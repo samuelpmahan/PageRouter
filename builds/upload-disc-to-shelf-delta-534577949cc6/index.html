@@ -1,0 +1,14 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Studio sandbox</title><link rel="stylesheet" href="./style.css"></head><body>
+<header id="sandbox-controls">
+  <button id="sandbox-drawer-toggle" type="button" aria-expanded="false" aria-controls="sandbox-drawer" aria-label="Show sandbox controls">
+    <span class="drawer-icon" aria-hidden="true">&#9776;</span><span class="drawer-label">Sandbox</span>
+  </button>
+  <section id="sandbox-drawer" aria-label="Studio sandbox controls" hidden>
+    <div class="sandbox-heading"><div><strong id="title">Studio Experience</strong><span id="mount"></span></div><span class="eyebrow">Sandbox controls</span></div>
+    <div class="controls"><label>Surface <select id="surface"></select></label><label>Session <select id="session"></select></label><label>Scenario <select id="scenario"><option value="empty">Empty</option><option value="one">One disc</option><option value="normal" selected>Normal</option><option value="tons">Tons of discs</option></select></label><button id="new-test">New test run</button><button id="launch-scenario">Launch isolated scenario</button><button id="reset-scenario">Reset scenario</button><button id="return-workspace">Return to my workspace</button><button id="inspect">Inspect this sandbox</button></div>
+    <p id="boundary"></p><p id="status" role="status">Opening retained interactive sandbox…</p>
+  </section>
+</header>
+<main id="surfaces"></main>
+<dialog id="inspection"><div class="controls"><strong>Actual owning model</strong><button id="export">Export inspection</button><button id="close">Close</button></div><p id="inspection-kind"></p><form id="lookup"><label>Mounted address <input id="address" placeholder="mock.upload-disc-to-shelf.px.shelf.0"></label><button>Resolve</button></form><pre id="resolved"></pre><pre id="values"></pre><a href="./studio-import.json" target="_blank">Pinned source and compatibility report</a></dialog>
+<script type="module" src="./host.mjs"></script></body></html>
