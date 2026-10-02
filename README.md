@@ -1,40 +1,15 @@
-# PageRouter
+# PageRouter × PxCube Composed Workbench
 
-Tiny GitHub Pages frontend comparison harness.
+Candidate0.0.0, build af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492
 
-Configure a handful of static frontend URLs in `pagerouter.json`, deploy this repo with GitHub Pages, and switch between them in a single browser tab or compare two side by side.
+This repository publishes the verified compiled browser-local workbench. It includes the recovered PageRouter A/B comparison,12 actual crisp-packaged PxCube experiences, HH C6 visual runtime graph composition and standalone Justin technical snapshot.
 
-## PoC usage
+Immutable source, recipes/manifests and evidence checkpoint: https://drive.google.com/file/d/1gosMXXSy2A5oQschSboAy7QdBDd38bxu/view?usp=drivesdk
+Archive SHA-256: 14ae8c350409606003ebdd388030dddaad5aa5e99bc2b19f990f908240458b4e
+The Drive checkpoint remains owner-private; no sharing permissions were expanded.
 
-1. Edit `pagerouter.json` and replace the example entries with URLs for the frontend builds you want to compare.
-2. In this repo, open **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**.
-3. Push to `main` (or run the `Deploy PageRouter` workflow manually).
-4. Open the Pages URL GitHub shows for this repo.
+See SOURCE-CHECKPOINT.json, data/verification.json and examples/visual-composition-session.json. Existing neat/tidy/crisp lifecycle remains authority. Candidate version does not assert a contract milestone or human acceptance.
 
-For Disc Studio, the fastest path is to point `pagerouter.json` at two already-deployed frontend builds. PageRouter itself does not need access to the source repos and does not receive their credentials.
+Rollback: rollback/pre-composed-workbench-20261002-5cc1ae3 at 5cc1ae3d8d4d3c14074829c48118d1e70912b6dd
 
-```json
-{
-  "title": "Disc Studio FE Compare",
-  "sites": [
-    { "label": "Concept A", "url": "https://example.com/a/" },
-    { "label": "Concept B", "url": "https://example.com/b/" }
-  ]
-}
-```
-
-## What this PoC does
-
-- Single-view switcher
-- A/B keyboard-friendly buttons
-- Side-by-side comparison
-- Swappable left/right targets
-- No framework, build step, backend, database, or credentials
-
-## Important iframe note
-
-The compared site must allow being embedded in an iframe. GitHub Pages sites normally work fine. A site sending restrictive `X-Frame-Options` or CSP `frame-ancestors` headers will refuse to render inside PageRouter.
-
-## Why URLs first instead of commit hashes?
-
-This PoC deliberately separates **comparison** from **building**. That keeps PageRouter dumb and safe: it only displays already-built sites. A later v2 can add a GitHub Action that checks out arbitrary refs, builds them, and publishes them under `/builds/<sha>/`.
+Deployment transport: the existing Pages workflow materializes exact precompiled bytes from hashed artifact chunks; it never rebuilds application code.
