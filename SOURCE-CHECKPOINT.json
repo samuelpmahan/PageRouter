@@ -1,18 +1,34 @@
 {
-  "schema": "composed-workbench-source-checkpoint@1",
+  "schema": "composed-workbench-source-checkpoint@2",
   "version": "0.0.0",
   "channel": "candidate",
-  "buildId": "af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492",
-  "sourceCommit": "1f372f81eb1dd4ba39b0f91818d5f1202b1d46f9",
-  "driveFileId": "1gosMXXSy2A5oQschSboAy7QdBDd38bxu",
-  "driveUrl": "https://drive.google.com/file/d/1gosMXXSy2A5oQschSboAy7QdBDd38bxu/view?usp=drivesdk",
-  "archiveSha256": "14ae8c350409606003ebdd388030dddaad5aa5e99bc2b19f990f908240458b4e",
-  "archiveBytes": 23652399,
-  "verification": "data/verification.json",
-  "graphExample": "examples/visual-composition-session.json",
-  "rollback": {
-    "repository": "samuelpmahan/PageRouter",
-    "branch": "rollback/pre-composed-workbench-20261002-5cc1ae3",
-    "commit": "5cc1ae3d8d4d3c14074829c48118d1e70912b6dd"
-  }
+  "siteBuildId": "48c89c08a578f7da79e24ae43a12a1cbeb7ffd62922c84b9394a40fdf60f12ff",
+  "evaluatorImplementationPin": "af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492",
+  "sourceCommit": "2e2090e836aad4f388eaf6a0d562632a9b1f2681",
+  "baseCheckpoint": {
+    "schema": "composed-workbench-source-checkpoint@1",
+    "version": "0.0.0",
+    "channel": "candidate",
+    "buildId": "af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492",
+    "sourceCommit": "1f372f81eb1dd4ba39b0f91818d5f1202b1d46f9",
+    "driveFileId": "1gosMXXSy2A5oQschSboAy7QdBDd38bxu",
+    "driveUrl": "https://drive.google.com/file/d/1gosMXXSy2A5oQschSboAy7QdBDd38bxu/view?usp=drivesdk",
+    "archiveSha256": "14ae8c350409606003ebdd388030dddaad5aa5e99bc2b19f990f908240458b4e",
+    "archiveBytes": 23652399,
+    "verification": "data/verification.json",
+    "graphExample": "examples/visual-composition-session.json",
+    "rollback": {
+      "repository": "samuelpmahan/PageRouter",
+      "branch": "rollback/pre-composed-workbench-20261002-5cc1ae3",
+      "commit": "5cc1ae3d8d4d3c14074829c48118d1e70912b6dd"
+    }
+  },
+  "currentSourceReceiptRecord": "https://github.com/samuelpmahan/PageRouter/blob/main/artifact.json",
+  "verification": "data/annotation-verification.json",
+  "annotationExample": "examples/justin-prototype.json",
+  "note": "The deployment artifact record links the immutable Drive source checkpoint for this exact siteBuildId. Source archive is finalized before that remote receipt exists.",
+  "driveFileId": "1A6RtXbXJl8P1V9hwlpD5K-64N93B98ZN",
+  "driveUrl": "https://drive.google.com/file/d/1A6RtXbXJl8P1V9hwlpD5K-64N93B98ZN/view?usp=drivesdk",
+  "archiveSha256": "882da55da4d3409c6d9c8ae6b3d51773d0354955caedcd9d58304a7f7abddd1a",
+  "archiveBytes": 31390101
 }
