@@ -1,16 +1,13 @@
 # PageRouter × PxCube Composed Workbench
 
-Candidate 0.0.0 · site build d0d44d43dc42aaada0ae4ac146d4c6d679dcd91a6f05fac16ddc03c70c6e22cb
+Candidate 0.0.0 · site build fea2626b882e958a0e4dc80b619d2aed490b59a941d9d9cf510380389f1b027c
 
-This repair fixes the HH style playground import in the assembled site. The source assembly recipe now points the copied adapter at its colocated `services/style-playground.mjs`; a regression check follows the built HH entry's local imports so this path cannot silently break again. The existing bounded style behavior and evaluator implementation pin are unchanged.
+PxCube's Atlas tab (`#/pxcube/atlas`) runs live bounded program search with retained concrete counterexamples, measured executable byte sizes and actual Part/provenance inspection. Run original composition exposes the existing motion/Beta/Boolean fixture calculation. Replay, reset, gain/bias controls and recipe/result/inspection downloads use the same browser session.
 
-The workbench retains the HH synthetic teacher preview, PxCube experiences, Game Boy Connect Four cartridges, and Justin's standalone technical snapshot.
+The existing PxCube/Game Boy, HH style import repair and Justin IDE compiled subtrees retain their exact hashes. HH evaluator implementation: af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492. Atlas implementation: c07e22a6db3623821ef6ee01fccb73b3e1fe580d1bd2c0abe4266387fd6d4bf9.
 
-Owner-private source checkpoint: https://drive.google.com/file/d/19pmwn3CjvZ401EFF5MetGmZ0EXEniYPI/view?usp=drivesdk
-Source archive SHA-256: ac15948543630e27f1f2abe8c71758ab01421233665048582d2ab4667bff3920
-Base source commit: 854e271da06087dc798422328b2eaac921625277
-Drive sharing was not changed.
+Authoritative immutable source checkpoint: https://drive.google.com/file/d/1e1LOsuw9wvjSaUeAs0JZ_0cUJzizPc3i/view?usp=drivesdk
+Source archive SHA-256: f44ba198f6f2e09c699a4377230f8edd9404ea1d9f77b7eac399690190bb29e6
+Base source commit: 854e271da06087dc798422328b2eaac921625277. No new source Git commit is claimed.
 
-Local verification: 55/55 Node tests passed, including the new built import check. Headless Chrome loaded `#/hh/run`, loaded the direct HH fixture, and generated six style variants without page errors. The Pages artifact contains 692 compiled files and is hash-verified by `deploy-materialize.py`. The HH evaluator implementation pin remains af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492.
-
-Candidate 0.0.0 is not a human contract milestone. See `artifact.json` and `SOURCE-CHECKPOINT.json` for exact build and source checkpoint identities.
+Local checks and build evidence are included in the checkpoint. Acceptance applies to the declared grid and tolerance; the Boolean/Beta fixture policy does not establish equivalence. Candidate 0.0.0 is not a human contract milestone.
