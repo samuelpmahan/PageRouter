@@ -1,0 +1,22 @@
+{
+  "schema": "nctk-directory@1",
+  "address": "parts/crop/discstudio",
+  "children": [],
+  "kind": "part",
+  "source": "parts/crop/discstudio/part.json",
+  "policies": {
+    "neat": {
+      "mode": "none"
+    },
+    "crisp": {
+      "mode": "local"
+    },
+    "tidy": {
+      "mode": "local"
+    },
+    "kompoze": {
+      "mode": "local",
+      "references": []
+    }
+  }
+}

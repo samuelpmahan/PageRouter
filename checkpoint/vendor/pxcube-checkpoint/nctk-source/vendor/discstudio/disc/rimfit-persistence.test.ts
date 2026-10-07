@@ -1,0 +1,33 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createCanvas } from '@napi-rs/canvas';
+import { openExperience } from './persistent-experience.ts';
+import { initialDraft } from './model.ts';
+import { ensureCircleFitCalculations } from './circle-fit.ts';
+import { sessionKeyPrefix } from './session-storage.ts';
+import { Part } from '../part-first-kernel/src/pxc.mjs';
+import { clampCropSelection } from './upload-ui.ts';
+
+test('CircleFit correction remains transient while a photo-only save restores', async () => {
+  const values = new Map<string, string>();
+  const storage = { getItem: (key: string) => values.get(key) ?? null, setItem: (key: string, value: string) => values.set(key, value) };
+  const app = await openExperience(storage, () => {});
+  const canvas = createCanvas(96, 96), ctx = canvas.getContext('2d')!;
+  ctx.fillStyle = '#1c2930'; ctx.fillRect(0, 0, 96, 96); ctx.fillStyle = '#75b7db'; ctx.beginPath(); ctx.arc(48, 48, 34, 0, Math.PI * 2); ctx.fill();
+  const data = ctx.getImageData(0, 0, 96, 96).data;
+  ensureCircleFitCalculations(app.pxc, { clampCropSelection });
+  app.pxc.set('ds.px.PhotoIntake.circlefit.test', new Part({ schema: 'PhotoRaster@1', working: { width: 96, height: 96, rgba: data }, source: { width: 96, height: 96, rgba: data } }));
+  await app.pxc.compose({ into: 'ds.px.CircleFit.circlefit.test', calculation: 'oc.studio.circleFit', inputs: { photo: 'ds.px.PhotoIntake.circlefit.test' } });
+  await app.pxc.compose({ into: 'ds.px.CropEdit.circlefit.test', calculation: 'fn.studio.circleCropProposal', inputs: { photo: 'ds.px.PhotoIntake.circlefit.test', evidence: 'ds.px.CircleFit.circlefit.test' } });
+  const fit = app.pxc.get('ds.px.CropEdit.circlefit.test').value;
+  assert.ok(['accepted', 'abstained'].includes(fit.status));
+  await app.addDraftPhoto({ kind: 'photo', name: 'rimfit.png', src: 'data:image/png;base64,iVBORw0KGgo=' });
+  const depiction = await app.selectDraftDepiction(), hydrated = await app.hydrateSeed(initialDraft().mold);
+  await app.save({ ...initialDraft(), mold: hydrated.address, plastic: 'ESP' }, depiction);
+  const sessionKey = [...values.keys()].find(key => key.startsWith(sessionKeyPrefix))!;
+  const raw = values.get(sessionKey)!;
+  assert.doesNotMatch(raw, /(?:PhotoIntake|CircleFit|CropEdit)\.circlefit/);
+  const fresh = await openExperience(storage, () => {});
+  assert.equal(fresh.bag().length, 1);
+  assert.match(fresh.persistenceStatus, /Restored Today’s Bag/);
+});

@@ -1,0 +1,89 @@
+{
+  "app": "Connect Four (PxC + seek tree)",
+  "version": "0.1.0",
+  "source": null,
+  "entry": "index.html",
+  "outDir": "dist",
+  "entryChunk": "879032eb29ec7cd82786875bcc50a6575a8434029ec551fbbbfd33d6a4db64f5",
+  "mounts": [],
+  "resolvedMounts": [],
+  "usedMounts": [],
+  "chunks": [
+    {
+      "path": "cartridges.json",
+      "sha256": "eb4048d0dfc5ab915c75ecc4de63396573107c385bfd5a591f7f310ae4973b29"
+    },
+    {
+      "path": "connect4-ui.js",
+      "sha256": "be35b6438707aa5a248840ea98aab5dcb657b1a284f2e8be0dddb78f0878be32"
+    },
+    {
+      "path": "index.html",
+      "sha256": "879032eb29ec7cd82786875bcc50a6575a8434029ec551fbbbfd33d6a4db64f5"
+    },
+    {
+      "path": "model.mjs",
+      "sha256": "0a373b224e5d3a921196fada5e60e255ecf797dd06ee2b0ad171261ed1cd04dd"
+    },
+    {
+      "path": "player.js",
+      "sha256": "d360f03b777828a2dc1c6bf34d3b0a33f110791afde15f76c0a92ef726fe5ebc"
+    },
+    {
+      "path": "pxc.mjs",
+      "sha256": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9"
+    },
+    {
+      "path": "rom.js",
+      "sha256": "9da86e40bdba6b48524772becbf4aef21d97141c8e9165a1ebf32cd31c3b1590"
+    },
+    {
+      "path": "rules.mjs",
+      "sha256": "5bed47fe3a61c7f46df5ecb221b965ecb3baf53ca967a94eb98409388bf10e85"
+    }
+  ],
+  "composition": {
+    "base": "gameboy",
+    "patches": [],
+    "baseChunks": [
+      {
+        "path": "cartridges.json",
+        "sha256": "eb4048d0dfc5ab915c75ecc4de63396573107c385bfd5a591f7f310ae4973b29"
+      },
+      {
+        "path": "connect4-ui.js",
+        "sha256": "be35b6438707aa5a248840ea98aab5dcb657b1a284f2e8be0dddb78f0878be32"
+      },
+      {
+        "path": "index.html",
+        "sha256": "879032eb29ec7cd82786875bcc50a6575a8434029ec551fbbbfd33d6a4db64f5"
+      },
+      {
+        "path": "player.js",
+        "sha256": "d360f03b777828a2dc1c6bf34d3b0a33f110791afde15f76c0a92ef726fe5ebc"
+      },
+      {
+        "path": "rom.js",
+        "sha256": "eb3caef5880cee74479bf17d49986ff5aa0a75e9be5718ebf20533cd72ce39f6"
+      }
+    ],
+    "overridden": [
+      "rom.js"
+    ]
+  },
+  "sourceHash": "1bd0469bce1f562fd4aaad239c5fd827927c2974bb459f7a13efe3b7704fb179",
+  "manifestHash": "776196256a27c86c48dff381575189c1c658220a0755b142d6269e8b658010e6",
+  "build": {
+    "command": "node build.mjs",
+    "exitCode": 0,
+    "durationMs": 78,
+    "timedOut": false
+  },
+  "validation": {
+    "declaredMounts": [],
+    "usedMounts": [],
+    "undeclaredMounts": [],
+    "persistedPrefixViolations": []
+  },
+  "packagedAt": "2026-10-03T04:57:03.190Z"
+}

@@ -1,0 +1,119 @@
+{
+  "app": "MockPxC · retained worlds",
+  "version": "0.1.0",
+  "source": null,
+  "entry": "index.html",
+  "outDir": "dist",
+  "entryChunk": "44bf0c5e9c59b799a5b485d87d13b3fe16db9aa3423e5f9380b7c862b851ec64",
+  "mounts": [
+    "shelf"
+  ],
+  "resolvedMounts": [
+    "shelf"
+  ],
+  "usedMounts": [
+    "shelf"
+  ],
+  "chunks": [
+    {
+      "path": "app.mjs",
+      "sha256": "e6c50d5f48f8d6752fcefa99534019a80955aeb7fac5f1ef4f85317e537bbce4"
+    },
+    {
+      "path": "index.html",
+      "sha256": "44bf0c5e9c59b799a5b485d87d13b3fe16db9aa3423e5f9380b7c862b851ec64"
+    },
+    {
+      "path": "mock-pxc/mock-pxc.mjs",
+      "sha256": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b"
+    },
+    {
+      "path": "seed-identity.mjs",
+      "sha256": "1ae11651fb5cf3e0b5fca05d487d6a85aca6c0a927f6827f4e570d94175cd11b"
+    },
+    {
+      "path": "style.css",
+      "sha256": "4a8fcaa6e1e560bc8c28fd0f9b6a2d6b77b7ef454170b74e196db237947bf047"
+    },
+    {
+      "path": "tests/catalog.json",
+      "sha256": "36bddd1fbbf233f4626f7baa130c5a71c269faf0e9bb04eeb914a8e35160cf81"
+    },
+    {
+      "path": "tests/launcher/scenario-loader.mjs",
+      "sha256": "245680ceb9d4e5fe3ca15d57eb1b7e8df86dd009bb5c9e68ad7790dc57755183"
+    },
+    {
+      "path": "tests/local/experience-mount.mjs",
+      "sha256": "968343527364031f5f3bbce300c6492f7f8f7d654d7eb84277ac98ed2417fa34"
+    },
+    {
+      "path": "tests/local/pxc-kernel.mjs",
+      "sha256": "5c724b51e75cc88747dd60a401f2b3c95940fe94881d91041b1be292826fecad"
+    },
+    {
+      "path": "tests/local/scene-host.mjs",
+      "sha256": "6663ecb58766a2759911d60538a9b14c3e2ac9cb4a7662c70b908a05379249ad"
+    },
+    {
+      "path": "tests/local/test/experience-mount.test.mjs",
+      "sha256": "ea616435b3eaf158fc821c263df7898ebd8481c9b74cc471c7dd0476ab97396d"
+    },
+    {
+      "path": "tests/local/test/pxc-kernel.test.mjs",
+      "sha256": "b39582586b7e983ba7a2cea1f4d9dcf96cfb563c6b87fddde6d3c89f7a0a0055"
+    },
+    {
+      "path": "tests/local/test/scenario-conveyor.test.mjs",
+      "sha256": "c276d2761028e7e2d1cba22269ebebe2a3883d31684a57117b88db2f2505dc53"
+    },
+    {
+      "path": "tests/local/test/scene-host.test.mjs",
+      "sha256": "a0c54e4200e6019a32311e639e575ce994e38382eb538a2aa3b4025bc2053e3a"
+    },
+    {
+      "path": "tests/local/test/test-seam.mjs",
+      "sha256": "4720ea80833baff0317080e41de1871b95b8293de439ccafc466896e78ea3758"
+    },
+    {
+      "path": "tests/mock-pxc/mock-pxc.mjs",
+      "sha256": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b"
+    },
+    {
+      "path": "tests/shims/node-assert.mjs",
+      "sha256": "87d1b6a237a12e0f3c0bba4caf75216414befb9ecc6688247a476ae6e1910b6e"
+    },
+    {
+      "path": "tests/shims/node-test.mjs",
+      "sha256": "869c6b2f58ade5bf8666f34fc23582c4c084d0591881688bb3a51bad11335b56"
+    },
+    {
+      "path": "tests/vendor/neat/dist/pxc.js",
+      "sha256": "30cc0ec1076b64db10c0e0bb4fa288679c55142eaf0f1d2ef2050d1252e68e31"
+    },
+    {
+      "path": "tests/vendor/studio/part-first-kernel/src/pxc.mjs",
+      "sha256": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9"
+    }
+  ],
+  "composition": null,
+  "sourceHash": "4912a45088dc82a8268abf7e48ba14bbceb7552620734d9b6bddc75b1e2ace61",
+  "manifestHash": "491789e5f34f9feaa2fb1ebd743517bd9acc788685b42efb344c2a4c5d0b69a7",
+  "build": {
+    "command": "node build.mjs",
+    "exitCode": 0,
+    "durationMs": 79,
+    "timedOut": false
+  },
+  "validation": {
+    "declaredMounts": [
+      "shelf"
+    ],
+    "usedMounts": [
+      "shelf"
+    ],
+    "undeclaredMounts": [],
+    "persistedPrefixViolations": []
+  },
+  "packagedAt": "2026-10-02T21:06:20.590Z"
+}

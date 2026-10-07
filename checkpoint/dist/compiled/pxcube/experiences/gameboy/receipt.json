@@ -1,0 +1,49 @@
+{
+  "app": "Game Boy cartridge",
+  "version": "0.1.0",
+  "source": null,
+  "entry": "index.html",
+  "outDir": "dist",
+  "entryChunk": "879032eb29ec7cd82786875bcc50a6575a8434029ec551fbbbfd33d6a4db64f5",
+  "mounts": [],
+  "resolvedMounts": [],
+  "usedMounts": [],
+  "chunks": [
+    {
+      "path": "cartridges.json",
+      "sha256": "eb4048d0dfc5ab915c75ecc4de63396573107c385bfd5a591f7f310ae4973b29"
+    },
+    {
+      "path": "connect4-ui.js",
+      "sha256": "be35b6438707aa5a248840ea98aab5dcb657b1a284f2e8be0dddb78f0878be32"
+    },
+    {
+      "path": "index.html",
+      "sha256": "879032eb29ec7cd82786875bcc50a6575a8434029ec551fbbbfd33d6a4db64f5"
+    },
+    {
+      "path": "player.js",
+      "sha256": "d360f03b777828a2dc1c6bf34d3b0a33f110791afde15f76c0a92ef726fe5ebc"
+    },
+    {
+      "path": "rom.js",
+      "sha256": "eb3caef5880cee74479bf17d49986ff5aa0a75e9be5718ebf20533cd72ce39f6"
+    }
+  ],
+  "composition": null,
+  "sourceHash": "d502cb455ef4837574ce34410cdaebebcf49032cdfb3063c2b934cdc0c840683",
+  "manifestHash": "b934baaf88ec4f513063cb875c6bf2e9f987d303b97678906ae8afbd2cbc0f40",
+  "build": {
+    "command": "node build.mjs",
+    "exitCode": 0,
+    "durationMs": 68,
+    "timedOut": false
+  },
+  "validation": {
+    "declaredMounts": [],
+    "usedMounts": [],
+    "undeclaredMounts": [],
+    "persistedPrefixViolations": []
+  },
+  "packagedAt": "2026-10-03T04:57:03.584Z"
+}

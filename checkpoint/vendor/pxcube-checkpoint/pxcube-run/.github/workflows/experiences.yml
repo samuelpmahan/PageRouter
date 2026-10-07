@@ -1,0 +1,202 @@
+# .github/workflows/experiences.yml
+#
+# Each Experience ships its own THING. The workflow discovers the same
+# dependency-aware package targets as local PxCube. Every matrix leg restores
+# its exact content-addressed package when available; only a target whose
+# source/build inputs changed compiles again. We still stage every verified
+# THING so launcher assembly is a complete, honest Page on every deployment.
+#
+# This file is a thin wrapper by design. All build, test, and package logic
+# lives in crisp/; this workflow only calls it. crisp's own test suite runs
+# first: a red packager blocks the whole Page.
+#
+# Browser coverage (scaffold, NTC console, studio sandboxes) runs in its own
+# job. It never blocks the Page, but its results are always uploaded, so a
+# red browser run stays visible instead of silently vanishing.
+
+name: experiences
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'experiences/**'
+      - 'launcher/**'
+      - 'crisp/**'
+      - 'kompoze/**'
+      - 'tidy/**'
+      - 'mock-pxc/**'
+      - 'local/**'
+      - 'vendor/**'
+      - '.neat/**'
+      - '.tidy/**'
+      - '.github/workflows/experiences.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  crisp-selftest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: crisp self-test
+        # The packager must be green before it touches any THING.
+        run: node crisp/test/run.mjs
+
+  discover:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # The immediately preceding commit is enough for normal pushes;
+          # affected-targets falls back safely to all targets if a base is not
+          # available (for example, a force push).
+          fetch-depth: 2
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - id: matrix
+        run: |
+          base="${{ github.event.before }}"
+          if [ -z "$base" ] || [ "$base" = "0000000000000000000000000000000000000000" ]; then base=""; fi
+          matrix=$(node local/affected-targets.mjs --base "$base" --head "$GITHUB_SHA" --matrix | jq -c '.')
+          echo "matrix=${matrix}" >> "$GITHUB_OUTPUT"
+          echo "### Package target plan" >> "$GITHUB_STEP_SUMMARY"
+          echo '```json' >> "$GITHUB_STEP_SUMMARY"
+          echo "$matrix" | jq '[.[] | {id, affected, reasons}]' >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+
+  build:
+    needs: [discover, crisp-selftest]
+    if: ${{ needs.discover.outputs.matrix != '[]' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        exp: ${{ fromJSON(needs.discover.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: restore exact crisp package
+        id: package-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            experiences/${{ matrix.exp.id }}/${{ matrix.exp.outDir }}
+            experiences/${{ matrix.exp.id }}/.crisp
+          key: pxcube-package-v1-${{ runner.os }}-node22-${{ matrix.exp.packageKey }}
+      - name: package THING with crisp
+        if: steps.package-cache.outputs.cache-hit != 'true'
+        run: |
+          node crisp/bin/crisp package "experiences/${{ matrix.exp.id }}"
+      - name: verify cached or newly packaged THING
+        run: |
+          node crisp/bin/crisp verify "experiences/${{ matrix.exp.id }}/.crisp/receipt.json" "experiences/${{ matrix.exp.id }}/${{ matrix.exp.outDir }}"
+      - name: stage artifact
+        run: |
+          mkdir -p "staging/${{ matrix.exp.id }}"
+          cp -r "experiences/${{ matrix.exp.id }}/${{ matrix.exp.outDir }}/." "staging/${{ matrix.exp.id }}/"
+          cp "experiences/${{ matrix.exp.id }}/.crisp/receipt.json" "staging/${{ matrix.exp.id }}/receipt.json"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: exp-${{ matrix.exp.id }}
+          path: staging/${{ matrix.exp.id }}
+          if-no-files-found: error
+
+  browser-tests:
+    needs: [crisp-selftest]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: verify local adapter and crisp fixtures
+        run: node --test local/test/*.test.mjs
+      - name: install the browser test runner
+        run: |
+          npm install --prefix "$RUNNER_TEMP/pxcube-browser" --no-save playwright@1.62.1
+          node "$RUNNER_TEMP/pxcube-browser/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: generate and exercise a sandbox through crisp
+        env:
+          PLAYWRIGHT_MODULE: ${{ runner.temp }}/pxcube-browser/node_modules/playwright/index.mjs
+        run: node local/test/scaffold-browser.mjs
+      - name: inspect the NTC console and retain an Experience across views
+        env:
+          PLAYWRIGHT_MODULE: ${{ runner.temp }}/pxcube-browser/node_modules/playwright/index.mjs
+          NTC_FIXTURE: '1'
+        run: node local/test/ntc-browser.mjs
+      - name: same packaging program as local preview
+        run: node local/ci.mjs
+      - name: execute declared critical journeys against the assembled artifact
+        env:
+          PLAYWRIGHT_MODULE: ${{ runner.temp }}/pxcube-browser/node_modules/playwright/index.mjs
+        run: node local/test/critical-journeys-browser.mjs
+      - name: compare and retain a CreateGraphics composition
+        env:
+          PLAYWRIGHT_MODULE: ${{ runner.temp }}/pxcube-browser/node_modules/playwright/index.mjs
+        run: node local/test/create-graphics-browser.mjs
+      - name: E2E the five experiences against MockPxC, no browser
+        run: node --test "local/test/e2e/*.test.mjs"
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: pxcube-browser-results
+          path: |
+            .pxcube/runs/
+            evidence/build-bag-scaffold/
+            evidence/critical-journeys/
+            evidence/ntc-console/
+          include-hidden-files: true
+
+  assemble:
+    needs: [discover, build]
+    outputs:
+      site-ready: ${{ steps.assemble.outputs.site-ready }}
+    # Ship what built; mark the rest failed on the launcher. Never let one
+    # red THING cancel the whole Page.
+    if: ${{ !cancelled() && (needs.build.result == 'success' || needs.build.result == 'failure') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: exp-*
+          path: staging
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: assemble the same NTC site as local preview
+        id: assemble
+        continue-on-error: true
+        run: node local/ci.mjs --staged staging
+      - uses: actions/upload-pages-artifact@v4
+        if: ${{ !cancelled() && steps.assemble.outputs.site-ready == 'true' }}
+        with:
+          path: dist
+      - name: keep failed package attempts red
+        if: ${{ !cancelled() && steps.assemble.outcome == 'failure' }}
+        run: exit 1
+
+  deploy:
+    needs: assemble
+    if: ${{ !cancelled() && needs.assemble.outputs.site-ready == 'true' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

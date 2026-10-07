@@ -1,0 +1,85 @@
+{
+  "runId": 34897594224,
+  "head": "d02e7a7f674d0b87a4d250c3d7d3335a3ba3982a",
+  "pages": "https://samuelpmahan.github.io/PxCube/",
+  "jobs": [
+    {
+      "id": 104155471116,
+      "name": "discover",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104155471604,
+      "name": "crisp-selftest",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104155538217,
+      "name": "browser-tests",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104155538375,
+      "name": "build (upload-disc-to-shelf, UploadDiscToShelf, Paint or photograph a disc, save it, and inspect ...",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104155538411,
+      "name": "build (explore-shelf, ExploreShelf, Browse the accepted shopping shelf; inspect or test the live ...",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104155538442,
+      "name": "build (MockPxC · retained worlds, Keep an interactive workspace, create isolated test runs, and ...",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104155538461,
+      "name": "build (BuildBag, Choose the discs you want to carry. A sandbox frame ready for the bag-building E...",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104155538552,
+      "name": "build (mkdir -p dist && cp index.html dist/, First light: a trivial THING proving the sandbox hol...",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104155610054,
+      "name": "assemble",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "id": 104155660721,
+      "name": "deploy",
+      "status": "completed",
+      "conclusion": "success"
+    }
+  ],
+  "excerpts": [
+    {
+      "job": "discover",
+      "lines": [
+        "2026-09-14T21:13:50.4184873Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +d02e7a7f674d0b87a4d250c3d7d3335a3ba3982a:refs/remotes/origin/main",
+        "2026-09-14T21:13:50.7213206Z  * [new ref]         d02e7a7f674d0b87a4d250c3d7d3335a3ba3982a -> origin/main",
+        "2026-09-14T21:13:50.7649626Z d02e7a7f674d0b87a4d250c3d7d3335a3ba3982a"
+      ]
+    },
+    {
+      "job": "deploy",
+      "lines": [
+        "2026-09-14T21:14:29.6878493Z \t\"pages_build_version\": \"d02e7a7f674d0b87a4d250c3d7d3335a3ba3982a\",",
+        "2026-09-14T21:14:30.1487059Z Created deployment for d02e7a7f674d0b87a4d250c3d7d3335a3ba3982a, ID: d02e7a7f674d0b87a4d250c3d7d3335a3ba3982a",
+        "2026-09-14T21:14:35.4372982Z Evaluated environment url: https://samuelpmahan.github.io/PxCube/"
+      ]
+    }
+  ]
+}

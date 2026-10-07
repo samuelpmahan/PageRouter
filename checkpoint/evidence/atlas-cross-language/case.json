@@ -1,0 +1,174 @@
+{
+  "format": "kompozed.atlas.cross-language-case.v1",
+  "recipe": {
+    "nodes": [
+      {
+        "calculation": "probe_decision",
+        "id": "decision",
+        "inputs": [
+          "/models/posterior",
+          "/parts/policy"
+        ],
+        "output": "/evidence/decision"
+      },
+      {
+        "calculation": "probe_model",
+        "id": "parameter_probe",
+        "inputs": [
+          "/models/fitted",
+          "/parts/specification"
+        ],
+        "output": "/evidence/parameters"
+      },
+      {
+        "calculation": "update_beta",
+        "id": "posterior",
+        "inputs": [
+          "/parts/prior",
+          "/evidence/predictions"
+        ],
+        "output": "/models/posterior"
+      },
+      {
+        "calculation": "probe_predictions",
+        "id": "prediction_probe",
+        "inputs": [
+          "/models/predicted",
+          "/parts/observed"
+        ],
+        "output": "/evidence/predictions"
+      },
+      {
+        "calculation": "predict_motion",
+        "id": "predict",
+        "inputs": [
+          "/models/fitted",
+          "/parts/queries"
+        ],
+        "output": "/models/predicted"
+      },
+      {
+        "calculation": "fit_motion",
+        "id": "fit",
+        "inputs": [
+          "/parts/training",
+          "/parts/config"
+        ],
+        "output": "/models/fitted"
+      }
+    ],
+    "outputs": {
+      "decision": "/evidence/decision",
+      "model": "/models/fitted",
+      "parameter_probe": "/evidence/parameters",
+      "posterior": "/models/posterior",
+      "prediction_probe": "/evidence/predictions"
+    }
+  },
+  "sources": {
+    "/parts/config": {},
+    "/parts/observed": {
+      "tolerance": 1e-9,
+      "values": [
+        -10,
+        -1,
+        8,
+        17,
+        26,
+        35,
+        44,
+        53,
+        62,
+        71
+      ]
+    },
+    "/parts/policy": {
+      "min_cases": 10,
+      "min_mean": 0.8
+    },
+    "/parts/prior": {
+      "alpha": 1,
+      "beta": 1
+    },
+    "/parts/queries": {
+      "transitions": [
+        {
+          "action": 1,
+          "x": -13
+        },
+        {
+          "action": 2,
+          "x": -6
+        },
+        {
+          "action": 3,
+          "x": 1
+        },
+        {
+          "action": 4,
+          "x": 8
+        },
+        {
+          "action": 5,
+          "x": 15
+        },
+        {
+          "action": 6,
+          "x": 22
+        },
+        {
+          "action": 7,
+          "x": 29
+        },
+        {
+          "action": 8,
+          "x": 36
+        },
+        {
+          "action": 9,
+          "x": 43
+        },
+        {
+          "action": 10,
+          "x": 50
+        }
+      ]
+    },
+    "/parts/specification": {
+      "expected_bias": 1,
+      "expected_gain": 2,
+      "tolerance": 1e-9
+    },
+    "/parts/training": {
+      "transitions": [
+        {
+          "action": -2,
+          "next_x": -7,
+          "x": -4
+        },
+        {
+          "action": -1,
+          "next_x": -2,
+          "x": -1
+        },
+        {
+          "action": 0,
+          "next_x": 3,
+          "x": 2
+        },
+        {
+          "action": 1,
+          "next_x": 8,
+          "x": 5
+        },
+        {
+          "action": 2,
+          "next_x": 13,
+          "x": 8
+        }
+      ]
+    }
+  },
+  "implementationIdentity": null,
+  "case_id": "sha256:8fcda1efa42c957207de0bb8986a9cf61a7c345f1035bad7deaf91a9ca23d617"
+}

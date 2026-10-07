@@ -1,0 +1,18 @@
+{
+  "title": "MockPxC \u00b7 retained worlds",
+  "description": "Keep an interactive workspace, create isolated test runs, inspect their actual values, and view and run the MockPxC unit tests in the browser.",
+  "version": "0.1.0",
+  "track": "exp",
+  "mounts": [
+    "shelf"
+  ],
+  "entry": "index.html",
+  "outDir": "dist",
+  "build": "node build.mjs",
+  "sandbox": [
+    "allow-scripts",
+    "allow-same-origin"
+  ],
+  "storage": "localStorage: retained JSON mock worlds. Trusted same-origin demonstration; not a hostile-code boundary.",
+  "binding": "Interactive: mock.<id>.*. Unit/E2E: mock.<id>.<iterator>.*. The shelf seed supplies both; stored inner names retain px/fn/oc/sc only."
+}

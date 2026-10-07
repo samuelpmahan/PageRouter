@@ -1,0 +1,55 @@
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET / HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /app.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /styles.css HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /compiled-patch.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /project-router.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /local-store.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /static-compiler.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /exp/cooperative/hh-workbench.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /session-repl.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /vendor/hh/services/fixture-provider.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /vendor/hh/services/runtime.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /vendor/hh/services/contract.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /vendor/hh/services/pxc.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /vendor/hh/services/fixtures.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /vendor/hh/services/devtools-board.mjs HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /data/catalog.json HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /data/delta-proof.json HTTP/1.1" 200 -
+127.0.0.1 - - [02/Oct/2026 16:47:21] "GET /sw.js HTTP/1.1" 200 -
+STATUS: Actual graph invocation produced output; receipt hh.workbench.calculation-call.1.result
+OUTPUT: {
+  "ok": true,
+  "result": {
+    "name": "countiesForState",
+    "outcomes": [
+      {
+        "id": "states",
+        "operation": "school.states",
+        "port": "SchoolData.getStates",
+        "ok": true,
+        "result": {
+          "ok": true,
+          "port": "SchoolData.getStates",
+          "mode": "fixture",
+          "fixture": true,
+          "outcome": "loaded",
+          "data": {
+            "values": [
+              "Demo California",
+              "Demo Washington"
+            ]
+          },
+          "message": ""
+        },
+        "value": {
+          "values": [
+            "Demo California",
+            "Demo Washington"
+          ]
+        },
+        "part": {
+          "value": {
+            "ok": true,
+            "port": "SchoolData.getStates",
+            "mod
+ERRORS: []

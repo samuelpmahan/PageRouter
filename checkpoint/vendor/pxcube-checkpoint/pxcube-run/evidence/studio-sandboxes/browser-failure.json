@@ -1,0 +1,18 @@
+{
+  "checks": [
+    {
+      "mode": "local",
+      "text": "photo-free Upload save produces a real Disc; mounted resolution returns the exact Part"
+    },
+    {
+      "mode": "local",
+      "text": "numbered Upload Case uses actual controls and all declared checks pass"
+    },
+    {
+      "mode": "local",
+      "text": "fresh test iterators preserve the interactive Part identity and reject cross-run addresses"
+    }
+  ],
+  "errors": [],
+  "error": "TimeoutError: locator.fill: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#thing').contentFrame().locator('#surfaces iframe:not([hidden])').contentFrame().locator('#fs-filter')\u001b[22m\n"
+}

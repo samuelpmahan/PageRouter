@@ -1,0 +1,185 @@
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 2 shipped, 0 failed
+run: 2026-09-15T15-16-34-496Z-116bda20
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 2 shipped, 0 failed
+run: 2026-09-15T15-16-38-396Z-69fbe6dc
+✔ local and matrix assembly carry the same complete NTC surface without rebuilding (9038.806742ms)
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 2 shipped, 0 failed
+run: 2026-09-15T15-16-44-286Z-84dcad55
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 1 failed
+run: 2026-09-15T15-16-48-846Z-c4c1be83
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 1 failed
+run: 2026-09-15T15-16-51-929Z-d2ac5e66
+✔ missing and altered matrix artifacts stay red while healthy siblings and prior attempts survive (20116.030643ms)
+✖ launcher ships a PxConsole view (17.411175ms)
+✖ console shell registers the console panel and never executes (3.682265ms)
+✖ console inspects through the real PxC store, not a mock copy (2.271034ms)
+✖ console shell hydrates worlds into PxC and describes values without invoking accessors (2.194477ms)
+✖ pxc.js ships offline and same-origin (30.88708ms)
+✔ exact-copy bag order, duplicate refusal, reload and isolated worlds (4995.085984ms)
+{"archiveCharacters":992008,"compressedCharacters":102622,"roundTrip":"identical"}
+✔ compressed storage preserves every archive byte, replays Parts, and refuses stale writers (3589.603241ms)
+✔ render uses actual source Parts; captures replay and cannot drift with live design (5493.08548ms)
+✔ search excludes nicknames and preserves mold / plastic / descending weight order (961.116448ms)
+✔ nine card studies retain source Parts and reach export as the exact chosen graphic (7062.221421ms)
+✔ creator queues one Competition image at a time: turns, points, size, accent, exact export (7232.888164ms)
+✔ interactive and numbered handles resolve only their own domain addresses (6.297725ms)
+✔ namespaced archives preserve other Experiences and refuse stale owners or quota failures (1.58267ms)
+▶ actual crisp CLI: six fixture intentions, with explicit negative mutations
+  ✔ hello (960.388629ms)
+  ✔ sneaky (466.996811ms)
+  ✔ broken (530.508504ms)
+  ✔ leaky (416.33866ms)
+  ✔ drift (681.673902ms)
+  ✔ unknown-world (316.019575ms)
+✔ actual crisp CLI: six fixture intentions, with explicit negative mutations (3392.72066ms)
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 1 failed
+run: 2026-09-15T15-17-43-369Z-06aeca41
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 1 failed
+run: 2026-09-15T15-17-47-638Z-8afbe7b3
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 1 failed
+run: 2026-09-15T15-17-50-963Z-b7b4fb5c
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 0 shipped, 2 failed
+run: 2026-09-15T15-17-53-978Z-b3ae98de
+✔ shared pipeline retains attempts, isolates failed builds, shows drift and refuses stale output (15374.759645ms)
+✔ vendored original source identities match their recorded commits (11.529603ms)
+✔ iteration allocation, guarded resolution and seed isolation (50.284862ms)
+✔ reads go through PxC: dotted fixtures, telemetry, MissingPartError (7.342928ms)
+✔ peek reads a board value without recording telemetry (1.875613ms)
+✔ writeScratch replaces the whole sc value on the board (3.964321ms)
+✔ interactive identity resumes without reseeding; revision and reload retention (15.646626ms)
+✔ competing kernel instance cannot silently discard; quota failure is loud (2.810427ms)
+✔ kernel reads state written by the old mock shape (retained browser data loads) (10.750536ms)
+✔ recordResult and list keep the audit shape (122.539821ms)
+✔ tidy provides a detached build definition and names missing or invalid inputs (1056.464059ms)
+✔ crisp generates reproducibly from tidy, supports a second id, and refuses to overwrite work (2165.992433ms)
+neat check: 1 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 0 failed
+run: 2026-09-15T15-18-04-482Z-28a21839
+neat check: 1 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 0 failed
+run: 2026-09-15T15-18-07-382Z-e96adebc
+neat check: 1 item schemas valid
+tidy: registry schema checked
+launcher: 0 shipped, 1 failed
+run: 2026-09-15T15-18-11-130Z-740bb825
+✔ CLI scaffold -> tidy-fed package -> launcher; a changed manifest changes the next build (11943.956796ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 30
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 102531.176696
+
+✖ failing tests:
+
+test at local/test/console.test.mjs:5:1
+✖ launcher ships a PxConsole view (17.411175ms)
+  AssertionError [ERR_ASSERTION]: navigation names PxConsole
+      at TestContext.<anonymous> (file:///Users/samuelmahan/Documents/ChatGPT/Pyto/PxCube/local/test/console.test.mjs:7:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at local/test/console.test.mjs:11:1
+✖ console shell registers the console panel and never executes (3.682265ms)
+  AssertionError [ERR_ASSERTION]: console panel is a registered view
+      at TestContext.<anonymous> (file:///Users/samuelmahan/Documents/ChatGPT/Pyto/PxCube/local/test/console.test.mjs:13:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at local/test/console.test.mjs:17:1
+✖ console inspects through the real PxC store, not a mock copy (2.271034ms)
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/Users/samuelmahan/Documents/ChatGPT/Pyto/PxCube/dist/pxc.js' imported from /Users/samuelmahan/Documents/ChatGPT/Pyto/PxCube/local/test/console.test.mjs
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+      at #resolve (node:internal/modules/esm/loader:683:17)
+      at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+      at node:internal/modules/esm/loader:632:32
+      at TracingChannel.tracePromise (node:diagnostics_channel:362:14) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///Users/samuelmahan/Documents/ChatGPT/Pyto/PxCube/dist/pxc.js'
+  }
+
+test at local/test/console.test.mjs:31:1
+✖ console shell hydrates worlds into PxC and describes values without invoking accessors (2.194477ms)
+  AssertionError [ERR_ASSERTION]: shell imports the real PxC store
+      at TestContext.<anonymous> (file:///Users/samuelmahan/Documents/ChatGPT/Pyto/PxCube/local/test/console.test.mjs:33:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at local/test/console.test.mjs:40:1
+✖ pxc.js ships offline and same-origin (30.88708ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+    assert.ok(existsSync(new URL('../../dist/pxc.js', import.meta.url), 'pxc.js ships in dist'))
+
+      at TestContext.<anonymous> (file:///Users/samuelmahan/Documents/ChatGPT/Pyto/PxCube/local/test/console.test.mjs:41:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

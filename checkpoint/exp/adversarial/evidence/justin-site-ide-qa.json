@@ -1,0 +1,174 @@
+{
+  "baseUrl": "http://127.0.0.1:39007/",
+  "checks": [
+    {
+      "name": "Justin run view opens pinned IDE preview",
+      "ok": true,
+      "detail": "{'url': 'http://127.0.0.1:39007/compiled/justin/index.html', 'sandbox': 'allow-scripts allow-same-origin'}"
+    },
+    {
+      "name": "six real site pages can be selected",
+      "ok": true,
+      "detail": "['index.html', 'about.html', 'policy.html', 'community.html', 'blog.html', 'contact.html']"
+    },
+    {
+      "name": "annotation markers start hidden",
+      "ok": true,
+      "detail": "hidden"
+    },
+    {
+      "name": "annotation toggle projects visible geometry markers",
+      "ok": true,
+      "detail": "{'markerCount': 11, 'state': 'visible'}"
+    },
+    {
+      "name": "annotation event and seek are backed by PxC Parts and receipts",
+      "ok": true,
+      "detail": "{'registration': 'seek.justin.annotation', 'context': {'markers': [{'id': 'F01', 'number': 1, 'title': 'Primary navigation disappears below 1024 px', 'x': 0, 'y': 0, 'width': 390, 'height': 80}, {'id': 'F02', 'number': 2, 'title': 'Homepage footer links overflow', 'x': -33.125, 'y': 3759.5, 'width': 456.25, 'height': 20}, {'id': 'F03', 'number': 3, 'title': 'Live hero asset was missing', 'x': 0, 'y': 80, 'width': 390, 'height': 669.25}, {'id': 'F05', 'number': 5, 'title': 'Contact fragment has no target', 'x': 240.59375, 'y': 10, 'width': 133.40625, 'height': 60}, {'id': 'F05', 'number': 5, 'title': 'Contact fragment has no target', 'x': 16, 'y': 555.25, 'width': 255.78125, 'height': 48}, {'id': 'F07', 'number': 7, 'title': 'Small text contrast is below target', 'x': 36, 'y': 1219.25, 'width': 338, 'height': 16}, {'id': 'F07', 'number': 7, 'title': 'Small text contrast is below target', 'x': 16, 'y': 1922.25, 'width': 358, 'height': 16}, {'id': 'F07', 'number': 7, 'title': 'Small text contrast is below target', 'x': 41, 'y': 2320.25, 'width': 104.90625, 'height': 17}, {'id': 'F07', 'number': 7, 'title': 'Small text contrast is below target', 'x': 41, 'y': 2857.25, 'width': 130.203125, 'height': 17}, {'id': 'F07', 'number': 7, 'title': 'Small text contrast is below target', 'x': 41, 'y': 3366.25, 'width': 110.359375, 'height': 17}, {'id': 'F07', 'number': 7, 'title': 'Small text contrast is below target', 'x': 16, 'y': 3893.5, 'width': 358, 'height': 65}], 'page': 'index.html', 'viewport': {'width': 390, 'height': 800}, 'guards': [{'issue': 'F01', 'selector': 'body > header nav', 'expected': 1, 'actual': 1, 'ok': True}, {'issue': 'F02', 'selector': 'body > footer div.flex.space-x-6', 'expected': 1, 'actual': 1, 'ok': True}, {'issue': 'F03', 'selector': 'main > section:first-of-type > img', 'expected': 1, 'actual': 1, 'ok': True}, {'issue': 'F05', 'selector': 'a[href=\"contact.html#get-involved\"]', 'expected': 2, 'actual': 2, 'ok': True}, {'issue': 'F07', 'selector': 'main .text-amber-600', 'expected': 5, 'actual': 5, 'ok': True}, {'issue': 'F07', 'selector': 'body > footer .text-gray-500', 'expected': 1, 'actual': 1, 'ok': True}]}, 'annotation': {'definition': {'id': 'annotation-toggle-overlay', 'kind': 'composed', 'consumes': [{'name': 'event', 'type': 'annotation-event', 'tags': ['enable', 'disable'], 'target': {'node': 'event', 'port': 'event'}, 'requestPath': 'event'}, {'name': 'context', 'type': 'geometry-context', 'target': {'node': 'seek', 'port': 'context'}, 'requestPath': 'context'}], 'emits': [{'name': 'state', 'type': 'annotation-state', 'tags': ['hidden', 'visible'], 'source': {'node': 'transition', 'port': 'state'}}, {'name': 'projection', 'type': 'ui-tree', 'source': {'node': 'seek', 'port': 'projection'}}], 'guarantees': [{'when': 'enable', 'emits': 'visible annotation markers'}, {'when': 'disable', 'emits': 'hidden empty layer'}, {'when': 'seek', 'transition': False}], 'internalGraph': {'nodes': [{'id': 'currentState', 'fg': {'id': 'annotation-current-state', 'kind': 'leaf', 'consumes': [], 'emits': [{'name': 'state', 'type': 'annotation-state', 'tags': ['hidden', 'visible']}], 'guarantees': [{'initial': 'hidden'}], 'internalGraph': {'nodes': [{'id': 'annotation-current-state', 'kind': 'leaf'}], 'bindings': [], 'externalInputs': [], 'externalOutputs': [{'name': 'state', 'type': 'annotation-state', 'tags': ['hidden', 'visible']}]}}, 'sourceAddress': 'annotation.state.current'}, {'id': 'event', 'fg': {'id': 'annotation-event', 'kind': 'leaf', 'consumes': [{'name': 'event', 'type': 'annotation-event', 'tags': ['enable', 'disable']}], 'emits': [{'name': 'event', 'type': 'annotation-event', 'tags': ['enable', 'disable']}], 'guarantees': [{'when': 'event.type=enable', 'emits': 'enable'}, {'when': 'event.type=disable', 'emits': 'disable'}], 'internalGraph': {'nodes': [{'id': 'annotation-event', 'kind': 'leaf'}], 'bindings': [], 'externalInputs': [{'name': 'event', 'type': 'annotation-event', 'tags': ['enable', 'disable']}], 'externalOutputs': [{'name': 'event', 'type': 'annotation-event', 'tags': ['enable', 'disable']}]}}, 'calculation': 'annotation.event'}, {'id': 'transition', 'fg': {'id': 'annotation-transition', 'kind': 'leaf', 'consumes': [{'name': 'event', 'type': 'annotation-event', 'tags': ['enable', 'disable']}, {'name': 'state', 'type': 'annotation-state', 'tags': ['hidden', 'visible']}], 'emits': [{'name': 'state', 'type': 'annotation-state', 'tags': ['hidden', 'visible']}], 'guarantees': [{'when': 'enable', 'emits': 'visible'}, {'when': 'disable', 'emits': 'hidden'}], 'internalGraph': {'nodes': [{'id': 'annotation-transition', 'kind': 'leaf'}], 'bindings': [], 'externalInputs': [{'name': 'event', 'type': 'annotation-event', 'tags': ['enable', 'disable']}, {'name': 'state', 'type': 'annotation-state', 'tags': ['hidden', 'visible']}], 'externalOutputs': [{'name': 'state', 'type': 'annotation-state', 'tags': ['hidden', 'visible']}]}}, 'calculation': 'annotation.transition'}, {'id': 'seek', 'fg': {'id': 'annotation-seek', 'kind': 'leaf', 'consumes': [{'name': 'state', 'type': 'annotation-state', 'tags': ['hidden', 'visible']}, {'name': 'context', 'type': 'geometry-context'}], 'emits': [{'name': 'projection', 'type': 'ui-tree'}], 'guarantees': [{'when': 'hidden', 'emits': 'empty-marker-layer'}, {'when': 'visible', 'emits': 'measured-issue-markers'}], 'internalGraph': {'nodes': [{'id': 'annotation-seek', 'kind': 'leaf'}], 'bindings': [], 'externalInputs': [{'name': 'state', 'type': 'annotation-state', 'tags': ['hidden', 'visible']}, {'name': 'context', 'type': 'geometry-context'}], 'externalOutputs': [{'name': 'projection', 'type': 'ui-tree'}]}}, 'calculation': 'annotation.seek'}], 'bindings': [{'from': {'node': 'event', 'port': 'event'}, 'to': {'node': 'transition', 'port': 'event'}, 'type': 'annotation-event', 'tags': ['enable', 'disable']}, {'from': {'node': 'currentState', 'port': 'state'}, 'to': {'node': 'transition', 'port': 'state'}, 'type': 'annotation-state', 'tags': ['hidden', 'visible']}, {'from': {'node': 'transition', 'port': 'state'}, 'to': {'node': 'seek', 'port': 'state'}, 'type': 'annotation-state', 'tags': ['hidden', 'visible']}], 'externalInputs': [{'port': 'event', 'type': 'annotation-event', 'target': {'node': 'event', 'port': 'event'}, 'requestPath': 'event', 'tags': ['enable', 'disable']}, {'port': 'context', 'type': 'geometry-context', 'target': {'node': 'seek', 'port': 'context'}, 'requestPath': 'context'}], 'externalOutputs': [{'port': 'state', 'type': 'annotation-state', 'source': {'node': 'transition', 'port': 'state'}, 'tags': ['hidden', 'visible']}, {'port': 'projection', 'type': 'ui-tree', 'source': {'node': 'seek', 'port': 'projection'}}]}}, 'state': {'tag': 'visible', 'previous': 'hidden', 'event': 'enable', 'changed': True}, 'parts': [{'address': 'annotation.event', 'kind': 'event', 'valueType': 'function', 'part': 'actual'}, {'address': 'annotation.transition', 'kind': 'transition', 'valueType': 'function', 'part': 'actual'}, {'address': 'annotation.seek', 'kind': 'projection', 'valueType': 'function', 'part': 'actual'}, {'address': 'annotation.port-select', 'kind': 'port-select', 'valueType': 'function', 'part': 'actual'}, {'address': 'annotation.state.initial', 'kind': 'valuePart', 'valueType': 'object', 'part': 'actual'}, {'address': 'annotation.composed', 'kind': 'composed-wrapper', 'valueType': 'function', 'part': 'actual'}, {'address': 'annotation.input.context.seek.1', 'kind': 'valuePart', 'valueType': 'object', 'part': 'actual'}, {'address': 'annotation.output.projection.seek.1', 'kind': 'valuePart', 'valueType': 'object', 'part': 'actual'}, {'address': 'annotation.input.dispatch.2', 'kind': 'valuePart', 'valueType': 'object', 'part': 'actual'}, {'address': 'annotation.input.graph.3.event.event', 'kind': 'valuePart', 'valueType': 'object', 'part': 'actual'}, {'address': 'annotation.input.graph.3.seek.context', 'kind': 'valuePart', 'valueType': 'object', 'part': 'actual'}, {'address': 'annotation.output.graph.3.event', 'kind': 'valuePart', 'valueType': 'object', 'part': 'actual'}, {'address': 'annotation.output.graph.3.transition', 'kind': 'valuePart', 'valueType': 'object', 'part': 'actual'}, {'address': 'annotation.output.graph.3.seek', 'kind': 'valuePart', 'valueType': 'object', 'part': 'actual'}, {'address': 'annotation.output.dispatch.2', 'kind': 'valuePart', 'valueType': 'object', 'part': 'actual'}], 'receipts': [{'status': 'produced', 'into': 'annotation.output.projection.seek.1', 'kind': 'projection', 'calculation': 'annotation.seek', 'inputNames': ['state', 'context'], 'inputs': {'state': 'annotation.state.initial', 'context': 'annotation.input.context.seek.1'}}, {'status': 'produced', 'into': 'annotation.output.graph.3.event', 'kind': 'event', 'calculation': 'annotation.event', 'inputNames': ['event'], 'inputs': {'event': 'annotation.input.graph.3.event.event'}}, {'status': 'produced', 'into': 'annotation.output.graph.3.transition', 'kind': 'transition', 'calculation': 'annotation.transition', 'inputNames': ['event', 'state'], 'inputs': {'event': 'annotation.output.graph.3.event', 'state': 'annotation.state.initial'}}, {'status': 'produced', 'into': 'annotation.output.graph.3.seek', 'kind': 'projection', 'calculation': 'annotation.seek', 'inputNames': ['state', 'context'], 'inputs': {'state': 'annotation.output.graph.3.transition', 'context': 'annotation.input.graph.3.seek.context'}}, {'status': 'produced', 'into': 'annotation.output.dispatch.2', 'kind': 'composed-wrapper', 'calculation': 'annotation.composed', 'inputNames': ['request'], 'inputs': {'request': 'annotation.input.dispatch.2'}}], 'currentState': 'annotation.output.graph.3.transition'}, 'prototypeReceipts': []}"
+    },
+    {
+      "name": "annotation toggle returns to hidden with zero markers",
+      "ok": true,
+      "detail": "hidden"
+    },
+    {
+      "name": "page selector loads About and only its mapped findings",
+      "ok": true,
+      "detail": "['F01']"
+    },
+    {
+      "name": "Community page selects its own marker tree and findings",
+      "ok": true,
+      "detail": "['F01', 'F04', 'F09']"
+    },
+    {
+      "name": "320px viewport preserves original hidden-nav condition before fix",
+      "ok": true,
+      "detail": "none"
+    },
+    {
+      "name": "F01 fix safely reveals and wraps the actual six direct nav links",
+      "ok": true,
+      "detail": "{'display': 'flex', 'wrap': 'wrap', 'links': 6}"
+    },
+    {
+      "name": "prototype export is exact-base pinned and carries only typed preview operations",
+      "ok": true,
+      "detail": "{'schema': 'justin-site-prototype@1', 'base': {'project': 'justin', 'compiledDigest': '05a005cb29e5d7b41d515a0d9d844f9512482a6ad7540e52d4d911c2492967e3', 'sourcePin': '9fccd18d3077 \u2022 local technical patch', 'implementationPin': '48c89c08a578f7da79e24ae43a12a1cbeb7ffd62922c84b9394a40fdf60f12ff'}, 'page': 'index.html', 'operations': [{'route': 'index.html', 'selector': 'body > header > div > div.flex', 'count': 1, 'kind': 'style', 'values': {'height': 'auto', 'flexWrap': 'wrap', 'gap': '12px', 'padding': '16px'}}, {'route': 'index.html', 'selector': 'body > header nav', 'count': 1, 'kind': 'style', 'values': {'display': 'flex', 'width': '100%', 'flexWrap': 'wrap', 'gap': '12px'}}, {'route': 'index.html', 'selector': 'body > header nav > a', 'count': 6, 'kind': 'style', 'values': {'marginLeft': '0px'}}]}"
+    },
+    {
+      "name": "export contains no form/session secrets or receipt data",
+      "ok": true,
+      "detail": "['annotation', 'base', 'boundary', 'operations', 'page', 'schema', 'viewport']"
+    },
+    {
+      "name": "Undo restores the original navigation CSS exactly",
+      "ok": true,
+      "detail": "{'display': 'none', 'style': None}"
+    },
+    {
+      "name": "Contact fix adds only the declared destination id",
+      "ok": true,
+      "detail": "get-involved"
+    },
+    {
+      "name": "attribute undo restores the original form id",
+      "ok": true,
+      "detail": "None"
+    },
+    {
+      "name": "busy preview fix synchronously locks all competing controls",
+      "ok": true,
+      "detail": "{'page': True, 'viewport': True, 'annotation': True, 'undo': True, 'reset': True, 'export': True, 'fix': True, 'previewPointerEvents': 'none', 'selectionAfterAttempt': 'index.html', 'previewSrc': 'http://127.0.0.1:39007/compiled/justin/index.html', 'sameDocument': True}"
+    },
+    {
+      "name": "synthetic page change during fix preserves current document and selection",
+      "ok": true,
+      "detail": "{'page': True, 'viewport': True, 'annotation': True, 'undo': True, 'reset': True, 'export': True, 'fix': True, 'previewPointerEvents': 'none', 'selectionAfterAttempt': 'index.html', 'previewSrc': 'http://127.0.0.1:39007/compiled/justin/index.html', 'sameDocument': True}"
+    },
+    {
+      "name": "F02 fix reflows the footer row fully inside 390px without changing links",
+      "ok": true,
+      "detail": "{'left': 16, 'right': 374, 'width': 358, 'viewport': 390, 'flexWrap': 'wrap', 'hrefs': ['index.html', 'about.html', 'policy.html', 'community.html', 'blog.html', 'contact.html'], 'beforeWrap': 'nowrap'}"
+    },
+    {
+      "name": "completed race retains the exact F02 operation in export",
+      "ok": true,
+      "detail": "[{'route': 'index.html', 'selector': 'body > footer div.flex.space-x-6', 'count': 1, 'kind': 'style', 'values': {'flexWrap': 'wrap', 'gap': '16px'}}, {'route': 'index.html', 'selector': 'body > footer div.flex.space-x-6 > a', 'count': 6, 'kind': 'style', 'values': {'marginLeft': '0px'}}]"
+    },
+    {
+      "name": "F02 undo restores original footer wrapping",
+      "ok": true,
+      "detail": "nowrap"
+    },
+    {
+      "name": "undo clears the F02 operation from prototype export history",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "F07 fix changes only the declared text color tokens",
+      "ok": true,
+      "detail": "{'amber': 'rgb(146, 64, 14)', 'footer': 'rgb(209, 213, 219)'}"
+    },
+    {
+      "name": "F07 undo restores both original text colors",
+      "ok": true,
+      "detail": "{'amber': 'rgb(217, 119, 6)', 'footer': 'rgb(107, 114, 128)'}"
+    },
+    {
+      "name": "F06 preview fix adds the declared visible focus outline",
+      "ok": true,
+      "detail": "{'style': 'rgb(7, 89, 133) solid 3px', 'width': '3px', 'color': 'rgb(7, 89, 133)'}"
+    },
+    {
+      "name": "F06 undo restores the original outline style",
+      "ok": true,
+      "detail": "{'style': '', 'width': '3px'}"
+    },
+    {
+      "name": "Justin IDE mobile shell has no horizontal body overflow",
+      "ok": true,
+      "detail": "{'scroll': 390, 'width': 390, 'body': 390}"
+    },
+    {
+      "name": "Justin IDE route has no uncaught browser errors",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "prior exact-pin HH reproducible session imports after Justin IDE build",
+      "ok": true,
+      "detail": "Reproducible definitions loaded into the same owning kernel; no invocation performed"
+    },
+    {
+      "name": "old HH session remains inspectable without auto-run",
+      "ok": true,
+      "detail": "Actual invocation evidence appears here"
+    },
+    {
+      "name": "HH import after audit build has no uncaught browser errors",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "dependency-derived changed HH compatibility pin rejects old session",
+      "ok": true,
+      "detail": "{'pin': '67b29207895a8419b4959017a368fe05c97dfaa48b6202a7ef3f7649a7f0ca58', 'status': 'Session rejected: Session requires this exact project pin'}"
+    },
+    {
+      "name": "changed-pin rejection leaves fresh definitions and invocation untouched",
+      "ok": true,
+      "detail": "{'definitions': 'Define a composed Calculation, then reuse it here', 'output': 'Actual invocation evidence appears here'}"
+    },
+    {
+      "name": "changed-pin rejection has no uncaught browser errors",
+      "ok": true,
+      "detail": "[]"
+    }
+  ],
+  "pageErrors": [],
+  "justinDigest": "05a005cb29e5d7b41d515a0d9d844f9512482a6ad7540e52d4d911c2492967e3",
+  "prototypeExport": "/workspace/scratch/acdc354f2dcd/composed-workbench/exp/adversarial/evidence/justin-prototype.json",
+  "sessionFile": "/workspace/scratch/acdc354f2dcd/composed-workbench/exp/adversarial/evidence/reproducible-session.json"
+}

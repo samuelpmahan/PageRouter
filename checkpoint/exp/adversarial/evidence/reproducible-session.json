@@ -1,0 +1,621 @@
+{
+  "schema": "composed-workbench-session@1",
+  "projectPin": "48b928f941454ec62d2191ec6caa77399a2c37e6bbc2d9af82acdab015d7e6d9",
+  "implementationPin": "af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492",
+  "hhSession": {
+    "format": "hh-workbench-session",
+    "version": 1,
+    "definitions": [
+      {
+        "id": "countiesForStateQA",
+        "version": 1,
+        "active": false,
+        "plan": {
+          "name": "countiesForStateQA",
+          "stopOnFailure": true,
+          "stages": [
+            {
+              "id": "states",
+              "operation": "school.states",
+              "inputs": {}
+            },
+            {
+              "id": "counties",
+              "operation": "school.counties",
+              "inputs": {
+                "state": {
+                  "$input": "state"
+                }
+              }
+            }
+          ]
+        },
+        "inputSchema": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "state": {
+              "type": "string"
+            }
+          },
+          "example": {}
+        },
+        "outputs": [
+          {
+            "path": "outcomes.1.result.data.values",
+            "type": "array",
+            "source": "declared-interface"
+          },
+          {
+            "path": "outcomes.1.result.data.values.0",
+            "type": "string",
+            "source": "declared-interface"
+          }
+        ],
+        "sourceGraph": {
+          "format": "pxcube-composition-graph/1",
+          "id": "countiesForStateQA",
+          "version": 1,
+          "name": "countiesForStateQA",
+          "nodes": [
+            {
+              "id": "states",
+              "operation": "school.states",
+              "inputs": {},
+              "outputs": [
+                {
+                  "path": "data.values",
+                  "type": "array",
+                  "source": "declared-contract"
+                },
+                {
+                  "path": "data.values.0",
+                  "type": "string",
+                  "source": "declared-contract"
+                }
+              ]
+            },
+            {
+              "id": "counties",
+              "operation": "school.counties",
+              "inputs": {
+                "state": {
+                  "$input": "state"
+                }
+              },
+              "outputs": [
+                {
+                  "path": "data.values",
+                  "type": "array",
+                  "source": "declared-contract"
+                },
+                {
+                  "path": "data.values.0",
+                  "type": "string",
+                  "source": "declared-contract"
+                }
+              ]
+            }
+          ],
+          "bindings": [
+            {
+              "stageId": "counties",
+              "location": [
+                "state"
+              ],
+              "kind": "parameter",
+              "path": "state"
+            }
+          ],
+          "parameters": {
+            "type": "object",
+            "required": [],
+            "properties": {
+              "state": {
+                "type": "string"
+              }
+            },
+            "example": {}
+          },
+          "interface": {
+            "inputs": {
+              "type": "object",
+              "required": [],
+              "properties": {
+                "state": {
+                  "type": "string"
+                }
+              },
+              "example": {}
+            },
+            "outputs": [
+              {
+                "path": "outcomes.1.result.data.values",
+                "type": "array",
+                "source": "declared-interface"
+              },
+              {
+                "path": "outcomes.1.result.data.values.0",
+                "type": "string",
+                "source": "declared-interface"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "countiesForStateQA",
+        "version": 2,
+        "active": true,
+        "plan": {
+          "name": "countiesForStateQA",
+          "stopOnFailure": true,
+          "stages": [
+            {
+              "id": "states",
+              "operation": "school.states",
+              "inputs": {}
+            },
+            {
+              "id": "counties",
+              "operation": "school.counties",
+              "inputs": {
+                "state": {
+                  "$ref": "states.data.values.0"
+                }
+              }
+            }
+          ]
+        },
+        "inputSchema": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "state": {
+              "type": "string"
+            }
+          },
+          "example": {}
+        },
+        "outputs": [
+          {
+            "path": "outcomes.1.result.data.values",
+            "type": "array",
+            "source": "declared-interface"
+          },
+          {
+            "path": "outcomes.1.result.data.values.0",
+            "type": "string",
+            "source": "declared-interface"
+          }
+        ],
+        "sourceGraph": {
+          "format": "pxcube-composition-graph/1",
+          "id": "countiesForStateQA",
+          "version": 2,
+          "name": "countiesForStateQA",
+          "nodes": [
+            {
+              "id": "states",
+              "operation": "school.states",
+              "inputs": {},
+              "outputs": [
+                {
+                  "path": "data.values",
+                  "type": "array",
+                  "source": "declared-contract"
+                },
+                {
+                  "path": "data.values.0",
+                  "type": "string",
+                  "source": "declared-contract"
+                }
+              ]
+            },
+            {
+              "id": "counties",
+              "operation": "school.counties",
+              "inputs": {
+                "state": {
+                  "$ref": "states.data.values.0"
+                }
+              },
+              "outputs": [
+                {
+                  "path": "data.values",
+                  "type": "array",
+                  "source": "declared-contract"
+                },
+                {
+                  "path": "data.values.0",
+                  "type": "string",
+                  "source": "declared-contract"
+                }
+              ]
+            }
+          ],
+          "bindings": [
+            {
+              "stageId": "counties",
+              "location": [
+                "state"
+              ],
+              "kind": "connection",
+              "path": "states.data.values.0"
+            }
+          ],
+          "parameters": {
+            "type": "object",
+            "required": [],
+            "properties": {
+              "state": {
+                "type": "string"
+              }
+            },
+            "example": {}
+          },
+          "interface": {
+            "inputs": {
+              "type": "object",
+              "required": [],
+              "properties": {
+                "state": {
+                  "type": "string"
+                }
+              },
+              "example": {}
+            },
+            "outputs": [
+              {
+                "path": "outcomes.1.result.data.values",
+                "type": "array",
+                "source": "declared-interface"
+              },
+              {
+                "path": "outcomes.1.result.data.values.0",
+                "type": "string",
+                "source": "declared-interface"
+              }
+            ]
+          }
+        }
+      },
+      {
+        "id": "countiesForStateQALarger",
+        "version": 1,
+        "active": true,
+        "plan": {
+          "name": "countiesForStateQALarger",
+          "stopOnFailure": true,
+          "stages": [
+            {
+              "id": "states",
+              "operation": "school.states",
+              "inputs": {}
+            },
+            {
+              "id": "counties",
+              "operation": "school.counties",
+              "inputs": {
+                "state": {
+                  "$ref": "states.data.values.0"
+                }
+              }
+            },
+            {
+              "id": "reuse3",
+              "operation": "calculation.countiesForStateQA@2",
+              "inputs": {
+                "state": {
+                  "$ref": "states.data.values.0"
+                }
+              }
+            }
+          ]
+        },
+        "inputSchema": {
+          "type": "object",
+          "required": [],
+          "properties": {
+            "state": {
+              "type": "string"
+            }
+          },
+          "example": {}
+        },
+        "outputs": [
+          {
+            "path": "outcomes.2.result.outcomes.1.result.data.values",
+            "type": "array",
+            "source": "declared-interface"
+          },
+          {
+            "path": "outcomes.2.result.outcomes.1.result.data.values.0",
+            "type": "string",
+            "source": "declared-interface"
+          }
+        ],
+        "sourceGraph": {
+          "format": "pxcube-composition-graph/1",
+          "id": "countiesForStateQALarger",
+          "version": 1,
+          "name": "countiesForStateQALarger",
+          "nodes": [
+            {
+              "id": "states",
+              "operation": "school.states",
+              "inputs": {},
+              "outputs": [
+                {
+                  "path": "data.values",
+                  "type": "array",
+                  "source": "declared-contract"
+                },
+                {
+                  "path": "data.values.0",
+                  "type": "string",
+                  "source": "declared-contract"
+                }
+              ]
+            },
+            {
+              "id": "counties",
+              "operation": "school.counties",
+              "inputs": {
+                "state": {
+                  "$ref": "states.data.values.0"
+                }
+              },
+              "outputs": [
+                {
+                  "path": "data.values",
+                  "type": "array",
+                  "source": "declared-contract"
+                },
+                {
+                  "path": "data.values.0",
+                  "type": "string",
+                  "source": "declared-contract"
+                }
+              ]
+            },
+            {
+              "id": "reuse3",
+              "operation": "calculation.countiesForStateQA@2",
+              "inputs": {
+                "state": {
+                  "$ref": "states.data.values.0"
+                }
+              },
+              "outputs": [
+                {
+                  "path": "outcomes.1.result.data.values",
+                  "type": "array",
+                  "source": "declared-interface"
+                },
+                {
+                  "path": "outcomes.1.result.data.values.0",
+                  "type": "string",
+                  "source": "declared-interface"
+                }
+              ]
+            }
+          ],
+          "bindings": [
+            {
+              "stageId": "counties",
+              "location": [
+                "state"
+              ],
+              "kind": "connection",
+              "path": "states.data.values.0"
+            },
+            {
+              "stageId": "reuse3",
+              "location": [
+                "state"
+              ],
+              "kind": "connection",
+              "path": "states.data.values.0"
+            }
+          ],
+          "parameters": {
+            "type": "object",
+            "required": [],
+            "properties": {
+              "state": {
+                "type": "string"
+              }
+            },
+            "example": {}
+          },
+          "interface": {
+            "inputs": {
+              "type": "object",
+              "required": [],
+              "properties": {
+                "state": {
+                  "type": "string"
+                }
+              },
+              "example": {}
+            },
+            "outputs": [
+              {
+                "path": "outcomes.2.result.outcomes.1.result.data.values",
+                "type": "array",
+                "source": "declared-interface"
+              },
+              {
+                "path": "outcomes.2.result.outcomes.1.result.data.values.0",
+                "type": "string",
+                "source": "declared-interface"
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "graph": {
+    "implementationPins": {
+      "hh": "48b928f941454ec62d2191ec6caa77399a2c37e6bbc2d9af82acdab015d7e6d9",
+      "workbench": "af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492"
+    },
+    "nodes": [
+      {
+        "id": "states",
+        "calculation": "school.states",
+        "calculationVersion": null,
+        "implementationPart": "hh.service.SchoolData.getStates",
+        "parameters": {},
+        "bindings": {},
+        "inputPorts": [],
+        "outputPorts": [
+          {
+            "path": "data.values",
+            "type": "array",
+            "source": "declared-contract"
+          },
+          {
+            "path": "data.values.0",
+            "type": "string",
+            "source": "declared-contract"
+          }
+        ]
+      },
+      {
+        "id": "counties",
+        "calculation": "school.counties",
+        "calculationVersion": null,
+        "implementationPart": "hh.service.SchoolData.getCounties",
+        "parameters": {},
+        "bindings": {
+          "state": {
+            "$ref": "states.data.values.0"
+          }
+        },
+        "inputPorts": [
+          {
+            "name": "state",
+            "type": "string"
+          }
+        ],
+        "outputPorts": [
+          {
+            "path": "data.values",
+            "type": "array",
+            "source": "declared-contract"
+          },
+          {
+            "path": "data.values.0",
+            "type": "string",
+            "source": "declared-contract"
+          }
+        ]
+      },
+      {
+        "id": "reuse3",
+        "calculation": "calculation.countiesForStateQA@2",
+        "calculationVersion": 2,
+        "implementationPart": "hh.workbench.defined.countiesForStateQA.v2.calculation",
+        "parameters": {},
+        "bindings": {
+          "state": {
+            "$ref": "states.data.values.0"
+          }
+        },
+        "inputPorts": [
+          {
+            "name": "state",
+            "type": "string"
+          }
+        ],
+        "outputPorts": [
+          {
+            "path": "outcomes.1.result.data.values",
+            "type": "array",
+            "source": "declared-interface"
+          },
+          {
+            "path": "outcomes.1.result.data.values.0",
+            "type": "string",
+            "source": "declared-interface"
+          }
+        ]
+      }
+    ],
+    "interface": {
+      "inputs": {
+        "state": {
+          "type": "string",
+          "default": "Demo California"
+        }
+      }
+    },
+    "definition": {
+      "name": "countiesForStateQALarger",
+      "stopOnFailure": true,
+      "stages": [
+        {
+          "id": "states",
+          "operation": "school.states",
+          "inputs": {}
+        },
+        {
+          "id": "counties",
+          "operation": "school.counties",
+          "inputs": {
+            "state": {
+              "$ref": "states.data.values.0"
+            }
+          }
+        },
+        {
+          "id": "reuse3",
+          "operation": "calculation.countiesForStateQA@2",
+          "inputs": {
+            "state": {
+              "$ref": "states.data.values.0"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "editor": {
+    "id": "countiesForStateQALarger",
+    "plan": {
+      "name": "countiesForStateQALarger",
+      "stopOnFailure": true,
+      "stages": [
+        {
+          "id": "states",
+          "operation": "school.states",
+          "inputs": {}
+        },
+        {
+          "id": "counties",
+          "operation": "school.counties",
+          "inputs": {
+            "state": {
+              "$ref": "states.data.values.0"
+            }
+          }
+        },
+        {
+          "id": "reuse3",
+          "operation": "calculation.countiesForStateQA@2",
+          "inputs": {
+            "state": {
+              "$ref": "states.data.values.0"
+            }
+          }
+        }
+      ]
+    },
+    "inputs": {
+      "state": "Demo California"
+    }
+  }
+}

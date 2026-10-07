@@ -1,0 +1,154 @@
+{
+  "baseUrl": "http://127.0.0.1:44663/",
+  "checks": [
+    {
+      "name": "define operation creates named Calculation Part",
+      "ok": true,
+      "detail": "Defined countiesForStateQA as actual Calculation Part hh.workbench.defined.countiesForStateQA.v1.calculation. It can now be invoked or wired into a larger composition."
+    },
+    {
+      "name": "defined Calculation appears as reusable node",
+      "ok": true,
+      "detail": "countiesForStateQA\nhh.workbench.defined.countiesForStateQA.v1.calculation\nWire into larger composition\nSelect for invocation"
+    },
+    {
+      "name": "caller input runs actual function Part",
+      "ok": true,
+      "detail": "{\"ok\": true, \"result\": {\"name\": \"countiesForStateQA\", \"outcomes\": [{\"id\": \"states\", \"operation\": \"school.states\", \"port\": \"SchoolData.getStates\", \"ok\": true, \"result\": {\"ok\": true, \"port\": \"SchoolData.getStates\", \"mode\": \"fixture\", \"fixture\": true, \"outcome\": \"loaded\", \"data\": {\"values\": [\"Demo California\", \"Demo Washington\"]}, \"message\": \"\"}, \"value\": {\"values\": [\"Demo California\", \"Demo Washington\"]}, \"part\": {\"value\": {\"ok\": true, \"port\": \"SchoolData.getStates\", \"mode\": \"fixture\", \"fixture\": "
+    },
+    {
+      "name": "edited caller state changes calculated service result",
+      "ok": true,
+      "detail": "{\"ok\": true, \"result\": {\"name\": \"countiesForStateQA\", \"outcomes\": [{\"id\": \"states\", \"operation\": \"school.states\", \"port\": \"SchoolData.getStates\", \"ok\": true, \"result\": {\"ok\": true, \"port\": \"SchoolData.getStates\", \"mode\": \"fixture\", \"fixture\": true, \"outcome\": \"loaded\", \"data\": {\"values\": [\"Demo California\", \"Demo Washington\"]}, \"message\": \"\"}, \"value\": {\"values\": [\"Demo California\", \"Demo Washington\"]}, \"part\": {\"value\": {\"ok\": true, \"port\": \"SchoolData.getStates\", \"mode\": \"fixture\", \"fixture\": "
+    },
+    {
+      "name": "compatible typed output is offered as a wire option",
+      "ok": true,
+      "detail": "['Parameter value', 'Caller input port', 'states \u2192 data.values.0 \u00b7 string']"
+    },
+    {
+      "name": "visible output wire disables its literal parameter",
+      "ok": true,
+      "detail": "Connected compatible output \u2192 input"
+    },
+    {
+      "name": "wired source output drives the next input",
+      "ok": true,
+      "detail": "{\"ok\": true, \"result\": {\"name\": \"countiesForStateQA\", \"outcomes\": [{\"id\": \"states\", \"operation\": \"school.states\", \"port\": \"SchoolData.getStates\", \"ok\": true, \"result\": {\"ok\": true, \"port\": \"SchoolData.getStates\", \"mode\": \"fixture\", \"fixture\": true, \"outcome\": \"loaded\", \"data\": {\"values\": [\"Demo California\", \"Demo Washington\"]}, \"message\": \"\"}, \"value\": {\"values\": [\"Demo California\", \"Demo Washington\"]}, \"part\": {\"value\": {\"ok\": true, \"port\": \"SchoolData.getStates\", \"mode\": \"fixture\", \"fixture\": "
+    },
+    {
+      "name": "named Calculation is inserted as third graph node",
+      "ok": true,
+      "detail": "['school.states', 'school.counties', 'calculation.countiesForStateQA']"
+    },
+    {
+      "name": "nested node offers a compatible prior output wire",
+      "ok": true,
+      "detail": "['Parameter value', 'Caller input port', 'states \u2192 data.values.0 \u00b7 string', 'counties \u2192 data.values.0 \u00b7 string']"
+    },
+    {
+      "name": "nested graph runs and reuses exact pinned Calculation",
+      "ok": true,
+      "detail": "{'nestedOperation': 'calculation.countiesForStateQA@2', 'nestedOK': True, 'nestedCountyValues': ['Demo Alameda'], 'source': ''}"
+    },
+    {
+      "name": "real Calculation and service receipt evidence is inspectable",
+      "ok": true,
+      "detail": "{'status': 'produced', 'into': 'hh.workbench.calculation-call.4.result'}"
+    },
+    {
+      "name": "discover/inspect exposes the nested real function Part",
+      "ok": true,
+      "detail": "{'address': 'hh.workbench.defined.countiesForStateQALarger.v1.calculation', 'kind': 'definedCalculationPart', 'value': {'kind': 'functionPartValue', 'executable': True}, 'composition': None, 'receipt': None, 'calculation': {'id': 'countiesForStateQALarger', 'version': 1, 'operation': 'calculation.countiesForStateQALarger', 'active': True}}"
+    },
+    {
+      "name": "actual graph result Part is discoverable in the same PxC",
+      "ok": true,
+      "detail": "hh.workbench.calculation-call.4.result"
+    },
+    {
+      "name": "result inspection carries produced receipt and nested value",
+      "ok": true,
+      "detail": "{'receipt': {'status': 'produced', 'into': 'hh.workbench.calculation-call.4.result', 'inputNames': ['request']}, 'address': 'hh.workbench.calculation-call.4.result'}"
+    },
+    {
+      "name": "saved session carries both exact project and implementation pins",
+      "ok": true,
+      "detail": "{'projectPin': '48b928f941454ec62d2191ec6caa77399a2c37e6bbc2d9af82acdab015d7e6d9', 'implementationPin': 'af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492', 'footerPin': '48b928f941454ec62d2191ec6caa77399a2c37e6bbc2d9af82acdab015d7e6d9'}"
+    },
+    {
+      "name": "graph export separates node params, typed ports and bindings",
+      "ok": true,
+      "detail": "[{'id': 'states', 'calculation': 'school.states', 'calculationVersion': None, 'implementationPart': 'hh.service.SchoolData.getStates', 'parameters': {}, 'bindings': {}, 'inputPorts': [], 'outputPorts': [{'path': 'data.values', 'type': 'array', 'source': 'declared-contract'}, {'path': 'data.values.0', 'type': 'string', 'source': 'declared-contract'}]}, {'id': 'counties', 'calculation': 'school.counties', 'calculationVersion': None, 'implementationPart': 'hh.service.SchoolData.getCounties', 'parameters': {}, 'bindings': {'state': {'$ref': 'states.data.values.0'}}, 'inputPorts': [{'name': 'state', 'type': 'string'}], 'outputPorts': [{'path': 'data.values', 'type': 'array', 'source': 'declared-contract'}, {'path': 'data.values.0', 'type': 'string', 'source': 'declared-contract'}]}, {'id': 'reuse3', 'calculation': 'calculation.countiesForStateQA@2', 'calculationVersion': 2, 'implementationPart': 'hh.workbench.defined.countiesForStateQA.v2.calculation', 'parameters': {}, 'bindings': {'state': {'$ref': 'states.data.values.0'}}, 'inputPorts': [{'name': 'state', 'type': 'string'}], 'outputPorts': [{'path': 'outcomes.1.result.data.values', 'type': 'array', 'source': 'declared-interface'}, {'path': 'outcomes.1.result.data.values.0', 'type': 'string', 'source': 'declared-interface'}]}]"
+    },
+    {
+      "name": "graph interface remains distinct and typed",
+      "ok": true,
+      "detail": "{'inputs': {'state': {'type': 'string', 'default': 'Demo California'}}}"
+    },
+    {
+      "name": "nested Calculation export pins exact version",
+      "ok": true,
+      "detail": "[{'id': 'states', 'calculation': 'school.states', 'calculationVersion': None, 'implementationPart': 'hh.service.SchoolData.getStates', 'parameters': {}, 'bindings': {}, 'inputPorts': [], 'outputPorts': [{'path': 'data.values', 'type': 'array', 'source': 'declared-contract'}, {'path': 'data.values.0', 'type': 'string', 'source': 'declared-contract'}]}, {'id': 'counties', 'calculation': 'school.counties', 'calculationVersion': None, 'implementationPart': 'hh.service.SchoolData.getCounties', 'parameters': {}, 'bindings': {'state': {'$ref': 'states.data.values.0'}}, 'inputPorts': [{'name': 'state', 'type': 'string'}], 'outputPorts': [{'path': 'data.values', 'type': 'array', 'source': 'declared-contract'}, {'path': 'data.values.0', 'type': 'string', 'source': 'declared-contract'}]}, {'id': 'reuse3', 'calculation': 'calculation.countiesForStateQA@2', 'calculationVersion': 2, 'implementationPart': 'hh.workbench.defined.countiesForStateQA.v2.calculation', 'parameters': {}, 'bindings': {'state': {'$ref': 'states.data.values.0'}}, 'inputPorts': [{'name': 'state', 'type': 'string'}], 'outputPorts': [{'path': 'outcomes.1.result.data.values', 'type': 'array', 'source': 'declared-interface'}, {'path': 'outcomes.1.result.data.values.0', 'type': 'string', 'source': 'declared-interface'}]}]"
+    },
+    {
+      "name": "stable run/edit history avoids redundant Calculation versions",
+      "ok": true,
+      "detail": "[('countiesForStateQA', 1, False), ('countiesForStateQA', 2, True), ('countiesForStateQALarger', 1, True)]"
+    },
+    {
+      "name": "editor state preserves normalized stop-on-failure setting",
+      "ok": true,
+      "detail": "{'name': 'countiesForStateQALarger', 'stopOnFailure': True, 'stages': [{'id': 'states', 'operation': 'school.states', 'inputs': {}}, {'id': 'counties', 'operation': 'school.counties', 'inputs': {'state': {'$ref': 'states.data.values.0'}}}, {'id': 'reuse3', 'operation': 'calculation.countiesForStateQA@2', 'inputs': {'state': {'$ref': 'states.data.values.0'}}}]}"
+    },
+    {
+      "name": "session source contains no receipt or executable source payload",
+      "ok": true,
+      "detail": "['schema', 'projectPin', 'implementationPin', 'hhSession', 'graph', 'editor']"
+    },
+    {
+      "name": "fresh tab starts without prior REPL definitions",
+      "ok": true,
+      "detail": "Define a composed Calculation, then reuse it here"
+    },
+    {
+      "name": "exact-pin session reload restores definitions/editor",
+      "ok": true,
+      "detail": "Reproducible definitions loaded into the same owning kernel; no invocation performed"
+    },
+    {
+      "name": "session import does not auto-run",
+      "ok": true,
+      "detail": "Actual invocation evidence appears here"
+    },
+    {
+      "name": "explicit invocation after reload produces expected result",
+      "ok": true,
+      "detail": "{\"ok\": true, \"result\": {\"name\": \"countiesForStateQALarger\", \"outcomes\": [{\"id\": \"states\", \"operation\": \"school.states\", \"port\": \"SchoolData.getStates\", \"ok\": true, \"result\": {\"ok\": true, \"port\": \"SchoolData.getStates\", \"mode\": \"fixture\", \"fixture\": true, \"outcome\": \"loaded\", \"data\": {\"values\": [\"Demo California\", \"Demo Washington\"]}, \"message\": \"\"}, \"value\": {\"values\": [\"Demo California\", \"Demo Washington\"]}, \"part\": {\"value\": {\"ok\": true, \"port\": \"SchoolData.getStates\", \"mode\": \"fixture\", \"fixture\": true, \"outcome\": \"loaded\", \"data\": {\"values\": [\"Demo California\", \"Demo Washington\"]}, \"message\": \"\"}}, \"receipt\": {\"status\": \"produced\", \"into\": \"hh.result.1\", \"composition\": {\"calculation\": {}, \"inputs\": {\"request\": {\"value\": {}}}}, \"output\": {\"value\": {\"ok\": true, \"port\": \"SchoolData.getSta"
+    },
+    {
+      "name": "reopen run retains imported definition versions without silent replacement",
+      "ok": true,
+      "detail": "{'before': ['hh.workbench.defined.countiesForStateQA.v2.calculation', 'hh.workbench.defined.countiesForStateQALarger.v1.calculation'], 'after': ['hh.workbench.defined.countiesForStateQA.v2.calculation', 'hh.workbench.defined.countiesForStateQALarger.v1.calculation']}"
+    },
+    {
+      "name": "wrong project pin rejects without changing active editor",
+      "ok": true,
+      "detail": "Session rejected: Session requires this exact project pin"
+    },
+    {
+      "name": "cyclic nested session rejects atomically",
+      "ok": true,
+      "detail": "Session rejected: Calculation dependency cycle detected at cycleQA@1."
+    },
+    {
+      "name": "no uncaught browser errors",
+      "ok": true,
+      "detail": "[]"
+    }
+  ],
+  "pageErrors": [],
+  "projectPin": "48b928f941454ec62d2191ec6caa77399a2c37e6bbc2d9af82acdab015d7e6d9",
+  "implementationPin": "af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492",
+  "sessionFile": "/workspace/scratch/acdc354f2dcd/composed-workbench/exp/adversarial/evidence/reproducible-session.json"
+}

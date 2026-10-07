@@ -1,0 +1,125 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>neat report</title><style>
+    :root{font:15px/1.45 system-ui,sans-serif;color:#202124;background:#f6f7f9}body{max-width:1180px;margin:0 auto;padding:28px}h1{margin:0 0 18px}.tabs{display:flex;gap:8px;border-bottom:1px solid #ccd1d9;margin-bottom:18px}.tab{border:0;background:none;padding:10px 15px;cursor:pointer;font:inherit}.tab[aria-selected=true]{border-bottom:3px solid #3458d4;color:#193aab;font-weight:700}.tab-panel{display:none}.tab-panel.active{display:block}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}.card{background:white;border:1px solid #d9dde5;border-radius:10px;padding:16px;box-shadow:0 2px 7px #17233b12}.card-head{display:flex;justify-content:space-between;gap:10px}.card h3{margin:0}.card h3 small{font-size:.7em;font-weight:500;color:#5a6474}.activity{font-size:.8em;color:#596579}.target{font-size:.9em}.statuses{display:flex;gap:8px;flex-wrap:wrap}.status{font-size:.8em;border-radius:999px;padding:3px 8px;background:#eef0f4}.status.yes{background:#dff4e5;color:#155a2a}.evidence{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;font-size:.85em}.refs{margin:3px 0;padding-left:18px}.muted{color:#697386}.blockers{color:#9b2c2c;font-size:.88em}.matrix{width:100%;border-collapse:collapse;background:white}.matrix th,.matrix td{border:1px solid #d9dde5;padding:12px;text-align:left;vertical-align:top}.matrix td{min-width:180px}.matrix td span,.matrix td small{display:block}.matrix td small{margin-top:7px;color:#657084;font-size:.78em}.matrix .state-observed{background:#e6f7eb}.matrix .state-planned{background:#fff7dc}.matrix-note{padding:10px 13px;background:#eef2ff;border-left:4px solid #526dd6}.observed{font-size:.78em;margin:5px 0}.dependency-map{width:100%;min-height:210px;background:white;border:1px solid #d9dde5;border-radius:10px}.edge{stroke:#8e98a8;stroke-width:2;marker-end:url(#arrow)}.edge.blocked{stroke:#c63d3d;stroke-dasharray:5 4}.edge-label{font-size:11px;text-anchor:middle;fill:#49566a}.node rect{fill:#fff;stroke:#61708a}.node text{text-anchor:middle;font-weight:700;font-size:14px}.node .node-label{font-size:9px;font-weight:400}.legend{font-size:.88em;color:#536174}.fanout{background:white;border:1px solid #d9dde5;border-radius:8px;padding:12px 30px}
+  </style></head><body><h1>neat report</h1><nav class="tabs" role="tablist"><button class="tab" role="tab" aria-selected="true" aria-controls="tab-board" data-tab="tab-board">Board</button><button class="tab" role="tab" aria-selected="false" aria-controls="tab-matrix" data-tab="tab-matrix">Matrix</button><button class="tab" role="tab" aria-selected="false" aria-controls="tab-dependencies" data-tab="tab-dependencies">Dependencies</button></nav><section id="tab-board" class="tab-panel" role="tabpanel">
+    <div class="cards"><article class="card" data-item="PXCUBE-build-bag">
+        <div class="card-head"><h3>PXCUBE-build-bag <small>blocked</small></h3><span class="activity">review</span></div>
+        <p>Choose exact copies, arrange them, and keep a named bag.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.build-bag</code></p>
+        
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article><article class="card" data-item="PXCUBE-connect4">
+        <div class="card-head"><h3>PXCUBE-connect4 <small>blocked</small></h3><span class="activity">active</span></div>
+        <p>Run and inspect connect4 through the shared PxCube packaging program.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.connect4</code></p>
+        
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article><article class="card" data-item="PXCUBE-connect4-pxc">
+        <div class="card-head"><h3>PXCUBE-connect4-pxc <small>blocked</small></h3><span class="activity">active</span></div>
+        <p>Run and inspect connect4-pxc through the shared PxCube packaging program.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.connect4-pxc</code></p>
+        
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article><article class="card" data-item="PXCUBE-create-graphics">
+        <div class="card-head"><h3>PXCUBE-create-graphics <small>blocked</small></h3><span class="activity">review</span></div>
+        <p>Make a DiscSpotlight with real specimen Parts and the shared card renderer.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.create-graphics</code></p>
+        
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article><article class="card" data-item="PXCUBE-explore-shelf">
+        <div class="card-head"><h3>PXCUBE-explore-shelf <small>blocked</small></h3><span class="activity">review</span></div>
+        <p>Run and inspect explore-shelf through the shared PxCube packaging program.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.explore-shelf</code></p>
+        
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article><article class="card" data-item="PXCUBE-export-graphics">
+        <div class="card-head"><h3>PXCUBE-export-graphics <small>blocked</small></h3><span class="activity">review</span></div>
+        <p>Inspect a captured graphic and download the exact SVG or PNG.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.export-graphics</code></p>
+        
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article><article class="card" data-item="PXCUBE-gameboy">
+        <div class="card-head"><h3>PXCUBE-gameboy <small>blocked</small></h3><span class="activity">active</span></div>
+        <p>Run and inspect gameboy through the shared PxCube packaging program.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.gameboy</code></p>
+        
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article><article class="card" data-item="PXCUBE-hello">
+        <div class="card-head"><h3>PXCUBE-hello <small>blocked</small></h3><span class="activity">review</span></div>
+        <p>Run and inspect hello through the shared PxCube packaging program.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.hello</code></p>
+        
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article><article class="card" data-item="PXCUBE-mock-smoke">
+        <div class="card-head"><h3>PXCUBE-mock-smoke <small>blocked</small></h3><span class="activity">review</span></div>
+        <p>Run and inspect mock-smoke through the shared PxCube packaging program.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.mock-smoke</code></p>
+        
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article><article class="card" data-item="PXCUBE-on-course">
+        <div class="card-head"><h3>PXCUBE-on-course <small>blocked</small></h3><span class="activity">active</span></div>
+        <p>Run and inspect on-course through the shared PxCube packaging program.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.on-course</code></p>
+        
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article><article class="card" data-item="PXCUBE-snake">
+        <div class="card-head"><h3>PXCUBE-snake <small>blocked</small></h3><span class="activity">active</span></div>
+        <p>Run and inspect snake through the shared PxCube packaging program.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.snake</code></p>
+        
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article><article class="card" data-item="PXCUBE-upload-disc-to-shelf">
+        <div class="card-head"><h3>PXCUBE-upload-disc-to-shelf <small>blocked</small></h3><span class="activity">review</span></div>
+        <p>Run and inspect upload-disc-to-shelf through the shared PxCube packaging program.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.upload-disc-to-shelf</code></p>
+        
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article><article class="card" data-item="PXCUBE-upload-disc-to-shelf-delta">
+        <div class="card-head"><h3>PXCUBE-upload-disc-to-shelf-delta <small>blocked</small></h3><span class="activity">active</span></div>
+        <p>Run and inspect upload-disc-to-shelf-delta through the shared PxCube packaging program.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.upload-disc-to-shelf-delta</code></p>
+        
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article><article class="card" data-item="PXCUBE-upload-refinement-compare">
+        <div class="card-head"><h3>PXCUBE-upload-refinement-compare <small>blocked</small></h3><span class="activity">active</span></div>
+        <p>Compare the baseline Upload Disc to Shelf with the typed overlay delta before choosing an upload refinement.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.upload-disc-to-shelf</code></p>
+        <div class="refinement"><b>compare: incomplete</b><ul><li><code>PXCUBE-upload-disc-to-shelf</code>: reviewable</li><li><code>PXCUBE-upload-disc-to-shelf-delta</code>: incomplete</li></ul></div>
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article><article class="card" data-item="PXCUBE-your-shelf">
+        <div class="card-head"><h3>PXCUBE-your-shelf <small>blocked</small></h3><span class="activity">active</span></div>
+        <p>Run and inspect your-shelf through the shared PxCube packaging program.</p>
+        <p class="target"><b>Target:</b> <code>pcr:pcr.pxcube.your-shelf</code></p>
+        
+        <div class="statuses"><span class="status no">○ verified</span><span class="status no">○ accepted</span><span class="status no">○ promoted</span></div>
+        <div class="evidence"><div><b>Execution</b><span class="muted">none</span></div><div><b>Inspection</b><span class="muted">none</span></div></div>
+        <p class="blockers"><b>Blocked:</b> implementation/material surface availability unknown</p>
+      </article></div>
+  </section><section id="tab-matrix" class="tab-panel" role="tabpanel"><p class="empty">No mGM matrix supplied yet. This view accepts one without changing the base work-item model.</p></section><section id="tab-dependencies" class="tab-panel" role="tabpanel"><p class="legend"><b>Arrow direction:</b> prerequisite → dependent. Edge labels show required status; dashed red edges are blocked.</p><svg class="dependency-map" viewBox="0 0 920 565" aria-label="Dependency graph"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 z" fill="#8e98a8"/></marker></defs><g class="node" data-item="PXCUBE-build-bag"><title>Choose exact copies, arrange them, and keep a named bag.</title><rect x="78" y="58" width="184" height="44" rx="8"/><text x="170" y="77">PXCUBE-build-bag</text><text x="170" y="93" class="node-label">Choose exact copies, arr…</text></g><g class="node" data-item="PXCUBE-connect4-pxc"><title>Run and inspect connect4-pxc through the shared PxCube packaging program.</title><rect x="328" y="58" width="184" height="44" rx="8"/><text x="420" y="77">PXCUBE-connect4-pxc</text><text x="420" y="93" class="node-label">Run and inspect connect4…</text></g><g class="node" data-item="PXCUBE-connect4"><title>Run and inspect connect4 through the shared PxCube packaging program.</title><rect x="578" y="58" width="184" height="44" rx="8"/><text x="670" y="77">PXCUBE-connect4</text><text x="670" y="93" class="node-label">Run and inspect connect4…</text></g><g class="node" data-item="PXCUBE-create-graphics"><title>Make a DiscSpotlight with real specimen Parts and the shared card renderer.</title><rect x="78" y="163" width="184" height="44" rx="8"/><text x="170" y="182">PXCUBE-create-graphics</text><text x="170" y="198" class="node-label">Make a DiscSpotlight wit…</text></g><g class="node" data-item="PXCUBE-explore-shelf"><title>Run and inspect explore-shelf through the shared PxCube packaging program.</title><rect x="328" y="163" width="184" height="44" rx="8"/><text x="420" y="182">PXCUBE-explore-shelf</text><text x="420" y="198" class="node-label">Run and inspect explore-…</text></g><g class="node" data-item="PXCUBE-export-graphics"><title>Inspect a captured graphic and download the exact SVG or PNG.</title><rect x="578" y="163" width="184" height="44" rx="8"/><text x="670" y="182">PXCUBE-export-graphics</text><text x="670" y="198" class="node-label">Inspect a captured graph…</text></g><g class="node" data-item="PXCUBE-gameboy"><title>Run and inspect gameboy through the shared PxCube packaging program.</title><rect x="78" y="268" width="184" height="44" rx="8"/><text x="170" y="287">PXCUBE-gameboy</text><text x="170" y="303" class="node-label">Run and inspect gameboy …</text></g><g class="node" data-item="PXCUBE-hello"><title>Run and inspect hello through the shared PxCube packaging program.</title><rect x="328" y="268" width="184" height="44" rx="8"/><text x="420" y="287">PXCUBE-hello</text><text x="420" y="303" class="node-label">Run and inspect hello th…</text></g><g class="node" data-item="PXCUBE-mock-smoke"><title>Run and inspect mock-smoke through the shared PxCube packaging program.</title><rect x="578" y="268" width="184" height="44" rx="8"/><text x="670" y="287">PXCUBE-mock-smoke</text><text x="670" y="303" class="node-label">Run and inspect mock-smo…</text></g><g class="node" data-item="PXCUBE-on-course"><title>Run and inspect on-course through the shared PxCube packaging program.</title><rect x="78" y="373" width="184" height="44" rx="8"/><text x="170" y="392">PXCUBE-on-course</text><text x="170" y="408" class="node-label">Run and inspect on-cours…</text></g><g class="node" data-item="PXCUBE-snake"><title>Run and inspect snake through the shared PxCube packaging program.</title><rect x="328" y="373" width="184" height="44" rx="8"/><text x="420" y="392">PXCUBE-snake</text><text x="420" y="408" class="node-label">Run and inspect snake th…</text></g><g class="node" data-item="PXCUBE-upload-disc-to-shelf-delta"><title>Run and inspect upload-disc-to-shelf-delta through the shared PxCube packaging program.</title><rect x="578" y="373" width="184" height="44" rx="8"/><text x="670" y="392">PXCUBE-upload-disc-to-shelf-delta</text><text x="670" y="408" class="node-label">Run and inspect upload-d…</text></g><g class="node" data-item="PXCUBE-upload-disc-to-shelf"><title>Run and inspect upload-disc-to-shelf through the shared PxCube packaging program.</title><rect x="78" y="478" width="184" height="44" rx="8"/><text x="170" y="497">PXCUBE-upload-disc-to-shelf</text><text x="170" y="513" class="node-label">Run and inspect upload-d…</text></g><g class="node" data-item="PXCUBE-upload-refinement-compare"><title>Compare the baseline Upload Disc to Shelf with the typed overlay delta before choosing an upload refinement.</title><rect x="328" y="478" width="184" height="44" rx="8"/><text x="420" y="497">PXCUBE-upload-refinement-compare</text><text x="420" y="513" class="node-label">Compare the baseline Upl…</text></g><g class="node" data-item="PXCUBE-your-shelf"><title>Run and inspect your-shelf through the shared PxCube packaging program.</title><rect x="578" y="478" width="184" height="44" rx="8"/><text x="670" y="497">PXCUBE-your-shelf</text><text x="670" y="513" class="node-label">Run and inspect your-she…</text></g></svg><h3>Shared calculations</h3><p class="muted">No calculation fanout.</p></section><script>document.querySelectorAll('.tab').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('.tab').forEach(function(x){x.setAttribute('aria-selected',String(x===b));});document.querySelectorAll('.tab-panel').forEach(function(x){x.classList.toggle('active',x.id===b.dataset.tab);});});});document.getElementById('tab-board').classList.add('active');</script></body></html>

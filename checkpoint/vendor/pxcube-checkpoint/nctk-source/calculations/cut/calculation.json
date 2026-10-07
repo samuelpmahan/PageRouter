@@ -1,0 +1,8 @@
+{
+  "inputs": ["parts/source/house", "parts/probe/house"],
+  "outputs": ["parts/cut/house"],
+  "script": "calculate.mjs",
+  "runArgs": ["start", "duration"],
+  "viewArgs": [],
+  "runtime": "ffmpeg"
+}

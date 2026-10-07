@@ -1,0 +1,20 @@
+{
+  "id": "your-shelf",
+  "title": "Your Shelf",
+  "description": "Add a disc, browse your retained collection, and build the bag you are carrying today.",
+  "version": "0.1.0",
+  "track": "exp",
+  "mounts": ["studio"],
+  "entry": "index.html",
+  "outDir": "dist",
+  "build": "node build.mjs",
+  "sandbox": ["allow-scripts", "allow-same-origin", "allow-downloads", "allow-modals", "allow-forms"],
+  "studio": {
+    "mode": "your-shelf",
+    "sourceCommit": "6f7937bc1eebd22bf3135f50c9edf714b122902a",
+    "integration": "One responsive Studio journey exposing collection browsing, add/import, and live Parts inspection with mount-scoped retained state.",
+    "interactive": "mock.your-shelf.*",
+    "tests": "mock.your-shelf.<iterator>.*"
+  },
+  "storage": "Only mount-scoped local storage. Trusted same-origin code; not a security boundary."
+}

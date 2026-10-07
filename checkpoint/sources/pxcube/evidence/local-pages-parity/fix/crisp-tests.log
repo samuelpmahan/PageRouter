@@ -1,0 +1,44 @@
+ok   scaffold/exit 0
+ok   scaffold/writes experience.json
+ok   scaffold/writes src/index.html
+ok   scaffold/writes build.mjs
+ok   scaffold/manifest has title and mounts
+ok   scaffold/manifest records tidy pointer
+ok   scaffold/manifest has build contract
+ok   scaffold/refuses non-empty dir
+ok   scaffold/stderr says refusing
+ok   scaffold+package/scaffold exit 0
+ok   scaffold+package/package exit 0
+ok   hello/package exit 0
+ok   hello/receipt written
+ok   hello/snapshot written
+ok   hello/receipt app title
+ok   hello/receipt has content-addressed chunks
+ok   hello/receipt wires entry chunk
+ok   hello/receipt usedMounts has shelf
+ok   hello/receipt validation clean
+ok   hello/chunk hashes match built bytes
+ok   hello/entry chunk wires to entry path
+ok   hello/manifest untouched by package (no freeze)
+ok   hello/manifest carries no chunk hashes
+ok   verify/package exit 0
+ok   verify/clean chunks exit 0
+ok   verify/reports chunk count
+ok   verify/tampered chunk exit 1
+ok   verify/names the bad chunk
+ok   hello/check exit 0
+ok   hello/check reports mounts
+ok   broken/package exit 2
+ok   broken/stderr names build failure
+ok   sneaky/package exit 1
+ok   sneaky/stderr names undeclared mount
+ok   sneaky/stderr names file and line
+ok   leaky/package exit 1
+ok   leaky/stderr names persisted prefix
+ok   unknown-world/package exit 1
+ok   unknown-world/stderr names unknown mount
+ok   repack/first package exit 0
+ok   repack/second package exit 0 (no drift gate)
+ok   repack/edited chunk gets a new hash
+
+42 passed, 0 failed

@@ -1,0 +1,26 @@
+{
+  "schema": "nctk-directory@1",
+  "address": "calculations/composite-discstudio",
+  "children": [],
+  "kind": "calculation",
+  "source": "calculations/composite-discstudio/calculation.json",
+  "policies": {
+    "neat": {
+      "mode": "none"
+    },
+    "crisp": {
+      "mode": "local"
+    },
+    "tidy": {
+      "mode": "local"
+    },
+    "kompoze": {
+      "mode": "local",
+      "references": [
+        "parts/positioned/discstudio",
+        "parts/source/discstudio-background",
+        "parts/composite/discstudio"
+      ]
+    }
+  }
+}

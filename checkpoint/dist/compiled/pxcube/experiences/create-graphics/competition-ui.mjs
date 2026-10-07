@@ -1,0 +1,43 @@
+import { esc } from './renderer/src/presentation.js';
+import { allCardStudies, defaultStudy } from './graphics.mjs';
+import { competitionAppearance } from './competition.mjs';
+
+// DOM controls author one state; the model produces its Parts and graphic.
+export async function drawCompetition({model,run,say,preview,bindPreview,publish,redraw}) {
+  const $=id=>document.getElementById(id),context=model.context,rows=await model.shelfForDisplay();
+  const material=context.competitionAddress?model.value(context.competitionAddress):null;
+  const option=row=>`${row.seed.name} · ${row.disc.plastic} · ${row.disc.weight} g`;
+  const choose=()=>{
+    $('lineup-choices').innerHTML=rows.map(row=>`<label class="lineup-choice"><input type="checkbox" value="${esc(row.address)}" ${material?.entries.some(e=>e.address===row.address)?'checked':''}><img src="${esc(row.art)}" alt=""><span>${esc(option(row))}</span></label>`).join('');
+    $('lineup-dialog').showModal();
+    $('lineup-form').onsubmit=event=>{event.preventDefault();const selection=[...$('lineup-choices').querySelectorAll('input:checked')].map(input=>input.value);run(async()=>{await model.startCompetition(selection);$('lineup-dialog').close();await redraw();say('Lineup ready. Set the first image, then queue it.');});};
+  };
+  if(!material){
+    $('competition-body').innerHTML=`<section class="panel competition-start"><h2>Build the first image.</h2><p>Pick the discs. Set the turn, points, sizes, and colors. Queue the image when it is ready, then make the next one.</p><button id="choose-lineup" class="primary">Choose 2–4 discs</button></section>`;
+    $('choose-lineup').onclick=choose;return;
+  }
+  const state=material.states[0],design=context.design,result=await model.renderCompetition();
+  const queued=context.graphics.filter(address=>model.value(address).competition);
+  const appearances=Object.fromEntries(material.entries.map(e=>[e.id,competitionAppearance({design,material,entryId:e.id})]));
+  $('competition-body').innerHTML=`<div class="workspace competition-workspace"><aside class="panel"><h2>Your lineup</h2><button id="choose-lineup" class="full">Choose discs / start another</button><label>Card composition<select id="competition-study">${allCardStudies.filter(s=>s.composition||s.id===design.study).map(study=>`<option value="${study.id}" ${study.id===(design.study??defaultStudy)?'selected':''}>${esc(study.name)}</option>`).join('')}</select></label><label>Whose turn?<select id="competition-turn"><option value="">Show the lineup</option>${material.entries.map(e=>`<option value="${e.id}" ${state.highlight===e.id?'selected':''}>${esc(e.name)}</option>`).join('')}</select></label><button id="next-turn" class="full">Next disc’s turn →</button><div class="controls"><button id="auto-size">Emphasize turn</button><button id="equal-size">Equal sizes</button></div><p class="caption">Emphasize turn grows the active disc and shrinks the others. Manual size and color stay yours until you reset them.</p><label>Corner<select id="competition-corner">${['bottom-left','bottom-right','top-left','top-right'].map(v=>`<option value="${v}" ${v===design.placement?'selected':''}>${v.replace('-',' ')}</option>`).join('')}</select></label></aside><section class="competition-stage"><div class="live-label"><span class="eyebrow">CURRENT IMAGE</span><strong>${esc(material.entries.find(e=>e.id===state.highlight)?.name??'Lineup')}${state.highlight?'’s turn':''}</strong></div>${preview(result.graphic)}<div class="queue-action"><span>${queued.length} image${queued.length===1?'':'s'} queued</span><button id="queue-image" class="primary">Queue this image →</button></div><p class="caption">${result.graphic.width} × ${result.graphic.height} · ${design.frame==='none'?'transparent overlay':'filled canvas'}. The photo will not export.</p></section><aside class="panel"><h2>Points & emphasis</h2><p class="caption">Enter the points you want on this image.</p>${material.entries.map(e=>{
+    const a=appearances[e.id];
+    return `<section class="entry-edit ${state.highlight===e.id?'is-turn':''}"><h3>${esc(e.name)}${state.highlight===e.id?' <small>· up now</small>':''}</h3><small>${esc(option(rows.find(row=>row.address===e.address)).slice(e.name.length+3))}</small><div class="points-edit"><button data-point-delta="-1" data-entry="${e.id}" aria-label="Subtract a point from ${esc(e.name)}">−</button><label>Points<input data-points="${e.id}" type="number" min="-9999" max="9999" step="any" value="${state.scores[e.id]}"></label><button data-point-delta="1" data-entry="${e.id}" aria-label="Add a point to ${esc(e.name)}">+</button></div><label>Size · ${Math.round(a.scale*100)}%<input data-size="${e.id}" type="range" min="45" max="150" step="5" value="${Math.round(a.scale*100)}"></label><label>Accent<input data-color="${e.id}" type="color" value="${a.design.accent}"></label></section>`;
+  }).join('')}</aside></div><section class="image-queue"><div class="controls"><h2>Queued images · ${queued.length}</h2><span class="muted">Open ExportGraphics to download each one.</span></div><div class="queue-grid">${queued.map((address,i)=>{const c=model.value(address);return `<article class="queued-image"><button data-review-image="${esc(address)}"><img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(c.graphic.svg)}" alt="Queued image ${i+1}: ${esc(c.title)}"><strong>${i+1}. ${esc(c.title.replace('DiscCompetition · ',''))}</strong></button><div class="controls"><button data-queue-move="${i}" data-offset="-1" ${i===0?'disabled':''} aria-label="Move image ${i+1} earlier">← Earlier</button><button data-queue-move="${i}" data-offset="1" ${i===queued.length-1?'disabled':''} aria-label="Move image ${i+1} later">Later →</button></div></article>`;}).join('')||'<p class="empty">Your first queued image will appear here.</p>'}</div></section>`;
+  bindPreview();
+  const edit=change=>run(async()=>{await model.editCompetition(change);await redraw();});
+  $('choose-lineup').onclick=choose;
+  $('competition-turn').onchange=event=>edit({kind:'turn',id:event.target.value||null});
+  $('next-turn').onclick=()=>run(async()=>{const live=model.value(model.context.competitionAddress);await model.editCompetition({kind:'turn',id:live.entries[(live.entries.findIndex(e=>e.id===live.states[0].highlight)+1)%live.entries.length].id});await redraw();});
+  $('auto-size').onclick=()=>edit({kind:'auto'});$('equal-size').onclick=()=>edit({kind:'equal'});
+  for(const [id,key] of [['competition-study','study'],['competition-corner','placement']])$(id).onchange=event=>{const value=event.target.value;run(async()=>{await model.patch({design:{...model.context.design,[key]:value}});await redraw();});};
+  document.querySelectorAll('[data-points]').forEach(input=>input.onchange=()=>edit({kind:'points',id:input.dataset.points,points:input.value===''?NaN:Number(input.value)}));
+  document.querySelectorAll('[data-point-delta]').forEach(button=>button.onclick=()=>run(async()=>{const current=model.value(model.context.competitionAddress);await model.editCompetition({kind:'points',id:button.dataset.entry,points:current.states[0].scores[button.dataset.entry]+Number(button.dataset.pointDelta)});await redraw();}));
+  document.querySelectorAll('[data-size],[data-color]').forEach(input=>input.onchange=()=>{const id=input.dataset.size??input.dataset.color,style={scale:Number(document.querySelector(`[data-size="${id}"]`).value)/100,accent:document.querySelector(`[data-color="${id}"]`).value};edit({kind:'style',id,style});});
+  $('queue-image').onclick=()=>{const chosen=result,button=$('queue-image');button.disabled=true;run(async()=>{try{const kept=await model.captureCompetition(chosen,publish.mount());await publish.offer(kept.capture);await redraw();say(`Image ${queued.length+1} queued. Change the turn or points for the next image.`);}finally{button.disabled=false;}});};
+  document.querySelectorAll('[data-review-image]').forEach(button=>button.onclick=()=>run(async()=>{const c=model.value(button.dataset.reviewImage);await model.patch({competitionAddress:c.source.material,design:c.design});await redraw();say('Opened that image’s setup. Queue again to add the next image.');}));
+  document.querySelectorAll('[data-queue-move]').forEach(button=>button.onclick=()=>run(async()=>{
+    const order=[...queued],i=Number(button.dataset.queueMove),j=i+Number(button.dataset.offset);[order[i],order[j]]=[order[j],order[i]];
+    let n=0;await model.patch({graphics:model.context.graphics.map(address=>model.value(address).competition?order[n++]:address)});
+    await publish.order(order.map(address=>model.value(address)));await redraw();say('Queue order updated for ExportGraphics.');
+  }));
+}

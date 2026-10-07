@@ -1,0 +1,214 @@
+{
+  "workPath": "recipes/house-cut.json",
+  "phase": "EXPERIMENT",
+  "events": [
+    {
+      "workPath": "recipes/house-cut.json",
+      "phase": "EXPERIMENT",
+      "relations": [],
+      "at": "2026-09-27T18:06:23.803Z"
+    }
+  ],
+  "identity": "1.0.0-clip-house-cut_EXPERIMENT",
+  "lastRun": {
+    "at": "2026-09-28T21:08:24.439Z",
+    "recipe": "recipes/discstudio-photo-card.json",
+    "codeContentId": "05ea08f828c1f9e0a94f33edc9c61a133ce2f744758c63786eac51ef8e2235c9",
+    "sourceSha256": "d751819a1276be73f11d26bbcf2d8489c006fe60a5838264061ab3fc7ff7f0d6",
+    "report": "work/runs/run-2026-09-28T210824441Z-ffe5cdf4.json",
+    "outputs": [
+      {
+        "part": "parts/crop/discstudio",
+        "path": "work/attempts/2026-09-28T040551972Z-739e747f/parts/crop/discstudio/crop-settings.json",
+        "sha256": "9c247da3370067a7d062f9dfc262ccc9f5a3ce65c28cbe64ea348571e3745b80"
+      },
+      {
+        "part": "parts/prepared/discstudio",
+        "path": "work/attempts/2026-09-28T040551983Z-2d0bca49/parts/prepared/discstudio/prepared-photo.webp",
+        "sha256": "4755a81e1001e6f483f2a90f61c1a0e8ae458c917e52dc07a414b72dd4b0bee4"
+      },
+      {
+        "part": "parts/saved/discstudio",
+        "path": "work/attempts/2026-09-28T070528024Z-927e978a/parts/saved/discstudio/saved-discstudio.json",
+        "sha256": "e3a3697419bfabc74457870b274b53a55b5d5c8f069e0566064a6e5ef759ceba"
+      },
+      {
+        "part": "parts/card/discstudio",
+        "path": "work/attempts/2026-09-28T210705563Z-a0ed6e1b/parts/card/discstudio/card.png",
+        "sha256": "2dddf378a904763b7b22f456bf688086e6b936c703799195914edbab593e3b71"
+      },
+      {
+        "part": "parts/card/discstudio",
+        "path": "work/attempts/2026-09-28T210705563Z-a0ed6e1b/parts/card/discstudio/card.json",
+        "sha256": "9ae4d2fb23b176fffa50ebb5d94c5873af62dccb07bdcfecb8a4a48071023dc2"
+      },
+      {
+        "part": "parts/scaled/discstudio",
+        "path": "work/attempts/2026-09-28T210705969Z-e900f528/parts/scaled/discstudio/scaled-card.png",
+        "sha256": "2dddf378a904763b7b22f456bf688086e6b936c703799195914edbab593e3b71"
+      },
+      {
+        "part": "parts/scaled/discstudio",
+        "path": "work/attempts/2026-09-28T210705969Z-e900f528/parts/scaled/discstudio/scale.json",
+        "sha256": "8c39fa63d0ecb9176b16d5154b22f742c85ee2015af7b750dfea9fa00aec69f7"
+      },
+      {
+        "part": "parts/positioned/discstudio",
+        "path": "work/attempts/2026-09-28T210706003Z-dcd99ad6/parts/positioned/discstudio/positioned-card.png",
+        "sha256": "2dddf378a904763b7b22f456bf688086e6b936c703799195914edbab593e3b71"
+      },
+      {
+        "part": "parts/positioned/discstudio",
+        "path": "work/attempts/2026-09-28T210706003Z-dcd99ad6/parts/positioned/discstudio/xy-transform.json",
+        "sha256": "44216d85c30563809612b42402a01f87be94e78efb97f65b0a92a1435c7d4397"
+      }
+    ],
+    "editorialAcceptance": "UNKNOWN"
+  },
+  "schema": "neat-work-state@2",
+  "activeItem": "recipes/house-cut.json",
+  "items": {
+    "recipes/house-cut.json": {
+      "path": "recipes/house-cut.json",
+      "state": "Compare",
+      "phase": "EXPERIMENT",
+      "relations": [],
+      "substates": {},
+      "events": [
+        {
+          "workPath": "recipes/house-cut.json",
+          "phase": "EXPERIMENT",
+          "relations": [],
+          "at": "2026-09-27T18:06:23.803Z"
+        }
+      ],
+      "suggestions": []
+    },
+    "recipes/discstudio-photo-card.json": {
+      "path": "recipes/discstudio-photo-card.json",
+      "state": "Compare",
+      "phase": "Compare",
+      "relations": [],
+      "substates": {
+        "localci.discstudio-pages@1": {
+          "facts": {
+            "verdict": "PASS",
+            "buildId": "a4a129852f4eb6f6",
+            "archiveSha256": "6c1b71fb2b0eb206d9905c301a6d261bc32786ba50ed663719f4d93dec524970",
+            "bridgeStatus": "UPLOADED",
+            "archiveDriveId": "1v3BYqCXHo5CIXhkJFO_sM1r6JTHoJA3g",
+            "receiptDriveId": "1LQKKtOi7J4rQUUJdUxjAlAEajplFpl8A"
+          },
+          "evidence": [
+            {
+              "sha256": "7fe000b3b57c181c799f8637735c85f088b77bbb42711d5b79af02aa0460f9b6",
+              "kind": "release-receipt"
+            },
+            {
+              "sha256": "6c1b71fb2b0eb206d9905c301a6d261bc32786ba50ed663719f4d93dec524970",
+              "kind": "pages-artifact"
+            },
+            {
+              "sha256": "123a5c86f762e6bf55b47a5735375d71a007e70213ced06a80c7490fbd36a968",
+              "kind": "release-receipt"
+            },
+            {
+              "sha256": "6c1b71fb2b0eb206d9905c301a6d261bc32786ba50ed663719f4d93dec524970",
+              "kind": "pages-artifact"
+            },
+            {
+              "sha256": "c08b0dc4a5c75ff9392474d28a4d9134c884ed71148a64ee7784c3abec348570",
+              "kind": "release-receipt"
+            },
+            {
+              "sha256": "6c1b71fb2b0eb206d9905c301a6d261bc32786ba50ed663719f4d93dec524970",
+              "kind": "pages-artifact"
+            },
+            {
+              "sha256": "73a3dfcaa278f98ba3443a7ffb235e82784c92c76d38cf87e2f6ab88a846b330",
+              "kind": "release-receipt"
+            },
+            {
+              "sha256": "6c1b71fb2b0eb206d9905c301a6d261bc32786ba50ed663719f4d93dec524970",
+              "kind": "pages-artifact"
+            },
+            {
+              "kind": "drive-release-receipt",
+              "sha256": "a5a5bc3c15e9f92ea78acd1f14ccb18c80cf7bad809578cf2fecd8f67d997a58",
+              "driveId": "1LQKKtOi7J4rQUUJdUxjAlAEajplFpl8A"
+            },
+            {
+              "kind": "drive-pages-artifact",
+              "sha256": "6c1b71fb2b0eb206d9905c301a6d261bc32786ba50ed663719f4d93dec524970",
+              "driveId": "1v3BYqCXHo5CIXhkJFO_sM1r6JTHoJA3g"
+            }
+          ],
+          "observedAt": "2026-09-29T15:32:58.947Z"
+        }
+      },
+      "events": [],
+      "lastRun": {
+        "at": "2026-09-28T21:08:24.439Z",
+        "recipe": "recipes/discstudio-photo-card.json",
+        "codeContentId": "05ea08f828c1f9e0a94f33edc9c61a133ce2f744758c63786eac51ef8e2235c9",
+        "sourceSha256": "d751819a1276be73f11d26bbcf2d8489c006fe60a5838264061ab3fc7ff7f0d6",
+        "report": "work/runs/run-2026-09-28T210824441Z-ffe5cdf4.json",
+        "outputs": [
+          {
+            "part": "parts/crop/discstudio",
+            "path": "work/attempts/2026-09-28T040551972Z-739e747f/parts/crop/discstudio/crop-settings.json",
+            "sha256": "9c247da3370067a7d062f9dfc262ccc9f5a3ce65c28cbe64ea348571e3745b80"
+          },
+          {
+            "part": "parts/prepared/discstudio",
+            "path": "work/attempts/2026-09-28T040551983Z-2d0bca49/parts/prepared/discstudio/prepared-photo.webp",
+            "sha256": "4755a81e1001e6f483f2a90f61c1a0e8ae458c917e52dc07a414b72dd4b0bee4"
+          },
+          {
+            "part": "parts/saved/discstudio",
+            "path": "work/attempts/2026-09-28T070528024Z-927e978a/parts/saved/discstudio/saved-discstudio.json",
+            "sha256": "e3a3697419bfabc74457870b274b53a55b5d5c8f069e0566064a6e5ef759ceba"
+          },
+          {
+            "part": "parts/card/discstudio",
+            "path": "work/attempts/2026-09-28T210705563Z-a0ed6e1b/parts/card/discstudio/card.png",
+            "sha256": "2dddf378a904763b7b22f456bf688086e6b936c703799195914edbab593e3b71"
+          },
+          {
+            "part": "parts/card/discstudio",
+            "path": "work/attempts/2026-09-28T210705563Z-a0ed6e1b/parts/card/discstudio/card.json",
+            "sha256": "9ae4d2fb23b176fffa50ebb5d94c5873af62dccb07bdcfecb8a4a48071023dc2"
+          },
+          {
+            "part": "parts/scaled/discstudio",
+            "path": "work/attempts/2026-09-28T210705969Z-e900f528/parts/scaled/discstudio/scaled-card.png",
+            "sha256": "2dddf378a904763b7b22f456bf688086e6b936c703799195914edbab593e3b71"
+          },
+          {
+            "part": "parts/scaled/discstudio",
+            "path": "work/attempts/2026-09-28T210705969Z-e900f528/parts/scaled/discstudio/scale.json",
+            "sha256": "8c39fa63d0ecb9176b16d5154b22f742c85ee2015af7b750dfea9fa00aec69f7"
+          },
+          {
+            "part": "parts/positioned/discstudio",
+            "path": "work/attempts/2026-09-28T210706003Z-dcd99ad6/parts/positioned/discstudio/positioned-card.png",
+            "sha256": "2dddf378a904763b7b22f456bf688086e6b936c703799195914edbab593e3b71"
+          },
+          {
+            "part": "parts/positioned/discstudio",
+            "path": "work/attempts/2026-09-28T210706003Z-dcd99ad6/parts/positioned/discstudio/xy-transform.json",
+            "sha256": "44216d85c30563809612b42402a01f87be94e78efb97f65b0a92a1435c7d4397"
+          }
+        ],
+        "editorialAcceptance": "UNKNOWN"
+      },
+      "updatedAt": "2026-09-29T15:32:58.947Z",
+      "suggestions": [],
+      "latestEvidence": {
+        "report": "work/runs/run-2026-09-28T210824441Z-ffe5cdf4.json",
+        "sha256": "fae6457169522e37723c825e0873d29cc9a0605b96a4103ac05c0f016b882b66",
+        "at": "2026-09-28T21:08:24.439Z"
+      }
+    }
+  }
+}

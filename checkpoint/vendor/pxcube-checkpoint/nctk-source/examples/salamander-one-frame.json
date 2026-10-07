@@ -1,0 +1,20 @@
+{
+  "schema": "discstudio-seek-storyboard@1",
+  "width": 1080,
+  "height": 1920,
+  "fit": "contain",
+  "annotationSource": "Manual rectangles on IMG_6243.jpeg; conservative subject and caption protection, not automatic scene recognition",
+  "shots": [
+    {
+      "id": "salamander-right-of-thrower",
+      "start": 0,
+      "end": 2,
+      "placement": { "anchor": [0.82, 0.52], "scale": 0.66 },
+      "protected": [
+        { "id": "top-caption", "box": [0.10, 0.14, 0.80, 0.11] },
+        { "id": "thrower-and-discs", "box": [0.26, 0.30, 0.40, 0.46] },
+        { "id": "bottom-caption", "box": [0.11, 0.76, 0.78, 0.09] }
+      ]
+    }
+  ]
+}

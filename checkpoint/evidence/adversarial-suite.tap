@@ -1,0 +1,24 @@
+✔ hash is SHA-256 over exact bytes and UTF-8 strings (11.905694ms)
+✔ snapshot is deterministic and carries output/source integrity metadata (9.152258ms)
+✔ buildSnapshot accepts explicit prior baseline and reports unaffected outputs reused (5.604424ms)
+✔ declared dependency edits rebuild transitive closure and preserve unrelated branches (3.962575ms)
+✔ patch round trip handles additions, deletions, UTF-8, binary, zero bytes, and patch chains (11.029382ms)
+✔ patch is exact-baseline-bound and rejects wrong project or modified baseline (5.104079ms)
+✔ patch validation rejects malformed, duplicate, traversal, absolute, and tampered operations atomically (7.844512ms)
+✔ project graph rejects missing dependencies, cycles, duplicate outputs, and unsafe paths (4.277291ms)
+✔ snapshot metadata tampering is rejected even when the output bytes appear unchanged (5.076646ms)
+✔ packed snapshot delivery deduplicates exact byte payloads and round-trips losslessly (3.136977ms)
+✔ tampered or missing packed payloads fail ordinary snapshot hash validation (1.415388ms)
+✔ route helpers preserve only known projects and views with safe leaf paths (2.82316ms)
+✔ route parser rejects decoded traversal, malformed encoding, and unsafe path syntax (0.902525ms)
+✔ pin URLs remain scoped under compiled project roots (0.806718ms)
+✔ static source compiler uses explicit relative asset graph and copies source bytes literally (17.511545ms)
+✔ relative link traversal is not mistaken for an in-project dependency (0.35306ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 224.069149

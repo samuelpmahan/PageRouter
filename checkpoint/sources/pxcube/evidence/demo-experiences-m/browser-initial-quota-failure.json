@@ -1,0 +1,10 @@
+{
+  "symptom": "A new test mount did not open; the prior model remained visible.",
+  "error": "QuotaExceededError on mock.build-bag.1 archive",
+  "cause": "Repeated full shelf projections and an uncompressed complete archive exhausted localStorage.",
+  "fix": [
+    "Reuse unchanged shelf and graphic projections",
+    "Switch owner only after a successful model open",
+    "Gzip full archive bytes and await commit; preserve exact decompressed bytes and replay checks"
+  ]
+}

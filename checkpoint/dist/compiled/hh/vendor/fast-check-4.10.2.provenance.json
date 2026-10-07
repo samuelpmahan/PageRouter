@@ -1,0 +1,46 @@
+{
+  "schema": "hh-self-hosted-dependency@1",
+  "package": {
+    "name": "fast-check",
+    "version": "4.10.2",
+    "registry": "https://registry.npmjs.org/",
+    "resolved": "https://registry.npmjs.org/fast-check/-/fast-check-4.10.2.tgz",
+    "integrity": "sha512-iK2f+YrcmoeGqk6fA0ea2bptcu/itMIm4NfEozq6N25+aG6h7s5HZbB/k1aV7b5w5sFLMCbbtRUsTVR+BgC3xw==",
+    "sourceCommit": "c77afa8277a67250d798c52e61343b8ed5fd268b",
+    "license": "MIT"
+  },
+  "dependencies": [
+    {
+      "name": "pure-rand",
+      "version": "8.4.2",
+      "resolved": "https://registry.npmjs.org/pure-rand/-/pure-rand-8.4.2.tgz",
+      "integrity": "sha512-vvuOGgcuPJAirlHvuQw1TrOiw7ptaIXXmIbNuiNOY6lNGJJH49PQ1Kj4nd783nPdQhQdicgOjVI2yI/9BD6/Ng==",
+      "license": "MIT"
+    }
+  ],
+  "bundle": {
+    "file": "fast-check-4.10.2.bundle.mjs",
+    "format": "browser-esm",
+    "bytes": 171402,
+    "sha256": "28fc0e4dc36e31eb48577b319cec521931b4bc88556205a76d82cde763a34d06",
+    "importIntegrity": "sha256:28fc0e4dc36e31eb48577b319cec521931b4bc88556205a76d82cde763a34d06",
+    "externalImports": []
+  },
+  "styleImplementation": {
+    "pin": "sha256:844cb1d8b68d38785af0d75d7a73c5c39b15911703c35b3d5316b775ace7689e",
+    "files": {
+      "vendor/hh/services/style-playground.mjs": "0c6a6d2b9131b942848c0c0bde9b5a3fcaf51d23b77152b7e6debc5456e75112",
+      "vendor/hh/src/app.mjs": "6890e6e09f78519d08f05b1f62ec14000f966d253d3d7014339bfde49716d46a",
+      "vendor/hh/src/pxc-devtools/devtools.css": "9d4e3fe307218dba3cf962f73d0b34d35c400188595ad39a7be6043abcb3d731",
+      "vendor/hh/src/pxc-devtools/devtools.mjs": "9de145615034167617842854fa8f4b0200ae83207016065922583aad388a0e07",
+      "vendor/hh/src/style-playground.mjs": "b5f4b55f9861c50aeb58478913f9d27739ed9d2456f73494033ed8ed0f4af4ea",
+      "vendor/hh/src/styles.css": "8d20b9d8ae814d94c7fb90c027a5903eb993de0017c7e1708ac79bd645a0d956"
+    }
+  },
+  "buildTool": {
+    "name": "esbuild",
+    "version": "0.28.2",
+    "resolved": "https://registry.npmjs.org/esbuild/-/esbuild-0.28.2.tgz",
+    "integrity": "sha512-HKVLS8dvII+xoKW9kmqxbRKrnWEXfJJr/FZhhJmiqIB0e053QNYFqOBouTMO/k5sID4MvCiUCvv8b9M4h32wIA=="
+  }
+}

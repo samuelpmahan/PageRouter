@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | Justin Brundage for Concrete School Board</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { 800: '#0B1D3A', 900: '#061021' },
+                        gold: { 500: '#D4AF37', 600: '#AA820A' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styling to turn standard <details> into an expanding "Read More" widget */
+        details summary::-webkit-details-marker {
+            display: none;
+        }
+        details summary {
+            list-style: none;
+        }
+        details[open] summary .read-more-text {
+            display: none;
+        }
+        details:not([open]) summary .read-less-text {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- Header Navigation -->
+    <header class="bg-navy-900 text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="index.html" class="font-bold text-xl sm:text-2xl tracking-tight text-white flex items-center">
+                    <span class="text-amber-400">BRUNDAGE</span>
+                    <span class="ml-2 font-normal text-sm sm:text-base text-gray-300">FOR SCHOOL BOARD</span>
+                </a>
+                <nav class="hidden lg:flex space-x-6 text-sm font-semibold tracking-wide uppercase">
+                    <a href="index.html" class="hover:text-amber-400 transition-colors">Home</a>
+                    <a href="about.html" class="hover:text-amber-400 transition-colors">About</a>
+                    <a href="policy.html" class="hover:text-amber-400 transition-colors">Policy & Priorities</a>
+                    <a href="community.html" class="hover:text-amber-400 transition-colors">Community</a>
+                    <a href="blog.html" class="text-amber-400">Blog</a>
+                    <a href="contact.html" class="hover:text-amber-400 transition-colors">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow py-12">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <header class="border-b border-gray-200 pb-8 text-center max-w-2xl mx-auto mb-12">
+                <h1 class="text-4xl font-extrabold text-navy-900 tracking-tight">Board & Community Perspectives</h1>
+                <p class="text-gray-600 mt-3 text-lg">Thoughts on local policy, district updates, and honest community engagement.</p>
+            </header>
+
+            <div class="space-y-12">
+
+                <!-- Blog Post 1 -->
+                <article class="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+                    
+                    <!-- Header Image -->
+                    <div class="h-64 sm:h-80 w-full overflow-hidden relative">
+                        <img src="static/pictures/voted.jpg" alt="Voter Ballots and Policy" class="w-full h-full object-cover">
+                    </div>
+
+                    <div class="p-6 sm:p-8">
+                        
+                        <!-- Post Meta & Title -->
+                        <div class="mb-4">
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200">Policy Analysis</span>
+                            <h2 class="text-2xl sm:text-3xl font-bold text-navy-900 mt-3 mb-2">Stop the Misinformation: Read the Initiatives</h2>
+                            <p class="text-xs text-gray-500 font-semibold uppercase tracking-wider">By Justin Brundage &bull; Concrete School Board Director</p>
+                        </div>
+
+                        <!-- Preview / Initial Sentences -->
+                        <p class="text-gray-700 leading-relaxed text-base sm:text-lg mb-4">
+                            I am getting increasingly frustrated with the amount of misinformation and partisan rhetoric surrounding <a href="https://lawfilesext.leg.wa.gov/biennium/2025-26/Pdf/Initiatives/Initiatives/INITIATIVE%20IL26-001.pdf?q=20260930200030" target="_blank" rel="noopener noreferrer" class="text-amber-600 font-semibold hover:underline">Initiative 001</a> and <a href="https://www2.sos.wa.gov/_assets/elections/initiatives/finaltext_3276.pdf" target="_blank" rel="noopener noreferrer" class="text-amber-600 font-semibold hover:underline">Initiative 638</a>. People are free to oppose these initiatives. They are free to support them. We should be able to have an honest discussion about what they actually do. But that discussion needs to start with one simple thing: <strong>read the actual initiatives.</strong>
+                        </p>
+
+                        <!-- Expandable Content Section -->
+                        <details class="group">
+                            <summary class="cursor-pointer inline-flex items-center text-amber-600 hover:text-amber-700 font-bold text-sm tracking-wider uppercase transition-colors mb-4 focus:outline-none">
+                                <span class="read-more-text flex items-center">
+                                    See More 
+                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                                </span>
+                                <span class="read-less-text flex items-center">
+                                    Show Less 
+                                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                                </span>
+                            </summary>
+
+                            <div class="pt-4 border-t border-gray-100 space-y-4 text-gray-700 text-sm sm:text-base leading-relaxed">
+                                
+                                <p>
+                                    Do not rely on a Facebook post. Do not rely on a campaign flyer. Do not rely on a partisan talking point. Read the language yourself and decide what you think.
+                                </p>
+                                <p>
+                                    I support both of these initiatives. But supporting them does not mean we should exaggerate what they do, and it does not mean we should skip the parts that raise fair questions. I think our arguments are stronger when we stick to the actual text, all of it.
+                                </p>
+
+                                <!-- I-638 SECTION -->
+                                <h3 class="text-lg font-bold text-navy-900 pt-2">
+                                    INITIATIVE 638
+                                </h3>
+                                <p>
+                                    Let's start with what it does. It requires school districts and athletic organizations to adopt rules that bar biologically male students from competing with or against female students in sports intended for female students only. The physical exam is how that rule gets enforced.
+                                </p>
+                                <p>
+                                    One claim I have seen is that this initiative will require students to undergo invasive physical examinations to play sports. That is not what the initiative says. The requirement only applies to students who choose to compete in female only activities. Those students must provide, as part of the routine sports physical, a form or statement signed by their personal health care provider that verifies biological sex, relying only on reproductive anatomy, genetic makeup, or naturally produced testosterone levels.
+                                </p>
+                                <p>
+                                    But here is something supporters should be honest about. The text does not say how a provider is supposed to verify any of this. It does not require an invasive exam, but it does not rule one out either. People who ask how this would work in practice are asking a fair question.
+                                </p>
+                                <p>
+                                    I have also seen claims that the initiative contains no penalties. That is not accurate either. Athletic organizations can impose penalties on students, coaches, and school administrators, and those penalties must be proportional and can be appealed. Most of that language is already in current law, and the initiative keeps it. It also adds a definition of "knowingly." A student can only be penalized if they knowingly broke the rules, or if they gained a significant competitive advantage or materially disadvantaged another student. The initiative does not establish one specific automatic fine for every violation.
+                                </p>
+                                <p class="font-semibold text-navy-900">
+                                    Those details matter.
+                                </p>
+
+                                <!-- I-001 SECTION -->
+                                <h3 class="text-lg font-bold text-navy-900 pt-4">
+                                    INITIATIVE 001
+                                </h3>
+                                <p>
+                                    There has also been a lot of discussion about Initiative 001 and school counseling records.
+                                </p>
+                                <p>
+                                    The initiative gives parents broad rights to inspect and receive copies of their child's school records, including medical records and mental health counseling records. It requires schools to provide those records within 10 business days. Current law allows up to 45 days.
+                                </p>
+                                <p>
+                                    There is an exception that I think gets left out of some of the discussion.
+                                </p>
+                                <p>
+                                    A school would not be required to release a student's medical, health, or mental health counseling records to a parent during a pending investigation of child abuse or neglect by law enforcement or DCYF when that parent is the target of the investigation, unless the parent obtains a court order.
+                                </p>
+                                <p>
+                                    But I want to be fair about that exception, because it is narrower than the one in current law. Current law lets a school hold back health care, social work, counseling, and disciplinary records if the parent is the target of a pending investigation, or is a defendant in a criminal case where the student is the named victim. The initiative's exception covers only medical, health, and mental health counseling records, and it drops the criminal defendant language. Supporters can reasonably argue that most serious cases would still be covered, since a criminal case involving a child victim usually comes with an abuse investigation. Critics can reasonably respond that not every case fits that pattern, and that protection may lapse if an investigation closes while a criminal case is still pending.
+                                </p>
+                                <p>
+                                    If you are concerned about this provision, you are pointing at something real. If you support it, you should be able to explain why the narrower exception is the right balance.
+                                </p>
+
+                                <!-- CONCLUSION -->
+                                <h3 class="text-lg font-bold text-navy-900 pt-4">THE BOTTOM LINE</h3>
+                                <p>
+                                    I support these initiatives, and I am comfortable saying that openly. But I also believe supporters should be willing to acknowledge everything in the text, including the parts that raise hard questions, just as opponents should be willing to do the same.
+                                </p>
+                                <p>
+                                    If there is a provision you disagree with, point to it. If you believe something will have a particular consequence, explain why and show people the language that leads you there.
+                                </p>
+                                <p>
+                                    There is plenty to debate in both initiatives. We do not need to exaggerate them, misrepresent them, or repeat something simply because we saw it on social media.
+                                </p>
+                                <p class="font-semibold text-navy-900">
+                                    Read the initiatives. Read the protections. Read the exceptions. Read what actually changes, and what no longer applies. Then decide for yourself.
+                                </p>
+                                <p>
+                                    That is the conversation I would like to see.
+                                </p>
+
+                                <!-- Bottom "See Less" Button -->
+                                <div class="pt-6 border-t border-gray-100 text-center">
+                                    <button onclick="this.closest('details').removeAttribute('open')" class="inline-flex items-center text-amber-600 hover:text-amber-700 font-bold text-sm tracking-wider uppercase transition-colors focus:outline-none">
+                                        Show Less
+                                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path></svg>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </details>
+
+                    </div>
+                </article>
+
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-navy-900 text-white border-t border-navy-800 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-gray-400">
+            &copy; 2026 Justin Brundage for Washington. All rights reserved. Paid for by Justin Brundage.
+        </div>
+    </footer>
+</body>
+</html>

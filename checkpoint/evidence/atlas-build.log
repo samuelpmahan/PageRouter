@@ -1,0 +1,81 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> composed-workbench@0.0.0 build
+> node scripts/assemble.mjs
+
+{
+  "projects": [
+    {
+      "id": "pxcube",
+      "files": 574,
+      "digest": "b2070b4f86ba16a35152739ffca7e42658aaa56542814c21136b39ee3eb6b053"
+    },
+    {
+      "id": "hh",
+      "files": 31,
+      "digest": "69f5d78faac5cdcb2a7a40116e6637d186ccb08f55c2c9195786df5489f37fa3"
+    },
+    {
+      "id": "justin",
+      "files": 22,
+      "digest": "05a005cb29e5d7b41d515a0d9d844f9512482a6ad7540e52d4d911c2492967e3"
+    }
+  ],
+  "delta": {
+    "kind": "actual-HH-C6-compiled-byte-delta",
+    "baseDigest": "69f5d78faac5cdcb2a7a40116e6637d186ccb08f55c2c9195786df5489f37fa3",
+    "targetDigest": "06ee7b9470751ab7923db257febf971b39e1c8ef63f81b3c34c14b6d844f9021",
+    "cleanDigest": "06ee7b9470751ab7923db257febf971b39e1c8ef63f81b3c34c14b6d844f9021",
+    "equal": true,
+    "rebuilt": [
+      "file:styles.css",
+      "file:index.html"
+    ],
+    "reused": [
+      "file:teacher-journey.mjs",
+      "file:controller.mjs",
+      "file:services/pxc.mjs",
+      "file:pxc-devtools/devtools-data.mjs",
+      "file:services/contract.mjs",
+      "file:services/style-playground.mjs",
+      "file:vendor/fast-check-4.10.2.bundle.mjs",
+      "file:vendor/fast-check-4.10.2.meta.mjs",
+      "file:style-playground.mjs",
+      "file:pxc-devtools/devtools.mjs",
+      "file:services/fixtures.mjs",
+      "file:services/fixture-provider.mjs",
+      "file:services/http-provider.mjs",
+      "file:services/devtools-board.mjs",
+      "file:services/runtime.mjs",
+      "file:services/index.mjs",
+      "file:webmcp.mjs",
+      "file:app.mjs",
+      "file:assets/apple.jpg",
+      "file:assets/favicon.ico",
+      "file:assets/hero_border.jpg",
+      "file:assets/logo_transparent.png",
+      "file:pxc-devtools/devtools.css",
+      "file:services/CHECKPOINT.md",
+      "file:services/PROVENANCE.json",
+      "file:services/README.md",
+      "file:vendor/fast-check-4.10.2.LICENSE.txt",
+      "file:vendor/fast-check-4.10.2.provenance.json",
+      "file:vendor/pure-rand-8.4.2.LICENSE.txt"
+    ],
+    "operations": [
+      {
+        "path": "styles.css",
+        "kind": "splice",
+        "beforeSha256": "8d20b9d8ae814d94c7fb90c027a5903eb993de0017c7e1708ac79bd645a0d956",
+        "afterSha256": "5bd44d73ec70bea9b1c5dd786678599f877b41e1de0cfe05a28f754babc3cbc1",
+        "bytes": 11898,
+        "start": 11826,
+        "deleteCount": 0,
+        "payloadBytes": 72
+      }
+    ],
+    "patchBytes": 9264,
+    "fullBytes": 581819,
+    "payloadBytes": 72
+  }
+}

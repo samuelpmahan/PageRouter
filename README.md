@@ -1,6 +1,6 @@
 # PageRouter x PxCube Composed Workbench
 
-Candidate 0.0.0 · site build f300f36921420180b22cf20670700a08adaf3c523ac332f1c93653c4143aa765
+Candidate 0.0.0 Â· site build f300f36921420180b22cf20670700a08adaf3c523ac332f1c93653c4143aa765
 
 The Atlas tab (`#/pxcube/atlas`) captures a pinned six-node motion/Beta recipe, runs its JavaScript implementation, downloads a case for independent Python execution, imports the result, and compares declared observations through a PxC FunctionalGuarantee. Repeat checks deterministic replay. A disagreement reports the first differing path and values. Python runs by CLI, not in the browser.
 
@@ -10,3 +10,5 @@ Atlas implementation closure: b1cd98c6ff4195b183d6b6e0cee21b1ca0e2e16afa2bd3d482
 HH evaluator implementation: af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492
 
 The original neat lifecycle and compiled PxCube, HH, and Justin project snapshots remain pinned. The historical completed-game ReplayString implementation was not present in the source checkpoints and is not claimed here. This is a bounded candidate, not a human contract milestone.
+
+Full source for this deployed build and fresh-checkout commands: [SOURCE.md](SOURCE.md).

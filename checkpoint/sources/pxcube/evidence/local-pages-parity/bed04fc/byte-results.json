@@ -1,0 +1,2117 @@
+{
+  "observedAt": "2026-09-14T21:53:26.625Z",
+  "pages": "https://samuelpmahan.github.io/PxCube/",
+  "workflowRun": 34900941989,
+  "localHead": "bed04fc9697623e02683ee52154b9b1189fa8855",
+  "localBranch": "codex/local-pages",
+  "localRun": {
+    "runId": "2026-09-14T21-46-41-194Z-193667a4",
+    "site": ".pxcube/runs/2026-09-14T21-46-41-194Z-193667a4/site"
+  },
+  "state": {
+    "local": {
+      "runId": "2026-09-14T21-46-41-194Z-193667a4",
+      "sourceCommit": "bed04fc9697623e02683ee52154b9b1189fa8855",
+      "work": 5,
+      "types": 5,
+      "results": 5,
+      "packagedIds": [
+        "build-bag",
+        "explore-shelf",
+        "hello",
+        "mock-smoke",
+        "upload-disc-to-shelf"
+      ],
+      "receiptAccordions": 5
+    },
+    "pages": {
+      "runId": "2026-09-14T21-50-27-419Z-d2018684",
+      "sourceCommit": "bed04fc9697623e02683ee52154b9b1189fa8855",
+      "work": 5,
+      "types": 5,
+      "results": 5,
+      "packagedIds": [
+        "build-bag",
+        "explore-shelf",
+        "hello",
+        "mock-smoke",
+        "upload-disc-to-shelf"
+      ],
+      "receiptAccordions": 5
+    }
+  },
+  "shell": [
+    {
+      "file": "shell.css",
+      "status": 200,
+      "sameBytes": true
+    },
+    {
+      "file": "shell.mjs",
+      "status": 200,
+      "sameBytes": true
+    }
+  ],
+  "experiences": [
+    {
+      "id": "build-bag",
+      "title": "BuildBag",
+      "contractMatches": true,
+      "effectiveContractMatches": true,
+      "sourceHashMatches": true,
+      "manifestHashMatches": true,
+      "entryChunkMatches": true,
+      "localChunkCount": 6,
+      "pagesChunkCount": 6,
+      "identicalChunks": 6,
+      "validation": {
+        "ok": true,
+        "chunks": 6,
+        "mismatches": [],
+        "app": "BuildBag"
+      },
+      "mountValidation": {
+        "declaredMounts": [
+          "shelf"
+        ],
+        "usedMounts": [],
+        "undeclaredMounts": [],
+        "persistedPrefixViolations": []
+      },
+      "chunks": [
+        {
+          "path": "app.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "0ee735706f06e1a5930f4adc7a8de2a38b89f6872c5d766f2411d65b00b885dd",
+          "pagesHash": "0ee735706f06e1a5930f4adc7a8de2a38b89f6872c5d766f2411d65b00b885dd",
+          "localHash": "0ee735706f06e1a5930f4adc7a8de2a38b89f6872c5d766f2411d65b00b885dd",
+          "sameBytes": true
+        },
+        {
+          "path": "config.json",
+          "pagesStatus": 200,
+          "receiptHash": "fcd00fa1fc9b455581c93ed654fa0f5b7b8831b93caa1349715749fc7166b5b2",
+          "pagesHash": "fcd00fa1fc9b455581c93ed654fa0f5b7b8831b93caa1349715749fc7166b5b2",
+          "localHash": "fcd00fa1fc9b455581c93ed654fa0f5b7b8831b93caa1349715749fc7166b5b2",
+          "sameBytes": true
+        },
+        {
+          "path": "index.html",
+          "pagesStatus": 200,
+          "receiptHash": "b08311f390d3adeceaec1ea89045c0a56a620a3c850a1c4f6c70d2124e93647a",
+          "pagesHash": "b08311f390d3adeceaec1ea89045c0a56a620a3c850a1c4f6c70d2124e93647a",
+          "localHash": "b08311f390d3adeceaec1ea89045c0a56a620a3c850a1c4f6c70d2124e93647a",
+          "sameBytes": true
+        },
+        {
+          "path": "local/mock-mounts.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+          "pagesHash": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+          "localHash": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+          "sameBytes": true
+        },
+        {
+          "path": "mock-pxc/mock-pxc.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+          "pagesHash": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+          "localHash": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+          "sameBytes": true
+        },
+        {
+          "path": "style.css",
+          "pagesStatus": 200,
+          "receiptHash": "fb27b25eb7fa77347f2aa166ba1875def514fdb95d1206c4b6017a6ae3d03b32",
+          "pagesHash": "fb27b25eb7fa77347f2aa166ba1875def514fdb95d1206c4b6017a6ae3d03b32",
+          "localHash": "fb27b25eb7fa77347f2aa166ba1875def514fdb95d1206c4b6017a6ae3d03b32",
+          "sameBytes": true
+        }
+      ],
+      "localManifest": {
+        "id": "build-bag",
+        "title": "BuildBag",
+        "version": "0.1.0",
+        "entry": "index.html",
+        "mounts": [
+          "shelf"
+        ],
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-forms"
+        ],
+        "build": "node build.mjs",
+        "track": "exp"
+      },
+      "pagesManifest": {
+        "id": "build-bag",
+        "title": "BuildBag",
+        "version": "0.1.0",
+        "entry": "index.html",
+        "mounts": [
+          "shelf"
+        ],
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-forms"
+        ],
+        "build": "node build.mjs",
+        "track": "exp"
+      }
+    },
+    {
+      "id": "explore-shelf",
+      "title": "ExploreShelf",
+      "contractMatches": true,
+      "effectiveContractMatches": true,
+      "sourceHashMatches": true,
+      "manifestHashMatches": true,
+      "entryChunkMatches": true,
+      "localChunkCount": 45,
+      "pagesChunkCount": 45,
+      "identicalChunks": 45,
+      "validation": {
+        "ok": true,
+        "chunks": 45,
+        "mismatches": [],
+        "app": "ExploreShelf"
+      },
+      "mountValidation": {
+        "declaredMounts": [
+          "studio"
+        ],
+        "usedMounts": [],
+        "undeclaredMounts": [],
+        "persistedPrefixViolations": []
+      },
+      "chunks": [
+        {
+          "path": "config.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "6af5e29f2fb89c0216528fafe52e84bf24fa26966a9d29e0c14448e651f38040",
+          "pagesHash": "6af5e29f2fb89c0216528fafe52e84bf24fa26966a9d29e0c14448e651f38040",
+          "localHash": "6af5e29f2fb89c0216528fafe52e84bf24fa26966a9d29e0c14448e651f38040",
+          "sameBytes": true
+        },
+        {
+          "path": "host.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "0d9198d67d03babda60cc920b1b887b96b062d50fe64ae732c58a67d50df2ef0",
+          "pagesHash": "0d9198d67d03babda60cc920b1b887b96b062d50fe64ae732c58a67d50df2ef0",
+          "localHash": "0d9198d67d03babda60cc920b1b887b96b062d50fe64ae732c58a67d50df2ef0",
+          "sameBytes": true
+        },
+        {
+          "path": "index.html",
+          "pagesStatus": 200,
+          "receiptHash": "372c63f28d9b770c369e9b9ad6e397cbea6f9146a7fb4f5fb075c812d7f8bac1",
+          "pagesHash": "372c63f28d9b770c369e9b9ad6e397cbea6f9146a7fb4f5fb075c812d7f8bac1",
+          "localHash": "372c63f28d9b770c369e9b9ad6e397cbea6f9146a7fb4f5fb075c812d7f8bac1",
+          "sameBytes": true
+        },
+        {
+          "path": "live.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "e581c3724d7743380660b781148125ae57b6954101825a5b3e887abe0676372d",
+          "pagesHash": "e581c3724d7743380660b781148125ae57b6954101825a5b3e887abe0676372d",
+          "localHash": "e581c3724d7743380660b781148125ae57b6954101825a5b3e887abe0676372d",
+          "sameBytes": true
+        },
+        {
+          "path": "local/experience-mount.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "968343527364031f5f3bbce300c6492f7f8f7d654d7eb84277ac98ed2417fa34",
+          "pagesHash": "968343527364031f5f3bbce300c6492f7f8f7d654d7eb84277ac98ed2417fa34",
+          "localHash": "968343527364031f5f3bbce300c6492f7f8f7d654d7eb84277ac98ed2417fa34",
+          "sameBytes": true
+        },
+        {
+          "path": "local/mock-mounts.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+          "pagesHash": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+          "localHash": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+          "sameBytes": true
+        },
+        {
+          "path": "mock-pxc/mock-pxc.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+          "pagesHash": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+          "localHash": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+          "sameBytes": true
+        },
+        {
+          "path": "studio-import.json",
+          "pagesStatus": 200,
+          "receiptHash": "b0da3bda39a8bb14772131ce1cfa44886a2e843bca76af6fa5e64b80595b555e",
+          "pagesHash": "b0da3bda39a8bb14772131ce1cfa44886a2e843bca76af6fa5e64b80595b555e",
+          "localHash": "b0da3bda39a8bb14772131ce1cfa44886a2e843bca76af6fa5e64b80595b555e",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/part-first-kernel/src/inspect.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "54a140e605934104e1123fc5c5df54c04b20d80b925bcb72e867e94b47de2bc8",
+          "pagesHash": "54a140e605934104e1123fc5c5df54c04b20d80b925bcb72e867e94b47de2bc8",
+          "localHash": "54a140e605934104e1123fc5c5df54c04b20d80b925bcb72e867e94b47de2bc8",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/part-first-kernel/src/pxc.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+          "pagesHash": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+          "localHash": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/accepted-shelf.html",
+          "pagesStatus": 200,
+          "receiptHash": "dad63fe9f3806b32b1b395393629693c4d9ff03d7fa835f4eca1e066cdf58ba7",
+          "pagesHash": "dad63fe9f3806b32b1b395393629693c4d9ff03d7fa835f4eca1e066cdf58ba7",
+          "localHash": "dad63fe9f3806b32b1b395393629693c4d9ff03d7fa835f4eca1e066cdf58ba7",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/art/chevron-run.svg",
+          "pagesStatus": 200,
+          "receiptHash": "e47aedaa81eb59394d7aef5c6db1e671b93c27befc2a735fc0008bb9633be330",
+          "pagesHash": "e47aedaa81eb59394d7aef5c6db1e671b93c27befc2a735fc0008bb9633be330",
+          "localHash": "e47aedaa81eb59394d7aef5c6db1e671b93c27befc2a735fc0008bb9633be330",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/art/contour-basin.svg",
+          "pagesStatus": 200,
+          "receiptHash": "062985ea08257265141df90c0fc6d446aa79f35251a0e31868db73e1c077a8bb",
+          "pagesHash": "062985ea08257265141df90c0fc6d446aa79f35251a0e31868db73e1c077a8bb",
+          "localHash": "062985ea08257265141df90c0fc6d446aa79f35251a0e31868db73e1c077a8bb",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/art/pressed-fern.svg",
+          "pagesStatus": 200,
+          "receiptHash": "dfa5e90f93be16bec0594fdb0be0536e36e17b2bf6aea7dfda9729784635aaf5",
+          "pagesHash": "dfa5e90f93be16bec0594fdb0be0536e36e17b2bf6aea7dfda9729784635aaf5",
+          "localHash": "dfa5e90f93be16bec0594fdb0be0536e36e17b2bf6aea7dfda9729784635aaf5",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/bags.js",
+          "pagesStatus": 200,
+          "receiptHash": "24e9cacdcdfa24ea86fb73b198355eb1d3de1ca92b64568a42da0ae10c40af64",
+          "pagesHash": "24e9cacdcdfa24ea86fb73b198355eb1d3de1ca92b64568a42da0ae10c40af64",
+          "localHash": "24e9cacdcdfa24ea86fb73b198355eb1d3de1ca92b64568a42da0ae10c40af64",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/brand-mark.svg",
+          "pagesStatus": 200,
+          "receiptHash": "2ce681c5ee781715bc645b29c3eaaa6532f89103e0b19796dc8c2b87c9771676",
+          "pagesHash": "2ce681c5ee781715bc645b29c3eaaa6532f89103e0b19796dc8c2b87c9771676",
+          "localHash": "2ce681c5ee781715bc645b29c3eaaa6532f89103e0b19796dc8c2b87c9771676",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/catalog.js",
+          "pagesStatus": 200,
+          "receiptHash": "40c30c8599e9d7b396de23bb07a722ae20812e03ea0b18a9cf2d228feecdfa6c",
+          "pagesHash": "40c30c8599e9d7b396de23bb07a722ae20812e03ea0b18a9cf2d228feecdfa6c",
+          "localHash": "40c30c8599e9d7b396de23bb07a722ae20812e03ea0b18a9cf2d228feecdfa6c",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/devtools-data.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "ad2d76d679c4f26022a6f15a54c121df5fff85630f0afd412c1955d5e84909bf",
+          "pagesHash": "ad2d76d679c4f26022a6f15a54c121df5fff85630f0afd412c1955d5e84909bf",
+          "localHash": "ad2d76d679c4f26022a6f15a54c121df5fff85630f0afd412c1955d5e84909bf",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/devtools.css",
+          "pagesStatus": 200,
+          "receiptHash": "97f3968cf560f85be4debd9807f16047f65dfef5b9634b66db16b8b4626ff467",
+          "pagesHash": "97f3968cf560f85be4debd9807f16047f65dfef5b9634b66db16b8b4626ff467",
+          "localHash": "97f3968cf560f85be4debd9807f16047f65dfef5b9634b66db16b8b4626ff467",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/devtools.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "74295db712b4473d173dc9f31c2c1dc2cedf4f3faca1af373478803ecf478b63",
+          "pagesHash": "74295db712b4473d173dc9f31c2c1dc2cedf4f3faca1af373478803ecf478b63",
+          "localHash": "74295db712b4473d173dc9f31c2c1dc2cedf4f3faca1af373478803ecf478b63",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/disc-view.js",
+          "pagesStatus": 200,
+          "receiptHash": "8651ca15628ac9505d22c979575336bd0626db65d0576662c3c73e0f83262c5f",
+          "pagesHash": "8651ca15628ac9505d22c979575336bd0626db65d0576662c3c73e0f83262c5f",
+          "localHash": "8651ca15628ac9505d22c979575336bd0626db65d0576662c3c73e0f83262c5f",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/experience-fixtures.js",
+          "pagesStatus": 200,
+          "receiptHash": "c57c9f7e50a9a1a79e47cdc91eac46ef60b8aeaa871321c06fe9b4fe0c28a909",
+          "pagesHash": "c57c9f7e50a9a1a79e47cdc91eac46ef60b8aeaa871321c06fe9b4fe0c28a909",
+          "localHash": "c57c9f7e50a9a1a79e47cdc91eac46ef60b8aeaa871321c06fe9b4fe0c28a909",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/experience-page.js",
+          "pagesStatus": 200,
+          "receiptHash": "1da6b724b2303d7652e5bab6c1a4d825fd973d24dc834f082495b7b00ce344cb",
+          "pagesHash": "1da6b724b2303d7652e5bab6c1a4d825fd973d24dc834f082495b7b00ce344cb",
+          "localHash": "1da6b724b2303d7652e5bab6c1a4d825fd973d24dc834f082495b7b00ce344cb",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/experiences.js",
+          "pagesStatus": 200,
+          "receiptHash": "feeb313151d5e42e23658447be2f7da9649cc6c55bebab23cdaa075ccb83458e",
+          "pagesHash": "feeb313151d5e42e23658447be2f7da9649cc6c55bebab23cdaa075ccb83458e",
+          "localHash": "feeb313151d5e42e23658447be2f7da9649cc6c55bebab23cdaa075ccb83458e",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/index.html",
+          "pagesStatus": 200,
+          "receiptHash": "83859611442c97aa53e22fe905878ce885752af0f043f0fa912d90580255a9c0",
+          "pagesHash": "83859611442c97aa53e22fe905878ce885752af0f043f0fa912d90580255a9c0",
+          "localHash": "83859611442c97aa53e22fe905878ce885752af0f043f0fa912d90580255a9c0",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/model.js",
+          "pagesStatus": 200,
+          "receiptHash": "11d432d4f8a5f169135d00214897738a25422c1b3de8bfda2f44b1cfd001129a",
+          "pagesHash": "11d432d4f8a5f169135d00214897738a25422c1b3de8bfda2f44b1cfd001129a",
+          "localHash": "11d432d4f8a5f169135d00214897738a25422c1b3de8bfda2f44b1cfd001129a",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/operations.js",
+          "pagesStatus": 200,
+          "receiptHash": "a49c985f4bb3ca34ace121054b80bfdc5c2d0374f83e69bb322f5957dbee3024",
+          "pagesHash": "a49c985f4bb3ca34ace121054b80bfdc5c2d0374f83e69bb322f5957dbee3024",
+          "localHash": "a49c985f4bb3ca34ace121054b80bfdc5c2d0374f83e69bb322f5957dbee3024",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/paint-recipe.js",
+          "pagesStatus": 200,
+          "receiptHash": "12d74e8cb447fe0e06bc828580e8ade4320c3cb429c473b0234ec1cfbbe02663",
+          "pagesHash": "12d74e8cb447fe0e06bc828580e8ade4320c3cb429c473b0234ec1cfbbe02663",
+          "localHash": "12d74e8cb447fe0e06bc828580e8ade4320c3cb429c473b0234ec1cfbbe02663",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/paint.js",
+          "pagesStatus": 200,
+          "receiptHash": "c29eb327bff08d6f458123e219d142914e8ecdca45f6880c57ecac4cfdf4bbe0",
+          "pagesHash": "c29eb327bff08d6f458123e219d142914e8ecdca45f6880c57ecac4cfdf4bbe0",
+          "localHash": "c29eb327bff08d6f458123e219d142914e8ecdca45f6880c57ecac4cfdf4bbe0",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/persistence.js",
+          "pagesStatus": 200,
+          "receiptHash": "d47a3fb2cba59064f9522b7c3d8b40c666d6522db778d37c96e1b4c90339dec3",
+          "pagesHash": "d47a3fb2cba59064f9522b7c3d8b40c666d6522db778d37c96e1b4c90339dec3",
+          "localHash": "d47a3fb2cba59064f9522b7c3d8b40c666d6522db778d37c96e1b4c90339dec3",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/persistent-experience.js",
+          "pagesStatus": 200,
+          "receiptHash": "17c21989179e0bc83275f394d344d18896177b41fe2a4682d541cd5134e70bda",
+          "pagesHash": "17c21989179e0bc83275f394d344d18896177b41fe2a4682d541cd5134e70bda",
+          "localHash": "17c21989179e0bc83275f394d344d18896177b41fe2a4682d541cd5134e70bda",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/plastics.js",
+          "pagesStatus": 200,
+          "receiptHash": "da498c6f4577b399c4785250aa59470b5c868a238f83b6674dd710ebeb6e3d3e",
+          "pagesHash": "da498c6f4577b399c4785250aa59470b5c868a238f83b6674dd710ebeb6e3d3e",
+          "localHash": "da498c6f4577b399c4785250aa59470b5c868a238f83b6674dd710ebeb6e3d3e",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/sandbox-cases.js",
+          "pagesStatus": 200,
+          "receiptHash": "a9a63fc8b1bd1c0e201e60e3b9ea0ba8583f541031f74b95616d9eaebd9b0e22",
+          "pagesHash": "a9a63fc8b1bd1c0e201e60e3b9ea0ba8583f541031f74b95616d9eaebd9b0e22",
+          "localHash": "a9a63fc8b1bd1c0e201e60e3b9ea0ba8583f541031f74b95616d9eaebd9b0e22",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/sandbox-ui.js",
+          "pagesStatus": 200,
+          "receiptHash": "eb8e32d314677d719a53ae39216a6a746d46fcb7a29109f519ec4eef62873167",
+          "pagesHash": "eb8e32d314677d719a53ae39216a6a746d46fcb7a29109f519ec4eef62873167",
+          "localHash": "eb8e32d314677d719a53ae39216a6a746d46fcb7a29109f519ec4eef62873167",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/shelf-query.js",
+          "pagesStatus": 200,
+          "receiptHash": "a048d082517dce7bbb9538c34e7ee54cfce82afafdd4e89412489cd6c1713585",
+          "pagesHash": "a048d082517dce7bbb9538c34e7ee54cfce82afafdd4e89412489cd6c1713585",
+          "localHash": "a048d082517dce7bbb9538c34e7ee54cfce82afafdd4e89412489cd6c1713585",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/shelf-ui.js",
+          "pagesStatus": 200,
+          "receiptHash": "b6a1b27d64b62b243fb341998d339a7785186c24e0ca9b1c69ff3b9737ab9181",
+          "pagesHash": "b6a1b27d64b62b243fb341998d339a7785186c24e0ca9b1c69ff3b9737ab9181",
+          "localHash": "b6a1b27d64b62b243fb341998d339a7785186c24e0ca9b1c69ff3b9737ab9181",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/style.css",
+          "pagesStatus": 200,
+          "receiptHash": "d92550bf00730b50cdcd2cdcf1c1a6ec2e0fb76b81343d1a9811cfcbfc5fb964",
+          "pagesHash": "d92550bf00730b50cdcd2cdcf1c1a6ec2e0fb76b81343d1a9811cfcbfc5fb964",
+          "localHash": "d92550bf00730b50cdcd2cdcf1c1a6ec2e0fb76b81343d1a9811cfcbfc5fb964",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/upload-ui.js",
+          "pagesStatus": 200,
+          "receiptHash": "2e5d83a58d6c41745ab5c37cf35f4c141916697dee67274ab7bef0e395877183",
+          "pagesHash": "2e5d83a58d6c41745ab5c37cf35f4c141916697dee67274ab7bef0e395877183",
+          "localHash": "2e5d83a58d6c41745ab5c37cf35f4c141916697dee67274ab7bef0e395877183",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/vendor/painter/core.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "c0fc0bdc37c3c5ad420f736ca8f4bb082b150fddd388cd4e35fa52e45538fff4",
+          "pagesHash": "c0fc0bdc37c3c5ad420f736ca8f4bb082b150fddd388cd4e35fa52e45538fff4",
+          "localHash": "c0fc0bdc37c3c5ad420f736ca8f4bb082b150fddd388cd4e35fa52e45538fff4",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/vendor/painter/families/botanical.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "85c894e08f8c4e28b463fb71a4246dd2e4e60a7fdc83ddf526ba2a21f10c3d0d",
+          "pagesHash": "85c894e08f8c4e28b463fb71a4246dd2e4e60a7fdc83ddf526ba2a21f10c3d0d",
+          "localHash": "85c894e08f8c4e28b463fb71a4246dd2e4e60a7fdc83ddf526ba2a21f10c3d0d",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/vendor/painter/families/cartography.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "46b5fe9b45d141c881b9930e633c3b8b8e2596f23276349e5abaa55e810c4baa",
+          "pagesHash": "46b5fe9b45d141c881b9930e633c3b8b8e2596f23276349e5abaa55e810c4baa",
+          "localHash": "46b5fe9b45d141c881b9930e633c3b8b8e2596f23276349e5abaa55e810c4baa",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/vendor/painter/families/foundry.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "55a2e372cc0812a9c12ede4561b9a0a11cba0d3c83c298c7100789237f98ce87",
+          "pagesHash": "55a2e372cc0812a9c12ede4561b9a0a11cba0d3c83c298c7100789237f98ce87",
+          "localHash": "55a2e372cc0812a9c12ede4561b9a0a11cba0d3c83c298c7100789237f98ce87",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/vendor/painter/families/signal.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "a87c490c12d3087fc31f58a6dca4961f4c4e599ae9259d4cf643b61a389c98ad",
+          "pagesHash": "a87c490c12d3087fc31f58a6dca4961f4c4e599ae9259d4cf643b61a389c98ad",
+          "localHash": "a87c490c12d3087fc31f58a6dca4961f4c4e599ae9259d4cf643b61a389c98ad",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/vendor/painter/painter.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "5aeab9b991c0a17de632585cc05d9bdb0a0abce731cbf579eabf3d740b1b5cfc",
+          "pagesHash": "5aeab9b991c0a17de632585cc05d9bdb0a0abce731cbf579eabf3d740b1b5cfc",
+          "localHash": "5aeab9b991c0a17de632585cc05d9bdb0a0abce731cbf579eabf3d740b1b5cfc",
+          "sameBytes": true
+        },
+        {
+          "path": "style.css",
+          "pagesStatus": 200,
+          "receiptHash": "7bc0210075ea5cf69cf135b4d886bf26cea9c704a24fad3fb9a3fc8a052745fd",
+          "pagesHash": "7bc0210075ea5cf69cf135b4d886bf26cea9c704a24fad3fb9a3fc8a052745fd",
+          "localHash": "7bc0210075ea5cf69cf135b4d886bf26cea9c704a24fad3fb9a3fc8a052745fd",
+          "sameBytes": true
+        }
+      ],
+      "localManifest": {
+        "id": "explore-shelf",
+        "title": "ExploreShelf",
+        "version": "0.1.0",
+        "entry": "index.html",
+        "mounts": [
+          "studio"
+        ],
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals",
+          "allow-forms"
+        ],
+        "build": "node build.mjs",
+        "track": "exp"
+      },
+      "pagesManifest": {
+        "id": "explore-shelf",
+        "title": "ExploreShelf",
+        "version": "0.1.0",
+        "entry": "index.html",
+        "mounts": [
+          "studio"
+        ],
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals",
+          "allow-forms"
+        ],
+        "build": "node build.mjs",
+        "track": "exp"
+      }
+    },
+    {
+      "id": "hello",
+      "title": "Hello THING",
+      "contractMatches": true,
+      "effectiveContractMatches": true,
+      "sourceHashMatches": true,
+      "manifestHashMatches": true,
+      "entryChunkMatches": true,
+      "localChunkCount": 1,
+      "pagesChunkCount": 1,
+      "identicalChunks": 1,
+      "validation": {
+        "ok": true,
+        "chunks": 1,
+        "mismatches": [],
+        "app": "Hello THING"
+      },
+      "mountValidation": {
+        "declaredMounts": [],
+        "usedMounts": [],
+        "undeclaredMounts": [],
+        "persistedPrefixViolations": []
+      },
+      "chunks": [
+        {
+          "path": "index.html",
+          "pagesStatus": 200,
+          "receiptHash": "130311678ebbd422e41f93a0653ff118fbc4eb4c4e8794c0899c3000d2320bc6",
+          "pagesHash": "130311678ebbd422e41f93a0653ff118fbc4eb4c4e8794c0899c3000d2320bc6",
+          "localHash": "130311678ebbd422e41f93a0653ff118fbc4eb4c4e8794c0899c3000d2320bc6",
+          "sameBytes": true
+        }
+      ],
+      "localManifest": {
+        "id": "hello",
+        "title": "Hello THING",
+        "version": "0.1.0",
+        "entry": "index.html",
+        "mounts": [],
+        "sandbox": [
+          "allow-scripts"
+        ],
+        "build": "mkdir -p dist && cp index.html dist/",
+        "track": "exp"
+      },
+      "pagesManifest": {
+        "id": "hello",
+        "title": "Hello THING",
+        "version": "0.1.0",
+        "entry": "index.html",
+        "mounts": [],
+        "sandbox": [
+          "allow-scripts"
+        ],
+        "build": "mkdir -p dist && cp index.html dist/",
+        "track": "exp"
+      }
+    },
+    {
+      "id": "mock-smoke",
+      "title": "MockPxC · retained worlds",
+      "contractMatches": true,
+      "effectiveContractMatches": true,
+      "sourceHashMatches": true,
+      "manifestHashMatches": true,
+      "entryChunkMatches": true,
+      "localChunkCount": 6,
+      "pagesChunkCount": 6,
+      "identicalChunks": 6,
+      "validation": {
+        "ok": true,
+        "chunks": 6,
+        "mismatches": [],
+        "app": "MockPxC · retained worlds"
+      },
+      "mountValidation": {
+        "declaredMounts": [
+          "shelf"
+        ],
+        "usedMounts": [
+          "shelf"
+        ],
+        "undeclaredMounts": [],
+        "persistedPrefixViolations": []
+      },
+      "chunks": [
+        {
+          "path": "app.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "a463c29d2e0784267899c6824b0b582743638d8a4f24e578e927983c44fd5f0f",
+          "pagesHash": "a463c29d2e0784267899c6824b0b582743638d8a4f24e578e927983c44fd5f0f",
+          "localHash": "a463c29d2e0784267899c6824b0b582743638d8a4f24e578e927983c44fd5f0f",
+          "sameBytes": true
+        },
+        {
+          "path": "index.html",
+          "pagesStatus": 200,
+          "receiptHash": "45c9d00e39c565e990808bf5bef902040942c8cbc4bff4bd62115a0352eef8ef",
+          "pagesHash": "45c9d00e39c565e990808bf5bef902040942c8cbc4bff4bd62115a0352eef8ef",
+          "localHash": "45c9d00e39c565e990808bf5bef902040942c8cbc4bff4bd62115a0352eef8ef",
+          "sameBytes": true
+        },
+        {
+          "path": "local/mock-mounts.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+          "pagesHash": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+          "localHash": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+          "sameBytes": true
+        },
+        {
+          "path": "mock-pxc/mock-pxc.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+          "pagesHash": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+          "localHash": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+          "sameBytes": true
+        },
+        {
+          "path": "seed-identity.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "1ae11651fb5cf3e0b5fca05d487d6a85aca6c0a927f6827f4e570d94175cd11b",
+          "pagesHash": "1ae11651fb5cf3e0b5fca05d487d6a85aca6c0a927f6827f4e570d94175cd11b",
+          "localHash": "1ae11651fb5cf3e0b5fca05d487d6a85aca6c0a927f6827f4e570d94175cd11b",
+          "sameBytes": true
+        },
+        {
+          "path": "style.css",
+          "pagesStatus": 200,
+          "receiptHash": "6fc5581332cd1a2565715d1fd57cd43fd470e07836312a6fc59549f426b33d28",
+          "pagesHash": "6fc5581332cd1a2565715d1fd57cd43fd470e07836312a6fc59549f426b33d28",
+          "localHash": "6fc5581332cd1a2565715d1fd57cd43fd470e07836312a6fc59549f426b33d28",
+          "sameBytes": true
+        }
+      ],
+      "localManifest": {
+        "id": "mock-smoke",
+        "title": "MockPxC · retained worlds",
+        "version": "0.1.0",
+        "entry": "index.html",
+        "mounts": [
+          "shelf"
+        ],
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin"
+        ],
+        "build": "node build.mjs",
+        "track": "exp"
+      },
+      "pagesManifest": {
+        "id": "mock-smoke",
+        "title": "MockPxC · retained worlds",
+        "version": "0.1.0",
+        "entry": "index.html",
+        "mounts": [
+          "shelf"
+        ],
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin"
+        ],
+        "build": "node build.mjs",
+        "track": "exp"
+      }
+    },
+    {
+      "id": "upload-disc-to-shelf",
+      "title": "UploadDiscToShelf",
+      "contractMatches": true,
+      "effectiveContractMatches": true,
+      "sourceHashMatches": true,
+      "manifestHashMatches": true,
+      "entryChunkMatches": true,
+      "localChunkCount": 45,
+      "pagesChunkCount": 45,
+      "identicalChunks": 45,
+      "validation": {
+        "ok": true,
+        "chunks": 45,
+        "mismatches": [],
+        "app": "UploadDiscToShelf"
+      },
+      "mountValidation": {
+        "declaredMounts": [
+          "studio"
+        ],
+        "usedMounts": [],
+        "undeclaredMounts": [],
+        "persistedPrefixViolations": []
+      },
+      "chunks": [
+        {
+          "path": "config.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "343bf12cf05af2565f51f9b6d2e7983f2dd6860f80564b0ea0a57f21a1e4b1fa",
+          "pagesHash": "343bf12cf05af2565f51f9b6d2e7983f2dd6860f80564b0ea0a57f21a1e4b1fa",
+          "localHash": "343bf12cf05af2565f51f9b6d2e7983f2dd6860f80564b0ea0a57f21a1e4b1fa",
+          "sameBytes": true
+        },
+        {
+          "path": "host.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "0d9198d67d03babda60cc920b1b887b96b062d50fe64ae732c58a67d50df2ef0",
+          "pagesHash": "0d9198d67d03babda60cc920b1b887b96b062d50fe64ae732c58a67d50df2ef0",
+          "localHash": "0d9198d67d03babda60cc920b1b887b96b062d50fe64ae732c58a67d50df2ef0",
+          "sameBytes": true
+        },
+        {
+          "path": "index.html",
+          "pagesStatus": 200,
+          "receiptHash": "372c63f28d9b770c369e9b9ad6e397cbea6f9146a7fb4f5fb075c812d7f8bac1",
+          "pagesHash": "372c63f28d9b770c369e9b9ad6e397cbea6f9146a7fb4f5fb075c812d7f8bac1",
+          "localHash": "372c63f28d9b770c369e9b9ad6e397cbea6f9146a7fb4f5fb075c812d7f8bac1",
+          "sameBytes": true
+        },
+        {
+          "path": "live.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "e581c3724d7743380660b781148125ae57b6954101825a5b3e887abe0676372d",
+          "pagesHash": "e581c3724d7743380660b781148125ae57b6954101825a5b3e887abe0676372d",
+          "localHash": "e581c3724d7743380660b781148125ae57b6954101825a5b3e887abe0676372d",
+          "sameBytes": true
+        },
+        {
+          "path": "local/experience-mount.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "968343527364031f5f3bbce300c6492f7f8f7d654d7eb84277ac98ed2417fa34",
+          "pagesHash": "968343527364031f5f3bbce300c6492f7f8f7d654d7eb84277ac98ed2417fa34",
+          "localHash": "968343527364031f5f3bbce300c6492f7f8f7d654d7eb84277ac98ed2417fa34",
+          "sameBytes": true
+        },
+        {
+          "path": "local/mock-mounts.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+          "pagesHash": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+          "localHash": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+          "sameBytes": true
+        },
+        {
+          "path": "mock-pxc/mock-pxc.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+          "pagesHash": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+          "localHash": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+          "sameBytes": true
+        },
+        {
+          "path": "studio-import.json",
+          "pagesStatus": 200,
+          "receiptHash": "b0da3bda39a8bb14772131ce1cfa44886a2e843bca76af6fa5e64b80595b555e",
+          "pagesHash": "b0da3bda39a8bb14772131ce1cfa44886a2e843bca76af6fa5e64b80595b555e",
+          "localHash": "b0da3bda39a8bb14772131ce1cfa44886a2e843bca76af6fa5e64b80595b555e",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/part-first-kernel/src/inspect.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "54a140e605934104e1123fc5c5df54c04b20d80b925bcb72e867e94b47de2bc8",
+          "pagesHash": "54a140e605934104e1123fc5c5df54c04b20d80b925bcb72e867e94b47de2bc8",
+          "localHash": "54a140e605934104e1123fc5c5df54c04b20d80b925bcb72e867e94b47de2bc8",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/part-first-kernel/src/pxc.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+          "pagesHash": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+          "localHash": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/accepted-shelf.html",
+          "pagesStatus": 200,
+          "receiptHash": "dad63fe9f3806b32b1b395393629693c4d9ff03d7fa835f4eca1e066cdf58ba7",
+          "pagesHash": "dad63fe9f3806b32b1b395393629693c4d9ff03d7fa835f4eca1e066cdf58ba7",
+          "localHash": "dad63fe9f3806b32b1b395393629693c4d9ff03d7fa835f4eca1e066cdf58ba7",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/art/chevron-run.svg",
+          "pagesStatus": 200,
+          "receiptHash": "e47aedaa81eb59394d7aef5c6db1e671b93c27befc2a735fc0008bb9633be330",
+          "pagesHash": "e47aedaa81eb59394d7aef5c6db1e671b93c27befc2a735fc0008bb9633be330",
+          "localHash": "e47aedaa81eb59394d7aef5c6db1e671b93c27befc2a735fc0008bb9633be330",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/art/contour-basin.svg",
+          "pagesStatus": 200,
+          "receiptHash": "062985ea08257265141df90c0fc6d446aa79f35251a0e31868db73e1c077a8bb",
+          "pagesHash": "062985ea08257265141df90c0fc6d446aa79f35251a0e31868db73e1c077a8bb",
+          "localHash": "062985ea08257265141df90c0fc6d446aa79f35251a0e31868db73e1c077a8bb",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/art/pressed-fern.svg",
+          "pagesStatus": 200,
+          "receiptHash": "dfa5e90f93be16bec0594fdb0be0536e36e17b2bf6aea7dfda9729784635aaf5",
+          "pagesHash": "dfa5e90f93be16bec0594fdb0be0536e36e17b2bf6aea7dfda9729784635aaf5",
+          "localHash": "dfa5e90f93be16bec0594fdb0be0536e36e17b2bf6aea7dfda9729784635aaf5",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/bags.js",
+          "pagesStatus": 200,
+          "receiptHash": "24e9cacdcdfa24ea86fb73b198355eb1d3de1ca92b64568a42da0ae10c40af64",
+          "pagesHash": "24e9cacdcdfa24ea86fb73b198355eb1d3de1ca92b64568a42da0ae10c40af64",
+          "localHash": "24e9cacdcdfa24ea86fb73b198355eb1d3de1ca92b64568a42da0ae10c40af64",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/brand-mark.svg",
+          "pagesStatus": 200,
+          "receiptHash": "2ce681c5ee781715bc645b29c3eaaa6532f89103e0b19796dc8c2b87c9771676",
+          "pagesHash": "2ce681c5ee781715bc645b29c3eaaa6532f89103e0b19796dc8c2b87c9771676",
+          "localHash": "2ce681c5ee781715bc645b29c3eaaa6532f89103e0b19796dc8c2b87c9771676",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/catalog.js",
+          "pagesStatus": 200,
+          "receiptHash": "40c30c8599e9d7b396de23bb07a722ae20812e03ea0b18a9cf2d228feecdfa6c",
+          "pagesHash": "40c30c8599e9d7b396de23bb07a722ae20812e03ea0b18a9cf2d228feecdfa6c",
+          "localHash": "40c30c8599e9d7b396de23bb07a722ae20812e03ea0b18a9cf2d228feecdfa6c",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/devtools-data.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "ad2d76d679c4f26022a6f15a54c121df5fff85630f0afd412c1955d5e84909bf",
+          "pagesHash": "ad2d76d679c4f26022a6f15a54c121df5fff85630f0afd412c1955d5e84909bf",
+          "localHash": "ad2d76d679c4f26022a6f15a54c121df5fff85630f0afd412c1955d5e84909bf",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/devtools.css",
+          "pagesStatus": 200,
+          "receiptHash": "97f3968cf560f85be4debd9807f16047f65dfef5b9634b66db16b8b4626ff467",
+          "pagesHash": "97f3968cf560f85be4debd9807f16047f65dfef5b9634b66db16b8b4626ff467",
+          "localHash": "97f3968cf560f85be4debd9807f16047f65dfef5b9634b66db16b8b4626ff467",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/devtools.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "74295db712b4473d173dc9f31c2c1dc2cedf4f3faca1af373478803ecf478b63",
+          "pagesHash": "74295db712b4473d173dc9f31c2c1dc2cedf4f3faca1af373478803ecf478b63",
+          "localHash": "74295db712b4473d173dc9f31c2c1dc2cedf4f3faca1af373478803ecf478b63",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/disc-view.js",
+          "pagesStatus": 200,
+          "receiptHash": "8651ca15628ac9505d22c979575336bd0626db65d0576662c3c73e0f83262c5f",
+          "pagesHash": "8651ca15628ac9505d22c979575336bd0626db65d0576662c3c73e0f83262c5f",
+          "localHash": "8651ca15628ac9505d22c979575336bd0626db65d0576662c3c73e0f83262c5f",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/experience-fixtures.js",
+          "pagesStatus": 200,
+          "receiptHash": "c57c9f7e50a9a1a79e47cdc91eac46ef60b8aeaa871321c06fe9b4fe0c28a909",
+          "pagesHash": "c57c9f7e50a9a1a79e47cdc91eac46ef60b8aeaa871321c06fe9b4fe0c28a909",
+          "localHash": "c57c9f7e50a9a1a79e47cdc91eac46ef60b8aeaa871321c06fe9b4fe0c28a909",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/experience-page.js",
+          "pagesStatus": 200,
+          "receiptHash": "1da6b724b2303d7652e5bab6c1a4d825fd973d24dc834f082495b7b00ce344cb",
+          "pagesHash": "1da6b724b2303d7652e5bab6c1a4d825fd973d24dc834f082495b7b00ce344cb",
+          "localHash": "1da6b724b2303d7652e5bab6c1a4d825fd973d24dc834f082495b7b00ce344cb",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/experiences.js",
+          "pagesStatus": 200,
+          "receiptHash": "feeb313151d5e42e23658447be2f7da9649cc6c55bebab23cdaa075ccb83458e",
+          "pagesHash": "feeb313151d5e42e23658447be2f7da9649cc6c55bebab23cdaa075ccb83458e",
+          "localHash": "feeb313151d5e42e23658447be2f7da9649cc6c55bebab23cdaa075ccb83458e",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/index.html",
+          "pagesStatus": 200,
+          "receiptHash": "83859611442c97aa53e22fe905878ce885752af0f043f0fa912d90580255a9c0",
+          "pagesHash": "83859611442c97aa53e22fe905878ce885752af0f043f0fa912d90580255a9c0",
+          "localHash": "83859611442c97aa53e22fe905878ce885752af0f043f0fa912d90580255a9c0",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/model.js",
+          "pagesStatus": 200,
+          "receiptHash": "11d432d4f8a5f169135d00214897738a25422c1b3de8bfda2f44b1cfd001129a",
+          "pagesHash": "11d432d4f8a5f169135d00214897738a25422c1b3de8bfda2f44b1cfd001129a",
+          "localHash": "11d432d4f8a5f169135d00214897738a25422c1b3de8bfda2f44b1cfd001129a",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/operations.js",
+          "pagesStatus": 200,
+          "receiptHash": "a49c985f4bb3ca34ace121054b80bfdc5c2d0374f83e69bb322f5957dbee3024",
+          "pagesHash": "a49c985f4bb3ca34ace121054b80bfdc5c2d0374f83e69bb322f5957dbee3024",
+          "localHash": "a49c985f4bb3ca34ace121054b80bfdc5c2d0374f83e69bb322f5957dbee3024",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/paint-recipe.js",
+          "pagesStatus": 200,
+          "receiptHash": "12d74e8cb447fe0e06bc828580e8ade4320c3cb429c473b0234ec1cfbbe02663",
+          "pagesHash": "12d74e8cb447fe0e06bc828580e8ade4320c3cb429c473b0234ec1cfbbe02663",
+          "localHash": "12d74e8cb447fe0e06bc828580e8ade4320c3cb429c473b0234ec1cfbbe02663",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/paint.js",
+          "pagesStatus": 200,
+          "receiptHash": "c29eb327bff08d6f458123e219d142914e8ecdca45f6880c57ecac4cfdf4bbe0",
+          "pagesHash": "c29eb327bff08d6f458123e219d142914e8ecdca45f6880c57ecac4cfdf4bbe0",
+          "localHash": "c29eb327bff08d6f458123e219d142914e8ecdca45f6880c57ecac4cfdf4bbe0",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/persistence.js",
+          "pagesStatus": 200,
+          "receiptHash": "d47a3fb2cba59064f9522b7c3d8b40c666d6522db778d37c96e1b4c90339dec3",
+          "pagesHash": "d47a3fb2cba59064f9522b7c3d8b40c666d6522db778d37c96e1b4c90339dec3",
+          "localHash": "d47a3fb2cba59064f9522b7c3d8b40c666d6522db778d37c96e1b4c90339dec3",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/persistent-experience.js",
+          "pagesStatus": 200,
+          "receiptHash": "17c21989179e0bc83275f394d344d18896177b41fe2a4682d541cd5134e70bda",
+          "pagesHash": "17c21989179e0bc83275f394d344d18896177b41fe2a4682d541cd5134e70bda",
+          "localHash": "17c21989179e0bc83275f394d344d18896177b41fe2a4682d541cd5134e70bda",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/plastics.js",
+          "pagesStatus": 200,
+          "receiptHash": "da498c6f4577b399c4785250aa59470b5c868a238f83b6674dd710ebeb6e3d3e",
+          "pagesHash": "da498c6f4577b399c4785250aa59470b5c868a238f83b6674dd710ebeb6e3d3e",
+          "localHash": "da498c6f4577b399c4785250aa59470b5c868a238f83b6674dd710ebeb6e3d3e",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/sandbox-cases.js",
+          "pagesStatus": 200,
+          "receiptHash": "a9a63fc8b1bd1c0e201e60e3b9ea0ba8583f541031f74b95616d9eaebd9b0e22",
+          "pagesHash": "a9a63fc8b1bd1c0e201e60e3b9ea0ba8583f541031f74b95616d9eaebd9b0e22",
+          "localHash": "a9a63fc8b1bd1c0e201e60e3b9ea0ba8583f541031f74b95616d9eaebd9b0e22",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/sandbox-ui.js",
+          "pagesStatus": 200,
+          "receiptHash": "eb8e32d314677d719a53ae39216a6a746d46fcb7a29109f519ec4eef62873167",
+          "pagesHash": "eb8e32d314677d719a53ae39216a6a746d46fcb7a29109f519ec4eef62873167",
+          "localHash": "eb8e32d314677d719a53ae39216a6a746d46fcb7a29109f519ec4eef62873167",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/shelf-query.js",
+          "pagesStatus": 200,
+          "receiptHash": "a048d082517dce7bbb9538c34e7ee54cfce82afafdd4e89412489cd6c1713585",
+          "pagesHash": "a048d082517dce7bbb9538c34e7ee54cfce82afafdd4e89412489cd6c1713585",
+          "localHash": "a048d082517dce7bbb9538c34e7ee54cfce82afafdd4e89412489cd6c1713585",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/shelf-ui.js",
+          "pagesStatus": 200,
+          "receiptHash": "b6a1b27d64b62b243fb341998d339a7785186c24e0ca9b1c69ff3b9737ab9181",
+          "pagesHash": "b6a1b27d64b62b243fb341998d339a7785186c24e0ca9b1c69ff3b9737ab9181",
+          "localHash": "b6a1b27d64b62b243fb341998d339a7785186c24e0ca9b1c69ff3b9737ab9181",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/style.css",
+          "pagesStatus": 200,
+          "receiptHash": "d92550bf00730b50cdcd2cdcf1c1a6ec2e0fb76b81343d1a9811cfcbfc5fb964",
+          "pagesHash": "d92550bf00730b50cdcd2cdcf1c1a6ec2e0fb76b81343d1a9811cfcbfc5fb964",
+          "localHash": "d92550bf00730b50cdcd2cdcf1c1a6ec2e0fb76b81343d1a9811cfcbfc5fb964",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/upload-ui.js",
+          "pagesStatus": 200,
+          "receiptHash": "2e5d83a58d6c41745ab5c37cf35f4c141916697dee67274ab7bef0e395877183",
+          "pagesHash": "2e5d83a58d6c41745ab5c37cf35f4c141916697dee67274ab7bef0e395877183",
+          "localHash": "2e5d83a58d6c41745ab5c37cf35f4c141916697dee67274ab7bef0e395877183",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/vendor/painter/core.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "c0fc0bdc37c3c5ad420f736ca8f4bb082b150fddd388cd4e35fa52e45538fff4",
+          "pagesHash": "c0fc0bdc37c3c5ad420f736ca8f4bb082b150fddd388cd4e35fa52e45538fff4",
+          "localHash": "c0fc0bdc37c3c5ad420f736ca8f4bb082b150fddd388cd4e35fa52e45538fff4",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/vendor/painter/families/botanical.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "85c894e08f8c4e28b463fb71a4246dd2e4e60a7fdc83ddf526ba2a21f10c3d0d",
+          "pagesHash": "85c894e08f8c4e28b463fb71a4246dd2e4e60a7fdc83ddf526ba2a21f10c3d0d",
+          "localHash": "85c894e08f8c4e28b463fb71a4246dd2e4e60a7fdc83ddf526ba2a21f10c3d0d",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/vendor/painter/families/cartography.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "46b5fe9b45d141c881b9930e633c3b8b8e2596f23276349e5abaa55e810c4baa",
+          "pagesHash": "46b5fe9b45d141c881b9930e633c3b8b8e2596f23276349e5abaa55e810c4baa",
+          "localHash": "46b5fe9b45d141c881b9930e633c3b8b8e2596f23276349e5abaa55e810c4baa",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/vendor/painter/families/foundry.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "55a2e372cc0812a9c12ede4561b9a0a11cba0d3c83c298c7100789237f98ce87",
+          "pagesHash": "55a2e372cc0812a9c12ede4561b9a0a11cba0d3c83c298c7100789237f98ce87",
+          "localHash": "55a2e372cc0812a9c12ede4561b9a0a11cba0d3c83c298c7100789237f98ce87",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/vendor/painter/families/signal.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "a87c490c12d3087fc31f58a6dca4961f4c4e599ae9259d4cf643b61a389c98ad",
+          "pagesHash": "a87c490c12d3087fc31f58a6dca4961f4c4e599ae9259d4cf643b61a389c98ad",
+          "localHash": "a87c490c12d3087fc31f58a6dca4961f4c4e599ae9259d4cf643b61a389c98ad",
+          "sameBytes": true
+        },
+        {
+          "path": "studio/upload-disc-to-shelf/vendor/painter/painter.mjs",
+          "pagesStatus": 200,
+          "receiptHash": "5aeab9b991c0a17de632585cc05d9bdb0a0abce731cbf579eabf3d740b1b5cfc",
+          "pagesHash": "5aeab9b991c0a17de632585cc05d9bdb0a0abce731cbf579eabf3d740b1b5cfc",
+          "localHash": "5aeab9b991c0a17de632585cc05d9bdb0a0abce731cbf579eabf3d740b1b5cfc",
+          "sameBytes": true
+        },
+        {
+          "path": "style.css",
+          "pagesStatus": 200,
+          "receiptHash": "7bc0210075ea5cf69cf135b4d886bf26cea9c704a24fad3fb9a3fc8a052745fd",
+          "pagesHash": "7bc0210075ea5cf69cf135b4d886bf26cea9c704a24fad3fb9a3fc8a052745fd",
+          "localHash": "7bc0210075ea5cf69cf135b4d886bf26cea9c704a24fad3fb9a3fc8a052745fd",
+          "sameBytes": true
+        }
+      ],
+      "localManifest": {
+        "id": "upload-disc-to-shelf",
+        "title": "UploadDiscToShelf",
+        "version": "0.1.0",
+        "entry": "index.html",
+        "mounts": [
+          "studio"
+        ],
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals",
+          "allow-forms"
+        ],
+        "build": "node build.mjs",
+        "track": "exp"
+      },
+      "pagesManifest": {
+        "id": "upload-disc-to-shelf",
+        "title": "UploadDiscToShelf",
+        "version": "0.1.0",
+        "entry": "index.html",
+        "mounts": [
+          "studio"
+        ],
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals",
+          "allow-forms"
+        ],
+        "build": "node build.mjs",
+        "track": "exp"
+      }
+    }
+  ],
+  "supportingFiles": [
+    {
+      "file": "neat.html",
+      "pagesStatus": 200,
+      "localExists": true,
+      "sameBytes": true
+    },
+    {
+      "file": "pxcube-run.json",
+      "pagesStatus": 200,
+      "localExists": true,
+      "sameBytes": false
+    }
+  ],
+  "requests": [
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/",
+      "status": 200,
+      "bytes": 51114,
+      "sha256": "f558286dfd5c8fbf78dc05c93a4b1bea80f608d8f02f446191eb5e0f7f8596c2",
+      "etag": "W/\"6aa86c2f-c7aa\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/shell.css",
+      "status": 200,
+      "bytes": 8977,
+      "sha256": "61d78f9ca70387834a7cb1e94db9ac0ebcf65178b46006714430b591b3e2c61a",
+      "etag": "W/\"6aa86c2f-2311\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/shell.mjs",
+      "status": 200,
+      "bytes": 10985,
+      "sha256": "f6a2201e1ad5536a2a4535e7159ae2b5f9660ed424117e95c9237c828f665a06",
+      "etag": "W/\"6aa86c2f-2ae9\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/neat.html",
+      "status": 200,
+      "bytes": 9571,
+      "sha256": "444442e39c372d1681e9e9f8499e6adda928e8a2459c6b99d1529de70243c50c",
+      "etag": "W/\"6aa86c2f-2563\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/pxcube-run.json",
+      "status": 200,
+      "bytes": 33585,
+      "sha256": "36f7d07c0924078d2dbc266d3196accdd7e72d1625f526571eecb619fb4c84a1",
+      "etag": "W/\"6aa86c2f-8331\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/build-bag/receipt.json",
+      "status": 200,
+      "bytes": 1701,
+      "sha256": "c82e28af15db4426571d775eaf93d4f409584eb06b238f22f40c3d38d86ab526",
+      "etag": "W/\"6aa86c2f-6a5\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/build-bag/app.mjs",
+      "status": 200,
+      "bytes": 4293,
+      "sha256": "0ee735706f06e1a5930f4adc7a8de2a38b89f6872c5d766f2411d65b00b885dd",
+      "etag": "W/\"6aa86c2f-10c5\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/build-bag/config.json",
+      "status": 200,
+      "bytes": 1302,
+      "sha256": "fcd00fa1fc9b455581c93ed654fa0f5b7b8831b93caa1349715749fc7166b5b2",
+      "etag": "W/\"6aa86c2f-516\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/build-bag/index.html",
+      "status": 200,
+      "bytes": 1821,
+      "sha256": "b08311f390d3adeceaec1ea89045c0a56a620a3c850a1c4f6c70d2124e93647a",
+      "etag": "W/\"6aa86c2f-71d\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/build-bag/local/mock-mounts.mjs",
+      "status": 200,
+      "bytes": 4221,
+      "sha256": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+      "etag": "W/\"6aa86c2f-107d\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/build-bag/mock-pxc/mock-pxc.mjs",
+      "status": 200,
+      "bytes": 3578,
+      "sha256": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+      "etag": "W/\"6aa86c2f-dfa\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/build-bag/style.css",
+      "status": 200,
+      "bytes": 3017,
+      "sha256": "fb27b25eb7fa77347f2aa166ba1875def514fdb95d1206c4b6017a6ae3d03b32",
+      "etag": "W/\"6aa86c2f-bc9\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/receipt.json",
+      "status": 200,
+      "bytes": 7649,
+      "sha256": "64d5bbae90c1e20e5adbce269c8558ba6677f118d4a23d069a5c2a02c59ee522",
+      "etag": "W/\"6aa86c2f-1de1\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/config.mjs",
+      "status": 200,
+      "bytes": 129,
+      "sha256": "6af5e29f2fb89c0216528fafe52e84bf24fa26966a9d29e0c14448e651f38040",
+      "etag": "\"6aa86c2f-81\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/live.mjs",
+      "status": 200,
+      "bytes": 1887,
+      "sha256": "e581c3724d7743380660b781148125ae57b6954101825a5b3e887abe0676372d",
+      "etag": "W/\"6aa86c2f-75f\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/index.html",
+      "status": 200,
+      "bytes": 1213,
+      "sha256": "372c63f28d9b770c369e9b9ad6e397cbea6f9146a7fb4f5fb075c812d7f8bac1",
+      "etag": "W/\"6aa86c2f-4bd\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/host.mjs",
+      "status": 200,
+      "bytes": 7461,
+      "sha256": "0d9198d67d03babda60cc920b1b887b96b062d50fe64ae732c58a67d50df2ef0",
+      "etag": "W/\"6aa86c2f-1d25\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/local/mock-mounts.mjs",
+      "status": 200,
+      "bytes": 4221,
+      "sha256": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+      "etag": "W/\"6aa86c2f-107d\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/local/experience-mount.mjs",
+      "status": 200,
+      "bytes": 820,
+      "sha256": "968343527364031f5f3bbce300c6492f7f8f7d654d7eb84277ac98ed2417fa34",
+      "etag": "W/\"6aa86c2f-334\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/mock-pxc/mock-pxc.mjs",
+      "status": 200,
+      "bytes": 3578,
+      "sha256": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+      "etag": "W/\"6aa86c2f-dfa\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio-import.json",
+      "status": 200,
+      "bytes": 28946,
+      "sha256": "b0da3bda39a8bb14772131ce1cfa44886a2e843bca76af6fa5e64b80595b555e",
+      "etag": "W/\"6aa86c2f-7112\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/part-first-kernel/src/pxc.mjs",
+      "status": 200,
+      "bytes": 2869,
+      "sha256": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+      "etag": "W/\"6aa86c2f-b35\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/part-first-kernel/src/inspect.mjs",
+      "status": 200,
+      "bytes": 636,
+      "sha256": "54a140e605934104e1123fc5c5df54c04b20d80b925bcb72e867e94b47de2bc8",
+      "etag": "W/\"6aa86c2f-27c\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/art/chevron-run.svg",
+      "status": 200,
+      "bytes": 2348,
+      "sha256": "e47aedaa81eb59394d7aef5c6db1e671b93c27befc2a735fc0008bb9633be330",
+      "etag": "W/\"6aa86c2f-92c\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/accepted-shelf.html",
+      "status": 200,
+      "bytes": 88343,
+      "sha256": "dad63fe9f3806b32b1b395393629693c4d9ff03d7fa835f4eca1e066cdf58ba7",
+      "etag": "W/\"6aa86c2f-15917\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/art/pressed-fern.svg",
+      "status": 200,
+      "bytes": 11412,
+      "sha256": "dfa5e90f93be16bec0594fdb0be0536e36e17b2bf6aea7dfda9729784635aaf5",
+      "etag": "W/\"6aa86c2f-2c94\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/art/contour-basin.svg",
+      "status": 200,
+      "bytes": 20053,
+      "sha256": "062985ea08257265141df90c0fc6d446aa79f35251a0e31868db73e1c077a8bb",
+      "etag": "W/\"6aa86c2f-4e55\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/bags.js",
+      "status": 200,
+      "bytes": 5781,
+      "sha256": "24e9cacdcdfa24ea86fb73b198355eb1d3de1ca92b64568a42da0ae10c40af64",
+      "etag": "W/\"6aa86c2f-1695\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/brand-mark.svg",
+      "status": 200,
+      "bytes": 500,
+      "sha256": "2ce681c5ee781715bc645b29c3eaaa6532f89103e0b19796dc8c2b87c9771676",
+      "etag": "W/\"6aa86c2f-1f4\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/catalog.js",
+      "status": 200,
+      "bytes": 544569,
+      "sha256": "40c30c8599e9d7b396de23bb07a722ae20812e03ea0b18a9cf2d228feecdfa6c",
+      "etag": "W/\"6aa86c2f-84f39\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/devtools.css",
+      "status": 200,
+      "bytes": 1783,
+      "sha256": "97f3968cf560f85be4debd9807f16047f65dfef5b9634b66db16b8b4626ff467",
+      "etag": "W/\"6aa86c2f-6f7\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/devtools-data.mjs",
+      "status": 200,
+      "bytes": 7270,
+      "sha256": "ad2d76d679c4f26022a6f15a54c121df5fff85630f0afd412c1955d5e84909bf",
+      "etag": "W/\"6aa86c2f-1c66\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/devtools.mjs",
+      "status": 200,
+      "bytes": 16825,
+      "sha256": "74295db712b4473d173dc9f31c2c1dc2cedf4f3faca1af373478803ecf478b63",
+      "etag": "W/\"6aa86c2f-41b9\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/disc-view.js",
+      "status": 200,
+      "bytes": 1242,
+      "sha256": "8651ca15628ac9505d22c979575336bd0626db65d0576662c3c73e0f83262c5f",
+      "etag": "W/\"6aa86c2f-4da\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/experience-fixtures.js",
+      "status": 200,
+      "bytes": 1484,
+      "sha256": "c57c9f7e50a9a1a79e47cdc91eac46ef60b8aeaa871321c06fe9b4fe0c28a909",
+      "etag": "W/\"6aa86c2f-5cc\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/experience-page.js",
+      "status": 200,
+      "bytes": 3928,
+      "sha256": "1da6b724b2303d7652e5bab6c1a4d825fd973d24dc834f082495b7b00ce344cb",
+      "etag": "W/\"6aa86c2f-f58\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/experiences.js",
+      "status": 200,
+      "bytes": 1671,
+      "sha256": "feeb313151d5e42e23658447be2f7da9649cc6c55bebab23cdaa075ccb83458e",
+      "etag": "W/\"6aa86c2f-687\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/index.html",
+      "status": 200,
+      "bytes": 4716,
+      "sha256": "83859611442c97aa53e22fe905878ce885752af0f043f0fa912d90580255a9c0",
+      "etag": "W/\"6aa86c2f-126c\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/model.js",
+      "status": 200,
+      "bytes": 21290,
+      "sha256": "11d432d4f8a5f169135d00214897738a25422c1b3de8bfda2f44b1cfd001129a",
+      "etag": "W/\"6aa86c2f-532a\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/operations.js",
+      "status": 200,
+      "bytes": 1488,
+      "sha256": "a49c985f4bb3ca34ace121054b80bfdc5c2d0374f83e69bb322f5957dbee3024",
+      "etag": "W/\"6aa86c2f-5d0\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/paint-recipe.js",
+      "status": 200,
+      "bytes": 3318,
+      "sha256": "12d74e8cb447fe0e06bc828580e8ade4320c3cb429c473b0234ec1cfbbe02663",
+      "etag": "W/\"6aa86c2f-cf6\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/paint.js",
+      "status": 200,
+      "bytes": 2596,
+      "sha256": "c29eb327bff08d6f458123e219d142914e8ecdca45f6880c57ecac4cfdf4bbe0",
+      "etag": "W/\"6aa86c2f-a24\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/persistent-experience.js",
+      "status": 200,
+      "bytes": 1125,
+      "sha256": "17c21989179e0bc83275f394d344d18896177b41fe2a4682d541cd5134e70bda",
+      "etag": "W/\"6aa86c2f-465\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/persistence.js",
+      "status": 200,
+      "bytes": 7826,
+      "sha256": "d47a3fb2cba59064f9522b7c3d8b40c666d6522db778d37c96e1b4c90339dec3",
+      "etag": "W/\"6aa86c2f-1e92\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/plastics.js",
+      "status": 200,
+      "bytes": 933,
+      "sha256": "da498c6f4577b399c4785250aa59470b5c868a238f83b6674dd710ebeb6e3d3e",
+      "etag": "W/\"6aa86c2f-3a5\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/sandbox-cases.js",
+      "status": 200,
+      "bytes": 8438,
+      "sha256": "a9a63fc8b1bd1c0e201e60e3b9ea0ba8583f541031f74b95616d9eaebd9b0e22",
+      "etag": "W/\"6aa86c2f-20f6\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/sandbox-ui.js",
+      "status": 200,
+      "bytes": 6326,
+      "sha256": "eb8e32d314677d719a53ae39216a6a746d46fcb7a29109f519ec4eef62873167",
+      "etag": "W/\"6aa86c2f-18b6\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/shelf-query.js",
+      "status": 200,
+      "bytes": 5466,
+      "sha256": "a048d082517dce7bbb9538c34e7ee54cfce82afafdd4e89412489cd6c1713585",
+      "etag": "W/\"6aa86c2f-155a\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/style.css",
+      "status": 200,
+      "bytes": 15934,
+      "sha256": "d92550bf00730b50cdcd2cdcf1c1a6ec2e0fb76b81343d1a9811cfcbfc5fb964",
+      "etag": "W/\"6aa86c2f-3e3e\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/shelf-ui.js",
+      "status": 200,
+      "bytes": 21526,
+      "sha256": "b6a1b27d64b62b243fb341998d339a7785186c24e0ca9b1c69ff3b9737ab9181",
+      "etag": "W/\"6aa86c2f-5416\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/upload-ui.js",
+      "status": 200,
+      "bytes": 10906,
+      "sha256": "2e5d83a58d6c41745ab5c37cf35f4c141916697dee67274ab7bef0e395877183",
+      "etag": "W/\"6aa86c2f-2a9a\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/vendor/painter/core.mjs",
+      "status": 200,
+      "bytes": 20837,
+      "sha256": "c0fc0bdc37c3c5ad420f736ca8f4bb082b150fddd388cd4e35fa52e45538fff4",
+      "etag": "W/\"6aa86c2f-5165\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/vendor/painter/families/botanical.mjs",
+      "status": 200,
+      "bytes": 24149,
+      "sha256": "85c894e08f8c4e28b463fb71a4246dd2e4e60a7fdc83ddf526ba2a21f10c3d0d",
+      "etag": "W/\"6aa86c2f-5e55\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/vendor/painter/families/cartography.mjs",
+      "status": 200,
+      "bytes": 24553,
+      "sha256": "46b5fe9b45d141c881b9930e633c3b8b8e2596f23276349e5abaa55e810c4baa",
+      "etag": "W/\"6aa86c2f-5fe9\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/vendor/painter/families/foundry.mjs",
+      "status": 200,
+      "bytes": 14222,
+      "sha256": "55a2e372cc0812a9c12ede4561b9a0a11cba0d3c83c298c7100789237f98ce87",
+      "etag": "W/\"6aa86c2f-378e\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/vendor/painter/families/signal.mjs",
+      "status": 200,
+      "bytes": 14967,
+      "sha256": "a87c490c12d3087fc31f58a6dca4961f4c4e599ae9259d4cf643b61a389c98ad",
+      "etag": "W/\"6aa86c2f-3a77\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/style.css",
+      "status": 200,
+      "bytes": 1646,
+      "sha256": "7bc0210075ea5cf69cf135b4d886bf26cea9c704a24fad3fb9a3fc8a052745fd",
+      "etag": "W/\"6aa86c2f-66e\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/explore-shelf/studio/upload-disc-to-shelf/vendor/painter/painter.mjs",
+      "status": 200,
+      "bytes": 8226,
+      "sha256": "5aeab9b991c0a17de632585cc05d9bdb0a0abce731cbf579eabf3d740b1b5cfc",
+      "etag": "W/\"6aa86c2f-2022\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/hello/receipt.json",
+      "status": 200,
+      "bytes": 862,
+      "sha256": "03fb6c5b92d51ea0cc91a1e7a5bfe0af620dcd74c328e10f7ef68ca233140e5d",
+      "etag": "W/\"6aa86c2f-35e\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/hello/index.html",
+      "status": 200,
+      "bytes": 1637,
+      "sha256": "130311678ebbd422e41f93a0653ff118fbc4eb4c4e8794c0899c3000d2320bc6",
+      "etag": "W/\"6aa86c2f-665\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/mock-smoke/receipt.json",
+      "status": 200,
+      "bytes": 1584,
+      "sha256": "a0c735e9d9d4632ae6f480227957c86bd6145018c2bad254f99f13b123948c36",
+      "etag": "W/\"6aa86c2f-630\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/mock-smoke/app.mjs",
+      "status": 200,
+      "bytes": 4584,
+      "sha256": "a463c29d2e0784267899c6824b0b582743638d8a4f24e578e927983c44fd5f0f",
+      "etag": "W/\"6aa86c2f-11e8\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/mock-smoke/index.html",
+      "status": 200,
+      "bytes": 1315,
+      "sha256": "45c9d00e39c565e990808bf5bef902040942c8cbc4bff4bd62115a0352eef8ef",
+      "etag": "W/\"6aa86c2f-523\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/mock-smoke/local/mock-mounts.mjs",
+      "status": 200,
+      "bytes": 4221,
+      "sha256": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+      "etag": "W/\"6aa86c2f-107d\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/mock-smoke/mock-pxc/mock-pxc.mjs",
+      "status": 200,
+      "bytes": 3578,
+      "sha256": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+      "etag": "W/\"6aa86c2f-dfa\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/mock-smoke/seed-identity.mjs",
+      "status": 200,
+      "bytes": 83,
+      "sha256": "1ae11651fb5cf3e0b5fca05d487d6a85aca6c0a927f6827f4e570d94175cd11b",
+      "etag": "\"6aa86c2f-53\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/mock-smoke/style.css",
+      "status": 200,
+      "bytes": 1367,
+      "sha256": "6fc5581332cd1a2565715d1fd57cd43fd470e07836312a6fc59549f426b33d28",
+      "etag": "W/\"6aa86c2f-557\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/receipt.json",
+      "status": 200,
+      "bytes": 7654,
+      "sha256": "9bea267cf9248a452e90ea33983a5fdac8a8a1038b4bf5bb5a3a2cceb595d6b5",
+      "etag": "W/\"6aa86c2f-1de6\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/config.mjs",
+      "status": 200,
+      "bytes": 142,
+      "sha256": "343bf12cf05af2565f51f9b6d2e7983f2dd6860f80564b0ea0a57f21a1e4b1fa",
+      "etag": "\"6aa86c2f-8e\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/host.mjs",
+      "status": 200,
+      "bytes": 7461,
+      "sha256": "0d9198d67d03babda60cc920b1b887b96b062d50fe64ae732c58a67d50df2ef0",
+      "etag": "W/\"6aa86c2f-1d25\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/index.html",
+      "status": 200,
+      "bytes": 1213,
+      "sha256": "372c63f28d9b770c369e9b9ad6e397cbea6f9146a7fb4f5fb075c812d7f8bac1",
+      "etag": "W/\"6aa86c2f-4bd\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/live.mjs",
+      "status": 200,
+      "bytes": 1887,
+      "sha256": "e581c3724d7743380660b781148125ae57b6954101825a5b3e887abe0676372d",
+      "etag": "W/\"6aa86c2f-75f\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/mock-pxc/mock-pxc.mjs",
+      "status": 200,
+      "bytes": 3578,
+      "sha256": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+      "etag": "W/\"6aa86c2f-dfa\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/local/mock-mounts.mjs",
+      "status": 200,
+      "bytes": 4221,
+      "sha256": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+      "etag": "W/\"6aa86c2f-107d\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/local/experience-mount.mjs",
+      "status": 200,
+      "bytes": 820,
+      "sha256": "968343527364031f5f3bbce300c6492f7f8f7d654d7eb84277ac98ed2417fa34",
+      "etag": "W/\"6aa86c2f-334\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio-import.json",
+      "status": 200,
+      "bytes": 28946,
+      "sha256": "b0da3bda39a8bb14772131ce1cfa44886a2e843bca76af6fa5e64b80595b555e",
+      "etag": "W/\"6aa86c2f-7112\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/part-first-kernel/src/inspect.mjs",
+      "status": 200,
+      "bytes": 636,
+      "sha256": "54a140e605934104e1123fc5c5df54c04b20d80b925bcb72e867e94b47de2bc8",
+      "etag": "W/\"6aa86c2f-27c\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/part-first-kernel/src/pxc.mjs",
+      "status": 200,
+      "bytes": 2869,
+      "sha256": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+      "etag": "W/\"6aa86c2f-b35\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/art/chevron-run.svg",
+      "status": 200,
+      "bytes": 2348,
+      "sha256": "e47aedaa81eb59394d7aef5c6db1e671b93c27befc2a735fc0008bb9633be330",
+      "etag": "W/\"6aa86c2f-92c\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/accepted-shelf.html",
+      "status": 200,
+      "bytes": 88343,
+      "sha256": "dad63fe9f3806b32b1b395393629693c4d9ff03d7fa835f4eca1e066cdf58ba7",
+      "etag": "W/\"6aa86c2f-15917\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/art/pressed-fern.svg",
+      "status": 200,
+      "bytes": 11412,
+      "sha256": "dfa5e90f93be16bec0594fdb0be0536e36e17b2bf6aea7dfda9729784635aaf5",
+      "etag": "W/\"6aa86c2f-2c94\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/bags.js",
+      "status": 200,
+      "bytes": 5781,
+      "sha256": "24e9cacdcdfa24ea86fb73b198355eb1d3de1ca92b64568a42da0ae10c40af64",
+      "etag": "W/\"6aa86c2f-1695\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/brand-mark.svg",
+      "status": 200,
+      "bytes": 500,
+      "sha256": "2ce681c5ee781715bc645b29c3eaaa6532f89103e0b19796dc8c2b87c9771676",
+      "etag": "W/\"6aa86c2f-1f4\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/art/contour-basin.svg",
+      "status": 200,
+      "bytes": 20053,
+      "sha256": "062985ea08257265141df90c0fc6d446aa79f35251a0e31868db73e1c077a8bb",
+      "etag": "W/\"6aa86c2f-4e55\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/devtools.css",
+      "status": 200,
+      "bytes": 1783,
+      "sha256": "97f3968cf560f85be4debd9807f16047f65dfef5b9634b66db16b8b4626ff467",
+      "etag": "W/\"6aa86c2f-6f7\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/devtools-data.mjs",
+      "status": 200,
+      "bytes": 7270,
+      "sha256": "ad2d76d679c4f26022a6f15a54c121df5fff85630f0afd412c1955d5e84909bf",
+      "etag": "W/\"6aa86c2f-1c66\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/devtools.mjs",
+      "status": 200,
+      "bytes": 16825,
+      "sha256": "74295db712b4473d173dc9f31c2c1dc2cedf4f3faca1af373478803ecf478b63",
+      "etag": "W/\"6aa86c2f-41b9\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/catalog.js",
+      "status": 200,
+      "bytes": 544569,
+      "sha256": "40c30c8599e9d7b396de23bb07a722ae20812e03ea0b18a9cf2d228feecdfa6c",
+      "etag": "W/\"6aa86c2f-84f39\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/experience-fixtures.js",
+      "status": 200,
+      "bytes": 1484,
+      "sha256": "c57c9f7e50a9a1a79e47cdc91eac46ef60b8aeaa871321c06fe9b4fe0c28a909",
+      "etag": "W/\"6aa86c2f-5cc\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/disc-view.js",
+      "status": 200,
+      "bytes": 1242,
+      "sha256": "8651ca15628ac9505d22c979575336bd0626db65d0576662c3c73e0f83262c5f",
+      "etag": "W/\"6aa86c2f-4da\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/experience-page.js",
+      "status": 200,
+      "bytes": 3928,
+      "sha256": "1da6b724b2303d7652e5bab6c1a4d825fd973d24dc834f082495b7b00ce344cb",
+      "etag": "W/\"6aa86c2f-f58\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/experiences.js",
+      "status": 200,
+      "bytes": 1671,
+      "sha256": "feeb313151d5e42e23658447be2f7da9649cc6c55bebab23cdaa075ccb83458e",
+      "etag": "W/\"6aa86c2f-687\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/operations.js",
+      "status": 200,
+      "bytes": 1488,
+      "sha256": "a49c985f4bb3ca34ace121054b80bfdc5c2d0374f83e69bb322f5957dbee3024",
+      "etag": "W/\"6aa86c2f-5d0\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/model.js",
+      "status": 200,
+      "bytes": 21290,
+      "sha256": "11d432d4f8a5f169135d00214897738a25422c1b3de8bfda2f44b1cfd001129a",
+      "etag": "W/\"6aa86c2f-532a\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/index.html",
+      "status": 200,
+      "bytes": 4716,
+      "sha256": "83859611442c97aa53e22fe905878ce885752af0f043f0fa912d90580255a9c0",
+      "etag": "W/\"6aa86c2f-126c\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/paint-recipe.js",
+      "status": 200,
+      "bytes": 3318,
+      "sha256": "12d74e8cb447fe0e06bc828580e8ade4320c3cb429c473b0234ec1cfbbe02663",
+      "etag": "W/\"6aa86c2f-cf6\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/paint.js",
+      "status": 200,
+      "bytes": 2596,
+      "sha256": "c29eb327bff08d6f458123e219d142914e8ecdca45f6880c57ecac4cfdf4bbe0",
+      "etag": "W/\"6aa86c2f-a24\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/persistence.js",
+      "status": 200,
+      "bytes": 7826,
+      "sha256": "d47a3fb2cba59064f9522b7c3d8b40c666d6522db778d37c96e1b4c90339dec3",
+      "etag": "W/\"6aa86c2f-1e92\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/persistent-experience.js",
+      "status": 200,
+      "bytes": 1125,
+      "sha256": "17c21989179e0bc83275f394d344d18896177b41fe2a4682d541cd5134e70bda",
+      "etag": "W/\"6aa86c2f-465\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/plastics.js",
+      "status": 200,
+      "bytes": 933,
+      "sha256": "da498c6f4577b399c4785250aa59470b5c868a238f83b6674dd710ebeb6e3d3e",
+      "etag": "W/\"6aa86c2f-3a5\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/sandbox-ui.js",
+      "status": 200,
+      "bytes": 6326,
+      "sha256": "eb8e32d314677d719a53ae39216a6a746d46fcb7a29109f519ec4eef62873167",
+      "etag": "W/\"6aa86c2f-18b6\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/sandbox-cases.js",
+      "status": 200,
+      "bytes": 8438,
+      "sha256": "a9a63fc8b1bd1c0e201e60e3b9ea0ba8583f541031f74b95616d9eaebd9b0e22",
+      "etag": "W/\"6aa86c2f-20f6\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/shelf-query.js",
+      "status": 200,
+      "bytes": 5466,
+      "sha256": "a048d082517dce7bbb9538c34e7ee54cfce82afafdd4e89412489cd6c1713585",
+      "etag": "W/\"6aa86c2f-155a\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/style.css",
+      "status": 200,
+      "bytes": 15934,
+      "sha256": "d92550bf00730b50cdcd2cdcf1c1a6ec2e0fb76b81343d1a9811cfcbfc5fb964",
+      "etag": "W/\"6aa86c2f-3e3e\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/upload-ui.js",
+      "status": 200,
+      "bytes": 10906,
+      "sha256": "2e5d83a58d6c41745ab5c37cf35f4c141916697dee67274ab7bef0e395877183",
+      "etag": "W/\"6aa86c2f-2a9a\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/shelf-ui.js",
+      "status": 200,
+      "bytes": 21526,
+      "sha256": "b6a1b27d64b62b243fb341998d339a7785186c24e0ca9b1c69ff3b9737ab9181",
+      "etag": "W/\"6aa86c2f-5416\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/vendor/painter/core.mjs",
+      "status": 200,
+      "bytes": 20837,
+      "sha256": "c0fc0bdc37c3c5ad420f736ca8f4bb082b150fddd388cd4e35fa52e45538fff4",
+      "etag": "W/\"6aa86c2f-5165\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/vendor/painter/families/botanical.mjs",
+      "status": 200,
+      "bytes": 24149,
+      "sha256": "85c894e08f8c4e28b463fb71a4246dd2e4e60a7fdc83ddf526ba2a21f10c3d0d",
+      "etag": "W/\"6aa86c2f-5e55\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/vendor/painter/families/foundry.mjs",
+      "status": 200,
+      "bytes": 14222,
+      "sha256": "55a2e372cc0812a9c12ede4561b9a0a11cba0d3c83c298c7100789237f98ce87",
+      "etag": "W/\"6aa86c2f-378e\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/vendor/painter/families/cartography.mjs",
+      "status": 200,
+      "bytes": 24553,
+      "sha256": "46b5fe9b45d141c881b9930e633c3b8b8e2596f23276349e5abaa55e810c4baa",
+      "etag": "W/\"6aa86c2f-5fe9\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/vendor/painter/families/signal.mjs",
+      "status": 200,
+      "bytes": 14967,
+      "sha256": "a87c490c12d3087fc31f58a6dca4961f4c4e599ae9259d4cf643b61a389c98ad",
+      "etag": "W/\"6aa86c2f-3a77\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/studio/upload-disc-to-shelf/vendor/painter/painter.mjs",
+      "status": 200,
+      "bytes": 8226,
+      "sha256": "5aeab9b991c0a17de632585cc05d9bdb0a0abce731cbf579eabf3d740b1b5cfc",
+      "etag": "W/\"6aa86c2f-2022\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    },
+    {
+      "url": "https://samuelpmahan.github.io/PxCube/experiences/upload-disc-to-shelf/style.css",
+      "status": 200,
+      "bytes": 1646,
+      "sha256": "7bc0210075ea5cf69cf135b4d886bf26cea9c704a24fad3fb9a3fc8a052745fd",
+      "etag": "W/\"6aa86c2f-66e\"",
+      "lastModified": "Mon, 14 Sep 2026 21:50:39 GMT"
+    }
+  ],
+  "ntc": {
+    "sourceCommitMatches": true,
+    "workMatches": true,
+    "typesMatch": true,
+    "manifestsMatch": true,
+    "outcomesMatch": true,
+    "sharedToolsHashMatches": true
+  },
+  "summary": {
+    "allRemoteChunksVerified": true,
+    "allExperienceBytesMatch": true,
+    "allContractsMatch": true,
+    "allEffectiveContractsMatch": true,
+    "totalChunks": 103,
+    "ntcStateMatches": false,
+    "ntcSemanticParity": true,
+    "allSupportingFilesAvailable": true
+  }
+}

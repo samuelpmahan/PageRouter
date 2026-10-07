@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PxCube · NTC workspace</title><link rel="stylesheet" href="./shell.css"></head>
+<body>
+  <header id="control-header">
+    <button id="control-drawer-toggle" type="button" aria-expanded="true" aria-controls="control-header navigation ntc-strip bar" aria-label="Hide workspace controls">
+      <span class="drawer-icon" aria-hidden="true">&#9776;</span><span class="drawer-label">Hide controls</span>
+    </button>
+    <button class="brand" data-view="experiences">PxCube <span>NTC workspace</span></button>
+    <div class="identity"><span>Artifact</span> <code id="artifact-id">—</code><span>Snapshot</span> <code id="source-id">—</code></div>
+    <button id="refresh-build" hidden>New build ready · reload</button>
+  </header>
+  <aside id="navigation">
+    <p class="eyebrow">Control layer</p>
+    <button class="nav-button selected" data-view="experiences">Experiences <span id="experience-count"></span></button>
+    <button class="nav-button" data-view="work">neat <small>Work</small></button>
+    <button class="nav-button" data-view="manifests">tidy <small>Manifests</small></button>
+    <button class="nav-button" data-view="builds">crisp <small>Builds</small></button>
+    <button class="nav-button" data-view="mounts">Mounts <span id="mount-count">0</span></button>
+    <button class="nav-button" data-view="console">PxConsole <small>Inspect</small></button>
+    <div class="nav-section"><p class="eyebrow">Experiences</p><div id="experience-nav"></div></div>
+    <div class="nav-foot"><span id="frame-count">0 opened frames</span><p>Switch views freely.<br>Opened contexts stay here.</p></div>
+  </aside>
+  <main id="control-main">
+    <section id="ntc-strip" aria-label="NTC build path">
+      <button data-view="work"><span class="stage-name">neat</span><span>Work defines the task</span><strong id="work-summary">—</strong></button>
+      <button data-view="manifests"><span class="stage-name">tidy</span><span>Manifests define the build</span><strong id="manifest-summary">—</strong></button>
+      <button data-view="builds"><span class="stage-name">crisp</span><span>Builds produce the artifact</span><strong id="build-summary">—</strong></button>
+    </section>
+    <div id="surface">
+      <section id="experience-panel" class="control-panel">
+        <div class="section-heading"><div><p class="eyebrow">Workspace / experiences</p><h1>Experiences</h1><p>Open a sandbox. Its work, manifest, build and mounts remain in reach.</p></div><span class="pill" id="artifact-status"></span></div>
+        <nav id="tabs" aria-label="Experience collections"><button data-tab="clean">Clean</button><button data-tab="exp" class="active">Exp</button><button data-tab="manifests">Manifests</button></nav>
+        <section id="tab-clean" class="tab" hidden><div class="shelf"><!-- CLEAN --></div></section>
+        <section id="tab-exp" class="tab"><div class="shelf"><!-- EXP --></div></section>
+        <section id="tab-manifests" class="tab" hidden><!-- MANIFESTS --></section>
+      </section>
+      <section id="work-panel" class="control-panel" hidden>
+        <div class="section-heading"><div><p class="eyebrow">neat / work</p><h1>Work behind the Experiences</h1><p>The actual work items captured with this build.</p></div><a href="./neat.html" target="_blank" rel="noopener">Full work board</a></div>
+        <div class="table-scroll"><table><thead><tr><th>Work item</th><th>State</th><th>Outcome</th><th>Inspect</th></tr></thead><tbody id="work-rows"></tbody></table></div>
+      </section>
+      <section id="builds-panel" class="control-panel" hidden>
+        <div class="section-heading"><div><p class="eyebrow">crisp / builds</p><h1>What built, and from what</h1><p>Packaging outcomes from the artifact currently open in this workspace.</p></div><a href="./pxcube-run.json" target="_blank" rel="noopener">Latest build record</a></div>
+        <div class="table-scroll"><table><thead><tr><th>Experience</th><th>Result</th><th>Build time</th><th>Outputs</th><th>Inspect</th></tr></thead><tbody id="build-rows"></tbody></table></div>
+      </section>
+      <section id="mounts-panel" class="control-panel" hidden>
+        <div class="section-heading"><div><p class="eyebrow">Runtime / mounts</p><h1>Inside the opened sandboxes</h1><p>Read from each opened Experience’s own inspector. Unopened Experiences have not been started.</p></div><button id="refresh-mounts">Refresh mounts</button></div>
+        <div class="table-scroll"><table><thead><tr><th>Owner</th><th>Mount</th><th>Kind</th><th>Context</th><th>Inspect</th></tr></thead><tbody id="mount-rows"></tbody></table></div>
+        <p class="note">These are retained browser contexts. Hiding a frame does not pause its code. Same-origin sandbox code is trusted.</p>
+      </section>
+      <section id="console-panel" class="control-panel" hidden>
+        <div class="section-heading"><div><p class="eyebrow">Runtime / console</p><h1>PxConsole</h1><p>Discover every retained world, read its state, trace how it was composed. Reads descriptors; executes nothing.</p></div><span class="pill" id="console-status">—</span></div>
+        <div class="console-discover"><label>Find <input id="console-filter" type="search" placeholder="filter worlds, experiences, addresses" aria-label="Filter worlds"></label><button id="refresh-console">Refresh</button></div>
+        <div class="table-scroll"><table><thead><tr><th>World</th><th>Experience</th><th>Kind</th><th>Writes</th><th>Revision</th><th>Source</th><th>Inspect</th></tr></thead><tbody id="console-rows"></tbody></table></div>
+        <div id="console-detail" hidden>
+          <div class="section-heading"><div><p class="eyebrow" id="console-detail-eyebrow">World</p><h2 id="console-detail-title">—</h2></div></div>
+          <h3>Read · addresses through PxC</h3>
+          <div class="table-scroll"><table><thead><tr><th>Address</th><th>Type</th><th>Inspect</th></tr></thead><tbody id="console-addresses"></tbody></table></div>
+          <h3>Read · recorded writes</h3>
+          <div class="table-scroll"><table><thead><tr><th>#</th><th>Address</th><th>Before</th><th>After</th></tr></thead><tbody id="console-writes"></tbody></table></div>
+          <p class="note">Full world value opens in the inspector dialog.</p>
+          <h3>Trace · composition</h3>
+          <pre id="console-trace" class="console-pre">—</pre>
+        </div>
+        <p class="note">Retained worlds are read from this browser's storage; opened frames are read live from their own inspectors. Opening a world hydrates it into a real PxC instance and every read goes through PxC's own machinery. The console never writes to a world and never executes its code.</p>
+      </section>
+      <section id="viewer" hidden>
+        <div id="bar"><button id="back">All Experiences</button><strong id="thing-title"></strong><label>Scenario <select id="scenario-select" aria-label="Representative scenario"></select></label><button id="load-scenario">Load</button><span id="frame-state" class="pill">Opened frame</span><button id="inspect-owner">Inspect owner</button><button id="inspect-manifest">Manifest</button><button id="inspect-build">Build</button></div>
+      </section>
+    </div>
+  </main>
+  <dialog id="inspector"><header><div><p class="eyebrow" id="inspector-kind"></p><h2 id="inspector-title"></h2></div><button id="close-inspector" aria-label="Close inspector">Close</button></header><p id="inspector-note"></p><pre id="inspector-value"></pre></dialog>
+  <script src="./tick-part-checklist.js"></script>
+  <!-- REVIEW-CHECKLIST -->
+  <script type="application/json" id="ntc-state"><!-- STATE --></script>
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});</script>
+  <script type="module" src="./shell.mjs"></script>
+</body></html>

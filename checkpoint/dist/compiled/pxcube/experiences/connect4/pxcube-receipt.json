@@ -1,0 +1,100 @@
+{
+  "app": "Connect Four (baseline)",
+  "version": "0.1.0",
+  "source": null,
+  "entry": "index.html",
+  "outDir": "dist",
+  "entryChunk": "879032eb29ec7cd82786875bcc50a6575a8434029ec551fbbbfd33d6a4db64f5",
+  "mounts": [],
+  "resolvedMounts": [],
+  "usedMounts": [],
+  "chunks": [
+    {
+      "path": "cartridges.json",
+      "sha256": "eb4048d0dfc5ab915c75ecc4de63396573107c385bfd5a591f7f310ae4973b29"
+    },
+    {
+      "path": "connect4-ui.js",
+      "sha256": "be35b6438707aa5a248840ea98aab5dcb657b1a284f2e8be0dddb78f0878be32"
+    },
+    {
+      "path": "index.html",
+      "sha256": "879032eb29ec7cd82786875bcc50a6575a8434029ec551fbbbfd33d6a4db64f5"
+    },
+    {
+      "path": "model.mjs",
+      "sha256": "6d68f2086fe3fcc1f55c125a1d7066bd35a174092637eac6c6f5856321b9c0a4"
+    },
+    {
+      "path": "player.js",
+      "sha256": "d360f03b777828a2dc1c6bf34d3b0a33f110791afde15f76c0a92ef726fe5ebc"
+    },
+    {
+      "path": "rom.js",
+      "sha256": "d36c6dabe51a7c01c5933aaa4c71043056dbf5c281955bc6cf971419633088f7"
+    },
+    {
+      "path": "rules.mjs",
+      "sha256": "5bed47fe3a61c7f46df5ecb221b965ecb3baf53ca967a94eb98409388bf10e85"
+    }
+  ],
+  "composition": {
+    "base": "gameboy",
+    "patches": [],
+    "baseChunks": [
+      {
+        "path": "cartridges.json",
+        "sha256": "eb4048d0dfc5ab915c75ecc4de63396573107c385bfd5a591f7f310ae4973b29"
+      },
+      {
+        "path": "connect4-ui.js",
+        "sha256": "be35b6438707aa5a248840ea98aab5dcb657b1a284f2e8be0dddb78f0878be32"
+      },
+      {
+        "path": "index.html",
+        "sha256": "879032eb29ec7cd82786875bcc50a6575a8434029ec551fbbbfd33d6a4db64f5"
+      },
+      {
+        "path": "player.js",
+        "sha256": "d360f03b777828a2dc1c6bf34d3b0a33f110791afde15f76c0a92ef726fe5ebc"
+      },
+      {
+        "path": "rom.js",
+        "sha256": "eb3caef5880cee74479bf17d49986ff5aa0a75e9be5718ebf20533cd72ce39f6"
+      }
+    ],
+    "overridden": [
+      "rom.js"
+    ]
+  },
+  "sourceHash": "2f3a3ea4b45ec5d2c643aabeac6bd654ad81be6f0c12f697bbb8787487041591",
+  "manifestHash": "1a4f9b799b0e965306b4be985cad6db0ce3b73dacffe0d91c7effd8022ae5bd7",
+  "build": {
+    "command": "node build.mjs",
+    "exitCode": 0,
+    "durationMs": 81,
+    "timedOut": false
+  },
+  "validation": {
+    "declaredMounts": [],
+    "usedMounts": [],
+    "undeclaredMounts": [],
+    "persistedPrefixViolations": []
+  },
+  "packagedAt": "2026-10-03T04:57:02.984Z",
+  "runId": "2026-10-03T04-57-02-751Z-f7caf981",
+  "sharedToolsHash": "b3ffd30fd197b6363eda802c2401f5b36ef220a3fb7f6db632f822b4ceebbcf8",
+  "outputHashes": {
+    "cartridges.json": "eb4048d0dfc5ab915c75ecc4de63396573107c385bfd5a591f7f310ae4973b29",
+    "connect4-ui.js": "be35b6438707aa5a248840ea98aab5dcb657b1a284f2e8be0dddb78f0878be32",
+    "index.html": "879032eb29ec7cd82786875bcc50a6575a8434029ec551fbbbfd33d6a4db64f5",
+    "model.mjs": "6d68f2086fe3fcc1f55c125a1d7066bd35a174092637eac6c6f5856321b9c0a4",
+    "player.js": "d360f03b777828a2dc1c6bf34d3b0a33f110791afde15f76c0a92ef726fe5ebc",
+    "rom.js": "d36c6dabe51a7c01c5933aaa4c71043056dbf5c281955bc6cf971419633088f7",
+    "rules.mjs": "5bed47fe3a61c7f46df5ecb221b965ecb3baf53ca967a94eb98409388bf10e85"
+  },
+  "tidy": {
+    "track": "exp",
+    "changedSinceRegistration": true
+  }
+}

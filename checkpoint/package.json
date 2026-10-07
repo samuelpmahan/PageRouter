@@ -1,0 +1,32 @@
+{
+  "name": "composed-workbench",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bundle:fast-check": "node scripts/build-fast-check-bundle.mjs",
+    "build:pxcube": "node scripts/build-pxcube.mjs",
+    "build": "node scripts/assemble.mjs",
+    "test": "node --test exp/cooperative/*.test.mjs exp/adversarial/*.test.mjs scripts/evaluator-identity.test.mjs scripts/hh-built-imports.test.mjs exp/atlas/*.test.mjs scripts/capability-ladder-view.test.mjs",
+    "preview": "node scripts/preview.mjs",
+    "test:ladder:browser": "node scripts/capability-ladder-browser-smoke.mjs",
+    "test:publication": "python3 scripts/publication-transport.test.py"
+  },
+  "releaseNotes": [
+    "Recovered original PageRouter A/B comparison and pinned project loading",
+    "Full existing PxCube crisp packages and authoritative neat/tidy lifecycle",
+    "Visual live composition session with actual HH Calculation Parts, typed connections and nested reuse",
+    "Exact-pin agent-readable graph/session export/import, separate from optional execution evidence",
+    "Compiled exact-byte deltas over real source closure, with clean-build equality proofs",
+    "Justin site IDE: declaratively composed annotation switch, guarded issue markers, reversible presentation prototypes and exact-base export",
+    "Game Boy cartridge picker with Connect Four baseline and a same-rules PxC + seek-tree migration",
+    "Bounded HH style playground with seeded fast-check variants, real PxC receipts, and a safe CSS-variable boundary",
+    "PxCube Atlas: live bounded program search, concrete counterexamples, real Part provenance and persistent-session replay/cache inspection",
+    "Atlas capability ladder: independently callable Parse, Validate, Interpret and Execute Parts, composed execution, editable literal definitions and replay/cache evidence"
+  ],
+  "releaseChannel": "candidate",
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "fast-check": "4.10.2"
+  }
+}

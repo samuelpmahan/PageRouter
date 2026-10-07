@@ -1,0 +1,156 @@
+{
+  "baseUrl": "http://127.0.0.1:34149/",
+  "checks": [
+    {
+      "name": "initial route/project",
+      "ok": true,
+      "detail": "http://127.0.0.1:34149/"
+    },
+    {
+      "name": "three pinned real projects",
+      "ok": true,
+      "detail": "['PxCubeDrive scene-worlds \u2022 7a82d9f4a227', 'Homeroom HeroesC6 \u2022 7462b8a200a6', 'Justin\u2019s standalone site9fccd18d3077 \u2022 local technical patch']"
+    },
+    {
+      "name": "recovered PageRouter A/B comparison retains pinned side-by-side UI",
+      "ok": true,
+      "detail": "compare/index.html"
+    },
+    {
+      "name": "actual PxCube launcher remains independently runnable",
+      "ok": true,
+      "detail": "http://127.0.0.1:34149/compiled/pxcube/index.html"
+    },
+    {
+      "name": "project selection updates route",
+      "ok": true,
+      "detail": "http://127.0.0.1:34149/#/hh/overview"
+    },
+    {
+      "name": "actual Homeroom Heroes application remains independently runnable",
+      "ok": true,
+      "detail": "http://127.0.0.1:34149/compiled/hh/index.html"
+    },
+    {
+      "name": "HH fixture capability integration test",
+      "ok": true,
+      "detail": "[\n  {\n    \"capability\": \"school.states\",\n    \"ok\": true,\n    \"receipt\": {\n      \"status\": \"produced\",\n      \"into\": \"hh.result.1\"\n    },\n    \"outcome\": \"loaded\"\n  },\n  {\n    \"capability\": \"school.counties\",\n    \"ok\": true,\n    \"receipt\": {\n      \"status\": \"produced\",\n      \"into\": \"hh.result.2\"\n    },\n    \"outcome\": \"loaded\"\n  },\n  {\n    \"capability\": \"school.districts\",\n    \"ok\": true,\n    \"receipt\": {\n      \"status\": \"produced\",\n      \"into\": \"hh.result.3\"\n    },\n    \"outcome\": \"loaded\"\n  },\n "
+    },
+    {
+      "name": "capability receipts visible",
+      "ok": true,
+      "detail": "[\n  {\n    \"capability\": \"school.states\",\n    \"ok\": true,\n    \"receipt\": {\n      \"status\": \"produced\",\n      \"into\": \"hh.result.1\"\n    },\n    \"outcome\": \"loaded\"\n  },\n  {\n    \"capability\": \"school.counties\",\n    \"ok\": true,\n    \"receipt\": {\n      \"status\": \"produced\",\n      \"into\": \"hh.result.2\"\n    },\n    \"outcome\": \"loaded\"\n  },\n  {\n    \"capability\": \"school.districts\",\n    \"ok\": true,\n    \"receipt\": {\n      \"status\": \"produced\",\n      \"into\": \"hh.result.3\"\n    },\n    \"outcome\": \"loaded\"\n  },\n "
+    },
+    {
+      "name": "composition runs real selected stages",
+      "ok": true,
+      "detail": "{\n  \"ok\": true,\n  \"name\": \"Fixture school search\",\n  \"stages\": [\n    {\n      \"id\": \"states\",\n      \"operation\": \"school.states\",\n      \"ok\": true,\n      \"result\": {\n        \"ok\": true,\n        \"port\": \"SchoolData.getStates\",\n        \"mode\": \"fixture\",\n        \"fixture\": true,\n        \"outcome\": \"loaded\",\n        \"data\": {\n          \"values\": [\n            \"Demo California\",\n            \"Demo Washington\"\n          ]\n        },\n        \"message\": \"\"\n      }\n    },\n    {\n      \"id\": \"counties\",\n      \"operation\": \"school.counties\",\n      \"ok\": true,\n      \"result\": {\n        \"ok\": true,\n        \"port\": \"SchoolData.getCounties\",\n        \"mode\": \"fixture\",\n        \"fixture\": true,\n        \"outcome\": \"loaded\",\n        \"data\": {\n          \"values\": [\n            \"Demo Alameda\"\n          ]\n       "
+    },
+    {
+      "name": "composition carries kernel receipts",
+      "ok": true,
+      "detail": "{\n  \"ok\": true,\n  \"name\": \"Fixture school search\",\n  \"stages\": [\n    {\n      \"id\": \"states\",\n      \"operation\": \"school.states\",\n      \"ok\": true,\n      \"result\": {\n        \"ok\": true,\n        \"port\": \"SchoolData.getStates\",\n        \"mode\": \"fixture\",\n        \"fixture\": true,\n        \"outcome\": \"loaded\",\n        \"data\": {\n          \"values\": [\n            \"Demo California\",\n            \"Demo Washington\"\n          ]\n        },\n        \"message\": \"\"\n      }\n    },\n    {\n      \"id\": \"counties\",\n      \"operation\": \"school.counties\",\n      \"ok\": true,\n      \"result\": {\n        \"ok\": true,\n        \"port\": \"SchoolData.getCounties\",\n        \"mode\": \"fixture\",\n        \"fixture\": true,\n        \"outcome\": \"loaded\",\n        \"data\": {\n          \"values\": [\n            \"Demo Alameda\"\n          ]\n       "
+    },
+    {
+      "name": "browser back restores previous selected project",
+      "ok": true,
+      "detail": "http://127.0.0.1:34149/#/hh/compose"
+    },
+    {
+      "name": "browser forward restores later project",
+      "ok": true,
+      "detail": "http://127.0.0.1:34149/#/justin/overview"
+    },
+    {
+      "name": "Justin preview is a sandboxed compiled leaf",
+      "ok": true,
+      "detail": "http://127.0.0.1:34149/compiled/justin/index.html"
+    },
+    {
+      "name": "browser delta build equals clean build",
+      "ok": true,
+      "detail": "{\n  \"rebuilt\": [\n    \"file:styles.css\",\n    \"file:index.html\"\n  ],\n  \"reused\": [\n    \"file:teacher-journey.mjs\",\n    \"file:controller.mjs\",\n    \"file:services/pxc.mjs\",\n    \"file:pxc-devtools/devtools-data.mjs\",\n    \"file:pxc-devtools/devtools.mjs\",\n    \"file:services/contract.mjs\",\n    \"file:services/fixtures.mjs\",\n    \"file:services/fixture-provider.mjs\",\n    \"file:services/http-provider.mjs\",\n    \"file:services/devtools-board.mjs\",\n    \"file:services/runtime.mjs\",\n    \"file:services/index.mjs"
+    },
+    {
+      "name": "wrong baseline rejected in browser",
+      "ok": true,
+      "detail": "PASS: wrong baseline rejected before mutation \u00b7 Wrong baseline or invalid patch"
+    },
+    {
+      "name": "shipped exact-pin delta imports",
+      "ok": true,
+      "detail": "Applied exact compiled patch. 1 operations. Shipped trusted target, runnable."
+    },
+    {
+      "name": "verified shipped delta runs only under trusted exact pin",
+      "ok": true,
+      "detail": "allow-scripts allow-same-origin"
+    },
+    {
+      "name": "unknown patch imports into local store",
+      "ok": true,
+      "detail": "Applied exact compiled patch. 1 operations. Unrecognized target, static inert preview only."
+    },
+    {
+      "name": "unknown HTML preview uses empty sandbox",
+      "ok": true,
+      "detail": "None"
+    },
+    {
+      "name": "hostile import script did not execute and leaf content displays",
+      "ok": true,
+      "detail": "send\ntop navigation"
+    },
+    {
+      "name": "hostile import canary attempts were blocked by CSP with no response",
+      "ok": true,
+      "detail": "{'attempts': ['https://example.invalid/__evil_image'], 'failed': [{'url': 'https://example.invalid/__evil_image', 'failure': 'csp'}], 'responses': []}"
+    },
+    {
+      "name": "direct navigation has restrictive CSP",
+      "ok": true,
+      "detail": "sandbox; default-src 'none'; style-src 'unsafe-inline' 'self'; img-src data: 'self'; font-src 'none'; connect-src 'none'; form-action 'none'; base-uri 'none'"
+    },
+    {
+      "name": "direct hostile leaf canary attempts were blocked by CSP with no response",
+      "ok": true,
+      "detail": "{'attempts': ['https://example.invalid/__evil_image'], 'failed': [{'url': 'https://example.invalid/__evil_image', 'failure': 'csp'}], 'responses': []}"
+    },
+    {
+      "name": "patch import never mutates pinned baseline",
+      "ok": true,
+      "detail": "{'expected': '48b928f941454ec62d2191ec6caa77399a2c37e6bbc2d9af82acdab015d7e6d9', 'stored': None, 'files': 0, 'expectedFiles': 24}"
+    },
+    {
+      "name": "mobile view renders without horizontal overflow",
+      "ok": true,
+      "detail": "{'scroll': 390, 'width': 390}"
+    },
+    {
+      "name": "no uncaught app errors",
+      "ok": true,
+      "detail": "[]"
+    }
+  ],
+  "consoleErrors": [
+    "Blocked script execution in 'about:srcdoc' because the document's frame is sandboxed and the 'allow-scripts' permission is not set.",
+    "Blocked script execution in 'about:srcdoc' because the document's frame is sandboxed and the 'allow-scripts' permission is not set.",
+    "Loading the image 'https://example.invalid/__evil_image' violates the following Content Security Policy directive: \"img-src data:\". The action has been blocked."
+  ],
+  "pageErrors": [],
+  "hostileRequests": [
+    "https://example.invalid/__evil_image",
+    "https://example.invalid/__evil_image"
+  ],
+  "hostileFailures": [
+    {
+      "url": "https://example.invalid/__evil_image",
+      "failure": "csp"
+    },
+    {
+      "url": "https://example.invalid/__evil_image",
+      "failure": "csp"
+    }
+  ],
+  "hostileResponses": []
+}

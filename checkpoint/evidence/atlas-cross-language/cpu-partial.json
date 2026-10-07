@@ -1,0 +1,63 @@
+{
+  "status": "PARTIAL",
+  "proto": {
+    "address": "proto/cpu/step",
+    "as": "calculation",
+    "interface": {
+      "inputs": {
+        "state": "CpuState",
+        "program": "Program16",
+        "inputByte": "Byte"
+      },
+      "outputs": {
+        "state": "CpuState"
+      }
+    },
+    "slots": {
+      "execute": {
+        "mode": "abstract",
+        "binding": null
+      },
+      "validate": {
+        "mode": "overridable",
+        "binding": null
+      },
+      "observe": {
+        "mode": "final",
+        "binding": "cpu.observe"
+      }
+    }
+  },
+  "sourceHashes": {
+    "capability-lab\\runtime.py": "1ac2cf2644b42962b583904764b21429c352a25b60c0c61d2678d6f276fcf48f",
+    "capability-lab\\cpu.py": "2dfa80a3e7cf660d373c397fc43d32613f308d9bf0bbbf8125c47e60d7ab1c8a",
+    "pxc-machine\\pipeline.py": "b78db780d31db72a6986a90ae8a14ba1757d42c5253670de63296c7883597004",
+    "pxc-machine\\core.py": "177439b1efaf308e275ffe054d1eab96c33ec86352a6f0d560aae9f24e32a952",
+    "pxc-machine\\circuits.py": "c3e4ca44a94e1570ee17658444f3cd115182d7665be5b07711c17946a4d6df1c",
+    "pxc-machine\\oracle.py": "62a1116647eba36a0bc6882683e90141c9719afe325a73f6a440f7212058730a"
+  },
+  "frontier": [
+    {
+      "slot": "execute",
+      "mode": "abstract",
+      "binding": null,
+      "because": "execution role is unbound",
+      "try": "bind a known registered Calculation implementation"
+    },
+    {
+      "slot": "validate",
+      "mode": "overridable",
+      "binding": null,
+      "because": "execution role is unbound",
+      "try": "bind a known registered Calculation implementation"
+    }
+  ],
+  "acceptedOutputs": null,
+  "validation": null,
+  "compileLint": null,
+  "readOnly": null,
+  "cause": null,
+  "order": null,
+  "value": null,
+  "originalSourcesUnchanged": null
+}

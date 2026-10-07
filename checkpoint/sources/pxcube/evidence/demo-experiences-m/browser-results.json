@@ -1,0 +1,10 @@
+{
+  "checks": [
+    "BuildBag uses exact copies, preserves selection through search, retains order/reload, and isolates numbered tests",
+    "CreateGraphics visibly renders real Parts, changes canvas without changing source discs, and retains the earlier capture",
+    "Explicit handoff excludes test captures; SVG matches the kept bytes and PNG dimensions/hash match the actual download",
+    "Conversion failure is visible and retained alongside successes after a real browser reload",
+    "The NTC layer remains above each Experience; owner Parts resolve directly and the narrow viewport does not overflow"
+  ],
+  "errors": []
+}

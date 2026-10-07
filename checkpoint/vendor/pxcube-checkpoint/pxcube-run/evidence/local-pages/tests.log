@@ -1,0 +1,37 @@
+✔ owned resolver preserves fixture dotted-key and nested resolution (32.548472ms)
+✔ iteration allocation, guarded resolution, seed isolation and reload retention (21.421634ms)
+✔ quota failure and competing owner cannot silently discard prior iterations (1.56877ms)
+▶ actual crisp CLI: six fixture intentions, with explicit negative mutations
+  ✔ hello (314.079837ms)
+  ✔ sneaky (154.366109ms)
+  ✔ broken (273.035086ms)
+  ✔ leaky (128.283103ms)
+  ✔ drift (133.01513ms)
+  ✔ unknown-world (108.864772ms)
+✔ actual crisp CLI: six fixture intentions, with explicit negative mutations (1115.441504ms)
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 1 failed
+run: 2026-09-14T13-25-09-463Z-7985b00d
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 1 failed
+run: 2026-09-14T13-25-10-364Z-8cdacc78
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 1 failed
+run: 2026-09-14T13-25-11-216Z-3876f231
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 0 shipped, 2 failed
+run: 2026-09-14T13-25-12-007Z-acfd2029
+✔ shared pipeline retains attempts, isolates failed builds, shows drift and refuses stale output (3581.22274ms)
+✔ vendored original source identities match their recorded commits (3.159487ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5559.080381

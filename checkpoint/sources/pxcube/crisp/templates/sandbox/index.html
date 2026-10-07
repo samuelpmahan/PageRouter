@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Experience sandbox</title><link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header><div><p class="eyebrow">Studio / experience scaffold</p><h1 id="title">Loading…</h1><p id="description"></p></div><span class="badge">Frame ready · behavior to build</span></header>
+  <nav aria-label="Sandbox"><label>Workspace <select id="mounts"></select></label><button id="interactive">Interactive</button><button id="new-test">New test sandbox</button><code id="mount-name"></code></nav>
+  <p id="status" role="status" aria-live="polite">Loading the manifest…</p>
+  <main>
+    <aside class="panel"><p class="eyebrow">Available inputs</p><div id="inputs"></div></aside>
+    <section class="panel workspace"><p class="eyebrow">Build here</p><h2 id="workspace-title"></h2><ol id="steps"></ol>
+      <form id="draft-form" hidden><label for="draft-name" id="draft-label"></label><div class="draft-row"><input id="draft-name" autocomplete="off"><button type="submit">Save draft</button></div><p class="hint">This saves sandbox scratch state. The Experience’s domain steps are still to be built.</p></form>
+      <div class="empty"><span aria-hidden="true">＋</span><p>Your working surface goes here.</p><p class="hint">The frame, inputs, and isolated draft are connected.</p></div>
+    </section>
+    <aside class="panel"><p class="eyebrow">Expected outputs</p><div id="outputs"></div></aside>
+  </main>
+  <details class="inspector"><summary>Inspect this sandbox’s actual values</summary><p class="hint">Mock world and scratch history; these are not Calculation receipts.</p><pre id="inspection"></pre></details>
+  <script type="module" src="./app.mjs"></script>
+</body></html>

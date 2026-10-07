@@ -1,0 +1,42 @@
+{
+  "app": "Hello THING",
+  "version": "0.1.0",
+  "source": null,
+  "entry": "index.html",
+  "outDir": "dist",
+  "entryChunk": "130311678ebbd422e41f93a0653ff118fbc4eb4c4e8794c0899c3000d2320bc6",
+  "mounts": [],
+  "resolvedMounts": [],
+  "usedMounts": [],
+  "chunks": [
+    {
+      "path": "index.html",
+      "sha256": "130311678ebbd422e41f93a0653ff118fbc4eb4c4e8794c0899c3000d2320bc6"
+    }
+  ],
+  "composition": null,
+  "sourceHash": "c651c7a04a664e95e4a0e6cd034e922e7a79d56b53f61fc5586736893fe31e55",
+  "manifestHash": "605ba43dbd7d394de23ce5bc6c3bb219881598a96103a33ca7ab1ba74e93695b",
+  "build": {
+    "command": "mkdir -p dist && cp index.html dist/",
+    "exitCode": 0,
+    "durationMs": 7,
+    "timedOut": false
+  },
+  "validation": {
+    "declaredMounts": [],
+    "usedMounts": [],
+    "undeclaredMounts": [],
+    "persistedPrefixViolations": []
+  },
+  "packagedAt": "2026-10-02T21:06:20.570Z",
+  "runId": "2026-10-03T04-57-02-751Z-f7caf981",
+  "sharedToolsHash": "b3ffd30fd197b6363eda802c2401f5b36ef220a3fb7f6db632f822b4ceebbcf8",
+  "outputHashes": {
+    "index.html": "130311678ebbd422e41f93a0653ff118fbc4eb4c4e8794c0899c3000d2320bc6"
+  },
+  "tidy": {
+    "track": "exp",
+    "changedSinceRegistration": true
+  }
+}

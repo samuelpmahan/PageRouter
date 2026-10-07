@@ -1,0 +1,91 @@
+{
+  "schema": "nctk-directory@1",
+  "address": "recipes/discstudio-photo-card",
+  "children": [],
+  "kind": "recipe",
+  "source": "recipes/discstudio-photo-card.json",
+  "policies": {
+    "neat": {
+      "mode": "local",
+      "state": "Compare",
+      "phase": "Compare",
+      "substates": {
+        "localci.discstudio-pages@1": {
+          "facts": {
+            "verdict": "PASS",
+            "buildId": "a4a129852f4eb6f6",
+            "archiveSha256": "6c1b71fb2b0eb206d9905c301a6d261bc32786ba50ed663719f4d93dec524970",
+            "bridgeStatus": "UPLOADED",
+            "archiveDriveId": "1v3BYqCXHo5CIXhkJFO_sM1r6JTHoJA3g",
+            "receiptDriveId": "1LQKKtOi7J4rQUUJdUxjAlAEajplFpl8A"
+          },
+          "evidence": [
+            {
+              "sha256": "7fe000b3b57c181c799f8637735c85f088b77bbb42711d5b79af02aa0460f9b6",
+              "kind": "release-receipt"
+            },
+            {
+              "sha256": "6c1b71fb2b0eb206d9905c301a6d261bc32786ba50ed663719f4d93dec524970",
+              "kind": "pages-artifact"
+            },
+            {
+              "sha256": "123a5c86f762e6bf55b47a5735375d71a007e70213ced06a80c7490fbd36a968",
+              "kind": "release-receipt"
+            },
+            {
+              "sha256": "6c1b71fb2b0eb206d9905c301a6d261bc32786ba50ed663719f4d93dec524970",
+              "kind": "pages-artifact"
+            },
+            {
+              "sha256": "c08b0dc4a5c75ff9392474d28a4d9134c884ed71148a64ee7784c3abec348570",
+              "kind": "release-receipt"
+            },
+            {
+              "sha256": "6c1b71fb2b0eb206d9905c301a6d261bc32786ba50ed663719f4d93dec524970",
+              "kind": "pages-artifact"
+            },
+            {
+              "sha256": "73a3dfcaa278f98ba3443a7ffb235e82784c92c76d38cf87e2f6ab88a846b330",
+              "kind": "release-receipt"
+            },
+            {
+              "sha256": "6c1b71fb2b0eb206d9905c301a6d261bc32786ba50ed663719f4d93dec524970",
+              "kind": "pages-artifact"
+            },
+            {
+              "kind": "drive-release-receipt",
+              "sha256": "a5a5bc3c15e9f92ea78acd1f14ccb18c80cf7bad809578cf2fecd8f67d997a58",
+              "driveId": "1LQKKtOi7J4rQUUJdUxjAlAEajplFpl8A"
+            },
+            {
+              "kind": "drive-pages-artifact",
+              "sha256": "6c1b71fb2b0eb206d9905c301a6d261bc32786ba50ed663719f4d93dec524970",
+              "driveId": "1v3BYqCXHo5CIXhkJFO_sM1r6JTHoJA3g"
+            }
+          ],
+          "observedAt": "2026-09-29T15:32:58.947Z"
+        }
+      },
+      "suggestions": [],
+      "relations": [],
+      "latestEvidence": {
+        "report": "work/runs/run-2026-09-28T210824441Z-ffe5cdf4.json",
+        "sha256": "fae6457169522e37723c825e0873d29cc9a0605b96a4103ac05c0f016b882b66",
+        "at": "2026-09-28T21:08:24.439Z"
+      }
+    },
+    "crisp": {
+      "mode": "none"
+    },
+    "tidy": {
+      "mode": "local"
+    },
+    "kompoze": {
+      "mode": "local",
+      "references": [
+        "bases/discstudio-photo-card.json",
+        "overlays/discstudio-photo-card.json"
+      ]
+    }
+  }
+}

@@ -1,0 +1,5 @@
+import {validateSnapshot} from './compiled-patch.mjs';
+const DB='composed-workbench-compiled-v1';
+export function openDB(){return new Promise((resolve,reject)=>{const r=indexedDB.open(DB,1);r.onupgradeneeded=()=>r.result.createObjectStore('snapshots',{keyPath:'key'});r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
+export async function saveSnapshot(snapshot){await validateSnapshot(snapshot);const db=await openDB();await new Promise((resolve,reject)=>{const t=db.transaction('snapshots','readwrite');t.objectStore('snapshots').put({key:`${snapshot.project}/${snapshot.digest}`,snapshot});t.oncomplete=resolve;t.onerror=()=>reject(t.error);});db.close();return snapshot;}
+export async function loadSnapshot(project,digest){const db=await openDB();const result=await new Promise((resolve,reject)=>{const r=db.transaction('snapshots').objectStore('snapshots').get(`${project}/${digest}`);r.onsuccess=()=>resolve(r.result?.snapshot??null);r.onerror=()=>reject(r.error);});db.close();return result;}

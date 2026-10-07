@@ -1,0 +1,45 @@
+{
+  "checks": [
+    {
+      "mode": "local",
+      "runId": "2026-09-14T18-41-24-198Z-c8449284",
+      "checks": [
+        "actual neat board is served",
+        "hello opens",
+        "visible save changes actual mounted value",
+        "opening interactive resumes without writing",
+        "test runs start seeded beside edited interactive state",
+        "test writes preserve interactive and sibling worlds",
+        "visible kind matches stored metadata",
+        "three visible smoke assertions pass",
+        "Back/reopen retains worlds",
+        "page reload retains worlds",
+        "packaging report names both successful apps"
+      ]
+    },
+    {
+      "mode": "project-prefix",
+      "runId": "2026-09-14T18-41-24-198Z-c8449284",
+      "checks": [
+        "actual neat board is served",
+        "hello opens",
+        "visible save changes actual mounted value",
+        "opening interactive resumes without writing",
+        "test runs start seeded beside edited interactive state",
+        "test writes preserve interactive and sibling worlds",
+        "visible kind matches stored metadata",
+        "three visible smoke assertions pass",
+        "Back/reopen retains worlds",
+        "page reload retains worlds",
+        "packaging report names both successful apps"
+      ]
+    },
+    {
+      "mode": "storage-failure",
+      "checks": [
+        "initial storage failure is visible and creation stops"
+      ]
+    }
+  ],
+  "errors": []
+}

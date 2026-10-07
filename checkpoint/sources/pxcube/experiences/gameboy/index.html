@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Game Boy cartridge</title>
+<style>
+  body { margin: 0; background: #0f0f23; color: #e5e5e5; font-family: system-ui, sans-serif;
+         display: flex; flex-direction: column; align-items: center; gap: 10px;
+         padding: 12px; min-height: 100vh; box-sizing: border-box; }
+  #screen { width: min(92vw, 480px); aspect-ratio: 10 / 9; background: #9bbc0f;
+            image-rendering: pixelated; border: 8px solid #2a2a3a; border-radius: 10px; }
+  #cartridge-picker { width: min(92vw, 480px); box-sizing: border-box; display: flex;
+                      align-items: center; gap: 8px; flex-wrap: wrap; padding: 7px 9px;
+                      border: 1px solid #343449; border-radius: 10px; background: #171727; }
+  #cartridge-picker label { font-size: 10px; font-weight: 700; letter-spacing: .08em; color: #bdbdd0; }
+  #cartridge-select { flex: 1; min-width: 140px; padding: 7px 8px; border: 1px solid #414158;
+                      border-radius: 6px; background: #0f0f23; color: #f0f0f7; font: inherit; font-size: 12px; }
+  #cartridge-select:focus-visible, #load-cartridge:focus-visible { outline: 2px solid #9bbc0f; outline-offset: 2px; }
+  #load-cartridge { padding: 8px 11px; border: 0; border-radius: 6px; background: #7a1f2b;
+                    color: #fff; font-weight: 700; font-size: 11px; }
+  #load-cartridge:disabled { opacity: .5; }
+  #cartridge-picker-status { flex-basis: 100%; min-height: 12px; margin: 0; color: #a9a9bb; font-size: 10px; }
+  #controls { display: flex; gap: 24px; align-items: center; user-select: none; -webkit-user-select: none; }
+  #dpad { display: grid; grid-template-columns: repeat(3, 44px); grid-template-rows: repeat(3, 44px); gap: 2px; }
+  #dpad button { background: #2a2a3a; color: #e5e5e5; border: none; border-radius: 6px; font-size: 18px; touch-action: none; }
+  #dpad button:active { background: #3d3d55; }
+  #dpad .up { grid-column: 2; grid-row: 1; } #dpad .left { grid-column: 1; grid-row: 2; }
+  #dpad .right { grid-column: 3; grid-row: 2; } #dpad .down { grid-column: 2; grid-row: 3; }
+  #actions { display: flex; flex-direction: column; gap: 10px; }
+  #actions .row { display: flex; gap: 10px; }
+  #actions button { background: #7a1f2b; color: #fff; border: none; border-radius: 50%;
+                    width: 56px; height: 56px; font-size: 16px; touch-action: none; }
+  #actions button:active { background: #a02c3b; }
+  #actions button.small { width: auto; height: auto; border-radius: 12px; padding: 8px 14px;
+                          background: #2a2a3a; font-size: 12px; }
+  p.hint { font-size: 12px; opacity: .6; margin: 0; text-align: center; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+                     overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+</style>
+</head>
+<body>
+<canvas id="screen" width="160" height="144" role="img" aria-label="Game Boy screen" aria-describedby="game-status"></canvas>
+<p id="game-status" class="visually-hidden" role="status" aria-live="polite">Game screen is starting</p>
+<section id="cartridge-picker" aria-label="Game Boy cartridge loader">
+  <label for="cartridge-select">CARTRIDGE</label>
+  <select id="cartridge-select" aria-label="Choose cartridge" disabled>
+    <option value="">Loading cartridges…</option>
+  </select>
+  <button id="load-cartridge" type="button" disabled>LOAD</button>
+  <p id="cartridge-picker-status" role="status" aria-live="polite">Loading registered cartridges…</p>
+</section>
+<div id="controls">
+  <div id="dpad">
+    <button class="up" data-btn="up">▲</button>
+    <button class="left" data-btn="left">◀</button>
+    <button class="right" data-btn="right">▶</button>
+    <button class="down" data-btn="down">▼</button>
+  </div>
+  <div id="actions">
+    <div class="row"><button data-btn="b">B</button><button data-btn="a">A</button></div>
+    <div class="row"><button class="small" data-btn="select">SELECT</button><button class="small" data-btn="start">START</button></div>
+  </div>
+</div>
+<p class="hint">Arrows/WASD move · Z = B · X = A · Enter = start · Shift = select</p>
+<script src="./connect4-ui.js"></script>
+<script src="./player.js"></script>
+<script src="./rom.js"></script>
+</body>
+</html>

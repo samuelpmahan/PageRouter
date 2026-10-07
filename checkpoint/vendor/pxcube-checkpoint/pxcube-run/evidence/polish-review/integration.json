@@ -1,0 +1,39 @@
+{
+  "purpose": "publish current Studio consumers for online polish; keep local work focused on new-disc photo/paint flow",
+  "runtimeCommit": "19aab2b7de61036a2bbecf47aefb960d79163af5",
+  "integratedMain": "c9d446c",
+  "build": "2026-09-15T15-19-28-497Z-dad1476f",
+  "packaged": [
+    "build-bag",
+    "create-graphics",
+    "explore-shelf",
+    "export-graphics",
+    "gameboy",
+    "hello",
+    "mock-smoke",
+    "snake",
+    "upload-disc-to-shelf"
+  ],
+  "packageFailures": [],
+  "checks": {
+    "crisp": {
+      "passed": 56,
+      "failed": 0
+    },
+    "localBehavior": {
+      "passed": 30,
+      "note": "Five incoming console checks initially failed against absent/stale pre-build dist. Moved to the existing post-build E2E stage; all five passed there."
+    },
+    "packagedModels": {
+      "passed": 24,
+      "note": "Initial 23/24; the new Bag test omitted the selection commit performed by the UI. Corrected the test to call patch after reorder, then all three Bag checks passed. No product changes needed."
+    }
+  },
+  "visualEvidence": "The prior two-image browser review is evidence/competition-queue/review.json; it is not a new post-merge browser run.",
+  "remaining": [
+    "CapCut import untested",
+    "100-image queue storage changes proposed only",
+    "newly uploaded disc not connected across Experience collections"
+  ],
+  "environment": "Node v24.19.0 on the local Mac. CI uses Node 22."
+}

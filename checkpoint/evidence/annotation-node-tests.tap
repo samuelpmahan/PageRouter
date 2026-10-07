@@ -1,0 +1,54 @@
+
+> composed-workbench@0.0.0 test
+> node --test exp/cooperative/*.test.mjs exp/adversarial/*.test.mjs scripts/evaluator-identity.test.mjs
+
+✔ hash is SHA-256 over exact bytes and UTF-8 strings (9.463472ms)
+✔ snapshot is deterministic and carries output/source integrity metadata (9.33445ms)
+✔ buildSnapshot accepts explicit prior baseline and reports unaffected outputs reused (12.356194ms)
+✔ declared dependency edits rebuild transitive closure and preserve unrelated branches (6.592245ms)
+✔ patch round trip handles additions, deletions, UTF-8, binary, zero bytes, and patch chains (33.984338ms)
+✔ patch is exact-baseline-bound and rejects wrong project or modified baseline (14.145632ms)
+✔ patch validation rejects malformed, duplicate, traversal, absolute, and tampered operations atomically (14.816288ms)
+✔ project graph rejects missing dependencies, cycles, duplicate outputs, and unsafe paths (4.558076ms)
+✔ snapshot metadata tampering is rejected even when the output bytes appear unchanged (5.625071ms)
+✔ packed snapshot delivery deduplicates exact byte payloads and round-trips losslessly (3.151922ms)
+✔ tampered or missing packed payloads fail ordinary snapshot hash validation (3.260268ms)
+✔ route helpers preserve only known projects and views with safe leaf paths (2.654699ms)
+✔ route parser rejects decoded traversal, malformed encoding, and unsafe path syntax (0.672121ms)
+✔ pin URLs remain scoped under compiled project roots (0.563564ms)
+✔ named Calculation is a real pinned function Part with inspectable source graph and actual output receipts (14.028193ms)
+✔ nested composed Calculations pin dependency versions and execute through the same PxC (17.154804ms)
+✔ replacement creates a new version while older nested callers stay pinned to v1 (3.923692ms)
+✔ session export/import round-trip restores definitions without executing them, then explicit invocation works (11.904196ms)
+✔ invalid cyclic, unresolved, duplicate, credential-bearing, and wrong-shape sessions reject atomically (10.438593ms)
+✔ unsafe credential-shaped definition parameters are rejected before adding a function Part (1.351055ms)
+✔ static source compiler uses explicit relative asset graph and copies source bytes literally (33.238154ms)
+✔ relative link traversal is not mistaken for an in-project dependency (0.543698ms)
+✔ enable dispatch transitions hidden to visible and emits a geometry-backed marker tree (4.635235ms)
+✔ disable dispatch transitions visible to hidden and hides all issue markers (1.533542ms)
+✔ seek is a pure projection over current state and creates only a projection receipt (4.23962ms)
+✔ events, transitions, projection and the composed wrapper are real PxC function Parts (1.56697ms)
+✔ contract composition accepts nested same-shape FGs and rejects incompatible tagged ports (1.957688ms)
+✔ dispatch rejects unsupported event tags and unknown measured issue IDs (1.166768ms)
+✔ exposes each HH fixture service as a real kernel Part and receipt (9.974851ms)
+✔ runs a multi-stage school search through the HH service ports (5.303976ms)
+✔ composes registration, approval, demo login, profile creation and public read (5.691409ms)
+✔ supports separated approval/login, profile publication and directory reads (3.921884ms)
+✔ rejects credential-shaped inputs before creating a request Part (2.359491ms)
+✔ serializes concurrent calls and keeps receipts paired with their actual results (0.596462ms)
+✔ reports missing composition references with a real failed kernel receipt (1.073634ms)
+✔ defines and invokes a reusable Calculation Part using editable parameter bindings (4.431628ms)
+✔ nests a named Calculation inside a larger output-to-input composition with real inner receipts (3.841872ms)
+✔ requires explicit replace and pins existing dependents to the prior Calculation version (20.935535ms)
+✔ rejects undeclared inputs and cyclic imports before adding any Parts (3.248736ms)
+✔ exports and atomically imports data-only graph source, then replays it (5.00704ms)
+✔ audit/navigation/caption-only changes preserve exact executed evaluator closure and prior session pin (8.51722ms)
+✔ real evaluator calculation dependency changes invalidate prior implementation pin (6.310491ms)
+ℹ tests 42
+ℹ suites 0
+ℹ pass 42
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 266.227483

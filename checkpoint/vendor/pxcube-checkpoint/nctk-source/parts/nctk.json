@@ -1,0 +1,35 @@
+{
+  "schema": "nctk-directory@1",
+  "address": "parts",
+  "children": [
+    "parts/card",
+    "parts/composite",
+    "parts/crop",
+    "parts/cut",
+    "parts/positioned",
+    "parts/prepared",
+    "parts/preview",
+    "parts/probe",
+    "parts/review",
+    "parts/saved",
+    "parts/scaled",
+    "parts/source"
+  ],
+  "kind": "group",
+  "source": null,
+  "policies": {
+    "neat": {
+      "mode": "none"
+    },
+    "crisp": {
+      "mode": "none"
+    },
+    "tidy": {
+      "mode": "local"
+    },
+    "kompoze": {
+      "mode": "none",
+      "references": []
+    }
+  }
+}

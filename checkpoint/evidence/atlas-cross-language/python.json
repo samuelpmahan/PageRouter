@@ -1,0 +1,79 @@
+{
+  "format": "kompozed.atlas.cross-language-observation.v1",
+  "language": "python",
+  "case_id": "sha256:8fcda1efa42c957207de0bb8986a9cf61a7c345f1035bad7deaf91a9ca23d617",
+  "observables": {
+    "model": {
+      "gain": 2.0,
+      "bias": 1.0,
+      "n": 5,
+      "training_mse": 0.0,
+      "equation": "delta = 2 * action + 1"
+    },
+    "parameter_probe": {
+      "gain_matches": true,
+      "bias_matches": true,
+      "passed": true
+    },
+    "predictions": [
+      -10.0,
+      -1.0,
+      8.0,
+      17.0,
+      26.0,
+      35.0,
+      44.0,
+      53.0,
+      62.0,
+      71.0
+    ],
+    "prediction_probe": {
+      "errors": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "pass_flags": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "passed": 10,
+      "failed": 0,
+      "n": 10
+    },
+    "posterior": {
+      "alpha": 11,
+      "beta": 1,
+      "mean": 0.9166666666666666,
+      "n": 10,
+      "model_assumption": "conditionally independent Bernoulli cases with one shared pass probability"
+    },
+    "decision": {
+      "accepted": true,
+      "checks": {
+        "enough_cases": true,
+        "reliability_ok": true
+      },
+      "expression": "enough_cases and reliability_ok"
+    }
+  },
+  "execution": {
+    "implementation": "exp/atlas/cross_language.py",
+    "contract": "pinned six-node Atlas motion composition"
+  }
+}

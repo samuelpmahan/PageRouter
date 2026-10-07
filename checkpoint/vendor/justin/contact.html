@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Justin Brundage | Concrete School Board</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: { 800: '#0B1D3A', 900: '#061021' },
+                        gold: { 500: '#D4AF37', 600: '#AA820A' }
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased flex flex-col min-h-screen">
+
+    <!-- Header Navigation -->
+    <header class="bg-navy-900 text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="index.html" class="font-bold text-xl sm:text-2xl tracking-tight text-white flex items-center">
+                    <span class="text-amber-400">BRUNDAGE</span>
+                    <span class="ml-2 font-normal text-sm sm:text-base text-gray-300">FOR SCHOOL BOARD</span>
+                </a>
+                <nav class="hidden lg:flex space-x-6 text-sm font-semibold tracking-wide uppercase">
+                    <a href="index.html" class="hover:text-amber-400 transition-colors">Home</a>
+                    <a href="about.html" class="hover:text-amber-400 transition-colors">About</a>
+                    <a href="policy.html" class="hover:text-amber-400 transition-colors">Policy & Priorities</a>
+                    <a href="community.html" class="hover:text-amber-400 transition-colors">Community</a>
+                    <a href="blog.html" class="hover:text-amber-400 transition-colors">Blog</a>
+                    <a href="contact.html" class="text-amber-400">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow py-12">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <header class="border-b border-gray-200 pb-8 text-center max-w-2xl mx-auto mb-10">
+                <h1 class="text-4xl font-extrabold text-navy-900 tracking-tight">Get in Touch</h1>
+                <p class="text-gray-600 mt-2 text-lg">Have questions, feedback, or thoughts on Concrete School District policy? Reach out directly.</p>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <!-- Contact Info Sidebar -->
+                <div class="lg:col-span-6 bg-navy-900 text-white rounded-2xl p-6 sm:p-8 shadow-lg space-y-6 flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-xl font-bold text-amber-400 border-b border-navy-800 pb-3 mb-4">Direct Contact</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <span class="block text-xs uppercase tracking-wider text-gray-400 font-semibold">Official Email</span>
+                                <a href="mailto:jbrundage@concrete.k12.wa.us" class="text-sm sm:text-base font-medium hover:text-amber-400 transition-colors break-words">
+                                    jbrundage@concrete.k12.wa.us
+                                </a>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4 pt-2">
+                                <div>
+                                    <span class="block text-xs uppercase tracking-wider text-gray-400 font-semibold">District</span>
+                                    <p class="text-sm font-medium text-gray-200">Concrete School District</p>
+                                </div>
+                                <div>
+                                    <span class="block text-xs uppercase tracking-wider text-gray-400 font-semibold">State</span>
+                                    <p class="text-sm font-medium text-gray-200">Washington (WA)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Image below text inside blue card -->
+                        <div class="mt-6 pt-4 border-t border-navy-800">
+                            <div class="overflow-hidden rounded-xl border border-navy-800 bg-white/5">
+                                <img src="static/pictures/skagit.jpg" alt="Skagit County / Washington State Map" class="w-full h-auto object-contain">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-navy-800 pt-4 text-xs text-gray-400">
+                        <p>I strive to respond to all community inquiries, parents, and teachers as quickly as possible.</p>
+                    </div>
+                </div>
+
+                <!-- Static Mailto Form -->
+                <div class="lg:col-span-6 bg-white rounded-2xl p-6 sm:p-8 shadow-lg border border-gray-200">
+                    <form action="mailto:jbrundage@concrete.k12.wa.us" method="post" enctype="text/plain" class="space-y-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="name" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Your Name</label>
+                                <input type="text" id="name" name="Name" required class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-sm outline-none transition">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Email Address</label>
+                                <input type="email" id="email" name="Email" required class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-sm outline-none transition">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="subject" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Topic / Subject</label>
+                            <input type="text" id="subject" name="Subject" required class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-sm outline-none transition" placeholder="e.g., Curriculum, STEM, General Question">
+                        </div>
+
+                        <div>
+                            <label for="message" class="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">Message</label>
+                            <textarea id="message" name="Message" rows="5" required class="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 text-sm outline-none transition" placeholder="Share your thoughts..."></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-navy-900 font-extrabold py-3 px-6 rounded-lg shadow-md transition-colors uppercase tracking-wider text-sm">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="bg-navy-900 text-white border-t border-navy-800 py-8">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-gray-400">
+            &copy; 2026 Justin Brundage for Washington. All rights reserved. Paid for by Justin Brundage.
+        </div>
+    </footer>
+</body>
+</html>

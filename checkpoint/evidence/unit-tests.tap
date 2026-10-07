@@ -1,0 +1,42 @@
+✔ hash is SHA-256 over exact bytes and UTF-8 strings (10.387303ms)
+✔ snapshot is deterministic and carries output/source integrity metadata (9.424218ms)
+✔ buildSnapshot accepts explicit prior baseline and reports unaffected outputs reused (11.795549ms)
+✔ declared dependency edits rebuild transitive closure and preserve unrelated branches (7.466116ms)
+✔ patch round trip handles additions, deletions, UTF-8, binary, zero bytes, and patch chains (41.299053ms)
+✔ patch is exact-baseline-bound and rejects wrong project or modified baseline (9.924155ms)
+✔ patch validation rejects malformed, duplicate, traversal, absolute, and tampered operations atomically (29.23293ms)
+✔ project graph rejects missing dependencies, cycles, duplicate outputs, and unsafe paths (6.314917ms)
+✔ snapshot metadata tampering is rejected even when the output bytes appear unchanged (8.511482ms)
+✔ packed snapshot delivery deduplicates exact byte payloads and round-trips losslessly (3.388832ms)
+✔ tampered or missing packed payloads fail ordinary snapshot hash validation (2.997859ms)
+✔ route helpers preserve only known projects and views with safe leaf paths (2.310682ms)
+✔ route parser rejects decoded traversal, malformed encoding, and unsafe path syntax (1.252788ms)
+✔ pin URLs remain scoped under compiled project roots (0.785785ms)
+✔ named Calculation is a real pinned function Part with inspectable source graph and actual output receipts (13.316162ms)
+✔ nested composed Calculations pin dependency versions and execute through the same PxC (12.471806ms)
+✔ replacement creates a new version while older nested callers stay pinned to v1 (3.297269ms)
+✔ session export/import round-trip restores definitions without executing them, then explicit invocation works (6.456038ms)
+✔ invalid cyclic, unresolved, duplicate, credential-bearing, and wrong-shape sessions reject atomically (6.874839ms)
+✔ unsafe credential-shaped definition parameters are rejected before adding a function Part (0.934494ms)
+✔ static source compiler uses explicit relative asset graph and copies source bytes literally (28.419758ms)
+✔ relative link traversal is not mistaken for an in-project dependency (0.603868ms)
+✔ exposes each HH fixture service as a real kernel Part and receipt (9.143132ms)
+✔ runs a multi-stage school search through the HH service ports (6.87508ms)
+✔ composes registration, approval, demo login, profile creation and public read (7.710764ms)
+✔ supports separated approval/login, profile publication and directory reads (2.831294ms)
+✔ rejects credential-shaped inputs before creating a request Part (2.064434ms)
+✔ serializes concurrent calls and keeps receipts paired with their actual results (0.581253ms)
+✔ reports missing composition references with a real failed kernel receipt (0.859655ms)
+✔ defines and invokes a reusable Calculation Part using editable parameter bindings (4.433672ms)
+✔ nests a named Calculation inside a larger output-to-input composition with real inner receipts (3.414043ms)
+✔ requires explicit replace and pins existing dependents to the prior Calculation version (15.302468ms)
+✔ rejects undeclared inputs and cyclic imports before adding any Parts (1.356256ms)
+✔ exports and atomically imports data-only graph source, then replays it (4.302258ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 264.251588

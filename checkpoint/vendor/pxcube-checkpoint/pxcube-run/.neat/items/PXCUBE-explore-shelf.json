@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "PXCUBE-explore-shelf",
+  "outcome": "Run and inspect explore-shelf through the shared PxCube packaging program.",
+  "location": {
+    "component": "experiences/explore-shelf"
+  },
+  "target": {
+    "kind": "pcr",
+    "identity": "pcr.pxcube.explore-shelf"
+  },
+  "requirements": [
+    {
+      "id": "package",
+      "text": "Current source packages and supplies a usable index.html."
+    },
+    {
+      "id": "review",
+      "text": "The mounted Experience is inspected by its human reviewer."
+    }
+  ],
+  "dependencies": [],
+  "status": "review",
+  "blockers": [],
+  "checkpoints": [],
+  "acceptanceRefs": [],
+  "promotionRefs": [],
+  "resume": "Open this Experience in PxCube. Fresh numbered Cases and interactive sessions are separate. Read docs/studio-sandboxes.md and evidence/studio-sandboxes before review; no human acceptance or promotion is implied."
+}

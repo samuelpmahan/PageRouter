@@ -1,0 +1,35 @@
+{
+  "schema": "pxcube-world-scenes-checkpoint@1",
+  "checkpoint_utc": "2026-09-30T01:15:54Z",
+  "status": "LOCAL_SOURCE_CHECKPOINT; no app/browser build, run, raster, screenshot, commit, push, or deployment",
+  "pxcube_source": {
+    "path": "/workspace/shared/pxcube-run",
+    "initial_commit": "5625972188212e69184f06989841a194ddb829dc",
+    "generated_caches_excluded": [
+      ".git",
+      ".pxcube",
+      "**/dist",
+      "**/node_modules"
+    ]
+  },
+  "nctk_source": {
+    "path": "/workspace/shared/nctk-archaeology/source",
+    "baseline_drive_file_id": "1ehwfLPSb8E5d8xU-a2xH_iu8Wec_YArG",
+    "baseline_zip_sha256": "87fd67a08877c90e6b87558e5bda9dbeedf1a8f188462b9ccfe73d3443434d4d",
+    "baseline_modified_utc": "2026-09-29T23:05:44.689Z",
+    "original_crisp_sha256": "7c71293c91fdaf7657bff774bb881a098f673570b40fa211e3e28ebf9ecf7db9",
+    "current_crisp_sha256": "2647aaf4278ef9d0cb4477d361077f93e7903749d17ba882949146682cded68f",
+    "original_stage_set_test_sha256": "3bbd280869895743f705707616135631a846fff1ffd477c6776c0ce8f0161818",
+    "current_stage_set_test_sha256": "97893009f88b18b17487464da3dc957022a54721d54cf0b3c8ae0897e1c87c08",
+    "sync_manifest_sha256": "a4c1c87e0ade1ba53e3deaf5227e26dec3b44beb37866f5b679e6c583358c81e"
+  },
+  "verification": {
+    "pxcube_host_and_mock_smoke_tests": "8/8 PASS",
+    "nctk_stage_set_tests": "6/6 PASS",
+    "javascript_syntax_checks": "PASS",
+    "discstudio_renderer_integration": "1/1 PASS before final host preflight edit; not rerun pending code-flow approval",
+    "browser_ui": "written, not built or run",
+    "screenshot": "NOT RUN"
+  },
+  "next": "Review updated CreateGraphics scene dialog flow; then run integration/build only with the approved preview path and preserve screenshot/test receipt."
+}

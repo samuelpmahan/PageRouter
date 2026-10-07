@@ -1,0 +1,447 @@
+{
+  "schema": "justin-site-prototype@1",
+  "base": {
+    "project": "justin",
+    "compiledDigest": "05a005cb29e5d7b41d515a0d9d844f9512482a6ad7540e52d4d911c2492967e3",
+    "sourcePin": "9fccd18d3077 • local technical patch",
+    "implementationPin": "48c89c08a578f7da79e24ae43a12a1cbeb7ffd62922c84b9394a40fdf60f12ff"
+  },
+  "page": "index.html",
+  "viewport": {
+    "width": 390,
+    "height": 800
+  },
+  "annotation": {
+    "registration": "seek.justin.annotation",
+    "definition": {
+      "id": "annotation-toggle-overlay",
+      "kind": "composed",
+      "consumes": [
+        {
+          "name": "event",
+          "type": "annotation-event",
+          "tags": [
+            "enable",
+            "disable"
+          ],
+          "target": {
+            "node": "event",
+            "port": "event"
+          },
+          "requestPath": "event"
+        },
+        {
+          "name": "context",
+          "type": "geometry-context",
+          "target": {
+            "node": "seek",
+            "port": "context"
+          },
+          "requestPath": "context"
+        }
+      ],
+      "emits": [
+        {
+          "name": "state",
+          "type": "annotation-state",
+          "tags": [
+            "hidden",
+            "visible"
+          ],
+          "source": {
+            "node": "transition",
+            "port": "state"
+          }
+        },
+        {
+          "name": "projection",
+          "type": "ui-tree",
+          "source": {
+            "node": "seek",
+            "port": "projection"
+          }
+        }
+      ],
+      "guarantees": [
+        {
+          "when": "enable",
+          "emits": "visible annotation markers"
+        },
+        {
+          "when": "disable",
+          "emits": "hidden empty layer"
+        },
+        {
+          "when": "seek",
+          "transition": false
+        }
+      ],
+      "internalGraph": {
+        "nodes": [
+          {
+            "id": "currentState",
+            "fg": {
+              "id": "annotation-current-state",
+              "kind": "leaf",
+              "consumes": [],
+              "emits": [
+                {
+                  "name": "state",
+                  "type": "annotation-state",
+                  "tags": [
+                    "hidden",
+                    "visible"
+                  ]
+                }
+              ],
+              "guarantees": [
+                {
+                  "initial": "hidden"
+                }
+              ],
+              "internalGraph": {
+                "nodes": [
+                  {
+                    "id": "annotation-current-state",
+                    "kind": "leaf"
+                  }
+                ],
+                "bindings": [],
+                "externalInputs": [],
+                "externalOutputs": [
+                  {
+                    "name": "state",
+                    "type": "annotation-state",
+                    "tags": [
+                      "hidden",
+                      "visible"
+                    ]
+                  }
+                ]
+              }
+            },
+            "sourceAddress": "annotation.state.current"
+          },
+          {
+            "id": "event",
+            "fg": {
+              "id": "annotation-event",
+              "kind": "leaf",
+              "consumes": [
+                {
+                  "name": "event",
+                  "type": "annotation-event",
+                  "tags": [
+                    "enable",
+                    "disable"
+                  ]
+                }
+              ],
+              "emits": [
+                {
+                  "name": "event",
+                  "type": "annotation-event",
+                  "tags": [
+                    "enable",
+                    "disable"
+                  ]
+                }
+              ],
+              "guarantees": [
+                {
+                  "when": "event.type=enable",
+                  "emits": "enable"
+                },
+                {
+                  "when": "event.type=disable",
+                  "emits": "disable"
+                }
+              ],
+              "internalGraph": {
+                "nodes": [
+                  {
+                    "id": "annotation-event",
+                    "kind": "leaf"
+                  }
+                ],
+                "bindings": [],
+                "externalInputs": [
+                  {
+                    "name": "event",
+                    "type": "annotation-event",
+                    "tags": [
+                      "enable",
+                      "disable"
+                    ]
+                  }
+                ],
+                "externalOutputs": [
+                  {
+                    "name": "event",
+                    "type": "annotation-event",
+                    "tags": [
+                      "enable",
+                      "disable"
+                    ]
+                  }
+                ]
+              }
+            },
+            "calculation": "annotation.event"
+          },
+          {
+            "id": "transition",
+            "fg": {
+              "id": "annotation-transition",
+              "kind": "leaf",
+              "consumes": [
+                {
+                  "name": "event",
+                  "type": "annotation-event",
+                  "tags": [
+                    "enable",
+                    "disable"
+                  ]
+                },
+                {
+                  "name": "state",
+                  "type": "annotation-state",
+                  "tags": [
+                    "hidden",
+                    "visible"
+                  ]
+                }
+              ],
+              "emits": [
+                {
+                  "name": "state",
+                  "type": "annotation-state",
+                  "tags": [
+                    "hidden",
+                    "visible"
+                  ]
+                }
+              ],
+              "guarantees": [
+                {
+                  "when": "enable",
+                  "emits": "visible"
+                },
+                {
+                  "when": "disable",
+                  "emits": "hidden"
+                }
+              ],
+              "internalGraph": {
+                "nodes": [
+                  {
+                    "id": "annotation-transition",
+                    "kind": "leaf"
+                  }
+                ],
+                "bindings": [],
+                "externalInputs": [
+                  {
+                    "name": "event",
+                    "type": "annotation-event",
+                    "tags": [
+                      "enable",
+                      "disable"
+                    ]
+                  },
+                  {
+                    "name": "state",
+                    "type": "annotation-state",
+                    "tags": [
+                      "hidden",
+                      "visible"
+                    ]
+                  }
+                ],
+                "externalOutputs": [
+                  {
+                    "name": "state",
+                    "type": "annotation-state",
+                    "tags": [
+                      "hidden",
+                      "visible"
+                    ]
+                  }
+                ]
+              }
+            },
+            "calculation": "annotation.transition"
+          },
+          {
+            "id": "seek",
+            "fg": {
+              "id": "annotation-seek",
+              "kind": "leaf",
+              "consumes": [
+                {
+                  "name": "state",
+                  "type": "annotation-state",
+                  "tags": [
+                    "hidden",
+                    "visible"
+                  ]
+                },
+                {
+                  "name": "context",
+                  "type": "geometry-context"
+                }
+              ],
+              "emits": [
+                {
+                  "name": "projection",
+                  "type": "ui-tree"
+                }
+              ],
+              "guarantees": [
+                {
+                  "when": "hidden",
+                  "emits": "empty-marker-layer"
+                },
+                {
+                  "when": "visible",
+                  "emits": "measured-issue-markers"
+                }
+              ],
+              "internalGraph": {
+                "nodes": [
+                  {
+                    "id": "annotation-seek",
+                    "kind": "leaf"
+                  }
+                ],
+                "bindings": [],
+                "externalInputs": [
+                  {
+                    "name": "state",
+                    "type": "annotation-state",
+                    "tags": [
+                      "hidden",
+                      "visible"
+                    ]
+                  },
+                  {
+                    "name": "context",
+                    "type": "geometry-context"
+                  }
+                ],
+                "externalOutputs": [
+                  {
+                    "name": "projection",
+                    "type": "ui-tree"
+                  }
+                ]
+              }
+            },
+            "calculation": "annotation.seek"
+          }
+        ],
+        "bindings": [
+          {
+            "from": {
+              "node": "event",
+              "port": "event"
+            },
+            "to": {
+              "node": "transition",
+              "port": "event"
+            },
+            "type": "annotation-event",
+            "tags": [
+              "enable",
+              "disable"
+            ]
+          },
+          {
+            "from": {
+              "node": "currentState",
+              "port": "state"
+            },
+            "to": {
+              "node": "transition",
+              "port": "state"
+            },
+            "type": "annotation-state",
+            "tags": [
+              "hidden",
+              "visible"
+            ]
+          },
+          {
+            "from": {
+              "node": "transition",
+              "port": "state"
+            },
+            "to": {
+              "node": "seek",
+              "port": "state"
+            },
+            "type": "annotation-state",
+            "tags": [
+              "hidden",
+              "visible"
+            ]
+          }
+        ],
+        "externalInputs": [
+          {
+            "port": "event",
+            "type": "annotation-event",
+            "target": {
+              "node": "event",
+              "port": "event"
+            },
+            "requestPath": "event",
+            "tags": [
+              "enable",
+              "disable"
+            ]
+          },
+          {
+            "port": "context",
+            "type": "geometry-context",
+            "target": {
+              "node": "seek",
+              "port": "context"
+            },
+            "requestPath": "context"
+          }
+        ],
+        "externalOutputs": [
+          {
+            "port": "state",
+            "type": "annotation-state",
+            "source": {
+              "node": "transition",
+              "port": "state"
+            },
+            "tags": [
+              "hidden",
+              "visible"
+            ]
+          },
+          {
+            "port": "projection",
+            "type": "ui-tree",
+            "source": {
+              "node": "seek",
+              "port": "projection"
+            }
+          }
+        ]
+      }
+    },
+    "state": {
+      "tag": "hidden",
+      "previous": "visible",
+      "event": "disable",
+      "changed": true
+    }
+  },
+  "operations": [],
+  "boundary": "Presentation-only local pinned mirror; no production mutation or form data"
+}

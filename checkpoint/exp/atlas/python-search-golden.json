@@ -1,0 +1,389 @@
+{
+  "reference_program": {
+    "bindings": {
+      "bias": 1.0,
+      "gain": 2.0
+    },
+    "expression": "x+gain*action+bias"
+  },
+  "reference_bytes": 70,
+  "accepted": {
+    "program": {
+      "bindings": {},
+      "expression": "x+2*action+1"
+    },
+    "program_address": "/search/rounds/3/program",
+    "size_bytes": 43
+  },
+  "scope": {
+    "actions": [
+      0,
+      -2,
+      -1,
+      1,
+      2
+    ],
+    "bias": 1,
+    "case_count": 25,
+    "claim": "Agreement on this exhaustive finite grid at the declared absolute tolerance; not arbitrary-input or all-model equivalence, and not globally minimal size.",
+    "gain": 2,
+    "positions": [
+      0,
+      -2,
+      -1,
+      1,
+      2
+    ],
+    "tolerance": 1e-09
+  },
+  "metric": "Canonical UTF-8 JSON bytes of the complete program (expression and all per-program bindings). Common shared interpreter/library cost is excluded equally.",
+  "rounds": [
+    {
+      "round": 0,
+      "program": {
+        "bindings": {},
+        "expression": "0"
+      },
+      "size_bytes": 32,
+      "full_check": {
+        "errors": [
+          1.0,
+          3.0,
+          1.0,
+          3.0,
+          5.0,
+          1.0,
+          5.0,
+          3.0,
+          1.0,
+          3.0,
+          0.0,
+          4.0,
+          2.0,
+          2.0,
+          4.0,
+          2.0,
+          2.0,
+          0.0,
+          4.0,
+          6.0,
+          3.0,
+          1.0,
+          1.0,
+          5.0,
+          7.0
+        ],
+        "failed": 23,
+        "n": 25,
+        "pass_flags": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "passed": 2
+      },
+      "counterexample_address": "/search/rounds/0/counterexample",
+      "counterexample": {
+        "actual": 0,
+        "case_index": 0,
+        "input": {
+          "action": 0,
+          "x": 0
+        },
+        "program": {
+          "bindings": {},
+          "expression": "0"
+        },
+        "program_id": "1be3318600becf4148a0191376a7d04620d664654587f918ec8ba66658a91013",
+        "reference": 1.0,
+        "tolerance": 1e-09
+      },
+      "constraint_count": 0,
+      "pruned_count": 0,
+      "considered_count": 41,
+      "executed_count": 9,
+      "cache_hit_count": 6
+    },
+    {
+      "round": 1,
+      "program": {
+        "bindings": {},
+        "expression": "1"
+      },
+      "size_bytes": 32,
+      "full_check": {
+        "errors": [
+          0.0,
+          4.0,
+          2.0,
+          2.0,
+          4.0,
+          2.0,
+          6.0,
+          4.0,
+          0.0,
+          2.0,
+          1.0,
+          5.0,
+          3.0,
+          1.0,
+          3.0,
+          1.0,
+          3.0,
+          1.0,
+          3.0,
+          5.0,
+          2.0,
+          2.0,
+          0.0,
+          4.0,
+          6.0
+        ],
+        "failed": 22,
+        "n": 25,
+        "pass_flags": [
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false
+        ],
+        "passed": 3
+      },
+      "counterexample_address": "/search/rounds/1/counterexample",
+      "counterexample": {
+        "actual": 1,
+        "case_index": 1,
+        "input": {
+          "action": -2,
+          "x": 0
+        },
+        "program": {
+          "bindings": {},
+          "expression": "1"
+        },
+        "program_id": "3507468cde88f55f3a5d2e3f3d2d797cab123d8b012f3c65338ec31faff03e65",
+        "reference": -3.0,
+        "tolerance": 1e-09
+      },
+      "constraint_count": 1,
+      "pruned_count": 31,
+      "considered_count": 41,
+      "executed_count": 9,
+      "cache_hit_count": 15
+    },
+    {
+      "round": 2,
+      "program": {
+        "bindings": {},
+        "expression": "2*action+1"
+      },
+      "size_bytes": 41,
+      "full_check": {
+        "errors": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0,
+          2.0
+        ],
+        "failed": 20,
+        "n": 25,
+        "pass_flags": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "passed": 5
+      },
+      "counterexample_address": "/search/rounds/2/counterexample",
+      "counterexample": {
+        "actual": 1,
+        "case_index": 5,
+        "input": {
+          "action": 0,
+          "x": -2
+        },
+        "program": {
+          "bindings": {},
+          "expression": "2*action+1"
+        },
+        "program_id": "acf892fe1f0bd6b33be071f07bfcde99a9976f12c83e01ce57e35277a3527106",
+        "reference": -1.0,
+        "tolerance": 1e-09
+      },
+      "constraint_count": 2,
+      "pruned_count": 39,
+      "considered_count": 41,
+      "executed_count": 9,
+      "cache_hit_count": 24
+    },
+    {
+      "round": 3,
+      "program": {
+        "bindings": {},
+        "expression": "x+2*action+1"
+      },
+      "size_bytes": 43,
+      "full_check": {
+        "errors": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "failed": 0,
+        "n": 25,
+        "pass_flags": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "passed": 25
+      },
+      "counterexample_address": null,
+      "counterexample": null,
+      "constraint_count": 3,
+      "pruned_count": 40,
+      "considered_count": 41,
+      "executed_count": 9,
+      "cache_hit_count": 33
+    }
+  ],
+  "replay": {
+    "executed_count": 0,
+    "cache_hit_count": 42
+  },
+  "part_count": 48,
+  "producer_sources_verified": true,
+  "closure_verified": true,
+  "test_count": 27,
+  "original_modules_unchanged": true
+}

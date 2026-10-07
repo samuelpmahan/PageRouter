@@ -1,0 +1,25 @@
+{
+  "schema": "nctk-directory@1",
+  "address": "overlays",
+  "children": [
+    "overlays/discstudio-photo-card",
+    "overlays/house-10s"
+  ],
+  "kind": "group",
+  "source": null,
+  "policies": {
+    "neat": {
+      "mode": "none"
+    },
+    "crisp": {
+      "mode": "none"
+    },
+    "tidy": {
+      "mode": "local"
+    },
+    "kompoze": {
+      "mode": "none",
+      "references": []
+    }
+  }
+}

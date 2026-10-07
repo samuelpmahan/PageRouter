@@ -1,0 +1,1312 @@
+{
+  "schema": "smartsync-recipe@1",
+  "included": [
+    {
+      "path": "README.md",
+      "sha256": "a87b0d71c1af9852314078399f4ffd7e548dd8c3e052de37d5617b32dfbc6b68",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "bases/discstudio-photo-card.json",
+      "sha256": "167699f7dfd625888981e7c42ac174284ed44d487a4fc11999987388887ed7e9",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "bases/discstudio-photo-card/nctk.json",
+      "sha256": "5cfb7c79dca0f8dde0d975713b9738d413e05b27f09716d04452beae3ab23622",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "bases/house-cut.json",
+      "sha256": "dd9d3d6f9a2717c1144882698e4318541be10e5ddd52fd18baf0a541b94c3090",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "bases/house-cut/nctk.json",
+      "sha256": "2b4bc55d802f44be9951ae936e8dac325bcd21f527984d73ebcdd360bb820467",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "bases/nctk.json",
+      "sha256": "7ec4809be4d0ddc43d191259fbe7be581450f0868d2fb094bc7863a39039ec8f",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "calculations/composite-discstudio/calculate.mjs",
+      "sha256": "6e54802f87d8b84de97b81ceb4292adc1cec2b00856da9b4e0eaef3ea887f240",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/composite-discstudio/calculation.json",
+      "sha256": "00b34bb0ff47da7d67cdc6d1a57f9b899a779ee5ea37bd431c1bc7883faede02",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/composite-discstudio/nctk.json",
+      "sha256": "2f2502560b917a417b341d86b58a201cec74d497c8b6715422f36b132fa13360",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/cut/calculate.mjs",
+      "sha256": "4fb50094b4759d8e25884ba0161d693b44eba7dcb9aa44e72afdf4a6a09a522b",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/cut/calculation.json",
+      "sha256": "5664ecf1332281ebe7b0044b57d78ef45c9fdbd7cfad8d8d946204b13b1fe013",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/cut/nctk.json",
+      "sha256": "78291a10a637f31007a066fc2ce0cbb69cba4667d0b9a9b929bd0a80966c590b",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/declare-discstudio-crop/calculate.mjs",
+      "sha256": "c0872337474f6d92377a4472e4462fa7913a634c49fac6461278662f883232e3",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/declare-discstudio-crop/calculation.json",
+      "sha256": "2d24b10e7d0698bd968d8a5be99c767729aab03b0a017a267166785b26b9b5e8",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/declare-discstudio-crop/nctk.json",
+      "sha256": "972d6dd4c823522368299d6dad887efe332acbafeac264fa5cfd9d334075e2fa",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/nctk.json",
+      "sha256": "0b6e9a19df96e4bbc1cd1a68dfb903324c9941949055c1e6ae5a775ea5aff703",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/prepare-discstudio-photo/calculate.mjs",
+      "sha256": "d2cc4c2ed72b197bda12adc2bd0ade65ca3b208c4726a936c947282291705d69",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/prepare-discstudio-photo/calculation.json",
+      "sha256": "240708bb91170bb231e44f8a850e6e03e567c38af56c351bae339748b3a5cc21",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/prepare-discstudio-photo/nctk.json",
+      "sha256": "26ab0bd3a2e559ac7cd111ea8924f080f42f1229594d3ebb747a79e6d096492e",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/preview-discstudio/calculate.mjs",
+      "sha256": "37779997f405bc3196da0b39540e622b39ee3d54a529c9d0bc336930e2eb206f",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/preview-discstudio/calculation.json",
+      "sha256": "bb87b0dccc4483de4b4ae1123fce5bebf8104709c96d7d982463ad9083125bd1",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/preview-discstudio/nctk.json",
+      "sha256": "72ba541328c0e0464fcf2f259430eb1434b5ae7a3d78bc0cc0aba0a7202cc04f",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/probe-source/calculate.mjs",
+      "sha256": "dfdbd7083d8eca89cc505ed597ee7a2a64c8df726da50dc6abba811bac96336b",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/probe-source/calculation.json",
+      "sha256": "16ea85246d40260633e9bab83b07c1fcdb3b93fd89d2752f079e2498b483bfe4",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/probe-source/nctk.json",
+      "sha256": "5ade781c23d956fac787a377c868c718d9df7f793d3d9edc5501e0366d8ff8f7",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/render-discstudio-card/calculate.mjs",
+      "sha256": "38f7c7263dd6f215144e25f3c1b0801f9bc945af0f758ce36492a129f9fdcf8b",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/render-discstudio-card/calculation.json",
+      "sha256": "34c1642517bceed21849b518500705655a1363f748ec1e7e1cd4911c9a6f1b78",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/render-discstudio-card/nctk.json",
+      "sha256": "0636d9c4741a648a449a4ba279d82104c8811df0fac7ea52ef599971d20cf6f6",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/review/calculate.mjs",
+      "sha256": "312a756c943e74d48104291d48b79d3cb64a86afbc0d64f74c0b545f94c3bfa5",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/review/calculation.json",
+      "sha256": "bd7e166e85ea2250ddd1c8a3338cc0b2839ba4af975140ccf1a7c7546cc5389b",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/review/nctk.json",
+      "sha256": "7db0e3e8d738dfd4c8b38228ab60de93c034cddc9fd244a06bad354cde5b0ee0",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/save-discstudio/calculate.mjs",
+      "sha256": "083cfa365c385057ceaf83634e17ce2dbb2307945f5734f259e5995ed6195701",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/save-discstudio/calculation.json",
+      "sha256": "789e0948b4a890297d511a5d3d4b43b950ff0d0ccfff5b510060c3a0c0b7c1c2",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/save-discstudio/nctk.json",
+      "sha256": "cf45a9f85366a9173efcd7124f34e8cf8aea24aaaba9e90a77f1b706fad61f5a",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/uniform-scale/calculate.mjs",
+      "sha256": "ac5e85efd8c8104d2d16260789272aaebe5930b841779b8a79eae3f3db0f96df",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/uniform-scale/calculation.json",
+      "sha256": "9228d44c72b0413bbd1fcbb0087aba17500abc872ac2146db283f6cb16e8909a",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/uniform-scale/nctk.json",
+      "sha256": "d2a993e73f5b206255ec36f015fbec86dbb41edf567c95366c84745cb31d763f",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/xy-transform/calculate.mjs",
+      "sha256": "75e41de928fc45e571474790daf99a7325cf691abf77c1bedf5e52551b01102d",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/xy-transform/calculation.json",
+      "sha256": "a028f89033716a5462d397ed2980cc696127dd6b3c263741db40d53284cc25c8",
+      "classification": "executable-source"
+    },
+    {
+      "path": "calculations/xy-transform/nctk.json",
+      "sha256": "427b270ce7a802fc4c285f5db595e6491cb3ecb1732bf3d966994dae3f51a725",
+      "classification": "executable-source"
+    },
+    {
+      "path": "capabilities/merge_release.mjs",
+      "sha256": "190ee98730ec6c5be71641f8507726e182f94755d2e42a0225999a35a750a77a",
+      "classification": "executable-source"
+    },
+    {
+      "path": "capabilities/smartsync.mjs",
+      "sha256": "d98f8b213e40308592e9f90a14246e26911216fef52aa76775e616b2a4f6af7c",
+      "classification": "executable-source"
+    },
+    {
+      "path": "examples/salamander-one-frame.json",
+      "sha256": "a3d0b6af98b206564b98bde8188c282eeee743d21bcae35d06b74f964777d26a",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "facts.mjs",
+      "sha256": "094e886fc0d6ea2559b093fc8aa131120638661aefd1b889359529e2890845f7",
+      "classification": "executable-source"
+    },
+    {
+      "path": "fixtures/derived-contact-sheet-input.png",
+      "sha256": "d751819a1276be73f11d26bbcf2d8489c006fe60a5838264061ab3fc7ff7f0d6",
+      "classification": "declared-derived-fixture"
+    },
+    {
+      "path": "fixtures/discstudio-sample-background.svg",
+      "sha256": "ba395bb81029258c8ea56f60b1122bfe044be781ebfa4b637914e5b3073976d8",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "fixtures/seek/card.png",
+      "sha256": "e19dd5ba44f2b072868328a5fbc0ea4cb37a3e8ffb8254e5742dd84c1d4d7bb5",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "fixtures/seek/frame.jpeg",
+      "sha256": "54d08aa84a074421aa7492c33c613219a24f994bf9e39ae52dd2e87e5df6cf50",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "nctk.json",
+      "sha256": "6c01dbc9098d1616763acb2da32bef2b51b6b8aaa949d25eda3e59b005027d4e",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "overlays/discstudio-photo-card.json",
+      "sha256": "17e56f3bbaf929f9387e2311fb1e04861e0471e1028067e8fa6b27e2c9cd5579",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "overlays/discstudio-photo-card/nctk.json",
+      "sha256": "ec9c508c055cea094e8e8371448f0112deb296d91b2f638af2e5fe8d47502fd8",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "overlays/house-10s.json",
+      "sha256": "9dab8556d0f65879178880151109f51193bb8c770819edded36cf789342ff2fc",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "overlays/house-10s/nctk.json",
+      "sha256": "16aedce12d11956b9e174fccee5e43615b8c795c5a495b6fbaf9aa7f4e2b3519",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "overlays/nctk.json",
+      "sha256": "0765e434fb2cf658a47a8e93bdb6113240c3cf678cc50e3152eb3165c4b03b89",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/card/discstudio/nctk.json",
+      "sha256": "6f1ce32b021ad9b2e3f3bfb69b8170746b78b114dd402b16551f3cbc5d5f595c",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/card/discstudio/part.json",
+      "sha256": "384545869b857399ce380c243ec667fcb3ca9cb0397dc14f2fe8edd4d6af3aec",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/card/nctk.json",
+      "sha256": "1ec30be54f5e8bb9cfc884df7a766d06c6e0ad69261c9160a2d40e436242d68b",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/composite/discstudio/nctk.json",
+      "sha256": "d40a84b3ca48266aec590a62373207138c2f0af78e3957dca8d422c72f764942",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/composite/discstudio/part.json",
+      "sha256": "9936d516dbdc941647c49c550975aa4a799901b26fbdf9a37153db37d86b2bee",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/composite/nctk.json",
+      "sha256": "83d1a88896b30a5e54a1424ab6804a9967b612ffa99c96ecc132642d58f5d01b",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/crop/discstudio/nctk.json",
+      "sha256": "301c4615e236b66feaaf962b220576d4f950ef9f344552e85f8bce5921f8bebf",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/crop/discstudio/part.json",
+      "sha256": "d862b8e5949ed037c62bd9e499d26ce007a186b1a85ca6f45fb6e7f59261153e",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/crop/nctk.json",
+      "sha256": "950cb38a49ca1287f6c3c2f820bfe9ad668e9763f96aa64b065380d52305446f",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/cut/house/nctk.json",
+      "sha256": "1e05904d593dea8cd686134664de525bddbbb8c62f60664a46cdc63183b88f74",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/cut/house/part.json",
+      "sha256": "5cf6b506ef59f7addf3b64c628b149c92c9616d801a15918f090ec6af17a38eb",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/cut/nctk.json",
+      "sha256": "6b6a26285b940a6c4cdc0a5c888a62a4c05da1eebf677a7316844c82454532cf",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/nctk.json",
+      "sha256": "78b09e773d013a4af6a333dc0718d1c50d3af3f5693a0d23dd1e6cfebc65b137",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/positioned/discstudio/nctk.json",
+      "sha256": "b8e3f50ad86dc5c2a48424c904c3fa813c9e1f3775ec9d190836871d277447bc",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/positioned/discstudio/part.json",
+      "sha256": "ae17ad4f0e45ea361b6499722092cbd2710de96255de85d5634de46b9ca68b44",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/positioned/nctk.json",
+      "sha256": "15f922d385d9944e91e69b841a700da31a41513a7a137a532ffaf72d530d6ba2",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/prepared/discstudio/nctk.json",
+      "sha256": "604cd2cc335894a6be4b29171f498effa04cfb03b1dabae65e8dae8ceef21f60",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/prepared/discstudio/part.json",
+      "sha256": "06b366e8888eb49b055f8a23e12ace29f01c74d5e15c7e6b892a0ef648d74a88",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/prepared/nctk.json",
+      "sha256": "b390ab21b9add18be96eaa890cc84733304307c07051c76d80ae722854c83d20",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/preview/discstudio/nctk.json",
+      "sha256": "e25e3214cb75c03c0796b3d34e146662d0e3f0808db0e18429d1afda5bef5a8d",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/preview/discstudio/part.json",
+      "sha256": "dc30b4abbf5920ed42669ad72496c5d0cb9db77c5a1b63645e961857adee4912",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/preview/nctk.json",
+      "sha256": "90d2054c268751f59959f2a2fc7b7aac372ba430b48f3c62d5d5c0cabdf34eeb",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/probe/house/nctk.json",
+      "sha256": "821790692bb44fbac3fa3e30f0f14fc0a88cdf1a3d19a87c52040d36283e8e89",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/probe/house/part.json",
+      "sha256": "bcedf345a310ff22a75c13afffa9d746375ac7f1496fd1ac9f356a0694128280",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/probe/nctk.json",
+      "sha256": "e6f89efdd194894e6e1da8a10dbd28c92d4b180ea533656e22f5c657fef90fee",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/review/house/nctk.json",
+      "sha256": "82a8fd16b11b8f216e576c59577f2c0b05a94ff76c4ecaed8b475d89216dbc7f",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/review/house/part.json",
+      "sha256": "606f1571a5f5a86b2f84a8fad87e05a36302f6e6b7c7ef203208fc71d53e7306",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/review/nctk.json",
+      "sha256": "111ed47677b069d8dc229961fd7e4715f4270a11720504ea76e9003e026e9795",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/saved/discstudio/nctk.json",
+      "sha256": "bff8d56c8188fa2f61414845eb2519cc163b5c0433cfac79df6af2806c5d0974",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/saved/discstudio/part.json",
+      "sha256": "13db209ca3192a117eee7902c155bd2241baceaac68b891a4947b299462ae7d8",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/saved/nctk.json",
+      "sha256": "93f92dc3901daa9ec75affa0139e27525cbd5673da865afe9a161b8af0d555a1",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/scaled/discstudio/nctk.json",
+      "sha256": "6a298abbe2e8741a439ce84a23d29e9683bc9e9aa9cb89b0b59875d82725deb7",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/scaled/discstudio/part.json",
+      "sha256": "75cc02ae70b30cd1098ccca4e79eedca09a18065364b30f977bd900b4fcaba70",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/scaled/nctk.json",
+      "sha256": "03806cd547cb19c1877b9b27476ab1f10dd9a0eabbc1aa98ab65f3f1d9657280",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "parts/source/discstudio-background/nctk.json",
+      "sha256": "74be58b239b4d8f5b4ee641593fc30f50050bb47cb72457f49c3a70aed490262",
+      "classification": "original-input-binding"
+    },
+    {
+      "path": "parts/source/discstudio-background/part.json",
+      "sha256": "32b02d9871366ef862da2f910a6e83adedf762ec0bca2ce517b1f66c3eee229b",
+      "classification": "original-input-binding"
+    },
+    {
+      "path": "parts/source/discstudio-fixture/nctk.json",
+      "sha256": "304d0d31a3fd2fb845b1b81906954ac55a9eb8c1d2b896e18f45470f28511b68",
+      "classification": "original-input-binding"
+    },
+    {
+      "path": "parts/source/discstudio-fixture/part.json",
+      "sha256": "1c295c002e6628ccd09e1a4f385a70c41ead3ce8baec62cb459b37e99baf6579",
+      "classification": "original-input-binding"
+    },
+    {
+      "path": "parts/source/house/nctk.json",
+      "sha256": "1d7ff97a38256191e0fffc3eeebb29320cb1fb9509b94fdc671ded77f717fcf6",
+      "classification": "original-input-binding"
+    },
+    {
+      "path": "parts/source/house/part.json",
+      "sha256": "be7d6e1d7afadf5cc393b00cf3997f2683707c8049b41405d492c1db08298fd6",
+      "classification": "original-input-binding"
+    },
+    {
+      "path": "parts/source/nctk.json",
+      "sha256": "07a3be792d1a84ffedf18626f484ce7607d295ce64a9b1eb932d8d1f06aca664",
+      "classification": "original-input-binding"
+    },
+    {
+      "path": "policies/candidate.mjs",
+      "sha256": "7856c910d18b45c20f2c141792df1f788ab01b2f64ac319b434145ff91db62c5",
+      "classification": "policy"
+    },
+    {
+      "path": "policies/crisp.mjs",
+      "sha256": "2647aaf4278ef9d0cb4477d361077f93e7903749d17ba882949146682cded68f",
+      "classification": "policy"
+    },
+    {
+      "path": "policies/kompoze.mjs",
+      "sha256": "7bdf5e113e48d75c7ebc9fd1a2896a162cc4801f69c178a937ee3f015ddb240e",
+      "classification": "policy"
+    },
+    {
+      "path": "policies/neat.mjs",
+      "sha256": "409460458d88f1bff7a022ddeb7d77c6cb1a607612124eabca267b6e17a01ca4",
+      "classification": "policy"
+    },
+    {
+      "path": "policies/tidy.mjs",
+      "sha256": "15774eafd1463ab81a418d75e070ff0695ffbd6644e7704de22099f422c09ab3",
+      "classification": "policy"
+    },
+    {
+      "path": "projections/discstudio-seek.mjs",
+      "sha256": "f9820c41bece85efce05bdd0494441dd3a31aad7eb131f57e25bcecd9abffc34",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "projections/seek-plan.mjs",
+      "sha256": "366f3fcecb8befa1d3c4a0889a9c44ddf8219680c1a36e188ef5cc4c343e2cd5",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "recipes/discstudio-photo-card.json",
+      "sha256": "b6593b2fdaa3c4c3e2210c05f05e9c0b2ce24ca14a0e0d1680ce2a029b0938cb",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "recipes/discstudio-photo-card/nctk.json",
+      "sha256": "84d0f81cd5923be6f5db5b3080ead57ec0b8237a2128aaf9eeab3099be5696c1",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "recipes/house-cut.json",
+      "sha256": "49ee5ed656a6f4e4dc8fe273510b451eb2420a1f652270f35cce444fc60950ba",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "recipes/house-cut/nctk.json",
+      "sha256": "8432254e5ed9a12fff758927596b4478b8bc9a6c965e6f03716e05e35f55f999",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "recipes/nctk.json",
+      "sha256": "ae621c54f12e0cf34734e2b1e030d838d21b03d95a4c8f945d3a76d94ead5ef3",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "runtime.json",
+      "sha256": "27eaa4a6ead252af098d565ea2151b85ec980cc3182ae2fd31a25a4864cb6d87",
+      "classification": "runtime-transport-binding"
+    },
+    {
+      "path": "tests/discstudio-seek.test.mjs",
+      "sha256": "72d0515a6f4d02a43ee287a3ea91fec8ea2d65633364bfeb27bfdf05e34321c6",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "tests/discstudio-transform.test.mjs",
+      "sha256": "af24845782680cefe850a68f1c59ebe93d90241d7988157413b771915023d89c",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "tests/merge-queue.test.mjs",
+      "sha256": "a60b4cbe73df6fcdec5147bff8a7030961f4b1b6dfddd1606927fd019508f3fd",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "tests/neat-work-state.test.mjs",
+      "sha256": "d6ada624c9122cb70f5f8007bc1b1beef9ce11dc8eabff2fc11b4a90421aa7ee",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "tests/stage-set.test.mjs",
+      "sha256": "97893009f88b18b17487464da3dc957022a54721d54cf0b3c8ae0897e1c87c08",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "tests/tidy-directory.test.mjs",
+      "sha256": "3d3f04d89ec03b9ce47b3e924113ccbe6658e822c24b1c0b625e5178bbdeb833",
+      "classification": "composition-contract"
+    },
+    {
+      "path": "toolkit.mjs",
+      "sha256": "a95118c29a4d14dea493b466d816b7addae968c9b86ddb5ed8c639fc61936475",
+      "classification": "executable-source"
+    },
+    {
+      "path": "transport/discstudio_release.py",
+      "sha256": "7407a893f0e1d11aaaad6490435bbb96ba5e132486217a9cd51f3c0ca03baaab",
+      "classification": "runtime-transport-binding"
+    },
+    {
+      "path": "transport/localci.py",
+      "sha256": "4e1fa4d745493ec4f95a38bde8376b313b83a7f6e74f0962528b336f604e3a61",
+      "classification": "runtime-transport-binding"
+    },
+    {
+      "path": "transport/localci_merge.mjs",
+      "sha256": "e7bd611e0f41710cd5868f218d3ed2f341761b08abc2e8dac0ef7aaae8d1f437",
+      "classification": "runtime-transport-binding"
+    },
+    {
+      "path": "transport/record_localci_observation.mjs",
+      "sha256": "da73bfde0ae154c16259d29cbcb2fd735d82fe4b9fd6e1fa4af737f2a3871b0a",
+      "classification": "runtime-transport-binding"
+    },
+    {
+      "path": "transport/remote_input.py",
+      "sha256": "9a96fb3468862563c5283a588cd217da03df5233a8bed2244c97fe2a1852df98",
+      "classification": "runtime-transport-binding"
+    },
+    {
+      "path": "transport/root_sync.py",
+      "sha256": "b2a7b152813bf915b7cb9089fe1aefbda220c60df967ff52d8c7077979168cb2",
+      "classification": "runtime-transport-binding"
+    },
+    {
+      "path": "transport/root_sync_legacy.py",
+      "sha256": "d899c5bceed3b4f699df97dd8559097c93b7c638f49741de916066a5ef76bbc4",
+      "classification": "runtime-transport-binding"
+    },
+    {
+      "path": "transport/test_discstudio_release.py",
+      "sha256": "b475b4dfe198a520e90ba5aa97ea27bebb41fe67d2a47d10b6492178018a9d24",
+      "classification": "runtime-transport-binding"
+    },
+    {
+      "path": "transport/validate_directory_tree.mjs",
+      "sha256": "0989f51ad6b4973add97eb20597c3cbf980b94675379d9e3461dc3d4991fe6c7",
+      "classification": "runtime-transport-binding"
+    },
+    {
+      "path": "vendor/discstudio/disc/.gitignore",
+      "sha256": "9015d89c7b3cef194d1eed74f37f46f048feb97f86152539f75e19d0992f01fb",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/README.md",
+      "sha256": "685022763fbe35ab136b157572d2811d89f43487b8ca30299f4a3ee284b9e354",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/SOURCE_LINEAGE.md",
+      "sha256": "70af785431056cfa6ae0ce4760297e640f94f0356734a025d4866a773c4b6842",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/app.ts",
+      "sha256": "ab829a53c1bd62339365cbd8ebe38e8f5069073c8893563fdbaf0a34a9d59239",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/approval-identity.ts",
+      "sha256": "dc555da54ac8c894d90c6216f4d268988ddac60e00a0042045a9902fa7b87dc0",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/bag-current-version.test.ts",
+      "sha256": "c8b67cdcc3bf66cb20715452d572b3e689e74f75f90530eabf698250ba04f50a",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/bags.test.ts",
+      "sha256": "074b31762755ae90ab7f290b8f152a514c4aa9251f8b73da4675062db83d65c1",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/bags.ts",
+      "sha256": "0445427685a5bcb55563db485ca3de3a61a6702de18d8f9a02e74b00be4540ea",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/batch-review.test.ts",
+      "sha256": "61aeb76851ad53245814645e122475cad819577bee0640f2933024d34fc4a775",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/batch-review.ts",
+      "sha256": "94f2f6eed68e729a4cfbaf2634eab52fa3b40aae54376ccbff9c9c29fb38cc8a",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/brand-mark.svg",
+      "sha256": "b1b7549dadd5ef7cdf5ed91d4326f7a3b1ea4ef3a94018da9358d177b84f0d31",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/browser-card-renderer.ts",
+      "sha256": "6e2df69984dcae9a99c307cf1df239f7f150822bc04e72ac8c5c2d19a73a1bc0",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/browser-export.ts",
+      "sha256": "e84d21bab4ca62dabd1bbebc29a31f6947690126bce3fecbe4ff838f0249c664",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/build-input-identity.mjs",
+      "sha256": "857f9b6b74ba51425b4556d79788ecff346e5e5d6c8fc6e97560282f7883dd87",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/build-output-identity.mjs",
+      "sha256": "198a9163df6bf15a52a59db8d415a8be8ea33e461cf87ee091095c169f2948a3",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/build.mjs",
+      "sha256": "9a86ddcf60a5e0e673257e72c1d76576f69f7380a8f8aec6d7518587abfbdfd0",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/calculation-select.test.ts",
+      "sha256": "460b5a2bdb6b03426561ac1c690e23fbe89893cefd2207a6f89098a125a555ba",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/calculation-select.ts",
+      "sha256": "7495f31f4ef523ff237a951fcc1518a998fa54e4d76e602981a57c3db2167c81",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/capture-initial-scenario.mjs",
+      "sha256": "bc8fca5e01573635ebc321e62d688724ddb687660a4270ce15818a7f6d880f27",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/capture-output.mjs",
+      "sha256": "1271dab053938c509c481bf41021d23a66d1e1bd0ba6ef0fbda46b0ec3e9c8dc",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/card-renderer-core.ts",
+      "sha256": "022c00fb18a38f1fb14b8ef483d73c154573fa8fd4fd5d7c326564da1543b723",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/card-renderer.test.ts",
+      "sha256": "89fffbcc964178320135dec19228fd858544e548de468e0e60b05369b262d33d",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/card-renderer.ts",
+      "sha256": "2d84fc9b820e808ce3283431a61eefa06b8d5d7ead258f25ca26ec2c0dbf96ee",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/catalog-lite.ts",
+      "sha256": "1d774d095dcd6b9e93b5792654f1af2166c33ae6282e2031f2394264d9ac8a4d",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/catalog.test.ts",
+      "sha256": "bc27c1ed87036bfe6ff44f835a1c3080c12f0cf0d6f66e4b04a21eebf8d6d53f",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/catalog.ts",
+      "sha256": "40c30c8599e9d7b396de23bb07a722ae20812e03ea0b18a9cf2d228feecdfa6c",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/circle-candidates.test.ts",
+      "sha256": "1922a15492f4f46dda550f4a9bb405c98533f8bdbd09173ef4f91bba0a84fcf0",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/circle-candidates.ts",
+      "sha256": "2229e21a2f99adb6ffbbb334b71f1033cd93eddc8ee63ef4a1aaee2a20e94ed4",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/circle-fit.ts",
+      "sha256": "21761c6fd31c0210570d05ab980e832c245325e49b842dc4504c3a4be29ac928",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/cold-bootstrap-v4-replay.md",
+      "sha256": "0dcbb7f2494cbe6bc2eff5dfdca81949b37041665fba8749aae6ed1fc8030551",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/creator-review.html",
+      "sha256": "84b3e139eda05f10c8ed9874d51681a52b2585121822bc121cafcd67ee7a7e03",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/creator-review.ts",
+      "sha256": "2581f3edd289352707300e59fc9a71c3b96c21608f619786186e8164b2ec0e9e",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/creator-selection.test.ts",
+      "sha256": "bab52d9d059de44980f303f305637c88c33ec7fd51a98a9b0c7fe8271fea8024",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/creator-selection.ts",
+      "sha256": "ead48e14e1bb97ad44452bf3494b75011721672bcd57c1e0141e4ce33497f087",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/creator-walkthrough.md",
+      "sha256": "b48bc4876dd6b0a06d6597b1440af9f9a09f87008bdbfe20758848574684bb53",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/creator-walkthrough.ts",
+      "sha256": "cd82253e466a08a179e04ed1b5adfdb4fb2dbd42741f1acd019866d5ce961d42",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/crisp-recompose.mjs",
+      "sha256": "914ea728a585a825ca0b1729068480cfe73cbf52ecc443f06e463051b51eb506",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/crop-geometry.ts",
+      "sha256": "9539ce445c713a889a0b623b9275bd8fdd074c71b83ced026b253fb8fc3bece2",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/devtools-data.mjs",
+      "sha256": "ad2d76d679c4f26022a6f15a54c121df5fff85630f0afd412c1955d5e84909bf",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/devtools.css",
+      "sha256": "97f3968cf560f85be4debd9807f16047f65dfef5b9634b66db16b8b4626ff467",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/devtools.mjs",
+      "sha256": "74295db712b4473d173dc9f31c2c1dc2cedf4f3faca1af373478803ecf478b63",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/devtools.test.mjs",
+      "sha256": "7cf05612baf5e2000de62d8775f2efc0fc9a9481e0b321278b5d5c722c6c2988",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/disc-view.ts",
+      "sha256": "a35cc65e6f9b4e31b989ab0cef8c0272d047c79e0df6719cc5520517c056289b",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/discstudio-painted-creator-attempt-v5-receipt.md",
+      "sha256": "4a54ccb5c9b12a0b8a2e7ae60a44ffa3596371bf0775ec2918817514c1e2d65f",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/discstudio-painted-creator-attempt-v6-receipt.md",
+      "sha256": "85b175e5bc5d9ca89b263ab4d711653f15850cf625b09566acc6ef37ddd94a53",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/discstudio-painted-creator-attempt-v7-receipt.md",
+      "sha256": "230c412991048a71d91a9704fb4a607631ace66b843589481f7bc22565f4707b",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/discstudio-painted-creator-attempt-v8-receipt.md",
+      "sha256": "efdd15641f400e08b7c319b7251ce694b0d37f55dac1a8d54b34cdde2fc443c0",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/discstudio-painted-creator-attempt-v9-receipt.md",
+      "sha256": "476eb8acc69badcc0628695dbaac2fa9d2c500973fb49bd081dfc69881466635",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/drive-real-ui.mjs",
+      "sha256": "fc2cba2105a01e6c89d37e569f722ea82b40de0b216e780315d4dfec4fbd4553",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/experience-fixtures.ts",
+      "sha256": "348fa8e25a20bb4518dede84da2fab3cd05ebfd19a131c1571067a755e6aba68",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/experience-page.ts",
+      "sha256": "3ff0fdfc00d36b034983826d9ff37d1f86572aff71ffc2c5532be18d7c4bea8e",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/experiences.test.ts",
+      "sha256": "4a3d908c6af2414c21f31151204c8adf1bf7c8de289b748d9def3ad79a15711c",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/experiences.ts",
+      "sha256": "4d9af5bdcb39657fe65f36a2152106577db869fec52d734cb5c30bb108dc926c",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/export-queue-core.ts",
+      "sha256": "04900e995764a48a7572360d0b4ecda2bb14b6659e7a49b778af3ae68331d71e",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/export-queue.test.ts",
+      "sha256": "c2a5cc3755c1184457f22819c50e0e0bab63ec3b50be42e987b651bf018f2fd5",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/export-queue.ts",
+      "sha256": "3cfe8008813abbb4f98c334baed7c68d4f2625c434fec6ffc8c458a7b9c06a69",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/export-ui.ts",
+      "sha256": "557f19893cab3d7b2fd6fd4da76b619d1a2093655b38ca341ec14066aa65b3da",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/import-integration.test.ts",
+      "sha256": "01b2787e5f1164ba422a99e5823b34cc714fca60addb39c947265fd7cc68c9a6",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/index.html",
+      "sha256": "cd77dbacefcfe1d60a299ad47085f5d57f0a44d704dac4d13e6cecd6ff16c676",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/instrumented-run.mjs",
+      "sha256": "c78ac450f5f6ce70cee4f19a84c8a0356b5de02d8cdee756eafe33545eae1ded",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/kompoze-materialize.mjs",
+      "sha256": "946f1a1577aecbf2062fe0a95889b77da446903a6b5c027d479dca52e7725bb1",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/kompoze-resolve.mjs",
+      "sha256": "6d95e18302a470145237c5305b29d4a66299bf3015bd30729c0c36bd643ffc16",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/kompozition.test.ts",
+      "sha256": "6d3e53ad59f5a41efff21d5b91f69fd5d6a2346815c24402a49f7483c45de6c3",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/kompozition.ts",
+      "sha256": "d931e320423d7351adede33a9af7610b41a0c586b1ee4c0d76d1230a935ef833",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/legacy-archive.test.ts",
+      "sha256": "45293e4d2d32dd2a5d1957fe130e83c1e5c1007628a1390740662ef5fd2f5911",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/model.test.ts",
+      "sha256": "6e7e46b0055e5fdc058b0e504338e110055bd45b348a41f64388d2e57f63a6c4",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/model.ts",
+      "sha256": "d0dfb7df5e36bca944562f8c999fba04e3b6186422459843e6051e29ff41563c",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/mold-library.ts",
+      "sha256": "a71ae0034b187e5daa80022e4242c19de8aa1ea440f44df976395805ea9c376a",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/mold-search.test.ts",
+      "sha256": "bdfe20eb155f4c6c229399e6c62607849506f5453d705a7ef2045f1ea81ffa85",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/mold-search.ts",
+      "sha256": "db9c8d3ac2b22adfb90da07ae22d94c70fd9b3100407e4e6637efbec43c64447",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/mvp-run.mjs",
+      "sha256": "b9071b1c14f9b0f41bc612c0b45baebfe25d3015addf7cd735a9f71fc0a99d6d",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/operations.test.ts",
+      "sha256": "38fff371ed8944c55b22ceaa0a9bb2a7c224b74849212f2401ddd82e8582a46b",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/operations.ts",
+      "sha256": "b30eabeb43904a643ff4cbef5c1a8e6081cb9284006d254d5540a4adf3da3ab3",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/overlays/painted-discs.overlay.json",
+      "sha256": "7dc3661af2c487e83c3ba354d2e7befb0a126b7edbd969ade55c1f83b2ccc82e",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/package-lock.json",
+      "sha256": "7ad8591182c6a11cbce5223ceede2c1d7f6311b285f0c62bc26a42da061f0369",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/package.json",
+      "sha256": "968ff0a4bdd7bad07e7c664123190f9db1c276b1c87a1c01cf7a9ffc6835dcb5",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/paint-recipe.test.ts",
+      "sha256": "c4e34c0f95b42037fbaf7553a64b9a0fd5e7538d82711277a284056c7512fea0",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/paint-recipe.ts",
+      "sha256": "d8d73b53f7affd84f979ef242e0b07c98e1c0853df17177f2015b94422c84d77",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/paint.ts",
+      "sha256": "0f90e093682329925a704eac6efd4f9f7c9455978b59d418ffc6d6bf2fbbdec2",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/painted-card-evidence.mjs",
+      "sha256": "bc4cfdcba3841378a1a8884b094068a36d6e0f0eb4f82c61db4ac00cb92e4757",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/painted-overlay.test.ts",
+      "sha256": "cdaebb593f70e52543baa4657c9740c98ac625c2d4f7b920b915c061bdb61f73",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/painted-return-probe.mjs",
+      "sha256": "709c90eeaf95bbde68d6074c197f359239a06548164ad6d7d5fce68f8af32108",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/paired-capture.mjs",
+      "sha256": "31378df10717aaf1906b0dcd12392df42cda34163d19a09458a9e89da8e51e95",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/paired-capture.test.mjs",
+      "sha256": "cc22c4e811dd03785b58564867b9eb41c06350c10a35f33711834eb424828ef0",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/persistence.test.ts",
+      "sha256": "1f2e52e7c46440d0f7a52ed30c71417035b7640729aedd7874923488618a0a4c",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/persistence.ts",
+      "sha256": "c56fdad88b5bed2b92d46e1701ed2e63e1d8e29afde7dc70db7ad48005e2f4a2",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/persistent-experience.ts",
+      "sha256": "dd4355c619f43bafb4a21dba16fdc75251ed7bff181ef9ee3b7209cb36f84e17",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/photo-bag-two-card-evidence.mjs",
+      "sha256": "34fe97345bf8b90a74938ee6b7b06824555d0a5420e5621abde553f914bb54e5",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/photo-crop.test.ts",
+      "sha256": "7ef89bad8663782402b0767e8653c8975ab7c23d043661f1cb9f3f81ebcc3d33",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/plastics.ts",
+      "sha256": "7fdb6fe8fa1b0ecf57eb2e4b4c9e2471f53edb323c4ffc5ee388bf9d0c5cc004",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/preset-gallery-standalone.html",
+      "sha256": "ae4410123bfab03d7f19119fdca34c0ea0f5ddd584cd85f81f328e8a269db083",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/preset-gallery-upright.html",
+      "sha256": "61e879f5165b7210f3072355f1264690e039438df0227e0e628722a7a695b97c",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/preset-gallery.html",
+      "sha256": "564f984db7668434e2f04479bb189856c1071e3e62771b51233bdaa3b55a1792",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/preview-placement.test.ts",
+      "sha256": "ef5051d3088faffa4eb2fe6bf6589244d1e4b23401182439b136bb0efe4bacb8",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/render-breakout.mjs",
+      "sha256": "6138dd13882f3a108a92ee41c915db8d35093eafa26125de1171c6e135458aef",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/render-presets.mjs",
+      "sha256": "6daa4df837460613bd551be76d3eae4c1a341fdaa39730494323613fee5aac96",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/rimfit-persistence.test.ts",
+      "sha256": "0376a8294b160ac5d7566290db2c540828512f8eb56532c5291670b703e43506",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/rimfit-v3/numeric.mjs",
+      "sha256": "6f1c45ad3a19df6f28012c7efe56faaa971084b0454058b1b08a00967dbd042a",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/rimfit-v3/powell.mjs",
+      "sha256": "434bcdc6f8905b54aac917d486a92724fa14f3f1537a2d735d9293784d2ff1f4",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/rimfit-v3/recover.mjs",
+      "sha256": "7617e179efa5e3c6101ab2644ccef3fb5a588b22901c4c5c12f5e62d53876f83",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/rimfit-v3/worker-client.mjs",
+      "sha256": "70573b9477e1ff390b886317a525dc58ce8f1dc87baf798211e97fa6b06e090a",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/rimfit.ts",
+      "sha256": "f2fc393c2520714042fe46cfc37e2de55ce97733c328e8182c1ddb7ca08c0c37",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/sample-background.svg",
+      "sha256": "3ccfd1db18e8221b23ca5fdb177617a1d18b2a40a1559982ec2360aa7c3e102c",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/sandbox-cases.test.ts",
+      "sha256": "ba337fcce0015530cafa91ad075347e3e54099bbc33da6f0176d1ef31e24ad38",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/sandbox-cases.ts",
+      "sha256": "65867ec56e299134363ecc878fb3e7d49ca88a250c9f4782edaec58729a1f77e",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/sandbox-ui.ts",
+      "sha256": "4b662c33b9f7781c0359c2b999a6904d9267d9278987e00af32a039109a4780b",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/serve.mjs",
+      "sha256": "e6fcd1bca575c106a0172a0825ae7e8b0205a1f0709d3f03446ff10d623ef8e9",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/session-storage.test.ts",
+      "sha256": "bb4a972ac63118b1f8bb970ac7611bff50764a191ab4f7a972237758a09d88be",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/session-storage.ts",
+      "sha256": "5b0fb807c60a88389efd68041b112aa3e8ea108bfe2657aaddbd77ffab85c1b6",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/shelf-query.test.ts",
+      "sha256": "6f3bfbf49fafabb8fb11b9225d145538194689f8da0db7f227c4d67a426f793b",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/shelf-query.ts",
+      "sha256": "f601db7fae500a2a9dd21af279ac1eea7c17de4a3761ab5462af50d34eee3230",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/shelf-ui.ts",
+      "sha256": "ac5ff90fc2d0d9b2d150664e013b7dca45bb0a8870fc4235470ab8a4a6d12bf0",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/shelf.test.ts",
+      "sha256": "3436ba6c022168fad2b8046fed2f0b8571828a2704f98dd2f8d228f563ceb6fc",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/style.css",
+      "sha256": "d17bbd940abea69a241e764651218077cf85874fbe5d165c45c35f569eae21e2",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/test-page-iife.html",
+      "sha256": "2eef9df03a98f7a2151ea91b52ca31bc20c54d9442e38097b4607909bff04dc6",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/test-page.html",
+      "sha256": "73221fa0663b0120fcbc2c4f83cf38a826e745e157a0f5b5d17c7af2bfd1d9d6",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/transform-geometry.mjs",
+      "sha256": "5acbd02ac7cce1aa4bac14269304b3e7a1e804750239a769c9ac8e13241c1bc8",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/transform-geometry.test.mjs",
+      "sha256": "24dae10967b042caabd0a406d8d62a9f9d675e609cfeeceeb2503d881763da5a",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/upload-ui.ts",
+      "sha256": "fd1281b838dcc687f23e55348a3b6385a42566dd1829b222b74dbca1d5669ff2",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/url-free-materializer.mjs",
+      "sha256": "1be08fe81a4eba0e9891e4ed255c3c9cf54ca7b264b2c791d1a567cba12bf152",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/url-free-materializer.test.mjs",
+      "sha256": "2cddf35f54fd7dd8d9aac23924c789d62697debc4e761c6ee2824ff379b7cdb3",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/vendor/neat/tick-part-checklist.js",
+      "sha256": "aac0774065e3657cd06bdf6bae921318d98956e2dc19532629dcc59d99f27801",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/vendor/painter/core.mjs",
+      "sha256": "c0fc0bdc37c3c5ad420f736ca8f4bb082b150fddd388cd4e35fa52e45538fff4",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/vendor/painter/families/botanical.mjs",
+      "sha256": "b66c179e84956b1d300bbe66ef8b291d0a556c5cc8373424e1bcaafcc753b786",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/vendor/painter/families/cartography.mjs",
+      "sha256": "46b5fe9b45d141c881b9930e633c3b8b8e2596f23276349e5abaa55e810c4baa",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/vendor/painter/families/foundry.mjs",
+      "sha256": "a68b5517197986ba741bb9740a49bf92225d2b2753260722cbbca31127855660",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/vendor/painter/families/signal.mjs",
+      "sha256": "a795c1a7be4b72990401328c22b43dee25d6eda4af29d6dfdacaf45607b9ae6b",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/vendor/painter/painter.mjs",
+      "sha256": "fecfa16b78a3e2f90547a754283e30d15a9caad848aba9a43c51511d120aa3ba",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/disc/zip.ts",
+      "sha256": "d6bcec748e1abccea9ae8de5415ffe11d99b07d58c43cff3c333678c7252f2e0",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "vendor/discstudio/part-first-kernel/src/pxc.mjs",
+      "sha256": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+      "classification": "discstudio-source-closure"
+    },
+    {
+      "path": "version.json",
+      "sha256": "81d9a1e86f16a9d9b6c1f4641a12334b8c90b2c480247b274ebad7349f92df95",
+      "classification": "policy"
+    },
+    {
+      "path": "state/lifecycle.json",
+      "sha256": "5db6478752ef65f491d0ff8fc58745bb17a0a56cfcdbe64bb3eea2b059d33e4e",
+      "classification": "small-work-state"
+    }
+  ],
+  "excluded": [
+    {
+      "path": "work/** except explicitly listed frozen-merge-input JSON",
+      "classification": "generated-results-and-receipts"
+    },
+    {
+      "path": "**/node_modules/**, **/dist/**, **/evidence/**, **/mvp-output/**",
+      "classification": "local-runtime-and-render-evidence"
+    },
+    {
+      "path": "../work/dispatch-20260926/**",
+      "classification": "historical-work-and-original-media-local-copy"
+    },
+    {
+      "path": "../.bootstrap/**",
+      "classification": "local-runtime-install-and-source-inspection"
+    }
+  ],
+  "originalInputAcquisition": [
+    {
+      "path": "fixtures/derived-contact-sheet-input.png",
+      "sha256": "d751819a1276be73f11d26bbcf2d8489c006fe60a5838264061ab3fc7ff7f0d6",
+      "bytes": 238896,
+      "classification": "declared-derived-fixture"
+    }
+  ],
+  "generatedPayloadIncluded": false
+}

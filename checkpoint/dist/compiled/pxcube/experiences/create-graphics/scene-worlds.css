@@ -1,0 +1,12 @@
+#scene-worlds{width:min(1320px,96vw);max-height:94vh;padding:20px}
+#scene-worlds header{align-items:start;gap:18px}
+#scene-worlds h2{margin:5px 0 8px}
+.scene-world-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}
+.scene-world-card{min-width:0;padding:12px;border:1px solid #40535a;border-radius:12px;background:#0d141a}
+.scene-world-card h3{color:var(--accent);margin-bottom:10px}
+.scene-world-card img{display:block;width:100%;height:min(54vh,520px);object-fit:contain;background:repeating-conic-gradient(#1b2730 0% 25%,#142029 0% 50%) 50%/18px 18px;border-radius:8px}
+.scene-world-card details{border-top:1px solid var(--line);padding-top:8px}
+.scene-world-card summary{cursor:pointer;color:var(--muted);font-size:13px}
+.scene-world-card pre{max-height:240px;overflow:auto;font:11px/1.45 ui-monospace,monospace}
+#scene-worlds-status{min-height:24px;color:var(--muted)}
+@media(max-width:700px){#scene-worlds{width:calc(100vw - 16px);padding:12px}.scene-world-grid{grid-template-columns:1fr}.scene-world-card img{height:42vh}}

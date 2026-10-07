@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { createMockMounts } from '../../local/mock-mounts.mjs';
+import fs from 'node:fs';
+const storage=(()=>{let v=null;return {getItem:()=>v,setItem:(_,next)=>{v=next;}}})();
+test('scenario launch creates isolated numbered fixture without overwriting interactive',()=>{const owner=createMockMounts({storage,key:'scenario',seedIdentity:'fixture'});const interactive=owner.openInteractive('demo','shelf');const run=owner.createTestRun('demo','shelf',{scenario:'empty',sourceSurface:'shopping',kind:'scenario'});assert.equal(interactive.name,'mock.demo');assert.equal(run.inspect().kind,'scenario');assert.equal(run.inspect().scenarioId,'empty');assert.equal(owner.list().find(x=>x.name===run.name).scenarioId,'empty');assert.equal(owner.list().find(x=>x.name===run.name).sourceSurface,'shopping');assert.deepEqual(run.resolve('mock.demo.1.px.discs'),[]);});
+test('scenario ready status reads run metadata rather than open-scope locals',()=>{assert.match(fs.readFileSync('local/studio-sandbox/host.mjs','utf8'),/owner\.handle\(entry\.name\)\.inspect\(\)/);});
+test('scenario registry rejects unknown values and reset-equivalent runs retain provenance',()=>{const storage=(()=>{let value=null;return {getItem:()=>value,setItem:(_,next)=>{value=next;}}})();const owner=createMockMounts({storage,key:'scenario',seedIdentity:'fixture'});const interactive=owner.openInteractive('demo','shelf');const before=interactive.inspect();assert.throws(()=>owner.createTestRun('demo','shelf',{scenario:'mystery'}),/Unknown scenario/);const first=owner.createTestRun('demo','shelf',{scenario:'normal',kind:'scenario',sourceSurface:'shopping'}).inspect();const second=owner.createTestRun('demo','shelf',{scenario:'normal',kind:'scenario',sourceSurface:'shopping'}).inspect();assert.notEqual(first.name,second.name);assert.equal(first.fixtureHash,second.fixtureHash);assert.equal(first.sourceSurface,'shopping');assert.deepEqual(owner.handle('mock.demo').inspect(),before);});
+test('live surfaces keep scenario controls disabled',()=>{const host=fs.readFileSync('local/studio-sandbox/host.mjs','utf8');assert.match(host,/scenarioMode=surface==='shopping'/);assert.match(host,/disabled=!scenarioMode/);});
+test('host accepts upload navigation only from the current child and promotes scenarios',()=>{const host=fs.readFileSync('local/studio-sandbox/host.mjs','utf8');assert.match(host,/event\.data\?\.type !== 'pxcube:your-shelf:navigate'/);assert.match(host,/const entry = entryFor\(event\.source\)/);assert.match(host,/if \(entry !== current\) return/);assert.match(host,/entry\.kind === 'scenario' \? owner\.openInteractive\(config\.id,'studio'\)\.name : entry\.name/);assert.match(host,/open\(ownerName,'upload'\)/);});
+test('mount owner and sandbox host share the single browser-safe registry',()=>{
+  const mounts=fs.readFileSync('local/mock-mounts.mjs','utf8');
+  const host=fs.readFileSync('local/studio-sandbox/host.mjs','utf8');
+  const build=fs.readFileSync('local/build-studio.mjs','utf8');
+  assert.match(mounts,/from ['"]\.\/scenarios\.mjs['"]/);
+  assert.match(host,/from ['"]\.\/local\/scenarios\.mjs['"]/);
+  assert.match(build,/['"]scenarios\.mjs['"]/);
+  assert.doesNotMatch(mounts,/const scenarioFor\s*=|const scenarioAdapters\s*=|const scenarioWorld\s*=/);
+  assert.doesNotMatch(host,/const scenarioFor\s*=/);
+});

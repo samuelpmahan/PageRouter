@@ -1,0 +1,26 @@
+{
+  "schema": "nctk-directory@1",
+  "address": "parts/source",
+  "children": [
+    "parts/source/discstudio-background",
+    "parts/source/discstudio-fixture",
+    "parts/source/house"
+  ],
+  "kind": "group",
+  "source": null,
+  "policies": {
+    "neat": {
+      "mode": "none"
+    },
+    "crisp": {
+      "mode": "none"
+    },
+    "tidy": {
+      "mode": "local"
+    },
+    "kompoze": {
+      "mode": "none",
+      "references": []
+    }
+  }
+}

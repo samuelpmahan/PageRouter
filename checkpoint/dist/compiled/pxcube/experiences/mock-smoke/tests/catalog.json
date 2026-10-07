@@ -1,0 +1,284 @@
+[
+  {
+    "file": "local/test/accepted-shelf-scenario.test.mjs",
+    "tests": [
+      "accepted shelf scenario adapter is deterministic and test-run scoped",
+      "accepted shelf preserves the interactive mailbox while scoping scenario state by run",
+      "accepted shelf coalesces ResizeObserver layout work outside its callback",
+      "accepted shelf has mobile-safe context and explicit upload actions"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/affected-targets.test.mjs",
+    "tests": [
+      "Studio source changes target its actual Studio consumers, not every Experience",
+      "a launcher-only change does not invalidate an Experience package"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/assembly-parity.test.mjs",
+    "tests": [
+      "local and matrix assembly carry the same complete NTC surface without rebuilding",
+      "missing and altered matrix artifacts stay red while healthy siblings and prior attempts survive"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/create-graphics-contract.test.mjs",
+    "tests": [
+      "CreateGraphics exposes nine authored compositions and real rendered output",
+      "CreateGraphics keeps selection, reversible controls, and explicit Keep in the task viewport",
+      "CreateGraphics exposes discrete geometry tuning in the shared render calculation",
+      "ExportGraphics keeps one immutable capture and one explicit browser download decision visible",
+      "retained calculation drift has explicit working and frozen restore policies"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/critical-journeys.test.mjs",
+    "tests": [
+      "every declared critical journey has executable desktop and mobile release steps"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/demo-experiences.test.mjs",
+    "tests": [
+      "exact-copy bag order, duplicate refusal, reload and isolated worlds",
+      "compressed storage preserves every archive byte, replays Parts, and refuses stale writers",
+      "render uses actual source Parts; captures replay and cannot drift with live design",
+      "working-mode restore recomputes stale derived geometry without losing user state",
+      "working-mode restore recomputes non-geometry derived drift while frozen restore rejects it",
+      "search excludes nicknames and preserves mold / plastic / descending weight order",
+      "nine card studies retain source Parts and reach export as the exact chosen graphic",
+      "creator queues one Competition image at a time: turns, points, size, accent, exact export"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/discstudio-scene-host.test.mjs",
+    "tests": [
+      "DiscStudio photo → Card → placement runs in separate, inspectable PxC worlds"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/experience-mount.test.mjs",
+    "tests": [
+      "interactive and numbered handles resolve only their own domain addresses",
+      "namespaced archives preserve other Experiences and refuse stale owners or quota failures"
+    ],
+    "runnable": true
+  },
+  {
+    "file": "local/test/launcher-refresh.test.mjs",
+    "tests": [
+      "build refresh updates the service worker before bounded reload fallback"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/mock-smoke-build.test.mjs",
+    "tests": [
+      "MockPxC browser package contains the app-imported test seam and its complete closure"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/one-step-one-viewport.test.mjs",
+    "tests": [
+      "opening an Experience collapses workspace chrome but keeps its trigger",
+      "the review checklist wrapper cannot shield the active Experience",
+      "the crop step keeps primary controls in one viewport",
+      "the design principle requires same-viewport result verification"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/pipeline.test.mjs",
+    "tests": [
+      "actual crisp CLI: six fixture intentions, with explicit negative mutations",
+      "shared pipeline retains attempts, isolates failed builds, shows drift and refuses stale output",
+      "a dirty subcommit source snapshot invalidates a warm package cache without a Git commit",
+      "vendored original source identities match their recorded commits"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/prune-generated-runs.test.mjs",
+    "tests": [
+      "generated-run pruning is opt-in, retains latest plus newest runs, and cannot target arbitrary directories"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/pxc-kernel.test.mjs",
+    "tests": [
+      "iteration allocation, guarded resolution and seed isolation",
+      "reads go through PxC: dotted fixtures, telemetry, MissingPartError",
+      "peek reads a board value without recording telemetry",
+      "writeScratch replaces the whole sc value on the board",
+      "interactive identity resumes without reseeding; revision and reload retention",
+      "competing kernel instance cannot silently discard; quota failure is loud",
+      "kernel reads state written by the old mock shape (retained browser data loads)",
+      "recordResult and list keep the audit shape"
+    ],
+    "runnable": true
+  },
+  {
+    "file": "local/test/scaffold.test.mjs",
+    "tests": [
+      "tidy provides a detached build definition and names missing or invalid inputs",
+      "crisp generates reproducibly from tidy, supports a second id, and refuses to overwrite work",
+      "CLI scaffold -> tidy-fed package -> launcher; a changed manifest changes the next build"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/scenario-conveyor.test.mjs",
+    "tests": [
+      "scenario conveyor has required representative states",
+      "scenario URL is opt-in and test-run scoped",
+      "matrix gives every Experience the same conveyor stages"
+    ],
+    "runnable": true
+  },
+  {
+    "file": "local/test/scenario-loader.test.mjs",
+    "tests": [
+      "scenario launch creates isolated numbered fixture without overwriting interactive",
+      "scenario ready status reads run metadata rather than open-scope locals",
+      "scenario registry rejects unknown values and reset-equivalent runs retain provenance",
+      "live surfaces keep scenario controls disabled",
+      "host accepts upload navigation only from the current child and promotes scenarios",
+      "mount owner and sandbox host share the single browser-safe registry"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/scene-host.test.mjs",
+    "tests": [
+      "worlds compose scene dependencies over one PxC store; world inputs are isolated and scoped Parts stay private",
+      "close disposes once, releases identity, and reopen creates a fresh world",
+      "same-id open is reserved across async creation",
+      "a caught failed calculation cannot produce a passing scene; failed setup is disposed and identity can reopen",
+      "scene cannot invoke an undeclared inline Calculation Part",
+      "a Part from a provider service cannot bypass scene binding declarations",
+      "a declared output collision fails before scene mount or calculation invocation"
+    ],
+    "runnable": true
+  },
+  {
+    "file": "local/test/upload-photo-regression.test.mjs",
+    "tests": [
+      "UploadDiscToShelf keeps the photo affordance at the top compose controls",
+      "crop interaction stays transient and frame-coalesced until confirmation",
+      "photo preparation enters photo mode and protects the original file",
+      "photo mode explains that flight numbers remain available while photo art stays untouched",
+      "photo depiction is labeled as a photo and does not invoke the painting renderer",
+      "applying enters photo mode while cancelling discards only pending crop state",
+      "photo export is circular and the photo view drops the decorative backing",
+      "photo mode keeps underglow available while structurally hiding painting controls"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/your-shelf.test.mjs",
+    "tests": [
+      "Your Shelf selects its composed Studio journey mode"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/e2e/e2e-build-bag.test.mjs",
+    "tests": [
+      "the shipped BuildBag creates an ordered bag of exact physical copies",
+      "the shipped BuildBag retains its draft and keeps another sandbox isolated",
+      "the shipped BuildBag rejects stale or repeated physical copies"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/e2e/e2e-console.test.mjs",
+    "tests": [
+      "launcher ships a PxConsole view",
+      "console shell registers the console panel and never executes",
+      "console inspects through the real PxC store, not a mock copy",
+      "console shell hydrates worlds into PxC and describes values without invoking accessors",
+      "pxc.js ships offline and same-origin"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/e2e/e2e-explore.test.mjs",
+    "tests": [
+      "the accepted shelf holds 50 fairway discs at speed 7-8",
+      "strict search finds Passion ESP and excludes nicknames",
+      "specimens order by plastic, then weight descending",
+      "checkout creates a bag of the exact selected versions",
+      "the live shelf seeds discs and the shelf query runs against real Parts"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/e2e/e2e-hello.test.mjs",
+    "tests": [
+      "hello THING ships an entry that renders its title",
+      "launcher cards hello with the manifest sandbox flags",
+      "hello receipt verifies against its shipped chunks"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/e2e/e2e-mock-smoke.test.mjs",
+    "tests": [
+      "interactive world opens on the seeded shelf",
+      "test runs isolate: save in one world, the other keeps its seed",
+      "a fresh interactive open retains the saved worlds"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/e2e/e2e-upload-compare.test.mjs",
+    "tests": [
+      "baseline and typed delta execute the same upload and search inputs with separate workspace identities"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  },
+  {
+    "file": "local/test/e2e/e2e-upload.test.mjs",
+    "tests": [
+      "photo-free save produces a real Disc with a painted depiction",
+      "mounted resolution returns the exact Part, hydrated through the mold",
+      "composition receipts record the save",
+      "separate sandboxes are isolated: save in one, the other stays empty",
+      "the shelf sandbox seeds three discs and the shelf query runs"
+    ],
+    "runnable": false,
+    "note": "Runs in Node/CI; it needs node builtins or the assembled site."
+  }
+]

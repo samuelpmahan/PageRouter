@@ -1,0 +1,77 @@
+{
+  "app": "Snake",
+  "version": "0.1.0",
+  "source": null,
+  "entry": "index.html",
+  "outDir": "dist",
+  "entryChunk": "879032eb29ec7cd82786875bcc50a6575a8434029ec551fbbbfd33d6a4db64f5",
+  "mounts": [],
+  "resolvedMounts": [],
+  "usedMounts": [],
+  "chunks": [
+    {
+      "path": "cartridges.json",
+      "sha256": "eb4048d0dfc5ab915c75ecc4de63396573107c385bfd5a591f7f310ae4973b29"
+    },
+    {
+      "path": "connect4-ui.js",
+      "sha256": "be35b6438707aa5a248840ea98aab5dcb657b1a284f2e8be0dddb78f0878be32"
+    },
+    {
+      "path": "index.html",
+      "sha256": "879032eb29ec7cd82786875bcc50a6575a8434029ec551fbbbfd33d6a4db64f5"
+    },
+    {
+      "path": "player.js",
+      "sha256": "d360f03b777828a2dc1c6bf34d3b0a33f110791afde15f76c0a92ef726fe5ebc"
+    },
+    {
+      "path": "rom.js",
+      "sha256": "7eb61740fc3edfd72e3279c518ceb7fdfee7ddb517e56f6cd805dfe74669c59b"
+    }
+  ],
+  "composition": {
+    "base": "gameboy",
+    "patches": [],
+    "baseChunks": [
+      {
+        "path": "cartridges.json",
+        "sha256": "eb4048d0dfc5ab915c75ecc4de63396573107c385bfd5a591f7f310ae4973b29"
+      },
+      {
+        "path": "connect4-ui.js",
+        "sha256": "be35b6438707aa5a248840ea98aab5dcb657b1a284f2e8be0dddb78f0878be32"
+      },
+      {
+        "path": "index.html",
+        "sha256": "879032eb29ec7cd82786875bcc50a6575a8434029ec551fbbbfd33d6a4db64f5"
+      },
+      {
+        "path": "player.js",
+        "sha256": "d360f03b777828a2dc1c6bf34d3b0a33f110791afde15f76c0a92ef726fe5ebc"
+      },
+      {
+        "path": "rom.js",
+        "sha256": "eb3caef5880cee74479bf17d49986ff5aa0a75e9be5718ebf20533cd72ce39f6"
+      }
+    ],
+    "overridden": [
+      "rom.js"
+    ]
+  },
+  "sourceHash": "b35cf3af3f6f4770733348afea7a3e1b518a21841925325a211e025cbd260f13",
+  "manifestHash": "fc157fb318db5dda816ddf5100ddc09f0e99a339407d1cfbef48aa1c3908dffc",
+  "build": {
+    "command": "mkdir -p dist && cp rom.js dist/",
+    "exitCode": 0,
+    "durationMs": 8,
+    "timedOut": false
+  },
+  "validation": {
+    "declaredMounts": [],
+    "usedMounts": [],
+    "undeclaredMounts": [],
+    "persistedPrefixViolations": []
+  },
+  "packagedAt": "2026-10-03T04:57:03.757Z"
+}

@@ -1,0 +1,1470 @@
+{
+  "status": "ACCEPT",
+  "proto": {
+    "address": "proto/cpu/step",
+    "as": "calculation",
+    "interface": {
+      "inputs": {
+        "state": "CpuState",
+        "program": "Program16",
+        "inputByte": "Byte"
+      },
+      "outputs": {
+        "state": "CpuState"
+      }
+    },
+    "slots": {
+      "execute": {
+        "mode": "abstract",
+        "binding": "cpu.gates"
+      },
+      "validate": {
+        "mode": "overridable",
+        "binding": "cpu.validate.integer"
+      },
+      "observe": {
+        "mode": "final",
+        "binding": "cpu.observe"
+      }
+    }
+  },
+  "sourceHashes": {
+    "capability-lab\\runtime.py": "1ac2cf2644b42962b583904764b21429c352a25b60c0c61d2678d6f276fcf48f",
+    "capability-lab\\cpu.py": "2dfa80a3e7cf660d373c397fc43d32613f308d9bf0bbbf8125c47e60d7ab1c8a",
+    "pxc-machine\\pipeline.py": "b78db780d31db72a6986a90ae8a14ba1757d42c5253670de63296c7883597004",
+    "pxc-machine\\core.py": "177439b1efaf308e275ffe054d1eab96c33ec86352a6f0d560aae9f24e32a952",
+    "pxc-machine\\circuits.py": "c3e4ca44a94e1570ee17658444f3cd115182d7665be5b07711c17946a4d6df1c",
+    "pxc-machine\\oracle.py": "62a1116647eba36a0bc6882683e90141c9719afe325a73f6a440f7212058730a"
+  },
+  "frontier": [],
+  "acceptedOutputs": {
+    "state": {
+      "A": 3,
+      "PC": 1,
+      "OUT": 0,
+      "HALT": 0,
+      "RAM": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "validation": [
+    {
+      "status": "ACCEPT",
+      "implementation": "cpu.validate.integer"
+    }
+  ],
+  "compileLint": {
+    "outputs": {
+      "graph": {
+        "status": "RESOLVED",
+        "root": "Cpu.Step",
+        "nodes": {
+          "capability": {
+            "definition": "Cpu.Step",
+            "kind": "functionalGuarantee",
+            "inputs": {
+              "state": {
+                "origin": "request/state",
+                "route": [
+                  "request/state"
+                ]
+              },
+              "program": {
+                "origin": "request/program",
+                "route": [
+                  "request/program"
+                ]
+              },
+              "inputByte": {
+                "origin": "request/inputByte",
+                "route": [
+                  "request/inputByte"
+                ]
+              },
+              "contractRef": {
+                "origin": "request/contractRef",
+                "route": [
+                  "request/contractRef"
+                ]
+              },
+              "executeRef": {
+                "origin": "request/executeRef",
+                "route": [
+                  "request/executeRef"
+                ]
+              },
+              "validateRef": {
+                "origin": "request/validateRef",
+                "route": [
+                  "request/validateRef"
+                ]
+              },
+              "observeRef": {
+                "origin": "request/observeRef",
+                "route": [
+                  "request/observeRef"
+                ]
+              }
+            },
+            "outputs": {
+              "state": {
+                "origin": "capability/transition/ports/state",
+                "route": [
+                  "capability/ports/state",
+                  "capability/transition/ports/state",
+                  "capability/transition/ports/state"
+                ]
+              },
+              "validation": {
+                "origin": "capability/validate/verdict/ports/verdict",
+                "route": [
+                  "capability/ports/validation",
+                  "capability/validate/ports/verdict",
+                  "capability/validate/ports/verdict",
+                  "capability/validate/verdict/ports/verdict",
+                  "capability/validate/verdict/ports/verdict"
+                ]
+              },
+              "readOnly": {
+                "origin": "capability/validate/readonly/ports/readOnly",
+                "route": [
+                  "capability/ports/readOnly",
+                  "capability/validate/ports/readOnly",
+                  "capability/validate/ports/readOnly",
+                  "capability/validate/readonly/ports/readOnly",
+                  "capability/validate/readonly/ports/readOnly"
+                ]
+              },
+              "effects": {
+                "origin": "capability/validate/invoke/ports/effects",
+                "route": [
+                  "capability/ports/effects",
+                  "capability/validate/ports/effects",
+                  "capability/validate/ports/effects",
+                  "capability/validate/invoke/ports/effects",
+                  "capability/validate/invoke/ports/effects"
+                ]
+              }
+            }
+          },
+          "capability/transition": {
+            "definition": "Cpu.Transition",
+            "kind": "calculation",
+            "inputs": {
+              "state": {
+                "origin": "request/state",
+                "route": [
+                  "capability/inputs/state",
+                  "request/state"
+                ]
+              },
+              "program": {
+                "origin": "request/program",
+                "route": [
+                  "capability/inputs/program",
+                  "request/program"
+                ]
+              },
+              "inputByte": {
+                "origin": "request/inputByte",
+                "route": [
+                  "capability/inputs/inputByte",
+                  "request/inputByte"
+                ]
+              },
+              "executeRef": {
+                "origin": "request/executeRef",
+                "route": [
+                  "capability/inputs/executeRef",
+                  "request/executeRef"
+                ]
+              }
+            },
+            "outputs": {
+              "state": {
+                "origin": "capability/transition/ports/state",
+                "route": [
+                  "capability/transition/ports/state"
+                ]
+              }
+            }
+          },
+          "capability/observe": {
+            "definition": "Cpu.Observe",
+            "kind": "calculation",
+            "inputs": {
+              "state": {
+                "origin": "request/state",
+                "route": [
+                  "capability/inputs/state",
+                  "request/state"
+                ]
+              },
+              "program": {
+                "origin": "request/program",
+                "route": [
+                  "capability/inputs/program",
+                  "request/program"
+                ]
+              },
+              "inputByte": {
+                "origin": "request/inputByte",
+                "route": [
+                  "capability/inputs/inputByte",
+                  "request/inputByte"
+                ]
+              },
+              "candidate": {
+                "origin": "capability/transition/ports/state",
+                "route": [
+                  "capability/transition/ports/state",
+                  "capability/transition/ports/state"
+                ]
+              },
+              "executeRef": {
+                "origin": "request/executeRef",
+                "route": [
+                  "capability/inputs/executeRef",
+                  "request/executeRef"
+                ]
+              },
+              "observeRef": {
+                "origin": "request/observeRef",
+                "route": [
+                  "capability/inputs/observeRef",
+                  "request/observeRef"
+                ]
+              },
+              "contractRef": {
+                "origin": "request/contractRef",
+                "route": [
+                  "capability/inputs/contractRef",
+                  "request/contractRef"
+                ]
+              }
+            },
+            "outputs": {
+              "observation": {
+                "origin": "capability/observe/ports/observation",
+                "route": [
+                  "capability/observe/ports/observation"
+                ]
+              }
+            }
+          },
+          "capability/validate": {
+            "definition": "ReadOnlyValidation",
+            "kind": "functionalGuarantee",
+            "inputs": {
+              "state": {
+                "origin": "request/state",
+                "route": [
+                  "capability/inputs/state",
+                  "request/state"
+                ]
+              },
+              "program": {
+                "origin": "request/program",
+                "route": [
+                  "capability/inputs/program",
+                  "request/program"
+                ]
+              },
+              "inputByte": {
+                "origin": "request/inputByte",
+                "route": [
+                  "capability/inputs/inputByte",
+                  "request/inputByte"
+                ]
+              },
+              "candidate": {
+                "origin": "capability/transition/ports/state",
+                "route": [
+                  "capability/transition/ports/state",
+                  "capability/transition/ports/state"
+                ]
+              },
+              "observation": {
+                "origin": "capability/observe/ports/observation",
+                "route": [
+                  "capability/observe/ports/observation",
+                  "capability/observe/ports/observation"
+                ]
+              },
+              "validateRef": {
+                "origin": "request/validateRef",
+                "route": [
+                  "capability/inputs/validateRef",
+                  "request/validateRef"
+                ]
+              }
+            },
+            "outputs": {
+              "verdict": {
+                "origin": "capability/validate/verdict/ports/verdict",
+                "route": [
+                  "capability/validate/ports/verdict",
+                  "capability/validate/verdict/ports/verdict",
+                  "capability/validate/verdict/ports/verdict"
+                ]
+              },
+              "readOnly": {
+                "origin": "capability/validate/readonly/ports/readOnly",
+                "route": [
+                  "capability/validate/ports/readOnly",
+                  "capability/validate/readonly/ports/readOnly",
+                  "capability/validate/readonly/ports/readOnly"
+                ]
+              },
+              "effects": {
+                "origin": "capability/validate/invoke/ports/effects",
+                "route": [
+                  "capability/validate/ports/effects",
+                  "capability/validate/invoke/ports/effects",
+                  "capability/validate/invoke/ports/effects"
+                ]
+              }
+            }
+          },
+          "capability/validate/invoke": {
+            "definition": "Validation.Invoke",
+            "kind": "calculation",
+            "inputs": {
+              "state": {
+                "origin": "request/state",
+                "route": [
+                  "capability/validate/inputs/state",
+                  "capability/inputs/state",
+                  "request/state"
+                ]
+              },
+              "program": {
+                "origin": "request/program",
+                "route": [
+                  "capability/validate/inputs/program",
+                  "capability/inputs/program",
+                  "request/program"
+                ]
+              },
+              "inputByte": {
+                "origin": "request/inputByte",
+                "route": [
+                  "capability/validate/inputs/inputByte",
+                  "capability/inputs/inputByte",
+                  "request/inputByte"
+                ]
+              },
+              "candidate": {
+                "origin": "capability/transition/ports/state",
+                "route": [
+                  "capability/validate/inputs/candidate",
+                  "capability/transition/ports/state",
+                  "capability/transition/ports/state"
+                ]
+              },
+              "validateRef": {
+                "origin": "request/validateRef",
+                "route": [
+                  "capability/validate/inputs/validateRef",
+                  "capability/inputs/validateRef",
+                  "request/validateRef"
+                ]
+              },
+              "observation": {
+                "origin": "capability/observe/ports/observation",
+                "route": [
+                  "capability/validate/inputs/observation",
+                  "capability/observe/ports/observation",
+                  "capability/observe/ports/observation"
+                ]
+              }
+            },
+            "outputs": {
+              "effects": {
+                "origin": "capability/validate/invoke/ports/effects",
+                "route": [
+                  "capability/validate/invoke/ports/effects"
+                ]
+              }
+            }
+          },
+          "capability/validate/readonly": {
+            "definition": "ReadOnly.Check",
+            "kind": "calculation",
+            "inputs": {
+              "effects": {
+                "origin": "capability/validate/invoke/ports/effects",
+                "route": [
+                  "capability/validate/invoke/ports/effects",
+                  "capability/validate/invoke/ports/effects"
+                ]
+              }
+            },
+            "outputs": {
+              "readOnly": {
+                "origin": "capability/validate/readonly/ports/readOnly",
+                "route": [
+                  "capability/validate/readonly/ports/readOnly"
+                ]
+              }
+            }
+          },
+          "capability/validate/verdict": {
+            "definition": "Validation.Verdict",
+            "kind": "calculation",
+            "inputs": {
+              "effects": {
+                "origin": "capability/validate/invoke/ports/effects",
+                "route": [
+                  "capability/validate/invoke/ports/effects",
+                  "capability/validate/invoke/ports/effects"
+                ]
+              },
+              "readOnly": {
+                "origin": "capability/validate/readonly/ports/readOnly",
+                "route": [
+                  "capability/validate/readonly/ports/readOnly",
+                  "capability/validate/readonly/ports/readOnly"
+                ]
+              }
+            },
+            "outputs": {
+              "verdict": {
+                "origin": "capability/validate/verdict/ports/verdict",
+                "route": [
+                  "capability/validate/verdict/ports/verdict"
+                ]
+              }
+            }
+          }
+        },
+        "links": [
+          {
+            "kind": "bind",
+            "at": "capability/transition/inputs/state",
+            "reference": "$input.state",
+            "origin": "request/state",
+            "route": [
+              "capability/inputs/state",
+              "request/state"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/transition/inputs/program",
+            "reference": "$input.program",
+            "origin": "request/program",
+            "route": [
+              "capability/inputs/program",
+              "request/program"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/transition/inputs/inputByte",
+            "reference": "$input.inputByte",
+            "origin": "request/inputByte",
+            "route": [
+              "capability/inputs/inputByte",
+              "request/inputByte"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/transition/inputs/executeRef",
+            "reference": "$input.executeRef",
+            "origin": "request/executeRef",
+            "route": [
+              "capability/inputs/executeRef",
+              "request/executeRef"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/observe/inputs/state",
+            "reference": "$input.state",
+            "origin": "request/state",
+            "route": [
+              "capability/inputs/state",
+              "request/state"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/observe/inputs/program",
+            "reference": "$input.program",
+            "origin": "request/program",
+            "route": [
+              "capability/inputs/program",
+              "request/program"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/observe/inputs/inputByte",
+            "reference": "$input.inputByte",
+            "origin": "request/inputByte",
+            "route": [
+              "capability/inputs/inputByte",
+              "request/inputByte"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/observe/inputs/candidate",
+            "reference": "transition.state",
+            "origin": "capability/transition/ports/state",
+            "route": [
+              "capability/transition/ports/state",
+              "capability/transition/ports/state"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/observe/inputs/executeRef",
+            "reference": "$input.executeRef",
+            "origin": "request/executeRef",
+            "route": [
+              "capability/inputs/executeRef",
+              "request/executeRef"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/observe/inputs/observeRef",
+            "reference": "$input.observeRef",
+            "origin": "request/observeRef",
+            "route": [
+              "capability/inputs/observeRef",
+              "request/observeRef"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/observe/inputs/contractRef",
+            "reference": "$input.contractRef",
+            "origin": "request/contractRef",
+            "route": [
+              "capability/inputs/contractRef",
+              "request/contractRef"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/inputs/state",
+            "reference": "$input.state",
+            "origin": "request/state",
+            "route": [
+              "capability/inputs/state",
+              "request/state"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/inputs/program",
+            "reference": "$input.program",
+            "origin": "request/program",
+            "route": [
+              "capability/inputs/program",
+              "request/program"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/inputs/inputByte",
+            "reference": "$input.inputByte",
+            "origin": "request/inputByte",
+            "route": [
+              "capability/inputs/inputByte",
+              "request/inputByte"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/inputs/candidate",
+            "reference": "transition.state",
+            "origin": "capability/transition/ports/state",
+            "route": [
+              "capability/transition/ports/state",
+              "capability/transition/ports/state"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/inputs/observation",
+            "reference": "observe.observation",
+            "origin": "capability/observe/ports/observation",
+            "route": [
+              "capability/observe/ports/observation",
+              "capability/observe/ports/observation"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/inputs/validateRef",
+            "reference": "$input.validateRef",
+            "origin": "request/validateRef",
+            "route": [
+              "capability/inputs/validateRef",
+              "request/validateRef"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/invoke/inputs/state",
+            "reference": "$input.state",
+            "origin": "request/state",
+            "route": [
+              "capability/validate/inputs/state",
+              "capability/inputs/state",
+              "request/state"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/invoke/inputs/program",
+            "reference": "$input.program",
+            "origin": "request/program",
+            "route": [
+              "capability/validate/inputs/program",
+              "capability/inputs/program",
+              "request/program"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/invoke/inputs/inputByte",
+            "reference": "$input.inputByte",
+            "origin": "request/inputByte",
+            "route": [
+              "capability/validate/inputs/inputByte",
+              "capability/inputs/inputByte",
+              "request/inputByte"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/invoke/inputs/candidate",
+            "reference": "$input.candidate",
+            "origin": "capability/transition/ports/state",
+            "route": [
+              "capability/validate/inputs/candidate",
+              "capability/transition/ports/state",
+              "capability/transition/ports/state"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/invoke/inputs/validateRef",
+            "reference": "$input.validateRef",
+            "origin": "request/validateRef",
+            "route": [
+              "capability/validate/inputs/validateRef",
+              "capability/inputs/validateRef",
+              "request/validateRef"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/invoke/inputs/observation",
+            "reference": "$input.observation",
+            "origin": "capability/observe/ports/observation",
+            "route": [
+              "capability/validate/inputs/observation",
+              "capability/observe/ports/observation",
+              "capability/observe/ports/observation"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/readonly/inputs/effects",
+            "reference": "invoke.effects",
+            "origin": "capability/validate/invoke/ports/effects",
+            "route": [
+              "capability/validate/invoke/ports/effects",
+              "capability/validate/invoke/ports/effects"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/verdict/inputs/effects",
+            "reference": "invoke.effects",
+            "origin": "capability/validate/invoke/ports/effects",
+            "route": [
+              "capability/validate/invoke/ports/effects",
+              "capability/validate/invoke/ports/effects"
+            ]
+          },
+          {
+            "kind": "bind",
+            "at": "capability/validate/verdict/inputs/readOnly",
+            "reference": "readonly.readOnly",
+            "origin": "capability/validate/readonly/ports/readOnly",
+            "route": [
+              "capability/validate/readonly/ports/readOnly",
+              "capability/validate/readonly/ports/readOnly"
+            ]
+          },
+          {
+            "kind": "return",
+            "at": "capability/validate/ports/verdict",
+            "reference": "verdict.verdict",
+            "origin": "capability/validate/verdict/ports/verdict",
+            "route": [
+              "capability/validate/ports/verdict",
+              "capability/validate/verdict/ports/verdict",
+              "capability/validate/verdict/ports/verdict"
+            ]
+          },
+          {
+            "kind": "return",
+            "at": "capability/validate/ports/readOnly",
+            "reference": "readonly.readOnly",
+            "origin": "capability/validate/readonly/ports/readOnly",
+            "route": [
+              "capability/validate/ports/readOnly",
+              "capability/validate/readonly/ports/readOnly",
+              "capability/validate/readonly/ports/readOnly"
+            ]
+          },
+          {
+            "kind": "return",
+            "at": "capability/validate/ports/effects",
+            "reference": "invoke.effects",
+            "origin": "capability/validate/invoke/ports/effects",
+            "route": [
+              "capability/validate/ports/effects",
+              "capability/validate/invoke/ports/effects",
+              "capability/validate/invoke/ports/effects"
+            ]
+          },
+          {
+            "kind": "return",
+            "at": "capability/ports/state",
+            "reference": "transition.state",
+            "origin": "capability/transition/ports/state",
+            "route": [
+              "capability/ports/state",
+              "capability/transition/ports/state",
+              "capability/transition/ports/state"
+            ]
+          },
+          {
+            "kind": "return",
+            "at": "capability/ports/validation",
+            "reference": "validate.verdict",
+            "origin": "capability/validate/verdict/ports/verdict",
+            "route": [
+              "capability/ports/validation",
+              "capability/validate/ports/verdict",
+              "capability/validate/ports/verdict",
+              "capability/validate/verdict/ports/verdict",
+              "capability/validate/verdict/ports/verdict"
+            ]
+          },
+          {
+            "kind": "return",
+            "at": "capability/ports/readOnly",
+            "reference": "validate.readOnly",
+            "origin": "capability/validate/readonly/ports/readOnly",
+            "route": [
+              "capability/ports/readOnly",
+              "capability/validate/ports/readOnly",
+              "capability/validate/ports/readOnly",
+              "capability/validate/readonly/ports/readOnly",
+              "capability/validate/readonly/ports/readOnly"
+            ]
+          },
+          {
+            "kind": "return",
+            "at": "capability/ports/effects",
+            "reference": "validate.effects",
+            "origin": "capability/validate/invoke/ports/effects",
+            "route": [
+              "capability/ports/effects",
+              "capability/validate/ports/effects",
+              "capability/validate/ports/effects",
+              "capability/validate/invoke/ports/effects",
+              "capability/validate/invoke/ports/effects"
+            ]
+          }
+        ],
+        "frontier": []
+      },
+      "check": {
+        "violations": [],
+        "frontier": [
+          {
+            "binding": "cpu.validate.integer",
+            "because": "selected validator has no effect declaration",
+            "try": "declare its local reads/writes; verify the declaration against the implementation separately"
+          }
+        ],
+        "effectLinks": [],
+        "sourceEffectsCompleteness": "UNVERIFIED",
+        "scope": "Declared origins and selected binding's effect claims; no source-body purity proof"
+      },
+      "verdict": {
+        "status": "PARTIAL",
+        "violations": [],
+        "frontier": [
+          {
+            "binding": "cpu.validate.integer",
+            "because": "selected validator has no effect declaration",
+            "try": "declare its local reads/writes; verify the declaration against the implementation separately"
+          }
+        ],
+        "sourceEffectsCompleteness": "UNVERIFIED"
+      }
+    },
+    "features": [
+      {
+        "id": "ReadOnly.Compile",
+        "path": "capability",
+        "label": "ReadOnly compilation lint",
+        "inputs": {
+          "definitions": "Definitions",
+          "root": "DefinitionId",
+          "rules": "ReadOnlyRules"
+        },
+        "outputs": {
+          "graph": "ResolvedGraph",
+          "check": "LinkCheck",
+          "verdict": "CompileVerdict"
+        }
+      }
+    ],
+    "order": [
+      "capability/resolve/result/calc",
+      "capability/resolve/ports/graph/calc",
+      "capability/check/result/calc",
+      "capability/check/ports/check/calc",
+      "capability/verdict/result/calc",
+      "capability/verdict/ports/verdict/calc",
+      "capability/result/calc"
+    ],
+    "log": [
+      {
+        "calculation": "capability/resolve/result/calc",
+        "rule": "Graph.Resolve",
+        "inputs": [
+          "request/definitions",
+          "request/root",
+          "capability/resolve/definition"
+        ],
+        "output": "capability/resolve/result"
+      },
+      {
+        "calculation": "capability/resolve/ports/graph/calc",
+        "rule": "project-port",
+        "inputs": [
+          "capability/resolve/result"
+        ],
+        "output": "capability/resolve/ports/graph"
+      },
+      {
+        "calculation": "capability/check/result/calc",
+        "rule": "ReadOnly.LinkCheck",
+        "inputs": [
+          "capability/resolve/ports/graph",
+          "request/rules",
+          "capability/check/definition"
+        ],
+        "output": "capability/check/result"
+      },
+      {
+        "calculation": "capability/check/ports/check/calc",
+        "rule": "project-port",
+        "inputs": [
+          "capability/check/result"
+        ],
+        "output": "capability/check/ports/check"
+      },
+      {
+        "calculation": "capability/verdict/result/calc",
+        "rule": "Compile.Verdict",
+        "inputs": [
+          "capability/check/ports/check",
+          "capability/verdict/definition"
+        ],
+        "output": "capability/verdict/result"
+      },
+      {
+        "calculation": "capability/verdict/ports/verdict/calc",
+        "rule": "project-port",
+        "inputs": [
+          "capability/verdict/result"
+        ],
+        "output": "capability/verdict/ports/verdict"
+      },
+      {
+        "calculation": "capability/result/calc",
+        "rule": "compose:ReadOnly.Compile",
+        "inputs": [
+          "capability/resolve/ports/graph",
+          "capability/check/ports/check",
+          "capability/verdict/ports/verdict",
+          "capability/resolve/result",
+          "capability/check/result",
+          "capability/verdict/result",
+          "capability/definition"
+        ],
+        "output": "capability/result"
+      }
+    ],
+    "declarations": {
+      "request/definitions": {
+        "address": "request/definitions",
+        "depends": []
+      },
+      "request/root": {
+        "address": "request/root",
+        "depends": []
+      },
+      "request/rules": {
+        "address": "request/rules",
+        "depends": []
+      },
+      "capability/definition": {
+        "address": "capability/definition",
+        "depends": []
+      },
+      "capability/resolve/definition": {
+        "address": "capability/resolve/definition",
+        "depends": []
+      },
+      "capability/resolve/result/calc": {
+        "address": "capability/resolve/result/calc",
+        "depends": [],
+        "rule": "Graph.Resolve",
+        "inputs": [
+          "request/definitions",
+          "request/root",
+          "capability/resolve/definition"
+        ],
+        "output": "capability/resolve/result",
+        "initial": null
+      },
+      "capability/resolve/result": {
+        "address": "capability/resolve/result",
+        "depends": [
+          "capability/resolve/result/calc"
+        ]
+      },
+      "capability/resolve/ports/graph/calc": {
+        "address": "capability/resolve/ports/graph/calc",
+        "depends": [],
+        "rule": "project-port",
+        "inputs": [
+          "capability/resolve/result"
+        ],
+        "output": "capability/resolve/ports/graph",
+        "initial": null
+      },
+      "capability/resolve/ports/graph": {
+        "address": "capability/resolve/ports/graph",
+        "depends": [
+          "capability/resolve/ports/graph/calc"
+        ]
+      },
+      "capability/check/definition": {
+        "address": "capability/check/definition",
+        "depends": []
+      },
+      "capability/check/result/calc": {
+        "address": "capability/check/result/calc",
+        "depends": [],
+        "rule": "ReadOnly.LinkCheck",
+        "inputs": [
+          "capability/resolve/ports/graph",
+          "request/rules",
+          "capability/check/definition"
+        ],
+        "output": "capability/check/result",
+        "initial": null
+      },
+      "capability/check/result": {
+        "address": "capability/check/result",
+        "depends": [
+          "capability/check/result/calc"
+        ]
+      },
+      "capability/check/ports/check/calc": {
+        "address": "capability/check/ports/check/calc",
+        "depends": [],
+        "rule": "project-port",
+        "inputs": [
+          "capability/check/result"
+        ],
+        "output": "capability/check/ports/check",
+        "initial": null
+      },
+      "capability/check/ports/check": {
+        "address": "capability/check/ports/check",
+        "depends": [
+          "capability/check/ports/check/calc"
+        ]
+      },
+      "capability/verdict/definition": {
+        "address": "capability/verdict/definition",
+        "depends": []
+      },
+      "capability/verdict/result/calc": {
+        "address": "capability/verdict/result/calc",
+        "depends": [],
+        "rule": "Compile.Verdict",
+        "inputs": [
+          "capability/check/ports/check",
+          "capability/verdict/definition"
+        ],
+        "output": "capability/verdict/result",
+        "initial": null
+      },
+      "capability/verdict/result": {
+        "address": "capability/verdict/result",
+        "depends": [
+          "capability/verdict/result/calc"
+        ]
+      },
+      "capability/verdict/ports/verdict/calc": {
+        "address": "capability/verdict/ports/verdict/calc",
+        "depends": [],
+        "rule": "project-port",
+        "inputs": [
+          "capability/verdict/result"
+        ],
+        "output": "capability/verdict/ports/verdict",
+        "initial": null
+      },
+      "capability/verdict/ports/verdict": {
+        "address": "capability/verdict/ports/verdict",
+        "depends": [
+          "capability/verdict/ports/verdict/calc"
+        ]
+      },
+      "capability/result/calc": {
+        "address": "capability/result/calc",
+        "depends": [],
+        "rule": "compose:ReadOnly.Compile",
+        "inputs": [
+          "capability/resolve/ports/graph",
+          "capability/check/ports/check",
+          "capability/verdict/ports/verdict",
+          "capability/resolve/result",
+          "capability/check/result",
+          "capability/verdict/result",
+          "capability/definition"
+        ],
+        "output": "capability/result",
+        "initial": null
+      },
+      "capability/result": {
+        "address": "capability/result",
+        "depends": [
+          "capability/result/calc"
+        ]
+      },
+      "capability/capability": {
+        "address": "capability/capability",
+        "depends": [
+          "capability/result/calc"
+        ],
+        "left": "capability/definition",
+        "right": "capability/result",
+        "validators": [
+          "capability/result/calc"
+        ]
+      },
+      "capability/ports/graph/calc": {
+        "address": "capability/ports/graph/calc",
+        "depends": [],
+        "rule": "project-port",
+        "inputs": [
+          "capability/result"
+        ],
+        "output": "capability/ports/graph",
+        "initial": null
+      },
+      "capability/ports/graph": {
+        "address": "capability/ports/graph",
+        "depends": [
+          "capability/ports/graph/calc"
+        ]
+      },
+      "capability/ports/check/calc": {
+        "address": "capability/ports/check/calc",
+        "depends": [],
+        "rule": "project-port",
+        "inputs": [
+          "capability/result"
+        ],
+        "output": "capability/ports/check",
+        "initial": null
+      },
+      "capability/ports/check": {
+        "address": "capability/ports/check",
+        "depends": [
+          "capability/ports/check/calc"
+        ]
+      },
+      "capability/ports/verdict/calc": {
+        "address": "capability/ports/verdict/calc",
+        "depends": [],
+        "rule": "project-port",
+        "inputs": [
+          "capability/result"
+        ],
+        "output": "capability/ports/verdict",
+        "initial": null
+      },
+      "capability/ports/verdict": {
+        "address": "capability/ports/verdict",
+        "depends": [
+          "capability/ports/verdict/calc"
+        ]
+      }
+    },
+    "definition": {
+      "kind": "functionalGuarantee",
+      "label": "ReadOnly compilation lint",
+      "inputs": {
+        "definitions": "Definitions",
+        "root": "DefinitionId",
+        "rules": "ReadOnlyRules"
+      },
+      "outputs": {
+        "graph": "ResolvedGraph",
+        "check": "LinkCheck",
+        "verdict": "CompileVerdict"
+      },
+      "id": "ReadOnly.Compile",
+      "returns": {
+        "graph": "resolve.graph",
+        "check": "check.check",
+        "verdict": "verdict.verdict"
+      },
+      "children": [
+        {
+          "instance": "resolve",
+          "bind": {
+            "definitions": "$input.definitions",
+            "root": "$input.root"
+          },
+          "after": [],
+          "kind": "calculation",
+          "label": "Resolve finite declared producers and aliases",
+          "inputs": {
+            "definitions": "Definitions",
+            "root": "DefinitionId"
+          },
+          "outputs": {
+            "graph": "ResolvedGraph"
+          },
+          "id": "Graph.Resolve",
+          "implementation": "graph.resolve",
+          "children": []
+        },
+        {
+          "instance": "check",
+          "bind": {
+            "graph": "resolve.graph",
+            "rules": "$input.rules"
+          },
+          "after": [],
+          "kind": "calculation",
+          "label": "Check selected ReadOnly link policy",
+          "inputs": {
+            "graph": "ResolvedGraph",
+            "rules": "ReadOnlyRules"
+          },
+          "outputs": {
+            "check": "LinkCheck"
+          },
+          "id": "ReadOnly.LinkCheck",
+          "implementation": "readonly.links",
+          "children": []
+        },
+        {
+          "instance": "verdict",
+          "bind": {
+            "check": "check.check"
+          },
+          "after": [],
+          "kind": "calculation",
+          "label": "Compose lint verdict without hiding unresolved effects",
+          "inputs": {
+            "check": "LinkCheck"
+          },
+          "outputs": {
+            "verdict": "CompileVerdict"
+          },
+          "id": "Compile.Verdict",
+          "implementation": "compile.verdict",
+          "children": []
+        }
+      ]
+    },
+    "inputParts": {
+      "request/definitions": {
+        "Cpu.Transition": {
+          "kind": "calculation",
+          "label": "Compute one CPU state transition",
+          "inputs": {
+            "state": "CpuState",
+            "program": "Program16",
+            "inputByte": "Byte",
+            "executeRef": "ImplementationRef"
+          },
+          "outputs": {
+            "state": "CpuState"
+          },
+          "implementation": "cpu.transition"
+        },
+        "Cpu.Validate": {
+          "kind": "calculation",
+          "label": "Check the complete next state independently",
+          "inputs": {
+            "state": "CpuState",
+            "program": "Program16",
+            "inputByte": "Byte",
+            "candidate": "CpuState"
+          },
+          "outputs": {
+            "state": "CpuState"
+          },
+          "implementation": "cpu.validate"
+        },
+        "Cpu.Step": {
+          "kind": "functionalGuarantee",
+          "label": "CPU Step",
+          "inputs": {
+            "state": "CpuState",
+            "program": "Program16",
+            "inputByte": "Byte",
+            "contractRef": "ProtoDefinition",
+            "executeRef": "ImplementationRef",
+            "validateRef": "ImplementationRef",
+            "observeRef": "ImplementationRef"
+          },
+          "outputs": {
+            "state": "CpuState",
+            "validation": "ValidationOutcome",
+            "readOnly": "ReadOnlyOutcome",
+            "effects": "ValidationEffects"
+          },
+          "steps": [
+            {
+              "id": "transition",
+              "use": "Cpu.Transition",
+              "bind": {
+                "state": "$input.state",
+                "program": "$input.program",
+                "inputByte": "$input.inputByte",
+                "executeRef": "$input.executeRef"
+              }
+            },
+            {
+              "id": "observe",
+              "use": "Cpu.Observe",
+              "bind": {
+                "state": "$input.state",
+                "program": "$input.program",
+                "inputByte": "$input.inputByte",
+                "candidate": "transition.state",
+                "executeRef": "$input.executeRef",
+                "observeRef": "$input.observeRef",
+                "contractRef": "$input.contractRef"
+              }
+            },
+            {
+              "id": "validate",
+              "use": "ReadOnlyValidation",
+              "after": [
+                "observe"
+              ],
+              "bind": {
+                "state": "$input.state",
+                "program": "$input.program",
+                "inputByte": "$input.inputByte",
+                "candidate": "transition.state",
+                "observation": "observe.observation",
+                "validateRef": "$input.validateRef"
+              }
+            }
+          ],
+          "returns": {
+            "state": "transition.state",
+            "validation": "validate.verdict",
+            "readOnly": "validate.readOnly",
+            "effects": "validate.effects"
+          }
+        },
+        "Cpu.Observe": {
+          "kind": "calculation",
+          "label": "Observe input and candidate at CPU boundary",
+          "inputs": {
+            "state": "CpuState",
+            "program": "Program16",
+            "inputByte": "Byte",
+            "candidate": "CpuState",
+            "executeRef": "ImplementationRef",
+            "observeRef": "ImplementationRef",
+            "contractRef": "ProtoDefinition"
+          },
+          "outputs": {
+            "observation": "BoundaryObservation"
+          },
+          "implementation": "cpu.observe"
+        },
+        "Validation.Invoke": {
+          "kind": "calculation",
+          "label": "Invoke selected validator and capture boundary effects",
+          "inputs": {
+            "state": "CpuState",
+            "program": "Program16",
+            "inputByte": "Byte",
+            "candidate": "CpuState",
+            "validateRef": "ImplementationRef",
+            "observation": "BoundaryObservation"
+          },
+          "outputs": {
+            "effects": "ValidationEffects"
+          },
+          "implementation": "validation.invoke"
+        },
+        "ReadOnly.Check": {
+          "kind": "calculation",
+          "label": "Check net borrowed argument changes",
+          "inputs": {
+            "effects": "ValidationEffects"
+          },
+          "outputs": {
+            "readOnly": "ReadOnlyOutcome"
+          },
+          "implementation": "readonly.check"
+        },
+        "Validation.Verdict": {
+          "kind": "calculation",
+          "label": "Compose validation and ReadOnly verdicts",
+          "inputs": {
+            "effects": "ValidationEffects",
+            "readOnly": "ReadOnlyOutcome"
+          },
+          "outputs": {
+            "verdict": "ValidationOutcome"
+          },
+          "implementation": "validation.verdict"
+        },
+        "ReadOnlyValidation": {
+          "kind": "functionalGuarantee",
+          "label": "ReadOnly validation",
+          "inputs": {
+            "state": "CpuState",
+            "program": "Program16",
+            "inputByte": "Byte",
+            "candidate": "CpuState",
+            "validateRef": "ImplementationRef",
+            "observation": "BoundaryObservation"
+          },
+          "outputs": {
+            "verdict": "ValidationOutcome",
+            "readOnly": "ReadOnlyOutcome",
+            "effects": "ValidationEffects"
+          },
+          "steps": [
+            {
+              "id": "invoke",
+              "use": "Validation.Invoke",
+              "bind": {
+                "state": "$input.state",
+                "program": "$input.program",
+                "inputByte": "$input.inputByte",
+                "candidate": "$input.candidate",
+                "validateRef": "$input.validateRef",
+                "observation": "$input.observation"
+              }
+            },
+            {
+              "id": "readonly",
+              "use": "ReadOnly.Check",
+              "bind": {
+                "effects": "invoke.effects"
+              }
+            },
+            {
+              "id": "verdict",
+              "use": "Validation.Verdict",
+              "bind": {
+                "effects": "invoke.effects",
+                "readOnly": "readonly.readOnly"
+              }
+            }
+          ],
+          "returns": {
+            "verdict": "verdict.verdict",
+            "readOnly": "readonly.readOnly",
+            "effects": "invoke.effects"
+          }
+        }
+      },
+      "request/root": "Cpu.Step",
+      "request/rules": {
+        "authoritativeOutput": {
+          "node": "capability",
+          "port": "state",
+          "expectedNode": "capability/transition",
+          "expectedPort": "state"
+        },
+        "readOnlyActor": "capability/validate",
+        "borrowedInputs": [
+          "candidate",
+          "state",
+          "program"
+        ],
+        "binding": "cpu.validate.integer",
+        "effects": null
+      }
+    }
+  },
+  "readOnly": {
+    "status": "PASS",
+    "changes": {},
+    "scope": "net borrowed JSON argument changes at invocation boundaries"
+  },
+  "cause": null,
+  "order": [
+    "capability/transition/result/calc",
+    "capability/transition/ports/state/calc",
+    "capability/observe/result/calc",
+    "capability/observe/ports/observation/calc",
+    "capability/validate/invoke/result/calc",
+    "capability/validate/invoke/ports/effects/calc",
+    "capability/validate/readonly/result/calc",
+    "capability/validate/readonly/ports/readOnly/calc",
+    "capability/validate/verdict/result/calc",
+    "capability/validate/verdict/ports/verdict/calc",
+    "capability/validate/result/calc",
+    "capability/validate/ports/verdict/calc",
+    "capability/validate/ports/readOnly/calc",
+    "capability/validate/ports/effects/calc",
+    "capability/result/calc"
+  ],
+  "value": null,
+  "originalSourcesUnchanged": true
+}

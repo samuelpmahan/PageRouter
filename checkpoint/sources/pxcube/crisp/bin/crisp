@@ -1,0 +1,137 @@
+#!/usr/bin/env node
+import { join, resolve } from 'node:path';
+import { PackageError, packageApp, checkApp } from '../lib/packager.mjs';
+import { scaffoldApp } from '../lib/scaffolder.mjs';
+import { scaffoldExperience } from '../lib/scaffold.mjs';
+import { verifyReceipt } from '../lib/verifier.mjs';
+import { loadManifest } from '../lib/manifest.mjs';
+
+const VERSION = '0.2.0';
+
+function usage() {
+  return [
+    'usage: crisp <command> [options]',
+    '',
+    'commands:',
+    '  scaffold <dir> [--title T] [--mounts a,b] [--source exp/id]',
+    '      generate a fresh experience folder with the canonical layout',
+    '      crisp knows how to compile (called on `neat add`)',
+    '  scaffold --from-tidy <type> [--root <path>]',
+    '      generate an Experience from a tidy manifest type instead of the',
+    '      canonical layout; the destination comes from the type definition',
+    '  package <app-dir> [--pxc <path>]   build and package an experience app;',
+    '      emits content-addressed chunks and a wiring-manifest receipt',
+    '  check <app-dir> [--pxc <path>]      validate manifest, mounts and source hash',
+    '  verify <receipt.json> <chunks-dir>  re-hash deployed chunks against the receipt',
+    '  resolve <app-dir>                   print the resolved manifest (tidy types included)',
+    '  --help, -h                          show this help',
+    '  --version, -v                       show version',
+    '',
+    'exit codes: 0 ok; 1 manifest/mounts/verify/scaffold; 2 build/output; 3 usage error',
+  ].join('\n');
+}
+
+function parseArgs(argv) {
+  const positional = [];
+  const opts = {};
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    const kv = arg.match(/^--([^=]+)=(.*)$/);
+    if (kv) {
+      opts[kv[1]] = kv[2];
+    } else if (arg === '--pxc' || arg === '--title' || arg === '--mounts' || arg === '--source' || arg === '--from-tidy' || arg === '--root') {
+      const key = arg.slice(2);
+      opts[key] = argv[++i];
+      if (opts[key] === undefined) return { error: `${arg} requires a value` };
+    } else if (arg.startsWith('--')) {
+      return { error: `unknown option ${arg}` };
+    } else {
+      positional.push(arg);
+    }
+  }
+  return { positional, opts };
+}
+
+function fail(code, message) {
+  process.stderr.write(`${message}\n`);
+  process.exit(code);
+}
+
+async function main() {
+  const { positional, opts, error } = parseArgs(process.argv.slice(2));
+  if (error) fail(3, `${error}\n\n${usage()}`);
+
+  const [command, a, b] = positional;
+  if (command === '--help' || command === '-h') {
+    process.stdout.write(usage() + '\n');
+    process.exit(0);
+  }
+  if (command === '--version' || command === '-v') {
+    process.stdout.write(`crisp ${VERSION}\n`);
+    process.exit(0);
+  }
+
+  try {
+    if (command === 'scaffold') {
+      if (opts['from-tidy']) {
+        const result = await scaffoldExperience(resolve(opts.root ?? '.'), opts['from-tidy']);
+        process.stdout.write(`generated ${result.root}: ${Object.keys(result.outputs).length} files + generation.json\nmanifest: ${result.manifestSource.type} ${result.manifestSource.digest}\n`);
+        process.exit(0);
+      }
+      if (!a) fail(3, usage());
+      const mounts = opts.mounts ? opts.mounts.split(',').map((m) => m.trim()).filter(Boolean) : [];
+      const result = await scaffoldApp(resolve(a), {
+        title: opts.title ?? 'Untitled',
+        mounts,
+        source: opts.source ?? null,
+      });
+      process.stdout.write(`scaffolded ${result.dir}: ${result.files.join(', ')}\n`);
+      process.exit(0);
+    }
+    if (command === 'verify') {
+      if (!a || !b) fail(3, usage());
+      const result = await verifyReceipt(resolve(a), resolve(b));
+      if (result.ok) {
+        process.stdout.write(`verified ${result.app ?? 'receipt'}: ${result.chunks} chunks match\n`);
+        process.exit(0);
+      }
+      for (const m of result.mismatches) {
+        process.stderr.write(`crisp: verify: ${m.path}: ${m.reason}\n`);
+      }
+      process.exit(1);
+    }
+    if (command === 'resolve') {
+      if (!a) fail(3, usage());
+      const manifest = await loadManifest(resolve(a));
+      process.stdout.write(JSON.stringify(manifest, null, 2) + '\n');
+      process.exit(0);
+    }
+    if ((command !== 'package' && command !== 'check') || !a) {
+      fail(3, usage());
+    }
+    const appDir = resolve(a);
+    const packOpts = opts.pxc ? { pxcPath: opts.pxc } : {};
+    if (command === 'check') {
+      const result = await checkApp(appDir, packOpts);
+      process.stdout.write(
+        `ok: mounts [${result.mounts.join(', ')}] used [${result.usedMounts.join(', ')}] ` +
+          `sourceHash ${result.sourceHash.slice(0, 8)}\n`,
+      );
+      process.exit(0);
+    }
+    const receipt = await packageApp(appDir, packOpts);
+    process.stdout.write(
+      `packaged ${receipt.app}: ${receipt.chunks.length} chunks, entry ${receipt.entryChunk ? receipt.entryChunk.slice(0, 8) + '...' : 'n/a'}\n`,
+    );
+    process.stdout.write(`receipt: ${join(appDir, '.crisp', 'receipt.json')}\n`);
+    process.exit(0);
+  } catch (err) {
+    if (err instanceof PackageError) {
+      const exitCode = err.code === 'build' || err.code === 'output' ? 2 : 1;
+      fail(exitCode, `crisp: ${err.code}: ${err.message}`);
+    }
+    fail(1, `crisp: ${err.message}`);
+  }
+}
+
+main();
