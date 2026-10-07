@@ -5,22 +5,51 @@ HH C6 fixture functionality and Justin's independently runnable static leaf.
 
 ## Reproducible local build
 
-Node 24, Python 3, and the exact npm dependencies in `package-lock.json` are required:
+Use Linux, Node **24.19.0**, Python 3, npm and Bazel **7.4.1** (or Bazelisk,
+which reads `.bazelversion`). From this directory run:
 
-1. `npm ci` — install the pinned fast-check and esbuild packages from npm
-2. `npm test`
-3. `npm run bundle:fast-check` — reproducibly refresh the self-hosted HH ESM bundle, license files and integrity metadata
-4. `npm run build:pxcube` — recovered PxCube local/run, crisp, neat and tidy
-5. `npm run build` — outer router, actual projects and HH compiled delta
-6. `node scripts/verify-crisp-delta.mjs` — local source edit/cache/clean proof
-7. `npm run preview` — static preview at http://localhost:4188
+```sh
+bash ci/bazel/run.sh
+# If Bazel is installed elsewhere:
+BAZEL=/path/to/bazel bash ci/bazel/run.sh
+```
 
-The HH style playground ships a locally hosted, SHA-pinned fast-check 4.10.2
-bundle. Its exact registry package and bundle inputs are locked; the browser does
-not load dependencies from a CDN.
+The preparation step installs exact `package-lock.json` dependencies with
+`npm ci --ignore-scripts` into private build tools. Bazel `//:site` declares the
+source/dependency files and writes `bazel-bin/site.site`, `site.evidence`,
+`site.receipt.json` and `site.log`. It copies inputs into isolated staging,
+refreshes fast-check, compiles neat and all authored PxCube experiences, assembles
+the site, verifies crisp delta/clean equality, runs the `npm test` suite against
+fresh output and checks built Atlas imports. A failed package or historical
+shipped-byte fallback fails the build. The output verifier checks every emitted
+site file against its SHA-256 receipt, including after a Bazel cache hit.
 
-In sandboxed automation, a server and browser must share the same process/network
-namespace. The adversarial browser QA script starts its own in-process server.
+Historical `dist/`, package caches and generated build evidence are excluded
+from compilation inputs. Your checkout is not rewritten by compilation. Host
+Linux shared libraries support the copied, declared Node/shell/cp/mkdir tools;
+this is not a fully hermetic operating-system toolchain. Dependency acquisition
+occurs only during preparation; compilation itself performs no downloads. The
+Bazel configuration disables sandbox networking where Linux namespaces are
+available. Restricted environments can fall back to processwrapper staging,
+which isolates files but does not enforce network isolation.
+
+For a local static preview:
+
+```sh
+python3 -m http.server 4188 --directory bazel-bin/site.site
+```
+
+The top-level GitHub Actions workflow uses the same Bazel target, builds pull
+requests without deploying, and deploys successful main builds to GitHub Pages.
+It detects this `checkpoint/` layout and a future root `package.json` layout.
+When moving the checkpoint contents to root, keep its Bazel files, `ci/`,
+`.nvmrc`, `.gitignore`, and mirrored `.github/workflows/deploy-pages.yml` together.
+The split compiled transport remains for separate later cleanup; Actions no
+longer consumes it. The source archive manifest records the original import,
+not the current edited source identity; the build receipt records current inputs.
+
+The existing npm scripts remain available for manual development. Browser smoke
+scripts are optional and are not included in this source build target.
 
 ## Ownership and provenance
 
@@ -93,9 +122,8 @@ It doesn't counterfeit generic scene-host disposal that this kernel cannot do.
 - Original attempt IDs, receipt timestamps and launcher provenance remain outside
   deterministic compiled-chunk equality; they are not silently rewritten
 - Browser QA, current status and screenshots live in the evidence report
-- GitHub Pages output is relative-path ready. Verification workflow only uploads
-  build artifacts. No deployment is enabled until a distinct safe destination is
-  approved, and no existing deployment is overwritten
+- GitHub Pages output is relative-path ready. Main uses the source-build workflow
+  described above; pull requests compile and upload artifacts without deployment.
 
 ## Candidate version and release header
 
@@ -151,9 +179,9 @@ Open `#/pxcube/atlas` or the Atlas tab. Run search invokes the actual browser ru
 
 Run original composition exposes the existing six-node motion/Beta/Boolean fixture calculation. Its policy result and posterior are separate from candidate equivalence. Gain/bias controls specialize the fitted model against the declared fixtures. The app keeps one session through view navigation; shared replay, inspection and reset operate on its most recently run recipe. Recipe/result/inspection downloads are explicit. HH's established evaluator implementation pin is unchanged; Atlas has its own source-derived implementation closure bound into Parts/producers.
 
-The relocated checkpoint reuses exact shipped PxCube compiled bytes after checking their snapshot digest; `evidence/pxcube-relocation.json` records the local assembly path. Install exact development dependencies with `npm ci --ignore-scripts`, then `npm test` and `npm run build`. The Atlas and prior HH built import regressions run with `node --test scripts/atlas-built-imports.test.mjs scripts/hh-built-imports.test.mjs`. `scripts/atlas-browser-smoke.mjs` uses primary-runtime Playwright with an optional `CHROME_PATH`; new screenshots and downloadable execution reports stay outside the canonical source checkpoint.
+The Bazel source build compiles all authored PxCube sources and refuses the historical shipped-byte relocation fallback. Use `bash ci/bazel/run.sh` to build and test the fresh site. The Atlas and prior HH built import regressions run with `node --test scripts/atlas-built-imports.test.mjs scripts/hh-built-imports.test.mjs`. `scripts/atlas-browser-smoke.mjs` uses primary-runtime Playwright with an optional `CHROME_PATH`; new screenshots and downloadable execution reports stay outside the canonical source checkpoint.
 
-Create an immutable source checkpoint using `evidence/create-checkpoint.py --baseline-commit VERIFIED_PAGES_COMMIT --base-source-commit VERIFIED_BASE_SOURCE_COMMIT --base-checkpoint VERIFIED_BASE_CHECKPOINT_BUILD_ID`. This exports the complete materialized source, including Atlas, and attributes its baseline without inventing a new Git source commit. Root supplies the observed new Drive file URL to `evidence/finalize-atlas-publication.py` after upload. The GitHub deployment continues to materialize the existing content-addressed compiled artifact; the full immutable checkpoint remains source authority.
+Create an immutable source checkpoint using `evidence/create-checkpoint.py --baseline-commit VERIFIED_PAGES_COMMIT --base-source-commit VERIFIED_BASE_SOURCE_COMMIT --base-checkpoint VERIFIED_BASE_CHECKPOINT_BUILD_ID`. This exports the complete materialized source, including Atlas, and attributes its baseline without inventing a new Git source commit. Root supplies the observed new Drive file URL to `evidence/finalize-atlas-publication.py` after upload. The GitHub deployment now compiles current checked-out source; the original immutable checkpoint remains provenance for the import.
 
 
 ## Executable capability ladder

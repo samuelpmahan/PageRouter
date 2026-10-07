@@ -1,0 +1,19 @@
+load("//ci/bazel:site.bzl", "pagerouter_site")
+
+# Authored sources evolve normally. Generated outputs and historical transport
+# never enter the compiler input closure, even when left in the checkout.
+pagerouter_site(
+    name = "site",
+    srcs = glob(
+        ["src/**", "scripts/**", "exp/**", "sources/**", "vendor/**", "evidence/**", "package*.json"],
+        exclude = [
+            "**/node_modules/**", "**/.git/**", "**/.github/**", "**/.pxcube/**",
+            "**/.crisp/**", "**/dist/**", "**/__pycache__/**",
+            "evidence/pxcube-build.json", "evidence/pxcube-build.log",
+            "evidence/pxcube-relocation.json", "evidence/hh-delta-proof.json",
+            "evidence/crisp-delta-proof.json",
+        ],
+    ),
+    deps = ["@build_tools//:closure"],
+    node = "@build_tools//:bin/node",
+)
