@@ -1,0 +1,25 @@
+{
+  "schema": "nctk-directory@1",
+  "address": "bases/discstudio-photo-card",
+  "children": [],
+  "kind": "base",
+  "source": "bases/discstudio-photo-card.json",
+  "policies": {
+    "neat": {
+      "mode": "none"
+    },
+    "crisp": {
+      "mode": "none"
+    },
+    "tidy": {
+      "mode": "local"
+    },
+    "kompoze": {
+      "mode": "local",
+      "references": [
+        "parts/source/discstudio-fixture",
+        "parts/positioned/discstudio"
+      ]
+    }
+  }
+}

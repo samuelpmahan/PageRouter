@@ -1,0 +1,19 @@
+{
+  "review": "Creator builds one image, queues it, then edits the next image",
+  "testedBuild": "2026-09-15T05-54-36-140Z-e78df9a9",
+  "checks": [
+    "Chose Buzzz ESP 175g, Zone ESP 173g, River Opto 174g through the lineup dialog",
+    "Queued Buzzz's opening turn at 0 points each",
+    "Added 1 point to Buzzz, switched to Zone, set Zone to 150% and #ff66cc, queued image 2",
+    "Imported both images into ExportGraphics in order",
+    "Both ExportGraphics SVG DOM trees exactly matched their respective CreateGraphics preview trees",
+    "Downloaded each image as a separate numbered PNG"
+  ],
+  "exports": [
+    {"filename":"004-discstudio-disccompetition-buzzz-1920x1080-e6d8efd2.png","byteLength":103011,"sha256":"e6d8efd2f47834826d2f1bdbbccab59004435053adc386523a4ecf0e8fd800e4"},
+    {"filename":"005-discstudio-disccompetition-zone-1920x1080-da968a16.png","byteLength":92592,"sha256":"da968a1694a8750e08bc2393472a3bfa3c4128d405599b2bd7d589016c44d673"}
+  ],
+  "numbering": "Three previously kept Spotlight captures preceded the two new Competition images",
+  "tests": "6 packaged module tests passed; additional repeated-image queue import test passed",
+  "acceptance": "Awaiting Sam's visual review"
+}

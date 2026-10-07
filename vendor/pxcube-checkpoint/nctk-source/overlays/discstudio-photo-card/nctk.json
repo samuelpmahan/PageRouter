@@ -1,0 +1,24 @@
+{
+  "schema": "nctk-directory@1",
+  "address": "overlays/discstudio-photo-card",
+  "children": [],
+  "kind": "overlay",
+  "source": "overlays/discstudio-photo-card.json",
+  "policies": {
+    "neat": {
+      "mode": "none"
+    },
+    "crisp": {
+      "mode": "none"
+    },
+    "tidy": {
+      "mode": "local"
+    },
+    "kompoze": {
+      "mode": "local",
+      "references": [
+        "bases/discstudio-photo-card.json"
+      ]
+    }
+  }
+}

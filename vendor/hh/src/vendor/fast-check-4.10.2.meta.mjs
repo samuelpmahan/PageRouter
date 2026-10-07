@@ -1,0 +1,1 @@
+export default Object.freeze({"name":"fast-check","version":"4.10.2","pin":"sha256:28fc0e4dc36e31eb48577b319cec521931b4bc88556205a76d82cde763a34d06","sourceCommit":"c77afa8277a67250d798c52e61343b8ed5fd268b","stylePin":"sha256:844cb1d8b68d38785af0d75d7a73c5c39b15911703c35b3d5316b775ace7689e"});

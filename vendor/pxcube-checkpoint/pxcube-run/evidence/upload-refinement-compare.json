@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "kind": "paired-upload-probe",
+  "subject": "locally assembled cartridges",
+  "command": "node local/ci.mjs && node --test local/test/e2e/e2e-upload-compare.test.mjs",
+  "inputs": {
+    "query": "Discraft Buzx",
+    "mold": "Buzzz",
+    "plastic": "ESP",
+    "weight": 174,
+    "depiction": "synthetic prepared PNG data URL"
+  },
+  "runs": [
+    {
+      "id": "upload-disc-to-shelf",
+      "storageKey": "pxcube.studio.v1:upload-disc-to-shelf:mounts",
+      "packageReceipt": "experiences/upload-disc-to-shelf/receipt.json",
+      "packageSourceHash": "259f61d7a26b10e7fbf1d26d1a5b7efb085db99e8999eb85c8dc0c536cb72446",
+      "suggestion": {
+        "query": "Discraft Buzx",
+        "first": "Buzzz"
+      },
+      "upload": {
+        "depiction": "photo",
+        "shelfCount": 1,
+        "otherSandboxCount": 0,
+        "ownFlightPersisted": false,
+        "resolvedFlight": [
+          5,
+          4,
+          -1,
+          1
+        ],
+        "shelfReadback": true,
+        "saveReadback": true,
+        "receiptCount": 8
+      }
+    },
+    {
+      "id": "upload-disc-to-shelf-delta",
+      "storageKey": "pxcube.studio.v1:upload-disc-to-shelf-delta:mounts",
+      "packageReceipt": "experiences/upload-disc-to-shelf-delta/receipt.json",
+      "packageSourceHash": "ad803dae4caf4d331c1c065518ef522943724b9479b3fa01ac848a9e5995d8f1",
+      "suggestion": {
+        "query": "Discraft Buzx",
+        "first": "Buzzz"
+      },
+      "upload": {
+        "depiction": "photo",
+        "shelfCount": 1,
+        "otherSandboxCount": 0,
+        "ownFlightPersisted": false,
+        "resolvedFlight": [
+          5,
+          4,
+          -1,
+          1
+        ],
+        "shelfReadback": true,
+        "saveReadback": true,
+        "receiptCount": 8
+      }
+    }
+  ],
+  "differingChunks": [
+    "config.mjs"
+  ],
+  "sharedChunkCount": 46,
+  "conclusion": "behavior parity on these inputs; distinct workspace storage keys; no refinement winner or human acceptance",
+  "limits": [
+    "Node execution of shipped model and search chunks, not a browser interaction",
+    "No photograph selection, crop, visual inspection, or remote Pages deployment tested"
+  ]
+}

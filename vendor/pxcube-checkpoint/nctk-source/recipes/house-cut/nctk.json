@@ -1,0 +1,29 @@
+{
+  "schema": "nctk-directory@1",
+  "address": "recipes/house-cut",
+  "children": [],
+  "kind": "recipe",
+  "source": "recipes/house-cut.json",
+  "policies": {
+    "neat": {
+      "mode": "local",
+      "state": "Compare",
+      "phase": "EXPERIMENT",
+      "substates": {},
+      "suggestions": []
+    },
+    "crisp": {
+      "mode": "none"
+    },
+    "tidy": {
+      "mode": "local"
+    },
+    "kompoze": {
+      "mode": "local",
+      "references": [
+        "bases/house-cut.json",
+        "overlays/house-10s.json"
+      ]
+    }
+  }
+}

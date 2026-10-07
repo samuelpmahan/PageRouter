@@ -1,0 +1,21 @@
+// Exercises the recovered crisp pipeline, not a replacement build engine.
+import fs from 'node:fs';import path from 'node:path';import {gzipSync} from 'node:zlib';import {pathToFileURL} from 'node:url';
+import {buildSnapshot,createPatch,applyPatch,canonical,packSnapshot} from '../src/compiled-patch.mjs';
+const root=path.resolve(import.meta.dirname,'..'),source=path.join(root,'sources/pxcube');
+const {build}=await import(pathToFileURL(path.join(source,'local/run.mjs')));
+const {resolveTargets}=await import(pathToFileURL(path.join(source,'local/affected-targets.mjs')));
+const baselineEvidence=JSON.parse(fs.readFileSync(path.join(root,'evidence/pxcube-build.json')));
+const original=fs.readFileSync(path.join(source,'experiences/hello/index.html'),'utf8');
+function spec(built,targets){const sources={},steps=[];for(const target of targets){const result=built.report.results.find(r=>r.id===target.id);if(!result?.ok)throw Error(`Package failed: ${target.id}`);const receipt=JSON.parse(fs.readFileSync(path.join(built.site,result.receipt)));const inputs=[`keys/${target.id}`],outputs={};sources[inputs[0]]=target.packageKey;for(const chunk of receipt.chunks){const out=`experiences/${target.id}/${chunk.path}`,input=`outputs/${out}`;sources[input]={encoding:'base64',data:fs.readFileSync(path.join(built.site,out)).toString('base64')};inputs.push(input);outputs[out]={source:input};}const raw=JSON.parse(fs.readFileSync(path.join(source,'experiences',target.id,'experience.json')));steps.push({id:target.id,inputs,outputs,dependencies:raw.base?[raw.base]:[]});}return {id:'pxcube-experiences',sources,targets:steps};}
+const baseline=await buildSnapshot(spec(baselineEvidence,baselineEvidence.targets));
+fs.writeFileSync(path.join(source,'experiences/hello/index.html'),original+'\n<!-- local crisp compiled delta evidence -->\n');
+try{
+ const candidateTargets=await resolveTargets(source),candidateBuild=await build(source),candidate=await buildSnapshot(spec(candidateBuild,candidateTargets),{baseline});
+ const cleanRoot=path.join(root,'build/pxcube-clean');fs.mkdirSync(cleanRoot,{recursive:true});for(const f of fs.readdirSync(source)){if(['.pxcube','.git'].includes(f))continue;fs.cpSync(path.join(source,f),path.join(cleanRoot,f),{recursive:true});}
+ const cleanBuild=await build(cleanRoot),cleanTargets=await resolveTargets(cleanRoot),clean=await buildSnapshot(spec(cleanBuild,cleanTargets));
+ const patch=await createPatch(baseline,candidate),applied=await applyPatch(baseline,patch);
+ if(applied.digest!==clean.digest||canonical(applied.files)!==canonical(clean.files))throw Error('Actual crisp delta does not equal clean packages');
+ const changed=candidateTargets.filter(t=>baselineEvidence.targets.find(b=>b.id===t.id)?.packageKey!==t.packageKey).map(t=>t.id);
+ const evidence={schema:'existing-crisp-delta-proof@1',sourceChange:'experiences/hello/index.html',sourceChangeBytes:Buffer.byteLength('\n<!-- local crisp compiled delta evidence -->\n'),changedPackageKeys:changed,reusedPackageKeys:candidateTargets.filter(t=>!changed.includes(t.id)).map(t=>t.id),baseDigest:baseline.digest,targetDigest:candidate.digest,cleanDigest:clean.digest,exactCompiledEquality:true,rebuilt:candidate.build.rebuilt,reused:candidate.build.reused,ops:patch.ops.map(({data,...op})=>({...op,payloadBytes:data?Buffer.from(data,'base64').length:0})),baselineRun:baselineEvidence.report.runId,candidateRun:candidateBuild.report.runId,cleanRun:cleanBuild.report.runId,boundary:'Equality covers every crisp testified compiled chunk across all 12 experiences. Attempt IDs and generated launcher provenance are intentionally separate, not claimed deterministic.'};
+ fs.writeFileSync(path.join(root,'evidence/crisp-delta-proof.json'),JSON.stringify(evidence,null,2));fs.writeFileSync(path.join(root,'dist/data/crisp-delta-proof.json'),JSON.stringify(evidence));fs.writeFileSync(path.join(root,'dist/data/pxcube-experiences.snapshot.json.gz'),gzipSync(JSON.stringify(packSnapshot(baseline)),{level:9}));fs.writeFileSync(path.join(root,'dist/data/pxcube-experiences.delta.json'),JSON.stringify(patch));console.log(JSON.stringify(evidence,null,2));
+}finally{fs.writeFileSync(path.join(source,'experiences/hello/index.html'),original);}

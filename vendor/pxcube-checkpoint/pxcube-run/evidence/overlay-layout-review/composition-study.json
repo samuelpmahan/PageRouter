@@ -1,0 +1,19 @@
+{
+  "layout": "corner@4",
+  "build": "2026-09-15T05-20-49-214Z-1a5e4ba3",
+  "compositions": ["broadcast-rail", "split-ticket", "score-slip", "floating-orbit", "caption-ribbon", "upright-tag", "crest", "edge-crop", "number-plate"],
+  "headline": "mold only; manufacturer omitted",
+  "verification": {
+    "fullSuitePassed": 5,
+    "geometryRegressionPassedAfterFinalAdjustment": true,
+    "browserVisibleChoices": 9,
+    "browserChecked": ["broadcast-rail", "score-slip", "floating-orbit"],
+    "placeholderAbsent": true,
+    "manufacturerNodeAbsent": true,
+    "paperCreateExportSvgIdentical": true,
+    "paperCaptureHashPrefix": "cf6235411bb4191a",
+    "packagedExperiences": 7,
+    "failedPackages": 0
+  },
+  "finding": "The renderer rejects arbitrary SVG image fields. Supported native card layers now carry panel geometry; preview and export share the existing overlay materializer."
+}

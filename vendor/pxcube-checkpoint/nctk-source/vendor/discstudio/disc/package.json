@@ -1,0 +1,23 @@
+{
+  "name": "upload-disc-to-shelf",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@napi-rs/canvas": "^1.0.9"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "serve": "node serve.mjs",
+    "test": "npm run test:tournament",
+    "test:tournament": "node --experimental-strip-types --test card-renderer.test.ts export-queue.test.ts batch-review.test.ts creator-selection.test.ts preview-placement.test.ts calculation-select.test.ts operations.test.ts model.test.ts bag-current-version.test.ts painted-overlay.test.ts photo-crop.test.ts circle-candidates.test.ts experiences.test.ts persistence.test.ts session-storage.test.ts rimfit-persistence.test.ts transform-geometry.test.mjs",
+    "test:all-history": "node --experimental-strip-types --test *.test.ts",
+    "test:capture": "node --test paired-capture.test.mjs url-free-materializer.test.mjs"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "devDependencies": {
+    "jszip": "^3.10.1"
+  }
+}

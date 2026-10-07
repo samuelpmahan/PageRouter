@@ -1,0 +1,234 @@
+{
+  "schemaVersion": 1,
+  "types": {
+    "pxcube-hello": {
+      "version": "0.1.0",
+      "root": "experiences/hello",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": []
+    },
+    "pxcube-mock-smoke": {
+      "version": "0.1.0",
+      "root": "experiences/mock-smoke",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": []
+    },
+    "pxcube-explore-shelf": {
+      "version": "0.1.0",
+      "root": "experiences/explore-shelf",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": []
+    },
+    "pxcube-upload-disc-to-shelf": {
+      "version": "0.1.0",
+      "root": "experiences/upload-disc-to-shelf",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": [],
+      "experience": {
+        "title": "UploadDiscToShelf",
+        "description": "Paint or photograph a disc, save it, and inspect its Parts in an isolated sandbox.",
+        "track": "exp",
+        "mounts": ["studio"],
+        "entry": "index.html",
+        "outDir": "dist",
+        "build": "node build.mjs",
+        "sandbox": ["allow-scripts", "allow-same-origin", "allow-downloads", "allow-modals", "allow-forms"],
+        "studio": {
+          "mode": "upload",
+          "sourceCommit": "6f7937bc1eebd22bf3135f50c9edf714b122902a",
+          "integration": "Legacy Studio model in an owning context. Additional dependency scan: studio-import.json.",
+          "interactive": "mock.upload-disc-to-shelf.*",
+          "tests": "mock.upload-disc-to-shelf.<iterator>.*"
+        },
+        "storage": "Only mount-scoped local storage. Trusted same-origin code; not a security boundary."
+      }
+    },
+    "pxcube-upload-disc-to-shelf-delta": {
+      "version": "0.1.0",
+      "root": "experiences/upload-disc-to-shelf-delta",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": [],
+      "experience": {
+        "title": "UploadDiscToShelf Delta",
+        "build": "node build.mjs",
+        "outDir": "dist",
+        "track": "exp"
+      }
+    },
+    "pxcube-build-bag": {
+      "version": "0.1.0",
+      "root": "experiences/build-bag",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": [
+        "node --test local/test/demo-experiences.test.mjs",
+        "node local/test/demo-experiences-browser.mjs"
+      ],
+      "experience": {
+        "title": "BuildBag",
+        "description": "Choose exact copies, arrange them, and keep a named bag.",
+        "entry": "index.html",
+        "mounts": [
+          "studio"
+        ],
+        "build": "node build.mjs",
+        "outDir": "dist",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals",
+          "allow-forms"
+        ],
+        "demo": {
+          "mode": "bag"
+        },
+        "track": "exp"
+      }
+    },
+    "pxcube-create-graphics": {
+      "version": "0.1.0",
+      "root": "experiences/create-graphics",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": [
+        "node --test local/test/demo-experiences.test.mjs",
+        "node local/test/demo-experiences-browser.mjs"
+      ],
+      "experience": {
+        "title": "CreateGraphics",
+        "description": "Make a DiscSpotlight with real specimen Parts and the shared card renderer.",
+        "entry": "index.html",
+        "mounts": [
+          "studio"
+        ],
+        "build": "node build.mjs",
+        "outDir": "dist",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals",
+          "allow-forms"
+        ],
+        "demo": {
+          "mode": "create"
+        },
+        "criticalJourney": {
+          "contract": "OTOV2/#PROcision",
+          "scenarios": [
+            "typical",
+            "mobile"
+          ],
+          "start": {
+            "selector": "#purpose-spotlight"
+          },
+          "initial": {
+            "selector": "[data-create-step=\"choose\"]",
+            "attribute": "aria-selected",
+            "value": "true"
+          },
+          "activePanelSelector": "[data-create-panel].is-active",
+          "viewports": [
+            "desktop",
+            "mobile"
+          ],
+          "actions": {
+            "desktop": [
+              {
+                "action": "click",
+                "selector": "#compare-cards",
+                "expect": "#card-study[open]"
+              }
+            ],
+            "mobile": [
+              {
+                "action": "click",
+                "selector": "[data-create-step=\"verify\"]",
+                "attribute": "aria-selected",
+                "value": "true"
+              },
+              {
+                "action": "click",
+                "selector": "[data-create-step=\"finish\"]",
+                "attribute": "aria-selected",
+                "value": "true"
+              },
+              {
+                "action": "click",
+                "selector": "[data-create-step=\"choose\"]",
+                "attribute": "aria-selected",
+                "value": "true"
+              }
+            ]
+          }
+        },
+        "track": "exp"
+      }
+    },
+    "pxcube-export-graphics": {
+      "version": "0.1.0",
+      "root": "experiences/export-graphics",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": [
+        "node --test local/test/demo-experiences.test.mjs",
+        "node local/test/demo-experiences-browser.mjs"
+      ],
+      "experience": {
+        "title": "ExportGraphics",
+        "description": "Inspect a captured graphic and download the exact SVG or PNG.",
+        "entry": "index.html",
+        "mounts": [
+          "studio"
+        ],
+        "build": "node build.mjs",
+        "outDir": "dist",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals",
+          "allow-forms"
+        ],
+        "demo": {
+          "mode": "export"
+        },
+        "track": "exp"
+      }
+    },
+    "pxcube-gameboy": {
+      "version": "0.1.0",
+      "root": "experiences/gameboy",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": []
+    },
+    "pxcube-snake": {
+      "version": "0.1.0",
+      "root": "experiences/snake",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": []
+    },
+    "pxcube-your-shelf": {
+      "version": "0.1.0",
+      "root": "experiences/your-shelf",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": []
+    },
+    "pxcube-on-course": {
+      "version": "0.1.0",
+      "root": "experiences/on-course",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": []
+    }
+  }
+}

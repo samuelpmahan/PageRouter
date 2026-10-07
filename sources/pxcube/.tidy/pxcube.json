@@ -1,0 +1,462 @@
+{
+  "schemaVersion": 1,
+  "apps": {
+    "hello": {
+      "track": "exp",
+      "manifest": {
+        "build": "mkdir -p dist && cp index.html dist/",
+        "description": "First light: a trivial THING proving the sandbox holds.",
+        "entry": "index.html",
+        "mounts": [],
+        "outDir": "dist",
+        "sandbox": [
+          "allow-scripts"
+        ],
+        "title": "Hello THING",
+        "track": "exp",
+        "version": "0.1.0"
+      },
+      "sourceHash": "c651c7a04a664e95e4a0e6cd034e922e7a79d56b53f61fc5586736893fe31e55",
+      "sharedToolsHash": "fbf724901172a9ed85da8ae669634d0f80ccd9ff25a7fbf857cb04d8bdb271d0",
+      "registeredAt": "2026-09-14T13:58:38.205Z"
+    },
+    "mock-smoke": {
+      "track": "exp",
+      "manifest": {
+        "title": "MockPxC · retained worlds",
+        "description": "Edit a bag name in one seeded mount. Inspect its value, open another iteration, and compare what stayed put.",
+        "version": "0.1.0",
+        "track": "exp",
+        "mounts": [
+          "shelf"
+        ],
+        "entry": "index.html",
+        "outDir": "dist",
+        "build": "node build.mjs",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin"
+        ],
+        "storage": "localStorage: retained JSON mock worlds. Trusted same-origin demonstration; not a hostile-code boundary.",
+        "binding": "The logical shelf seed is allocated as a fresh mock.<id>.<iterator> world at runtime. Inner stored names retain px/fn/oc/sc only."
+      },
+      "sourceHash": "534dd029b9fe7f2ee94afaa9310316c16ff1b4958bb443547cac4023aca30abc",
+      "sharedToolsHash": "fbf724901172a9ed85da8ae669634d0f80ccd9ff25a7fbf857cb04d8bdb271d0",
+      "registeredAt": "2026-09-14T13:58:38.278Z"
+    },
+    "explore-shelf": {
+      "track": "exp",
+      "manifest": {
+        "id": "explore-shelf",
+        "title": "ExploreShelf",
+        "description": "Browse the accepted shopping shelf; inspect or test the live Part edit loop separately.",
+        "version": "0.1.0",
+        "track": "exp",
+        "mounts": [
+          "studio"
+        ],
+        "entry": "index.html",
+        "outDir": "dist",
+        "build": "node build.mjs",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals"
+        ],
+        "studio": {
+          "mode": "shelf",
+          "sourceCommit": "6f7937bc1eebd22bf3135f50c9edf714b122902a",
+          "integration": "Legacy Studio model in an owning context. Additional dependency scan: studio-import.json.",
+          "interactive": "mock.explore-shelf.*",
+          "tests": "mock.explore-shelf.<iterator>.*"
+        },
+        "storage": "Only mount-scoped local storage. Trusted same-origin code; not a security boundary."
+      },
+      "sourceHash": "d9875013353c9cc4910e35e38c042be2def7e4bae8b15868a55135ded0374672",
+      "sharedToolsHash": "5dde57c7b27ee3a223ba9311e483e2ba02acdd92bb1fc3c1328ad50f75027c51",
+      "registeredAt": "2026-09-14T15:23:33.279Z"
+    },
+    "upload-disc-to-shelf": {
+      "track": "exp",
+      "manifest": {
+        "id": "upload-disc-to-shelf",
+        "title": "UploadDiscToShelf",
+        "description": "Paint or photograph a disc, save it, and inspect its Parts in an isolated sandbox.",
+        "version": "0.1.0",
+        "track": "exp",
+        "mounts": [
+          "studio"
+        ],
+        "entry": "index.html",
+        "outDir": "dist",
+        "build": "node build.mjs",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals"
+        ],
+        "studio": {
+          "mode": "upload",
+          "sourceCommit": "6f7937bc1eebd22bf3135f50c9edf714b122902a",
+          "integration": "Legacy Studio model in an owning context. Additional dependency scan: studio-import.json.",
+          "interactive": "mock.upload-disc-to-shelf.*",
+          "tests": "mock.upload-disc-to-shelf.<iterator>.*"
+        },
+        "storage": "Only mount-scoped local storage. Trusted same-origin code; not a security boundary."
+      },
+      "sourceHash": "f4179e57237485b173048bb9bb8ea7a157e23503773679587846e9e6b9181dcd",
+      "sharedToolsHash": "5dde57c7b27ee3a223ba9311e483e2ba02acdd92bb1fc3c1328ad50f75027c51",
+      "registeredAt": "2026-09-14T15:23:35.741Z"
+    },
+    "build-bag": {
+      "track": "exp",
+      "manifest": {
+        "title": "BuildBag",
+        "description": "Choose the discs you want to carry. A sandbox frame ready for the bag-building Experience.",
+        "mounts": [
+          "shelf"
+        ],
+        "build": "node build.mjs",
+        "outDir": "dist",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-forms"
+        ],
+        "scaffold": {
+          "template": "sandbox@1",
+          "world": "shelf",
+          "inputs": [
+            {
+              "address": "px.discs",
+              "label": "Your shelf",
+              "for": "The available discs. Selection of physical copies is the first behavior to connect."
+            }
+          ],
+          "outputs": [
+            {
+              "address": "px.bags",
+              "label": "Your saved bag",
+              "for": "An ordered collection of selected physical discs. This output has not been implemented."
+            }
+          ],
+          "steps": [
+            "Choose discs",
+            "Arrange your bag",
+            "Create bag"
+          ],
+          "draft": {
+            "address": "sc.draft",
+            "field": "name",
+            "label": "Bag name"
+          }
+        },
+        "id": "build-bag",
+        "version": "0.1.0",
+        "manifestSource": {
+          "path": ".tidy/manifest.json",
+          "type": "pxcube-build-bag",
+          "digest": "60c88db807af598c31c113f5f9bbb10667edbc843b484bc153fefe8a84063ed2"
+        }
+      },
+      "sourceHash": "0da522c12ee65e944bbca359431a426914d980f94afb2bfed1ba06c9534d6384",
+      "sharedToolsHash": "48fde89c3215ebff569ae92ed65859a3c6b85dffbeaf1ff87173bc1e4d15dcde",
+      "registeredAt": "2026-09-14T18:17:49.061Z"
+    },
+    "create-graphics": {
+      "track": "exp",
+      "manifest": {
+        "title": "CreateGraphics",
+        "description": "Make a DiscSpotlight with real specimen Parts and the shared card renderer.",
+        "entry": "index.html",
+        "mounts": [
+          "studio"
+        ],
+        "build": "node build.mjs",
+        "outDir": "dist",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals",
+          "allow-forms"
+        ],
+        "demo": {
+          "mode": "create"
+        },
+        "track": "exp",
+        "id": "create-graphics",
+        "version": "0.1.0",
+        "manifestSource": {
+          "path": ".tidy/manifest.json",
+          "type": "pxcube-create-graphics",
+          "digest": "fa6efd186f0e880e64bfff9e5c78e954a2ffca5261502fdcbadb3c5286a04040"
+        }
+      },
+      "sourceHash": "724cff666c80c73508791bd0bb68a366b8dd5e6b484f81f1d0cf6ce90f43c977",
+      "sharedToolsHash": "94abd58aa43b87a7a8bf9d6d7f47c1e24eed0b562d1f067a6ac62b2772a6a307",
+      "registeredAt": "2026-09-15T02:21:41.766Z"
+    },
+    "export-graphics": {
+      "track": "exp",
+      "manifest": {
+        "title": "ExportGraphics",
+        "description": "Inspect a captured graphic and download the exact SVG or PNG.",
+        "entry": "index.html",
+        "mounts": [
+          "studio"
+        ],
+        "build": "node build.mjs",
+        "outDir": "dist",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals",
+          "allow-forms"
+        ],
+        "demo": {
+          "mode": "export"
+        },
+        "track": "exp",
+        "id": "export-graphics",
+        "version": "0.1.0",
+        "manifestSource": {
+          "path": ".tidy/manifest.json",
+          "type": "pxcube-export-graphics",
+          "digest": "204f7fc23ba0375467ef5831173e43295e7b76bdd8a806f32a01c90016f765ad"
+        }
+      },
+      "sourceHash": "cb04949cc80e55b6fe26ad4457f4b171b35db47483dccde43a65e7b273a0a983",
+      "sharedToolsHash": "94abd58aa43b87a7a8bf9d6d7f47c1e24eed0b562d1f067a6ac62b2772a6a307",
+      "registeredAt": "2026-09-15T02:21:46.965Z"
+    },
+    "gameboy": {
+      "track": "exp",
+      "manifest": {
+        "build": "mkdir -p dist && cp index.html player.js rom.js dist/",
+        "description": "Base cartridge: 160x144 console, d-pad plus buttons, save RAM, offline. Overlays supply the ROM.",
+        "entry": "index.html",
+        "mounts": [],
+        "outDir": "dist",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin"
+        ],
+        "storage": "localStorage: save RAM, namespaced pxcube:cartridge:<game>:<key>. Trusted same-origin demonstration; not a hostile-code boundary.",
+        "title": "Game Boy cartridge",
+        "track": "exp",
+        "version": "0.1.0"
+      },
+      "sourceHash": "3f0aefa0d790b91fc094491446e8014d66c443f4c19e22ebcf70c1fd00c37cb5",
+      "sharedToolsHash": "e2e91a7ae072669ddab566950353e2af75325722d67e4a5f9e616a482aa5740c",
+      "registeredAt": "2026-09-15T02:42:28.090Z"
+    },
+    "snake": {
+      "track": "exp",
+      "manifest": {
+        "build": "mkdir -p dist && cp rom.js dist/",
+        "description": "Snake on the Game Boy cartridge base: steer with the d-pad, eat, survive. High score lives in save RAM.",
+        "entry": "index.html",
+        "mounts": [],
+        "outDir": "dist",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin"
+        ],
+        "storage": "localStorage: save RAM, namespaced pxcube:cartridge:<game>:<key>. Trusted same-origin demonstration; not a hostile-code boundary.",
+        "title": "Snake",
+        "track": "exp",
+        "version": "0.1.0",
+        "composition": {
+          "base": "gameboy",
+          "patches": []
+        }
+      },
+      "sourceHash": "b35cf3af3f6f4770733348afea7a3e1b518a21841925325a211e025cbd260f13",
+      "sharedToolsHash": "e2e91a7ae072669ddab566950353e2af75325722d67e4a5f9e616a482aa5740c",
+      "registeredAt": "2026-09-15T02:42:28.245Z"
+    },
+    "your-shelf": {
+      "track": "exp",
+      "manifest": {
+        "id": "your-shelf",
+        "title": "Your Shelf",
+        "description": "Add a disc, browse your retained collection, and build the bag you are carrying today.",
+        "version": "0.1.0",
+        "track": "exp",
+        "mounts": [
+          "studio"
+        ],
+        "entry": "index.html",
+        "outDir": "dist",
+        "build": "node build.mjs",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals",
+          "allow-forms"
+        ],
+        "studio": {
+          "mode": "shelf",
+          "sourceCommit": "6f7937bc1eebd22bf3135f50c9edf714b122902a",
+          "integration": "Existing Studio shelf model with mount-scoped retained state; add/import remains owned by UploadDiscToShelf.",
+          "interactive": "mock.your-shelf.*",
+          "tests": "mock.your-shelf.<iterator>.*"
+        },
+        "storage": "Only mount-scoped local storage. Trusted same-origin code; not a security boundary."
+      },
+      "sourceHash": "3e87fa693c7e1ae8d8cbf816be968ab3da951d683f07f9bdcde470401c89fdeb",
+      "sharedToolsHash": "dd93ed78d551c8a75c90133888f1afed54f52403d2f89d87139e628e70f48792",
+      "registeredAt": "2026-09-15T18:45:49.444Z"
+    },
+    "on-course": {
+      "track": "exp",
+      "manifest": {
+        "id": "on-course",
+        "title": "On Course",
+        "description": "Create, preview, and export the graphics made from your shelf.",
+        "version": "0.1.0",
+        "track": "exp",
+        "mounts": [
+          "studio"
+        ],
+        "entry": "index.html",
+        "outDir": "dist",
+        "build": "node build.mjs",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals",
+          "allow-forms"
+        ],
+        "studio": {
+          "mode": "create",
+          "sourceCommit": "6f7937bc1eebd22bf3135f50c9edf714b122902a",
+          "integration": "Shared Studio model; create and export views retain the same selected disc, bag, captures, and export records.",
+          "interactive": "mock.on-course.*",
+          "tests": "mock.on-course.<iterator>.*"
+        },
+        "demo": {
+          "mode": "course"
+        },
+        "storage": "Only mount-scoped local storage. Trusted same-origin code; not a security boundary."
+      },
+      "sourceHash": "396951ad2c6fe86b81fb129035101eba3d6176c2f0f960dc3e4a3f7aa3e81d95",
+      "sharedToolsHash": "73ba686a534d34024b121b2b8dacfa376922368f0109036d31de0f92a17aa524",
+      "registeredAt": "2026-09-15T18:46:34.210Z"
+    },
+    "upload-disc-to-shelf-delta": {
+      "track": "exp",
+      "manifest": {
+        "title": "UploadDiscToShelf Delta",
+        "description": "Typed delta of UploadDiscToShelf with its own retained workspace and package receipt.",
+        "track": "exp",
+        "mounts": [
+          "studio"
+        ],
+        "entry": "index.html",
+        "outDir": "dist",
+        "build": "node build.mjs",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals",
+          "allow-forms"
+        ],
+        "studio": {
+          "mode": "upload",
+          "sourceCommit": "6f7937bc1eebd22bf3135f50c9edf714b122902a",
+          "integration": "Legacy Studio model in an owning context. Additional dependency scan: studio-import.json.",
+          "interactive": "mock.upload-disc-to-shelf.*",
+          "tests": "mock.upload-disc-to-shelf.<iterator>.*",
+          "delta": "isolated-workspace-v1"
+        },
+        "storage": "Only mount-scoped local storage. Trusted same-origin code; not a security boundary.",
+        "id": "upload-disc-to-shelf-delta",
+        "version": "0.1.0",
+        "manifestSource": {
+          "path": ".tidy/manifest.json",
+          "type": "pxcube-upload-disc-to-shelf-delta",
+          "digest": "bca140d33f1e78a9d0671770482af2d608867577c894b0c9146258ce1e664081"
+        },
+        "composition": {
+          "base": "upload-disc-to-shelf",
+          "patches": [
+            {
+              "description": "Typed delta of UploadDiscToShelf with its own retained workspace and package receipt.",
+              "studio": {
+                "delta": "isolated-workspace-v1"
+              }
+            }
+          ],
+          "baseManifestSource": {
+            "path": ".tidy/manifest.json",
+            "type": "pxcube-upload-disc-to-shelf",
+            "digest": "6a6211212e4116f4f23d8633cc76c667c18787321e9c894eba708490238f6c66"
+          },
+          "resolvedType": "pxcube-upload-disc-to-shelf-delta",
+          "resolvedVersion": "0.1.0"
+        }
+      },
+      "sourceHash": "6b21eacdadcc11af68adc86754b5e66f032b2fca162f591469c49e04468d99d1",
+      "sharedToolsHash": "a088c567c212747f12449bf4aa94a40460d4581758763944a0e6424ffd3daa93",
+      "registeredAt": "2026-09-28T22:50:04.298Z"
+    },
+    "connect4": {
+      "track": "exp",
+      "manifest": {
+        "build": "node build.mjs",
+        "description": "Two-player Connect Four on the Game Boy cartridge base. Drop discs into a 7x6 board, make four in a row, and save the current match.",
+        "entry": "index.html",
+        "mounts": [],
+        "outDir": "dist",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin"
+        ],
+        "storage": "localStorage: save RAM, namespaced pxcube:cartridge:<game>:<key>. Trusted same-origin demonstration; not a hostile-code boundary.",
+        "title": "Connect Four (baseline)",
+        "track": "exp",
+        "version": "0.1.0",
+        "composition": {
+          "base": "gameboy",
+          "patches": []
+        }
+      },
+      "sourceHash": "2f3a3ea4b45ec5d2c643aabeac6bd654ad81be6f0c12f697bbb8787487041591",
+      "sharedToolsHash": "53be2a623285eaed917813b84693d4f04669f3bcd8cc74a5f62772dcc3cf3fba",
+      "registeredAt": "2026-10-03T03:11:34.754Z"
+    },
+    "connect4-pxc": {
+      "track": "exp",
+      "manifest": {
+        "build": "node build.mjs",
+        "description": "The same two-player Connect Four rules composed through actual PxC Parts and Calculation receipts, with a declarative seek-tree rendered by the Game Boy.",
+        "entry": "index.html",
+        "mounts": [],
+        "outDir": "dist",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin"
+        ],
+        "storage": "localStorage: save RAM, namespaced pxcube:cartridge:<game>:<key>. Trusted same-origin demonstration; not a hostile-code boundary.",
+        "title": "Connect Four (PxC + seek tree)",
+        "track": "exp",
+        "version": "0.1.0",
+        "composition": {
+          "base": "gameboy",
+          "patches": []
+        }
+      },
+      "sourceHash": "1bd0469bce1f562fd4aaad239c5fd827927c2974bb459f7a13efe3b7704fb179",
+      "sharedToolsHash": "53be2a623285eaed917813b84693d4f04669f3bcd8cc74a5f62772dcc3cf3fba",
+      "registeredAt": "2026-10-03T03:11:34.928Z"
+    }
+  }
+}

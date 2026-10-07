@@ -1,0 +1,24 @@
+{
+  "schema": "nctk-directory@1",
+  "address": "overlays/house-10s",
+  "children": [],
+  "kind": "overlay",
+  "source": "overlays/house-10s.json",
+  "policies": {
+    "neat": {
+      "mode": "none"
+    },
+    "crisp": {
+      "mode": "none"
+    },
+    "tidy": {
+      "mode": "local"
+    },
+    "kompoze": {
+      "mode": "local",
+      "references": [
+        "bases/house-cut.json"
+      ]
+    }
+  }
+}

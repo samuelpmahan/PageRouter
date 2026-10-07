@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "PXCUBE-export-graphics",
+  "location": {
+    "component": "experiences/export-graphics"
+  },
+  "target": {
+    "kind": "pcr",
+    "identity": "pcr.pxcube.export-graphics"
+  },
+  "dependencies": [],
+  "status": "review",
+  "blockers": [],
+  "checkpoints": [],
+  "acceptanceRefs": [],
+  "promotionRefs": [],
+  "outcome": "Inspect a captured graphic and download the exact SVG or PNG.",
+  "requirements": [
+    {
+      "id": "package",
+      "text": "Packages from a fresh source snapshot through crisp."
+    },
+    {
+      "id": "behavior",
+      "text": "Inspect a captured graphic and download the exact SVG or PNG."
+    },
+    {
+      "id": "inspection",
+      "text": "Visible output belongs to the sandbox store and retained compositions."
+    },
+    {
+      "id": "review",
+      "text": "Sam inspects the actual minimal Experience; checks do not imply acceptance."
+    }
+  ],
+  "resume": "Review this minimal candidate in the local NTC shell. Read docs/demo-experiences-m.md and evidence/demo-experiences-m. Acceptance and promotion await Sam; no verdict has been filed for him."
+}

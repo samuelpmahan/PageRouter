@@ -1,0 +1,800 @@
+{
+  "schemaVersion": 1,
+  "project": "justin",
+  "purpose": "In-place technical issue markers and reversible preview-only fixes",
+  "routeConvention": "All route fields are paths relative to the Justin preview document base; integration supplies that base. Do not use the public production origin as a mutation target.",
+  "sourceSnapshotCommit": "9fccd18d3077a30f70c26824981fd11718bd761b",
+  "mappingInspectedAt": "2026-10-02T23:35:49+00:00",
+  "inspectionMethod": "Read-only parsing of the actual assembled preview HTML; selectors derive from inspected elements and match counts were verified with equivalent DOM paths. Runtime CSS/rendering not rechecked in this mapping pass.",
+  "evidenceDate": "2026-10-01",
+  "liveOrigin": "https://www.jkbrundage.com",
+  "productionRechecked": false,
+  "guardrails": [
+    "Markers may be placed on a visible ancestor when the issue target is hidden",
+    "Check expectedMatchCount and textGuard against the current preview DOM before applying an option; stop on mismatch",
+    "Changes stay inside an isolated preview until explicitly exported or accepted",
+    "Do not submit forms, contact anyone, or publish to the production campaign site",
+    "Preserve campaign text, policy positions, links, and audience scope except the explicit technical token cleanup or requested form-disclosure prototype"
+  ],
+  "sourceFiles": [
+    {
+      "route": "index.html",
+      "sha256": "eac095ca4b9de3c66258b0845cedae4a5e0c370b080e6e51c46c7cd19f20a4fb"
+    },
+    {
+      "route": "about.html",
+      "sha256": "0968296dd3f4e1df9095439d018f0ad64053e3a96a91b979bf6ef7c8cf043c79"
+    },
+    {
+      "route": "policy.html",
+      "sha256": "937903db58f94633e7ab2ce3f29736c7814a00564d7a7446205501dc17448061"
+    },
+    {
+      "route": "community.html",
+      "sha256": "eddaebb731573b42624af5e08423f7b069a4abdd3e6232446f912cc1a4291385"
+    },
+    {
+      "route": "blog.html",
+      "sha256": "6b5ba37856db27234f8005509710deec990c66b7b374f182c261e599101b4af9"
+    },
+    {
+      "route": "contact.html",
+      "sha256": "fe0169687b5996e2876d7a058878c6ad6a7c94fb3032847cd509c7dddf28e3e8"
+    }
+  ],
+  "issues": [
+    {
+      "id": "F01",
+      "annotationNumber": 1,
+      "title": "Primary navigation disappears below 1024 px",
+      "severity": "high",
+      "route": "index.html",
+      "targetSelector": "body > header nav",
+      "targets": [
+        {
+          "route": "index.html",
+          "selector": "body > header nav",
+          "anchorSelector": "body > header",
+          "role": "affected-element",
+          "expectedMatchCount": 1,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            45
+          ],
+          "hiddenTargetFallback": true
+        },
+        {
+          "route": "about.html",
+          "selector": "body > header nav",
+          "anchorSelector": "body > header",
+          "role": "affected-element",
+          "expectedMatchCount": 1,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            31
+          ],
+          "hiddenTargetFallback": true
+        },
+        {
+          "route": "policy.html",
+          "selector": "body > header nav",
+          "anchorSelector": "body > header",
+          "role": "affected-element",
+          "expectedMatchCount": 1,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            31
+          ],
+          "hiddenTargetFallback": true
+        },
+        {
+          "route": "community.html",
+          "selector": "body > header nav",
+          "anchorSelector": "body > header",
+          "role": "affected-element",
+          "expectedMatchCount": 1,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            30
+          ],
+          "hiddenTargetFallback": true
+        },
+        {
+          "route": "blog.html",
+          "selector": "body > header nav",
+          "anchorSelector": "body > header",
+          "role": "affected-element",
+          "expectedMatchCount": 1,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            46
+          ],
+          "hiddenTargetFallback": true
+        },
+        {
+          "route": "contact.html",
+          "selector": "body > header nav",
+          "anchorSelector": "body > header",
+          "role": "affected-element",
+          "expectedMatchCount": 1,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            31
+          ],
+          "hiddenTargetFallback": true
+        }
+      ],
+      "affectedViewport": {
+        "condition": "CSS viewport width below 1024 px",
+        "recordedProfiles": [
+          {
+            "width": 320,
+            "zoomPercent": 200
+          },
+          {
+            "width": 390,
+            "zoomPercent": 150
+          },
+          {
+            "width": 1023,
+            "zoomPercent": 100
+          }
+        ],
+        "boundaryControl": {
+          "width": 1024,
+          "zoomPercent": 100
+        }
+      },
+      "observedProblem": "The primary links are hidden at narrow widths, with no replacement menu.",
+      "fixOptions": [
+        {
+          "id": "wrap-existing-links",
+          "label": "Show a wrapping navigation row",
+          "changes": [
+            "Keep the existing six hrefs and labels",
+            "Allow the header to grow; show the nav below the brand at narrow widths",
+            "Wrap the link list with gap instead of a fixed horizontal row"
+          ],
+          "boundary": "Layout and navigation access only; preserve page copy and destinations"
+        },
+        {
+          "id": "accessible-menu",
+          "label": "Add an accessible menu toggle",
+          "changes": [
+            "Add a type=button control with an accessible name and aria-expanded/aria-controls",
+            "Toggle the existing link list; keep keyboard focus visible",
+            "Support predictable Escape dismissal and return focus to the toggle"
+          ],
+          "boundary": "No new destinations or messaging; preview behavior only until reviewed"
+        }
+      ],
+      "evidence": {
+        "origin": "https://www.jkbrundage.com",
+        "date": "2026-10-01",
+        "status": "historical-live-observation",
+        "productionRechecked": false
+      },
+      "mirrorState": {
+        "status": "source-mechanism-present",
+        "detail": "All six mirrored pages retain nav.hidden.lg:flex. No replacement header menu exists in the inspected HTML. Browser behavior not re-run in this mapping pass."
+      },
+      "acceptance": [
+        "All main links reachable at 320, 390, 768, and 1023 px",
+        "Header content does not overlap",
+        "Keyboard focus is visible"
+      ]
+    },
+    {
+      "id": "F02",
+      "annotationNumber": 2,
+      "title": "Homepage footer links overflow",
+      "severity": "high",
+      "route": "index.html",
+      "targetSelector": "body > footer div.flex.space-x-6",
+      "targets": [
+        {
+          "route": "index.html",
+          "selector": "body > footer div.flex.space-x-6",
+          "anchorSelector": "body > footer div.flex.space-x-6",
+          "role": "affected-element",
+          "expectedMatchCount": 1,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            212
+          ]
+        }
+      ],
+      "affectedViewport": {
+        "condition": "narrow CSS viewport",
+        "recordedProfiles": [
+          {
+            "width": 320,
+            "zoomPercent": 200
+          },
+          {
+            "width": 390,
+            "zoomPercent": 150
+          }
+        ]
+      },
+      "observedProblem": "Footer links were clipped; document widths were 384 vs 312 px content and 418 vs 380 px content.",
+      "fixOptions": [
+        {
+          "id": "wrap-footer-links",
+          "label": "Wrap the existing footer links",
+          "changes": [
+            "Set the existing row to flex-wrap:wrap",
+            "Replace horizontal child margins with gap",
+            "Keep labels and hrefs unchanged"
+          ],
+          "boundary": "Footer layout only"
+        },
+        {
+          "id": "stack-footer-links",
+          "label": "Use a narrow-screen grid",
+          "changes": [
+            "Use a two-column or one-column grid below the responsive threshold",
+            "Remove row-only spacing at that width"
+          ],
+          "boundary": "Footer layout only"
+        }
+      ],
+      "evidence": {
+        "origin": "https://www.jkbrundage.com",
+        "date": "2026-10-01",
+        "status": "historical-live-observation",
+        "productionRechecked": false
+      },
+      "mirrorState": {
+        "status": "source-mechanism-present",
+        "detail": "The mirrored footer still has a flex space-x-6 row without a wrapping class. Reflow measurements have not been repeated."
+      },
+      "acceptance": [
+        "No horizontal document overflow at 320 or 390 px",
+        "All six footer links fully visible"
+      ]
+    },
+    {
+      "id": "F03",
+      "annotationNumber": 3,
+      "title": "Live hero asset was missing",
+      "severity": "medium",
+      "route": "index.html",
+      "targetSelector": "main > section:first-of-type > img",
+      "targets": [
+        {
+          "route": "index.html",
+          "selector": "main > section:first-of-type > img",
+          "anchorSelector": "main > section:first-of-type > img",
+          "role": "affected-element",
+          "expectedMatchCount": 1,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            66
+          ]
+        }
+      ],
+      "affectedViewport": {
+        "condition": "all widths; visual check at desktop and narrow profiles",
+        "recordedProfiles": [
+          {
+            "width": 1440,
+            "zoomPercent": 80
+          },
+          {
+            "width": 390,
+            "zoomPercent": 150
+          },
+          {
+            "width": 320,
+            "zoomPercent": 200
+          }
+        ]
+      },
+      "observedProblem": "The live hero.jpg request returned 404 and naturalWidth was 0.",
+      "fixOptions": [
+        {
+          "id": "inspect-preview-fallback",
+          "label": "Review the existing portrait fallback",
+          "changes": [
+            "Preview crop and text legibility at narrow and wide widths",
+            "Keep the current known asset unless a different approved file is supplied"
+          ],
+          "boundary": "No invented image or campaign redesign"
+        },
+        {
+          "id": "restore-intended-asset",
+          "label": "Use the intended approved hero asset",
+          "changes": [
+            "Select an existing approved asset or provide the missing file",
+            "Verify successful decoding, alt text, and responsive crop"
+          ],
+          "boundary": "Do not silently treat the portrait as the intended final hero"
+        }
+      ],
+      "evidence": {
+        "origin": "https://www.jkbrundage.com",
+        "date": "2026-10-01",
+        "status": "historical-live-observation",
+        "productionRechecked": false
+      },
+      "mirrorState": {
+        "status": "local-fallback-present",
+        "originalLiveSrc": "static/pictures/hero.jpg",
+        "mirrorSrc": "static/pictures/jbrundage.jpg",
+        "assetExists": true,
+        "detail": "Assembly already substituted the pinned portrait. This addresses the local missing path only; production repair and intended image choice are unverified."
+      },
+      "acceptance": [
+        "Image decodes with naturalWidth > 0",
+        "Intended crop is accepted at narrow and wide widths",
+        "Production remains unresolved until separately rechecked"
+      ]
+    },
+    {
+      "id": "F04",
+      "annotationNumber": 4,
+      "title": "Community placeholder images failed",
+      "severity": "medium",
+      "route": "community.html",
+      "targetSelector": "main img[src^=\"https://via.placeholder.com/\"]",
+      "targets": [
+        {
+          "route": "community.html",
+          "selector": "main img[src^=\"https://via.placeholder.com/\"]",
+          "anchorSelector": "main img[src^=\"https://via.placeholder.com/\"]",
+          "role": "affected-element",
+          "expectedMatchCount": 2,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            52,
+            62
+          ]
+        }
+      ],
+      "affectedViewport": {
+        "condition": "all widths; failure recorded in desktop browser",
+        "recordedProfiles": [
+          {
+            "width": 1180,
+            "zoomPercent": 100
+          },
+          {
+            "width": 1440,
+            "zoomPercent": 80
+          }
+        ]
+      },
+      "observedProblem": "Two placeholder images failed to decode and left empty card regions.",
+      "fixOptions": [
+        {
+          "id": "remove-unused-image-slots",
+          "label": "Remove unused image regions",
+          "changes": [
+            "Remove only the two image elements and their reserved heights",
+            "Preserve card headings and body text"
+          ],
+          "boundary": "No new imagery or content changes"
+        },
+        {
+          "id": "use-approved-local-images",
+          "label": "Point to approved local assets",
+          "changes": [
+            "Choose the specific intended local images",
+            "Keep useful alt text and explicit dimensions"
+          ],
+          "boundary": "Requires an actual selected image; do not invent a subject"
+        }
+      ],
+      "evidence": {
+        "origin": "https://www.jkbrundage.com",
+        "date": "2026-10-01",
+        "status": "historical-live-observation",
+        "productionRechecked": false
+      },
+      "mirrorState": {
+        "status": "external-paths-preserved-loading-unverified",
+        "detail": "Both mirrored src values still point to via.placeholder.com. Current network/image decoding was not tested."
+      },
+      "acceptance": [
+        "Both approved images decode or unused regions are intentionally absent"
+      ]
+    },
+    {
+      "id": "F05",
+      "annotationNumber": 5,
+      "title": "Contact fragment has no target",
+      "severity": "medium",
+      "route": "index.html",
+      "targetSelector": "a[href=\"contact.html#get-involved\"]",
+      "targets": [
+        {
+          "route": "index.html",
+          "selector": "a[href=\"contact.html#get-involved\"]",
+          "anchorSelector": "a[href=\"contact.html#get-involved\"]",
+          "role": "source-link",
+          "expectedMatchCount": 2,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            54,
+            84
+          ]
+        },
+        {
+          "route": "contact.html",
+          "selector": "main form",
+          "anchorSelector": "main form",
+          "role": "existing-destination-anchor",
+          "expectedMatchCount": 1,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            91
+          ]
+        }
+      ],
+      "affectedViewport": {
+        "condition": "all widths",
+        "recordedProfiles": [
+          {
+            "width": 1180,
+            "zoomPercent": 100
+          }
+        ]
+      },
+      "observedProblem": "The link opened contact.html#get-involved, but no matching id existed.",
+      "fixOptions": [
+        {
+          "id": "add-contact-target",
+          "label": "Add the missing destination id",
+          "changes": [
+            "Add id=get-involved to the contact form region",
+            "Set scroll-margin-top to clear the sticky header"
+          ],
+          "boundary": "Technical link target only; keep link wording and form semantics"
+        },
+        {
+          "id": "remove-unused-fragment",
+          "label": "Navigate to Contact without a fragment",
+          "changes": [
+            "Remove #get-involved from both existing source links"
+          ],
+          "boundary": "Use only if the top of Contact is the intended destination"
+        }
+      ],
+      "evidence": {
+        "origin": "https://www.jkbrundage.com",
+        "date": "2026-10-01",
+        "status": "historical-live-observation",
+        "productionRechecked": false
+      },
+      "mirrorState": {
+        "status": "confirmed-in-source",
+        "missingSelector": "#get-involved",
+        "missingSelectorMatchCount": 0,
+        "detail": "The two fragment links remain; the mirror still has no matching id."
+      },
+      "acceptance": [
+        "Click and keyboard activation reach the intended visible region below the sticky header"
+      ]
+    },
+    {
+      "id": "F06",
+      "annotationNumber": 6,
+      "title": "Blog focus disappears or is lost on collapse",
+      "severity": "medium",
+      "route": "blog.html",
+      "targetSelector": "main article details > summary",
+      "targets": [
+        {
+          "route": "blog.html",
+          "selector": "main article details > summary",
+          "anchorSelector": "main article details > summary",
+          "role": "expansion-control",
+          "expectedMatchCount": 1,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            92
+          ]
+        },
+        {
+          "route": "blog.html",
+          "selector": "main article details button",
+          "anchorSelector": "main article details > summary",
+          "role": "collapse-control",
+          "expectedMatchCount": 1,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            175
+          ],
+          "hiddenUntil": "details[open]"
+        }
+      ],
+      "affectedViewport": {
+        "condition": "keyboard use at any width; narrow profile recorded",
+        "recordedProfiles": [
+          {
+            "width": 320,
+            "zoomPercent": 200
+          }
+        ]
+      },
+      "observedProblem": "See More had a transparent focus outline; bottom Show Less closed the content and left focus on BODY.",
+      "fixOptions": [
+        {
+          "id": "restore-focus-behavior",
+          "label": "Add focus styling and restore focus on collapse",
+          "changes": [
+            "Add a visible :focus-visible outline to summary and collapse button",
+            "After removing open, focus the same details element\u2019s summary",
+            "Keep the existing details/summary content behavior"
+          ],
+          "boundary": "Interaction/accessibility only; preserve article content"
+        }
+      ],
+      "evidence": {
+        "origin": "https://www.jkbrundage.com",
+        "date": "2026-10-01",
+        "status": "historical-live-observation",
+        "productionRechecked": false
+      },
+      "mirrorState": {
+        "status": "source-mechanism-present",
+        "detail": "Both controls retain focus:outline-none. The bottom onclick only removes open and does not focus the summary. Runtime keyboard testing remains pending."
+      },
+      "acceptance": [
+        "Tab focus is visibly identifiable",
+        "Enter expands normally",
+        "Bottom collapse returns focus to summary"
+      ]
+    },
+    {
+      "id": "F07",
+      "annotationNumber": 7,
+      "title": "Small text contrast is below target",
+      "severity": "medium",
+      "route": "index.html",
+      "targetSelector": "main .text-amber-600",
+      "targets": [
+        {
+          "route": "index.html",
+          "selector": "main .text-amber-600",
+          "anchorSelector": "main .text-amber-600",
+          "role": "affected-element",
+          "expectedMatchCount": 5,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            109,
+            133,
+            147,
+            166,
+            185
+          ]
+        },
+        {
+          "route": "index.html",
+          "selector": "body > footer .text-gray-500",
+          "anchorSelector": "body > footer .text-gray-500",
+          "role": "affected-element",
+          "expectedMatchCount": 1,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            227
+          ]
+        },
+        {
+          "route": "blog.html",
+          "selector": "main .text-amber-600",
+          "anchorSelector": "main .text-amber-600",
+          "role": "affected-element",
+          "expectedMatchCount": 5,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            80,
+            87,
+            87,
+            92,
+            175
+          ],
+          "hiddenTargetFallback": "nearest visible details summary for the bottom button"
+        }
+      ],
+      "affectedViewport": {
+        "condition": "small text at all widths",
+        "recordedProfiles": [
+          {
+            "width": 390,
+            "zoomPercent": 150
+          },
+          {
+            "width": 1440,
+            "zoomPercent": 80
+          }
+        ]
+      },
+      "observedProblem": "Recorded contrast: amber on white 3.19:1; amber on light gray 2.89:1; badge 3.07:1; homepage footer 3.94:1.",
+      "fixOptions": [
+        {
+          "id": "adjust-text-colors",
+          "label": "Use stronger text colors in affected components",
+          "changes": [
+            "Darken the affected amber text against light backgrounds",
+            "Lighten the homepage footer\u2019s subdued small text",
+            "Check default, hover, and focus states against actual backgrounds"
+          ],
+          "boundary": "Color/accessibility only; preserve text and hierarchy"
+        }
+      ],
+      "evidence": {
+        "origin": "https://www.jkbrundage.com",
+        "date": "2026-10-01",
+        "status": "historical-live-observation",
+        "productionRechecked": false
+      },
+      "mirrorState": {
+        "status": "affected-style-tokens-preserved",
+        "detail": "The targeted amber and footer gray tokens remain. Actual computed contrast has not been measured on the current mirror."
+      },
+      "acceptance": [
+        "Normal-size text reaches 4.5:1 against its effective background",
+        "Focus indicator remains visible"
+      ]
+    },
+    {
+      "id": "F08",
+      "annotationNumber": 8,
+      "title": "Contact depends on an email app",
+      "severity": "needs-verification",
+      "route": "contact.html",
+      "targetSelector": "form[action^=\"mailto:\"]",
+      "targets": [
+        {
+          "route": "contact.html",
+          "selector": "form[action^=\"mailto:\"]",
+          "anchorSelector": "form[action^=\"mailto:\"]",
+          "role": "email-handoff-form",
+          "expectedMatchCount": 1,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            91
+          ]
+        },
+        {
+          "route": "contact.html",
+          "selector": "form button[type=\"submit\"]",
+          "anchorSelector": "form button[type=\"submit\"]",
+          "role": "submit-control",
+          "expectedMatchCount": 1,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            113
+          ]
+        }
+      ],
+      "affectedViewport": {
+        "condition": "all devices; email-client dependency",
+        "recordedProfiles": [
+          {
+            "width": 1180,
+            "zoomPercent": 100
+          }
+        ]
+      },
+      "observedProblem": "The form posts to mailto with text/plain and does not explain the email-app handoff. Delivery was not tested.",
+      "fixOptions": [
+        {
+          "id": "explain-email-handoff",
+          "label": "Explain the existing email-draft flow",
+          "changes": [
+            "Add a short technical instruction next to the submit control",
+            "Provide the existing direct email link as fallback",
+            "Do not display a delivered/sent confirmation"
+          ],
+          "boundary": "Disclosure and navigation only; no form submission, email, or backend integration"
+        },
+        {
+          "id": "prototype-feedback-only",
+          "label": "Prototype form feedback safely",
+          "changes": [
+            "Intercept submission inside the isolated preview only",
+            "Show clearly labeled preview feedback without transmitting any input"
+          ],
+          "boundary": "No real delivery; never claim a message was sent"
+        }
+      ],
+      "evidence": {
+        "origin": "https://www.jkbrundage.com",
+        "date": "2026-10-01",
+        "status": "historical-live-observation",
+        "productionRechecked": false
+      },
+      "mirrorState": {
+        "status": "confirmed-source-dependency",
+        "formMethod": "post",
+        "formEncoding": "text/plain",
+        "detail": "The mirrored form retains its mailto action. No site delivery handler was added and no message was sent."
+      },
+      "acceptance": [
+        "The email-app dependency is clear before activation",
+        "Preview cannot accidentally send or claim delivery",
+        "A real delivery integration is a separate decision"
+      ]
+    },
+    {
+      "id": "F09",
+      "annotationNumber": 9,
+      "title": "Raw citation tokens remain",
+      "severity": "low",
+      "route": "community.html",
+      "targetSelector": "main p",
+      "targets": [
+        {
+          "route": "community.html",
+          "selector": "main p",
+          "anchorSelector": "main p",
+          "role": "affected-element",
+          "expectedMatchCount": 4,
+          "sourceDOMVerified": true,
+          "sourceLineNumbers": [
+            47,
+            55,
+            65,
+            74
+          ],
+          "textGuard": {
+            "contains": "[cite: 1]",
+            "expectedTotalOccurrences": 5
+          }
+        }
+      ],
+      "affectedViewport": {
+        "condition": "all widths",
+        "recordedProfiles": [
+          {
+            "width": 1180,
+            "zoomPercent": 100
+          },
+          {
+            "width": 1440,
+            "zoomPercent": 80
+          }
+        ]
+      },
+      "observedProblem": "Five literal [cite: 1] markers were visible in four paragraphs.",
+      "fixOptions": [
+        {
+          "id": "remove-unfinished-tokens",
+          "label": "Remove the unfinished citation tokens",
+          "changes": [
+            "Remove only the exact token [cite: 1] from the four guarded paragraphs",
+            "Keep surrounding wording and punctuation intact"
+          ],
+          "boundary": "No changes to the claims or substantive wording"
+        },
+        {
+          "id": "replace-with-real-references",
+          "label": "Use actual supplied references",
+          "changes": [
+            "Replace each token with a meaningful accessible link after a real source is selected"
+          ],
+          "boundary": "Do not fabricate citations or infer sources"
+        }
+      ],
+      "evidence": {
+        "origin": "https://www.jkbrundage.com",
+        "date": "2026-10-01",
+        "status": "historical-live-observation",
+        "productionRechecked": false
+      },
+      "mirrorState": {
+        "status": "confirmed-in-source",
+        "paragraphCount": 4,
+        "tokenOccurrences": 5,
+        "detail": "All five tokens remain in the mirrored page."
+      },
+      "acceptance": [
+        "Zero raw [cite: tokens remain",
+        "Any replacement link has a real selected source and readable label"
+      ]
+    }
+  ]
+}

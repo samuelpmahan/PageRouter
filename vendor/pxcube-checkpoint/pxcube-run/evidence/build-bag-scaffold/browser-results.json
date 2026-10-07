@@ -1,0 +1,44 @@
+{
+  "runId": "2026-09-14T18-18-19-898Z-c924e928",
+  "checks": [
+    {
+      "prefix": "/",
+      "checks": [
+        "CLI generated an absent app",
+        "launcher discovers the generated scaffold",
+        "inputs and address labels read the mounted seed",
+        "draft writes actual scratch history",
+        "fresh numbered tests preserve interactive and sibling values",
+        "resolver refuses sibling access",
+        "Back and reload retain values",
+        "existing Studio archive untouched",
+        "planned bag output absent",
+        "receipt names tidy manifest input"
+      ]
+    },
+    {
+      "prefix": "/PxCube/",
+      "checks": [
+        "CLI generated an absent app",
+        "launcher discovers the generated scaffold",
+        "inputs and address labels read the mounted seed",
+        "draft writes actual scratch history",
+        "fresh numbered tests preserve interactive and sibling values",
+        "resolver refuses sibling access",
+        "Back and reload retain values",
+        "existing Studio archive untouched",
+        "planned bag output absent",
+        "receipt names tidy manifest input"
+      ]
+    },
+    {
+      "mode": "storage-failure",
+      "checks": [
+        "failed retention is visible and controls stop"
+      ]
+    }
+  ],
+  "errors": [],
+  "outsideRequests": [],
+  "unit": "node --test local/test/*.test.mjs"
+}

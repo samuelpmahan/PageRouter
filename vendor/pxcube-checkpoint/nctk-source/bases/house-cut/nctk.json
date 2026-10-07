@@ -1,0 +1,25 @@
+{
+  "schema": "nctk-directory@1",
+  "address": "bases/house-cut",
+  "children": [],
+  "kind": "base",
+  "source": "bases/house-cut.json",
+  "policies": {
+    "neat": {
+      "mode": "none"
+    },
+    "crisp": {
+      "mode": "none"
+    },
+    "tidy": {
+      "mode": "local"
+    },
+    "kompoze": {
+      "mode": "local",
+      "references": [
+        "parts/source/house",
+        "parts/review/house"
+      ]
+    }
+  }
+}

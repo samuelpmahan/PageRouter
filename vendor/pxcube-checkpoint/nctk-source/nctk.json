@@ -1,0 +1,31 @@
+{
+  "schema": "nctk-directory@1",
+  "address": ".",
+  "children": [
+    "bases",
+    "calculations",
+    "overlays",
+    "parts",
+    "recipes"
+  ],
+  "kind": "group",
+  "source": null,
+  "policies": {
+    "neat": {
+      "mode": "local",
+      "role": "batch-journal",
+      "state": "Compare",
+      "mergedBatches": []
+    },
+    "crisp": {
+      "mode": "none"
+    },
+    "tidy": {
+      "mode": "local"
+    },
+    "kompoze": {
+      "mode": "none",
+      "references": []
+    }
+  }
+}

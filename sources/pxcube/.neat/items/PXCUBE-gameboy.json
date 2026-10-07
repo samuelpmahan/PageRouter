@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "PXCUBE-gameboy",
+  "outcome": "Run and inspect gameboy through the shared PxCube packaging program.",
+  "location": {
+    "component": "experiences/gameboy"
+  },
+  "target": {
+    "kind": "pcr",
+    "identity": "pcr.pxcube.gameboy"
+  },
+  "requirements": [
+    {
+      "id": "package",
+      "text": "Current source packages and supplies a usable index.html."
+    },
+    {
+      "id": "review",
+      "text": "The mounted Experience is inspected by its human reviewer."
+    }
+  ],
+  "dependencies": [],
+  "status": "active",
+  "blockers": [],
+  "checkpoints": [],
+  "acceptanceRefs": [],
+  "promotionRefs": [],
+  "resume": "Inspect the retained local packaging attempts; do not equate a build with human acceptance."
+}

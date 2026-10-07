@@ -1,0 +1,86 @@
+{
+  "runId": "2026-09-14T18-19-54-109Z-2254a4c4",
+  "site": ".pxcube/runs/2026-09-14T18-19-54-109Z-2254a4c4/site",
+  "generation": {
+    "schemaVersion": 1,
+    "root": "experiences/build-bag",
+    "manifestSource": {
+      "path": ".tidy/manifest.json",
+      "type": "pxcube-build-bag",
+      "digest": "60c88db807af598c31c113f5f9bbb10667edbc843b484bc153fefe8a84063ed2"
+    },
+    "template": "sandbox@1",
+    "templateDigest": "912450095bb6bdf9a209443717410356507fb59ca960a9daf789826e92d4e5d9",
+    "outputs": {
+      "index.html": "b08311f390d3adeceaec1ea89045c0a56a620a3c850a1c4f6c70d2124e93647a",
+      "app.mjs": "0ee735706f06e1a5930f4adc7a8de2a38b89f6872c5d766f2411d65b00b885dd",
+      "style.css": "fb27b25eb7fa77347f2aa166ba1875def514fdb95d1206c4b6017a6ae3d03b32",
+      "build.mjs": "9b58e5c6680165d751185597d3c9b5d183b3f7954afc5f918e47db8ad61115e0",
+      "README.md": "322d710aa14b163a74e0c0ff4047df03418b2a75940edc250c5075acb4714a6a",
+      "experience.json": "d59631161e9096726ee2773081e29c34c58e5a38d5f684fba494d881fb7df646"
+    }
+  },
+  "generatedFilesMatch": {
+    "index.html": true,
+    "app.mjs": true,
+    "style.css": true,
+    "build.mjs": true,
+    "README.md": true,
+    "experience.json": true
+  },
+  "receipt": {
+    "app": "BuildBag",
+    "version": "0.1.0",
+    "mounts": [
+      "shelf"
+    ],
+    "resolvedMounts": [
+      "shelf"
+    ],
+    "usedMounts": [],
+    "sourceHash": "0da522c12ee65e944bbca359431a426914d980f94afb2bfed1ba06c9534d6384",
+    "manifestHash": "d59631161e9096726ee2773081e29c34c58e5a38d5f684fba494d881fb7df646",
+    "manifestSource": {
+      "path": ".tidy/manifest.json",
+      "type": "pxcube-build-bag",
+      "digest": "60c88db807af598c31c113f5f9bbb10667edbc843b484bc153fefe8a84063ed2"
+    },
+    "build": {
+      "command": "node build.mjs",
+      "exitCode": 0,
+      "durationMs": 758,
+      "timedOut": false
+    },
+    "outputs": [
+      "app.mjs",
+      "config.json",
+      "index.html",
+      "local/mock-mounts.mjs",
+      "mock-pxc/mock-pxc.mjs",
+      "style.css"
+    ],
+    "validation": {
+      "declaredMounts": [
+        "shelf"
+      ],
+      "usedMounts": [],
+      "undeclaredMounts": [],
+      "persistedPrefixViolations": []
+    },
+    "packagedAt": "2026-09-14T18:19:55.542Z",
+    "runId": "2026-09-14T18-19-54-109Z-2254a4c4",
+    "sharedToolsHash": "e1137329eb2af8426d02e453bd379574faa686e1fe31250aca749a0cf1295af0",
+    "outputHashes": {
+      "app.mjs": "0ee735706f06e1a5930f4adc7a8de2a38b89f6872c5d766f2411d65b00b885dd",
+      "config.json": "aa09146871b90623b47be878535058090359acee30880533717ced1d7f06f2a7",
+      "index.html": "b08311f390d3adeceaec1ea89045c0a56a620a3c850a1c4f6c70d2124e93647a",
+      "local/mock-mounts.mjs": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+      "mock-pxc/mock-pxc.mjs": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+      "style.css": "fb27b25eb7fa77347f2aa166ba1875def514fdb95d1206c4b6017a6ae3d03b32"
+    },
+    "tidy": {
+      "track": "exp",
+      "changedSinceRegistration": true
+    }
+  }
+}

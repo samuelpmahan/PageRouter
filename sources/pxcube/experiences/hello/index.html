@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hello THING</title>
+<style>
+  body { font-family: system-ui, sans-serif; background: #0e2a1a; color: #d8f3dc;
+         display: grid; place-items: center; min-height: 100vh; margin: 0; }
+  main { max-width: 420px; padding: 24px; text-align: center; }
+  h1 { font-size: 22px; margin: 0 0 12px; }
+  p { font-size: 14px; color: #a8c8b0; word-break: break-all; }
+  button { background: #1d4a2f; color: inherit; border: 1px solid #2f6b45;
+           border-radius: 8px; padding: 10px 14px; font: inherit; cursor: pointer; margin-top: 8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>hello from inside the THING</h1>
+  <p id="loc"></p>
+  <p id="sandbox"></p>
+  <button id="try">try to read the shelf page</button>
+  <p id="res"></p>
+  <script>
+    document.getElementById('loc').textContent = 'I live at ' + location.href;
+    try {
+      const h = window.top.location.href;
+      document.getElementById('sandbox').textContent = 'unexpectedly read the top: ' + h;
+    } catch (e) {
+      document.getElementById('sandbox').textContent =
+        'sandboxed: cannot see the shelf (' + e.name + '). a crashing experiment cannot sink it.';
+    }
+    document.getElementById('try').onclick = () => {
+      try {
+        window.top.location.href = 'https://example.com';
+        document.getElementById('res').textContent = 'top navigation went through (unexpected)';
+      } catch (e) {
+        document.getElementById('res').textContent = 'blocked: ' + e.name;
+      }
+    };
+  </script>
+</main>
+</body>
+</html>

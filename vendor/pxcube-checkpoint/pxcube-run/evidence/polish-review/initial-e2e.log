@@ -1,0 +1,57 @@
+✖ the shipped BuildBag creates an ordered bag of exact physical copies (2013.780625ms)
+✔ the shipped BuildBag retains its draft and keeps another sandbox isolated (5899.588046ms)
+✔ the shipped BuildBag rejects stale or repeated physical copies (1548.730104ms)
+✔ launcher ships a PxConsole view (14.162125ms)
+✔ console shell registers the console panel and never executes (2.431817ms)
+✔ console inspects through the real PxC store, not a mock copy (50.685837ms)
+✔ console shell hydrates worlds into PxC and describes values without invoking accessors (2.656834ms)
+✔ pxc.js ships offline and same-origin (14.342648ms)
+✔ the accepted shelf holds 50 fairway discs at speed 7-8 (81.404261ms)
+✔ strict search finds Passion ESP and excludes nicknames (3.685816ms)
+✔ specimens order by plastic, then weight descending (42.218522ms)
+✔ checkout creates a bag of the exact selected versions (9.71898ms)
+✔ the live shelf seeds discs and the shelf query runs against real Parts (262.08134ms)
+✔ hello THING ships an entry that renders its title (7.027708ms)
+✔ launcher cards hello with the manifest sandbox flags (3.238903ms)
+✔ hello receipt verifies against its shipped chunks (5.522363ms)
+✔ interactive world opens on the seeded shelf (2.960627ms)
+✔ test runs isolate: save in one world, the other keeps its seed (19.463837ms)
+✔ a fresh interactive open retains the saved worlds (0.879103ms)
+✔ photo-free save produces a real Disc with a painted depiction (97.578638ms)
+✔ mounted resolution returns the exact Part, hydrated through the mold (54.506881ms)
+✔ composition receipts record the save (52.89851ms)
+✔ separate sandboxes are isolated: save in one, the other stays empty (52.034502ms)
+✔ the shelf sandbox seeds three discs and the shelf query runs (151.406762ms)
+ℹ tests 24
+ℹ suites 0
+ℹ pass 23
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 15734.602726
+
+✖ failing tests:
+
+test at local/test/e2e/e2e-build-bag.test.mjs:13:1
+✖ the shipped BuildBag creates an ordered bag of exact physical copies (2013.780625ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+
+    [
+  -   'ds.px.disc.save-2',
+      'ds.px.disc.save-3',
+      'ds.px.disc.save-1',
+  +   'ds.px.disc.save-2'
+    ]
+
+      at TestContext.<anonymous> (file:///Users/samuelmahan/Documents/ChatGPT/Pyto/PxCube/local/test/e2e/e2e-build-bag.test.mjs:23:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'ds.px.disc.save-3', 'ds.px.disc.save-1', 'ds.px.disc.save-2' ],
+    expected: [ 'ds.px.disc.save-2', 'ds.px.disc.save-3', 'ds.px.disc.save-1' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,620 @@
+{
+  "schemaVersion": 1,
+  "runId": "2026-09-14T21-50-27-419Z-d2018684",
+  "sourceCommit": "bed04fc9697623e02683ee52154b9b1189fa8855",
+  "sharedToolsHash": "ab43708dd92bee30d06f3a82b03cfe16b3cb2126e8066af7717923ad5ddd1867",
+  "work": [
+    {
+      "schemaVersion": 1,
+      "id": "PXCUBE-build-bag",
+      "outcome": "Run and inspect build-bag through the shared PxCube packaging program.",
+      "location": {
+        "component": "experiences/build-bag"
+      },
+      "target": {
+        "kind": "pcr",
+        "identity": "pcr.pxcube.build-bag"
+      },
+      "requirements": [
+        {
+          "id": "package",
+          "text": "Current source packages and supplies a usable index.html."
+        },
+        {
+          "id": "review",
+          "text": "The mounted Experience is inspected by its human reviewer."
+        }
+      ],
+      "dependencies": [],
+      "status": "active",
+      "blockers": [],
+      "checkpoints": [],
+      "acceptanceRefs": [],
+      "promotionRefs": [],
+      "resume": "Inspect the retained local packaging attempts; do not equate a build with human acceptance."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "PXCUBE-explore-shelf",
+      "outcome": "Run and inspect explore-shelf through the shared PxCube packaging program.",
+      "location": {
+        "component": "experiences/explore-shelf"
+      },
+      "target": {
+        "kind": "pcr",
+        "identity": "pcr.pxcube.explore-shelf"
+      },
+      "requirements": [
+        {
+          "id": "package",
+          "text": "Current source packages and supplies a usable index.html."
+        },
+        {
+          "id": "review",
+          "text": "The mounted Experience is inspected by its human reviewer."
+        }
+      ],
+      "dependencies": [],
+      "status": "review",
+      "blockers": [],
+      "checkpoints": [],
+      "acceptanceRefs": [],
+      "promotionRefs": [],
+      "resume": "Open this Experience in PxCube. Fresh numbered Cases and interactive sessions are separate. Read docs/studio-sandboxes.md and evidence/studio-sandboxes before review; no human acceptance or promotion is implied."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "PXCUBE-hello",
+      "outcome": "Run and inspect hello through the shared PxCube packaging program.",
+      "location": {
+        "component": "experiences/hello"
+      },
+      "target": {
+        "kind": "pcr",
+        "identity": "pcr.pxcube.hello"
+      },
+      "requirements": [
+        {
+          "id": "package",
+          "text": "Current source packages and supplies a usable index.html."
+        },
+        {
+          "id": "review",
+          "text": "The mounted Experience is inspected by its human reviewer."
+        }
+      ],
+      "dependencies": [],
+      "status": "review",
+      "blockers": [],
+      "checkpoints": [],
+      "acceptanceRefs": [],
+      "promotionRefs": [],
+      "resume": "Open the local launcher and inspect the packaged Experience. Automated evidence is in evidence/local-pages; human acceptance and promotion remain unset."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "PXCUBE-mock-smoke",
+      "outcome": "Run and inspect mock-smoke through the shared PxCube packaging program.",
+      "location": {
+        "component": "experiences/mock-smoke"
+      },
+      "target": {
+        "kind": "pcr",
+        "identity": "pcr.pxcube.mock-smoke"
+      },
+      "requirements": [
+        {
+          "id": "package",
+          "text": "Current source packages and supplies a usable index.html."
+        },
+        {
+          "id": "review",
+          "text": "The mounted Experience is inspected by its human reviewer."
+        }
+      ],
+      "dependencies": [],
+      "status": "review",
+      "blockers": [],
+      "checkpoints": [],
+      "acceptanceRefs": [],
+      "promotionRefs": [],
+      "resume": "Open the local launcher and inspect the packaged Experience. Automated evidence is in evidence/local-pages; human acceptance and promotion remain unset."
+    },
+    {
+      "schemaVersion": 1,
+      "id": "PXCUBE-upload-disc-to-shelf",
+      "outcome": "Run and inspect upload-disc-to-shelf through the shared PxCube packaging program.",
+      "location": {
+        "component": "experiences/upload-disc-to-shelf"
+      },
+      "target": {
+        "kind": "pcr",
+        "identity": "pcr.pxcube.upload-disc-to-shelf"
+      },
+      "requirements": [
+        {
+          "id": "package",
+          "text": "Current source packages and supplies a usable index.html."
+        },
+        {
+          "id": "review",
+          "text": "The mounted Experience is inspected by its human reviewer."
+        }
+      ],
+      "dependencies": [],
+      "status": "review",
+      "blockers": [],
+      "checkpoints": [],
+      "acceptanceRefs": [],
+      "promotionRefs": [],
+      "resume": "Open this Experience in PxCube. Fresh numbered Cases and interactive sessions are separate. Read docs/studio-sandboxes.md and evidence/studio-sandboxes before review; no human acceptance or promotion is implied."
+    }
+  ],
+  "types": {
+    "pxcube-hello": {
+      "version": "0.1.0",
+      "root": "experiences/hello",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": []
+    },
+    "pxcube-mock-smoke": {
+      "version": "0.1.0",
+      "root": "experiences/mock-smoke",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": []
+    },
+    "pxcube-explore-shelf": {
+      "version": "0.1.0",
+      "root": "experiences/explore-shelf",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": []
+    },
+    "pxcube-upload-disc-to-shelf": {
+      "version": "0.1.0",
+      "root": "experiences/upload-disc-to-shelf",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": []
+    },
+    "pxcube-build-bag": {
+      "version": "0.1.0",
+      "root": "experiences/build-bag",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": [
+        "node --test local/test/scaffold.test.mjs",
+        "node local/test/scaffold-browser.mjs"
+      ],
+      "experience": {
+        "title": "BuildBag",
+        "description": "Choose the discs you want to carry. A sandbox frame ready for the bag-building Experience.",
+        "entry": "index.html",
+        "mounts": [
+          "shelf"
+        ],
+        "build": "node build.mjs",
+        "outDir": "dist",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-forms"
+        ],
+        "scaffold": {
+          "template": "sandbox@1",
+          "world": "shelf",
+          "inputs": [
+            {
+              "address": "px.discs",
+              "label": "Your shelf",
+              "for": "The available discs. Selection of physical copies is the first behavior to connect."
+            }
+          ],
+          "outputs": [
+            {
+              "address": "px.bags",
+              "label": "Your saved bag",
+              "for": "An ordered collection of selected physical discs. This output has not been implemented."
+            }
+          ],
+          "steps": [
+            "Choose discs",
+            "Arrange your bag",
+            "Create bag"
+          ],
+          "draft": {
+            "address": "sc.draft",
+            "field": "name",
+            "label": "Bag name"
+          }
+        }
+      }
+    }
+  },
+  "results": [
+    {
+      "id": "build-bag",
+      "ok": true,
+      "sourceHash": "02bb3e50fbca04e339c191cf2e7d5cfdf73d9765e3b609e3e4896e3e37d13db3",
+      "outputHashes": {
+        "app.mjs": "0ee735706f06e1a5930f4adc7a8de2a38b89f6872c5d766f2411d65b00b885dd",
+        "config.json": "fcd00fa1fc9b455581c93ed654fa0f5b7b8831b93caa1349715749fc7166b5b2",
+        "index.html": "b08311f390d3adeceaec1ea89045c0a56a620a3c850a1c4f6c70d2124e93647a",
+        "local/mock-mounts.mjs": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+        "mock-pxc/mock-pxc.mjs": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+        "style.css": "fb27b25eb7fa77347f2aa166ba1875def514fdb95d1206c4b6017a6ae3d03b32"
+      },
+      "build": {
+        "command": "node build.mjs",
+        "exitCode": 0,
+        "durationMs": 45,
+        "timedOut": false
+      },
+      "receipt": "experiences/build-bag/receipt.json",
+      "drift": true
+    },
+    {
+      "id": "explore-shelf",
+      "ok": true,
+      "sourceHash": "a68142e55d7287a62216b798fc746f465c20d185e4cb0389140b3da3de34d796",
+      "outputHashes": {
+        "config.mjs": "6af5e29f2fb89c0216528fafe52e84bf24fa26966a9d29e0c14448e651f38040",
+        "host.mjs": "0d9198d67d03babda60cc920b1b887b96b062d50fe64ae732c58a67d50df2ef0",
+        "index.html": "372c63f28d9b770c369e9b9ad6e397cbea6f9146a7fb4f5fb075c812d7f8bac1",
+        "live.mjs": "e581c3724d7743380660b781148125ae57b6954101825a5b3e887abe0676372d",
+        "local/experience-mount.mjs": "968343527364031f5f3bbce300c6492f7f8f7d654d7eb84277ac98ed2417fa34",
+        "local/mock-mounts.mjs": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+        "mock-pxc/mock-pxc.mjs": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+        "studio/part-first-kernel/src/inspect.mjs": "54a140e605934104e1123fc5c5df54c04b20d80b925bcb72e867e94b47de2bc8",
+        "studio/part-first-kernel/src/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+        "studio/upload-disc-to-shelf/accepted-shelf.html": "dad63fe9f3806b32b1b395393629693c4d9ff03d7fa835f4eca1e066cdf58ba7",
+        "studio/upload-disc-to-shelf/art/chevron-run.svg": "e47aedaa81eb59394d7aef5c6db1e671b93c27befc2a735fc0008bb9633be330",
+        "studio/upload-disc-to-shelf/art/contour-basin.svg": "062985ea08257265141df90c0fc6d446aa79f35251a0e31868db73e1c077a8bb",
+        "studio/upload-disc-to-shelf/art/pressed-fern.svg": "dfa5e90f93be16bec0594fdb0be0536e36e17b2bf6aea7dfda9729784635aaf5",
+        "studio/upload-disc-to-shelf/bags.js": "24e9cacdcdfa24ea86fb73b198355eb1d3de1ca92b64568a42da0ae10c40af64",
+        "studio/upload-disc-to-shelf/brand-mark.svg": "2ce681c5ee781715bc645b29c3eaaa6532f89103e0b19796dc8c2b87c9771676",
+        "studio/upload-disc-to-shelf/catalog.js": "40c30c8599e9d7b396de23bb07a722ae20812e03ea0b18a9cf2d228feecdfa6c",
+        "studio/upload-disc-to-shelf/devtools-data.mjs": "ad2d76d679c4f26022a6f15a54c121df5fff85630f0afd412c1955d5e84909bf",
+        "studio/upload-disc-to-shelf/devtools.css": "97f3968cf560f85be4debd9807f16047f65dfef5b9634b66db16b8b4626ff467",
+        "studio/upload-disc-to-shelf/devtools.mjs": "74295db712b4473d173dc9f31c2c1dc2cedf4f3faca1af373478803ecf478b63",
+        "studio/upload-disc-to-shelf/disc-view.js": "8651ca15628ac9505d22c979575336bd0626db65d0576662c3c73e0f83262c5f",
+        "studio/upload-disc-to-shelf/experience-fixtures.js": "c57c9f7e50a9a1a79e47cdc91eac46ef60b8aeaa871321c06fe9b4fe0c28a909",
+        "studio/upload-disc-to-shelf/experience-page.js": "1da6b724b2303d7652e5bab6c1a4d825fd973d24dc834f082495b7b00ce344cb",
+        "studio/upload-disc-to-shelf/experiences.js": "feeb313151d5e42e23658447be2f7da9649cc6c55bebab23cdaa075ccb83458e",
+        "studio/upload-disc-to-shelf/index.html": "83859611442c97aa53e22fe905878ce885752af0f043f0fa912d90580255a9c0",
+        "studio/upload-disc-to-shelf/model.js": "11d432d4f8a5f169135d00214897738a25422c1b3de8bfda2f44b1cfd001129a",
+        "studio/upload-disc-to-shelf/operations.js": "a49c985f4bb3ca34ace121054b80bfdc5c2d0374f83e69bb322f5957dbee3024",
+        "studio/upload-disc-to-shelf/paint-recipe.js": "12d74e8cb447fe0e06bc828580e8ade4320c3cb429c473b0234ec1cfbbe02663",
+        "studio/upload-disc-to-shelf/paint.js": "c29eb327bff08d6f458123e219d142914e8ecdca45f6880c57ecac4cfdf4bbe0",
+        "studio/upload-disc-to-shelf/persistence.js": "d47a3fb2cba59064f9522b7c3d8b40c666d6522db778d37c96e1b4c90339dec3",
+        "studio/upload-disc-to-shelf/persistent-experience.js": "17c21989179e0bc83275f394d344d18896177b41fe2a4682d541cd5134e70bda",
+        "studio/upload-disc-to-shelf/plastics.js": "da498c6f4577b399c4785250aa59470b5c868a238f83b6674dd710ebeb6e3d3e",
+        "studio/upload-disc-to-shelf/sandbox-cases.js": "a9a63fc8b1bd1c0e201e60e3b9ea0ba8583f541031f74b95616d9eaebd9b0e22",
+        "studio/upload-disc-to-shelf/sandbox-ui.js": "eb8e32d314677d719a53ae39216a6a746d46fcb7a29109f519ec4eef62873167",
+        "studio/upload-disc-to-shelf/shelf-query.js": "a048d082517dce7bbb9538c34e7ee54cfce82afafdd4e89412489cd6c1713585",
+        "studio/upload-disc-to-shelf/shelf-ui.js": "b6a1b27d64b62b243fb341998d339a7785186c24e0ca9b1c69ff3b9737ab9181",
+        "studio/upload-disc-to-shelf/style.css": "d92550bf00730b50cdcd2cdcf1c1a6ec2e0fb76b81343d1a9811cfcbfc5fb964",
+        "studio/upload-disc-to-shelf/upload-ui.js": "2e5d83a58d6c41745ab5c37cf35f4c141916697dee67274ab7bef0e395877183",
+        "studio/upload-disc-to-shelf/vendor/painter/core.mjs": "c0fc0bdc37c3c5ad420f736ca8f4bb082b150fddd388cd4e35fa52e45538fff4",
+        "studio/upload-disc-to-shelf/vendor/painter/families/botanical.mjs": "85c894e08f8c4e28b463fb71a4246dd2e4e60a7fdc83ddf526ba2a21f10c3d0d",
+        "studio/upload-disc-to-shelf/vendor/painter/families/cartography.mjs": "46b5fe9b45d141c881b9930e633c3b8b8e2596f23276349e5abaa55e810c4baa",
+        "studio/upload-disc-to-shelf/vendor/painter/families/foundry.mjs": "55a2e372cc0812a9c12ede4561b9a0a11cba0d3c83c298c7100789237f98ce87",
+        "studio/upload-disc-to-shelf/vendor/painter/families/signal.mjs": "a87c490c12d3087fc31f58a6dca4961f4c4e599ae9259d4cf643b61a389c98ad",
+        "studio/upload-disc-to-shelf/vendor/painter/painter.mjs": "5aeab9b991c0a17de632585cc05d9bdb0a0abce731cbf579eabf3d740b1b5cfc",
+        "studio-import.json": "b0da3bda39a8bb14772131ce1cfa44886a2e843bca76af6fa5e64b80595b555e",
+        "style.css": "7bc0210075ea5cf69cf135b4d886bf26cea9c704a24fad3fb9a3fc8a052745fd"
+      },
+      "build": {
+        "command": "node build.mjs",
+        "exitCode": 0,
+        "durationMs": 682,
+        "timedOut": false
+      },
+      "receipt": "experiences/explore-shelf/receipt.json",
+      "drift": true
+    },
+    {
+      "id": "hello",
+      "ok": true,
+      "sourceHash": "c651c7a04a664e95e4a0e6cd034e922e7a79d56b53f61fc5586736893fe31e55",
+      "outputHashes": {
+        "index.html": "130311678ebbd422e41f93a0653ff118fbc4eb4c4e8794c0899c3000d2320bc6"
+      },
+      "build": {
+        "command": "mkdir -p dist && cp index.html dist/",
+        "exitCode": 0,
+        "durationMs": 9,
+        "timedOut": false
+      },
+      "receipt": "experiences/hello/receipt.json",
+      "drift": true
+    },
+    {
+      "id": "mock-smoke",
+      "ok": true,
+      "sourceHash": "ec18fe8ef41a2f2f9ae939378bcc04da33031c7a20f10bf765cf9088ec05080c",
+      "outputHashes": {
+        "app.mjs": "a463c29d2e0784267899c6824b0b582743638d8a4f24e578e927983c44fd5f0f",
+        "index.html": "45c9d00e39c565e990808bf5bef902040942c8cbc4bff4bd62115a0352eef8ef",
+        "local/mock-mounts.mjs": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+        "mock-pxc/mock-pxc.mjs": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+        "seed-identity.mjs": "1ae11651fb5cf3e0b5fca05d487d6a85aca6c0a927f6827f4e570d94175cd11b",
+        "style.css": "6fc5581332cd1a2565715d1fd57cd43fd470e07836312a6fc59549f426b33d28"
+      },
+      "build": {
+        "command": "node build.mjs",
+        "exitCode": 0,
+        "durationMs": 37,
+        "timedOut": false
+      },
+      "receipt": "experiences/mock-smoke/receipt.json",
+      "drift": true
+    },
+    {
+      "id": "upload-disc-to-shelf",
+      "ok": true,
+      "sourceHash": "d2aab78dc35fea893dc7e4aa2e6e8ebc34586e16dff6b5ee16de1777a6ab2cf3",
+      "outputHashes": {
+        "config.mjs": "343bf12cf05af2565f51f9b6d2e7983f2dd6860f80564b0ea0a57f21a1e4b1fa",
+        "host.mjs": "0d9198d67d03babda60cc920b1b887b96b062d50fe64ae732c58a67d50df2ef0",
+        "index.html": "372c63f28d9b770c369e9b9ad6e397cbea6f9146a7fb4f5fb075c812d7f8bac1",
+        "live.mjs": "e581c3724d7743380660b781148125ae57b6954101825a5b3e887abe0676372d",
+        "local/experience-mount.mjs": "968343527364031f5f3bbce300c6492f7f8f7d654d7eb84277ac98ed2417fa34",
+        "local/mock-mounts.mjs": "42e42572c218ef99c9cd7558f217abb3c2fb98100013c9a89edd638af4c098b7",
+        "mock-pxc/mock-pxc.mjs": "023852254d8a80661d907200efe185b0f3e5eec30501a7c6f50dffad351d8e6b",
+        "studio/part-first-kernel/src/inspect.mjs": "54a140e605934104e1123fc5c5df54c04b20d80b925bcb72e867e94b47de2bc8",
+        "studio/part-first-kernel/src/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+        "studio/upload-disc-to-shelf/accepted-shelf.html": "dad63fe9f3806b32b1b395393629693c4d9ff03d7fa835f4eca1e066cdf58ba7",
+        "studio/upload-disc-to-shelf/art/chevron-run.svg": "e47aedaa81eb59394d7aef5c6db1e671b93c27befc2a735fc0008bb9633be330",
+        "studio/upload-disc-to-shelf/art/contour-basin.svg": "062985ea08257265141df90c0fc6d446aa79f35251a0e31868db73e1c077a8bb",
+        "studio/upload-disc-to-shelf/art/pressed-fern.svg": "dfa5e90f93be16bec0594fdb0be0536e36e17b2bf6aea7dfda9729784635aaf5",
+        "studio/upload-disc-to-shelf/bags.js": "24e9cacdcdfa24ea86fb73b198355eb1d3de1ca92b64568a42da0ae10c40af64",
+        "studio/upload-disc-to-shelf/brand-mark.svg": "2ce681c5ee781715bc645b29c3eaaa6532f89103e0b19796dc8c2b87c9771676",
+        "studio/upload-disc-to-shelf/catalog.js": "40c30c8599e9d7b396de23bb07a722ae20812e03ea0b18a9cf2d228feecdfa6c",
+        "studio/upload-disc-to-shelf/devtools-data.mjs": "ad2d76d679c4f26022a6f15a54c121df5fff85630f0afd412c1955d5e84909bf",
+        "studio/upload-disc-to-shelf/devtools.css": "97f3968cf560f85be4debd9807f16047f65dfef5b9634b66db16b8b4626ff467",
+        "studio/upload-disc-to-shelf/devtools.mjs": "74295db712b4473d173dc9f31c2c1dc2cedf4f3faca1af373478803ecf478b63",
+        "studio/upload-disc-to-shelf/disc-view.js": "8651ca15628ac9505d22c979575336bd0626db65d0576662c3c73e0f83262c5f",
+        "studio/upload-disc-to-shelf/experience-fixtures.js": "c57c9f7e50a9a1a79e47cdc91eac46ef60b8aeaa871321c06fe9b4fe0c28a909",
+        "studio/upload-disc-to-shelf/experience-page.js": "1da6b724b2303d7652e5bab6c1a4d825fd973d24dc834f082495b7b00ce344cb",
+        "studio/upload-disc-to-shelf/experiences.js": "feeb313151d5e42e23658447be2f7da9649cc6c55bebab23cdaa075ccb83458e",
+        "studio/upload-disc-to-shelf/index.html": "83859611442c97aa53e22fe905878ce885752af0f043f0fa912d90580255a9c0",
+        "studio/upload-disc-to-shelf/model.js": "11d432d4f8a5f169135d00214897738a25422c1b3de8bfda2f44b1cfd001129a",
+        "studio/upload-disc-to-shelf/operations.js": "a49c985f4bb3ca34ace121054b80bfdc5c2d0374f83e69bb322f5957dbee3024",
+        "studio/upload-disc-to-shelf/paint-recipe.js": "12d74e8cb447fe0e06bc828580e8ade4320c3cb429c473b0234ec1cfbbe02663",
+        "studio/upload-disc-to-shelf/paint.js": "c29eb327bff08d6f458123e219d142914e8ecdca45f6880c57ecac4cfdf4bbe0",
+        "studio/upload-disc-to-shelf/persistence.js": "d47a3fb2cba59064f9522b7c3d8b40c666d6522db778d37c96e1b4c90339dec3",
+        "studio/upload-disc-to-shelf/persistent-experience.js": "17c21989179e0bc83275f394d344d18896177b41fe2a4682d541cd5134e70bda",
+        "studio/upload-disc-to-shelf/plastics.js": "da498c6f4577b399c4785250aa59470b5c868a238f83b6674dd710ebeb6e3d3e",
+        "studio/upload-disc-to-shelf/sandbox-cases.js": "a9a63fc8b1bd1c0e201e60e3b9ea0ba8583f541031f74b95616d9eaebd9b0e22",
+        "studio/upload-disc-to-shelf/sandbox-ui.js": "eb8e32d314677d719a53ae39216a6a746d46fcb7a29109f519ec4eef62873167",
+        "studio/upload-disc-to-shelf/shelf-query.js": "a048d082517dce7bbb9538c34e7ee54cfce82afafdd4e89412489cd6c1713585",
+        "studio/upload-disc-to-shelf/shelf-ui.js": "b6a1b27d64b62b243fb341998d339a7785186c24e0ca9b1c69ff3b9737ab9181",
+        "studio/upload-disc-to-shelf/style.css": "d92550bf00730b50cdcd2cdcf1c1a6ec2e0fb76b81343d1a9811cfcbfc5fb964",
+        "studio/upload-disc-to-shelf/upload-ui.js": "2e5d83a58d6c41745ab5c37cf35f4c141916697dee67274ab7bef0e395877183",
+        "studio/upload-disc-to-shelf/vendor/painter/core.mjs": "c0fc0bdc37c3c5ad420f736ca8f4bb082b150fddd388cd4e35fa52e45538fff4",
+        "studio/upload-disc-to-shelf/vendor/painter/families/botanical.mjs": "85c894e08f8c4e28b463fb71a4246dd2e4e60a7fdc83ddf526ba2a21f10c3d0d",
+        "studio/upload-disc-to-shelf/vendor/painter/families/cartography.mjs": "46b5fe9b45d141c881b9930e633c3b8b8e2596f23276349e5abaa55e810c4baa",
+        "studio/upload-disc-to-shelf/vendor/painter/families/foundry.mjs": "55a2e372cc0812a9c12ede4561b9a0a11cba0d3c83c298c7100789237f98ce87",
+        "studio/upload-disc-to-shelf/vendor/painter/families/signal.mjs": "a87c490c12d3087fc31f58a6dca4961f4c4e599ae9259d4cf643b61a389c98ad",
+        "studio/upload-disc-to-shelf/vendor/painter/painter.mjs": "5aeab9b991c0a17de632585cc05d9bdb0a0abce731cbf579eabf3d740b1b5cfc",
+        "studio-import.json": "b0da3bda39a8bb14772131ce1cfa44886a2e843bca76af6fa5e64b80595b555e",
+        "style.css": "7bc0210075ea5cf69cf135b4d886bf26cea9c704a24fad3fb9a3fc8a052745fd"
+      },
+      "build": {
+        "command": "node build.mjs",
+        "exitCode": 0,
+        "durationMs": 237,
+        "timedOut": false
+      },
+      "receipt": "experiences/upload-disc-to-shelf/receipt.json",
+      "drift": true
+    }
+  ],
+  "manifests": [
+    {
+      "id": "build-bag",
+      "title": "BuildBag",
+      "description": "Choose the discs you want to carry. A sandbox frame ready for the bag-building Experience.",
+      "entry": "index.html",
+      "mounts": [
+        "shelf"
+      ],
+      "build": "node build.mjs",
+      "outDir": "dist",
+      "sandbox": [
+        "allow-scripts",
+        "allow-same-origin",
+        "allow-forms"
+      ],
+      "scaffold": {
+        "template": "sandbox@1",
+        "world": "shelf",
+        "inputs": [
+          {
+            "address": "px.discs",
+            "label": "Your shelf",
+            "for": "The available discs. Selection of physical copies is the first behavior to connect."
+          }
+        ],
+        "outputs": [
+          {
+            "address": "px.bags",
+            "label": "Your saved bag",
+            "for": "An ordered collection of selected physical discs. This output has not been implemented."
+          }
+        ],
+        "steps": [
+          "Choose discs",
+          "Arrange your bag",
+          "Create bag"
+        ],
+        "draft": {
+          "address": "sc.draft",
+          "field": "name",
+          "label": "Bag name"
+        }
+      },
+      "version": "0.1.0",
+      "manifestSource": {
+        "path": ".tidy/manifest.json",
+        "type": "pxcube-build-bag",
+        "digest": "f93e0a3c3e2315d52df5c9301f2701d22b1a041eaa691a862355a8d4b5be165d"
+      },
+      "track": "exp",
+      "registry": {
+        "registeredSourceHash": "0da522c12ee65e944bbca359431a426914d980f94afb2bfed1ba06c9534d6384",
+        "currentSourceHash": "02bb3e50fbca04e339c191cf2e7d5cfdf73d9765e3b609e3e4896e3e37d13db3",
+        "changedSinceRegistration": true
+      },
+      "attempt": {
+        "runId": "2026-09-14T21-50-27-419Z-d2018684",
+        "ok": true,
+        "error": null,
+        "receipt": "experiences/build-bag/receipt.json"
+      }
+    },
+    {
+      "id": "explore-shelf",
+      "title": "ExploreShelf",
+      "description": "Browse the accepted shopping shelf; inspect or test the live Part edit loop separately.",
+      "version": "0.1.0",
+      "track": "exp",
+      "mounts": [
+        "studio"
+      ],
+      "entry": "index.html",
+      "outDir": "dist",
+      "build": "node build.mjs",
+      "sandbox": [
+        "allow-scripts",
+        "allow-same-origin",
+        "allow-downloads",
+        "allow-modals",
+        "allow-forms"
+      ],
+      "studio": {
+        "mode": "shelf",
+        "sourceCommit": "6f7937bc1eebd22bf3135f50c9edf714b122902a",
+        "integration": "Legacy Studio model in an owning context. Additional dependency scan: studio-import.json.",
+        "interactive": "mock.explore-shelf.*",
+        "tests": "mock.explore-shelf.<iterator>.*"
+      },
+      "storage": "Only mount-scoped local storage. Trusted same-origin code; not a security boundary.",
+      "registry": {
+        "registeredSourceHash": "d9875013353c9cc4910e35e38c042be2def7e4bae8b15868a55135ded0374672",
+        "currentSourceHash": "a68142e55d7287a62216b798fc746f465c20d185e4cb0389140b3da3de34d796",
+        "changedSinceRegistration": true
+      },
+      "attempt": {
+        "runId": "2026-09-14T21-50-27-419Z-d2018684",
+        "ok": true,
+        "error": null,
+        "receipt": "experiences/explore-shelf/receipt.json"
+      }
+    },
+    {
+      "id": "hello",
+      "build": "mkdir -p dist && cp index.html dist/",
+      "description": "First light: a trivial THING proving the sandbox holds.",
+      "entry": "index.html",
+      "mounts": [],
+      "outDir": "dist",
+      "sandbox": [
+        "allow-scripts"
+      ],
+      "title": "Hello THING",
+      "track": "exp",
+      "version": "0.1.0",
+      "registry": {
+        "registeredSourceHash": "c651c7a04a664e95e4a0e6cd034e922e7a79d56b53f61fc5586736893fe31e55",
+        "currentSourceHash": "c651c7a04a664e95e4a0e6cd034e922e7a79d56b53f61fc5586736893fe31e55",
+        "changedSinceRegistration": true
+      },
+      "attempt": {
+        "runId": "2026-09-14T21-50-27-419Z-d2018684",
+        "ok": true,
+        "error": null,
+        "receipt": "experiences/hello/receipt.json"
+      }
+    },
+    {
+      "id": "mock-smoke",
+      "title": "MockPxC · retained worlds",
+      "description": "Keep an interactive workspace, create isolated test runs, and inspect their actual values.",
+      "version": "0.1.0",
+      "track": "exp",
+      "mounts": [
+        "shelf"
+      ],
+      "entry": "index.html",
+      "outDir": "dist",
+      "build": "node build.mjs",
+      "sandbox": [
+        "allow-scripts",
+        "allow-same-origin"
+      ],
+      "storage": "localStorage: retained JSON mock worlds. Trusted same-origin demonstration; not a hostile-code boundary.",
+      "binding": "Interactive: mock.<id>.*. Unit/E2E: mock.<id>.<iterator>.*. The shelf seed supplies both; stored inner names retain px/fn/oc/sc only.",
+      "registry": {
+        "registeredSourceHash": "534dd029b9fe7f2ee94afaa9310316c16ff1b4958bb443547cac4023aca30abc",
+        "currentSourceHash": "ec18fe8ef41a2f2f9ae939378bcc04da33031c7a20f10bf765cf9088ec05080c",
+        "changedSinceRegistration": true
+      },
+      "attempt": {
+        "runId": "2026-09-14T21-50-27-419Z-d2018684",
+        "ok": true,
+        "error": null,
+        "receipt": "experiences/mock-smoke/receipt.json"
+      }
+    },
+    {
+      "id": "upload-disc-to-shelf",
+      "title": "UploadDiscToShelf",
+      "description": "Paint or photograph a disc, save it, and inspect its Parts in an isolated sandbox.",
+      "version": "0.1.0",
+      "track": "exp",
+      "mounts": [
+        "studio"
+      ],
+      "entry": "index.html",
+      "outDir": "dist",
+      "build": "node build.mjs",
+      "sandbox": [
+        "allow-scripts",
+        "allow-same-origin",
+        "allow-downloads",
+        "allow-modals",
+        "allow-forms"
+      ],
+      "studio": {
+        "mode": "upload",
+        "sourceCommit": "6f7937bc1eebd22bf3135f50c9edf714b122902a",
+        "integration": "Legacy Studio model in an owning context. Additional dependency scan: studio-import.json.",
+        "interactive": "mock.upload-disc-to-shelf.*",
+        "tests": "mock.upload-disc-to-shelf.<iterator>.*"
+      },
+      "storage": "Only mount-scoped local storage. Trusted same-origin code; not a security boundary.",
+      "registry": {
+        "registeredSourceHash": "f4179e57237485b173048bb9bb8ea7a157e23503773679587846e9e6b9181dcd",
+        "currentSourceHash": "d2aab78dc35fea893dc7e4aa2e6e8ebc34586e16dff6b5ee16de1777a6ab2cf3",
+        "changedSinceRegistration": true
+      },
+      "attempt": {
+        "runId": "2026-09-14T21-50-27-419Z-d2018684",
+        "ok": true,
+        "error": null,
+        "receipt": "experiences/upload-disc-to-shelf/receipt.json"
+      }
+    }
+  ],
+  "packagedIds": [
+    "build-bag",
+    "explore-shelf",
+    "hello",
+    "mock-smoke",
+    "upload-disc-to-shelf"
+  ]
+}

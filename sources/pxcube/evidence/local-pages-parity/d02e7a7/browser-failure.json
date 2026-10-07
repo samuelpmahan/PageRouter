@@ -1,0 +1,62 @@
+{
+  "checks": [
+    {
+      "mode": "local",
+      "text": "all five cards render; actual NTC counts and build view captured separately from runtime checks"
+    },
+    {
+      "mode": "local",
+      "text": "Hello loads inside its restricted frame"
+    },
+    {
+      "mode": "local",
+      "text": "MockPxC visible isolation check passes all three checks"
+    },
+    {
+      "mode": "local",
+      "text": "BuildBag saves scratch state, retains exact owner identity across NTC views, exposes actual values, and isolates its numbered test"
+    },
+    {
+      "mode": "local",
+      "text": "control shell has no horizontal overflow at 390px"
+    },
+    {
+      "mode": "local",
+      "text": "photo-free Upload save produces a real Disc; mounted resolution returns the exact Part"
+    },
+    {
+      "mode": "local",
+      "text": "numbered Upload Case uses actual controls and all declared checks pass"
+    },
+    {
+      "mode": "local",
+      "text": "fresh test iterators preserve the interactive Part identity and reject cross-run addresses"
+    },
+    {
+      "mode": "local",
+      "text": "accepted mold/plastic/weight shopping, strict search, nickname exclusion, checkout and direct object inspection work"
+    },
+    {
+      "mode": "local",
+      "text": "live Shelf Case previews, keeps and bags the exact physical copy; shopping stays independent"
+    },
+    {
+      "mode": "local",
+      "text": "Back preserves owning contexts; reload verifies saved compositions and retains test observations without re-executing"
+    },
+    {
+      "mode": "local",
+      "text": "reload restores both interactive surfaces, keeps numbered Shelf evidence, and never writes the real Studio shelf"
+    },
+    {
+      "mode": "pages",
+      "text": "all five cards render; actual NTC counts and build view captured separately from runtime checks"
+    },
+    {
+      "mode": "pages",
+      "text": "Hello loads inside its restricted frame"
+    }
+  ],
+  "errors": [],
+  "error": "TimeoutError: locator.waitFor: Timeout 15000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#thing').contentFrame().locator('#status').filter({ hasText: '3 checks passed' }) to be visible\u001b[22m\n"
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="220" height="220" viewBox="0 0 512 512" role="img" aria-label="">
+<defs><clipPath id="disc"><circle cx="256" cy="256" r="220"/></clipPath>
+<linearGradient id="depth" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset="1" stop-color="#000" stop-opacity=".28"/></linearGradient></defs>
+<g id="base" clip-path="url(#disc)">
+<circle cx="256" cy="256" r="220" fill="#f8f1dc"/>
+<circle cx="256" cy="256" r="220" fill="url(#depth)"/>
+</g>
+<g id="rim" fill="none">
+<circle cx="256" cy="256" r="216" stroke="#24594b" stroke-width="7" opacity=".9"/>
+<circle cx="256" cy="256" r="201" stroke="#fff" stroke-width="3" opacity=".28"/>
+</g>
+<g id="art" clip-path="url(#disc)">
+<g transform="rotate(-4 256 256)">
+<rect x="-60" y="85.8" width="632" height="340.4" fill="#24594b" opacity=".16"/>
+<path d="M-3.5 103.8 H446.8" stroke="#24594b" stroke-width="6" opacity=".3" stroke-linecap="round"/>
+<path d="M-3.5 408.2 H446.8" stroke="#24594b" stroke-width="6" opacity=".3" stroke-linecap="round"/>
+<path d="M84.5 119.8 L168.5 256 L84.5 392.2" fill="none" stroke="#24594b" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter" opacity="0.42"/>
+<path d="M143.6 119.8 L227.6 256 L143.6 392.2" fill="none" stroke="#24594b" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter" opacity="0.56"/>
+<path d="M202.6 119.8 L286.6 256 L202.6 392.2" fill="none" stroke="#24594b" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter" opacity="0.71"/>
+<path d="M261.7 119.8 L345.7 256 L261.7 392.2" fill="none" stroke="#24594b" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter" opacity="0.85"/>
+<path d="M320.8 119.8 L404.8 256 L320.8 392.2" fill="none" stroke="#24594b" stroke-width="30" stroke-linecap="butt" stroke-linejoin="miter" opacity="1.00"/>
+<path d="M320.8 119.8 L404.8 256 L320.8 392.2" fill="none" stroke="#ffffff" stroke-width="10.2" stroke-linecap="butt" stroke-linejoin="miter" opacity=".95"/>
+</g>
+</g>
+<g id="stamp">
+<rect x="255.9" y="82.8" width="26" height="26" rx="4" fill="#111318" transform="rotate(-4 268.9 95.8)"/>
+<rect x="255.9" y="82.8" width="26" height="26" rx="4" fill="none" stroke="#24594b" stroke-width="7" transform="rotate(-4 268.9 95.8)"/>
+</g>
+<title></title>
+</svg>

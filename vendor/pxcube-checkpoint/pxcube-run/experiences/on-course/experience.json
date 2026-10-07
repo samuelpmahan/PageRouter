@@ -1,0 +1,21 @@
+{
+  "id": "on-course",
+  "title": "On Course",
+  "description": "Create, preview, and export the graphics made from your shelf.",
+  "version": "0.1.0",
+  "track": "exp",
+  "mounts": ["studio"],
+  "entry": "index.html",
+  "outDir": "dist",
+  "build": "node build.mjs",
+  "sandbox": ["allow-scripts", "allow-same-origin", "allow-downloads", "allow-modals", "allow-forms"],
+  "studio": {
+    "mode": "create",
+    "sourceCommit": "6f7937bc1eebd22bf3135f50c9edf714b122902a",
+    "integration": "Shared Studio model; create and export views retain the same selected disc, bag, captures, and export records.",
+    "interactive": "mock.on-course.*",
+    "tests": "mock.on-course.<iterator>.*"
+  },
+  "demo": { "mode": "course" },
+  "storage": "Only mount-scoped local storage. Trusted same-origin code; not a security boundary."
+}

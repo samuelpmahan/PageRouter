@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "PXCUBE-hello",
+  "outcome": "Run and inspect hello through the shared PxCube packaging program.",
+  "location": {
+    "component": "experiences/hello"
+  },
+  "target": {
+    "kind": "pcr",
+    "identity": "pcr.pxcube.hello"
+  },
+  "requirements": [
+    {
+      "id": "package",
+      "text": "Current source packages and supplies a usable index.html."
+    },
+    {
+      "id": "review",
+      "text": "The mounted Experience is inspected by its human reviewer."
+    }
+  ],
+  "dependencies": [],
+  "status": "review",
+  "blockers": [],
+  "checkpoints": [],
+  "acceptanceRefs": [],
+  "promotionRefs": [],
+  "resume": "Open the local launcher and inspect the packaged Experience. Automated evidence is in evidence/local-pages; human acceptance and promotion remain unset."
+}

@@ -1,0 +1,176 @@
+{
+  "schemaVersion": 1,
+  "storeId": "pxcube-browser-optimizations",
+  "records": [
+    {
+      "id": "BO-0001",
+      "title": "Transient state before durable persistence",
+      "status": "seeded",
+      "scope": "browser-runtime",
+      "tags": ["state", "persistence", "quota", "startup"],
+      "problem": "Writing large or rapidly changing browser state directly to durable storage makes the first interaction slow and can fail at the storage boundary, taking the user's progress with it.",
+      "signals": [
+        { "id": "write-on-every-change", "event": "state-change", "observation": "A durable write occurs for every keystroke, selection, paint, or preview update." },
+        { "id": "quota-or-long-write", "event": "durable-write", "observation": "A write is slow, throws a quota error, or blocks the next paint." }
+      ],
+      "recommendation": {
+        "summary": "Keep an in-memory/session draft first; persist a compact, debounced checkpoint only after the transient state is usable.",
+        "actions": [
+          "Render and acknowledge the transient interaction before scheduling durable persistence.",
+          "Debounce/coalesce durable writes and retain the last known-good checkpoint.",
+          "Record persistence failures as recoverable diagnostics instead of discarding the draft."
+        ],
+        "avoid": ["Synchronous full-state serialization in an input or paint handler", "Treating a quota failure as permission to reset the session"]
+      },
+      "guard": {
+        "kind": "unit",
+        "assertion": "The transient update remains available when durable persistence fails, and durable writes are coalesced.",
+        "testRef": "browser-optimizations/test/run.mjs#BO-0001"
+      },
+      "appliesTo": {
+        "lanes": ["neat", "tidy", "crisp"],
+        "surfaces": ["experience-state", "preview", "browser-storage"]
+      },
+      "evidence": [
+        { "kind": "local-observation", "ref": "evidence/demo-experiences-m/browser-quota-failure.json", "note": "A browser quota failure is retained as a concrete slow-path signal." }
+      ]
+    },
+    {
+      "id": "BO-0002",
+      "title": "Build the catalog index once",
+      "status": "seeded",
+      "scope": "browser-runtime",
+      "tags": ["catalog", "index", "startup", "network"],
+      "problem": "Repeatedly scanning or normalizing the same catalog during startup and navigation multiplies parse and layout work, making the whole Experience feel slow.",
+      "signals": [
+        { "id": "repeated-scan", "event": "catalog-read", "observation": "The same catalog source is fetched, parsed, or indexed more than once per session." },
+        { "id": "navigation-rebuild", "event": "navigation", "observation": "Changing views rebuilds an index that has not changed." }
+      ],
+      "recommendation": {
+        "summary": "Create one immutable session index from the catalog source, then share it with views and invalidate it only when the source changes.",
+        "actions": [
+          "Key the index by the source version or content identity.",
+          "Expose read-only lookup helpers to downstream views.",
+          "Measure cache hit/miss and build duration so regressions become visible."
+        ],
+        "avoid": ["Per-view catalog scans", "Sorting and filtering the full source for every render"]
+      },
+      "guard": {
+        "kind": "unit",
+        "assertion": "A stable catalog source produces one index build per session; a changed source produces exactly one new build.",
+        "testRef": "browser-optimizations/test/run.mjs#BO-0002"
+      },
+      "appliesTo": {
+        "lanes": ["neat", "tidy", "crisp"],
+        "surfaces": ["catalog", "shelf", "launcher"]
+      },
+      "evidence": [
+        { "kind": "design-note", "ref": "docs/studio-sandboxes.md", "note": "The sandbox inventory makes repeated catalog and launcher work a shared cross-Experience concern." }
+      ]
+    },
+    {
+      "id": "BO-0006",
+      "title": "Never restart a live session",
+      "status": "seeded",
+      "scope": "local-development",
+      "tags": ["session", "server", "hot-reload", "recovery"],
+      "problem": "Restarting the server or replacing the active preview while someone is working destroys the browser context and can strand unsaved progress.",
+      "signals": [
+        { "id": "active-session", "event": "source-change", "observation": "A rebuild or source edit is observed while a live preview has active interaction state." },
+        { "id": "restart-request", "event": "server-lifecycle", "observation": "A tool proposes killing, restarting, or replacing the process that owns the current preview." }
+      ],
+      "recommendation": {
+        "summary": "Keep the live server and loaded session stable; offer a separately identified newer build that the user can inspect or activate deliberately.",
+        "actions": [
+          "Treat the current session as an owned context with an explicit lifecycle.",
+          "Build into a new attempt/artifact directory instead of replacing the loaded one.",
+          "Surface a newer-build notice without navigation, reload, or implicit activation."
+        ],
+        "avoid": ["Killing a server to pick up ordinary edits", "Auto-reloading an active Experience", "Assuming a successful build means the new build is safe to activate"]
+      },
+      "guard": {
+        "kind": "browser",
+        "assertion": "A newer build does not navigate, reload, or discard the loaded artifact and owning context.",
+        "testRef": "browser-optimizations/test/run.mjs#BO-0006"
+      },
+      "appliesTo": {
+        "lanes": ["neat", "tidy", "crisp"],
+        "surfaces": ["live-preview", "launcher", "local-server"]
+      },
+      "evidence": [
+        { "kind": "browser-test", "ref": "evidence/ntc-console/browser-results.json", "note": "The control layer retains a loaded artifact while offering a newer build." },
+        { "kind": "design-note", "ref": "docs/local-pages.md", "note": "Local build attempts are retained and served through a stable preview path." }
+      ]
+    },
+    {
+      "id": "BO-0007",
+      "title": "Serve the preview artifact only",
+      "status": "seeded",
+      "scope": "all-experiences",
+      "tags": ["preview", "artifact", "cache", "isolation"],
+      "problem": "A preview that reaches back into source/build machinery at runtime couples the browser to expensive and mutable work, increasing load time and making failures look like data loss.",
+      "signals": [
+        { "id": "runtime-build-fetch", "event": "preview-load", "observation": "The browser requests source files, build commands, or package tooling instead of a completed preview artifact." },
+        { "id": "artifact-missing", "event": "preview-load", "observation": "A served preview is not tied to a receipt or immutable output set." }
+      ],
+      "recommendation": {
+        "summary": "Serve a completed, verified, static preview artifact; keep build and source inspection outside the runtime request path.",
+        "actions": [
+          "Package once, verify the receipt, and point the preview at the resulting output.",
+          "Give each attempt a stable identity so it can be compared or activated explicitly.",
+          "Keep source/build endpoints out of the browser's normal preview path."
+        ],
+        "avoid": ["Compiling during first paint", "Replacing a loaded artifact in place", "Calling a development build endpoint from an Experience"]
+      },
+      "guard": {
+        "kind": "static",
+        "assertion": "Preview output is served from a packaged artifact and does not import or fetch vendor/source build paths.",
+        "testRef": "browser-optimizations/test/run.mjs#BO-0007"
+      },
+      "appliesTo": {
+        "lanes": ["neat", "tidy", "crisp"],
+        "surfaces": ["preview", "launcher", "static-hosting"]
+      },
+      "evidence": [
+        { "kind": "local-observation", "ref": "evidence/local-pages/browser-results.json", "note": "Local Pages evidence exercises the packaged preview rather than source/build tooling in the frame." }
+      ]
+    },
+    {
+      "id": "BO-0008",
+      "title": "#PROcision: assisted, exact, reversible finishing",
+      "status": "seeded",
+      "scope": "all-experiences",
+      "tags": ["procision", "crop", "direct-manipulation", "deterministic", "viewport"],
+      "problem": "A tool that hides finishing behind opaque automation or scattered controls makes visual work hard to correct, verify, and trust.",
+      "signals": [
+        { "id": "opaque-first-pass", "event": "first-pass", "observation": "The automatic result is shown without a direct manipulation path for precise correction." },
+        { "id": "non-deterministic-finish", "event": "fine-adjustment", "observation": "A finishing control does not apply a predictable increment or moves verification outside the active viewport." },
+        { "id": "premature-commit", "event": "edit", "observation": "A correction changes durable state before the user has visually verified and explicitly committed it." }
+      ],
+      "recommendation": {
+        "summary": "Pair an automatic first pass with direct manipulation, exact finishing increments, same-viewport verification, reversible transient state, and explicit commit.",
+        "actions": [
+          "Show the automatic first pass immediately, then keep the direct manipulation path visible and unobstructed.",
+          "Use exact deterministic increments for fine adjustments; the first crop example is -10, -5, -3, -1, +1, +3, +5, +10 percentage points of selection diameter.",
+          "Keep edits transient and reversible until the user verifies the result in the same viewport and explicitly commits it."
+        ],
+        "avoid": ["Opaque automation with no correction path", "Controls that apply hidden or variable deltas", "Durable writes before visual verification and explicit commit", "Tooling panels that displace the user's task"]
+      },
+      "guard": {
+        "kind": "unit",
+        "assertion": "The crop correction strip applies exactly its signed selection-diameter-percentage-point increments to transient state, verifies in the same viewport, and commits only explicitly.",
+        "testRef": "browser-optimizations/test/run.mjs#BO-0008"
+      },
+      "appliesTo": {
+        "lanes": ["neat", "tidy", "crisp"],
+        "surfaces": ["crop", "direct-manipulation", "preview", "commit"]
+      },
+      "evidence": [
+        { "kind": "design-note", "ref": "docs/design-principles.md", "note": "#PROcision defines the professional-tool contract and the first crop correction example." }
+      ],
+      "examples": [
+        { "kind": "crop-correction-strip", "increments": [-10, -5, -3, -1, 1, 3, 5, 10], "unit": "selection-diameter-percentage-points", "verification": "same-viewport" }
+      ]
+    }
+  ]
+}

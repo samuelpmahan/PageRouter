@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "work": [],
+  "types": {},
+  "results": [],
+  "manifests": [
+    {
+      "id": "build-bag",
+      "title": "BuildBag",
+      "description": "Choose the discs you want to carry. A sandbox frame ready for the bag-building Experience.",
+      "entry": "index.html",
+      "mounts": [
+        "shelf"
+      ],
+      "build": "node build.mjs",
+      "outDir": "dist",
+      "sandbox": [
+        "allow-scripts",
+        "allow-same-origin",
+        "allow-forms"
+      ],
+      "scaffold": {
+        "template": "sandbox@1",
+        "world": "shelf",
+        "inputs": [
+          {
+            "address": "px.discs",
+            "label": "Your shelf",
+            "for": "The available discs. Selection of physical copies is the first behavior to connect."
+          }
+        ],
+        "outputs": [
+          {
+            "address": "px.bags",
+            "label": "Your saved bag",
+            "for": "An ordered collection of selected physical discs. This output has not been implemented."
+          }
+        ],
+        "steps": [
+          "Choose discs",
+          "Arrange your bag",
+          "Create bag"
+        ],
+        "draft": {
+          "address": "sc.draft",
+          "field": "name",
+          "label": "Bag name"
+        }
+      },
+      "version": "0.1.0",
+      "manifestSource": {
+        "path": ".tidy/manifest.json",
+        "type": "pxcube-build-bag",
+        "digest": "f93e0a3c3e2315d52df5c9301f2701d22b1a041eaa691a862355a8d4b5be165d"
+      }
+    },
+    {
+      "id": "explore-shelf",
+      "title": "ExploreShelf",
+      "description": "Browse the accepted shopping shelf; inspect or test the live Part edit loop separately.",
+      "version": "0.1.0",
+      "track": "exp",
+      "mounts": [
+        "studio"
+      ],
+      "entry": "index.html",
+      "outDir": "dist",
+      "build": "node build.mjs",
+      "sandbox": [
+        "allow-scripts",
+        "allow-same-origin",
+        "allow-downloads",
+        "allow-modals",
+        "allow-forms"
+      ],
+      "studio": {
+        "mode": "shelf",
+        "sourceCommit": "6f7937bc1eebd22bf3135f50c9edf714b122902a",
+        "integration": "Legacy Studio model in an owning context. Additional dependency scan: studio-import.json.",
+        "interactive": "mock.explore-shelf.*",
+        "tests": "mock.explore-shelf.<iterator>.*"
+      },
+      "storage": "Only mount-scoped local storage. Trusted same-origin code; not a security boundary."
+    },
+    {
+      "id": "hello",
+      "build": "mkdir -p dist && cp index.html dist/",
+      "description": "First light: a trivial THING proving the sandbox holds.",
+      "entry": "index.html",
+      "mounts": [],
+      "outDir": "dist",
+      "sandbox": [
+        "allow-scripts"
+      ],
+      "title": "Hello THING",
+      "track": "exp",
+      "version": "0.1.0"
+    },
+    {
+      "id": "mock-smoke",
+      "title": "MockPxC · retained worlds",
+      "description": "Keep an interactive workspace, create isolated test runs, and inspect their actual values.",
+      "version": "0.1.0",
+      "track": "exp",
+      "mounts": [
+        "shelf"
+      ],
+      "entry": "index.html",
+      "outDir": "dist",
+      "build": "node build.mjs",
+      "sandbox": [
+        "allow-scripts",
+        "allow-same-origin"
+      ],
+      "storage": "localStorage: retained JSON mock worlds. Trusted same-origin demonstration; not a hostile-code boundary.",
+      "binding": "Interactive: mock.<id>.*. Unit/E2E: mock.<id>.<iterator>.*. The shelf seed supplies both; stored inner names retain px/fn/oc/sc only."
+    },
+    {
+      "id": "upload-disc-to-shelf",
+      "title": "UploadDiscToShelf",
+      "description": "Paint or photograph a disc, save it, and inspect its Parts in an isolated sandbox.",
+      "version": "0.1.0",
+      "track": "exp",
+      "mounts": [
+        "studio"
+      ],
+      "entry": "index.html",
+      "outDir": "dist",
+      "build": "node build.mjs",
+      "sandbox": [
+        "allow-scripts",
+        "allow-same-origin",
+        "allow-downloads",
+        "allow-modals",
+        "allow-forms"
+      ],
+      "studio": {
+        "mode": "upload",
+        "sourceCommit": "6f7937bc1eebd22bf3135f50c9edf714b122902a",
+        "integration": "Legacy Studio model in an owning context. Additional dependency scan: studio-import.json.",
+        "interactive": "mock.upload-disc-to-shelf.*",
+        "tests": "mock.upload-disc-to-shelf.<iterator>.*"
+      },
+      "storage": "Only mount-scoped local storage. Trusted same-origin code; not a security boundary."
+    }
+  ],
+  "packagedIds": [
+    "build-bag",
+    "explore-shelf",
+    "hello",
+    "mock-smoke",
+    "upload-disc-to-shelf"
+  ]
+}

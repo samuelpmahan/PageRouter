@@ -1,0 +1,56 @@
+✔ interactive and numbered handles resolve only their own domain addresses (12.541701ms)
+✔ namespaced archives preserve other Experiences and refuse stale owners or quota failures (1.649233ms)
+✔ owned resolver preserves fixture dotted-key and nested resolution (4.848087ms)
+✔ iteration allocation, guarded resolution, seed isolation and reload retention (14.586659ms)
+✔ quota failure and competing owner cannot silently discard prior iterations (1.742372ms)
+✔ interactive identity resumes without reseeding; numbered tests remain independent (17.588352ms)
+✔ legacy numbered worlds retain their exact data without assigning a historical purpose (7.037359ms)
+▶ actual crisp CLI: six fixture intentions, with explicit negative mutations
+  ✔ hello (760.459749ms)
+  ✔ sneaky (296.44049ms)
+  ✔ broken (372.868552ms)
+  ✔ leaky (296.742913ms)
+  ✔ drift (285.341993ms)
+  ✔ unknown-world (295.659022ms)
+✔ actual crisp CLI: six fixture intentions, with explicit negative mutations (2315.706972ms)
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 1 failed
+run: 2026-09-14T18-34-07-951Z-951b593e
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 1 failed
+run: 2026-09-14T18-34-10-519Z-90600b26
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 1 failed
+run: 2026-09-14T18-34-12-576Z-0b96ad3d
+neat check: 2 item schemas valid
+tidy: registry schema checked
+launcher: 0 shipped, 2 failed
+run: 2026-09-14T18-34-14-431Z-38dbb95f
+✔ shared pipeline retains attempts, isolates failed builds, shows drift and refuses stale output (8297.784463ms)
+✔ vendored original source identities match their recorded commits (3.6591ms)
+✔ tidy provides a detached build definition and names missing or invalid inputs (456.118381ms)
+✔ crisp generates reproducibly from tidy, supports a second id, and refuses to overwrite work (838.752258ms)
+neat check: 1 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 0 failed
+run: 2026-09-14T18-34-07-578Z-139fc855
+neat check: 1 item schemas valid
+tidy: registry schema checked
+launcher: 1 shipped, 0 failed
+run: 2026-09-14T18-34-10-012Z-0c660794
+neat check: 1 item schemas valid
+tidy: registry schema checked
+launcher: 0 shipped, 1 failed
+run: 2026-09-14T18-34-12-039Z-85982e09
+✔ CLI scaffold -> tidy-fed package -> launcher; a changed manifest changes the next build (6656.175178ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 19
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11118.985338

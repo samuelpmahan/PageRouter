@@ -1,17 +1,18 @@
 {
-  "schema": "composed-workbench-source-checkpoint@2",
-  "version": "0.0.0",
-  "channel": "candidate",
-  "siteBuildId": "f300f36921420180b22cf20670700a08adaf3c523ac332f1c93653c4143aa765",
-  "evaluatorImplementationPin": "af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492",
-  "atlasImplementationPin": "b1cd98c6ff4195b183d6b6e0cee21b1ca0e2e16afa2bd3d482b400a175f13739",
-  "driveFileId": "1ZwS98quJQwjeyEz3w4nWPXetILYr9qbm",
-  "driveUrl": "https://drive.google.com/file/d/1ZwS98quJQwjeyEz3w4nWPXetILYr9qbm/view",
-  "archiveSha256": "2d58add7477bc1b9cb18cce9297f6851f21fcf4d051afcd9bda5e849f6e8ce3b",
-  "archiveBytes": 32555727,
-  "baseSourceCommit": "854e271da06087dc798422328b2eaac921625277",
-  "baseCheckpointBuildId": "9315e256bb770f102ba0da7dbda3975f187667e846046455c81f8c3f490da454",
-  "baselinePublicationCommit": "0ad7eae4d4b7671ca045852fd341915618ac1ac4",
-  "sourceAuthority": "Full modified materialized canonical checkpoint tree; compiled-only GitHub transport is not source authority",
-  "note": "Atlas motion/Beta six-node cross-language case with capture, independent Python result import, PxC FG comparison, replay and disagreement. Native CPU Proto ingestion is in private source. Historical ReplayString source remains unlocated. Candidate 0.0.0; no human acceptance asserted."
+  "schema": "pagerouter-bazel-source@1",
+  "branch": "parallel-compressing-bootstrap",
+  "baseline_publication_commit": "ea5d7c6dbe99522adc8bdae687c885ac143fabb7",
+  "authoritative_drive_file_id": "1ZwS98quJQwjeyEz3w4nWPXetILYr9qbm",
+  "authoritative_archive_sha256": "2d58add7477bc1b9cb18cce9297f6851f21fcf4d051afcd9bda5e849f6e8ce3b",
+  "checkpoint_build_id": "f300f36921420180b22cf20670700a08adaf3c523ac332f1c93653c4143aa765",
+  "canonical_file_count": 2081,
+  "compiler_input_count": 1292,
+  "manifest": "ci/bazel/source-manifest.json",
+  "source_authority": "Verified canonical archive; curated compiler inputs and separate build-recipe overlays",
+  "boundaries": [
+    "Original archive/build identities do not describe the new Git tree or freshly rebuilt site",
+    "Historical dist, unrelated screenshots, publication machinery and executor caches are excluded",
+    "Proto mint tuples remain unresolved data, not executable recipes",
+    "No main merge, product deployment or semantic acceptance is implied"
+  ]
 }

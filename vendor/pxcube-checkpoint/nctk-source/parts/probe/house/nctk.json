@@ -1,0 +1,22 @@
+{
+  "schema": "nctk-directory@1",
+  "address": "parts/probe/house",
+  "children": [],
+  "kind": "part",
+  "source": "parts/probe/house/part.json",
+  "policies": {
+    "neat": {
+      "mode": "none"
+    },
+    "crisp": {
+      "mode": "local"
+    },
+    "tidy": {
+      "mode": "local"
+    },
+    "kompoze": {
+      "mode": "local",
+      "references": []
+    }
+  }
+}

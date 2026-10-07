@@ -1,0 +1,39 @@
+{
+  "errors": [],
+  "requests": [],
+  "beforeClick": {
+    "ownerReady": true,
+    "handlerReady": true,
+    "status": "Ready.",
+    "smoke": null
+  },
+  "afterClick": {
+    "ownerReady": true,
+    "handlerReady": true,
+    "status": "Created mock.shelf.1 and mock.shelf.2. Next: edit the first world's visible control.",
+    "smoke": null
+  },
+  "whenReady": {
+    "ownerReady": true,
+    "handlerReady": true,
+    "status": "Created mock.shelf.1 and mock.shelf.2. Next: edit the first world's visible control.",
+    "smoke": null
+  },
+  "finished": {
+    "ownerReady": true,
+    "handlerReady": true,
+    "status": "Created mock.shelf.3 and mock.shelf.4. Next: edit the first world's visible control.",
+    "smoke": {
+      "mounts": [
+        "mock.shelf.1",
+        "mock.shelf.2"
+      ],
+      "checks": [
+        true,
+        true,
+        true
+      ],
+      "ownerRevision": 4
+    }
+  }
+}

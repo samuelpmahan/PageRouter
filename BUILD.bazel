@@ -1,0 +1,34 @@
+load("//ci/bazel:source_files.bzl", "SOURCE_FILES")
+load("//ci/bazel:build_rule.bzl", "pagerouter_site")
+load("//ci/bazel:verify_rule.bzl", "pagerouter_verify")
+
+pagerouter_site(
+    name = "pagerouter_site",
+    srcs = SOURCE_FILES,
+    deps = ["@pagerouter_toolchain//:closure"],
+    dependency_prefix = "../pagerouter_toolchain/",
+    node = "@pagerouter_toolchain//:node/bin/node",
+    source_manifest = "//ci/bazel:source-manifest.json",
+    recipe_files = [
+        "//:BUILD.bazel", "//:WORKSPACE", "//:.bazelversion", "//:.gitignore",
+        "//ci/bazel:BUILD.bazel", "//ci/bazel:source_files.bzl", "//ci/bazel:source-manifest.json",
+        "//ci/bazel:build_rule.bzl", "//ci/bazel:build_driver.mjs", "//ci/bazel:verify_rule.bzl",
+        "//ci/bazel:bootstrap.py", "//ci/bazel:run.sh", "//ci/bazel:verify_outputs.py",
+        "//ci/bazel:run_observation.py", "//ci/bazel:README.md",
+    ],
+    bazel_version = "7.4.1",
+)
+
+pagerouter_verify(
+    name = "pagerouter_verify",
+    build = ":pagerouter_site",
+)
+
+filegroup(
+    name = "minted_protos",
+    srcs = [
+        "FunctionalGuarantee/proto/none/m.pxc",
+        "FunctionalGuarantee/proto/none/c.pxc",
+        "FunctionalGuarantee/proto/none/LossFunction.pxc",
+    ],
+)

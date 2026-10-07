@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "PXCUBE-build-bag",
+  "outcome": "Choose exact copies, arrange them, and keep a named bag.",
+  "location": {
+    "component": "experiences/build-bag"
+  },
+  "target": {
+    "kind": "pcr",
+    "identity": "pcr.pxcube.build-bag"
+  },
+  "requirements": [
+    {
+      "id": "package",
+      "text": "Packages from a fresh source snapshot through crisp."
+    },
+    {
+      "id": "behavior",
+      "text": "Choose exact copies, arrange them, and keep a named bag."
+    },
+    {
+      "id": "inspection",
+      "text": "Visible output belongs to the sandbox store and retained compositions."
+    },
+    {
+      "id": "review",
+      "text": "Sam inspects the actual minimal Experience; checks do not imply acceptance."
+    }
+  ],
+  "dependencies": [],
+  "status": "review",
+  "blockers": [],
+  "checkpoints": [],
+  "acceptanceRefs": [],
+  "promotionRefs": [],
+  "resume": "Review this minimal candidate in the local NTC shell. Read docs/demo-experiences-m.md and evidence/demo-experiences-m. Acceptance and promotion await Sam; no verdict has been filed for him."
+}

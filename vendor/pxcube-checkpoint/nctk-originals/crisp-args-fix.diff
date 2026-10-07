@@ -1,0 +1,78 @@
+--- /workspace/shared/nctk-archaeology/checkpoints/originals/policies-crisp.mjs.orig	2026-09-29 20:05:04.943707948 -0500
++++ /workspace/shared/nctk-archaeology/source/policies/crisp.mjs	2026-09-29 20:06:31.211488913 -0500
+@@ -45,7 +45,6 @@
+   for (const node of resolved.ordered) {
+     const inputs = Object.fromEntries(node.contract.inputs.map(address => [address, available.get(address)]));
+     const outputAddress = node.contract.outputs[0];
+-    const nodeConfig = resolved.nodeArgs?.get(node.address) ?? resolved;
+     const { fingerprint, inputIds, args, viewArgs, runtimeIdentity } = await actionIdentity(root, resolved, node, inputs, runtime.identities);
+     const decision = await eligibility(root, node, fingerprint);
+     let receipt = decision.receipt, receiptPath = decision.receiptPath, receiptSha256 = decision.receiptSha256;
+@@ -59,8 +58,7 @@
+       try {
+         const implementation = await import(pathToFileURL(join(root, node.script)).href);
+         const result = await implementation.calculate({ inputs, outputDir,
+-          args: resolved.stageTargets ? args : nodeConfig.runArgs,
+-          viewArgs: resolved.stageTargets ? viewArgs : nodeConfig.viewArgs, runtime });
++          args, viewArgs, runtime });
+         for (const file of result.files) {
+           const path = relative(root, file).replaceAll('\\', '/');
+           record.outputs.push({ path, sha256: await fileHash(file), size: (await readFile(file)).length });
+--- /workspace/shared/nctk-archaeology/checkpoints/originals/stage-set.test.mjs.orig	2026-09-29 20:05:04.945180457 -0500
++++ /workspace/shared/nctk-archaeology/source/tests/stage-set.test.mjs	2026-09-29 20:07:32.437333536 -0500
+@@ -5,7 +5,7 @@
+ import { dirname, join } from 'node:path';
+ import { fileHash } from '../facts.mjs';
+ import { kompoze, kompozeStageSet } from '../policies/kompoze.mjs';
+-import { crispStageSet } from '../policies/crisp.mjs';
++import { crisp, crispStageSet } from '../policies/crisp.mjs';
+ 
+ const stage = name => ({ name, recipePath: `recipes/${name.toLowerCase()}.json` });
+ const manifest = (address, children, kind, source = null, refs = []) => ({ schema: 'nctk-directory@1',
+@@ -16,14 +16,14 @@
+   await mkdir(dirname(full), { recursive: true });
+   await writeFile(full, typeof value === 'string' ? value : JSON.stringify(value));
+ }
+-async function fixture({ differentSource = false, conflictingArgs = false, unstarted = false, irrelevantArgs = false } = {}) {
++async function fixture({ differentSource = false, conflictingArgs = false, unstarted = false, irrelevantArgs = false, variantProducers = true } = {}) {
+   const root = await mkdtemp(join(tmpdir(), 'stage-set-'));
+   await write(root, 'fixtures/shared.txt', 'seed');
+   await write(root, 'fixtures/other.txt', 'other');
+   await write(root, 'nctk.json', manifest('.', ['bases', 'calculations', 'overlays', 'parts', 'recipes'], 'group'));
+   for (const [parent, children] of Object.entries({
+     bases: ['bases/a', 'bases/b'], overlays: ['overlays/a', 'overlays/b'], recipes: ['recipes/a', 'recipes/b'],
+-    calculations: ['calculations/shared-a', 'calculations/shared-b', 'calculations/target-a', 'calculations/target-b'],
++    calculations: ['calculations/shared-a', ...(variantProducers ? ['calculations/shared-b'] : []), 'calculations/target-a', 'calculations/target-b'],
+     parts: [...(unstarted ? ['parts/open'] : []), 'parts/shared', 'parts/source', 'parts/target'],
+     'parts/source': ['parts/source/other', 'parts/source/shared'],
+     'parts/target': ['parts/target/a', 'parts/target/b'],
+@@ -56,7 +56,7 @@
+   await write(root, 'parts/shared/nctk.json', manifest('parts/shared', [], 'part', 'parts/shared/part.json'));
+   const calculations = [
+     ['shared-a', 'parts/source/shared', 'parts/shared', 'SA', ['factor']],
+-    ['shared-b', 'parts/source/shared', 'parts/shared', 'SB', ['factor']],
++    ...(variantProducers ? [['shared-b', 'parts/source/shared', 'parts/shared', 'SB', ['factor']]] : []),
+     ['target-a', 'parts/shared', 'parts/target/a', 'A', []],
+     ['target-b', differentSource ? 'parts/source/other' : 'parts/shared', 'parts/target/b', 'B', []],
+   ];
+@@ -157,3 +157,20 @@
+   assert.equal(await readFile(result.targets.A.files[0], 'utf8'), 'seed>SA1>A');
+   assert.equal(await readFile(result.targets.B.files[0], 'utf8'), 'seed>SA1>B');
+ });
++
++test('ordinary Crisp passes only fingerprinted Run/View Args and reuses when undeclared args change', async () => {
++  const { root, source, runtime } = await fixture({ irrelevantArgs: true, variantProducers: false });
++  const firstPlan = await kompoze(root, 'recipes/a.json', { runArgs: {}, viewArgs: {} });
++  const first = await crisp(root, firstPlan, source, runtime);
++  assert.deepEqual(first.actions.map(action => action.decision), ['RUN', 'RUN']);
++  assert.equal(await readFile(first.target.files[0], 'utf8'), 'seed>SA1>A');
++
++  const basePath = 'bases/a.json', base = JSON.parse(await readFile(join(root, basePath)));
++  base.runArgs.extra = 'changed-but-undeclared-by-this-Calculation';
++  await write(root, basePath, base);
++  const secondPlan = await kompoze(root, 'recipes/a.json', { runArgs: {}, viewArgs: {} });
++  const second = await crisp(root, secondPlan, source, runtime);
++  assert.deepEqual(second.actions.map(action => action.decision), ['REUSE', 'REUSE']);
++  assert.deepEqual(second.actions.map(action => action.fingerprint), first.actions.map(action => action.fingerprint));
++  assert.equal(await readFile(second.target.files[0], 'utf8'), 'seed>SA1>A');
++});

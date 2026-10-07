@@ -1,0 +1,67 @@
+{
+  "schema": "published-evaluator-identity@1",
+  "implementationPin": "af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492",
+  "sourceCommit": "1f372f81eb1dd4ba39b0f91818d5f1202b1d46f9",
+  "sourceArchiveSha256": "14ae8c350409606003ebdd388030dddaad5aa5e99bc2b19f990f908240458b4e",
+  "publishedCommit": "cbc7a00fe64f9d1c5771e8597dd59d955d4cbfe0",
+  "closure": {
+    "schema": "evaluator-dependency-closure@1",
+    "roots": [
+      "src/session-repl.mjs",
+      "exp/cooperative/hh-workbench.mjs"
+    ],
+    "files": {
+      "exp/cooperative/hh-workbench.mjs": {
+        "sha256": "120579662183ab248460c93234200dad10fd1f5f956900c47b603bc91cedcfd9",
+        "bytes": 47537
+      },
+      "vendor/hh/services/contract.mjs": {
+        "sha256": "6d50ddd27ac35df190a5e3c65e5fc4e5c269ca52ae8febb1d9d332bc2597738c",
+        "bytes": 4062
+      },
+      "vendor/hh/services/pxc.mjs": {
+        "sha256": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+        "bytes": 2869
+      },
+      "vendor/hh/services/runtime.mjs": {
+        "sha256": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+        "bytes": 4589
+      },
+      "vendor/hh/services/devtools-board.mjs": {
+        "sha256": "90113ea78b98ae526db03f0a5ff7cf43c41190a886a7bf8c0d2639edacde8999",
+        "bytes": 3537
+      },
+      "vendor/hh/services/fixture-provider.mjs": {
+        "sha256": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+        "bytes": 16820
+      },
+      "vendor/hh/services/fixtures.mjs": {
+        "sha256": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+        "bytes": 1507
+      },
+      "src/session-repl.mjs": {
+        "sha256": "5a43c22d3f0a8c8fcd21689a798d57866e29451250e5a5a415736130b897b7cf",
+        "bytes": 18744
+      }
+    },
+    "hostBindings": {
+      "initialization": {
+        "sha256": "319e74ee4c6df72e299df65edc9224ba910710248317f385233f4ccb542ed420",
+        "bytes": 140
+      },
+      "output": {
+        "sha256": "be461d0a137ca08038ff8ccb89afe494cf407eb2dd266a2d282762ab6ee4eb90",
+        "bytes": 340
+      },
+      "functionsView": {
+        "sha256": "8f8bb6514cf0e6fc3814e74b75120d4f07652718ee0f1ae215b2a41fed9b91a0",
+        "bytes": 2706
+      },
+      "composeView": {
+        "sha256": "2dbb28b2ce7ff41b0070ade8ca16904b35053223f5a68e45c5f447a692ccfa66",
+        "bytes": 2841
+      }
+    },
+    "digest": "572f02f674ac1cdf8b27664a803d4d06ac32ac16833a527f14718a33b249cdff"
+  }
+}

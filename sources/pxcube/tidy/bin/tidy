@@ -1,0 +1,94 @@
+#!/usr/bin/env node
+import { TidyError, registerStage, promoteStage, stageStatus, DEFAULT_REGISTRY } from '../lib/registry.mjs';
+
+const VERSION = '0.1.0';
+
+function usage() {
+  return [
+    'usage: tidy <command> [options]',
+    '',
+    'commands:',
+    '  register <id> --source exp/<id> [--title T] [--registry <path>]',
+    '      register a stage: a pointer at a working folder. No hashes.',
+    '  promote <id> --by-sam --receipt <receipt.json> [--registry <path>]',
+    "      record the receipt's chunk hashes and freeze the stage.",
+    "      Refuses without --by-sam: promotion is Sam's hand only.",
+    '  status [<id>] [--registry <path>]',
+    '      show the registry, or one stage.',
+    '  --help, -h    show this help',
+    '  --version, -v show version',
+    '',
+    'exit codes: 0 ok; 1 registry/promotion error; 3 usage error',
+  ].join('\n');
+}
+
+function parseArgs(argv) {
+  const positional = [];
+  const opts = {};
+  for (let i = 0; i < argv.length; i++) {
+    const arg = argv[i];
+    const kv = arg.match(/^--([^=]+)=(.*)$/);
+    if (kv) {
+      opts[kv[1]] = kv[2];
+    } else if (arg === '--source' || arg === '--title' || arg === '--receipt' || arg === '--registry') {
+      opts[arg.slice(2)] = argv[++i];
+      if (opts[arg.slice(2)] === undefined) return { error: `${arg} requires a value` };
+    } else if (arg === '--by-sam') {
+      opts['by-sam'] = true;
+    } else if (arg.startsWith('--')) {
+      return { error: `unknown option ${arg}` };
+    } else {
+      positional.push(arg);
+    }
+  }
+  return { positional, opts };
+}
+
+function fail(code, message) {
+  process.stderr.write(`${message}\n`);
+  process.exit(code);
+}
+
+async function main() {
+  const { positional, opts, error } = parseArgs(process.argv.slice(2));
+  if (error) fail(3, `${error}\n\n${usage()}`);
+  const [command, id] = positional;
+  if (command === '--help' || command === '-h' || !command) {
+    process.stdout.write(usage() + '\n');
+    process.exit(0);
+  }
+  if (command === '--version' || command === '-v') {
+    process.stdout.write(`tidy ${VERSION}\n`);
+    process.exit(0);
+  }
+  const registryPath = opts.registry ?? DEFAULT_REGISTRY;
+  try {
+    if (command === 'register') {
+      if (!id) fail(3, usage());
+      const stage = await registerStage(id, { source: opts.source, title: opts.title ?? null }, registryPath);
+      process.stdout.write(`registered ${stage.id}: ${stage.source} (track: ${stage.track}, frozen: false)\n`);
+      process.exit(0);
+    }
+    if (command === 'promote') {
+      if (!id) fail(3, usage());
+      const stage = await promoteStage(
+        id,
+        { bySam: !!opts['by-sam'], receiptPath: opts.receipt },
+        registryPath,
+      );
+      process.stdout.write(`promoted ${stage.id}: ${stage.chunks.length} chunk hashes frozen (track: clean)\n`);
+      process.exit(0);
+    }
+    if (command === 'status') {
+      const result = await stageStatus(id ?? null, registryPath);
+      process.stdout.write(JSON.stringify(result, null, 2) + '\n');
+      process.exit(0);
+    }
+    fail(3, usage());
+  } catch (err) {
+    if (err instanceof TidyError) fail(1, `tidy: ${err.code}: ${err.message}`);
+    fail(1, `tidy: ${err.message}`);
+  }
+}
+
+main();

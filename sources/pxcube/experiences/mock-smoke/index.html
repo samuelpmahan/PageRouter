@@ -1,0 +1,13 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MockPxC · retained worlds</title><link rel="stylesheet" href="style.css"><script type="importmap">{"imports":{"node:test":"./tests/shims/node-test.mjs","node:assert/strict":"./tests/shims/node-assert.mjs"}}</script></head><body><main>
+<p class="eyebrow">PxCube / MockPxC</p><h1>One seed. Separate worlds.</h1>
+<p>An interactive sandbox keeps your working state. Each unit/E2E test gets a fresh, numbered run from the same seed. Both stay available for inspection. MockPxC is the testcontainer, so its unit tests run right here, in this page, against the same seam.</p>
+<div class="toolbar"><label>Sandbox id <input id="run-id" value="shelf" pattern="[A-Za-z][A-Za-z0-9_-]*"></label><button id="open-interactive">Open interactive sandbox</button><button id="new-run">New test run</button><button id="smoke">Run visible isolation check</button></div>
+<p id="status" role="status">Ready.</p><div id="worlds"></div>
+<section id="tests" aria-label="Tests"><h2>Tests</h2>
+<p>The suite that treats MockPxC as the testcontainer. The unit tests below are the repo's real test files, running in this browser; each test's results land in MockPxC run records, its worlds stay inspectable, and any recorded run replays in a distinct sandbox, step by step. Your retained worlds are untouched. The rest of the suite needs Node or the assembled site, so it stays listed for CI.</p>
+<div class="toolbar"><button id="run-tests">Run MockPxC unit tests in this browser</button></div>
+<p id="tests-status" role="status"></p><div id="tests-results"></div><div id="tests-worlds"></div><div id="replay"></div>
+<details><summary>All test files in the repo</summary><div id="tests-files"></div></details></section>
+<details><summary>Inspect the mount owner</summary><p>The console handle is <code>window.pxCubeMocks</code>. The panels, checks, and console read the same owner. Snapshots are JSON values; this is not the Studio Part kernel.</p><pre id="inspection"></pre></details>
+<p class="foot">Retained in this browser on this origin. Storage errors are shown; nothing is automatically deleted. A running copy on a different origin has its own storage.</p>
+</main><script type="module" src="app.mjs"></script></body></html>

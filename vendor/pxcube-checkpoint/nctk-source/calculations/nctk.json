@@ -1,0 +1,34 @@
+{
+  "schema": "nctk-directory@1",
+  "address": "calculations",
+  "children": [
+    "calculations/composite-discstudio",
+    "calculations/cut",
+    "calculations/declare-discstudio-crop",
+    "calculations/prepare-discstudio-photo",
+    "calculations/preview-discstudio",
+    "calculations/probe-source",
+    "calculations/render-discstudio-card",
+    "calculations/review",
+    "calculations/save-discstudio",
+    "calculations/uniform-scale",
+    "calculations/xy-transform"
+  ],
+  "kind": "group",
+  "source": null,
+  "policies": {
+    "neat": {
+      "mode": "none"
+    },
+    "crisp": {
+      "mode": "none"
+    },
+    "tidy": {
+      "mode": "local"
+    },
+    "kompoze": {
+      "mode": "none",
+      "references": []
+    }
+  }
+}
