@@ -12,3 +12,18 @@ HH evaluator implementation: af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7b
 The original neat lifecycle and compiled PxCube, HH, and Justin project snapshots remain pinned. The historical completed-game ReplayString implementation was not present in the source checkpoints and is not claimed here. This is a bounded candidate, not a human contract milestone.
 
 Full source for this deployed build and fresh-checkout commands: [SOURCE.md](SOURCE.md).
+
+## Source build and Pages deployment
+
+From a fresh checkout with Linux, Node 24.19.0, Python 3 and Bazel 7.4.1:
+
+```sh
+cd checkpoint
+bash ci/bazel/run.sh
+```
+
+The fresh site is `checkpoint/bazel-bin/site.site`; source inputs, output hashes
+and successful build checks are recorded beside it. [Build details](checkpoint/README.md).
+GitHub Actions uses the same target on pull requests and deploys successful main
+builds. The split compiled artifact is retained for later cleanup and is no longer
+the deployment input. The workflow also supports moving the checkpoint to root.
