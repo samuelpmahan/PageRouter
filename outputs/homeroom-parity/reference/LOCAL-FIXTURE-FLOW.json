@@ -1,0 +1,1066 @@
+{
+  "schema": "homeroom-local-fixture-flow.v1",
+  "capturedAt": "2026-10-08T21:35:20.482Z",
+  "limits": [
+    "All actions used the assembled local fixture provider and one disposable browser tab.",
+    "No production login, real account, email, or external request occurred.",
+    "Fixture state reset was verified at end."
+  ],
+  "networkRequests": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/index.html"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/styles.css"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/app.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/services/index.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/teacher-journey.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/controller.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/webmcp.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/pxc-devtools/devtools.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/style-playground.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/services/style-playground.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/vendor/fast-check-4.10.2.bundle.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/vendor/fast-check-4.10.2.meta.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/services/pxc.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/services/contract.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/services/fixtures.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/services/fixture-provider.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/services/http-provider.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/services/runtime.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/pxc-devtools/devtools-data.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/services/devtools-board.mjs"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/assets/logo_transparent.png"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/pxc-devtools/devtools.css"
+    },
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:4188/compiled/hh/assets/apple.jpg"
+    }
+  ],
+  "externalRequests": [],
+  "steps": [
+    {
+      "name": "local-flow-01-register",
+      "action": "Fresh synthetic register view; no input changes.",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-flow-01-register.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+        "title": "Homeroom Heroes · Register",
+        "headings": [
+          "Preview controls",
+          "Create your account"
+        ],
+        "buttons": [
+          "Teacher journey",
+          "PxC DevTools",
+          "Reset demo",
+          "Fail next request",
+          "Submit demo registration"
+        ],
+        "fields": [
+          {
+            "tag": "input",
+            "name": "name",
+            "value": "Demo Teacher",
+            "disabled": false,
+            "checked": false
+          },
+          {
+            "tag": "input",
+            "name": "email",
+            "value": "demo.teacher@fixture.test",
+            "disabled": false,
+            "checked": false
+          },
+          {
+            "tag": "input",
+            "name": "phoneNumber",
+            "value": "DEMO",
+            "disabled": false,
+            "checked": false
+          },
+          {
+            "tag": "select",
+            "name": "state",
+            "value": "",
+            "disabled": false,
+            "options": [
+              {
+                "text": "Choose state",
+                "value": ""
+              },
+              {
+                "text": "Demo California",
+                "value": "Demo California"
+              },
+              {
+                "text": "Demo Washington",
+                "value": "Demo Washington"
+              }
+            ]
+          },
+          {
+            "tag": "select",
+            "name": "county",
+            "value": "",
+            "disabled": true,
+            "options": [
+              {
+                "text": "Choose county",
+                "value": ""
+              }
+            ]
+          },
+          {
+            "tag": "select",
+            "name": "district",
+            "value": "",
+            "disabled": true,
+            "options": [
+              {
+                "text": "Choose school district",
+                "value": ""
+              }
+            ]
+          },
+          {
+            "tag": "select",
+            "name": "school",
+            "value": "",
+            "disabled": true,
+            "options": [
+              {
+                "text": "Choose school",
+                "value": ""
+              }
+            ]
+          },
+          {
+            "tag": "input",
+            "name": "demoConsent",
+            "value": "on",
+            "disabled": false,
+            "checked": false
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "Log in",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/login"
+          }
+        ],
+        "text": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nLog in\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n1\nRegister\n2\nApproval\n3\nDemo login\n4\nCreate profile\n5\nPublic view\nPreview controls\n\nTry the flow, then reset to start again.\n\nReset demoFail next request\n\nNew records stay only in this tab’s session.\n\nA bounded preview from the surviving HH registration and teacher UI.\n\nTEACHER COMMUNITY\nCreate your account\n\nShare your school details to request a Homeroom Heroes account. Your registration stays pending until it is confirmed.\n\nName\nEmail\nPhone number\n\nSynthetic details are locked for this preview. Demo login does not use a real password.\n\nSchool information\nState\nChoose state\nDemo California\nDemo Washington\nCounty\nChoose county\nSchool district\nChoose school district\nSchool\nChoose school\nI confirm this is a synthetic demo request. No real account or terms acceptance is created.\nSubmit demo registration\nHomeroom Heroes · Synthetic teacher journey preview",
+        "storage": null
+      },
+      "requestCount": 22
+    },
+    {
+      "name": "local-flow-02-state-selected",
+      "action": "Selected local fixture state Demo California; downstream county choices became available.",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-flow-02-state-selected.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+        "title": "Homeroom Heroes · Register",
+        "headings": [
+          "Preview controls",
+          "Create your account"
+        ],
+        "buttons": [
+          "Teacher journey",
+          "PxC DevTools",
+          "Reset demo",
+          "Fail next request",
+          "Submit demo registration"
+        ],
+        "fields": [
+          {
+            "tag": "input",
+            "name": "name",
+            "value": "Demo Teacher",
+            "disabled": false,
+            "checked": false
+          },
+          {
+            "tag": "input",
+            "name": "email",
+            "value": "demo.teacher@fixture.test",
+            "disabled": false,
+            "checked": false
+          },
+          {
+            "tag": "input",
+            "name": "phoneNumber",
+            "value": "DEMO",
+            "disabled": false,
+            "checked": false
+          },
+          {
+            "tag": "select",
+            "name": "state",
+            "value": "Demo California",
+            "disabled": false,
+            "options": [
+              {
+                "text": "Choose state",
+                "value": ""
+              },
+              {
+                "text": "Demo California",
+                "value": "Demo California"
+              },
+              {
+                "text": "Demo Washington",
+                "value": "Demo Washington"
+              }
+            ]
+          },
+          {
+            "tag": "select",
+            "name": "county",
+            "value": "",
+            "disabled": false,
+            "options": [
+              {
+                "text": "Choose county",
+                "value": ""
+              },
+              {
+                "text": "Demo Alameda",
+                "value": "Demo Alameda"
+              }
+            ]
+          },
+          {
+            "tag": "select",
+            "name": "district",
+            "value": "",
+            "disabled": true,
+            "options": [
+              {
+                "text": "Choose school district",
+                "value": ""
+              }
+            ]
+          },
+          {
+            "tag": "select",
+            "name": "school",
+            "value": "",
+            "disabled": true,
+            "options": [
+              {
+                "text": "Choose school",
+                "value": ""
+              }
+            ]
+          },
+          {
+            "tag": "input",
+            "name": "demoConsent",
+            "value": "on",
+            "disabled": false,
+            "checked": false
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "Log in",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/login"
+          }
+        ],
+        "text": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nLog in\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n1\nRegister\n2\nApproval\n3\nDemo login\n4\nCreate profile\n5\nPublic view\nPreview controls\n\nTry the flow, then reset to start again.\n\nReset demoFail next request\n\nNew records stay only in this tab’s session.\n\nA bounded preview from the surviving HH registration and teacher UI.\n\nTEACHER COMMUNITY\nCreate your account\n\nShare your school details to request a Homeroom Heroes account. Your registration stays pending until it is confirmed.\n\nName\nEmail\nPhone number\n\nSynthetic details are locked for this preview. Demo login does not use a real password.\n\nSchool information\nState\nChoose state\nDemo California\nDemo Washington\nCounty\nChoose county\nDemo Alameda\nSchool district\nChoose school district\nSchool\nChoose school\nI confirm this is a synthetic demo request. No real account or terms acceptance is created.\nSubmit demo registration\nHomeroom Heroes · Synthetic teacher journey preview",
+        "storage": null
+      },
+      "requestCount": 22
+    },
+    {
+      "name": "local-flow-03-school-selected",
+      "action": "Selected one fixture county, district, and school; no production service called.",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-flow-03-school-selected.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+        "title": "Homeroom Heroes · Register",
+        "headings": [
+          "Preview controls",
+          "Create your account"
+        ],
+        "buttons": [
+          "Teacher journey",
+          "PxC DevTools",
+          "Reset demo",
+          "Fail next request",
+          "Submit demo registration"
+        ],
+        "fields": [
+          {
+            "tag": "input",
+            "name": "name",
+            "value": "Demo Teacher",
+            "disabled": false,
+            "checked": false
+          },
+          {
+            "tag": "input",
+            "name": "email",
+            "value": "demo.teacher@fixture.test",
+            "disabled": false,
+            "checked": false
+          },
+          {
+            "tag": "input",
+            "name": "phoneNumber",
+            "value": "DEMO",
+            "disabled": false,
+            "checked": false
+          },
+          {
+            "tag": "select",
+            "name": "state",
+            "value": "Demo California",
+            "disabled": false,
+            "options": [
+              {
+                "text": "Choose state",
+                "value": ""
+              },
+              {
+                "text": "Demo California",
+                "value": "Demo California"
+              },
+              {
+                "text": "Demo Washington",
+                "value": "Demo Washington"
+              }
+            ]
+          },
+          {
+            "tag": "select",
+            "name": "county",
+            "value": "Demo Alameda",
+            "disabled": false,
+            "options": [
+              {
+                "text": "Choose county",
+                "value": ""
+              },
+              {
+                "text": "Demo Alameda",
+                "value": "Demo Alameda"
+              }
+            ]
+          },
+          {
+            "tag": "select",
+            "name": "district",
+            "value": "Demo Bay District",
+            "disabled": false,
+            "options": [
+              {
+                "text": "Choose school district",
+                "value": ""
+              },
+              {
+                "text": "Demo Bay District",
+                "value": "Demo Bay District"
+              }
+            ]
+          },
+          {
+            "tag": "select",
+            "name": "school",
+            "value": "Demo Bay School",
+            "disabled": false,
+            "options": [
+              {
+                "text": "Choose school",
+                "value": ""
+              },
+              {
+                "text": "Demo Bay School",
+                "value": "Demo Bay School"
+              }
+            ]
+          },
+          {
+            "tag": "input",
+            "name": "demoConsent",
+            "value": "on",
+            "disabled": false,
+            "checked": false
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "Log in",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/login"
+          }
+        ],
+        "text": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nLog in\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n1\nRegister\n2\nApproval\n3\nDemo login\n4\nCreate profile\n5\nPublic view\nPreview controls\n\nTry the flow, then reset to start again.\n\nReset demoFail next request\n\nNew records stay only in this tab’s session.\n\nA bounded preview from the surviving HH registration and teacher UI.\n\nTEACHER COMMUNITY\nCreate your account\n\nShare your school details to request a Homeroom Heroes account. Your registration stays pending until it is confirmed.\n\nName\nEmail\nPhone number\n\nSynthetic details are locked for this preview. Demo login does not use a real password.\n\nSchool information\nState\nChoose state\nDemo California\nDemo Washington\nCounty\nChoose county\nDemo Alameda\nSchool district\nChoose school district\nDemo Bay District\nSchool\nChoose school\nDemo Bay School\nI confirm this is a synthetic demo request. No real account or terms acceptance is created.\nSubmit demo registration\nHomeroom Heroes · Synthetic teacher journey preview",
+        "storage": null
+      },
+      "requestCount": 22
+    },
+    {
+      "name": "local-flow-04-pending",
+      "action": "Submitted the explicitly synthetic registration to its in-tab fixture; pending approval state displayed.",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-flow-04-pending.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+        "title": "Homeroom Heroes · Register",
+        "headings": [
+          "Preview controls",
+          "Your request is pending",
+          "Try the next step"
+        ],
+        "buttons": [
+          "Teacher journey",
+          "PxC DevTools",
+          "Reset demo",
+          "Fail next request",
+          "Simulate demo approval"
+        ],
+        "fields": [],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "Log in",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/login"
+          },
+          {
+            "text": "See public demo teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          }
+        ],
+        "text": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nLog in\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n✓\nRegister\n2\nApproval\n3\nDemo login\n4\nCreate profile\n5\nPublic view\nPreview controls\n\nTry the flow, then reset to start again.\n\nReset demoFail next request\n\nNew records stay only in this tab’s session.\n\nA bounded preview from the surviving HH registration and teacher UI.\n\nTEACHER COMMUNITY\nPending approval\nYour request is pending\n\nYour demo registration is saved. In Homeroom Heroes, a teacher must be approved before they can log in.\n\nDemo registration saved as pending. Simulated approval is required before demo login.\nTry the next step\n\nSimulate approval for this synthetic teacher. This does not log you in or approve anyone in the real app.\n\nSimulate demo approval\nSee public demo teachers\nHomeroom Heroes · Synthetic teacher journey preview",
+        "storage": "{\"version\":1,\"fixture\":true,\"nextId\":2,\"selectedTeacherId\":\"demo-teacher-1\",\"sessionTeacherId\":null,\"teachers\":[{\"id\":\"demo-seed-avery\",\"teacher\":{\"name\":\"Demo Avery\",\"email\":\"avery@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo Washington\",\"county\":\"Demo King\",\"district\":\"Demo District\",\"school\":\"Demo Academy\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"demo-avery\",\"teacherId\":\"demo-seed-avery\",\"displayName\":\"Demo Avery\",\"bio\":\"Synthetic science teacher profile.\",\"subjects\":[\"Science\"],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY\",\"school\":{\"state\":\"Demo Washington\",\"county\":\"Demo King\",\"district\":\"Demo District\",\"school\":\"Demo Academy\"},\"seeded\":true}},{\"id\":\"demo-seed-jordan\",\"teacher\":{\"name\":\"Demo Jordan\",\"email\":\"jordan@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"demo-jordan\",\"teacherId\":\"demo-seed-jordan\",\"displayName\":\"Demo Jordan\",\"bio\":\"Synthetic arts teacher profile.\",\"subjects\":[\"Art\"],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN\",\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"seeded\":true}},{\"id\":\"demo-teacher-1\",\"teacher\":{\"name\":\"Demo Teacher\",\"email\":\"demo.teacher@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"registrationStatus\":\"pending\",\"profile\":null}]}"
+      },
+      "requestCount": 22
+    },
+    {
+      "name": "local-flow-05-approved",
+      "action": "Used local-only simulate approval; no real approval or account action.",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-flow-05-approved.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/login",
+        "title": "Homeroom Heroes · Demo login",
+        "headings": [
+          "Preview controls",
+          "Demo login"
+        ],
+        "buttons": [
+          "Teacher journey",
+          "PxC DevTools",
+          "Reset demo",
+          "Fail next request",
+          "Log in to demo"
+        ],
+        "fields": [
+          {
+            "tag": "input",
+            "name": "loginEmail",
+            "value": "demo.teacher@fixture.test",
+            "disabled": false,
+            "checked": false
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "Log in",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/login"
+          }
+        ],
+        "text": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nLog in\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n✓\nRegister\n✓\nApproval\n3\nDemo login\n4\nCreate profile\n5\nPublic view\nPreview controls\n\nTry the flow, then reset to start again.\n\nReset demoFail next request\n\nNew records stay only in this tab’s session.\n\nA bounded preview from the surviving HH registration and teacher UI.\n\nTEACHER COMMUNITY\nDemo login\n\nLog in as the synthetic teacher after demo approval. This is a simulated session, with no real authentication or stored password.\n\nDemo email\nLog in to demo\nHomeroom Heroes · Synthetic teacher journey preview",
+        "storage": "{\"version\":1,\"fixture\":true,\"nextId\":2,\"selectedTeacherId\":\"demo-teacher-1\",\"sessionTeacherId\":null,\"teachers\":[{\"id\":\"demo-seed-avery\",\"teacher\":{\"name\":\"Demo Avery\",\"email\":\"avery@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo Washington\",\"county\":\"Demo King\",\"district\":\"Demo District\",\"school\":\"Demo Academy\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"demo-avery\",\"teacherId\":\"demo-seed-avery\",\"displayName\":\"Demo Avery\",\"bio\":\"Synthetic science teacher profile.\",\"subjects\":[\"Science\"],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY\",\"school\":{\"state\":\"Demo Washington\",\"county\":\"Demo King\",\"district\":\"Demo District\",\"school\":\"Demo Academy\"},\"seeded\":true}},{\"id\":\"demo-seed-jordan\",\"teacher\":{\"name\":\"Demo Jordan\",\"email\":\"jordan@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"demo-jordan\",\"teacherId\":\"demo-seed-jordan\",\"displayName\":\"Demo Jordan\",\"bio\":\"Synthetic arts teacher profile.\",\"subjects\":[\"Art\"],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN\",\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"seeded\":true}},{\"id\":\"demo-teacher-1\",\"teacher\":{\"name\":\"Demo Teacher\",\"email\":\"demo.teacher@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"registrationStatus\":\"approved\",\"profile\":null}]}"
+      },
+      "requestCount": 22
+    },
+    {
+      "name": "local-flow-06-demo-login",
+      "action": "Approved fixture now presents the passwordless demo login form; no authentication action yet.",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-flow-06-demo-login.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/login",
+        "title": "Homeroom Heroes · Demo login",
+        "headings": [
+          "Preview controls",
+          "Demo login"
+        ],
+        "buttons": [
+          "Teacher journey",
+          "PxC DevTools",
+          "Reset demo",
+          "Fail next request",
+          "Log in to demo"
+        ],
+        "fields": [
+          {
+            "tag": "input",
+            "name": "loginEmail",
+            "value": "demo.teacher@fixture.test",
+            "disabled": false,
+            "checked": false
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "Log in",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/login"
+          }
+        ],
+        "text": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nLog in\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n✓\nRegister\n✓\nApproval\n3\nDemo login\n4\nCreate profile\n5\nPublic view\nPreview controls\n\nTry the flow, then reset to start again.\n\nReset demoFail next request\n\nNew records stay only in this tab’s session.\n\nA bounded preview from the surviving HH registration and teacher UI.\n\nTEACHER COMMUNITY\nDemo login\n\nLog in as the synthetic teacher after demo approval. This is a simulated session, with no real authentication or stored password.\n\nDemo email\nLog in to demo\nHomeroom Heroes · Synthetic teacher journey preview",
+        "storage": "{\"version\":1,\"fixture\":true,\"nextId\":2,\"selectedTeacherId\":\"demo-teacher-1\",\"sessionTeacherId\":null,\"teachers\":[{\"id\":\"demo-seed-avery\",\"teacher\":{\"name\":\"Demo Avery\",\"email\":\"avery@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo Washington\",\"county\":\"Demo King\",\"district\":\"Demo District\",\"school\":\"Demo Academy\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"demo-avery\",\"teacherId\":\"demo-seed-avery\",\"displayName\":\"Demo Avery\",\"bio\":\"Synthetic science teacher profile.\",\"subjects\":[\"Science\"],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY\",\"school\":{\"state\":\"Demo Washington\",\"county\":\"Demo King\",\"district\":\"Demo District\",\"school\":\"Demo Academy\"},\"seeded\":true}},{\"id\":\"demo-seed-jordan\",\"teacher\":{\"name\":\"Demo Jordan\",\"email\":\"jordan@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"demo-jordan\",\"teacherId\":\"demo-seed-jordan\",\"displayName\":\"Demo Jordan\",\"bio\":\"Synthetic arts teacher profile.\",\"subjects\":[\"Art\"],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN\",\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"seeded\":true}},{\"id\":\"demo-teacher-1\",\"teacher\":{\"name\":\"Demo Teacher\",\"email\":\"demo.teacher@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"registrationStatus\":\"approved\",\"profile\":null}]}"
+      },
+      "requestCount": 22
+    },
+    {
+      "name": "local-flow-07-profile-create",
+      "action": "Entered synthetic authenticated fixture state and profile-creation form.",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-flow-07-profile-create.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/profile",
+        "title": "Homeroom Heroes · Teacher profile",
+        "headings": [
+          "Preview controls",
+          "Create Teacher Profile"
+        ],
+        "buttons": [
+          "Teacher journey",
+          "PxC DevTools",
+          "Log out",
+          "Reset demo",
+          "Fail next request",
+          "Create demo profile"
+        ],
+        "fields": [
+          {
+            "tag": "input",
+            "name": "displayName",
+            "value": "Demo Teacher",
+            "disabled": false,
+            "checked": false
+          },
+          {
+            "tag": "input",
+            "name": "profileSchool",
+            "value": "Demo Bay School",
+            "disabled": false,
+            "checked": false
+          },
+          {
+            "tag": "textarea",
+            "name": "bio",
+            "value": "I am a synthetic teacher exploring classroom support with Homeroom Heroes.",
+            "disabled": false
+          },
+          {
+            "tag": "input",
+            "name": "wishlistUrl",
+            "value": "https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM-ONLY",
+            "disabled": false,
+            "checked": false
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "My profile",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/profile"
+          }
+        ],
+        "text": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nMy profile\nLog out\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n✓\nRegister\n✓\nApproval\n✓\nDemo login\n4\nCreate profile\n5\nPublic view\nPreview controls\n\nTry the flow, then reset to start again.\n\nReset demoFail next request\n\nNew records stay only in this tab’s session.\n\nA bounded preview from the surviving HH registration and teacher UI.\n\nTEACHER COMMUNITY\nCreate Teacher Profile\n\nAdd a classroom introduction and wishlist for the synthetic teacher.\n\nFull name\nSchool\nAbout Me\nAmazon Wishlist URL (synthetic)\n\nThis locked URL has a demo identifier and is displayed only. No Amazon request, wishlist item model or purchase flow runs.\n\nCreate demo profile\nHomeroom Heroes · Synthetic teacher journey preview",
+        "storage": "{\"version\":1,\"fixture\":true,\"nextId\":2,\"selectedTeacherId\":\"demo-teacher-1\",\"sessionTeacherId\":\"demo-teacher-1\",\"teachers\":[{\"id\":\"demo-seed-avery\",\"teacher\":{\"name\":\"Demo Avery\",\"email\":\"avery@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo Washington\",\"county\":\"Demo King\",\"district\":\"Demo District\",\"school\":\"Demo Academy\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"demo-avery\",\"teacherId\":\"demo-seed-avery\",\"displayName\":\"Demo Avery\",\"bio\":\"Synthetic science teacher profile.\",\"subjects\":[\"Science\"],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY\",\"school\":{\"state\":\"Demo Washington\",\"county\":\"Demo King\",\"district\":\"Demo District\",\"school\":\"Demo Academy\"},\"seeded\":true}},{\"id\":\"demo-seed-jordan\",\"teacher\":{\"name\":\"Demo Jordan\",\"email\":\"jordan@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"demo-jordan\",\"teacherId\":\"demo-seed-jordan\",\"displayName\":\"Demo Jordan\",\"bio\":\"Synthetic arts teacher profile.\",\"subjects\":[\"Art\"],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN\",\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"seeded\":true}},{\"id\":\"demo-teacher-1\",\"teacher\":{\"name\":\"Demo Teacher\",\"email\":\"demo.teacher@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"registrationStatus\":\"approved\",\"profile\":null}]}"
+      },
+      "requestCount": 22
+    },
+    {
+      "name": "local-flow-08-own-profile",
+      "action": "Created a synthetic teacher profile in per-tab sessionStorage.",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-flow-08-own-profile.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/profile",
+        "title": "Homeroom Heroes · Teacher profile",
+        "headings": [
+          "Preview controls",
+          "Demo Teacher",
+          "About me",
+          "Classroom wishlist",
+          "Open the public view"
+        ],
+        "buttons": [
+          "Teacher journey",
+          "PxC DevTools",
+          "Log out",
+          "Reset demo",
+          "Fail next request"
+        ],
+        "fields": [
+          {
+            "tag": "input",
+            "name": "publicWishlistUrl",
+            "value": "https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM-ONLY",
+            "disabled": false,
+            "checked": false
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "My profile",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/profile"
+          },
+          {
+            "text": "Browse demo teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "View my public demo profile",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers/profile-demo-teacher-1"
+          }
+        ],
+        "text": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nMy profile\nLog out\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n✓\nRegister\n✓\nApproval\n✓\nDemo login\n✓\nCreate profile\n5\nPublic view\nPreview controls\n\nTry the flow, then reset to start again.\n\nReset demoFail next request\n\nNew records stay only in this tab’s session.\n\nA bounded preview from the surviving HH registration and teacher UI.\n\nOne session-only demo profile created.\nYour synthetic profile\nDemo Teacher\n\nDemo Bay School\n\nDemo Alameda, Demo California\n\nAbout me\n\nI am a synthetic teacher exploring classroom support with Homeroom Heroes.\n\nClassroom wishlist\nAmazon Wishlist URL (synthetic)\n\nSynthetic preview link only. Opening Amazon, wishlist items and purchases are deferred.\n\nBrowse demo teachers\nOpen the public view\nView my public demo profile\n\nYour new profile stays in this tab’s demo session. It survives reload here; it is not a shareable, saved teacher record. Profile editing is deferred.\n\nHomeroom Heroes · Synthetic teacher journey preview",
+        "storage": "{\"version\":1,\"fixture\":true,\"nextId\":2,\"selectedTeacherId\":\"demo-teacher-1\",\"sessionTeacherId\":\"demo-teacher-1\",\"teachers\":[{\"id\":\"demo-seed-avery\",\"teacher\":{\"name\":\"Demo Avery\",\"email\":\"avery@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo Washington\",\"county\":\"Demo King\",\"district\":\"Demo District\",\"school\":\"Demo Academy\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"demo-avery\",\"teacherId\":\"demo-seed-avery\",\"displayName\":\"Demo Avery\",\"bio\":\"Synthetic science teacher profile.\",\"subjects\":[\"Science\"],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY\",\"school\":{\"state\":\"Demo Washington\",\"county\":\"Demo King\",\"district\":\"Demo District\",\"school\":\"Demo Academy\"},\"seeded\":true}},{\"id\":\"demo-seed-jordan\",\"teacher\":{\"name\":\"Demo Jordan\",\"email\":\"jordan@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"demo-jordan\",\"teacherId\":\"demo-seed-jordan\",\"displayName\":\"Demo Jordan\",\"bio\":\"Synthetic arts teacher profile.\",\"subjects\":[\"Art\"],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN\",\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"seeded\":true}},{\"id\":\"demo-teacher-1\",\"teacher\":{\"name\":\"Demo Teacher\",\"email\":\"demo.teacher@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"profile-demo-teacher-1\",\"teacherId\":\"demo-teacher-1\",\"displayName\":\"Demo Teacher\",\"bio\":\"I am a synthetic teacher exploring classroom support with Homeroom Heroes.\",\"subjects\":[],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM-ONLY\",\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"seeded\":false}}]}"
+      },
+      "requestCount": 23
+    },
+    {
+      "name": "local-flow-09-directory",
+      "action": "Opened the fixture directory after profile creation; the new tab-local profile appears beside seeded profiles.",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-flow-09-directory.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers",
+        "title": "Homeroom Heroes · Demo teachers",
+        "headings": [
+          "Preview controls",
+          "Meet the demo teachers",
+          "Demo Avery",
+          "Demo Jordan",
+          "Demo Teacher"
+        ],
+        "buttons": [
+          "Teacher journey",
+          "PxC DevTools",
+          "Log out",
+          "Reset demo",
+          "Fail next request"
+        ],
+        "fields": [],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "My profile",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/profile"
+          },
+          {
+            "text": "View classroom",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers/demo-avery"
+          },
+          {
+            "text": "View classroom",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers/demo-jordan"
+          },
+          {
+            "text": "View classroom",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers/profile-demo-teacher-1"
+          }
+        ],
+        "text": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nMy profile\nLog out\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n✓\nRegister\n✓\nApproval\n✓\nDemo login\n✓\nCreate profile\n5\nPublic view\nPreview controls\n\nTry the flow, then reset to start again.\n\nReset demoFail next request\n\nNew records stay only in this tab’s session.\n\nA bounded preview from the surviving HH registration and teacher UI.\n\nSUPPORT TEACHERS\nMeet the demo teachers\n\nExplore synthetic classroom profiles. New profiles stay in this tab’s demo session.\n\nDemo Avery\n\nStable demo profile\n\nView classroom\nDemo Jordan\n\nStable demo profile\n\nView classroom\nDemo Teacher\n\nThis tab only\n\nView classroom\nHomeroom Heroes · Synthetic teacher journey preview",
+        "storage": "{\"version\":1,\"fixture\":true,\"nextId\":2,\"selectedTeacherId\":\"demo-teacher-1\",\"sessionTeacherId\":\"demo-teacher-1\",\"teachers\":[{\"id\":\"demo-seed-avery\",\"teacher\":{\"name\":\"Demo Avery\",\"email\":\"avery@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo Washington\",\"county\":\"Demo King\",\"district\":\"Demo District\",\"school\":\"Demo Academy\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"demo-avery\",\"teacherId\":\"demo-seed-avery\",\"displayName\":\"Demo Avery\",\"bio\":\"Synthetic science teacher profile.\",\"subjects\":[\"Science\"],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY\",\"school\":{\"state\":\"Demo Washington\",\"county\":\"Demo King\",\"district\":\"Demo District\",\"school\":\"Demo Academy\"},\"seeded\":true}},{\"id\":\"demo-seed-jordan\",\"teacher\":{\"name\":\"Demo Jordan\",\"email\":\"jordan@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"demo-jordan\",\"teacherId\":\"demo-seed-jordan\",\"displayName\":\"Demo Jordan\",\"bio\":\"Synthetic arts teacher profile.\",\"subjects\":[\"Art\"],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN\",\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"seeded\":true}},{\"id\":\"demo-teacher-1\",\"teacher\":{\"name\":\"Demo Teacher\",\"email\":\"demo.teacher@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"profile-demo-teacher-1\",\"teacherId\":\"demo-teacher-1\",\"displayName\":\"Demo Teacher\",\"bio\":\"I am a synthetic teacher exploring classroom support with Homeroom Heroes.\",\"subjects\":[],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM-ONLY\",\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"seeded\":false}}]}"
+      },
+      "requestCount": 23
+    },
+    {
+      "name": "local-flow-10-public-profile",
+      "action": "Opened the new synthetic public profile route from the local directory.",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-flow-10-public-profile.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers/profile-demo-teacher-1",
+        "title": "Homeroom Heroes · Public demo profile",
+        "headings": [
+          "Preview controls",
+          "Demo Teacher",
+          "About me",
+          "Classroom wishlist"
+        ],
+        "buttons": [
+          "Teacher journey",
+          "PxC DevTools",
+          "Log out",
+          "Reset demo",
+          "Fail next request"
+        ],
+        "fields": [
+          {
+            "tag": "input",
+            "name": "publicWishlistUrl",
+            "value": "https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM-ONLY",
+            "disabled": false,
+            "checked": false
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "My profile",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/profile"
+          },
+          {
+            "text": "Browse demo teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          }
+        ],
+        "text": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nMy profile\nLog out\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n✓\nRegister\n✓\nApproval\n✓\nDemo login\n✓\nCreate profile\n5\nPublic view\nPreview controls\n\nTry the flow, then reset to start again.\n\nReset demoFail next request\n\nNew records stay only in this tab’s session.\n\nA bounded preview from the surviving HH registration and teacher UI.\n\nPublic demo profile\nDemo Teacher\n\nDemo Bay School\n\nDemo Alameda, Demo California\n\nAbout me\n\nI am a synthetic teacher exploring classroom support with Homeroom Heroes.\n\nClassroom wishlist\nAmazon Wishlist URL (synthetic)\n\nSynthetic preview link only. Opening Amazon, wishlist items and purchases are deferred.\n\nBrowse demo teachers\nHomeroom Heroes · Synthetic teacher journey preview",
+        "storage": "{\"version\":1,\"fixture\":true,\"nextId\":2,\"selectedTeacherId\":\"demo-teacher-1\",\"sessionTeacherId\":\"demo-teacher-1\",\"teachers\":[{\"id\":\"demo-seed-avery\",\"teacher\":{\"name\":\"Demo Avery\",\"email\":\"avery@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo Washington\",\"county\":\"Demo King\",\"district\":\"Demo District\",\"school\":\"Demo Academy\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"demo-avery\",\"teacherId\":\"demo-seed-avery\",\"displayName\":\"Demo Avery\",\"bio\":\"Synthetic science teacher profile.\",\"subjects\":[\"Science\"],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY\",\"school\":{\"state\":\"Demo Washington\",\"county\":\"Demo King\",\"district\":\"Demo District\",\"school\":\"Demo Academy\"},\"seeded\":true}},{\"id\":\"demo-seed-jordan\",\"teacher\":{\"name\":\"Demo Jordan\",\"email\":\"jordan@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"demo-jordan\",\"teacherId\":\"demo-seed-jordan\",\"displayName\":\"Demo Jordan\",\"bio\":\"Synthetic arts teacher profile.\",\"subjects\":[\"Art\"],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN\",\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"seeded\":true}},{\"id\":\"demo-teacher-1\",\"teacher\":{\"name\":\"Demo Teacher\",\"email\":\"demo.teacher@fixture.test\",\"phoneNumber\":\"DEMO\"},\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"registrationStatus\":\"approved\",\"profile\":{\"id\":\"profile-demo-teacher-1\",\"teacherId\":\"demo-teacher-1\",\"displayName\":\"Demo Teacher\",\"bio\":\"I am a synthetic teacher exploring classroom support with Homeroom Heroes.\",\"subjects\":[],\"wishlistUrl\":\"https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM-ONLY\",\"school\":{\"state\":\"Demo California\",\"county\":\"Demo Alameda\",\"district\":\"Demo Bay District\",\"school\":\"Demo Bay School\"},\"seeded\":false}}]}"
+      },
+      "requestCount": 23
+    },
+    {
+      "name": "local-flow-11-reset",
+      "action": "Reset local fixture; verified its per-tab sessionStorage record was removed.",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-flow-11-reset.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+        "title": "Homeroom Heroes · Register",
+        "headings": [
+          "Preview controls",
+          "Create your account"
+        ],
+        "buttons": [
+          "Teacher journey",
+          "PxC DevTools",
+          "Reset demo",
+          "Fail next request",
+          "Submit demo registration"
+        ],
+        "fields": [
+          {
+            "tag": "input",
+            "name": "name",
+            "value": "Demo Teacher",
+            "disabled": false,
+            "checked": false
+          },
+          {
+            "tag": "input",
+            "name": "email",
+            "value": "demo.teacher@fixture.test",
+            "disabled": false,
+            "checked": false
+          },
+          {
+            "tag": "input",
+            "name": "phoneNumber",
+            "value": "DEMO",
+            "disabled": false,
+            "checked": false
+          },
+          {
+            "tag": "select",
+            "name": "state",
+            "value": "",
+            "disabled": false,
+            "options": [
+              {
+                "text": "Choose state",
+                "value": ""
+              },
+              {
+                "text": "Demo California",
+                "value": "Demo California"
+              },
+              {
+                "text": "Demo Washington",
+                "value": "Demo Washington"
+              }
+            ]
+          },
+          {
+            "tag": "select",
+            "name": "county",
+            "value": "",
+            "disabled": true,
+            "options": [
+              {
+                "text": "Choose county",
+                "value": ""
+              }
+            ]
+          },
+          {
+            "tag": "select",
+            "name": "district",
+            "value": "",
+            "disabled": true,
+            "options": [
+              {
+                "text": "Choose school district",
+                "value": ""
+              }
+            ]
+          },
+          {
+            "tag": "select",
+            "name": "school",
+            "value": "",
+            "disabled": true,
+            "options": [
+              {
+                "text": "Choose school",
+                "value": ""
+              }
+            ]
+          },
+          {
+            "tag": "input",
+            "name": "demoConsent",
+            "value": "on",
+            "disabled": false,
+            "checked": false
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "Log in",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/login"
+          }
+        ],
+        "text": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nLog in\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n1\nRegister\n2\nApproval\n3\nDemo login\n4\nCreate profile\n5\nPublic view\nPreview controls\n\nTry the flow, then reset to start again.\n\nReset demoFail next request\n\nNew records stay only in this tab’s session.\n\nA bounded preview from the surviving HH registration and teacher UI.\n\nTEACHER COMMUNITY\nCreate your account\n\nShare your school details to request a Homeroom Heroes account. Your registration stays pending until it is confirmed.\n\nName\nEmail\nPhone number\n\nSynthetic details are locked for this preview. Demo login does not use a real password.\n\nSchool information\nState\nChoose state\nDemo California\nDemo Washington\nCounty\nChoose county\nSchool district\nChoose school district\nSchool\nChoose school\nI confirm this is a synthetic demo request. No real account or terms acceptance is created.\nSubmit demo registration\nHomeroom Heroes · Synthetic teacher journey preview",
+        "storage": null
+      },
+      "requestCount": 23
+    }
+  ]
+}

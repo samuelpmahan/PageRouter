@@ -1,0 +1,239 @@
+{
+  "schema": "homeroom-reference-route-state.v2",
+  "product": "Homeroom Heroes",
+  "canonicalOrigin": "https://www.helpteachers.net",
+  "identityEvidence": {
+    "repository": "work/PageRouter/checkpoint/vendor/justin/index.html:116",
+    "officialListing": "https://www.linkedin.com/company/homeroom-heroes",
+    "claim": "The repo identifies HelpTeachers.net with Homeroom Heroes; official company listing names www.helpteachers.net."
+  },
+  "viewports": {
+    "desktop": "1440\u00d71000",
+    "mobile": "390\u00d7844"
+  },
+  "routes": [
+    {
+      "id": "home",
+      "url": "https://www.helpteachers.net/pages/homepage.html",
+      "surface": "Homepage",
+      "entry": "Public root redirects to this page.",
+      "observations": [
+        "Green gradient global header and logo; dark navy page body; chalkboard hero; impact cards; teacher-of-day panel; teacher/donor/random-teacher CTA cards; shared footer.",
+        "A stable captured render showed 150+ verified teachers, $9.3k total donations, 135+ schools and Sarah Endsley as Teacher of the Day. Other reloads captured different displayed counts; treat as displayed copy, not verified service data.",
+        "Desktop hamburger opens Login; mobile hamburger exposes Home, Donate, Sign Up, About, Contact, Partners, Login."
+      ],
+      "screenshots": [
+        "screenshots/home-desktop.png",
+        "screenshots/home-mobile.png",
+        "screenshots/home-desktop-nav.png",
+        "screenshots/home-mobile-menu-expanded.png"
+      ],
+      "evidence": "BROWSER-EVIDENCE.json results 0-1; PUBLIC-JOURNEY-EVIDENCE.json pages 0-1"
+    },
+    {
+      "id": "find-teacher-donate",
+      "url": "https://www.helpteachers.net/pages/index.html",
+      "surface": "Teacher search / donation directory",
+      "entry": "Global Donate and homepage Find Teachers to Support point here.",
+      "observations": [
+        "Search form has State, County, School District, School selectors and Find Teachers action; Search Results region is blank in captured default state.",
+        "Web retrieval had suggested a no-results message; the captured browser screen did not show it. Do not treat stale retrieval as rendered state.",
+        "Selector options are progressively populated; only default county/district/school entries appeared before a state selection."
+      ],
+      "screenshots": [
+        "screenshots/directory-desktop.png",
+        "screenshots/directory-mobile.png"
+      ],
+      "evidence": "BROWSER-EVIDENCE.json results 2-3"
+    },
+    {
+      "id": "register",
+      "url": "https://www.helpteachers.net/pages/register.html",
+      "surface": "Teacher sign-up",
+      "observations": [
+        "Name/email/phone/password/confirm-password; state/county/district/school; Terms and Conditions button and consent checkbox; Submit and Login controls.",
+        "Terms opens scrollable modal titled Terms and Conditions; captured top content has Introduction and Charitable Mission.",
+        "No live fields were submitted. State selector exposed 59 entries including placeholder and US states/territories; remaining geography selectors initially exposed only placeholder."
+      ],
+      "screenshots": [
+        "screenshots/register-desktop.png",
+        "screenshots/register-mobile.png",
+        "screenshots/register-terms.png"
+      ],
+      "evidence": "BROWSER-EVIDENCE.json results 4-5; INTERACTION-EVIDENCE.json actions 0-1"
+    },
+    {
+      "id": "about",
+      "url": "https://www.helpteachers.net/pages/about.html",
+      "surface": "About / mission / team",
+      "observations": [
+        "Mission and how-it-works sections, team bios/portraits (six visible people), terms section, shared navigation."
+      ],
+      "screenshots": [
+        "screenshots/about-desktop.png",
+        "screenshots/about-mobile.png"
+      ],
+      "evidence": "BROWSER-EVIDENCE.json results 6-7"
+    },
+    {
+      "id": "contact",
+      "url": "https://www.helpteachers.net/pages/contact.html",
+      "surface": "Contact",
+      "observations": [
+        "Name, email, subject, message; character counter starts at 250. Typing a local-only 20-character draft changed it to 230. Submit and visible reCAPTCHA area.",
+        "Form was not submitted; this is only an in-page counter observation."
+      ],
+      "screenshots": [
+        "screenshots/contact-desktop.png",
+        "screenshots/contact-mobile.png",
+        "screenshots/contact-counter.png"
+      ],
+      "evidence": "BROWSER-EVIDENCE.json results 8-9; INTERACTION-EVIDENCE.json action 3"
+    },
+    {
+      "id": "partners",
+      "url": "https://www.helpteachers.net/pages/partners.html",
+      "surface": "Partners / sponsors",
+      "observations": [
+        "Partner sections/logos include Coastal, Microsoft, 100.7 The Wolf, 96.5 Country, Base Camp; Become a Partner/contact path."
+      ],
+      "screenshots": [
+        "screenshots/partners-desktop.png",
+        "screenshots/partners-mobile.png"
+      ],
+      "evidence": "BROWSER-EVIDENCE.json results 10-11"
+    },
+    {
+      "id": "login",
+      "url": "https://www.helpteachers.net/pages/login.html",
+      "surface": "Public login shell",
+      "observations": [
+        "Email and password fields, Submit, Forgot Password, Register. Form action is same login page. No values entered and no submit/auth attempt."
+      ],
+      "screenshots": [
+        "screenshots/live-login-shell.png"
+      ],
+      "evidence": "PUBLIC-JOURNEY-EVIDENCE.json page 1"
+    },
+    {
+      "id": "forgot-password",
+      "url": "https://www.helpteachers.net/pages/forgot.html",
+      "surface": "Public password reset shell",
+      "observations": [
+        "Reached through Forgot Password. Public shell captured; no data submitted. Whether reset messages are sent or account state changes is untested and out of scope."
+      ],
+      "screenshots": [
+        "screenshots/live-forgot-password.png"
+      ],
+      "evidence": "DISCOVERABILITY-EVIDENCE.json page for forgot-password"
+    },
+    {
+      "id": "teacher-profile",
+      "url": "https://www.helpteachers.net/pages/teacher.html",
+      "surface": "Public Teacher of the Day profile",
+      "entry": "Homepage View Teacher of the Day button.",
+      "observations": [
+        "Public profile for Sarah Endsley with school/location, photo/hero image, biography, View Wishlist outbound Amazon link, Share Page button. Wishlist and share controls not activated.",
+        "Other teacher profile routes via directory were not tested; dynamic routing depth is unknown."
+      ],
+      "screenshots": [
+        "screenshots/teacher-of-day-public-route.png",
+        "screenshots/teacher-of-day-public-route-mobile.png"
+      ],
+      "evidence": "PUBLIC-JOURNEY-EVIDENCE.json page 2; DISCOVERABILITY-EVIDENCE.json profile route"
+    },
+    {
+      "id": "global-menu-auth-gated",
+      "url": "https://www.helpteachers.net/pages/homepage.html",
+      "surface": "Global navigation / hidden account links",
+      "observations": [
+        "Expanded desktop menu shows Login; mobile expanded menu exposes the six public pages plus Login. DOM includes hidden Logout, My Page, Forum, Validation controls while anonymous. Their post-auth destination behavior is not observed.",
+        "No Privacy link found in inspected public navigation/footer surfaces; site-wide existence unknown."
+      ],
+      "screenshots": [
+        "screenshots/home-desktop-nav.png",
+        "screenshots/home-mobile-menu-expanded.png"
+      ],
+      "evidence": "INTERACTION-EVIDENCE.json action 0; PUBLIC-JOURNEY-EVIDENCE.json page 0"
+    },
+    {
+      "id": "integrated-pagerouter",
+      "url": "http://127.0.0.1:4188/#/hh/run",
+      "surface": "Local PageRouter integration entry",
+      "observations": [
+        "HTTP 200 PageRouter shell frames `http://127.0.0.1:4188/compiled/hh/index.html` as \u201cHomeroom Heroes compiled project\u201d. Frame 1124\u00d7720 desktop and 354\u00d7680 mobile.",
+        "PageRouter chrome occupies viewport around the smaller framed compiled page; visible controls include Overview, Display & run, Side by side, Functionality, Composition, Delta builds, Scope & evidence, Reload, Full project. Frame renders direct-leaf register state with local journey/devtools controls."
+      ],
+      "screenshots": [
+        "screenshots/integrated-hh-run-desktop.png",
+        "screenshots/integrated-hh-run-mobile.png"
+      ],
+      "evidence": "INTEGRATED-ROUTE-EVIDENCE.json"
+    },
+    {
+      "id": "local-leaf",
+      "url": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+      "surface": "Local assembled direct leaf",
+      "observations": [
+        "Compiled preview loaded successfully after correcting the document root. Synthetic demo banner, seeded registration fields, local geography and preview controls are visible.",
+        "Initial attempt at source-only `/src` preview lacked sibling services import and returned 404; preserved as startup evidence only, not parity evidence."
+      ],
+      "screenshots": [
+        "screenshots/local-register-desktop.png",
+        "screenshots/local-register-mobile.png"
+      ],
+      "evidence": "LOCAL-BROWSER-EVIDENCE.json; BROWSER-EVIDENCE-source-preview-404.json"
+    },
+    {
+      "id": "local-fixture-flow",
+      "url": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+      "surface": "Local sessionStorage-only synthetic teacher journey",
+      "observations": [
+        "11 captured steps: register; select synthetic geography; consent; local-only submit; pending; simulate approval; passwordless demo login; create profile; own profile; directory; public profile; reset.",
+        "Directory displays two seeded fixture people plus this-tab profile; reset clears sessionStorage. Browser recorded 0 external requests. No production sign-in or service write occurred."
+      ],
+      "screenshots": [
+        "screenshots/local-flow-01-register.png",
+        "screenshots/local-flow-02-state-selected.png",
+        "screenshots/local-flow-03-school-selected.png",
+        "screenshots/local-flow-04-pending.png",
+        "screenshots/local-flow-05-approved.png",
+        "screenshots/local-flow-06-demo-login.png",
+        "screenshots/local-flow-07-profile-create.png",
+        "screenshots/local-flow-08-own-profile.png",
+        "screenshots/local-flow-09-directory.png",
+        "screenshots/local-flow-10-public-profile.png",
+        "screenshots/local-flow-11-reset.png"
+      ],
+      "evidence": "LOCAL-FIXTURE-FLOW.json"
+    }
+  ],
+  "assetAndFontInventory": {
+    "observed": [
+      "Remote logo: https://www.helpteachers.net/static/images/logo_transparent.png (298\u00d795).",
+      "Home hero/tile textures: https://www.helpteachers.net/static/images/homepage/hero_border.jpg and tile_border_1.jpg through tile_border_4.jpg.",
+      "Partner logos: Coastal.png (321\u00d7157), Microsoft-logo.png (1020\u00d7961), 1007TheWolf.png (225\u00d7225), 965CountryColor.png (1264\u00d7712), BaseCamp.png (385\u00d7131), under https://www.helpteachers.net/static/images/partners/.",
+      "Google Fonts CSS request and Inter v20 woff2 plus Fraunces v38 woff2 observed. Computed body font-family reports Inter, sans-serif.",
+      "Remote Tailwind CDN script and site static/style.css requested. Several hero/card image sources are inline data images; binary payload omitted from inventory."
+    ],
+    "evidence": "DISCOVERABILITY-EVIDENCE.json and PUBLIC-JOURNEY-EVIDENCE.json network/asset observations; BROWSER-EVIDENCE.json DOM."
+  },
+  "limits": [
+    "Screenshots represent pages/states at capture time; browser page retrieval text can diverge or be stale. Browser screenshots supersede earlier text-only claims when they conflict.",
+    "Public pages and visible shell states only. Authentication, account-specific routes, backend outcomes, dynamic teacher/donation data correctness, email delivery, payment/provider behavior and CAPTCHA validation are excluded.",
+    "No live forms submitted, no login, wishlist, share, donation or contact transactions performed.",
+    "No public route to Privacy was found within inspected surfaces; existence elsewhere unknown.",
+    "The source-only preview 404 was caused by an incomplete docroot during startup, as shown by missing service module; correctly assembled local comparison uses checkpoint/dist compiled page.",
+    "Parity target is the full discoverable public frontend, excluding backend/live services. Current C6 implementation is intentionally narrower. Authenticated role-gated screens remain unobserved. The local demo-login click was not exercised; authenticated fixture state was injected for post-login UI inspection."
+  ],
+  "artifactFiles": [
+    "BROWSER-EVIDENCE.json",
+    "INTERACTION-EVIDENCE.json",
+    "PUBLIC-JOURNEY-EVIDENCE.json",
+    "DISCOVERABILITY-EVIDENCE.json",
+    "INTEGRATED-ROUTE-EVIDENCE.json",
+    "LOCAL-BROWSER-EVIDENCE.json",
+    "LOCAL-FIXTURE-FLOW.json",
+    "BROWSER-EVIDENCE-source-preview-404.json"
+  ]
+}

@@ -1,0 +1,146 @@
+{
+  "schema": "homeroom-parity-handoff.v1",
+  "observedAt": "2026-10-08",
+  "sourceBaselineCommit": "f47bbaf428afd7020fc7e1ff3813d2af73747f7c",
+  "target": "Full discoverable public frontend parity; backend and live services excluded",
+  "referenceOrigin": "https://www.helpteachers.net",
+  "integratedPreview": "http://127.0.0.1:4188/#/hh/run",
+  "standalonePreview": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+  "gaps": [
+    {
+      "id": "ENV-01",
+      "priority": "P0",
+      "gap": "Raw source is not a runnable standalone bundle.",
+      "frontendWork": "Serve the assembled tree; keep the src/service copy and import-rewrite recipe reproducible. Provide a clear preview command.",
+      "evidenceBoundary": "Initial module 404; corrected leaf and integrated views loaded."
+    },
+    {
+      "id": "ENV-02",
+      "priority": "P0",
+      "gap": "Fresh-clone build and browser tools are not installed by the clone.",
+      "frontendWork": "Bootstrap the pinned build tools for source rebuilds; supply external browser-tool paths for optional capture. Keep preview and audit tooling requirements separate.",
+      "evidenceBoundary": "No install/rebuild performed. Portable checksum and capture scripts are included."
+    },
+    {
+      "id": "ENV-03",
+      "priority": "P0",
+      "gap": "Cached whole-site receipt does not describe the latest source bytes.",
+      "frontendWork": "Refresh the full build/receipt before claiming a fresh composed deployment. Existing HH output can be inspected now.",
+      "evidenceBoundary": "One unrelated whitespace-only input differs; HH package comparison passes."
+    },
+    {
+      "id": "UI-01",
+      "priority": "P1",
+      "gap": "Public page coverage and URLs differ.",
+      "frontendWork": "Add Home, donor search, About, Contact, Partners, Login, Forgot Password and public teacher destinations. Decide explicit aliases for the reference `/pages/*.html` URLs while preserving PageRouter's outer routes.",
+      "evidenceBoundary": "Current leaf parses registration, login, profile, teachers and teacher-detail hashes only."
+    },
+    {
+      "id": "UI-02",
+      "priority": "P1",
+      "gap": "Public shell differs: navigation, navy canvas, spacing and typography.",
+      "frontendWork": "Match the reference header/footer, active links, expanded mobile menu, forms and page layout. Keep PageRouter diagnostics available outside the site comparison surface.",
+      "evidenceBoundary": "Equal-width live/local registration screenshots; expanded live menu; integrated iframe capture."
+    },
+    {
+      "id": "UI-03",
+      "priority": "P1",
+      "gap": "Inter/Fraunces font files and much of the reference imagery are absent.",
+      "frontendWork": "Provide local fonts, page styles and images. Inventory includes homepage tiles, teacher photo, team portraits and partner logos. Verify existing logo/hero assets rather than assuming a matching filename proves matching bytes.",
+      "evidenceBoundary": "Reference requests/fonts and image dimensions recorded; local font fallback and remote/local byte identity are unverified."
+    },
+    {
+      "id": "UI-04",
+      "priority": "P1",
+      "gap": "Donor homepage is missing.",
+      "frontendWork": "Build hero, impact display, featured teacher, teacher registration, donation-intent and random-teacher cards. Use deterministic representative values and teacher fixtures.",
+      "evidenceBoundary": "Populated browser render supersedes earlier text-only loading/zero placeholders. Values are observations, not data-accuracy proof."
+    },
+    {
+      "id": "UI-05",
+      "priority": "P1",
+      "gap": "Teacher search is partial: local directory lacks the reference filter form.",
+      "frontendWork": "State\u2192county\u2192district\u2192school controls, dependent resets, Find Teachers action and result cards. Add representative match, empty, loading and failure fixtures.",
+      "evidenceBoundary": "Reference default result region was blank. Filtered live results and no-match behavior were not exercised."
+    },
+    {
+      "id": "UI-06",
+      "priority": "P1",
+      "gap": "Public profile presentation and actions are partial.",
+      "frontendWork": "Teacher photo, school/location, biography, wishlist handoff and share affordance. Model featured/random/directory selection and missing-profile states with fixtures.",
+      "evidenceBoundary": "Public featured profile captured; local profiles exist with simplified content and inert wishlist. Wishlist/share outcomes were not activated."
+    },
+    {
+      "id": "UI-07",
+      "priority": "P1",
+      "gap": "Registration uses locked identity and omits password/confirmation and real Terms presentation.",
+      "frontendWork": "Editable form fields, confirmation UI, school choices, scrollable Terms dialog, consent and client validation. Show mock submission/pending states without production account creation.",
+      "evidenceBoundary": "Live form and Terms modal inspected; live submission/password rules remain unverified."
+    },
+    {
+      "id": "UI-08",
+      "priority": "P1",
+      "gap": "Email/password Login and Forgot Password shells are missing.",
+      "frontendWork": "Match credential/reset fields, navigation and representative invalid/pending/success-like local states. Keep them clearly simulated.",
+      "evidenceBoundary": "Public shells captured. Local demo-login click was not verified; authenticated fixture state was injected to inspect subsequent profile screens."
+    },
+    {
+      "id": "UI-09",
+      "priority": "P2",
+      "gap": "About/team content is missing.",
+      "frontendWork": "Mission/process/team sections, portraits and Terms section, with matching layout.",
+      "evidenceBoundary": "Public About captured; source asset paths/dimensions listed."
+    },
+    {
+      "id": "UI-10",
+      "priority": "P2",
+      "gap": "Contact/support frontend is missing.",
+      "frontendWork": "Fields, social destinations, message-length counter, school-not-listed support path and CAPTCHA placeholder footprint. Include local validation and explicit unsent result states.",
+      "evidenceBoundary": "Message counter changed after typing; no message sent and no CAPTCHA verification attempted."
+    },
+    {
+      "id": "UI-11",
+      "priority": "P2",
+      "gap": "Partners frontend is missing.",
+      "frontendWork": "Grouped partner sections/logos and contact navigation.",
+      "evidenceBoundary": "Public partner sections captured; outbound partner behavior was not tested."
+    },
+    {
+      "id": "UI-12",
+      "priority": "P1/P2",
+      "gap": "Mobile and embedded presentation need separate parity checks.",
+      "frontendWork": "Compare standalone leaf with the same reference viewport. Separately verify embedded scrolling, reachable controls, menus and focus inside PageRouter.",
+      "evidenceBoundary": "The embedded frame is smaller than the browser viewport; surrounding workbench chrome is intentional and should not be mistaken for site styling."
+    },
+    {
+      "id": "UI-13",
+      "priority": "P1/P2",
+      "gap": "Complete offline state coverage and accessibility are unverified.",
+      "frontendWork": "Preserve useful fixture error/retry/storage/reset behavior; add missing route/form/result states. Check labels, keyboard order, modal focus/close, menu controls, readable errors and reduced motion.",
+      "evidenceBoundary": "Existing local state controls work in the inspected fixture path. Source attributes and screenshots do not establish full keyboard/accessibility behavior."
+    },
+    {
+      "id": "UI-14",
+      "priority": "Unknown",
+      "gap": "Role-dependent My Page, Logout, Forum and Validation screens are unobserved.",
+      "frontendWork": "Inventory intended frontend routes and render role-specific fixtures when reference evidence becomes available.",
+      "evidenceBoundary": "Hidden controls were present in anonymous DOM; authenticated screens were not inspected. No public Privacy route was found in the inspected surfaces."
+    }
+  ],
+  "evidenceFiles": [
+    "local/inventory.json",
+    "reference/ROUTE-STATE-INVENTORY.json",
+    "reference/GAP-CANDIDATES.json",
+    "reference/BROWSER-EVIDENCE.json",
+    "reference/LOCAL-BROWSER-EVIDENCE.json",
+    "reference/LOCAL-FIXTURE-FLOW.json",
+    "reference/INTEGRATED-ROUTE-EVIDENCE.json"
+  ],
+  "importantLimits": [
+    "Live forms not submitted; auth and service outcomes excluded",
+    "Local actual login click not verified; authenticated synthetic state injected",
+    "Directory blank initial results observed; filtered result behavior untested",
+    "Whole Bazel receipt stale for unrelated whitespace-only source change; no rebuild",
+    "Accessibility partly inspected; full keyboard checks not performed"
+  ]
+}

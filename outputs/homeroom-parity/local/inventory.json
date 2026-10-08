@@ -1,0 +1,544 @@
+{
+  "schema": "homeroom-local-environment-inventory/v1",
+  "scope": "Local PageRouter source/setup, cross-referenced to live and local desktop/mobile Chromium evidence.",
+  "labels": {
+    "source_observed": "Explicit in inspected source or repository documentation.",
+    "runtime_verified": "Observed by launching the page in a browser during this investigation.",
+    "unknown": "Cannot be established from this local source inventory."
+  },
+  "entry": {
+    "source": "work/PageRouter/checkpoint/vendor/hh/src/index.html",
+    "title": "Homeroom Heroes \u00b7 Teacher Journey Preview",
+    "runtime_status": "Runtime verified: initial register/login/teachers views at desktop/mobile and 11-step disposable local fixture journey; login action itself was skipped.",
+    "direct_source_command": "INVALID: serving vendor/hh/src alone returns 404 for /services/index.mjs",
+    "direct_source_url": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+    "composed_preview_command": "cd work/PageRouter/checkpoint && python3 -m http.server 4188 --bind 127.0.0.1 --directory dist",
+    "composed_preview_path": "/compiled/hh/index.html",
+    "port_4188_listener_at_inventory": "free in observed listener snapshot; recheck before use",
+    "integrated_workbench_url": "http://127.0.0.1:4188/#/hh/run",
+    "server_docroot": "work/PageRouter/checkpoint/dist",
+    "packaged_http_probe": "200 for root, index, HH html/app, services/index, fixture-provider, style-playground, devtools-data, logo asset",
+    "invalid_capture_evidence": "outputs/homeroom-parity/reference/BROWSER-EVIDENCE-source-preview-404.json",
+    "valid_local_capture_evidence": "outputs/homeroom-parity/reference/LOCAL-BROWSER-EVIDENCE.json",
+    "source_package_hash_check": "PASS for all 30 HH src and services files in dist/compiled/hh and bazel-bin/site.site/compiled/hh after the two assembly-defined import rewrites",
+    "whole_bazel_site_freshness": "NOT_CURRENT: 1 of 1390 receipt source inputs differs, exp/block5/core/canonical.mjs"
+  },
+  "environment": {
+    "python3": "present",
+    "node": "absent from this shell PATH",
+    "npm": "absent from this shell PATH",
+    "node_modules": "absent",
+    "bazel_bin_site_output": "present",
+    "required_full_build": [
+      "Linux",
+      "Node 24.19.0",
+      "Python 3",
+      "npm",
+      "Bazel 7.4.1"
+    ],
+    "full_build_run": false,
+    "heavy_install_run": false,
+    "evidence": [
+      "work/PageRouter/checkpoint/README.md",
+      "work/PageRouter/checkpoint/.nvmrc",
+      "work/PageRouter/checkpoint/.bazelversion",
+      "work/PageRouter/checkpoint/ci/bazel/run.sh"
+    ],
+    "current_preview_server": "work/PageRouter/checkpoint/dist on 127.0.0.1:4188",
+    "source_hash_audit": "python3 work/homeroom-parity/local/compare_hh_package.py",
+    "whole_site_receipt_check": {
+      "receipt": "work/PageRouter/checkpoint/bazel-bin/site.receipt.json",
+      "source_inputs": 1390,
+      "changed": 1,
+      "missing": 0,
+      "changed_path": "exp/block5/core/canonical.mjs",
+      "receipt_bytes": 1897,
+      "receipt_sha256": "eafbf2adb0f04725525a55e1c3968440445cb9516f4928b26b24fb2fcfc207a6",
+      "current_bytes": 1896,
+      "current_sha256": "d38f842c1d56cce1dd2cb1fd65d9a727b04009cc546b896d818b068aae7f1ae5"
+    },
+    "current_outer_app_sha256": "79b867aaf93ea7d960bef355d51041617180280f95dd439f2fa811ac4c32b85a",
+    "outer_app_package_hashes_match": true,
+    "helper_invocation": {
+      "from_workspace_root": "python3 work/homeroom-parity/local/<helper>.py",
+      "from_cloned_pagerouter_root": "python3 /path/to/<helper>.py --checkpoint .",
+      "from_cloned_repo_parent": "python3 /path/to/<helper>.py --checkpoint ./PageRouter/checkpoint",
+      "environment_override": "HH_CHECKPOINT_ROOT=/path/to/checkpoint",
+      "receipt_missing_state": "UNVERIFIED_MISSING_RECEIPT; exit status 2; no freshness conclusion"
+    }
+  },
+  "routes": [
+    {
+      "route": "#/register",
+      "source_status": "source_observed"
+    },
+    {
+      "route": "#/login",
+      "source_status": "source_observed"
+    },
+    {
+      "route": "#/profile",
+      "source_status": "source_observed"
+    },
+    {
+      "route": "#/teachers",
+      "source_status": "source_observed"
+    },
+    {
+      "route": "#/teachers/<lowercase-id>",
+      "source_status": "source_observed"
+    },
+    {
+      "route": "other",
+      "behavior": "not-found card",
+      "source_status": "source_observed"
+    }
+  ],
+  "behavior": {
+    "journey": [
+      "synthetic registration",
+      "simulated approval",
+      "demo login",
+      "create one profile",
+      "public profile"
+    ],
+    "storage": "sessionStorage per tab; explicit storage-unavailable result, no silent success fallback",
+    "seed_profiles": 2,
+    "school_fixture_rows": 3,
+    "registration_identity": "locked Demo Teacher / demo.teacher@fixture.test / DEMO",
+    "wishlist": "inert synthetic URL text; no fetch/items/purchases",
+    "errors": [
+      "busy",
+      "completed",
+      "rejected",
+      "failed",
+      "outcome_unknown",
+      "retry for eligible failures"
+    ],
+    "backend": "HTTP adapter declares endpoint shapes but returns unsupported and requestSent=false for every service",
+    "browser_run": "Runtime verified: registration \u2192 pending \u2192 locally simulated approval \u2192 passwordless login screen \u2192 injected authenticated fixture state \u2192 profile creation \u2192 directory \u2192 public profile \u2192 reset. Reset removed the per-tab fixture record. Login click/auth transition not verified.",
+    "fixture_flow": {
+      "evidence": "outputs/homeroom-parity/reference/LOCAL-FIXTURE-FLOW.json",
+      "screenshots": "outputs/homeroom-parity/reference/screenshots/local-flow-01-register.png through local-flow-11-reset.png",
+      "steps": 11,
+      "same_origin_gets": 23,
+      "external_requests": 0,
+      "verified": [
+        "state selection enables downstream geography",
+        "school selection",
+        "synthetic register submission reaches pending",
+        "local approval simulation",
+        "login screen shown",
+        "profile creation in sessionStorage after injected demo-auth state",
+        "directory includes the created profile",
+        "public profile route",
+        "reset deletes sessionStorage record"
+      ],
+      "not_verified": [
+        "clicking login or authenticating through a form",
+        "production auth or writes"
+      ]
+    }
+  },
+  "assets": [
+    {
+      "path": "work/PageRouter/checkpoint/vendor/hh/src/assets/logo_transparent.png",
+      "bytes": 11341,
+      "used": true
+    },
+    {
+      "path": "work/PageRouter/checkpoint/vendor/hh/src/assets/apple.jpg",
+      "bytes": 5692,
+      "used": true,
+      "role": "placeholder image"
+    },
+    {
+      "path": "work/PageRouter/checkpoint/vendor/hh/src/assets/hero_border.jpg",
+      "bytes": 17268,
+      "used": false,
+      "note": "No use found in inspected HH entry, modules, or CSS."
+    },
+    {
+      "path": "work/PageRouter/checkpoint/vendor/hh/src/assets/favicon.ico",
+      "bytes": 49963,
+      "used": true
+    }
+  ],
+  "fonts": {
+    "bundled_font_file": "none found",
+    "css_stack": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif",
+    "status": "source_observed"
+  },
+  "dependencies": {
+    "core_runtime": "local browser ES modules and browser APIs; no runtime npm package found",
+    "vendored": [
+      "fast-check 4.10.2 module for style playground",
+      "pure-rand 8.4.2 license file"
+    ],
+    "full_site_build": [
+      "esbuild 0.28.2",
+      "fast-check 4.10.2",
+      "Node 24.19.0",
+      "Bazel 7.4.1",
+      "Python 3",
+      "npm"
+    ],
+    "evidence": [
+      "work/PageRouter/checkpoint/package.json",
+      "work/PageRouter/checkpoint/vendor/hh/src/vendor/fast-check-4.10.2.provenance.json"
+    ]
+  },
+  "parity_candidates": [
+    {
+      "claim": "No landing, password recovery, profile edit, donation, wishlist item, or checkout route appears in the local route map.",
+      "status": "source_observed_local_absence; live_parity_unknown"
+    },
+    {
+      "claim": "Registration is locked to synthetic identity and three fixture school rows.",
+      "status": "source_observed; live_parity_unknown"
+    },
+    {
+      "claim": "Approval is simulated; login is a passwordless demo toggle.",
+      "status": "source_observed; live_parity_unknown"
+    },
+    {
+      "claim": "Profile creation is one-time and offers only a bio plus inert wishlist URL.",
+      "status": "source_observed; live_parity_unknown"
+    },
+    {
+      "claim": "Teacher directory contains two seeds plus same-tab-created profiles, with no declared remote search/filter/pagination.",
+      "status": "source_observed; live_parity_unknown"
+    },
+    {
+      "claim": "HTTP provider sends no network requests; backend-dependent UI states require local mocks/fixtures for comparison.",
+      "status": "source_observed; live_parity_unknown"
+    },
+    {
+      "claim": "No local font file found; image set is small and includes a used apple placeholder.",
+      "status": "source_observed; visual_parity_unknown"
+    },
+    {
+      "claim": "Not-found and failure/retry states exist in source, but browser rendering/accessibility/responsive behavior were not tested.",
+      "status": "source_observed; runtime_not_verified; live_parity_unknown"
+    }
+  ],
+  "workspace_integrity": {
+    "PageRouter_files_modified_by_this_investigation": false,
+    "publisher_commit": "f47bbaf428afd7020fc7e1ff3813d2af73747f7c",
+    "owned_paths": [
+      "work/homeroom-parity/local/compare_hh_package.py",
+      "outputs/homeroom-parity/local/LOCAL-ENVIRONMENT.md",
+      "outputs/homeroom-parity/local/inventory.json",
+      "work/homeroom-parity/local/check_site_receipt.py"
+    ]
+  },
+  "reference_comparison": "Six live marketing routes and local initial pages plus fixture journey are captured desktop/mobile. Additional read-only evidence covers login/reset shells, Teacher of the Day profile, mobile menu, terms dialog, contact character count, and integrated PageRouter route. No production submit/auth/donation/contact send.",
+  "reference_crosscheck": {
+    "reference_url": "https://www.helpteachers.net",
+    "reference_evidence_source": "outputs/homeroom-parity/reference/BROWSER-EVIDENCE.json",
+    "local_evidence_source": "outputs/homeroom-parity/reference/LOCAL-BROWSER-EVIDENCE.json",
+    "reference_evidence_level": "Chromium desktop/mobile screenshots and DOM/assets/errors; read-only menu expansion, terms modal opening, contact typing/character counter; no form submit/auth/donation/contact send.",
+    "routes": [
+      "home",
+      "directory",
+      "register",
+      "about",
+      "contact",
+      "partners",
+      {
+        "route": "forgot password",
+        "url": "https://www.helpteachers.net/pages/forgot.html",
+        "reference_status": "captured public reset shell; no form submitted"
+      },
+      {
+        "route": "/pages/login.html",
+        "local_route": "#/login",
+        "local_gap": "Local demo login is passwordless; no email/password form shell."
+      },
+      {
+        "route": "/pages/forgot.html",
+        "local_route": null,
+        "local_gap": "No local password-reset shell/route."
+      },
+      {
+        "route": "/pages/teacher.html",
+        "local_route": "#/teachers/<lowercase-id>",
+        "local_gap": "Local fixture profile route exists but does not demonstrate reference profile presentation/Wishlist/Share affordances."
+      }
+    ],
+    "screenshots_per_route": [
+      "desktop 1440x1000",
+      "mobile 390x844"
+    ],
+    "home_correction": "Teacher of the Day resolved to Sarah Endsley; earlier text-only loading string was superseded. Impact counters vary.",
+    "matrix": [
+      {
+        "priority": "P1",
+        "surface": "Shared visual shell/navigation",
+        "reference": "Navy body, green-gradient header, logo, six nav items; mobile hamburger",
+        "local": "Green header, pale-green body, synthetic banner, five-step rail, Teacher journey/PxC DevTools toolbar",
+        "gap": "Initial visual and nav scope differences confirmed in screenshots/source",
+        "fixture": "local static shell/nav and per-route current state",
+        "acceptance": "Compare register/teachers captures; verify nav target and keyboard focus/expanded mobile behavior",
+        "unknown": "Click and keyboard outcomes"
+      },
+      {
+        "priority": "P1",
+        "surface": "Login and password reset",
+        "reference": "Public /pages/login.html shows email/password, Submit, Forgot Password and Register; /pages/forgot.html reset shell captured. No submit/auth attempt.",
+        "local": "Passwordless demo-session toggle after simulated approval; no reset route/page.",
+        "gap": "Frontend credential fields and reset shell absent; demo toggle does not provide shell parity.",
+        "fixture": "Synthetic local login/reset forms and deterministic validation/result states; do not retain credentials/send reset email.",
+        "acceptance": "Routes render desktop/mobile; links work; local validation feedback; assert no network or persistence of credentials.",
+        "unknown": "Authentication and reset-message delivery; excluded."
+      },
+      {
+        "priority": "P1",
+        "surface": "Homepage",
+        "reference": "Hero, impact counters, Teacher of Day Sarah Endsley, teacher CTA, donor and random teacher CTAs",
+        "local": "No homepage route; defaults to registration",
+        "gap": "Source-confirmed page absence",
+        "fixture": "synthetic hero, fixed counters, featured demo teacher image/profile; no payment",
+        "acceptance": "Static home renders; CTAs route locally; no network/payment",
+        "unknown": "Metric provenance/licensing of image/actual donation flow"
+      },
+      {
+        "priority": "P1",
+        "surface": "Directory",
+        "reference": "Four cascading selectors and Find Teachers; Search Results region is blank at default selections. Filtered outcomes were not tested.",
+        "local": "Two seeded teacher profiles; no directory filters/search; school cascade only on registration",
+        "gap": "Local teacher listing exists, but no filter/search controls; default live blank region must not be mislabeled no-results.",
+        "fixture": "Synthetic geography; one deterministic matching teacher set plus explicit filtered empty-state fixture.",
+        "acceptance": "Cascade/reset; Find Teachers query returns local fixed profiles; unmatched query renders defined empty state; zero network.",
+        "unknown": "Live selected-filter matching/no-match results and wording."
+      },
+      {
+        "priority": "P1",
+        "surface": "Registration",
+        "reference": "Editable identity/password/confirmation, four school selectors, terms dialog + consent, Submit/Login; interaction capture opened Terms, no submit.",
+        "local": "Locked synthetic identity, no password, three geography rows, demo consent",
+        "gap": "Locked synthetic identity, no password/confirmation or production Terms presentation; demo consent differs.",
+        "fixture": "Local-only form with validation and local Terms content; never retain credentials or post.",
+        "acceptance": "Required/format/match validation, terms open/close and consent states; synthetic pending result only.",
+        "unknown": "Live password rules and submission outcome."
+      },
+      {
+        "priority": "P1",
+        "surface": "Profile detail",
+        "reference": "Main donor path from home View Teacher of the Day to public Sarah Endsley profile: photo/hero, school/location, bio, Wishlist and Share Page affordances.",
+        "local": "Synthetic profile detail exists, but no demonstrated presentation match or visible equivalent Wishlist/Share controls.",
+        "gap": "Profile presentation/action affordances are a P1 part of homepage-to-teacher donor discovery.",
+        "fixture": "Stable synthetic featured profile, photo placeholder, location, bio, visible Wishlist/Share affordances that stay local.",
+        "acceptance": "Home\u2192profile works; visible profile hierarchy/content fields; local explanatory behavior for Wishlist/Share; no outbound/network action.",
+        "unknown": "Live Wishlist/Share action outcomes and all transactions; excluded."
+      },
+      {
+        "priority": "P2",
+        "surface": "About/team",
+        "reference": "Mission/how-it-works/terms/six team images",
+        "local": "No route/content",
+        "gap": "Confirmed source absence",
+        "fixture": "approved static copy/assets only",
+        "acceptance": "Desktop/mobile route, image alternatives, local terms link",
+        "unknown": "authoritative copy, team identities/assets rights"
+      },
+      {
+        "priority": "P2",
+        "surface": "Contact",
+        "reference": "Social links, contact fields and 250-char counter",
+        "local": "No route/form; CSP disallows connect and submit",
+        "gap": "Confirmed source absence",
+        "fixture": "local-only form state and never-sent result",
+        "acceptance": "validation/count; assert no network/outbound action",
+        "unknown": "recipient/submission behavior/social URLs"
+      },
+      {
+        "priority": "P2",
+        "surface": "Partners",
+        "reference": "Sponsor groups, five loaded partner logos",
+        "local": "No route/content/assets",
+        "gap": "Confirmed source absence",
+        "fixture": "approved partner labels/logo assets",
+        "acceptance": "groups, alt text, local contact path, no outbound action",
+        "unknown": "asset rights and destinations"
+      }
+    ],
+    "not_assessed": [
+      "live registration/search/contact submissions, authentication, donations",
+      "production profile mutation, Wishlist/Share action outcomes or transaction behavior",
+      "exact impact metric provenance/freshness",
+      "accessibility beyond captured DOM and interaction observations",
+      "local login click; authenticated fixture state was injected during flow"
+    ],
+    "public_interactions": {
+      "evidence": "outputs/homeroom-parity/reference/INTERACTION-EVIDENCE.json and PUBLIC-JOURNEY-EVIDENCE.json",
+      "verified": [
+        "mobile menu click expands navigation",
+        "terms dialog opens; no consent checkbox checked",
+        "contact message draft typed; counter showed 230 remaining of 250",
+        "public login route opened without entering credentials",
+        "Sarah Endsley public profile route opened",
+        "public forgot-password shell opened via Forgot Password link"
+      ],
+      "untouched": [
+        "submit",
+        "login/authentication",
+        "donation",
+        "contact send"
+      ]
+    },
+    "local_flow_evidence": "outputs/homeroom-parity/reference/LOCAL-FIXTURE-FLOW.json"
+  },
+  "assets_live_reference": {
+    "source": "outputs/homeroom-parity/reference/BROWSER-EVIDENCE.json",
+    "fonts": {
+      "computed_body": "Inter, sans-serif",
+      "requested": "Google Fonts Inter and Fraunces WOFF2 (network URLs recorded in browser evidence)",
+      "local": "No bundled font; entry CSP blocks external resources; actual selected fallback face unknown"
+    },
+    "assets": [
+      {
+        "url": "https://www.helpteachers.net/static/images/logo_transparent.png",
+        "dimensions": "298x95",
+        "local": "matching logo_transparent.png present, 11,341 bytes"
+      },
+      {
+        "url": "embedded data:image/jpeg on live homepage",
+        "dimensions": "1059x1459",
+        "local": "no matching teacher image; local apple.jpg is placeholder, 275x183"
+      },
+      {
+        "url": "https://www.helpteachers.net/static/images/homepage/hero_border.jpg and /static/images/homepage/tile_border_1.jpg through tile_border_4.jpg",
+        "dimensions": "CSS/background assets; dimensions not exposed in DOM capture",
+        "local": "same-named hero_border.jpg (624x260) exists, but source not used; tile backgrounds absent"
+      },
+      {
+        "url": "https://www.helpteachers.net/static/images/about/peanut.jpg",
+        "dimensions": "599x599",
+        "local": "absent"
+      },
+      {
+        "url": "https://www.helpteachers.net/static/images/about/grape.jpg",
+        "dimensions": "200x200",
+        "local": "absent"
+      },
+      {
+        "url": "https://www.helpteachers.net/static/images/about/Tory.jpg",
+        "dimensions": "1536x2047",
+        "local": "absent"
+      },
+      {
+        "url": "https://www.helpteachers.net/static/images/about/jillian.jpg",
+        "dimensions": "1150x1755",
+        "local": "absent"
+      },
+      {
+        "url": "https://www.helpteachers.net/static/images/about/william.jpg",
+        "dimensions": "1848x3024",
+        "local": "absent"
+      },
+      {
+        "url": "https://www.helpteachers.net/static/images/about/majid.jpg",
+        "dimensions": "1482x1558",
+        "local": "absent"
+      },
+      {
+        "url": "https://www.helpteachers.net/static/images/partners/Coastal.png",
+        "dimensions": "321x157",
+        "local": "absent"
+      },
+      {
+        "url": "https://www.helpteachers.net/static/images/partners/Microsoft-logo.png",
+        "dimensions": "1020x961",
+        "local": "absent"
+      },
+      {
+        "url": "https://www.helpteachers.net/static/images/partners/1007TheWolf.png",
+        "dimensions": "225x225",
+        "local": "absent"
+      },
+      {
+        "url": "https://www.helpteachers.net/static/images/partners/965CountryColor.png",
+        "dimensions": "1264x712",
+        "local": "absent"
+      },
+      {
+        "url": "https://www.helpteachers.net/static/images/partners/BaseCamp.png",
+        "dimensions": "385x131",
+        "local": "absent"
+      }
+    ],
+    "note": "URLs and dimensions are observations from the public reference capture, not binary identity checks. Exact local byte identity remains unverified; supplied public-reference assets or synthetic placeholders are implementation inputs, not a permission-gate conclusion."
+  },
+  "verification_commands": [
+    {
+      "command": "python3 work/homeroom-parity/local/compare_hh_package.py",
+      "purpose": "Read-only SHA-256 compare current HH source with dist and Bazel package copies plus required rewrites",
+      "observed": "PASS both packaged HH copies",
+      "portability": "Auto-detect workspace/repository root; optional --checkpoint PATH or HH_CHECKPOINT_ROOT."
+    },
+    {
+      "command": "python3 -m http.server 4188 --bind 127.0.0.1 --directory work/PageRouter/checkpoint/dist",
+      "purpose": "Serve composed entry and compiled HH child with sibling services",
+      "observed": "HTTP 200 probes; Chromium captured initial register/login/teachers without page errors"
+    },
+    {
+      "command": "sha256sum work/PageRouter/checkpoint/vendor/hh/src/{index.html,app.mjs,controller.mjs,teacher-journey.mjs,styles.css} work/PageRouter/checkpoint/vendor/hh/services/{fixtures.mjs,http-provider.mjs}",
+      "purpose": "Reproduce source hashes in LOCAL-ENVIRONMENT.md",
+      "observed": "Current hashes listed; no build"
+    },
+    {
+      "command": "python3 work/homeroom-parity/local/check_site_receipt.py",
+      "purpose": "Compare all source paths and SHA-256 values in the retained site receipt to current files without building",
+      "observed": "STALE: 1 changed of 1390 inputs, 0 missing; exp/block5/core/canonical.mjs",
+      "portability": "Auto-detect workspace/repository root; optional --checkpoint PATH or HH_CHECKPOINT_ROOT. Missing receipt reports UNVERIFIED_MISSING_RECEIPT and exit 2."
+    },
+    {
+      "command": "Review outputs/homeroom-parity/reference/LOCAL-FIXTURE-FLOW.json; verify externalRequests is empty and step 11 records removed sessionStorage key",
+      "purpose": "Audit the already captured deterministic local journey without contacting services",
+      "observed": "11 steps, 23 local GETs, zero external requests; reset verified"
+    }
+  ],
+  "local_capture_details": {
+    "evidence": "outputs/homeroom-parity/reference/LOCAL-BROWSER-EVIDENCE.json and LOCAL-FIXTURE-FLOW.json",
+    "screenshots": "outputs/homeroom-parity/reference/screenshots/local-{register,login,teachers}-{desktop,mobile}.png",
+    "captured_states": [
+      "initial registration",
+      "passwordless demo login initial state",
+      "teachers directory with two seed profiles",
+      "registration to pending",
+      "simulated approval",
+      "profile create after injected fixture auth",
+      "created profile",
+      "directory and public profile",
+      "reset"
+    ],
+    "viewports": [
+      "1440x1000",
+      "390x844"
+    ],
+    "page_errors": [],
+    "excluded_actions": [
+      "production submit",
+      "live approval/authentication",
+      "live profile write",
+      "persistent production write"
+    ],
+    "render_notes": [
+      "two county/district/school controls disabled until parent selected",
+      "synthetic app toolbar/banners/journey rail visible",
+      "apple placeholder used for teacher tiles"
+    ],
+    "overall": "Initial render and disposable local fixture flow runtime verified; no production operation. Login click not tested."
+  },
+  "source_hashes": {
+    "vendor/hh/src/index.html": "0703e079c0e3567eac0421721be8ad39d6742d0fff7c36afc6d1dd860d4eae51",
+    "vendor/hh/src/app.mjs": "6890e6e09f78519d08f05b1f62ec14000f966d253d3d7014339bfde49716d46a",
+    "vendor/hh/src/controller.mjs": "5085dd70d0eb4f06116d565e99b5d0c98467bdabe217e582e5dc955ccde888c8",
+    "vendor/hh/src/teacher-journey.mjs": "dde771c3048fba787704f2fc62606d51065775afcc067d2f907a3bf9a78c5596",
+    "vendor/hh/src/styles.css": "8d20b9d8ae814d94c7fb90c027a5903eb993de0017c7e1708ac79bd645a0d956",
+    "vendor/hh/services/fixtures.mjs": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+    "vendor/hh/services/http-provider.mjs": "d0cc961336c553bc2e83cfe2e5796a7510a95ae6d77307ca75f19e1c79b2ba71",
+    "outer/src/app.mjs": "79b867aaf93ea7d960bef355d51041617180280f95dd439f2fa811ac4c32b85a"
+  }
+}

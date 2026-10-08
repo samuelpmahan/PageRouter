@@ -1,0 +1,2282 @@
+{
+  "schema": "homeroom-local-browser-comparison.v1",
+  "capturedAt": "2026-10-08T21:31:36.361Z",
+  "note": "Assembled local page; no form submit, simulated approval, login action, profile creation or persistent write was performed.",
+  "browser": {
+    "name": "Chromium headless shell",
+    "version": "156.0.8078.4",
+    "executable": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/work/toolteam/browser/browsers/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell"
+  },
+  "viewport": {
+    "desktop": {
+      "width": 1440,
+      "height": 1000
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  "results": [
+    {
+      "name": "local-register",
+      "size": "desktop",
+      "requestedUrl": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+      "finalUrl": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+      "status": 200,
+      "error": null,
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-register-desktop.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+        "title": "Homeroom Heroes · Register",
+        "headings": [
+          {
+            "level": "H2",
+            "text": "Preview controls"
+          },
+          {
+            "level": "H1",
+            "text": "Create your account"
+          },
+          {
+            "level": "H1",
+            "text": "PxC DevTools"
+          },
+          {
+            "level": "H2",
+            "text": "Teachers · loaded state"
+          },
+          {
+            "level": "H2",
+            "text": "Recent activity · this page"
+          },
+          {
+            "level": "H2",
+            "text": "Select a teacher or action"
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "Log in",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/login"
+          }
+        ],
+        "controls": [
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Teacher journey",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "PxC DevTools",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Reset demo",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Fail next request",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "name": "name",
+            "id": "name",
+            "text": "",
+            "label": "Name",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "email",
+            "name": "email",
+            "id": "email",
+            "text": "",
+            "label": "Email",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "name": "phoneNumber",
+            "id": "phoneNumber",
+            "text": "",
+            "label": "Phone number",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "state",
+            "id": "state",
+            "text": "Choose state\nDemo California\nDemo Washington",
+            "label": "State\nChoose state\nDemo California\nDemo Washington",
+            "disabled": false,
+            "required": true,
+            "options": [
+              "Choose state",
+              "Demo California",
+              "Demo Washington"
+            ]
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "county",
+            "id": "county",
+            "text": "Choose county",
+            "label": "County\nChoose county",
+            "disabled": true,
+            "required": true,
+            "options": [
+              "Choose county"
+            ]
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "district",
+            "id": "district",
+            "text": "Choose school district",
+            "label": "School district\nChoose school district",
+            "disabled": true,
+            "required": true,
+            "options": [
+              "Choose school district"
+            ]
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "school",
+            "id": "school",
+            "text": "Choose school",
+            "label": "School\nChoose school",
+            "disabled": true,
+            "required": true,
+            "options": [
+              "Choose school"
+            ]
+          },
+          {
+            "tag": "input",
+            "type": "checkbox",
+            "name": "demoConsent",
+            "id": "demoConsent",
+            "text": "",
+            "label": "I confirm this is a synthetic demo request. No real account or terms acceptance is created.",
+            "disabled": false,
+            "required": true
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Submit demo registration",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Refresh live store",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Repeatable seed",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Generate six styles",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Replay same seed",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Keep selected style",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Reset style",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Export kept values",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Find Parts",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "",
+            "id": "",
+            "text": "All addresses",
+            "label": "Address prefixAll addresses",
+            "disabled": false,
+            "required": false,
+            "options": [
+              "All addresses"
+            ]
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "",
+            "id": "",
+            "text": "All kindsSuppliedProducedCalculation",
+            "label": "KindAll kindsSuppliedProducedCalculation",
+            "disabled": false,
+            "required": false,
+            "options": [
+              "All kinds",
+              "Supplied",
+              "Produced",
+              "Calculation"
+            ]
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Show 100 more",
+            "label": "",
+            "disabled": false,
+            "required": false
+          }
+        ],
+        "images": [
+          {
+            "src": "http://127.0.0.1:4188/compiled/hh/assets/logo_transparent.png",
+            "alt": "Homeroom Heroes",
+            "loaded": true,
+            "width": 298,
+            "height": 95
+          }
+        ],
+        "fonts": {
+          "body": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "h1": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1000,
+          "documentWidth": 1440,
+          "documentHeight": 1089
+        },
+        "visibleText": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nLog in\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n1\nRegister\n2\nApproval\n3\nDemo login\n4\nCreate profile\n5\nPublic view\nPreview controls\n\nTry the flow, then reset to start again.\n\nReset demoFail next request\n\nNew records stay only in this tab’s session.\n\nA bounded preview from the surviving HH registration and teacher UI.\n\nTEACHER COMMUNITY\nCreate your account\n\nShare your school details to request a Homeroom Heroes account. Your registration stays pending until it is confirmed.\n\nName\nEmail\nPhone number\n\nSynthetic details are locked for this preview. Demo login does not use a real password.\n\nSchool information\nState\nChoose state\nDemo California\nDemo Washington\nCounty\nChoose county\nSchool district\nChoose school district\nSchool\nChoose school\nI confirm this is a synthetic demo request. No real account or terms acceptance is created.\nSubmit demo registration\nHomeroom Heroes · Synthetic teacher journey preview"
+      },
+      "errors": [],
+      "failedRequests": []
+    },
+    {
+      "name": "local-register",
+      "size": "mobile",
+      "requestedUrl": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+      "finalUrl": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+      "status": 200,
+      "error": null,
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-register-mobile.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+        "title": "Homeroom Heroes · Register",
+        "headings": [
+          {
+            "level": "H2",
+            "text": "Preview controls"
+          },
+          {
+            "level": "H1",
+            "text": "Create your account"
+          },
+          {
+            "level": "H1",
+            "text": "PxC DevTools"
+          },
+          {
+            "level": "H2",
+            "text": "Teachers · loaded state"
+          },
+          {
+            "level": "H2",
+            "text": "Recent activity · this page"
+          },
+          {
+            "level": "H2",
+            "text": "Select a teacher or action"
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "Log in",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/login"
+          }
+        ],
+        "controls": [
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Teacher journey",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "PxC DevTools",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Reset demo",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Fail next request",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "name": "name",
+            "id": "name",
+            "text": "",
+            "label": "Name",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "email",
+            "name": "email",
+            "id": "email",
+            "text": "",
+            "label": "Email",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "name": "phoneNumber",
+            "id": "phoneNumber",
+            "text": "",
+            "label": "Phone number",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "state",
+            "id": "state",
+            "text": "Choose state\nDemo California\nDemo Washington",
+            "label": "State\nChoose state\nDemo California\nDemo Washington",
+            "disabled": false,
+            "required": true,
+            "options": [
+              "Choose state",
+              "Demo California",
+              "Demo Washington"
+            ]
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "county",
+            "id": "county",
+            "text": "Choose county",
+            "label": "County\nChoose county",
+            "disabled": true,
+            "required": true,
+            "options": [
+              "Choose county"
+            ]
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "district",
+            "id": "district",
+            "text": "Choose school district",
+            "label": "School district\nChoose school district",
+            "disabled": true,
+            "required": true,
+            "options": [
+              "Choose school district"
+            ]
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "school",
+            "id": "school",
+            "text": "Choose school",
+            "label": "School\nChoose school",
+            "disabled": true,
+            "required": true,
+            "options": [
+              "Choose school"
+            ]
+          },
+          {
+            "tag": "input",
+            "type": "checkbox",
+            "name": "demoConsent",
+            "id": "demoConsent",
+            "text": "",
+            "label": "I confirm this is a synthetic demo request. No real account or terms acceptance is created.",
+            "disabled": false,
+            "required": true
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Submit demo registration",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Refresh live store",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Repeatable seed",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Generate six styles",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Replay same seed",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Keep selected style",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Reset style",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Export kept values",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Find Parts",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "",
+            "id": "",
+            "text": "All addresses",
+            "label": "Address prefixAll addresses",
+            "disabled": false,
+            "required": false,
+            "options": [
+              "All addresses"
+            ]
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "",
+            "id": "",
+            "text": "All kindsSuppliedProducedCalculation",
+            "label": "KindAll kindsSuppliedProducedCalculation",
+            "disabled": false,
+            "required": false,
+            "options": [
+              "All kinds",
+              "Supplied",
+              "Produced",
+              "Calculation"
+            ]
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Show 100 more",
+            "label": "",
+            "disabled": false,
+            "required": false
+          }
+        ],
+        "images": [
+          {
+            "src": "http://127.0.0.1:4188/compiled/hh/assets/logo_transparent.png",
+            "alt": "Homeroom Heroes",
+            "loaded": true,
+            "width": 298,
+            "height": 95
+          }
+        ],
+        "fonts": {
+          "body": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "h1": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+        },
+        "viewport": {
+          "width": 390,
+          "height": 844,
+          "documentWidth": 390,
+          "documentHeight": 1580
+        },
+        "visibleText": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nLog in\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n1\nRegister\n2\nApproval\n3\nDemo login\n4\nCreate profile\n5\nPublic view\nReset demo\nFail next request\nTEACHER COMMUNITY\nCreate your account\n\nShare your school details to request a Homeroom Heroes account. Your registration stays pending until it is confirmed.\n\nName\nEmail\nPhone number\n\nSynthetic details are locked for this preview. Demo login does not use a real password.\n\nSchool information\nState\nChoose state\nDemo California\nDemo Washington\nCounty\nChoose county\nSchool district\nChoose school district\nSchool\nChoose school\nI confirm this is a synthetic demo request. No real account or terms acceptance is created.\nSubmit demo registration\nHomeroom Heroes · Synthetic teacher journey preview"
+      },
+      "errors": [],
+      "failedRequests": []
+    },
+    {
+      "name": "local-login",
+      "size": "desktop",
+      "requestedUrl": "http://127.0.0.1:4188/compiled/hh/index.html#/login",
+      "finalUrl": "http://127.0.0.1:4188/compiled/hh/index.html#/login",
+      "status": 200,
+      "error": null,
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-login-desktop.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/login",
+        "title": "Homeroom Heroes · Demo login",
+        "headings": [
+          {
+            "level": "H2",
+            "text": "Preview controls"
+          },
+          {
+            "level": "H1",
+            "text": "Demo login"
+          },
+          {
+            "level": "H1",
+            "text": "PxC DevTools"
+          },
+          {
+            "level": "H2",
+            "text": "Teachers · loaded state"
+          },
+          {
+            "level": "H2",
+            "text": "Recent activity · this page"
+          },
+          {
+            "level": "H2",
+            "text": "Select a teacher or action"
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "Log in",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/login"
+          },
+          {
+            "text": "Open registration",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          }
+        ],
+        "controls": [
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Teacher journey",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "PxC DevTools",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Reset demo",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Fail next request",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "email",
+            "name": "loginEmail",
+            "id": "loginEmail",
+            "text": "",
+            "label": "Demo email",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Log in to demo",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Refresh live store",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Repeatable seed",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Generate six styles",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Replay same seed",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Keep selected style",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Reset style",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Export kept values",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Find Parts",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "",
+            "id": "",
+            "text": "All addresses",
+            "label": "Address prefixAll addresses",
+            "disabled": false,
+            "required": false,
+            "options": [
+              "All addresses"
+            ]
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "",
+            "id": "",
+            "text": "All kindsSuppliedProducedCalculation",
+            "label": "KindAll kindsSuppliedProducedCalculation",
+            "disabled": false,
+            "required": false,
+            "options": [
+              "All kinds",
+              "Supplied",
+              "Produced",
+              "Calculation"
+            ]
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Show 100 more",
+            "label": "",
+            "disabled": false,
+            "required": false
+          }
+        ],
+        "images": [
+          {
+            "src": "http://127.0.0.1:4188/compiled/hh/assets/logo_transparent.png",
+            "alt": "Homeroom Heroes",
+            "loaded": true,
+            "width": 298,
+            "height": 95
+          }
+        ],
+        "fonts": {
+          "body": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "h1": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1000,
+          "documentWidth": 1440,
+          "documentHeight": 1031
+        },
+        "visibleText": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nLog in\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n1\nRegister\n2\nApproval\n3\nDemo login\n4\nCreate profile\n5\nPublic view\nPreview controls\n\nTry the flow, then reset to start again.\n\nReset demoFail next request\n\nNew records stay only in this tab’s session.\n\nA bounded preview from the surviving HH registration and teacher UI.\n\nTEACHER COMMUNITY\nDemo login\n\nLog in as the synthetic teacher after demo approval. This is a simulated session, with no real authentication or stored password.\n\nDemo email\nLog in to demo\n\nCreate a demo registration first. Open registration\n\nHomeroom Heroes · Synthetic teacher journey preview"
+      },
+      "errors": [],
+      "failedRequests": []
+    },
+    {
+      "name": "local-login",
+      "size": "mobile",
+      "requestedUrl": "http://127.0.0.1:4188/compiled/hh/index.html#/login",
+      "finalUrl": "http://127.0.0.1:4188/compiled/hh/index.html#/login",
+      "status": 200,
+      "error": null,
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-login-mobile.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/login",
+        "title": "Homeroom Heroes · Demo login",
+        "headings": [
+          {
+            "level": "H2",
+            "text": "Preview controls"
+          },
+          {
+            "level": "H1",
+            "text": "Demo login"
+          },
+          {
+            "level": "H1",
+            "text": "PxC DevTools"
+          },
+          {
+            "level": "H2",
+            "text": "Teachers · loaded state"
+          },
+          {
+            "level": "H2",
+            "text": "Recent activity · this page"
+          },
+          {
+            "level": "H2",
+            "text": "Select a teacher or action"
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "Log in",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/login"
+          },
+          {
+            "text": "Open registration",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          }
+        ],
+        "controls": [
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Teacher journey",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "PxC DevTools",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Reset demo",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Fail next request",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "email",
+            "name": "loginEmail",
+            "id": "loginEmail",
+            "text": "",
+            "label": "Demo email",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Log in to demo",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Refresh live store",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Repeatable seed",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Generate six styles",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Replay same seed",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Keep selected style",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Reset style",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Export kept values",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Find Parts",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "",
+            "id": "",
+            "text": "All addresses",
+            "label": "Address prefixAll addresses",
+            "disabled": false,
+            "required": false,
+            "options": [
+              "All addresses"
+            ]
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "",
+            "id": "",
+            "text": "All kindsSuppliedProducedCalculation",
+            "label": "KindAll kindsSuppliedProducedCalculation",
+            "disabled": false,
+            "required": false,
+            "options": [
+              "All kinds",
+              "Supplied",
+              "Produced",
+              "Calculation"
+            ]
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Show 100 more",
+            "label": "",
+            "disabled": false,
+            "required": false
+          }
+        ],
+        "images": [
+          {
+            "src": "http://127.0.0.1:4188/compiled/hh/assets/logo_transparent.png",
+            "alt": "Homeroom Heroes",
+            "loaded": true,
+            "width": 298,
+            "height": 95
+          }
+        ],
+        "fonts": {
+          "body": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "h1": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+        },
+        "viewport": {
+          "width": 390,
+          "height": 844,
+          "documentWidth": 390,
+          "documentHeight": 904
+        },
+        "visibleText": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nLog in\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n1\nRegister\n2\nApproval\n3\nDemo login\n4\nCreate profile\n5\nPublic view\nReset demo\nFail next request\nTEACHER COMMUNITY\nDemo login\n\nLog in as the synthetic teacher after demo approval. This is a simulated session, with no real authentication or stored password.\n\nDemo email\nLog in to demo\n\nCreate a demo registration first. Open registration\n\nHomeroom Heroes · Synthetic teacher journey preview"
+      },
+      "errors": [],
+      "failedRequests": []
+    },
+    {
+      "name": "local-teachers",
+      "size": "desktop",
+      "requestedUrl": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers",
+      "finalUrl": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers",
+      "status": 200,
+      "error": null,
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-teachers-desktop.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers",
+        "title": "Homeroom Heroes · Demo teachers",
+        "headings": [
+          {
+            "level": "H2",
+            "text": "Preview controls"
+          },
+          {
+            "level": "H1",
+            "text": "Meet the demo teachers"
+          },
+          {
+            "level": "H2",
+            "text": "Demo Avery"
+          },
+          {
+            "level": "H2",
+            "text": "Demo Jordan"
+          },
+          {
+            "level": "H1",
+            "text": "PxC DevTools"
+          },
+          {
+            "level": "H2",
+            "text": "Teachers · loaded state"
+          },
+          {
+            "level": "H2",
+            "text": "Recent activity · this page"
+          },
+          {
+            "level": "H2",
+            "text": "Select a teacher or action"
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "Log in",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/login"
+          },
+          {
+            "text": "View classroom",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers/demo-avery"
+          },
+          {
+            "text": "View classroom",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers/demo-jordan"
+          }
+        ],
+        "controls": [
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Teacher journey",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "PxC DevTools",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Reset demo",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Fail next request",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Refresh live store",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Repeatable seed",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Generate six styles",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Replay same seed",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Keep selected style",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Reset style",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Export kept values",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Find Parts",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "",
+            "id": "",
+            "text": "All addresses",
+            "label": "Address prefixAll addresses",
+            "disabled": false,
+            "required": false,
+            "options": [
+              "All addresses"
+            ]
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "",
+            "id": "",
+            "text": "All kindsSuppliedProducedCalculation",
+            "label": "KindAll kindsSuppliedProducedCalculation",
+            "disabled": false,
+            "required": false,
+            "options": [
+              "All kinds",
+              "Supplied",
+              "Produced",
+              "Calculation"
+            ]
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Show 100 more",
+            "label": "",
+            "disabled": false,
+            "required": false
+          }
+        ],
+        "images": [
+          {
+            "src": "http://127.0.0.1:4188/compiled/hh/assets/logo_transparent.png",
+            "alt": "Homeroom Heroes",
+            "loaded": true,
+            "width": 298,
+            "height": 95
+          },
+          {
+            "src": "http://127.0.0.1:4188/compiled/hh/assets/apple.jpg",
+            "alt": "Homeroom Heroes apple placeholder",
+            "loaded": true,
+            "width": 275,
+            "height": 183
+          },
+          {
+            "src": "http://127.0.0.1:4188/compiled/hh/assets/apple.jpg",
+            "alt": "Homeroom Heroes apple placeholder",
+            "loaded": true,
+            "width": 275,
+            "height": 183
+          }
+        ],
+        "fonts": {
+          "body": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "h1": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+        },
+        "viewport": {
+          "width": 1440,
+          "height": 1000,
+          "documentWidth": 1440,
+          "documentHeight": 1031
+        },
+        "visibleText": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nLog in\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n1\nRegister\n2\nApproval\n3\nDemo login\n4\nCreate profile\n5\nPublic view\nPreview controls\n\nTry the flow, then reset to start again.\n\nReset demoFail next request\n\nNew records stay only in this tab’s session.\n\nA bounded preview from the surviving HH registration and teacher UI.\n\nSUPPORT TEACHERS\nMeet the demo teachers\n\nExplore synthetic classroom profiles. New profiles stay in this tab’s demo session.\n\nDemo Avery\n\nStable demo profile\n\nView classroom\nDemo Jordan\n\nStable demo profile\n\nView classroom\nHomeroom Heroes · Synthetic teacher journey preview"
+      },
+      "errors": [],
+      "failedRequests": []
+    },
+    {
+      "name": "local-teachers",
+      "size": "mobile",
+      "requestedUrl": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers",
+      "finalUrl": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers",
+      "status": 200,
+      "error": null,
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/local-teachers-mobile.png",
+      "dom": {
+        "url": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers",
+        "title": "Homeroom Heroes · Demo teachers",
+        "headings": [
+          {
+            "level": "H2",
+            "text": "Preview controls"
+          },
+          {
+            "level": "H1",
+            "text": "Meet the demo teachers"
+          },
+          {
+            "level": "H2",
+            "text": "Demo Avery"
+          },
+          {
+            "level": "H2",
+            "text": "Demo Jordan"
+          },
+          {
+            "level": "H1",
+            "text": "PxC DevTools"
+          },
+          {
+            "level": "H2",
+            "text": "Teachers · loaded state"
+          },
+          {
+            "level": "H2",
+            "text": "Recent activity · this page"
+          },
+          {
+            "level": "H2",
+            "text": "Select a teacher or action"
+          }
+        ],
+        "links": [
+          {
+            "text": "Skip to content",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#main"
+          },
+          {
+            "text": "",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Register",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/register"
+          },
+          {
+            "text": "Teachers",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers"
+          },
+          {
+            "text": "Log in",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/login"
+          },
+          {
+            "text": "View classroom",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers/demo-avery"
+          },
+          {
+            "text": "View classroom",
+            "href": "http://127.0.0.1:4188/compiled/hh/index.html#/teachers/demo-jordan"
+          }
+        ],
+        "controls": [
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Teacher journey",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "PxC DevTools",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Reset demo",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Fail next request",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Refresh live store",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Repeatable seed",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Min",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "number",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Max",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Generate six styles",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Replay same seed",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Keep selected style",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Reset style",
+            "label": "",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "button",
+            "type": "button",
+            "name": "",
+            "id": "",
+            "text": "Export kept values",
+            "label": "",
+            "disabled": true,
+            "required": false
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "name": "",
+            "id": "",
+            "text": "",
+            "label": "Find Parts",
+            "disabled": false,
+            "required": false
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "",
+            "id": "",
+            "text": "All addresses",
+            "label": "Address prefixAll addresses",
+            "disabled": false,
+            "required": false,
+            "options": [
+              "All addresses"
+            ]
+          },
+          {
+            "tag": "select",
+            "type": "select-one",
+            "name": "",
+            "id": "",
+            "text": "All kindsSuppliedProducedCalculation",
+            "label": "KindAll kindsSuppliedProducedCalculation",
+            "disabled": false,
+            "required": false,
+            "options": [
+              "All kinds",
+              "Supplied",
+              "Produced",
+              "Calculation"
+            ]
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "name": "",
+            "id": "",
+            "text": "Show 100 more",
+            "label": "",
+            "disabled": false,
+            "required": false
+          }
+        ],
+        "images": [
+          {
+            "src": "http://127.0.0.1:4188/compiled/hh/assets/logo_transparent.png",
+            "alt": "Homeroom Heroes",
+            "loaded": true,
+            "width": 298,
+            "height": 95
+          },
+          {
+            "src": "http://127.0.0.1:4188/compiled/hh/assets/apple.jpg",
+            "alt": "Homeroom Heroes apple placeholder",
+            "loaded": true,
+            "width": 275,
+            "height": 183
+          },
+          {
+            "src": "http://127.0.0.1:4188/compiled/hh/assets/apple.jpg",
+            "alt": "Homeroom Heroes apple placeholder",
+            "loaded": true,
+            "width": 275,
+            "height": 183
+          }
+        ],
+        "fonts": {
+          "body": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+          "h1": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif"
+        },
+        "viewport": {
+          "width": 390,
+          "height": 844,
+          "documentWidth": 390,
+          "documentHeight": 1368
+        },
+        "visibleText": "Teacher journey\nPxC DevTools\nSkip to content\nRegister\nTeachers\nLog in\nDEMO ONLY\nSynthetic data · this tab only · no real email, login, or payments\n\nTEACHER JOURNEY\n\n1\nRegister\n2\nApproval\n3\nDemo login\n4\nCreate profile\n5\nPublic view\nReset demo\nFail next request\nSUPPORT TEACHERS\nMeet the demo teachers\n\nExplore synthetic classroom profiles. New profiles stay in this tab’s demo session.\n\nDemo Avery\n\nStable demo profile\n\nView classroom\nDemo Jordan\n\nStable demo profile\n\nView classroom\nHomeroom Heroes · Synthetic teacher journey preview"
+      },
+      "errors": [],
+      "failedRequests": []
+    }
+  ]
+}

@@ -1,0 +1,675 @@
+{
+  "schema": "homeroom-discoverability.v1",
+  "capturedAt": "2026-10-08T21:37:02.458Z",
+  "limits": [
+    "Navigation-only; no login, password recovery submit, or external wishlist/share action.",
+    "Donation, random-teacher action, forum/validation, and form POSTs were not activated."
+  ],
+  "pages": [
+    {
+      "name": "forgot-password-shell",
+      "url": "https://www.helpteachers.net/pages/forgot.html",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/live-forgot-password.png",
+      "before": {
+        "url": "https://www.helpteachers.net/pages/login.html",
+        "title": "Homeroom Heroes - Login",
+        "body": "☰\nLog In to Your Account\nEmail:\nPassword:\nSubmit\n\nForgot Password Register\n\n© 2024 Homeroom Heroes. All rights reserved.",
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "text": "☰",
+            "name": "",
+            "type": "submit",
+            "onclick": "toggleMenu()"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Login",
+            "name": "",
+            "type": "submit",
+            "onclick": "redirectTo('/pages/login.html')"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Logout",
+            "name": "",
+            "type": "submit",
+            "onclick": "logout()"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "My Page",
+            "name": "",
+            "type": "submit",
+            "onclick": "mypage()"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Forum",
+            "name": "",
+            "type": "submit",
+            "onclick": "redirectTo('/pages/forum.html')"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Validation",
+            "name": "",
+            "type": "submit",
+            "onclick": "redirectTo('/pages/validation.html')"
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "name": "email",
+            "type": "email",
+            "onclick": null
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "name": "password",
+            "type": "password",
+            "onclick": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Submit",
+            "name": "",
+            "type": "submit",
+            "onclick": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Forgot Password",
+            "name": "",
+            "type": "submit",
+            "onclick": null
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Register",
+            "name": "",
+            "type": "submit",
+            "onclick": null
+          }
+        ],
+        "forms": [
+          {
+            "method": "post",
+            "action": "https://www.helpteachers.net/pages/login.html",
+            "fields": [
+              {
+                "name": "email",
+                "type": "email"
+              },
+              {
+                "name": "password",
+                "type": "password"
+              },
+              {
+                "name": "",
+                "type": "submit"
+              }
+            ]
+          }
+        ],
+        "links": [
+          {
+            "text": "",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "onclick": null
+          },
+          {
+            "text": "Home",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "onclick": null
+          },
+          {
+            "text": "Donate",
+            "href": "https://www.helpteachers.net/pages/index.html",
+            "onclick": null
+          },
+          {
+            "text": "Sign Up",
+            "href": "https://www.helpteachers.net/pages/register.html",
+            "onclick": null
+          },
+          {
+            "text": "About",
+            "href": "https://www.helpteachers.net/pages/about.html",
+            "onclick": null
+          },
+          {
+            "text": "Contact",
+            "href": "https://www.helpteachers.net/pages/contact.html",
+            "onclick": null
+          },
+          {
+            "text": "Partners",
+            "href": "https://www.helpteachers.net/pages/partners.html",
+            "onclick": null
+          },
+          {
+            "text": "Home",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "onclick": null
+          },
+          {
+            "text": "Donate",
+            "href": "https://www.helpteachers.net/pages/index.html",
+            "onclick": null
+          },
+          {
+            "text": "Sign Up",
+            "href": "https://www.helpteachers.net/pages/register.html",
+            "onclick": null
+          },
+          {
+            "text": "About",
+            "href": "https://www.helpteachers.net/pages/about.html",
+            "onclick": null
+          },
+          {
+            "text": "Contact",
+            "href": "https://www.helpteachers.net/pages/contact.html",
+            "onclick": null
+          },
+          {
+            "text": "Partners",
+            "href": "https://www.helpteachers.net/pages/partners.html",
+            "onclick": null
+          }
+        ]
+      },
+      "after": {
+        "url": "https://www.helpteachers.net/pages/forgot.html",
+        "title": "Homeroom Heroes - Forgot Password",
+        "body": "☰\nForgot Your Password?\n\nEnter your email address below, and we'll send you instructions on how to reset your password.\n\nEmail:\nSubmit\n\nBack to Login\n\n© 2024 Homeroom Heroes. All rights reserved.",
+        "headings": [
+          "Forgot Your Password?"
+        ],
+        "controls": [
+          {
+            "tag": "BUTTON",
+            "text": "☰",
+            "name": "",
+            "type": "submit"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Login",
+            "name": "",
+            "type": "submit"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Logout",
+            "name": "",
+            "type": "submit"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "My Page",
+            "name": "",
+            "type": "submit"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Forum",
+            "name": "",
+            "type": "submit"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Validation",
+            "name": "",
+            "type": "submit"
+          },
+          {
+            "tag": "INPUT",
+            "text": "",
+            "name": "email",
+            "type": "email"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Submit",
+            "name": "",
+            "type": "submit"
+          },
+          {
+            "tag": "BUTTON",
+            "text": "Back to Login",
+            "name": "",
+            "type": "submit"
+          }
+        ],
+        "forms": [
+          {
+            "method": "post",
+            "action": "https://www.helpteachers.net/pages/forgot.html",
+            "fields": [
+              {
+                "name": "email",
+                "type": "email"
+              },
+              {
+                "name": "",
+                "type": "submit"
+              }
+            ]
+          }
+        ],
+        "links": [
+          {
+            "text": "",
+            "href": "https://www.helpteachers.net/pages/homepage.html"
+          },
+          {
+            "text": "Home",
+            "href": "https://www.helpteachers.net/pages/homepage.html"
+          },
+          {
+            "text": "Donate",
+            "href": "https://www.helpteachers.net/pages/index.html"
+          },
+          {
+            "text": "Sign Up",
+            "href": "https://www.helpteachers.net/pages/register.html"
+          },
+          {
+            "text": "About",
+            "href": "https://www.helpteachers.net/pages/about.html"
+          },
+          {
+            "text": "Contact",
+            "href": "https://www.helpteachers.net/pages/contact.html"
+          },
+          {
+            "text": "Partners",
+            "href": "https://www.helpteachers.net/pages/partners.html"
+          },
+          {
+            "text": "Home",
+            "href": "https://www.helpteachers.net/pages/homepage.html"
+          },
+          {
+            "text": "Donate",
+            "href": "https://www.helpteachers.net/pages/index.html"
+          },
+          {
+            "text": "Sign Up",
+            "href": "https://www.helpteachers.net/pages/register.html"
+          },
+          {
+            "text": "About",
+            "href": "https://www.helpteachers.net/pages/about.html"
+          },
+          {
+            "text": "Contact",
+            "href": "https://www.helpteachers.net/pages/contact.html"
+          },
+          {
+            "text": "Partners",
+            "href": "https://www.helpteachers.net/pages/partners.html"
+          }
+        ]
+      }
+    },
+    {
+      "name": "homepage-route-and-asset-inventory",
+      "url": "https://www.helpteachers.net/pages/homepage.html",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/home-brand-assets.png",
+      "data": {
+        "route": "https://www.helpteachers.net/pages/homepage.html",
+        "title": "Homeroom Heroes - Support Teachers",
+        "scripts": [
+          "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202610020101/show_ads_impl.js?bust=122881394",
+          "https://cdn.tailwindcss.com/",
+          "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2827692846371935",
+          "https://www.googletagmanager.com/gtag/js?id=AW-17482080573",
+          "inline",
+          "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/17482080573/?random=1791495418287&cv=11&fst=1791495418287&bg=ffffff&guid=ON&async=1&en=gtag.config&gtm=45be6a70za200xecxf1&gcd=13l3l3l3l1l1&dma=0&tag_exp=115616986~115938466~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121046263~121046271~121246026~121246034~121280970&u_w=1440&u_h=1000&url=https%3A%2F%2Fwww.helpteachers.net%2Fpages%2Fhomepage.html&rcb=13&frm=0&tiba=Homeroom%20Heroes%20-%20Support%20Teachers&hn=www.googleadservices.com&npa=0&pscdl=noapi&auid=1799265074.1791495418&uaa=x86&uab=64&uafvl=Not%253AA-Brand%3B8.0.0.0%7CChromium%3B156.0.8078.4%7CHeadlessChrome%3B156.0.8078.4&uamb=0&uam=&uap=Linux&uapv=&uaw=0&data=event%3Dgtag.config&ept=9&rfmt=3&fmt=4",
+          "inline"
+        ],
+        "styles": [
+          "https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Fraunces:wght@400;500&family=DM+Sans:wght@400;500&display=swap",
+          "https://www.helpteachers.net/static/style.css"
+        ],
+        "buttons": [
+          {
+            "text": "☰",
+            "type": "submit",
+            "href": null,
+            "onclick": "toggleMenu()",
+            "parent": "<div class=\"relative\">\n                <button id=\"hamburgerButton\" class=\"text-white text-3xl focus:outline-none **md:hidden**\" onclick=\"toggleMenu()\">☰</button>\n\n                <div class=\"menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden **md:hidden**\" id=\"menuItems\">\n                    \n                    <nav class=\"md:hidden\">\n                        <ul class=\"flex flex-col text-base p-1\">\n                            <li><a href=\"/pages/h"
+          },
+          {
+            "text": "Login",
+            "type": "submit",
+            "href": null,
+            "onclick": "redirectTo('/pages/login.html')",
+            "parent": "<div class=\"menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden **md:hidden**\" id=\"menuItems\">\n                    \n                    <nav class=\"md:hidden\">\n                        <ul class=\"flex flex-col text-base p-1\">\n                            <li><a href=\"/pages/homepage.html\" class=\"listButton block\">Home</a></li>\n                            <li><a href=\"/pages/index.html\" class=\"listButton block\">Donate</a></li>\n                          "
+          },
+          {
+            "text": "Logout",
+            "type": "submit",
+            "href": null,
+            "onclick": "logout()",
+            "parent": "<div class=\"menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden **md:hidden**\" id=\"menuItems\">\n                    \n                    <nav class=\"md:hidden\">\n                        <ul class=\"flex flex-col text-base p-1\">\n                            <li><a href=\"/pages/homepage.html\" class=\"listButton block\">Home</a></li>\n                            <li><a href=\"/pages/index.html\" class=\"listButton block\">Donate</a></li>\n                          "
+          },
+          {
+            "text": "My Page",
+            "type": "submit",
+            "href": null,
+            "onclick": "mypage()",
+            "parent": "<div class=\"menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden **md:hidden**\" id=\"menuItems\">\n                    \n                    <nav class=\"md:hidden\">\n                        <ul class=\"flex flex-col text-base p-1\">\n                            <li><a href=\"/pages/homepage.html\" class=\"listButton block\">Home</a></li>\n                            <li><a href=\"/pages/index.html\" class=\"listButton block\">Donate</a></li>\n                          "
+          },
+          {
+            "text": "Forum",
+            "type": "submit",
+            "href": null,
+            "onclick": "redirectTo('/pages/forum.html')",
+            "parent": "<div class=\"menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden **md:hidden**\" id=\"menuItems\">\n                    \n                    <nav class=\"md:hidden\">\n                        <ul class=\"flex flex-col text-base p-1\">\n                            <li><a href=\"/pages/homepage.html\" class=\"listButton block\">Home</a></li>\n                            <li><a href=\"/pages/index.html\" class=\"listButton block\">Donate</a></li>\n                          "
+          },
+          {
+            "text": "Validation",
+            "type": "submit",
+            "href": null,
+            "onclick": "redirectTo('/pages/validation.html')",
+            "parent": "<div class=\"menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden **md:hidden**\" id=\"menuItems\">\n                    \n                    <nav class=\"md:hidden\">\n                        <ul class=\"flex flex-col text-base p-1\">\n                            <li><a href=\"/pages/homepage.html\" class=\"listButton block\">Home</a></li>\n                            <li><a href=\"/pages/index.html\" class=\"listButton block\">Donate</a></li>\n                          "
+          },
+          {
+            "text": "Find Teachers to Support",
+            "type": "submit",
+            "href": null,
+            "onclick": "redirectTo('/pages/index.html')",
+            "parent": "<div class=\"relative z-10 text-center p-4\">\n                <h2 class=\"text-4xl md:text-6xl font-extrabold mb-4 drop-shadow-lg\">Support Teachers, Empower Futures!</h2>\n                <p class=\"text-xl md:text-2xl font-light drop-shadow-md mb-8\">Connecting generous donors with teachers in need of classroom supplies.</p>\n                <button onclick=\"redirectTo('/pages/index.html')\" class=\"bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 ease-in"
+          },
+          {
+            "text": "View Teacher of the Day",
+            "type": "submit",
+            "href": null,
+            "onclick": "teacherDay()",
+            "parent": "<div id=\"teacherDay\" class=\"flex flex-col items-center justify-center\">\n                        <div class=\"teacher-home\">\n                            <img src=\"data:image/jpeg;base64,/9j/4QF4RXhpZgAATU0AKgAAAAgABgEAAAMAAAABBDgAAAEBAAMAAAABCOgAAAExAAIAAAAmAAAAVodpAAQAAAABAAAAkAESAAMAAAABAAEAAAEyAAIAAAAUAAAAfAAAAABBbmRyb2lkIFNQMUEuMjEwODEyLjAxNi5HOTczVVNRVTlJWEUxADIwMjQ6MDg6MTkgMTc6MjY6MTIAAAWQAwACAAAAFAAAANKSkQACAAAABDIwMQCQEAACAAAABwAAAOaQEQACAAAABwAAAO2SCAADAAAAAQAAAAAAAAAAMjAyNDowODoxOSAxNzoy"
+          },
+          {
+            "text": "Register",
+            "type": "submit",
+            "href": null,
+            "onclick": "redirectTo('/pages/register.html')",
+            "parent": "<div class=\"relative z-10\">\n                    <h2 class=\"text-3xl font-bold text-white mb-4\">Are You a Teacher?</h2>\n                    <p class=\"text-lg leading-relaxed mb-6 text-white\">If you're an educator in need of support, register to create your profile.</p>\n                    <button onclick=\"redirectTo('/pages/register.html')\" class=\"bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md\">\n   "
+          },
+          {
+            "text": "Donate",
+            "type": "submit",
+            "href": null,
+            "onclick": "redirectTo('https://www.paypal.com/donate/?hosted_button_id=B8NRR79ZEV2PS')",
+            "parent": "<div class=\"relative z-10\">\n                    <h2 class=\"text-3xl font-bold text-white mb-4\">Donate Directly to Us</h2>\n                    <p class=\"text-lg leading-relaxed mb-6 text-white\">Click the button below if you would like to make a direct donation to Homeroom Heroes:</p>\n                    <button onclick=\"redirectTo('https://www.paypal.com/donate/?hosted_button_id=B8NRR79ZEV2PS')\" class=\"bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-3"
+          },
+          {
+            "text": "Find Random Teacher",
+            "type": "submit",
+            "href": null,
+            "onclick": "randomTeacher()",
+            "parent": "<div class=\"relative z-10\">\n                    <h2 class=\"text-3xl font-bold text-white mb-4\">Find a Random Teacher</h2>\n                    <p class=\"text-lg leading-relaxed mb-6 text-white\">Discover a teacher at random and make a positive impact on their classroom.</p>\n                    <button onclick=\"randomTeacher()\" class=\"bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md\">\n                  "
+          }
+        ],
+        "allLinks": [
+          {
+            "text": "",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "hidden": false
+          },
+          {
+            "text": "Home",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "hidden": false
+          },
+          {
+            "text": "Donate",
+            "href": "https://www.helpteachers.net/pages/index.html",
+            "hidden": false
+          },
+          {
+            "text": "Sign Up",
+            "href": "https://www.helpteachers.net/pages/register.html",
+            "hidden": false
+          },
+          {
+            "text": "About",
+            "href": "https://www.helpteachers.net/pages/about.html",
+            "hidden": false
+          },
+          {
+            "text": "Contact",
+            "href": "https://www.helpteachers.net/pages/contact.html",
+            "hidden": false
+          },
+          {
+            "text": "Partners",
+            "href": "https://www.helpteachers.net/pages/partners.html",
+            "hidden": false
+          },
+          {
+            "text": "Home",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "hidden": true
+          },
+          {
+            "text": "Donate",
+            "href": "https://www.helpteachers.net/pages/index.html",
+            "hidden": true
+          },
+          {
+            "text": "Sign Up",
+            "href": "https://www.helpteachers.net/pages/register.html",
+            "hidden": true
+          },
+          {
+            "text": "About",
+            "href": "https://www.helpteachers.net/pages/about.html",
+            "hidden": true
+          },
+          {
+            "text": "Contact",
+            "href": "https://www.helpteachers.net/pages/contact.html",
+            "hidden": true
+          },
+          {
+            "text": "Partners",
+            "href": "https://www.helpteachers.net/pages/partners.html",
+            "hidden": true
+          }
+        ],
+        "forms": [],
+        "images": [
+          {
+            "src": "https://www.helpteachers.net/static/images/logo_transparent.png",
+            "alt": "Homeroom Heroes Logo",
+            "loaded": true,
+            "width": 298,
+            "height": 95
+          },
+          {
+            "src": "",
+            "alt": "Promotional Material",
+            "loaded": false,
+            "width": 0,
+            "height": 0
+          },
+          {
+            "src": "data:image/*",
+            "alt": "Teacher Image",
+            "loaded": true,
+            "width": 1059,
+            "height": 1459
+          }
+        ],
+        "fonts": {
+          "body": "Inter, sans-serif",
+          "bodySize": "16px",
+          "bodyBg": "rgb(31, 41, 55)"
+        },
+        "pageWidth": {
+          "viewport": 1440,
+          "document": 1440
+        }
+      }
+    },
+    {
+      "name": "featured-teacher-public-profile-mobile",
+      "url": "https://www.helpteachers.net/pages/teacher.html",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/teacher-of-day-public-route-mobile.png",
+      "data": {
+        "url": "https://www.helpteachers.net/pages/teacher.html",
+        "title": "Teacher Profile - Homeroom Heroes",
+        "headings": [
+          "undefined",
+          "About Me"
+        ],
+        "buttons": [
+          {
+            "text": "☰",
+            "type": "submit",
+            "onclick": "toggleMenu()"
+          },
+          {
+            "text": "Login",
+            "type": "submit",
+            "onclick": "redirectTo('/pages/login.html')"
+          },
+          {
+            "text": "Logout",
+            "type": "submit",
+            "onclick": "logout()"
+          },
+          {
+            "text": "My Page",
+            "type": "submit",
+            "onclick": "mypage()"
+          },
+          {
+            "text": "Forum",
+            "type": "submit",
+            "onclick": "redirectTo('/pages/forum.html')"
+          },
+          {
+            "text": "Validation",
+            "type": "submit",
+            "onclick": "redirectTo('/pages/validation.html')"
+          },
+          {
+            "text": "Update Image",
+            "type": "submit",
+            "onclick": "updateImage()"
+          },
+          {
+            "text": "Edit Info",
+            "type": "submit",
+            "onclick": "redirectTo('/pages/edit_teacher.html')"
+          },
+          {
+            "text": "Update Password",
+            "type": "submit",
+            "onclick": "redirectTo('/pages/update_password.html')"
+          },
+          {
+            "text": "Share Page",
+            "type": "submit",
+            "onclick": "getTeacherURL()"
+          }
+        ],
+        "links": [
+          {
+            "text": "",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          },
+          {
+            "text": "Home",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          },
+          {
+            "text": "Donate",
+            "href": "https://www.helpteachers.net/pages/index.html",
+            "target": ""
+          },
+          {
+            "text": "Sign Up",
+            "href": "https://www.helpteachers.net/pages/register.html",
+            "target": ""
+          },
+          {
+            "text": "About",
+            "href": "https://www.helpteachers.net/pages/about.html",
+            "target": ""
+          },
+          {
+            "text": "Contact",
+            "href": "https://www.helpteachers.net/pages/contact.html",
+            "target": ""
+          },
+          {
+            "text": "Partners",
+            "href": "https://www.helpteachers.net/pages/partners.html",
+            "target": ""
+          },
+          {
+            "text": "Home",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          },
+          {
+            "text": "Donate",
+            "href": "https://www.helpteachers.net/pages/index.html",
+            "target": ""
+          },
+          {
+            "text": "Sign Up",
+            "href": "https://www.helpteachers.net/pages/register.html",
+            "target": ""
+          },
+          {
+            "text": "About",
+            "href": "https://www.helpteachers.net/pages/about.html",
+            "target": ""
+          },
+          {
+            "text": "Contact",
+            "href": "https://www.helpteachers.net/pages/contact.html",
+            "target": ""
+          },
+          {
+            "text": "Partners",
+            "href": "https://www.helpteachers.net/pages/partners.html",
+            "target": ""
+          },
+          {
+            "text": "View Wishlist",
+            "href": "https://www.helpteachers.net/pages/teacher.html#",
+            "target": "_blank"
+          }
+        ],
+        "images": [
+          {
+            "src": "https://www.helpteachers.net/static/images/logo_transparent.png",
+            "alt": "Homeroom Heroes Logo",
+            "loaded": true,
+            "width": 298,
+            "height": 95
+          },
+          {
+            "src": "https://www.helpteachers.net/static/images/apple.jpg",
+            "alt": "Teacher Image",
+            "loaded": true,
+            "width": 275,
+            "height": 183
+          }
+        ],
+        "text": "☰\n\n© 2024 Homeroom Heroes. All rights reserved."
+      }
+    }
+  ]
+}

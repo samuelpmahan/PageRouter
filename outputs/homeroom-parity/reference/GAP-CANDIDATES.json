@@ -1,0 +1,135 @@
+{
+  "schema": "homeroom-frontend-gap-candidates.v1",
+  "comparison": {
+    "reference": "https://www.helpteachers.net",
+    "localLeaf": "http://127.0.0.1:4188/compiled/hh/index.html#/register",
+    "integrated": "http://127.0.0.1:4188/#/hh/run",
+    "localAssembly": "checkpoint/dist compiled leaf; same local fixture UI rendered inside PageRouter iframe",
+    "scope": "Full discoverable public frontend parity, excluding backend/live-service outcomes. Current C6 local implementation is intentionally narrower; auth-role screens were not observed."
+  },
+  "candidates": [
+    {
+      "id": "visual-shell-home-global-navigation",
+      "status": "confirmed-visible-difference",
+      "referenceEvidence": [
+        "screenshots/home-desktop.png",
+        "screenshots/home-mobile.png",
+        "screenshots/home-mobile-menu-expanded.png"
+      ],
+      "localEvidence": [
+        "screenshots/local-register-desktop.png",
+        "screenshots/local-register-mobile.png",
+        "screenshots/integrated-hh-run-desktop.png",
+        "screenshots/integrated-hh-run-mobile.png"
+      ],
+      "observation": "Live reference uses green global header, public Home/Donate/Sign Up/About/Contact/Partners navigation, dark navy site canvas, chalkboard hero and public donor/teacher cards. Local preview is a synthetic teacher-journey screen with a demo banner, step rail, controls, and a three-link Register/Teachers/Log in header; integrated route adds PageRouter chrome and frames the leaf at a reduced viewport.",
+      "scopeNote": "Confirm intended parity target with local product/source inventory; local app may intentionally be a functional synthetic journey, not a full marketing-site clone."
+    },
+    {
+      "id": "public-content-and-page-coverage",
+      "status": "confirmed-reference-surfaces-local-not-present-in-captured-leaf",
+      "referenceEvidence": [
+        "screenshots/about-desktop.png",
+        "screenshots/partners-desktop.png",
+        "screenshots/contact-desktop.png",
+        "screenshots/live-forgot-password.png"
+      ],
+      "localEvidence": [
+        "screenshots/local-register-desktop.png",
+        "screenshots/local-login-desktop.png",
+        "screenshots/local-teachers-desktop.png"
+      ],
+      "observation": "Reference has distinct Home, About/team, Partners, Contact, Forgot Password and public teacher-profile pages. Captured local leaf exposes Register, Teachers, and Log in plus fixture-driven journey/profile states. The captured surface does not demonstrate the marketing, partner, contact, reset, or featured-profile page shells.",
+      "scopeNote": "Candidate from observed route coverage, not a claim that these pages are required in the synthetic demo; source inventory should establish intended product scope."
+    },
+    {
+      "id": "directory-profile-content",
+      "status": "partial-surface-difference",
+      "referenceEvidence": [
+        "screenshots/directory-desktop.png",
+        "screenshots/teacher-of-day-public-route.png"
+      ],
+      "localEvidence": [
+        "screenshots/local-teachers-desktop.png",
+        "screenshots/local-flow-09-directory.png",
+        "screenshots/local-flow-10-public-profile.png"
+      ],
+      "observation": "Both sides expose a directory and profile concept. Live public teacher profile includes photo/hero, school/location, biography, wishlist and share affordances. Local directory/profile screenshots show fixture records and demo-local profile flow; content, layout, affordances and navigation are not a demonstrated match.",
+      "scopeNote": "Compare intended public-display requirements against source inventory. Wishlist destination/transactions excluded."
+    },
+    {
+      "id": "registration-shell-and-terms",
+      "status": "confirmed-visible-difference",
+      "referenceEvidence": [
+        "screenshots/register-desktop.png",
+        "screenshots/register-terms.png"
+      ],
+      "localEvidence": [
+        "screenshots/local-register-desktop.png",
+        "screenshots/local-flow-01-register.png"
+      ],
+      "observation": "Both show teacher registration and school geography. Live shell asks for password and confirmation and opens a Terms and Conditions dialog. Local shell uses fixed demo identity, passwordless demo semantics, synthetic selectors, consent and a preview journey; its visible terms/consent presentation differs.",
+      "scopeNote": "Live form was not submitted. Local fixture submission and simulated approval are not production auth parity."
+    },
+    {
+      "id": "contact-form-character-counter",
+      "status": "reference-only-interaction-captured",
+      "referenceEvidence": [
+        "screenshots/contact-desktop.png",
+        "screenshots/contact-counter.png"
+      ],
+      "localEvidence": [],
+      "observation": "Live Contact page includes a 250-character message counter and reCAPTCHA area. No matching local contact page/state was captured.",
+      "scopeNote": "No contact submitted; CAPTCHA verification and message delivery are out of scope."
+    },
+    {
+      "id": "desktop-mobile-layout-parity",
+      "status": "confirmed-integration-viewport-constraint",
+      "referenceEvidence": [
+        "screenshots/home-mobile.png",
+        "screenshots/register-mobile.png",
+        "screenshots/directory-mobile.png"
+      ],
+      "localEvidence": [
+        "screenshots/local-register-mobile.png",
+        "screenshots/local-teachers-mobile.png",
+        "screenshots/integrated-hh-run-mobile.png"
+      ],
+      "observation": "Both were captured at 390\u00d7844. The PageRouter mobile shell retains its top project bar, long tabs, framing controls and embedded leaf; the iframe is 354\u00d7680, while desktop is 1124\u00d7720. Therefore embedded local content has less available area than the live full page, and live mobile navigation/cards use a different responsive composition.",
+      "scopeNote": "This describes the current composed viewport; whether iframe behavior is intended is a product decision."
+    },
+    {
+      "id": "fonts-and-brand-assets",
+      "status": "reference-assets-confirmed-local-match-unverified",
+      "referenceEvidence": [
+        "ROUTE-STATE-INVENTORY.json assetAndFontInventory",
+        "screenshots/home-brand-assets.png"
+      ],
+      "localEvidence": [
+        "screenshots/local-register-desktop.png"
+      ],
+      "observation": "Reference requests Inter and Fraunces from Google Fonts plus its transparent logo and homepage/partner imagery. Local screenshot uses its local logo and visibly different visual system. Local browser evidence does not establish loading the same font files or imagery.",
+      "scopeNote": "A matching visual appearance does not require copying remote binary assets; source and licensing choices are not assessed."
+    }
+  ],
+  "unknowns": [
+    "Authenticated Forum, Validation, My Page, and Logout screens/routes are not observed; parity target is the full discoverable public frontend, but role-gated UI specifics remain unknown.",
+    "Authenticated Forum, Validation, My Page, Logout behavior and routes.",
+    "Directory results for live selected filters and dynamic teacher profiles beyond the public featured profile.",
+    "Live form validation, login, reset delivery, CAPTCHA, contact delivery, moderation/approval and backend persistence.",
+    "Donation provider handoff outcome and payment behavior.",
+    "Whether a Privacy route exists outside the inspected public navigation/footer surfaces.",
+    "The local demo-login interaction was not exercised. The demo-login shell was captured, then authenticated synthetic fixture state was injected for later profile screens."
+  ],
+  "evidenceFiles": [
+    "REFERENCE-FLOWS.md",
+    "ROUTE-STATE-INVENTORY.json",
+    "BROWSER-EVIDENCE.json",
+    "INTERACTION-EVIDENCE.json",
+    "PUBLIC-JOURNEY-EVIDENCE.json",
+    "DISCOVERABILITY-EVIDENCE.json",
+    "LOCAL-BROWSER-EVIDENCE.json",
+    "LOCAL-FIXTURE-FLOW.json",
+    "INTEGRATED-ROUTE-EVIDENCE.json"
+  ]
+}
