@@ -7,7 +7,9 @@
     "bundle:fast-check": "node scripts/build-fast-check-bundle.mjs",
     "build:pxcube": "node scripts/build-pxcube.mjs",
     "build": "node scripts/assemble.mjs",
-    "test": "node --test exp/cooperative/*.test.mjs exp/adversarial/*.test.mjs scripts/evaluator-identity.test.mjs scripts/hh-built-imports.test.mjs exp/atlas/*.test.mjs scripts/capability-ladder-view.test.mjs",
+    "test": "node --test exp/cooperative/*.test.mjs exp/adversarial/*.test.mjs scripts/evaluator-identity.test.mjs scripts/hh-built-imports.test.mjs exp/atlas/*.test.mjs scripts/capability-ladder-view.test.mjs exp/block5/*.test.mjs exp/block5/core/*.test.mjs exp/compression/*.test.mjs",
+    "benchmark:block5": "node scripts/block5-benchmark.mjs",
+    "test:block5:browser": "node scripts/block5-browser-smoke.mjs",
     "preview": "node scripts/preview.mjs",
     "test:ladder:browser": "node scripts/capability-ladder-browser-smoke.mjs",
     "test:publication": "python3 scripts/publication-transport.test.py"

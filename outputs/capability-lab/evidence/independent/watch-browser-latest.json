@@ -1,0 +1,648 @@
+{
+  "schema": "capability-lab.independent.watch-browser.v1",
+  "generatedAt": "2026-10-08T20:33:52.578Z",
+  "url": "http://127.0.0.1:4173",
+  "checks": [
+    {
+      "name": "managed service/browser resource snapshot",
+      "status": "pass"
+    },
+    {
+      "name": "exactly three actual SVG watch models with selectable geometry",
+      "status": "pass",
+      "observed": {
+        "models": [
+          {
+            "id": "mechanical",
+            "parts": 12
+          },
+          {
+            "id": "quartz",
+            "parts": 11
+          },
+          {
+            "id": "software",
+            "parts": 7
+          }
+        ]
+      }
+    },
+    {
+      "name": "mouse SVG selection binds crystal role/source/value without state change",
+      "status": "pass",
+      "observed": {
+        "detail": "Current value0 cyclesModel roletiming · source status fact · value status simulationState bindingmodels.quartz.oscillator.cyclesFormula / limitReads the exact modeled reference-cycle counter. The 32,768 Hz setting is a generic teaching parameter, not a universal watch specification.Source supportsSeiko describes a typical quartz watch using a battery, a quartz reference near 32,768 oscillations per second, electronic division to a one-second signal, a step motor, and gears.Source boundaryThe Japanese educational page says 32,768 Hz is typical and explicitly notes exceptions. It is a general explanation, not a specification for every quartz watch.Referenceseiko-quartz-education",
+        "selectedSvg": "watch-part selected"
+      }
+    },
+    {
+      "name": "keyboard SVG component selection adds no transport action",
+      "status": "pass"
+    },
+    {
+      "name": "state-driven internal motion reaches actual SVG geometry",
+      "status": "pass",
+      "observed": {
+        "geometry": "actual SVG primitives changed with declared phase/beat/motor state; illustrative kinematics"
+      }
+    },
+    {
+      "name": "mixed selected steps hit next common boundary",
+      "status": "pass",
+      "observed": {
+        "time": {
+          "numerator": 1,
+          "denominator": 8
+        },
+        "counters": {
+          "mechanicalBeats": 1,
+          "quartzCycles": 4096,
+          "motorCommands": 0,
+          "softwareUpdates": 32
+        }
+      }
+    },
+    {
+      "name": "period keyboard shortcut steps outside interactive controls",
+      "status": "pass",
+      "observed": {
+        "time": {
+          "numerator": 1,
+          "denominator": 8
+        },
+        "counters": {
+          "mechanicalBeats": 1,
+          "quartzCycles": 4096,
+          "motorCommands": 0,
+          "softwareUpdates": 32
+        }
+      }
+    },
+    {
+      "name": "exploded slider and independent overlays leave complete state unchanged",
+      "status": "pass",
+      "observed": {
+        "pairedTime": {
+          "numerator": 1,
+          "denominator": 8
+        },
+        "pairedCounters": {
+          "mechanicalBeats": 1,
+          "quartzCycles": 4096,
+          "motorCommands": 0,
+          "softwareUpdates": 32
+        },
+        "canonicalStateSha256": "9a71ff10de7edb0232d791f7d64dd277717cda7e77fbd1f3af23c43f9f7ed2ed",
+        "selectionAndExplosionStateInvariant": true
+      }
+    },
+    {
+      "name": "powered-off interval preserves mechanical phase and other watches continue",
+      "status": "pass",
+      "observed": {
+        "time": {
+          "numerator": 17,
+          "denominator": 8
+        },
+        "counters": {
+          "mechanicalBeats": 1,
+          "quartzCycles": 69632,
+          "motorCommands": 2,
+          "softwareUpdates": 544
+        }
+      }
+    },
+    {
+      "name": "edited live frequency is retained and causes declared nominal-gearing drift",
+      "status": "pass",
+      "observed": {
+        "time": {
+          "numerator": 1,
+          "denominator": 1
+        },
+        "displayTime": {
+          "mechanical": {
+            "numerator": 2,
+            "denominator": 1
+          },
+          "quartz": {
+            "numerator": 1,
+            "denominator": 1
+          },
+          "software": {
+            "numerator": 1,
+            "denominator": 1
+          }
+        },
+        "counters": {
+          "mechanicalBeats": 16,
+          "quartzCycles": 32768,
+          "motorCommands": 1,
+          "softwareUpdates": 256
+        }
+      }
+    },
+    {
+      "name": "full state/events replay exactly through public browser seam",
+      "status": "pass",
+      "observed": {
+        "actions": 22,
+        "events": 28
+      }
+    },
+    {
+      "name": "one-day compact counter microscope expands bounded real records",
+      "status": "pass",
+      "observed": {
+        "range": {
+          "value": "29",
+          "text": "quartzCycle · quartz · 1–2831155200"
+        },
+        "expanded": 32,
+        "tailEvent": {
+          "event": "quartzCycle",
+          "model": "quartz",
+          "index": 2831155200,
+          "time": {
+            "numerator": 86400,
+            "denominator": 1
+          },
+          "session": 10,
+          "sequence": 24
+        },
+        "quartzCycles": 2831155200
+      }
+    },
+    {
+      "name": "browser pacing uses actual bounded samples and statistics call traces",
+      "status": "pass",
+      "observed": {
+        "raw": {
+          "samples": [
+            97.29999995231628,
+            100.20000004768372,
+            102
+          ],
+          "count": 3,
+          "limit": 512,
+          "summary": {
+            "count": 3,
+            "max": 102,
+            "mean": 99.83333333333333,
+            "median": 100.20000004768372,
+            "min": 97.29999995231628,
+            "q1": 98.75,
+            "q3": 101.10000002384186,
+            "standardDeviation": 1.936204788000849,
+            "variance": 3.7488889810774126
+          }
+        },
+        "statisticsTrace": {
+          "id": "statistics.describe",
+          "order": 1,
+          "identity": {
+            "source": "capability-lab-browser",
+            "version": "0.1.0",
+            "kind": "declared"
+          },
+          "seed": null,
+          "inputCanonical": "{\"denominator\":\"population\",\"values\":[97.29999995231628,100.20000004768372,102]}",
+          "inputHash": "bf722ed27263c6d8",
+          "resultCanonical": "{\"count\":3,\"max\":102,\"mean\":99.83333333333333,\"median\":100.20000004768372,\"min\":97.29999995231628,\"q1\":98.75,\"q3\":101.10000002384186,\"standardDeviation\":1.936204788000849,\"variance\":3.7488889810774126}",
+          "resultHash": "9c3a763a51aff844",
+          "randomDraws": 0,
+          "calls": [
+            {
+              "id": "statistics.mean",
+              "order": 0,
+              "identity": {
+                "source": "capability-lab-browser",
+                "version": "0.1.0",
+                "kind": "declared"
+              },
+              "seed": null,
+              "inputCanonical": "{\"values\":[97.29999995231628,100.20000004768372,102]}",
+              "inputHash": "3bfc35f431049bb9",
+              "resultCanonical": "{\"value\":99.83333333333333}",
+              "resultHash": "e50c26681340c079",
+              "randomDraws": 0,
+              "calls": []
+            },
+            {
+              "id": "statistics.variance",
+              "order": 0,
+              "identity": {
+                "source": "capability-lab-browser",
+                "version": "0.1.0",
+                "kind": "declared"
+              },
+              "seed": null,
+              "inputCanonical": "{\"denominator\":\"population\",\"values\":[97.29999995231628,100.20000004768372,102]}",
+              "inputHash": "bf722ed27263c6d8",
+              "resultCanonical": "{\"value\":3.7488889810774126}",
+              "resultHash": "7bd349a5d7676a45",
+              "randomDraws": 0,
+              "calls": []
+            },
+            {
+              "id": "statistics.quantile",
+              "order": 0,
+              "identity": {
+                "source": "capability-lab-browser",
+                "version": "0.1.0",
+                "kind": "declared"
+              },
+              "seed": null,
+              "inputCanonical": "{\"probability\":0.25,\"values\":[97.29999995231628,100.20000004768372,102]}",
+              "inputHash": "3e4e5817d080867b",
+              "resultCanonical": "{\"value\":98.75}",
+              "resultHash": "639e01e1ff934881",
+              "randomDraws": 0,
+              "calls": []
+            },
+            {
+              "id": "statistics.quantile",
+              "order": 0,
+              "identity": {
+                "source": "capability-lab-browser",
+                "version": "0.1.0",
+                "kind": "declared"
+              },
+              "seed": null,
+              "inputCanonical": "{\"probability\":0.5,\"values\":[97.29999995231628,100.20000004768372,102]}",
+              "inputHash": "6f1bc6757bbb6c03",
+              "resultCanonical": "{\"value\":100.20000004768372}",
+              "resultHash": "4863fd3def2bd5e4",
+              "randomDraws": 0,
+              "calls": []
+            },
+            {
+              "id": "statistics.quantile",
+              "order": 0,
+              "identity": {
+                "source": "capability-lab-browser",
+                "version": "0.1.0",
+                "kind": "declared"
+              },
+              "seed": null,
+              "inputCanonical": "{\"probability\":0.75,\"values\":[97.29999995231628,100.20000004768372,102]}",
+              "inputHash": "556cd1a41e7b4ee8",
+              "resultCanonical": "{\"value\":101.10000002384186}",
+              "resultHash": "0d8cd14442d74749",
+              "randomDraws": 0,
+              "calls": []
+            }
+          ]
+        },
+        "pausedTime": {
+          "denominator": 5,
+          "numerator": 2
+        }
+      }
+    },
+    {
+      "name": "explicit simulated visibility transition freezes autoplay without catch-up",
+      "status": "pass",
+      "observed": {
+        "simulation": true,
+        "nativeTabSuspensionProven": false,
+        "time": {
+          "denominator": 5,
+          "numerator": 2
+        },
+        "retainedVisibilityActions": [
+          {
+            "hidden": true,
+            "type": "visibility"
+          },
+          {
+            "type": "visibility",
+            "hidden": false
+          }
+        ]
+      }
+    },
+    {
+      "name": "reduced-motion SVGs and component keyboard detail remain meaningful",
+      "status": "pass"
+    },
+    {
+      "name": "desktop core controls and all three schematics fit one viewport",
+      "status": "pass",
+      "observed": {
+        "viewport": {
+          "width": 1600,
+          "height": 1000
+        },
+        "svgBounds": [
+          {
+            "top": 364.875,
+            "bottom": 674.875,
+            "left": 130,
+            "right": 554
+          },
+          {
+            "top": 364.875,
+            "bottom": 674.875,
+            "left": 588,
+            "right": 1012
+          },
+          {
+            "top": 364.875,
+            "bottom": 674.875,
+            "left": 1046,
+            "right": 1470
+          }
+        ]
+      }
+    },
+    {
+      "name": "managed resources after interactions",
+      "status": "pass"
+    },
+    {
+      "name": "watch source bytes remained unchanged during browser run",
+      "status": "pass"
+    },
+    {
+      "name": "no browser console/page errors",
+      "status": "pass"
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    {
+      "label": "assembled",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/watch-browser-2026-10-08T20-33-52-578Z-assembled.png"
+    },
+    {
+      "label": "quarter-phase",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/watch-browser-2026-10-08T20-33-52-578Z-quarter-phase.png"
+    },
+    {
+      "label": "assembled-pair",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/watch-browser-2026-10-08T20-33-52-578Z-assembled-pair.png"
+    },
+    {
+      "label": "exploded",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/watch-browser-2026-10-08T20-33-52-578Z-exploded.png"
+    },
+    {
+      "label": "reduced-motion",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/watch-browser-2026-10-08T20-33-52-578Z-reduced-motion.png"
+    }
+  ],
+  "resourceSnapshots": [
+    {
+      "label": "loaded",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/watch-browser-resource-2026-10-08T20-33-52-578Z-loaded.json",
+      "managedObservation": {
+        "groups": [
+          {
+            "rootPid": 57261,
+            "present": true,
+            "rssBytes": 614858752,
+            "members": [
+              {
+                "pid": 57261,
+                "name": "MainThread",
+                "parentPid": 38893,
+                "rssBytes": 133636096,
+                "threads": 11,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57273,
+                "name": "chrome-headless",
+                "parentPid": 57261,
+                "rssBytes": 88178688,
+                "threads": 24,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57275,
+                "name": "chrome-headless",
+                "parentPid": 57273,
+                "rssBytes": 41418752,
+                "threads": 1,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57276,
+                "name": "chrome-headless",
+                "parentPid": 57273,
+                "rssBytes": 41680896,
+                "threads": 1,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57293,
+                "name": "chrome-headless",
+                "parentPid": 57275,
+                "rssBytes": 71741440,
+                "threads": 27,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57295,
+                "name": "chrome-headless",
+                "parentPid": 57273,
+                "rssBytes": 67764224,
+                "threads": 11,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57337,
+                "name": "chrome-headless",
+                "parentPid": 57276,
+                "rssBytes": 149467136,
+                "threads": 18,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57356,
+                "name": "python3",
+                "parentPid": 57261,
+                "rssBytes": 20971520,
+                "threads": 1,
+                "state": "R (running)"
+              }
+            ]
+          },
+          {
+            "rootPid": 27734,
+            "present": true,
+            "rssBytes": 68796416,
+            "members": [
+              {
+                "pid": 27734,
+                "name": "MainThread",
+                "parentPid": 38893,
+                "rssBytes": 68796416,
+                "threads": 11,
+                "state": "S (sleeping)"
+              }
+            ]
+          }
+        ],
+        "combinedRssBytes": 683655168,
+        "budgetBytes": 2147483648,
+        "belowBudgetAtSnapshot": true,
+        "enforcement": "observed snapshot only; no operating-system hard limit established",
+        "peakEstablished": false
+      }
+    },
+    {
+      "label": "exercised",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/watch-browser-resource-2026-10-08T20-33-52-578Z-exercised.json",
+      "managedObservation": {
+        "groups": [
+          {
+            "rootPid": 57261,
+            "present": true,
+            "rssBytes": 796848128,
+            "members": [
+              {
+                "pid": 57261,
+                "name": "MainThread",
+                "parentPid": 38893,
+                "rssBytes": 198893568,
+                "threads": 11,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57273,
+                "name": "chrome-headless",
+                "parentPid": 57261,
+                "rssBytes": 90853376,
+                "threads": 24,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57275,
+                "name": "chrome-headless",
+                "parentPid": 57273,
+                "rssBytes": 41418752,
+                "threads": 1,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57276,
+                "name": "chrome-headless",
+                "parentPid": 57273,
+                "rssBytes": 41680896,
+                "threads": 1,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57293,
+                "name": "chrome-headless",
+                "parentPid": 57275,
+                "rssBytes": 90021888,
+                "threads": 28,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57295,
+                "name": "chrome-headless",
+                "parentPid": 57273,
+                "rssBytes": 67895296,
+                "threads": 11,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57337,
+                "name": "chrome-headless",
+                "parentPid": 57276,
+                "rssBytes": 244981760,
+                "threads": 23,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57363,
+                "name": "python3",
+                "parentPid": 57261,
+                "rssBytes": 21102592,
+                "threads": 1,
+                "state": "R (running)"
+              }
+            ]
+          },
+          {
+            "rootPid": 27734,
+            "present": true,
+            "rssBytes": 68796416,
+            "members": [
+              {
+                "pid": 27734,
+                "name": "MainThread",
+                "parentPid": 38893,
+                "rssBytes": 68796416,
+                "threads": 11,
+                "state": "S (sleeping)"
+              }
+            ]
+          }
+        ],
+        "combinedRssBytes": 865644544,
+        "budgetBytes": 2147483648,
+        "belowBudgetAtSnapshot": true,
+        "enforcement": "observed snapshot only; no operating-system hard limit established",
+        "peakEstablished": false
+      }
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "index.html",
+      "bytes": 6669,
+      "sha256": "26b580a8b787c9f62f71218182b40edf2bf58676807e0ec65986f253bdc11c06"
+    },
+    {
+      "path": "src/watches/components.mjs",
+      "bytes": 12876,
+      "sha256": "b16cbeae50151debf73e25b705606b1ca6b545aea6dbe6d2bac394481704cbef"
+    },
+    {
+      "path": "src/watches/geometry.mjs",
+      "bytes": 14820,
+      "sha256": "0831135047636432c2f947ebb8811675a87314c54d49c5b35c1a5969f3365509"
+    },
+    {
+      "path": "src/watches/index.mjs",
+      "bytes": 8646,
+      "sha256": "34e74bdd969ac1b0e24d93ee0f83755c71dce15ff2ffa27adf8d6ad3ee49b933"
+    },
+    {
+      "path": "src/watches/mechanisms.mjs",
+      "bytes": 24104,
+      "sha256": "3649764c2175e00b36f3983c2ac67bf593a9302ea56141b5e5726e9563598825"
+    },
+    {
+      "path": "src/watches/transport.mjs",
+      "bytes": 40145,
+      "sha256": "75b1f43197f83d4c483bfb1a605b7b46645e968c4b44f4eeb98d59e567a54e4d"
+    },
+    {
+      "path": "ui/app.mjs",
+      "bytes": 32480,
+      "sha256": "e13d60f65578f2fc4e09b21337971d7e5d19acdfedea404f4ea032b5505f82c7"
+    },
+    {
+      "path": "ui/style.css",
+      "bytes": 33500,
+      "sha256": "551c94e5cf757ef9aa6b1ae435d177eac5401e8aa5c0fb966cc5f409cf7cacc1"
+    },
+    {
+      "path": "ui/watches.mjs",
+      "bytes": 28627,
+      "sha256": "6e920689a4f15ddd17765d83c4b70b7740e8128dbb8d0a791a141204b46cc555"
+    }
+  ],
+  "summary": {
+    "pass": 19,
+    "fail": 0,
+    "budgetObservationOnly": true,
+    "osHardLimitEstablished": false
+  }
+}

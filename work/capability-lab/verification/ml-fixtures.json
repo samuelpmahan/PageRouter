@@ -1,0 +1,31 @@
+{
+  "schema":"capability-lab.independent.ml-fixtures.v1",
+  "provenance":"Hand-derived elementary fixtures and contract-only leakage/retention requirements, prepared before ML source inspection. No expected prediction or model parameter is produced by the implementation under test.",
+  "linear":{"features":[[0],[1],[2],[3]],"targets":[2,5,8,11],"fitIntercept":true,"intercept":2,"coefficients":[3],"predictionFeatures":[[-1],[4]],"predictions":[-1,14]},
+  "standardizer":{"features":[[10,1],[14,1]],"means":[12,1],"scales":[2,1],"constantColumns":[false,true],"holdoutFeatures":[[100,1]],"transformed":[[44,0]]},
+  "logistic":{"features":[[0],[1],[-1]],"coefficients":[2],"intercept":-1,"scores":[-1,1,-3],"probabilities":[0.2689414213699951,0.7310585786300049,0.04742587317756678],"labels":[0,1,0]},
+  "kMeansOne":{"features":[[0,0],[2,4],[4,8]],"k":1,"seed":17,"centroid":[[2,4]],"inertia":40},
+  "kMeansPrediction":{"centroids":[[0,0],[4,0]],"features":[[1,0],[3,0],[2,0]],"assignments":[0,1,0],"distances":[1,1,2],"squaredDistances":[1,1,4]},
+  "pca":{"features":[[8,20],[10,19],[10,21],[12,20]],"components":2,"means":[10,20],"eigenvalues":[2.6666666666666665,0.6666666666666666],"explainedVarianceRatio":[0.8,0.2],"holdoutFeatures":[[14,20]],"absoluteProjected":[[4,0]]},
+  "groupedDataset":{"schema":"ml-dataset.v1","sourceKind":"independent-mathematical-fixture","featureNames":["observableX"],"targetName":"observedY","records":[
+    {"runId":"run-A","conditionId":"condition-A","features":[0],"target":2},
+    {"runId":"run-A","conditionId":"condition-A","features":[1],"target":5},
+    {"runId":"run-B","conditionId":"condition-B","features":[2],"target":8},
+    {"runId":"run-B","conditionId":"condition-B","features":[3],"target":11},
+    {"runId":"run-C","conditionId":"condition-C","features":[4],"target":14},
+    {"runId":"run-C","conditionId":"condition-C","features":[5],"target":17},
+    {"runId":"run-D","conditionId":"condition-D","features":[6],"target":20},
+    {"runId":"run-D","conditionId":"condition-D","features":[7],"target":23}
+  ]},
+  "connectedGroupingRecords":[
+    {"runId":"run-1","conditionId":"condition-1","features":[0],"target":0},
+    {"runId":"run-2","conditionId":"condition-1","features":[1],"target":1},
+    {"runId":"run-2","conditionId":"condition-2","features":[2],"target":2},
+    {"runId":"run-3","conditionId":"condition-3","features":[3],"target":3},
+    {"runId":"run-3","conditionId":"condition-3","features":[4],"target":4}
+  ],
+  "regressionMetrics":{"targets":[1,2,3],"predictions":[0,2,4],"count":3,"mae":0.6666666666666666,"mse":0.6666666666666666,"rmse":0.816496580927726,"r2":0},
+  "watchObservation":{"earlySeconds":5,"horizonSeconds":30,"conditions":[{"conditionId":"literal-low","mechanicalHz":{"numerator":7,"denominator":2}},{"conditionId":"literal-fractional","mechanicalHz":{"numerator":15,"denominator":4}},{"conditionId":"literal-nominal","mechanicalHz":4},{"conditionId":"literal-high","mechanicalHz":{"numerator":17,"denominator":4}}],"earlyCycles":[{"numerator":35,"denominator":1},{"numerator":75,"denominator":2},{"numerator":40,"denominator":1},{"numerator":85,"denominator":2}],"earlyBeats":[35,37,40,42],"features":[3.5,3.75,4,4.25],"targets":[-3.75,-1.875,0,1.875]},
+  "retention":"Fit, then mutate original training arrays/targets/config. Saved model/preprocessor and its predictions stay unchanged. Mutating a returned prediction array cannot affect a later prediction.",
+  "leakage":"Holdout-only target/feature changes cannot change learned parameters, training means/scales or mean baseline. Whole run and condition IDs remain disjoint; transitive shared-ID groups remain together. Known hidden configured rate, target and future fields are explicitly rejected if selected."
+}

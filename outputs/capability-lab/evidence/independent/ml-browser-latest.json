@@ -1,0 +1,1064 @@
+{
+  "schema": "capability-lab.independent.ml-browser.v1",
+  "generatedAt": "2026-10-08T20:35:37.868Z",
+  "product": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab",
+  "url": "http://127.0.0.1:4173",
+  "checks": [
+    {
+      "name": "managed service plus ML browser snapshot",
+      "status": "pass"
+    },
+    {
+      "name": "actual grouped linear fit, saved scaling, heldout rows and prediction",
+      "status": "pass",
+      "observed": {
+        "model": {
+          "coefficients": [
+            5.1234753829798
+          ],
+          "featureCount": 1,
+          "fitIntercept": true,
+          "intercept": 9.499999999999998,
+          "kind": "linearRegression",
+          "sampleCount": 6,
+          "solver": "linalg.leastSquares",
+          "version": 1
+        },
+        "preprocessing": {
+          "kind": "standardizer",
+          "version": 1,
+          "means": [
+            2.5
+          ],
+          "scales": [
+            1.707825127659933
+          ],
+          "constantColumns": [
+            false
+          ],
+          "featureCount": 1,
+          "sampleCount": 6,
+          "scaleMethod": "population-standard-deviation"
+        },
+        "trainIds": [
+          {
+            "runId": "run-A",
+            "conditionId": "condition-A"
+          },
+          {
+            "runId": "run-A",
+            "conditionId": "condition-A"
+          },
+          {
+            "runId": "run-B",
+            "conditionId": "condition-B"
+          },
+          {
+            "runId": "run-B",
+            "conditionId": "condition-B"
+          },
+          {
+            "runId": "run-C",
+            "conditionId": "condition-C"
+          },
+          {
+            "runId": "run-C",
+            "conditionId": "condition-C"
+          }
+        ],
+        "heldoutIds": [
+          {
+            "runId": "run-D",
+            "conditionId": "condition-D"
+          },
+          {
+            "runId": "run-D",
+            "conditionId": "condition-D"
+          }
+        ],
+        "prediction": {
+          "predictions": [
+            14
+          ]
+        },
+        "evaluation": {
+          "records": [
+            {
+              "conditionId": "new-condition",
+              "features": [
+                4
+              ],
+              "runId": "new-run",
+              "target": 14
+            }
+          ],
+          "prediction": {
+            "predictions": [
+              14
+            ]
+          },
+          "metrics": {
+            "count": 1,
+            "mae": 0,
+            "mse": 0,
+            "rmse": 0,
+            "r2": null
+          },
+          "baselines": {
+            "mean": {
+              "model": {
+                "kind": "meanBaseline",
+                "mean": 9.5,
+                "sampleCount": 6
+              },
+              "prediction": {
+                "predictions": [
+                  9.5
+                ]
+              },
+              "metrics": {
+                "count": 1,
+                "mae": 4.5,
+                "mse": 20.25,
+                "rmse": 4.5,
+                "r2": null
+              }
+            }
+          },
+          "trace": {
+            "schema": "ml-call-ledger.v1",
+            "limits": {
+              "maxCalls": 64,
+              "maxBytes": 16384
+            },
+            "calls": [
+              {
+                "sequence": 0,
+                "id": "ml.selectFeatureColumns",
+                "input": {
+                  "bytes": 24,
+                  "algorithm": "fnv1a32",
+                  "hash": "12a42918"
+                },
+                "output": {
+                  "bytes": 5,
+                  "algorithm": "fnv1a32",
+                  "hash": "5579d54f"
+                },
+                "summary": {
+                  "count": 1,
+                  "preview": [
+                    [
+                      4
+                    ]
+                  ]
+                }
+              },
+              {
+                "sequence": 1,
+                "id": "ml.transformStandardizer",
+                "input": {
+                  "bytes": 210,
+                  "algorithm": "fnv1a32",
+                  "hash": "a23edcab"
+                },
+                "output": {
+                  "bytes": 35,
+                  "algorithm": "fnv1a32",
+                  "hash": "48021737"
+                },
+                "summary": {
+                  "kind": "object",
+                  "keys": [
+                    "features"
+                  ]
+                }
+              },
+              {
+                "sequence": 2,
+                "id": "ml.predictLinearRegression",
+                "input": {
+                  "bytes": 230,
+                  "algorithm": "fnv1a32",
+                  "hash": "6317cf97"
+                },
+                "output": {
+                  "bytes": 20,
+                  "algorithm": "fnv1a32",
+                  "hash": "b912d3f0"
+                },
+                "summary": {
+                  "kind": "object",
+                  "keys": [
+                    "predictions"
+                  ]
+                }
+              },
+              {
+                "sequence": 3,
+                "id": "ml.regressionMetrics",
+                "input": {
+                  "bytes": 32,
+                  "algorithm": "fnv1a32",
+                  "hash": "c1d64ead"
+                },
+                "output": {
+                  "bytes": 46,
+                  "algorithm": "fnv1a32",
+                  "hash": "ac3d3ddb"
+                },
+                "summary": {
+                  "kind": "object",
+                  "keys": [
+                    "count",
+                    "mae",
+                    "mse",
+                    "r2",
+                    "rmse"
+                  ],
+                  "count": 1
+                }
+              },
+              {
+                "sequence": 4,
+                "id": "ml.predictMeanBaseline",
+                "input": {
+                  "bytes": 70,
+                  "algorithm": "fnv1a32",
+                  "hash": "f2883c62"
+                },
+                "output": {
+                  "bytes": 21,
+                  "algorithm": "fnv1a32",
+                  "hash": "5857602d"
+                },
+                "summary": {
+                  "kind": "object",
+                  "keys": [
+                    "predictions"
+                  ]
+                }
+              },
+              {
+                "sequence": 5,
+                "id": "ml.regressionMetrics",
+                "input": {
+                  "bytes": 33,
+                  "algorithm": "fnv1a32",
+                  "hash": "e8a0617a"
+                },
+                "output": {
+                  "bytes": 54,
+                  "algorithm": "fnv1a32",
+                  "hash": "a56e03e0"
+                },
+                "summary": {
+                  "kind": "object",
+                  "keys": [
+                    "count",
+                    "mae",
+                    "mse",
+                    "r2",
+                    "rmse"
+                  ],
+                  "count": 1
+                }
+              }
+            ],
+            "bytes": 1359
+          }
+        }
+      }
+    },
+    {
+      "name": "evaluation with reused training group IDs is explicitly descriptive",
+      "status": "pass",
+      "observed": {
+        "runId": "run-A",
+        "conditionId": "condition-A",
+        "status": "Evaluation complete, but a run/condition group overlaps training; treat these metrics as descriptive, not held-out evidence."
+      }
+    },
+    {
+      "name": "heldout edits change evaluation without changing learned parameters",
+      "status": "pass",
+      "observed": {
+        "heldoutIndices": [
+          6,
+          7
+        ],
+        "originalMetrics": {
+          "count": 2,
+          "mae": 0,
+          "mse": 0,
+          "rmse": 0,
+          "r2": 1
+        },
+        "changedMetrics": {
+          "count": 2,
+          "mae": 15345,
+          "mse": 235469025,
+          "rmse": 15345,
+          "r2": -104652899
+        }
+      }
+    },
+    {
+      "name": "changed training targets produce changed model and actual new prediction",
+      "status": "pass",
+      "observed": {
+        "model": {
+          "coefficients": [
+            5.1234753829798
+          ],
+          "featureCount": 1,
+          "fitIntercept": true,
+          "intercept": 19.500000000000004,
+          "kind": "linearRegression",
+          "sampleCount": 6,
+          "solver": "linalg.leastSquares",
+          "version": 1
+        },
+        "replayMatches": true
+      }
+    },
+    {
+      "name": "classifier actually trains, predicts probabilities and evaluates confusion",
+      "status": "pass",
+      "observed": {
+        "model": {
+          "kind": "logisticRegression",
+          "version": 1,
+          "coefficients": [
+            3.8166435052194236
+          ],
+          "intercept": -2.0237888378592004,
+          "fitIntercept": true,
+          "threshold": 0.5,
+          "training": {
+            "sampleCount": 12,
+            "featureCount": 1,
+            "initialization": "zeros"
+          },
+          "optimizer": {
+            "method": "fullBatchGradientDescent",
+            "learningRate": 0.2,
+            "maxIterations": 300,
+            "tolerance": 0.000001,
+            "l2": 0,
+            "iterations": 300,
+            "converged": false,
+            "finalLoss": 0.12074421137587452,
+            "finalBinaryCrossEntropy": 0.12074421137587452,
+            "maxBatchElementVisits": 2000000,
+            "worstCaseElementVisits": 10836
+          }
+        },
+        "prediction": {
+          "probabilities": [
+            3.0071095300216614e-10,
+            0.9999999997933009
+          ],
+          "labels": [
+            0,
+            1
+          ],
+          "scores": [
+            -21.92487160128121,
+            22.29975676187881
+          ]
+        },
+        "evaluation": {
+          "records": [
+            {
+              "conditionId": "new-low",
+              "features": [
+                -20
+              ],
+              "runId": "new-low",
+              "target": 0
+            },
+            {
+              "conditionId": "new-high",
+              "features": [
+                20
+              ],
+              "runId": "new-high",
+              "target": 1
+            }
+          ],
+          "prediction": {
+            "probabilities": [
+              3.0071095300216614e-10,
+              0.9999999997933009
+            ],
+            "labels": [
+              0,
+              1
+            ],
+            "scores": [
+              -21.92487160128121,
+              22.29975676187881
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "classes": [
+              0,
+              1
+            ],
+            "confusionMatrix": [
+              [
+                1,
+                0
+              ],
+              [
+                0,
+                1
+              ]
+            ],
+            "accuracy": 1,
+            "macroPrecision": 1,
+            "macroRecall": 1,
+            "macroF1": 1
+          },
+          "baselines": {
+            "majority": {
+              "model": {
+                "kind": "majorityBaseline",
+                "label": 0,
+                "sampleCount": 12
+              },
+              "prediction": {
+                "labels": [
+                  0,
+                  0
+                ]
+              },
+              "metrics": {
+                "count": 2,
+                "classes": [
+                  0,
+                  1
+                ],
+                "confusionMatrix": [
+                  [
+                    1,
+                    0
+                  ],
+                  [
+                    1,
+                    0
+                  ]
+                ],
+                "accuracy": 0.5,
+                "macroPrecision": 0.25,
+                "macroRecall": 0.5,
+                "macroF1": 0.3333333333333333
+              }
+            }
+          },
+          "trace": {
+            "schema": "ml-call-ledger.v1",
+            "limits": {
+              "maxCalls": 64,
+              "maxBytes": 16384
+            },
+            "calls": [
+              {
+                "sequence": 0,
+                "id": "ml.selectFeatureColumns",
+                "input": {
+                  "bytes": 24,
+                  "algorithm": "fnv1a32",
+                  "hash": "129d6d53"
+                },
+                "output": {
+                  "bytes": 12,
+                  "algorithm": "fnv1a32",
+                  "hash": "2745dfa2"
+                },
+                "summary": {
+                  "count": 2,
+                  "preview": [
+                    [
+                      -20
+                    ],
+                    [
+                      20
+                    ]
+                  ]
+                }
+              },
+              {
+                "sequence": 1,
+                "id": "ml.transformStandardizer",
+                "input": {
+                  "bytes": 217,
+                  "algorithm": "fnv1a32",
+                  "hash": "849205a6"
+                },
+                "output": {
+                  "bytes": 56,
+                  "algorithm": "fnv1a32",
+                  "hash": "5b7fdbb7"
+                },
+                "summary": {
+                  "kind": "object",
+                  "keys": [
+                    "features"
+                  ]
+                }
+              },
+              {
+                "sequence": 2,
+                "id": "ml.predictLogisticRegression",
+                "input": {
+                  "bytes": 575,
+                  "algorithm": "fnv1a32",
+                  "hash": "45936772"
+                },
+                "output": {
+                  "bytes": 124,
+                  "algorithm": "fnv1a32",
+                  "hash": "4d81f920"
+                },
+                "summary": {
+                  "kind": "object",
+                  "keys": [
+                    "labels",
+                    "probabilities",
+                    "scores"
+                  ]
+                }
+              },
+              {
+                "sequence": 3,
+                "id": "ml.classificationMetrics",
+                "input": {
+                  "bytes": 34,
+                  "algorithm": "fnv1a32",
+                  "hash": "04589777"
+                },
+                "output": {
+                  "bytes": 119,
+                  "algorithm": "fnv1a32",
+                  "hash": "5e17fc8b"
+                },
+                "summary": {
+                  "kind": "object",
+                  "keys": [
+                    "accuracy",
+                    "classes",
+                    "confusionMatrix",
+                    "count",
+                    "macroF1",
+                    "macroPrecision",
+                    "macroRecall"
+                  ],
+                  "count": 2
+                }
+              },
+              {
+                "sequence": 4,
+                "id": "ml.predictMajorityBaseline",
+                "input": {
+                  "bytes": 74,
+                  "algorithm": "fnv1a32",
+                  "hash": "9cf54c69"
+                },
+                "output": {
+                  "bytes": 16,
+                  "algorithm": "fnv1a32",
+                  "hash": "c454a8de"
+                },
+                "summary": {
+                  "kind": "object",
+                  "keys": [
+                    "labels"
+                  ]
+                }
+              },
+              {
+                "sequence": 5,
+                "id": "ml.classificationMetrics",
+                "input": {
+                  "bytes": 34,
+                  "algorithm": "fnv1a32",
+                  "hash": "95fe4d48"
+                },
+                "output": {
+                  "bytes": 143,
+                  "algorithm": "fnv1a32",
+                  "hash": "44ff8d16"
+                },
+                "summary": {
+                  "kind": "object",
+                  "keys": [
+                    "accuracy",
+                    "classes",
+                    "confusionMatrix",
+                    "count",
+                    "macroF1",
+                    "macroPrecision",
+                    "macroRecall"
+                  ],
+                  "count": 2
+                }
+              }
+            ],
+            "bytes": 1511
+          }
+        }
+      }
+    },
+    {
+      "name": "clustering and PCA learn retained centers/directions and plot heldout points",
+      "status": "pass",
+      "observed": {
+        "clusters": {
+          "kind": "kmeans",
+          "featureCount": 2,
+          "centroids": [
+            [
+              0.8939194904942493,
+              0.8942916969459911
+            ],
+            [
+              -1.1173993631178114,
+              -1.1178646211824887
+            ]
+          ],
+          "assignments": [
+            1,
+            1,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "inertia": 0.01294093448957126,
+          "iterations": 2,
+          "converged": true,
+          "seed": 17,
+          "config": {
+            "k": 2,
+            "maxIterations": 30,
+            "tolerance": 1e-8,
+            "initialization": "k-means++",
+            "tieBreak": "lowest-index",
+            "emptyCluster": "retain-previous-centroid"
+          }
+        },
+        "pca": {
+          "kind": "pca",
+          "featureCount": 2,
+          "means": [
+            9.71445146547012e-17,
+            8.326672684688674e-17
+          ],
+          "directions": [
+            [
+              0.7071067811865475,
+              0.7071067811865475
+            ]
+          ],
+          "eigenvalues": [
+            2.249850759052508
+          ],
+          "explainedVarianceRatio": [
+            0.9999336706900029
+          ],
+          "components": 1,
+          "sampleCount": 9,
+          "converged": true
+        },
+        "projection": {
+          "projected": [
+            [
+              3.7944133292732656
+            ]
+          ]
+        }
+      }
+    },
+    {
+      "name": "watch-derived dataset remains synthetic and baseline comparison is visible",
+      "status": "pass",
+      "observed": {
+        "selectedFeatures": {
+          "sourceFeatureNames": [
+            "earlyObservedMechanicalHz"
+          ],
+          "names": [
+            "earlyObservedMechanicalHz"
+          ],
+          "indices": [
+            0
+          ]
+        },
+        "baseline": {
+          "model": {
+            "kind": "analyticalWatchRateBaseline",
+            "nominalMechanicalHz": {
+              "denominator": 1,
+              "numerator": 4
+            },
+            "horizonSeconds": 30,
+            "formula": "(earlyObservedMechanicalHz / nominalMechanicalHz - 1) * horizonSeconds",
+            "sourceKind": "synthetic-watch"
+          },
+          "prediction": {
+            "predictions": [
+              0,
+              0.37499999999999867
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "mae": 6.661338147750939e-16,
+            "mse": 8.874685183736383e-31,
+            "rmse": 9.420554752102651e-16,
+            "r2": 1
+          }
+        },
+        "learnedMetrics": {
+          "count": 2,
+          "mae": 1.1587952819525071e-15,
+          "mse": 1.957611491972406e-30,
+          "rmse": 1.3991467013763803e-15,
+          "r2": 1
+        }
+      }
+    },
+    {
+      "name": "edited settings invalidate stale fitted-model controls",
+      "status": "pass"
+    },
+    {
+      "name": "malformed training input produces a useful visible error",
+      "status": "pass"
+    },
+    {
+      "name": "ML source files stayed unchanged during browser acceptance",
+      "status": "pass"
+    },
+    {
+      "name": "managed resources after ML fits and plots",
+      "status": "pass"
+    },
+    {
+      "name": "no console/page errors in model UI",
+      "status": "pass"
+    }
+  ],
+  "screenshots": [
+    {
+      "label": "linear",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/ml-browser-2026-10-08T20-35-37-868Z-linear.png"
+    },
+    {
+      "label": "linear-plot",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/ml-browser-2026-10-08T20-35-37-868Z-linear-plot.png"
+    },
+    {
+      "label": "classifier",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/ml-browser-2026-10-08T20-35-37-868Z-classifier.png"
+    },
+    {
+      "label": "classifier-plot",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/ml-browser-2026-10-08T20-35-37-868Z-classifier-plot.png"
+    },
+    {
+      "label": "clusters",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/ml-browser-2026-10-08T20-35-37-868Z-clusters.png"
+    },
+    {
+      "label": "clusters-plot",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/ml-browser-2026-10-08T20-35-37-868Z-clusters-plot.png"
+    },
+    {
+      "label": "pca",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/ml-browser-2026-10-08T20-35-37-868Z-pca.png"
+    },
+    {
+      "label": "pca-plot",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/ml-browser-2026-10-08T20-35-37-868Z-pca-plot.png"
+    },
+    {
+      "label": "watch-calibration",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/ml-browser-2026-10-08T20-35-37-868Z-watch-calibration.png"
+    },
+    {
+      "label": "watch-calibration-plot",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/ml-browser-2026-10-08T20-35-37-868Z-watch-calibration-plot.png"
+    }
+  ],
+  "errors": [],
+  "resources": [
+    {
+      "label": "loaded",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/ml-browser-resource-2026-10-08T20-35-37-868Z-loaded.json",
+      "managedObservation": {
+        "groups": [
+          {
+            "rootPid": 57433,
+            "present": true,
+            "rssBytes": 632180736,
+            "members": [
+              {
+                "pid": 57433,
+                "name": "MainThread",
+                "parentPid": 38893,
+                "rssBytes": 133758976,
+                "threads": 11,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57445,
+                "name": "chrome-headless",
+                "parentPid": 57433,
+                "rssBytes": 87347200,
+                "threads": 24,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57447,
+                "name": "chrome-headless",
+                "parentPid": 57445,
+                "rssBytes": 41156608,
+                "threads": 1,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57448,
+                "name": "chrome-headless",
+                "parentPid": 57445,
+                "rssBytes": 41680896,
+                "threads": 1,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57465,
+                "name": "chrome-headless",
+                "parentPid": 57447,
+                "rssBytes": 80023552,
+                "threads": 27,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57467,
+                "name": "chrome-headless",
+                "parentPid": 57445,
+                "rssBytes": 67371008,
+                "threads": 11,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57511,
+                "name": "chrome-headless",
+                "parentPid": 57448,
+                "rssBytes": 159870976,
+                "threads": 19,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57538,
+                "name": "python3",
+                "parentPid": 57433,
+                "rssBytes": 20971520,
+                "threads": 1,
+                "state": "R (running)"
+              }
+            ]
+          },
+          {
+            "rootPid": 27734,
+            "present": true,
+            "rssBytes": 68796416,
+            "members": [
+              {
+                "pid": 27734,
+                "name": "MainThread",
+                "parentPid": 38893,
+                "rssBytes": 68796416,
+                "threads": 11,
+                "state": "S (sleeping)"
+              }
+            ]
+          }
+        ],
+        "combinedRssBytes": 700977152,
+        "budgetBytes": 2147483648,
+        "belowBudgetAtSnapshot": true,
+        "enforcement": "observed snapshot only; no operating-system hard limit established",
+        "peakEstablished": false
+      }
+    },
+    {
+      "label": "exercised",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/ml-browser-resource-2026-10-08T20-35-37-868Z-exercised.json",
+      "managedObservation": {
+        "groups": [
+          {
+            "rootPid": 57433,
+            "present": true,
+            "rssBytes": 817360896,
+            "members": [
+              {
+                "pid": 57433,
+                "name": "MainThread",
+                "parentPid": 38893,
+                "rssBytes": 168230912,
+                "threads": 11,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57445,
+                "name": "chrome-headless",
+                "parentPid": 57433,
+                "rssBytes": 90705920,
+                "threads": 24,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57447,
+                "name": "chrome-headless",
+                "parentPid": 57445,
+                "rssBytes": 41156608,
+                "threads": 1,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57448,
+                "name": "chrome-headless",
+                "parentPid": 57445,
+                "rssBytes": 41680896,
+                "threads": 1,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57465,
+                "name": "chrome-headless",
+                "parentPid": 57447,
+                "rssBytes": 117604352,
+                "threads": 28,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57467,
+                "name": "chrome-headless",
+                "parentPid": 57445,
+                "rssBytes": 67371008,
+                "threads": 11,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57511,
+                "name": "chrome-headless",
+                "parentPid": 57448,
+                "rssBytes": 269901824,
+                "threads": 23,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57548,
+                "name": "python3",
+                "parentPid": 57433,
+                "rssBytes": 20709376,
+                "threads": 1,
+                "state": "R (running)"
+              }
+            ]
+          },
+          {
+            "rootPid": 27734,
+            "present": true,
+            "rssBytes": 68796416,
+            "members": [
+              {
+                "pid": 27734,
+                "name": "MainThread",
+                "parentPid": 38893,
+                "rssBytes": 68796416,
+                "threads": 11,
+                "state": "S (sleeping)"
+              }
+            ]
+          }
+        ],
+        "combinedRssBytes": 886157312,
+        "budgetBytes": 2147483648,
+        "belowBudgetAtSnapshot": true,
+        "enforcement": "observed snapshot only; no operating-system hard limit established",
+        "peakEstablished": false
+      }
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "index.html",
+      "bytes": 6669,
+      "sha256": "26b580a8b787c9f62f71218182b40edf2bf58676807e0ec65986f253bdc11c06"
+    },
+    {
+      "path": "src/ml/classification.mjs",
+      "bytes": 18647,
+      "sha256": "1a985e2b5f2c466fa47cf5b49caa64319eb5d7a72324bef05d0f1eb797e288e2"
+    },
+    {
+      "path": "src/ml/clustering.mjs",
+      "bytes": 21582,
+      "sha256": "5ec1afeaddb3f477b002915e6160252f96a7fa869b81183d34bfa749810e20f7"
+    },
+    {
+      "path": "src/ml/data.mjs",
+      "bytes": 27179,
+      "sha256": "a47764aa5c740bb542a9cb56a970b929ba7a8a62a085d00dd108db364b276d10"
+    },
+    {
+      "path": "src/ml/index.mjs",
+      "bytes": 28144,
+      "sha256": "fb17808e72e8548123dee83aafdac41b81f3438a535117f9bc6e41a790612909"
+    },
+    {
+      "path": "src/ml/pca.mjs",
+      "bytes": 19750,
+      "sha256": "c9288f81f800cced4f07716f1c9294ceaa26222482fa2913790c933afe7b7acb"
+    },
+    {
+      "path": "src/ml/regression.mjs",
+      "bytes": 11239,
+      "sha256": "e314d08bac8c346b74f7dc62bb4b4b4d97f8b6d1373d06ab8ea8bf031d92af1a"
+    },
+    {
+      "path": "src/ml/watch-data.mjs",
+      "bytes": 11396,
+      "sha256": "f2f73c9ba65ff9a285cd9daa5a971cb2c49be1151136fa3d583a2578ee5b7323"
+    },
+    {
+      "path": "ui/app.mjs",
+      "bytes": 32480,
+      "sha256": "e13d60f65578f2fc4e09b21337971d7e5d19acdfedea404f4ea032b5505f82c7"
+    },
+    {
+      "path": "ui/ml.mjs",
+      "bytes": 38505,
+      "sha256": "0cab6b01f7a4dd71bfa6b310da42def1635ccb61f55a649d8ca4c925d1518bec"
+    },
+    {
+      "path": "ui/style.css",
+      "bytes": 33500,
+      "sha256": "551c94e5cf757ef9aa6b1ae435d177eac5401e8aa5c0fb966cc5f409cf7cacc1"
+    }
+  ],
+  "summary": {
+    "pass": 13,
+    "fail": 0,
+    "budgetObservationOnly": true,
+    "osHardLimitEstablished": false
+  }
+}

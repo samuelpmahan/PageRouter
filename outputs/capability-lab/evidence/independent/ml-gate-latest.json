@@ -1,0 +1,3647 @@
+{
+  "schema": "capability-lab.independent.ml-gate.v1",
+  "generatedAt": "2026-10-08T20:24:37.040Z",
+  "product": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab",
+  "fixtureProvenance": "Hand-derived elementary fixtures and contract-only leakage/retention requirements, prepared before ML source inspection. No expected prediction or model parameter is produced by the implementation under test.",
+  "checks": [
+    {
+      "name": "hand linear coefficients and extrapolation",
+      "family": "linear-mathematics",
+      "status": "pass",
+      "elapsedMs": 3.0120730000000435,
+      "observed": {
+        "model": {
+          "kind": "linearRegression",
+          "version": 1,
+          "coefficients": [
+            3
+          ],
+          "intercept": 1.9999999999999996,
+          "featureCount": 1,
+          "sampleCount": 4,
+          "fitIntercept": true,
+          "solver": "linalg.leastSquares"
+        },
+        "diagnostics": {
+          "rank": 2,
+          "predictions": [
+            1.9999999999999996,
+            5,
+            8,
+            11
+          ],
+          "residuals": [
+            4.440892098500626e-16,
+            0,
+            0,
+            0
+          ],
+          "residualNorm": 4.440892098500626e-16
+        }
+      }
+    },
+    {
+      "name": "training scaler with constant feature and untouched holdout parameters",
+      "family": "preprocessing-hand",
+      "status": "pass",
+      "elapsedMs": 1.7453009999999836,
+      "observed": {
+        "model": {
+          "kind": "standardizer",
+          "version": 1,
+          "means": [
+            12,
+            1
+          ],
+          "scales": [
+            2,
+            1
+          ],
+          "constantColumns": [
+            false,
+            true
+          ],
+          "featureCount": 2,
+          "sampleCount": 2,
+          "scaleMethod": "population-standard-deviation"
+        },
+        "holdoutTransformed": [
+          [
+            44,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "hand residual metrics and honest constant-target R2",
+      "family": "metrics-hand",
+      "status": "pass",
+      "elapsedMs": 0.44894400000004
+    },
+    {
+      "name": "stable hand logits, probabilities, boundary and extreme scores",
+      "family": "classification-hand",
+      "status": "pass",
+      "elapsedMs": 0.8722799999999893
+    },
+    {
+      "name": "logistic hand gradient and finite contradictory-label optimum",
+      "family": "classification-training",
+      "status": "pass",
+      "elapsedMs": 7.039046999999982,
+      "observed": {
+        "model": {
+          "kind": "logisticRegression",
+          "version": 1,
+          "coefficients": [
+            1.0986122881676632
+          ],
+          "intercept": -1.0408340855860843e-16,
+          "fitIntercept": true,
+          "threshold": 0.5,
+          "training": {
+            "sampleCount": 8,
+            "featureCount": 1,
+            "initialization": "zeros"
+          },
+          "optimizer": {
+            "method": "fullBatchGradientDescent",
+            "learningRate": 0.5,
+            "maxIterations": 1000,
+            "tolerance": 1e-10,
+            "l2": 0,
+            "iterations": 216,
+            "converged": true,
+            "finalLoss": 0.5623351446188083,
+            "finalBinaryCrossEntropy": 0.5623351446188083,
+            "maxBatchElementVisits": 2000000,
+            "worstCaseElementVisits": 24024
+          }
+        }
+      }
+    },
+    {
+      "name": "classifier explicitly reports a bounded nonconverged fit",
+      "family": "optimizer-bounds",
+      "status": "pass",
+      "elapsedMs": 0.2948779999999829
+    },
+    {
+      "name": "nonzero-intercept regularized classifier ledger reports logits and BCE honestly",
+      "family": "classification-trace-truth",
+      "status": "pass",
+      "elapsedMs": 0.5010750000000144,
+      "observed": {
+        "scores": [
+          0.04625042307741741,
+          0.09343819970402087
+        ],
+        "bce": 0.6820293885265529,
+        "l2Penalty": 0.0005566715657405558,
+        "finalTrace": [
+          {
+            "sourceId": "src/ml/classification.mjs#logisticScores",
+            "operationId": "ml.logisticScores",
+            "phase": "final",
+            "inputSummary": {
+              "rows": 2,
+              "columns": 1,
+              "includesIntercept": true
+            },
+            "outputSummary": {
+              "count": 2,
+              "minimum": 0.04625042307741741,
+              "maximum": 0.09343819970402087
+            },
+            "dependencies": [
+              {
+                "sourceId": "linalg.matvec",
+                "calls": 1
+              }
+            ]
+          },
+          {
+            "sourceId": "ml.binaryCrossEntropy",
+            "phase": "final",
+            "inputSummary": {
+              "targets": 2,
+              "scoreSource": "linalg.matvec"
+            },
+            "outputSummary": {
+              "loss": 0.6820293885265529
+            }
+          },
+          {
+            "sourceId": "src/ml/classification.mjs#objectiveParts",
+            "operationId": "ml.regularizedObjective",
+            "phase": "final",
+            "inputSummary": {
+              "l2": 0.5,
+              "coefficients": 1
+            },
+            "outputSummary": {
+              "binaryCrossEntropy": 0.6820293885265529,
+              "l2Penalty": 0.0005566715657405558,
+              "objective": 0.6825860600922935
+            }
+          },
+          {
+            "sourceId": "src/ml/classification.mjs#gradientFromScores",
+            "operationId": "ml.logisticGradient",
+            "phase": "final",
+            "inputSummary": {
+              "rows": 2,
+              "columns": 1
+            },
+            "outputSummary": {
+              "coefficients": [
+                -0.1972832698264126
+              ],
+              "intercept": 0.017451557199579693,
+              "norm": 0.1980536427387573
+            },
+            "dependencies": [
+              {
+                "sourceId": "linalg.dot",
+                "calls": 2
+              },
+              {
+                "sourceId": "ml.logisticSigmoid",
+                "calls": 2
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "k1 hand centroid and inertia",
+      "family": "clustering-hand",
+      "status": "pass",
+      "elapsedMs": 2.0060339999999997,
+      "observed": {
+        "model": {
+          "kind": "kmeans",
+          "featureCount": 2,
+          "centroids": [
+            [
+              2,
+              4
+            ]
+          ],
+          "assignments": [
+            0,
+            0,
+            0
+          ],
+          "inertia": 40,
+          "iterations": 2,
+          "converged": true,
+          "seed": 17,
+          "config": {
+            "k": 1,
+            "maxIterations": 20,
+            "tolerance": 0.000001,
+            "initialization": "k-means++",
+            "tieBreak": "lowest-index",
+            "emptyCluster": "retain-previous-centroid"
+          }
+        }
+      }
+    },
+    {
+      "name": "literal centroid distances and lowest-index tie",
+      "family": "clustering-hand",
+      "status": "pass",
+      "elapsedMs": 0.6941570000000183
+    },
+    {
+      "name": "fitted PCA retains shifted training means for heldout projection",
+      "family": "pca-hand",
+      "status": "pass",
+      "elapsedMs": 16.22947700000003,
+      "observed": {
+        "model": {
+          "kind": "pca",
+          "featureCount": 2,
+          "means": [
+            10,
+            20
+          ],
+          "directions": [
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "eigenvalues": [
+            2.666666666666666,
+            0.6666666666666666
+          ],
+          "explainedVarianceRatio": [
+            0.8,
+            0.20000000000000004
+          ],
+          "components": 2,
+          "sampleCount": 4,
+          "converged": true
+        },
+        "holdoutProjected": [
+          [
+            4,
+            0
+          ]
+        ]
+      }
+    },
+    {
+      "name": "seeded clustering retains empty centroids and reports bounded unfinished fits",
+      "family": "clustering-policy",
+      "status": "pass",
+      "elapsedMs": 0.8383349999999723,
+      "observed": {
+        "duplicate": {
+          "kind": "kmeans",
+          "featureCount": 2,
+          "centroids": [
+            [
+              2,
+              4
+            ],
+            [
+              2,
+              4
+            ]
+          ],
+          "assignments": [
+            0,
+            0,
+            0
+          ],
+          "inertia": 0,
+          "iterations": 1,
+          "converged": true,
+          "seed": 0,
+          "config": {
+            "k": 2,
+            "maxIterations": 10,
+            "tolerance": 0.000001,
+            "initialization": "k-means++",
+            "tieBreak": "lowest-index",
+            "emptyCluster": "retain-previous-centroid"
+          }
+        },
+        "unfinished": {
+          "kind": "kmeans",
+          "featureCount": 1,
+          "centroids": [
+            [
+              1
+            ]
+          ],
+          "assignments": [
+            0,
+            0
+          ],
+          "inertia": 2,
+          "iterations": 1,
+          "converged": false,
+          "seed": 1,
+          "config": {
+            "k": 1,
+            "maxIterations": 1,
+            "tolerance": 0,
+            "initialization": "k-means++",
+            "tieBreak": "lowest-index",
+            "emptyCluster": "retain-previous-centroid"
+          }
+        }
+      }
+    },
+    {
+      "name": "PCA rejects unfinished eigenvectors and fits refuse configured excess work",
+      "family": "bounded-fit-work",
+      "status": "pass",
+      "elapsedMs": 21.654473999999993
+    },
+    {
+      "name": "connected run and condition graph never crosses split",
+      "family": "whole-group-splitting",
+      "status": "pass",
+      "elapsedMs": 0.9113350000000082,
+      "observed": {
+        "trainIndices": [
+          3,
+          4
+        ],
+        "testIndices": [
+          0,
+          1,
+          2
+        ],
+        "groups": {
+          "train": [
+            3
+          ],
+          "test": [
+            0
+          ]
+        }
+      }
+    },
+    {
+      "name": "one connected condition/run cannot masquerade as independent holdout",
+      "family": "whole-group-splitting",
+      "status": "pass",
+      "elapsedMs": 0.14546000000001413
+    },
+    {
+      "name": "grouped pipeline predictions obey known line and train-only means",
+      "family": "pipeline-mathematics",
+      "status": "pass",
+      "elapsedMs": 16.54517999999996,
+      "observed": {
+        "split": {
+          "train": [
+            {
+              "conditionId": "condition-A",
+              "features": [
+                0
+              ],
+              "runId": "run-A",
+              "target": 2
+            },
+            {
+              "conditionId": "condition-A",
+              "features": [
+                1
+              ],
+              "runId": "run-A",
+              "target": 5
+            },
+            {
+              "conditionId": "condition-B",
+              "features": [
+                2
+              ],
+              "runId": "run-B",
+              "target": 8
+            },
+            {
+              "conditionId": "condition-B",
+              "features": [
+                3
+              ],
+              "runId": "run-B",
+              "target": 11
+            },
+            {
+              "conditionId": "condition-C",
+              "features": [
+                4
+              ],
+              "runId": "run-C",
+              "target": 14
+            },
+            {
+              "conditionId": "condition-C",
+              "features": [
+                5
+              ],
+              "runId": "run-C",
+              "target": 17
+            }
+          ],
+          "test": [
+            {
+              "conditionId": "condition-D",
+              "features": [
+                6
+              ],
+              "runId": "run-D",
+              "target": 20
+            },
+            {
+              "conditionId": "condition-D",
+              "features": [
+                7
+              ],
+              "runId": "run-D",
+              "target": 23
+            }
+          ],
+          "trainIndices": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "testIndices": [
+            6,
+            7
+          ],
+          "groups": {
+            "train": [
+              0,
+              2,
+              4
+            ],
+            "test": [
+              6
+            ]
+          },
+          "groupCount": 4,
+          "seed": 17,
+          "testFraction": 0.25,
+          "groupBy": "conditionId"
+        },
+        "preprocessing": {
+          "kind": "standardizer",
+          "version": 1,
+          "means": [
+            2.5
+          ],
+          "scales": [
+            1.707825127659933
+          ],
+          "constantColumns": [
+            false
+          ],
+          "featureCount": 1,
+          "sampleCount": 6,
+          "scaleMethod": "population-standard-deviation"
+        },
+        "baseline": {
+          "meanModel": {
+            "kind": "meanBaseline",
+            "mean": 9.5,
+            "sampleCount": 6
+          }
+        },
+        "model": {
+          "coefficients": [
+            5.1234753829798
+          ],
+          "featureCount": 1,
+          "fitIntercept": true,
+          "intercept": 9.499999999999998,
+          "kind": "linearRegression",
+          "sampleCount": 6,
+          "solver": "linalg.leastSquares",
+          "version": 1
+        }
+      }
+    },
+    {
+      "name": "heldout-only feature/target injection cannot change learned parameters",
+      "family": "holdout-leakage",
+      "status": "pass",
+      "elapsedMs": 20.147767999999985,
+      "observed": {
+        "heldoutIndices": [
+          6,
+          7
+        ],
+        "modelUnchanged": true,
+        "preprocessingUnchanged": true,
+        "holdoutMetrics": {
+          "original": {
+            "count": 2,
+            "mae": 0,
+            "mse": 0,
+            "rmse": 0,
+            "r2": 1
+          },
+          "changed": {
+            "count": 2,
+            "mae": 15345,
+            "mse": 235469025,
+            "rmse": 15345,
+            "r2": -104652899
+          }
+        }
+      }
+    },
+    {
+      "name": "known hidden, target, future and identifier feature injections rejected",
+      "family": "known-leakage-guard",
+      "status": "pass",
+      "elapsedMs": 1.245789000000002
+    },
+    {
+      "name": "saved experiment survives original array/config and returned prediction poisoning",
+      "family": "retained-model-integrity",
+      "status": "pass",
+      "elapsedMs": 8.783937000000037,
+      "observed": {
+        "trainingIndex": 0,
+        "callerPoisoningProtected": true,
+        "predictionArrayPoisoningProtected": true
+      }
+    },
+    {
+      "name": "domain model outputs retain no mutable training-array aliases",
+      "family": "retained-model-integrity",
+      "status": "pass",
+      "elapsedMs": 13.546249000000046
+    },
+    {
+      "name": "returned domain prediction arrays cannot poison later predictions",
+      "family": "retained-model-integrity",
+      "status": "pass",
+      "elapsedMs": 16.102171999999996
+    },
+    {
+      "name": "complete experiment replay and model tamper rejection",
+      "family": "canonical-replay",
+      "status": "pass",
+      "elapsedMs": 39.062576000000035
+    },
+    {
+      "name": "watch calibration uses observed API-derived feature and analytical baseline",
+      "family": "watch-derived-data",
+      "status": "pass",
+      "elapsedMs": 103.58802700000001,
+      "observed": {
+        "sourceKind": "synthetic-watch",
+        "featureNames": [
+          "earlyObservedMechanicalHz"
+        ],
+        "provenance": {
+          "model": "mechanical-watch-transport",
+          "generatorVersion": 1,
+          "nominalMechanicalHz": {
+            "numerator": 4,
+            "denominator": 1
+          },
+          "earlySeconds": 5,
+          "horizonSeconds": 30,
+          "seed": 17,
+          "configuredConditions": [
+            {
+              "conditionId": "synthetic-condition-d7aa78c8",
+              "mechanicalHz": {
+                "numerator": 15,
+                "denominator": 4
+              }
+            },
+            {
+              "conditionId": "synthetic-condition-b50aaf8a",
+              "mechanicalHz": {
+                "numerator": 17,
+                "denominator": 4
+              }
+            },
+            {
+              "conditionId": "synthetic-condition-a1a583c3",
+              "mechanicalHz": {
+                "numerator": 83,
+                "denominator": 20
+              }
+            },
+            {
+              "conditionId": "synthetic-condition-3b0486e9",
+              "mechanicalHz": {
+                "numerator": 37,
+                "denominator": 10
+              }
+            },
+            {
+              "conditionId": "synthetic-condition-b3aa9a9d",
+              "mechanicalHz": {
+                "numerator": 81,
+                "denominator": 20
+              }
+            },
+            {
+              "conditionId": "synthetic-condition-6058e624",
+              "mechanicalHz": {
+                "numerator": 21,
+                "denominator": 5
+              }
+            },
+            {
+              "conditionId": "synthetic-condition-f2cfcb66",
+              "mechanicalHz": {
+                "numerator": 77,
+                "denominator": 20
+              }
+            }
+          ],
+          "observationMethod": "early rate is derived from retained mechanical cycles and powered operating time; target is later retained display time minus logical horizon"
+        },
+        "baseline": {
+          "model": {
+            "kind": "analyticalWatchRateBaseline",
+            "nominalMechanicalHz": {
+              "denominator": 1,
+              "numerator": 4
+            },
+            "horizonSeconds": 30,
+            "formula": "(earlyObservedMechanicalHz / nominalMechanicalHz - 1) * horizonSeconds",
+            "sourceKind": "synthetic-watch"
+          },
+          "prediction": {
+            "predictions": [
+              1.5000000000000013,
+              -1.1249999999999993
+            ]
+          },
+          "metrics": {
+            "count": 2,
+            "mae": 9.992007221626409e-16,
+            "mse": 1.1093356479670479e-30,
+            "rmse": 1.0532500405730103e-15,
+            "r2": 1
+          }
+        }
+      }
+    },
+    {
+      "name": "retained fine-phase watch observations independently reproduce features and later targets",
+      "family": "watch-observation-reconstruction",
+      "status": "pass",
+      "elapsedMs": 378.185343,
+      "observed": {
+        "records": [
+          {
+            "runId": "watch-run-17-5-30-literal-low-18f6b40b",
+            "conditionId": "literal-low",
+            "features": [
+              3.5
+            ],
+            "target": -3.75,
+            "observations": {
+              "earlyClockErrorSeconds": -0.625,
+              "earlyMechanicalCycles": {
+                "numerator": 35,
+                "denominator": 1
+              },
+              "earlyMechanicalBeats": 35,
+              "earlyOperatingTime": {
+                "numerator": 5,
+                "denominator": 1
+              },
+              "earlyObservationWindowSeconds": {
+                "numerator": 5,
+                "denominator": 1
+              },
+              "earlyDisplayTime": {
+                "numerator": 35,
+                "denominator": 8
+              },
+              "readoutKind": "synthetic-teaching-phase-observation",
+              "formula": "earlyMechanicalCycles/(2*earlyOperatingTime)",
+              "horizonMechanicalBeats": 210,
+              "horizonOperatingTime": {
+                "numerator": 30,
+                "denominator": 1
+              },
+              "horizonDisplayTime": {
+                "numerator": 105,
+                "denominator": 4
+              }
+            }
+          },
+          {
+            "runId": "watch-run-17-5-30-literal-fractional-d7aa78c8",
+            "conditionId": "literal-fractional",
+            "features": [
+              3.75
+            ],
+            "target": -1.875,
+            "observations": {
+              "earlyClockErrorSeconds": -0.375,
+              "earlyMechanicalCycles": {
+                "numerator": 75,
+                "denominator": 2
+              },
+              "earlyMechanicalBeats": 37,
+              "earlyOperatingTime": {
+                "numerator": 5,
+                "denominator": 1
+              },
+              "earlyObservationWindowSeconds": {
+                "numerator": 5,
+                "denominator": 1
+              },
+              "earlyDisplayTime": {
+                "numerator": 37,
+                "denominator": 8
+              },
+              "readoutKind": "synthetic-teaching-phase-observation",
+              "formula": "earlyMechanicalCycles/(2*earlyOperatingTime)",
+              "horizonMechanicalBeats": 225,
+              "horizonOperatingTime": {
+                "numerator": 30,
+                "denominator": 1
+              },
+              "horizonDisplayTime": {
+                "numerator": 225,
+                "denominator": 8
+              }
+            }
+          },
+          {
+            "runId": "watch-run-17-5-30-literal-nominal-a11eb18f",
+            "conditionId": "literal-nominal",
+            "features": [
+              4
+            ],
+            "target": 0,
+            "observations": {
+              "earlyClockErrorSeconds": 0,
+              "earlyMechanicalCycles": {
+                "numerator": 40,
+                "denominator": 1
+              },
+              "earlyMechanicalBeats": 40,
+              "earlyOperatingTime": {
+                "numerator": 5,
+                "denominator": 1
+              },
+              "earlyObservationWindowSeconds": {
+                "numerator": 5,
+                "denominator": 1
+              },
+              "earlyDisplayTime": {
+                "numerator": 5,
+                "denominator": 1
+              },
+              "readoutKind": "synthetic-teaching-phase-observation",
+              "formula": "earlyMechanicalCycles/(2*earlyOperatingTime)",
+              "horizonMechanicalBeats": 240,
+              "horizonOperatingTime": {
+                "numerator": 30,
+                "denominator": 1
+              },
+              "horizonDisplayTime": {
+                "numerator": 30,
+                "denominator": 1
+              }
+            }
+          },
+          {
+            "runId": "watch-run-17-5-30-literal-high-b50aaf8a",
+            "conditionId": "literal-high",
+            "features": [
+              4.25
+            ],
+            "target": 1.875,
+            "observations": {
+              "earlyClockErrorSeconds": 0.25,
+              "earlyMechanicalCycles": {
+                "numerator": 85,
+                "denominator": 2
+              },
+              "earlyMechanicalBeats": 42,
+              "earlyOperatingTime": {
+                "numerator": 5,
+                "denominator": 1
+              },
+              "earlyObservationWindowSeconds": {
+                "numerator": 5,
+                "denominator": 1
+              },
+              "earlyDisplayTime": {
+                "numerator": 21,
+                "denominator": 4
+              },
+              "readoutKind": "synthetic-teaching-phase-observation",
+              "formula": "earlyMechanicalCycles/(2*earlyOperatingTime)",
+              "horizonMechanicalBeats": 255,
+              "horizonOperatingTime": {
+                "numerator": 30,
+                "denominator": 1
+              },
+              "horizonDisplayTime": {
+                "numerator": 255,
+                "denominator": 8
+              }
+            }
+          }
+        ],
+        "hiddenProvenancePoisoningProtected": true
+      }
+    },
+    {
+      "name": "fitted primitives reject nonfinite/ragged inputs without inventing parameters",
+      "family": "invalid-inputs",
+      "status": "pass",
+      "elapsedMs": 0.30400600000007216
+    },
+    {
+      "name": "primitive and pipeline traces disclose genuine trainers and calls",
+      "family": "composition-honesty",
+      "status": "pass",
+      "elapsedMs": 6.508965999999987,
+      "observed": {
+        "pipeline": {
+          "schema": "ml-call-ledger.v1",
+          "limits": {
+            "maxCalls": 64,
+            "maxBytes": 16384
+          },
+          "calls": [
+            {
+              "sequence": 0,
+              "id": "ml.selectFeatures",
+              "input": {
+                "bytes": 766,
+                "algorithm": "fnv1a32",
+                "hash": "94fd17d7"
+              },
+              "output": {
+                "bytes": 53,
+                "algorithm": "fnv1a32",
+                "hash": "39a856f7"
+              },
+              "summary": {
+                "kind": "object",
+                "keys": [
+                  "featureIndices",
+                  "featureNames"
+                ]
+              }
+            },
+            {
+              "sequence": 1,
+              "id": "ml.splitByGroup",
+              "input": {
+                "bytes": 648,
+                "algorithm": "fnv1a32",
+                "hash": "ba955746"
+              },
+              "output": {
+                "bytes": 757,
+                "algorithm": "fnv1a32",
+                "hash": "10189200"
+              },
+              "summary": {
+                "kind": "object",
+                "keys": [
+                  "groupBy",
+                  "groupCount",
+                  "groups",
+                  "seed",
+                  "test",
+                  "testFraction",
+                  "testIndices",
+                  "train",
+                  "trainIndices"
+                ]
+              }
+            },
+            {
+              "sequence": 2,
+              "id": "ml.selectFeatureColumns",
+              "input": {
+                "bytes": 24,
+                "algorithm": "fnv1a32",
+                "hash": "1292dff7"
+              },
+              "output": {
+                "bytes": 25,
+                "algorithm": "fnv1a32",
+                "hash": "5bddd7fe"
+              },
+              "summary": {
+                "count": 6,
+                "preview": [
+                  [
+                    0
+                  ],
+                  [
+                    1
+                  ],
+                  [
+                    2
+                  ]
+                ]
+              }
+            },
+            {
+              "sequence": 3,
+              "id": "ml.fitStandardizer",
+              "input": {
+                "bytes": 38,
+                "algorithm": "fnv1a32",
+                "hash": "9feda267"
+              },
+              "output": {
+                "bytes": 183,
+                "algorithm": "fnv1a32",
+                "hash": "4ca6248b"
+              },
+              "summary": {
+                "kind": "standardizer",
+                "keys": [
+                  "constantColumns",
+                  "featureCount",
+                  "kind",
+                  "means",
+                  "sampleCount",
+                  "scaleMethod",
+                  "scales",
+                  "version"
+                ],
+                "sampleCount": 6,
+                "featureCount": 1,
+                "means": {
+                  "count": 1,
+                  "preview": [
+                    2.5
+                  ]
+                },
+                "scales": {
+                  "count": 1,
+                  "preview": [
+                    1.707825127659933
+                  ]
+                }
+              }
+            },
+            {
+              "sequence": 4,
+              "id": "ml.transformStandardizer",
+              "input": {
+                "bytes": 230,
+                "algorithm": "fnv1a32",
+                "hash": "68ef9420"
+              },
+              "output": {
+                "bytes": 145,
+                "algorithm": "fnv1a32",
+                "hash": "edcf4647"
+              },
+              "summary": {
+                "kind": "object",
+                "keys": [
+                  "features"
+                ]
+              }
+            },
+            {
+              "sequence": 5,
+              "id": "ml.fitLinearRegression",
+              "input": {
+                "bytes": 192,
+                "algorithm": "fnv1a32",
+                "hash": "09bc2274"
+              },
+              "output": {
+                "bytes": 465,
+                "algorithm": "fnv1a32",
+                "hash": "afc8707f"
+              },
+              "summary": {
+                "kind": "object",
+                "keys": [
+                  "diagnostics",
+                  "model"
+                ]
+              }
+            },
+            {
+              "sequence": 6,
+              "id": "ml.fitMeanBaseline",
+              "input": {
+                "bytes": 28,
+                "algorithm": "fnv1a32",
+                "hash": "6c439043"
+              },
+              "output": {
+                "bytes": 50,
+                "algorithm": "fnv1a32",
+                "hash": "5247a85b"
+              },
+              "summary": {
+                "kind": "meanBaseline",
+                "keys": [
+                  "kind",
+                  "mean",
+                  "sampleCount"
+                ],
+                "sampleCount": 6
+              }
+            },
+            {
+              "sequence": 7,
+              "id": "ml.predictLinearRegression",
+              "input": {
+                "bytes": 340,
+                "algorithm": "fnv1a32",
+                "hash": "25b4ffe7"
+              },
+              "output": {
+                "bytes": 97,
+                "algorithm": "fnv1a32",
+                "hash": "6faeb168"
+              },
+              "summary": {
+                "kind": "object",
+                "keys": [
+                  "predictions"
+                ]
+              }
+            },
+            {
+              "sequence": 8,
+              "id": "ml.regressionMetrics",
+              "input": {
+                "bytes": 121,
+                "algorithm": "fnv1a32",
+                "hash": "0c44130c"
+              },
+              "output": {
+                "bytes": 105,
+                "algorithm": "fnv1a32",
+                "hash": "da4d4e14"
+              },
+              "summary": {
+                "kind": "object",
+                "keys": [
+                  "count",
+                  "mae",
+                  "mse",
+                  "r2",
+                  "rmse"
+                ],
+                "count": 6
+              }
+            },
+            {
+              "sequence": 9,
+              "id": "ml.selectFeatureColumns",
+              "input": {
+                "bytes": 24,
+                "algorithm": "fnv1a32",
+                "hash": "129d6d53"
+              },
+              "output": {
+                "bytes": 9,
+                "algorithm": "fnv1a32",
+                "hash": "2726cb26"
+              },
+              "summary": {
+                "count": 2,
+                "preview": [
+                  [
+                    6
+                  ],
+                  [
+                    7
+                  ]
+                ]
+              }
+            },
+            {
+              "sequence": 10,
+              "id": "ml.transformStandardizer",
+              "input": {
+                "bytes": 214,
+                "algorithm": "fnv1a32",
+                "hash": "1c55e4f8"
+              },
+              "output": {
+                "bytes": 54,
+                "algorithm": "fnv1a32",
+                "hash": "d3910e00"
+              },
+              "summary": {
+                "kind": "object",
+                "keys": [
+                  "features"
+                ]
+              }
+            },
+            {
+              "sequence": 11,
+              "id": "ml.predictLinearRegression",
+              "input": {
+                "bytes": 249,
+                "algorithm": "fnv1a32",
+                "hash": "3283ce7e"
+              },
+              "output": {
+                "bytes": 23,
+                "algorithm": "fnv1a32",
+                "hash": "c6933d6e"
+              },
+              "summary": {
+                "kind": "object",
+                "keys": [
+                  "predictions"
+                ]
+              }
+            },
+            {
+              "sequence": 12,
+              "id": "ml.regressionMetrics",
+              "input": {
+                "bytes": 38,
+                "algorithm": "fnv1a32",
+                "hash": "1dc1fecb"
+              },
+              "output": {
+                "bytes": 43,
+                "algorithm": "fnv1a32",
+                "hash": "c01116be"
+              },
+              "summary": {
+                "kind": "object",
+                "keys": [
+                  "count",
+                  "mae",
+                  "mse",
+                  "r2",
+                  "rmse"
+                ],
+                "count": 2
+              }
+            },
+            {
+              "sequence": 13,
+              "id": "ml.predictMeanBaseline",
+              "input": {
+                "bytes": 70,
+                "algorithm": "fnv1a32",
+                "hash": "a836a067"
+              },
+              "output": {
+                "bytes": 25,
+                "algorithm": "fnv1a32",
+                "hash": "1717bc8b"
+              },
+              "summary": {
+                "kind": "object",
+                "keys": [
+                  "predictions"
+                ]
+              }
+            },
+            {
+              "sequence": 14,
+              "id": "ml.regressionMetrics",
+              "input": {
+                "bytes": 40,
+                "algorithm": "fnv1a32",
+                "hash": "1be31202"
+              },
+              "output": {
+                "bytes": 68,
+                "algorithm": "fnv1a32",
+                "hash": "d59d9c2c"
+              },
+              "summary": {
+                "kind": "object",
+                "keys": [
+                  "count",
+                  "mae",
+                  "mse",
+                  "r2",
+                  "rmse"
+                ],
+                "count": 2
+              }
+            }
+          ],
+          "bytes": 3708
+        },
+        "classifier": {
+          "kind": "logisticTrainingTrace",
+          "version": 1,
+          "inputSummary": {
+            "sampleCount": 2,
+            "featureCount": 1
+          },
+          "calls": [
+            {
+              "sourceId": "src/ml/classification.mjs#logisticScores",
+              "operationId": "ml.logisticScores",
+              "phase": "initial",
+              "inputSummary": {
+                "rows": 2,
+                "columns": 1,
+                "includesIntercept": true
+              },
+              "outputSummary": {
+                "count": 2,
+                "minimum": 0,
+                "maximum": 0
+              },
+              "dependencies": [
+                {
+                  "sourceId": "linalg.matvec",
+                  "calls": 1
+                }
+              ]
+            },
+            {
+              "sourceId": "ml.binaryCrossEntropy",
+              "phase": "initial",
+              "inputSummary": {
+                "targets": 2,
+                "scoreSource": "linalg.matvec"
+              },
+              "outputSummary": {
+                "loss": 0.6931471805599453
+              }
+            },
+            {
+              "sourceId": "src/ml/classification.mjs#objectiveParts",
+              "operationId": "ml.regularizedObjective",
+              "phase": "initial",
+              "inputSummary": {
+                "l2": 0.5,
+                "coefficients": 1
+              },
+              "outputSummary": {
+                "binaryCrossEntropy": 0.6931471805599453,
+                "l2Penalty": 0,
+                "objective": 0.6931471805599453
+              }
+            },
+            {
+              "sourceId": "src/ml/classification.mjs#gradientFromScores",
+              "operationId": "ml.logisticGradient",
+              "phase": "initial",
+              "inputSummary": {
+                "rows": 2,
+                "columns": 1
+              },
+              "outputSummary": {
+                "coefficients": [
+                  -0.25
+                ],
+                "intercept": 0,
+                "norm": 0.25
+              },
+              "dependencies": [
+                {
+                  "sourceId": "linalg.dot",
+                  "calls": 2
+                },
+                {
+                  "sourceId": "ml.logisticSigmoid",
+                  "calls": 2
+                }
+              ]
+            },
+            {
+              "sourceId": "src/ml/classification.mjs#logisticScores",
+              "operationId": "ml.logisticScores",
+              "phase": "final",
+              "inputSummary": {
+                "rows": 2,
+                "columns": 1,
+                "includesIntercept": true
+              },
+              "outputSummary": {
+                "count": 2,
+                "minimum": -0.0003124837249755208,
+                "maximum": 0.04812503255004896
+              },
+              "dependencies": [
+                {
+                  "sourceId": "linalg.matvec",
+                  "calls": 1
+                }
+              ]
+            },
+            {
+              "sourceId": "ml.binaryCrossEntropy",
+              "phase": "final",
+              "inputSummary": {
+                "targets": 2,
+                "scoreSource": "linalg.matvec"
+              },
+              "outputSummary": {
+                "loss": 0.6811825447999956
+              }
+            },
+            {
+              "sourceId": "src/ml/classification.mjs#objectiveParts",
+              "operationId": "ml.regularizedObjective",
+              "phase": "final",
+              "inputSummary": {
+                "l2": 0.5,
+                "coefficients": 1
+              },
+              "outputSummary": {
+                "binaryCrossEntropy": 0.6811825447999956,
+                "l2Penalty": 0.0005865482457233154,
+                "objective": 0.681769093045719
+              }
+            },
+            {
+              "sourceId": "src/ml/classification.mjs#gradientFromScores",
+              "operationId": "ml.logisticGradient",
+              "phase": "final",
+              "inputSummary": {
+                "rows": 2,
+                "columns": 1
+              },
+              "outputSummary": {
+                "coefficients": [
+                  -0.21976677355071256
+                ],
+                "intercept": 0.005975407846471104,
+                "norm": 0.21984799352239232
+              },
+              "dependencies": [
+                {
+                  "sourceId": "linalg.dot",
+                  "calls": 2
+                },
+                {
+                  "sourceId": "ml.logisticSigmoid",
+                  "calls": 2
+                }
+              ]
+            }
+          ],
+          "optimizerSummary": {
+            "method": "fullBatchGradientDescent",
+            "learningRate": 0.1,
+            "maxIterations": 2,
+            "tolerance": 1e-8,
+            "l2": 0.5,
+            "iterations": 2,
+            "converged": false,
+            "finalLoss": 0.681769093045719,
+            "finalBinaryCrossEntropy": 0.6811825447999956,
+            "maxBatchElementVisits": 2000000,
+            "worstCaseElementVisits": 18
+          },
+          "aggregate": {
+            "gradientEvaluations": 3,
+            "logisticScoreEvaluations": 3,
+            "matvecEvaluations": 3,
+            "scoreDotEvaluations": 6,
+            "gradientDotEvaluations": 6,
+            "dotEvaluations": 12,
+            "sigmoidEvaluations": 6,
+            "lossEvaluations": 2,
+            "omittedIntermediateGradientEvaluations": 1
+          },
+          "policy": "records actual initial/final calculations and summarizes omitted intermediate gradient updates"
+        }
+      }
+    },
+    {
+      "name": "every published ML descriptor executes declared primitives and exact replay",
+      "family": "descriptor-composition",
+      "status": "pass",
+      "elapsedMs": 43.58908300000007,
+      "observed": {
+        "examples": [
+          {
+            "id": "ml.splitByGroup",
+            "order": 0,
+            "trace": {
+              "id": "ml.splitByGroup",
+              "order": 0,
+              "identity": {
+                "source": "independent-ml-descriptor-gate",
+                "version": "1",
+                "kind": "declared"
+              },
+              "seed": 17,
+              "inputCanonical": "{\"records\":[{\"conditionId\":\"c1\",\"runId\":\"r1\"},{\"conditionId\":\"c2\",\"runId\":\"r2\"}],\"seed\":7,\"testFraction\":0.5}",
+              "inputHash": "d23e1cc9b0e0ee9a",
+              "resultCanonical": "{\"groupBy\":\"conditionId\",\"groupCount\":2,\"groups\":{\"test\":[1],\"train\":[0]},\"seed\":7,\"test\":[{\"conditionId\":\"c2\",\"runId\":\"r2\"}],\"testFraction\":0.5,\"testIndices\":[1],\"train\":[{\"conditionId\":\"c1\",\"runId\":\"r1\"}],\"trainIndices\":[0]}",
+              "resultHash": "9bde42f85afde19c",
+              "randomDraws": 0,
+              "calls": []
+            }
+          },
+          {
+            "id": "ml.fitStandardizer",
+            "order": 0,
+            "trace": {
+              "id": "ml.fitStandardizer",
+              "order": 0,
+              "identity": {
+                "source": "independent-ml-descriptor-gate",
+                "version": "1",
+                "kind": "declared"
+              },
+              "seed": 17,
+              "inputCanonical": "{\"features\":[[1,5],[3,5]]}",
+              "inputHash": "3c73126fe6466af4",
+              "resultCanonical": "{\"constantColumns\":[false,true],\"featureCount\":2,\"kind\":\"standardizer\",\"means\":[2,5],\"sampleCount\":2,\"scaleMethod\":\"population-standard-deviation\",\"scales\":[1,1],\"version\":1}",
+              "resultHash": "6a7b4c1d4f658b09",
+              "randomDraws": 0,
+              "calls": []
+            }
+          },
+          {
+            "id": "ml.transformStandardizer",
+            "order": 0,
+            "trace": {
+              "id": "ml.transformStandardizer",
+              "order": 0,
+              "identity": {
+                "source": "independent-ml-descriptor-gate",
+                "version": "1",
+                "kind": "declared"
+              },
+              "seed": 17,
+              "inputCanonical": "{\"features\":[[3]],\"model\":{\"constantColumns\":[false],\"featureCount\":1,\"kind\":\"standardizer\",\"means\":[2],\"sampleCount\":2,\"scaleMethod\":\"population-standard-deviation\",\"scales\":[1],\"version\":1}}",
+              "inputHash": "7f2fd84182f417f9",
+              "resultCanonical": "{\"features\":[[1]]}",
+              "resultHash": "4c07058e29cfa90d",
+              "randomDraws": 0,
+              "calls": []
+            }
+          },
+          {
+            "id": "ml.regressionMetrics",
+            "order": 0,
+            "trace": {
+              "id": "ml.regressionMetrics",
+              "order": 0,
+              "identity": {
+                "source": "independent-ml-descriptor-gate",
+                "version": "1",
+                "kind": "declared"
+              },
+              "seed": 17,
+              "inputCanonical": "{\"actual\":[1,3],\"predicted\":[2,2]}",
+              "inputHash": "f6a60ac7e1114725",
+              "resultCanonical": "{\"count\":2,\"mae\":1,\"mse\":1,\"r2\":0,\"rmse\":1}",
+              "resultHash": "6b077488ac39f268",
+              "randomDraws": 0,
+              "calls": []
+            }
+          },
+          {
+            "id": "ml.fitMeanBaseline",
+            "order": 0,
+            "trace": {
+              "id": "ml.fitMeanBaseline",
+              "order": 0,
+              "identity": {
+                "source": "independent-ml-descriptor-gate",
+                "version": "1",
+                "kind": "declared"
+              },
+              "seed": 17,
+              "inputCanonical": "{\"targets\":[1,3,5]}",
+              "inputHash": "9542069d09a28342",
+              "resultCanonical": "{\"kind\":\"meanBaseline\",\"mean\":3,\"sampleCount\":3}",
+              "resultHash": "aa033eddbcf8b4b7",
+              "randomDraws": 0,
+              "calls": []
+            }
+          },
+          {
+            "id": "ml.predictMeanBaseline",
+            "order": 0,
+            "trace": {
+              "id": "ml.predictMeanBaseline",
+              "order": 0,
+              "identity": {
+                "source": "independent-ml-descriptor-gate",
+                "version": "1",
+                "kind": "declared"
+              },
+              "seed": 17,
+              "inputCanonical": "{\"count\":2,\"model\":{\"kind\":\"meanBaseline\",\"mean\":3,\"sampleCount\":3}}",
+              "inputHash": "8f7fe655bffe6daf",
+              "resultCanonical": "{\"predictions\":[3,3]}",
+              "resultHash": "c39c406989de6ac3",
+              "randomDraws": 0,
+              "calls": []
+            }
+          },
+          {
+            "id": "ml.classificationMetrics",
+            "order": 0,
+            "trace": {
+              "id": "ml.classificationMetrics",
+              "order": 0,
+              "identity": {
+                "source": "independent-ml-descriptor-gate",
+                "version": "1",
+                "kind": "declared"
+              },
+              "seed": 17,
+              "inputCanonical": "{\"actual\":[0,1,1],\"predicted\":[0,0,1]}",
+              "inputHash": "997534e4cc5a2e84",
+              "resultCanonical": "{\"accuracy\":0.6666666666666666,\"classes\":[0,1],\"confusionMatrix\":[[1,0],[1,1]],\"count\":3,\"macroF1\":0.6666666666666666,\"macroPrecision\":0.75,\"macroRecall\":0.75}",
+              "resultHash": "cd57123b52e17bc5",
+              "randomDraws": 0,
+              "calls": []
+            }
+          },
+          {
+            "id": "ml.selectFeatures",
+            "order": 0,
+            "trace": {
+              "id": "ml.selectFeatures",
+              "order": 0,
+              "identity": {
+                "source": "independent-ml-descriptor-gate",
+                "version": "1",
+                "kind": "declared"
+              },
+              "seed": 17,
+              "inputCanonical": "{\"dataset\":{\"featureNames\":[\"earlyRate\",\"ambient\"],\"records\":[{\"conditionId\":\"c1\",\"features\":[4,20],\"runId\":\"r1\",\"target\":1}],\"sourceKind\":\"fixture\",\"targetName\":\"lateError\"},\"featureNames\":[\"ambient\",\"earlyRate\"]}",
+              "inputHash": "ac3874c5070af6f5",
+              "resultCanonical": "{\"featureIndices\":[1,0],\"featureNames\":[\"ambient\",\"earlyRate\"]}",
+              "resultHash": "083aa34c4d69e864",
+              "randomDraws": 0,
+              "calls": []
+            }
+          },
+          {
+            "id": "ml.fitLinearRegression",
+            "order": 4,
+            "trace": {
+              "id": "ml.fitLinearRegression",
+              "order": 4,
+              "identity": {
+                "source": "independent-ml-descriptor-gate",
+                "version": "1",
+                "kind": "declared"
+              },
+              "seed": 17,
+              "inputCanonical": "{\"features\":[[1,0],[0,1]],\"fitIntercept\":false,\"targets\":[2,3]}",
+              "inputHash": "e4c6b81a23dfb17d",
+              "resultCanonical": "{\"diagnostics\":{\"predictions\":[2,3],\"rank\":2,\"residualNorm\":0,\"residuals\":[0,0]},\"model\":{\"coefficients\":[2,3],\"featureCount\":2,\"fitIntercept\":false,\"intercept\":0,\"kind\":\"linearRegression\",\"sampleCount\":2,\"solver\":\"linalg.leastSquares\",\"version\":1}}",
+              "resultHash": "c211a314abb07d9d",
+              "randomDraws": 0,
+              "calls": [
+                {
+                  "id": "linalg.leastSquares",
+                  "order": 3,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"matrix\":[[1,0],[0,1]],\"vector\":[2,3]}",
+                  "inputHash": "6ef8db2c4579c91e",
+                  "resultCanonical": "{\"rank\":2,\"residualNorm\":0,\"residuals\":[0,0],\"solution\":[2,3]}",
+                  "resultHash": "94bc288ac3f6173e",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.qr",
+                      "order": 2,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"matrix\":[[1,0],[0,1]],\"tolerance\":1e-12}",
+                      "inputHash": "bd7a3a3272309067",
+                      "resultCanonical": "{\"q\":[[-1,0],[0,-1]],\"r\":[[-1,0],[0,-1]],\"rank\":2}",
+                      "resultHash": "8798af321571e9d4",
+                      "randomDraws": 0,
+                      "calls": [
+                        {
+                          "id": "linalg.householderFactor",
+                          "order": 0,
+                          "identity": {
+                            "source": "independent-ml-descriptor-gate",
+                            "version": "1",
+                            "kind": "declared"
+                          },
+                          "seed": 17,
+                          "inputCanonical": "{\"matrix\":[[1,0],[0,1]],\"tolerance\":1e-12}",
+                          "inputHash": "bd7a3a3272309067",
+                          "resultCanonical": "{\"q\":[[-1,0],[0,-1]],\"r\":[[-1,0],[0,-1]]}",
+                          "resultHash": "4f3e04b0216ce228",
+                          "randomDraws": 0,
+                          "calls": []
+                        },
+                        {
+                          "id": "linalg.rank",
+                          "order": 1,
+                          "identity": {
+                            "source": "independent-ml-descriptor-gate",
+                            "version": "1",
+                            "kind": "declared"
+                          },
+                          "seed": 17,
+                          "inputCanonical": "{\"matrix\":[[1,0],[0,1]],\"tolerance\":1e-12}",
+                          "inputHash": "bd7a3a3272309067",
+                          "resultCanonical": "2",
+                          "resultHash": "af63af4c8601a015",
+                          "randomDraws": 0,
+                          "calls": [
+                            {
+                              "id": "linalg.rowEchelon",
+                              "order": 0,
+                              "identity": {
+                                "source": "independent-ml-descriptor-gate",
+                                "version": "1",
+                                "kind": "declared"
+                              },
+                              "seed": 17,
+                              "inputCanonical": "{\"matrix\":[[1,0],[0,1]],\"tolerance\":1e-12}",
+                              "inputHash": "bd7a3a3272309067",
+                              "resultCanonical": "{\"matrix\":[[1,0],[0,1]],\"pivotColumns\":[0,1]}",
+                              "resultHash": "696ce976c68b49ee",
+                              "randomDraws": 0,
+                              "calls": []
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "id": "linalg.transpose",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"matrix\":[[-1,0],[0,-1]]}",
+                      "inputHash": "126999421bcd29d8",
+                      "resultCanonical": "[[-1,0],[0,-1]]",
+                      "resultHash": "4afb762c647c5d79",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.matvec",
+                      "order": 1,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"matrix\":[[-1,0],[0,-1]],\"vector\":[2,3]}",
+                      "inputHash": "49381059425e8596",
+                      "resultCanonical": "[-2,-3]",
+                      "resultHash": "317c7264b00c25ca",
+                      "randomDraws": 0,
+                      "calls": [
+                        {
+                          "id": "linalg.dot",
+                          "order": 0,
+                          "identity": {
+                            "source": "independent-ml-descriptor-gate",
+                            "version": "1",
+                            "kind": "declared"
+                          },
+                          "seed": 17,
+                          "inputCanonical": "{\"a\":[-1,0],\"b\":[2,3]}",
+                          "inputHash": "3b6eee1f8bbc97f5",
+                          "resultCanonical": "-2",
+                          "resultHash": "07d00c07b497d2de",
+                          "randomDraws": 0,
+                          "calls": []
+                        },
+                        {
+                          "id": "linalg.dot",
+                          "order": 0,
+                          "identity": {
+                            "source": "independent-ml-descriptor-gate",
+                            "version": "1",
+                            "kind": "declared"
+                          },
+                          "seed": 17,
+                          "inputCanonical": "{\"a\":[0,-1],\"b\":[2,3]}",
+                          "inputHash": "920bd411dca37415",
+                          "resultCanonical": "-3",
+                          "resultHash": "07d00d07b497d491",
+                          "randomDraws": 0,
+                          "calls": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "linalg.backSubstitute",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"matrix\":[[-1,0],[0,-1]],\"tolerance\":1e-12,\"vector\":[-2,-3]}",
+                      "inputHash": "d1e4cf7fe768d391",
+                      "resultCanonical": "[2,3]",
+                      "resultHash": "d4d01b12bb95d960",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.matvec",
+                      "order": 1,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"matrix\":[[1,0],[0,1]],\"vector\":[2,3]}",
+                      "inputHash": "6ef8db2c4579c91e",
+                      "resultCanonical": "[2,3]",
+                      "resultHash": "d4d01b12bb95d960",
+                      "randomDraws": 0,
+                      "calls": [
+                        {
+                          "id": "linalg.dot",
+                          "order": 0,
+                          "identity": {
+                            "source": "independent-ml-descriptor-gate",
+                            "version": "1",
+                            "kind": "declared"
+                          },
+                          "seed": 17,
+                          "inputCanonical": "{\"a\":[1,0],\"b\":[2,3]}",
+                          "inputHash": "c9556a1e70dfdc54",
+                          "resultCanonical": "2",
+                          "resultHash": "af63af4c8601a015",
+                          "randomDraws": 0,
+                          "calls": []
+                        },
+                        {
+                          "id": "linalg.dot",
+                          "order": 0,
+                          "identity": {
+                            "source": "independent-ml-descriptor-gate",
+                            "version": "1",
+                            "kind": "declared"
+                          },
+                          "seed": 17,
+                          "inputCanonical": "{\"a\":[0,1],\"b\":[2,3]}",
+                          "inputHash": "f9ebf933d973d5ec",
+                          "resultCanonical": "3",
+                          "resultHash": "af63ae4c86019e62",
+                          "randomDraws": 0,
+                          "calls": []
+                        }
+                      ]
+                    },
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[2,3],\"b\":[2,3]}",
+                      "inputHash": "cc0e21eb6b845884",
+                      "resultCanonical": "[0,0]",
+                      "resultHash": "f9cec3247ab9641d",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[0,0]}",
+                      "inputHash": "4219e27fcd991d76",
+                      "resultCanonical": "0",
+                      "resultHash": "af63ad4c86019caf",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ml.predictLinearRegression",
+            "order": 1,
+            "trace": {
+              "id": "ml.predictLinearRegression",
+              "order": 1,
+              "identity": {
+                "source": "independent-ml-descriptor-gate",
+                "version": "1",
+                "kind": "declared"
+              },
+              "seed": 17,
+              "inputCanonical": "{\"features\":[[2,0],[0,-1],[1,1]],\"model\":{\"coefficients\":[2,3],\"featureCount\":2,\"fitIntercept\":false,\"intercept\":0,\"kind\":\"linearRegression\",\"sampleCount\":2,\"solver\":\"linalg.leastSquares\",\"version\":1}}",
+              "inputHash": "a344e04a50b5223e",
+              "resultCanonical": "{\"predictions\":[4,-3,5]}",
+              "resultHash": "4fec23ad7cf2ff62",
+              "randomDraws": 0,
+              "calls": [
+                {
+                  "id": "linalg.dot",
+                  "order": 0,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[2,0],\"b\":[2,3]}",
+                  "inputHash": "9084de3d77432b69",
+                  "resultCanonical": "4",
+                  "resultHash": "af63a94c860195e3",
+                  "randomDraws": 0,
+                  "calls": []
+                },
+                {
+                  "id": "linalg.dot",
+                  "order": 0,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[0,-1],\"b\":[2,3]}",
+                  "inputHash": "920bd411dca37415",
+                  "resultCanonical": "-3",
+                  "resultHash": "07d00d07b497d491",
+                  "randomDraws": 0,
+                  "calls": []
+                },
+                {
+                  "id": "linalg.dot",
+                  "order": 0,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[1,1],\"b\":[2,3]}",
+                  "inputHash": "712ca280c26ac8d7",
+                  "resultCanonical": "5",
+                  "resultHash": "af63a84c86019430",
+                  "randomDraws": 0,
+                  "calls": []
+                }
+              ]
+            }
+          },
+          {
+            "id": "ml.fitPCA",
+            "order": 2,
+            "trace": {
+              "id": "ml.fitPCA",
+              "order": 2,
+              "identity": {
+                "source": "independent-ml-descriptor-gate",
+                "version": "1",
+                "kind": "declared"
+              },
+              "seed": 17,
+              "inputCanonical": "{\"features\":[[8,20],[10,20],[12,20]]}",
+              "inputHash": "57fd9885183c416a",
+              "resultCanonical": "{\"components\":2,\"converged\":true,\"directions\":[[1,0],[0,1]],\"eigenvalues\":[4,0],\"explainedVarianceRatio\":[1,0],\"featureCount\":2,\"kind\":\"pca\",\"means\":[10,20],\"sampleCount\":3}",
+              "resultHash": "c235f650d4c52fad",
+              "randomDraws": 0,
+              "calls": [
+                {
+                  "id": "composed.covarianceMatrix",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"denominator\":\"sample\",\"observations\":[[8,20],[10,20],[12,20]]}",
+                  "inputHash": "be4ba360fb850d7a",
+                  "resultCanonical": "{\"matrix\":[[4,0],[0,0]]}",
+                  "resultHash": "7c8da38e553dd948",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.transpose",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"matrix\":[[8,20],[10,20],[12,20]]}",
+                      "inputHash": "ff0690e1f3da6130",
+                      "resultCanonical": "[[8,10,12],[20,20,20]]",
+                      "resultHash": "9288ee4f6ab42f91",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "statistics.covariance",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"denominator\":\"sample\",\"x\":[8,10,12],\"y\":[8,10,12]}",
+                      "inputHash": "0e6c0ca86a013c0a",
+                      "resultCanonical": "{\"value\":4}",
+                      "resultHash": "eceb517ccadcf1b6",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "statistics.covariance",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"denominator\":\"sample\",\"x\":[8,10,12],\"y\":[20,20,20]}",
+                      "inputHash": "1ead35b11daa18d4",
+                      "resultCanonical": "{\"value\":0}",
+                      "resultHash": "ecdd517ccad0b45a",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "statistics.covariance",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"denominator\":\"sample\",\"x\":[20,20,20],\"y\":[20,20,20]}",
+                      "inputHash": "55d33d8dfcb7b65c",
+                      "resultCanonical": "{\"value\":0}",
+                      "resultHash": "ecdd517ccad0b45a",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                },
+                {
+                  "id": "statistics.mean",
+                  "order": 0,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"values\":[8,10,12]}",
+                  "inputHash": "a1eede73ec7c2e67",
+                  "resultCanonical": "{\"value\":10}",
+                  "resultHash": "4463710c9bf6a6c7",
+                  "randomDraws": 0,
+                  "calls": []
+                },
+                {
+                  "id": "statistics.mean",
+                  "order": 0,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"values\":[20,20,20]}",
+                  "inputHash": "95495f6c5af9247b",
+                  "resultCanonical": "{\"value\":20}",
+                  "resultHash": "5df2f00caa51e8b2",
+                  "randomDraws": 0,
+                  "calls": []
+                },
+                {
+                  "id": "linalg.symmetricEigen",
+                  "order": 0,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"matrix\":[[4,0],[0,0]],\"maxIterations\":200,\"tolerance\":1e-12}",
+                  "inputHash": "01a941d185e60129",
+                  "resultCanonical": "{\"converged\":true,\"eigenvalues\":[4,0],\"eigenvectors\":[[1,0],[0,1]],\"iterations\":0}",
+                  "resultHash": "1ea780001fe649d6",
+                  "randomDraws": 0,
+                  "calls": []
+                },
+                {
+                  "id": "linalg.transpose",
+                  "order": 0,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"matrix\":[[1,0],[0,1]]}",
+                  "inputHash": "64999fd64b165670",
+                  "resultCanonical": "[[1,0],[0,1]]",
+                  "resultHash": "75964f12ce84e061",
+                  "randomDraws": 0,
+                  "calls": []
+                }
+              ]
+            }
+          },
+          {
+            "id": "ml.transformPCA",
+            "order": 1,
+            "trace": {
+              "id": "ml.transformPCA",
+              "order": 1,
+              "identity": {
+                "source": "independent-ml-descriptor-gate",
+                "version": "1",
+                "kind": "declared"
+              },
+              "seed": 17,
+              "inputCanonical": "{\"features\":[[14,21]],\"model\":{\"components\":2,\"converged\":true,\"directions\":[[1,0],[0,1]],\"eigenvalues\":[4,0],\"explainedVarianceRatio\":[1,0],\"featureCount\":2,\"kind\":\"pca\",\"means\":[10,20],\"sampleCount\":3}}",
+              "inputHash": "37da48492cff5687",
+              "resultCanonical": "{\"projected\":[[4,1]]}",
+              "resultHash": "bf4e7f24aa798d1e",
+              "randomDraws": 0,
+              "calls": [
+                {
+                  "id": "linalg.vectorSubtract",
+                  "order": 0,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[14,21],\"b\":[10,20]}",
+                  "inputHash": "dbc2f4719fca1c4b",
+                  "resultCanonical": "[4,1]",
+                  "resultHash": "94a9df44c0d3658c",
+                  "randomDraws": 0,
+                  "calls": []
+                },
+                {
+                  "id": "linalg.dot",
+                  "order": 0,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[4,1],\"b\":[1,0]}",
+                  "inputHash": "f2997f95dc66fc48",
+                  "resultCanonical": "4",
+                  "resultHash": "af63a94c860195e3",
+                  "randomDraws": 0,
+                  "calls": []
+                },
+                {
+                  "id": "linalg.dot",
+                  "order": 0,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[4,1],\"b\":[0,1]}",
+                  "inputHash": "e3ba477d07ef4ad8",
+                  "resultCanonical": "1",
+                  "resultHash": "af63ac4c86019afc",
+                  "randomDraws": 0,
+                  "calls": []
+                }
+              ]
+            }
+          },
+          {
+            "id": "ml.fitKMeans",
+            "order": 2,
+            "trace": {
+              "id": "ml.fitKMeans",
+              "order": 2,
+              "identity": {
+                "source": "independent-ml-descriptor-gate",
+                "version": "1",
+                "kind": "declared"
+              },
+              "seed": 17,
+              "inputCanonical": "{\"features\":[[0,2],[2,4],[4,6]],\"k\":1,\"seed\":5}",
+              "inputHash": "60958aa8e912b284",
+              "resultCanonical": "{\"assignments\":[0,0,0],\"centroids\":[[2,4]],\"config\":{\"emptyCluster\":\"retain-previous-centroid\",\"initialization\":\"k-means++\",\"k\":1,\"maxIterations\":100,\"tieBreak\":\"lowest-index\",\"tolerance\":0.000001},\"converged\":true,\"featureCount\":2,\"inertia\":16,\"iterations\":2,\"kind\":\"kmeans\",\"seed\":5}",
+              "resultHash": "8074eb10a6f08b28",
+              "randomDraws": 0,
+              "calls": [
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[0,2],\"b\":[4,6]}",
+                  "inputHash": "dc962edcf5e8ffe8",
+                  "resultCanonical": "5.656854249492381",
+                  "resultHash": "9b03f42625cfd79e",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[0,2],\"b\":[4,6]}",
+                      "inputHash": "dc962edcf5e8ffe8",
+                      "resultCanonical": "[-4,-4]",
+                      "resultHash": "760c0fa7110974f3",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[-4,-4]}",
+                      "inputHash": "dcf5953a5b8e8ae0",
+                      "resultCanonical": "5.656854249492381",
+                      "resultHash": "9b03f42625cfd79e",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                },
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[2,4],\"b\":[4,6]}",
+                  "inputHash": "f53db1386daa5a5c",
+                  "resultCanonical": "2.8284271247461903",
+                  "resultHash": "a1093cdc35395c03",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[2,4],\"b\":[4,6]}",
+                      "inputHash": "f53db1386daa5a5c",
+                      "resultCanonical": "[-2,-2]",
+                      "resultHash": "3179ae64b00a55e7",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[-2,-2]}",
+                      "inputHash": "197d89302139cca4",
+                      "resultCanonical": "2.8284271247461903",
+                      "resultHash": "a1093cdc35395c03",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                },
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[4,6],\"b\":[4,6]}",
+                  "inputHash": "75ffcd1f97e5a528",
+                  "resultCanonical": "0",
+                  "resultHash": "af63ad4c86019caf",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[4,6],\"b\":[4,6]}",
+                      "inputHash": "75ffcd1f97e5a528",
+                      "resultCanonical": "[0,0]",
+                      "resultHash": "f9cec3247ab9641d",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[0,0]}",
+                      "inputHash": "4219e27fcd991d76",
+                      "resultCanonical": "0",
+                      "resultHash": "af63ad4c86019caf",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                },
+                {
+                  "id": "statistics.mean",
+                  "order": 0,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"values\":[0,2,4]}",
+                  "inputHash": "f947627afd312df1",
+                  "resultCanonical": "{\"value\":2}",
+                  "resultHash": "ece44d7ccad6cc3c",
+                  "randomDraws": 0,
+                  "calls": []
+                },
+                {
+                  "id": "statistics.mean",
+                  "order": 0,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"values\":[2,4,6]}",
+                  "inputHash": "c2aff0b966234d53",
+                  "resultCanonical": "{\"value\":4}",
+                  "resultHash": "eceb517ccadcf1b6",
+                  "randomDraws": 0,
+                  "calls": []
+                },
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[4,6],\"b\":[2,4]}",
+                  "inputHash": "07c8ce2f7b834da4",
+                  "resultCanonical": "2.8284271247461903",
+                  "resultHash": "a1093cdc35395c03",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[4,6],\"b\":[2,4]}",
+                      "inputHash": "07c8ce2f7b834da4",
+                      "resultCanonical": "[2,2]",
+                      "resultHash": "d4ccdf12bb933d95",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[2,2]}",
+                      "inputHash": "48c3e4a799fae6de",
+                      "resultCanonical": "2.8284271247461903",
+                      "resultHash": "a1093cdc35395c03",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                },
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[0,2],\"b\":[2,4]}",
+                  "inputHash": "6e5e2fecd984f564",
+                  "resultCanonical": "2.8284271247461903",
+                  "resultHash": "a1093cdc35395c03",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[0,2],\"b\":[2,4]}",
+                      "inputHash": "6e5e2fecd984f564",
+                      "resultCanonical": "[-2,-2]",
+                      "resultHash": "3179ae64b00a55e7",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[-2,-2]}",
+                      "inputHash": "197d89302139cca4",
+                      "resultCanonical": "2.8284271247461903",
+                      "resultHash": "a1093cdc35395c03",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                },
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[2,4],\"b\":[2,4]}",
+                  "inputHash": "744cb04d08ab9ff0",
+                  "resultCanonical": "0",
+                  "resultHash": "af63ad4c86019caf",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[2,4],\"b\":[2,4]}",
+                      "inputHash": "744cb04d08ab9ff0",
+                      "resultCanonical": "[0,0]",
+                      "resultHash": "f9cec3247ab9641d",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[0,0]}",
+                      "inputHash": "4219e27fcd991d76",
+                      "resultCanonical": "0",
+                      "resultHash": "af63ad4c86019caf",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                },
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[4,6],\"b\":[2,4]}",
+                  "inputHash": "07c8ce2f7b834da4",
+                  "resultCanonical": "2.8284271247461903",
+                  "resultHash": "a1093cdc35395c03",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[4,6],\"b\":[2,4]}",
+                      "inputHash": "07c8ce2f7b834da4",
+                      "resultCanonical": "[2,2]",
+                      "resultHash": "d4ccdf12bb933d95",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[2,2]}",
+                      "inputHash": "48c3e4a799fae6de",
+                      "resultCanonical": "2.8284271247461903",
+                      "resultHash": "a1093cdc35395c03",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                },
+                {
+                  "id": "statistics.mean",
+                  "order": 0,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"values\":[0,2,4]}",
+                  "inputHash": "f947627afd312df1",
+                  "resultCanonical": "{\"value\":2}",
+                  "resultHash": "ece44d7ccad6cc3c",
+                  "randomDraws": 0,
+                  "calls": []
+                },
+                {
+                  "id": "statistics.mean",
+                  "order": 0,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"values\":[2,4,6]}",
+                  "inputHash": "c2aff0b966234d53",
+                  "resultCanonical": "{\"value\":4}",
+                  "resultHash": "eceb517ccadcf1b6",
+                  "randomDraws": 0,
+                  "calls": []
+                },
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[2,4],\"b\":[2,4]}",
+                  "inputHash": "744cb04d08ab9ff0",
+                  "resultCanonical": "0",
+                  "resultHash": "af63ad4c86019caf",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[2,4],\"b\":[2,4]}",
+                      "inputHash": "744cb04d08ab9ff0",
+                      "resultCanonical": "[0,0]",
+                      "resultHash": "f9cec3247ab9641d",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[0,0]}",
+                      "inputHash": "4219e27fcd991d76",
+                      "resultCanonical": "0",
+                      "resultHash": "af63ad4c86019caf",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                },
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[0,2],\"b\":[2,4]}",
+                  "inputHash": "6e5e2fecd984f564",
+                  "resultCanonical": "2.8284271247461903",
+                  "resultHash": "a1093cdc35395c03",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[0,2],\"b\":[2,4]}",
+                      "inputHash": "6e5e2fecd984f564",
+                      "resultCanonical": "[-2,-2]",
+                      "resultHash": "3179ae64b00a55e7",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[-2,-2]}",
+                      "inputHash": "197d89302139cca4",
+                      "resultCanonical": "2.8284271247461903",
+                      "resultHash": "a1093cdc35395c03",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                },
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[2,4],\"b\":[2,4]}",
+                  "inputHash": "744cb04d08ab9ff0",
+                  "resultCanonical": "0",
+                  "resultHash": "af63ad4c86019caf",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[2,4],\"b\":[2,4]}",
+                      "inputHash": "744cb04d08ab9ff0",
+                      "resultCanonical": "[0,0]",
+                      "resultHash": "f9cec3247ab9641d",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[0,0]}",
+                      "inputHash": "4219e27fcd991d76",
+                      "resultCanonical": "0",
+                      "resultHash": "af63ad4c86019caf",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                },
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[4,6],\"b\":[2,4]}",
+                  "inputHash": "07c8ce2f7b834da4",
+                  "resultCanonical": "2.8284271247461903",
+                  "resultHash": "a1093cdc35395c03",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[4,6],\"b\":[2,4]}",
+                      "inputHash": "07c8ce2f7b834da4",
+                      "resultCanonical": "[2,2]",
+                      "resultHash": "d4ccdf12bb933d95",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[2,2]}",
+                      "inputHash": "48c3e4a799fae6de",
+                      "resultCanonical": "2.8284271247461903",
+                      "resultHash": "a1093cdc35395c03",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "id": "ml.predictKMeans",
+            "order": 2,
+            "trace": {
+              "id": "ml.predictKMeans",
+              "order": 2,
+              "identity": {
+                "source": "independent-ml-descriptor-gate",
+                "version": "1",
+                "kind": "declared"
+              },
+              "seed": 17,
+              "inputCanonical": "{\"features\":[[1],[3]],\"model\":{\"assignments\":[0,0],\"centroids\":[[0],[2]],\"config\":{\"emptyCluster\":\"retain-previous-centroid\",\"initialization\":\"k-means++\",\"k\":2,\"maxIterations\":100,\"tieBreak\":\"lowest-index\",\"tolerance\":0.000001},\"converged\":true,\"featureCount\":1,\"inertia\":0,\"iterations\":1,\"kind\":\"kmeans\",\"seed\":1}}",
+              "inputHash": "d9f9cc87588855ec",
+              "resultCanonical": "{\"assignments\":[0,1],\"distances\":[1,1],\"squaredDistances\":[1,1]}",
+              "resultHash": "f56785817db4216d",
+              "randomDraws": 0,
+              "calls": [
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[1],\"b\":[0]}",
+                  "inputHash": "b713f3cc5a61c233",
+                  "resultCanonical": "1",
+                  "resultHash": "af63ac4c86019afc",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[1],\"b\":[0]}",
+                      "inputHash": "b713f3cc5a61c233",
+                      "resultCanonical": "[1]",
+                      "resultHash": "dc72d61a20e83324",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[1]}",
+                      "inputHash": "c75aca7147683329",
+                      "resultCanonical": "1",
+                      "resultHash": "af63ac4c86019afc",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                },
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[1],\"b\":[2]}",
+                  "inputHash": "a5f7a5cc50c071c5",
+                  "resultCanonical": "1",
+                  "resultHash": "af63ac4c86019afc",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[1],\"b\":[2]}",
+                      "inputHash": "a5f7a5cc50c071c5",
+                      "resultCanonical": "[-1]",
+                      "resultHash": "e5d7f36624377623",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[-1]}",
+                      "inputHash": "5ad305919a600194",
+                      "resultCanonical": "1",
+                      "resultHash": "af63ac4c86019afc",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                },
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[3],\"b\":[0]}",
+                  "inputHash": "e2e013224121491d",
+                  "resultCanonical": "3",
+                  "resultHash": "af63ae4c86019e62",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[3],\"b\":[0]}",
+                      "inputHash": "e2e013224121491d",
+                      "resultCanonical": "[3]",
+                      "resultHash": "dc6c1a1a20e28802",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[3]}",
+                      "inputHash": "d877187151098397",
+                      "resultCanonical": "3",
+                      "resultHash": "af63ae4c86019e62",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                },
+                {
+                  "id": "linalg.distance",
+                  "order": 1,
+                  "identity": {
+                    "source": "independent-ml-descriptor-gate",
+                    "version": "1",
+                    "kind": "declared"
+                  },
+                  "seed": 17,
+                  "inputCanonical": "{\"a\":[3],\"b\":[2]}",
+                  "inputHash": "f4d561224b7a8a4b",
+                  "resultCanonical": "1",
+                  "resultHash": "af63ac4c86019afc",
+                  "randomDraws": 0,
+                  "calls": [
+                    {
+                      "id": "linalg.vectorSubtract",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"a\":[3],\"b\":[2]}",
+                      "inputHash": "f4d561224b7a8a4b",
+                      "resultCanonical": "[1]",
+                      "resultHash": "dc72d61a20e83324",
+                      "randomDraws": 0,
+                      "calls": []
+                    },
+                    {
+                      "id": "linalg.norm",
+                      "order": 0,
+                      "identity": {
+                        "source": "independent-ml-descriptor-gate",
+                        "version": "1",
+                        "kind": "declared"
+                      },
+                      "seed": 17,
+                      "inputCanonical": "{\"vector\":[1]}",
+                      "inputHash": "c75aca7147683329",
+                      "resultCanonical": "1",
+                      "resultHash": "af63ac4c86019afc",
+                      "randomDraws": 0,
+                      "calls": []
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "ML sources remained unchanged during independent gate",
+      "family": "source-provenance",
+      "status": "pass",
+      "elapsedMs": 12.031227000000172
+    }
+  ],
+  "sourceFiles": [
+    {
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/src/ml/classification.mjs",
+      "bytes": 18647,
+      "sha256": "1a985e2b5f2c466fa47cf5b49caa64319eb5d7a72324bef05d0f1eb797e288e2"
+    },
+    {
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/src/ml/clustering.mjs",
+      "bytes": 21582,
+      "sha256": "5ec1afeaddb3f477b002915e6160252f96a7fa869b81183d34bfa749810e20f7"
+    },
+    {
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/src/ml/data.mjs",
+      "bytes": 27179,
+      "sha256": "a47764aa5c740bb542a9cb56a970b929ba7a8a62a085d00dd108db364b276d10"
+    },
+    {
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/src/ml/index.mjs",
+      "bytes": 28144,
+      "sha256": "fb17808e72e8548123dee83aafdac41b81f3438a535117f9bc6e41a790612909"
+    },
+    {
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/src/ml/pca.mjs",
+      "bytes": 19750,
+      "sha256": "c9288f81f800cced4f07716f1c9294ceaa26222482fa2913790c933afe7b7acb"
+    },
+    {
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/src/ml/regression.mjs",
+      "bytes": 11239,
+      "sha256": "e314d08bac8c346b74f7dc62bb4b4b4d97f8b6d1373d06ab8ea8bf031d92af1a"
+    },
+    {
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/src/ml/watch-data.mjs",
+      "bytes": 11396,
+      "sha256": "f2f73c9ba65ff9a285cd9daa5a971cb2c49be1151136fa3d583a2578ee5b7323"
+    }
+  ],
+  "traceExample": {
+    "experiment": {
+      "schema": "ml-call-ledger.v1",
+      "limits": {
+        "maxCalls": 64,
+        "maxBytes": 16384
+      },
+      "calls": [
+        {
+          "sequence": 0,
+          "id": "ml.selectFeatures",
+          "input": {
+            "bytes": 766,
+            "algorithm": "fnv1a32",
+            "hash": "94fd17d7"
+          },
+          "output": {
+            "bytes": 53,
+            "algorithm": "fnv1a32",
+            "hash": "39a856f7"
+          },
+          "summary": {
+            "kind": "object",
+            "keys": [
+              "featureIndices",
+              "featureNames"
+            ]
+          }
+        },
+        {
+          "sequence": 1,
+          "id": "ml.splitByGroup",
+          "input": {
+            "bytes": 648,
+            "algorithm": "fnv1a32",
+            "hash": "ba955746"
+          },
+          "output": {
+            "bytes": 757,
+            "algorithm": "fnv1a32",
+            "hash": "10189200"
+          },
+          "summary": {
+            "kind": "object",
+            "keys": [
+              "groupBy",
+              "groupCount",
+              "groups",
+              "seed",
+              "test",
+              "testFraction",
+              "testIndices",
+              "train",
+              "trainIndices"
+            ]
+          }
+        },
+        {
+          "sequence": 2,
+          "id": "ml.selectFeatureColumns",
+          "input": {
+            "bytes": 24,
+            "algorithm": "fnv1a32",
+            "hash": "1292dff7"
+          },
+          "output": {
+            "bytes": 25,
+            "algorithm": "fnv1a32",
+            "hash": "5bddd7fe"
+          },
+          "summary": {
+            "count": 6,
+            "preview": [
+              [
+                0
+              ],
+              [
+                1
+              ],
+              [
+                2
+              ]
+            ]
+          }
+        },
+        {
+          "sequence": 3,
+          "id": "ml.fitStandardizer",
+          "input": {
+            "bytes": 38,
+            "algorithm": "fnv1a32",
+            "hash": "9feda267"
+          },
+          "output": {
+            "bytes": 183,
+            "algorithm": "fnv1a32",
+            "hash": "4ca6248b"
+          },
+          "summary": {
+            "kind": "standardizer",
+            "keys": [
+              "constantColumns",
+              "featureCount",
+              "kind",
+              "means",
+              "sampleCount",
+              "scaleMethod",
+              "scales",
+              "version"
+            ],
+            "sampleCount": 6,
+            "featureCount": 1,
+            "means": {
+              "count": 1,
+              "preview": [
+                2.5
+              ]
+            },
+            "scales": {
+              "count": 1,
+              "preview": [
+                1.707825127659933
+              ]
+            }
+          }
+        },
+        {
+          "sequence": 4,
+          "id": "ml.transformStandardizer",
+          "input": {
+            "bytes": 230,
+            "algorithm": "fnv1a32",
+            "hash": "68ef9420"
+          },
+          "output": {
+            "bytes": 145,
+            "algorithm": "fnv1a32",
+            "hash": "edcf4647"
+          },
+          "summary": {
+            "kind": "object",
+            "keys": [
+              "features"
+            ]
+          }
+        },
+        {
+          "sequence": 5,
+          "id": "ml.fitLinearRegression",
+          "input": {
+            "bytes": 192,
+            "algorithm": "fnv1a32",
+            "hash": "09bc2274"
+          },
+          "output": {
+            "bytes": 465,
+            "algorithm": "fnv1a32",
+            "hash": "afc8707f"
+          },
+          "summary": {
+            "kind": "object",
+            "keys": [
+              "diagnostics",
+              "model"
+            ]
+          }
+        },
+        {
+          "sequence": 6,
+          "id": "ml.fitMeanBaseline",
+          "input": {
+            "bytes": 28,
+            "algorithm": "fnv1a32",
+            "hash": "6c439043"
+          },
+          "output": {
+            "bytes": 50,
+            "algorithm": "fnv1a32",
+            "hash": "5247a85b"
+          },
+          "summary": {
+            "kind": "meanBaseline",
+            "keys": [
+              "kind",
+              "mean",
+              "sampleCount"
+            ],
+            "sampleCount": 6
+          }
+        },
+        {
+          "sequence": 7,
+          "id": "ml.predictLinearRegression",
+          "input": {
+            "bytes": 340,
+            "algorithm": "fnv1a32",
+            "hash": "25b4ffe7"
+          },
+          "output": {
+            "bytes": 97,
+            "algorithm": "fnv1a32",
+            "hash": "6faeb168"
+          },
+          "summary": {
+            "kind": "object",
+            "keys": [
+              "predictions"
+            ]
+          }
+        },
+        {
+          "sequence": 8,
+          "id": "ml.regressionMetrics",
+          "input": {
+            "bytes": 121,
+            "algorithm": "fnv1a32",
+            "hash": "0c44130c"
+          },
+          "output": {
+            "bytes": 105,
+            "algorithm": "fnv1a32",
+            "hash": "da4d4e14"
+          },
+          "summary": {
+            "kind": "object",
+            "keys": [
+              "count",
+              "mae",
+              "mse",
+              "r2",
+              "rmse"
+            ],
+            "count": 6
+          }
+        },
+        {
+          "sequence": 9,
+          "id": "ml.selectFeatureColumns",
+          "input": {
+            "bytes": 24,
+            "algorithm": "fnv1a32",
+            "hash": "129d6d53"
+          },
+          "output": {
+            "bytes": 9,
+            "algorithm": "fnv1a32",
+            "hash": "2726cb26"
+          },
+          "summary": {
+            "count": 2,
+            "preview": [
+              [
+                6
+              ],
+              [
+                7
+              ]
+            ]
+          }
+        },
+        {
+          "sequence": 10,
+          "id": "ml.transformStandardizer",
+          "input": {
+            "bytes": 214,
+            "algorithm": "fnv1a32",
+            "hash": "1c55e4f8"
+          },
+          "output": {
+            "bytes": 54,
+            "algorithm": "fnv1a32",
+            "hash": "d3910e00"
+          },
+          "summary": {
+            "kind": "object",
+            "keys": [
+              "features"
+            ]
+          }
+        },
+        {
+          "sequence": 11,
+          "id": "ml.predictLinearRegression",
+          "input": {
+            "bytes": 249,
+            "algorithm": "fnv1a32",
+            "hash": "3283ce7e"
+          },
+          "output": {
+            "bytes": 23,
+            "algorithm": "fnv1a32",
+            "hash": "c6933d6e"
+          },
+          "summary": {
+            "kind": "object",
+            "keys": [
+              "predictions"
+            ]
+          }
+        },
+        {
+          "sequence": 12,
+          "id": "ml.regressionMetrics",
+          "input": {
+            "bytes": 38,
+            "algorithm": "fnv1a32",
+            "hash": "1dc1fecb"
+          },
+          "output": {
+            "bytes": 43,
+            "algorithm": "fnv1a32",
+            "hash": "c01116be"
+          },
+          "summary": {
+            "kind": "object",
+            "keys": [
+              "count",
+              "mae",
+              "mse",
+              "r2",
+              "rmse"
+            ],
+            "count": 2
+          }
+        },
+        {
+          "sequence": 13,
+          "id": "ml.predictMeanBaseline",
+          "input": {
+            "bytes": 70,
+            "algorithm": "fnv1a32",
+            "hash": "a836a067"
+          },
+          "output": {
+            "bytes": 25,
+            "algorithm": "fnv1a32",
+            "hash": "1717bc8b"
+          },
+          "summary": {
+            "kind": "object",
+            "keys": [
+              "predictions"
+            ]
+          }
+        },
+        {
+          "sequence": 14,
+          "id": "ml.regressionMetrics",
+          "input": {
+            "bytes": 40,
+            "algorithm": "fnv1a32",
+            "hash": "1be31202"
+          },
+          "output": {
+            "bytes": 68,
+            "algorithm": "fnv1a32",
+            "hash": "d59d9c2c"
+          },
+          "summary": {
+            "kind": "object",
+            "keys": [
+              "count",
+              "mae",
+              "mse",
+              "r2",
+              "rmse"
+            ],
+            "count": 2
+          }
+        }
+      ],
+      "bytes": 3708
+    },
+    "classifier": {
+      "kind": "logisticTrainingTrace",
+      "version": 1,
+      "inputSummary": {
+        "sampleCount": 2,
+        "featureCount": 1
+      },
+      "calls": [
+        {
+          "sourceId": "src/ml/classification.mjs#logisticScores",
+          "operationId": "ml.logisticScores",
+          "phase": "initial",
+          "inputSummary": {
+            "rows": 2,
+            "columns": 1,
+            "includesIntercept": true
+          },
+          "outputSummary": {
+            "count": 2,
+            "minimum": 0,
+            "maximum": 0
+          },
+          "dependencies": [
+            {
+              "sourceId": "linalg.matvec",
+              "calls": 1
+            }
+          ]
+        },
+        {
+          "sourceId": "ml.binaryCrossEntropy",
+          "phase": "initial",
+          "inputSummary": {
+            "targets": 2,
+            "scoreSource": "linalg.matvec"
+          },
+          "outputSummary": {
+            "loss": 0.6931471805599453
+          }
+        },
+        {
+          "sourceId": "src/ml/classification.mjs#objectiveParts",
+          "operationId": "ml.regularizedObjective",
+          "phase": "initial",
+          "inputSummary": {
+            "l2": 0.5,
+            "coefficients": 1
+          },
+          "outputSummary": {
+            "binaryCrossEntropy": 0.6931471805599453,
+            "l2Penalty": 0,
+            "objective": 0.6931471805599453
+          }
+        },
+        {
+          "sourceId": "src/ml/classification.mjs#gradientFromScores",
+          "operationId": "ml.logisticGradient",
+          "phase": "initial",
+          "inputSummary": {
+            "rows": 2,
+            "columns": 1
+          },
+          "outputSummary": {
+            "coefficients": [
+              -0.25
+            ],
+            "intercept": 0,
+            "norm": 0.25
+          },
+          "dependencies": [
+            {
+              "sourceId": "linalg.dot",
+              "calls": 2
+            },
+            {
+              "sourceId": "ml.logisticSigmoid",
+              "calls": 2
+            }
+          ]
+        },
+        {
+          "sourceId": "src/ml/classification.mjs#logisticScores",
+          "operationId": "ml.logisticScores",
+          "phase": "final",
+          "inputSummary": {
+            "rows": 2,
+            "columns": 1,
+            "includesIntercept": true
+          },
+          "outputSummary": {
+            "count": 2,
+            "minimum": -0.0003124837249755208,
+            "maximum": 0.04812503255004896
+          },
+          "dependencies": [
+            {
+              "sourceId": "linalg.matvec",
+              "calls": 1
+            }
+          ]
+        },
+        {
+          "sourceId": "ml.binaryCrossEntropy",
+          "phase": "final",
+          "inputSummary": {
+            "targets": 2,
+            "scoreSource": "linalg.matvec"
+          },
+          "outputSummary": {
+            "loss": 0.6811825447999956
+          }
+        },
+        {
+          "sourceId": "src/ml/classification.mjs#objectiveParts",
+          "operationId": "ml.regularizedObjective",
+          "phase": "final",
+          "inputSummary": {
+            "l2": 0.5,
+            "coefficients": 1
+          },
+          "outputSummary": {
+            "binaryCrossEntropy": 0.6811825447999956,
+            "l2Penalty": 0.0005865482457233154,
+            "objective": 0.681769093045719
+          }
+        },
+        {
+          "sourceId": "src/ml/classification.mjs#gradientFromScores",
+          "operationId": "ml.logisticGradient",
+          "phase": "final",
+          "inputSummary": {
+            "rows": 2,
+            "columns": 1
+          },
+          "outputSummary": {
+            "coefficients": [
+              -0.21976677355071256
+            ],
+            "intercept": 0.005975407846471104,
+            "norm": 0.21984799352239232
+          },
+          "dependencies": [
+            {
+              "sourceId": "linalg.dot",
+              "calls": 2
+            },
+            {
+              "sourceId": "ml.logisticSigmoid",
+              "calls": 2
+            }
+          ]
+        }
+      ],
+      "optimizerSummary": {
+        "method": "fullBatchGradientDescent",
+        "learningRate": 0.1,
+        "maxIterations": 2,
+        "tolerance": 1e-8,
+        "l2": 0.5,
+        "iterations": 2,
+        "converged": false,
+        "finalLoss": 0.681769093045719,
+        "finalBinaryCrossEntropy": 0.6811825447999956,
+        "maxBatchElementVisits": 2000000,
+        "worstCaseElementVisits": 18
+      },
+      "aggregate": {
+        "gradientEvaluations": 3,
+        "logisticScoreEvaluations": 3,
+        "matvecEvaluations": 3,
+        "scoreDotEvaluations": 6,
+        "gradientDotEvaluations": 6,
+        "dotEvaluations": 12,
+        "sigmoidEvaluations": 6,
+        "lossEvaluations": 2,
+        "omittedIntermediateGradientEvaluations": 1
+      },
+      "policy": "records actual initial/final calculations and summarizes omitted intermediate gradient updates"
+    }
+  },
+  "summary": {
+    "pass": 27,
+    "fail": 0,
+    "blocked": false,
+    "families": [
+      "linear-mathematics",
+      "preprocessing-hand",
+      "metrics-hand",
+      "classification-hand",
+      "classification-training",
+      "optimizer-bounds",
+      "classification-trace-truth",
+      "clustering-hand",
+      "pca-hand",
+      "clustering-policy",
+      "bounded-fit-work",
+      "whole-group-splitting",
+      "pipeline-mathematics",
+      "holdout-leakage",
+      "known-leakage-guard",
+      "retained-model-integrity",
+      "canonical-replay",
+      "watch-derived-data",
+      "watch-observation-reconstruction",
+      "invalid-inputs",
+      "composition-honesty",
+      "descriptor-composition",
+      "source-provenance"
+    ]
+  }
+}

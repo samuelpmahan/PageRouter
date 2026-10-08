@@ -1,0 +1,403 @@
+{
+  "model": "generic watch components",
+  "sources": [
+    {
+      "id": "grand-seiko-mechanical",
+      "url": "https://www.grand-seiko.com/uk-en/collections/movement/mechanical",
+      "supports": "A wound mainspring supplies motive force; the escapement uses the balance, pallet fork, and escape wheel to regulate gear motion; the balance carries a hairspring; the gear train drives the hands.",
+      "limits": "The page describes Grand Seiko 9S movements, whose construction varies by caliber. The 4 Hz teaching rate appears for specific listed calibers, not every mechanical watch. Schematic geometry, state counters, and ideal timing here are not a specific 9S movement."
+    },
+    {
+      "id": "seiko-quartz-education",
+      "url": "https://www.seiko.co.jp/csr/toki-iku/tokiq-nazotoki/",
+      "supports": "Seiko describes a typical quartz watch using a battery, a quartz reference near 32,768 oscillations per second, electronic division to a one-second signal, a step motor, and gears.",
+      "limits": "The Japanese educational page says 32,768 Hz is typical and explicitly notes exceptions. It is a general explanation, not a specification for every quartz watch."
+    },
+    {
+      "id": "grand-seiko-quartz",
+      "url": "https://www.grand-seiko.com/us-en/collections/movement/quartz",
+      "supports": "Grand Seiko describes the 9F battery, quartz oscillator, integrated circuit, step motor, gears, and hands; its 9F twin-pulse motor sends two second-hand steps per second.",
+      "limits": "This describes the specific Grand Seiko 9F movement. The generic model uses one motor command per second; it does not claim the 9F pulse pattern or universal quartz motor behavior."
+    },
+    {
+      "id": "gear-ratio-reference",
+      "url": "https://khkgears.net/pdf/internal-tech.pdf",
+      "supports": "KHK gives gear ratio magnitude in terms of tooth counts and rotational speeds and distinguishes rotation directions for internal gear arrangements.",
+      "limits": "This is general gear-design information, not a watch-specific tooth count or validation of a particular watch train. The schematic labels do not assert a real watch gear geometry."
+    },
+    {
+      "id": "mdn-animation-frame",
+      "url": "https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame",
+      "supports": "requestAnimationFrame schedules rendering callbacks, normally follows display refresh, and is paused in most hidden tabs.",
+      "limits": "Callback timing is a browser scheduling observation, not a logical software-watch tick. This component model does not count callbacks or claim callback timing accuracy."
+    },
+    {
+      "id": "fixed-timestep-author",
+      "url": "https://gafferongames.com/post/fix_your_timestep/",
+      "supports": "A fixed logical update is kept separate from render cadence; elapsed time can be accumulated to decide when updates are due.",
+      "limits": "This source motivates the teaching separation only. It does not specify this app’s runtime policy or prove physical watch timing."
+    }
+  ],
+  "components": [
+    {
+      "id": "mechanical.crown",
+      "model": "mechanical",
+      "name": "Crown and winding input",
+      "role": "control",
+      "roleStatus": "illustrative",
+      "valueStatus": "illustrative",
+      "sourceId": "grand-seiko-mechanical",
+      "statePath": null,
+      "formula": "No winding action or stored-energy amount is simulated; energy is controlled by the explicit teaching-model energy toggle.",
+      "unit": "not modeled"
+    },
+    {
+      "id": "mechanical.barrel",
+      "model": "mechanical",
+      "name": "Barrel",
+      "role": "energy",
+      "roleStatus": "illustrative",
+      "valueStatus": "simulation",
+      "sourceId": "grand-seiko-mechanical",
+      "statePath": "models.mechanical.energy.available",
+      "formula": "The current boolean says whether the modeled mainspring energy path is available; it is not a reserve measurement.",
+      "unit": "boolean"
+    },
+    {
+      "id": "mechanical.mainspring",
+      "model": "mechanical",
+      "name": "Mainspring",
+      "role": "energy",
+      "roleStatus": "fact",
+      "valueStatus": "simulation",
+      "sourceId": "grand-seiko-mechanical",
+      "statePath": "models.mechanical.energy.available",
+      "formula": "Reads the modeled energy-enabled state. Stored torque, energy, and power reserve are not simulated.",
+      "unit": "boolean"
+    },
+    {
+      "id": "mechanical.goingTrain",
+      "model": "mechanical",
+      "name": "Going and hand gear train",
+      "role": "energy",
+      "roleStatus": "fact",
+      "valueStatus": "derived",
+      "sourceId": "grand-seiko-mechanical",
+      "statePath": "models.mechanical.gearTrain",
+      "formula": "Reads derived hand turns, teaching gear-pair ratios, and hand angles for the configured elapsed display time. Tooth counts are teaching choices, not a named watch train.",
+      "unit": "turns and degrees"
+    },
+    {
+      "id": "mechanical.escapeWheel",
+      "model": "mechanical",
+      "name": "Escape wheel",
+      "role": "timing",
+      "roleStatus": "fact",
+      "valueStatus": "simulation",
+      "sourceId": "grand-seiko-mechanical",
+      "statePath": "models.mechanical.escapement.eventIndex",
+      "formula": "The model records its controlled escapement event index; the index does not simulate tooth contact geometry.",
+      "unit": "events"
+    },
+    {
+      "id": "mechanical.palletFork",
+      "model": "mechanical",
+      "name": "Pallet fork",
+      "role": "timing",
+      "roleStatus": "fact",
+      "valueStatus": "simulation",
+      "sourceId": "grand-seiko-mechanical",
+      "statePath": "models.mechanical.escapement.phase",
+      "formula": "Reads the discrete modeled escapement phase (lock, release, or impulse); it is an ideal teaching sequence.",
+      "unit": "phase"
+    },
+    {
+      "id": "mechanical.balanceWheel",
+      "model": "mechanical",
+      "name": "Balance wheel",
+      "role": "timing",
+      "roleStatus": "fact",
+      "valueStatus": "simulation",
+      "sourceId": "grand-seiko-mechanical",
+      "statePath": "models.mechanical.oscillator.cycles",
+      "formula": "Counts modeled full balance oscillations. A full oscillation contains two escapement beats.",
+      "unit": "cycles"
+    },
+    {
+      "id": "mechanical.hairspring",
+      "model": "mechanical",
+      "name": "Hairspring",
+      "role": "timing",
+      "roleStatus": "fact",
+      "valueStatus": "simulation",
+      "sourceId": "grand-seiko-mechanical",
+      "statePath": "models.mechanical.oscillator.phase",
+      "formula": "Reads the same ideal oscillator phase used by the balance model; it does not model spring shape, torque, or material behavior.",
+      "unit": "phase"
+    },
+    {
+      "id": "mechanical.support",
+      "model": "mechanical",
+      "name": "Plate, bridges, pivots, and jewels",
+      "role": "support",
+      "roleStatus": "illustrative",
+      "valueStatus": "illustrative",
+      "sourceId": "grand-seiko-mechanical",
+      "statePath": null,
+      "formula": "Support geometry is illustrative and has no dynamic state in this teaching model.",
+      "unit": "not modeled"
+    },
+    {
+      "id": "mechanical.secondHand",
+      "model": "mechanical",
+      "name": "Second hand",
+      "role": "display",
+      "roleStatus": "fact",
+      "valueStatus": "derived",
+      "sourceId": "grand-seiko-mechanical",
+      "statePath": "models.mechanical.handAnglesDegrees.second",
+      "formula": "Angle = 360 × (nominal display time / hand period) modulo 360; second period 60 s, minute period 3,600 s, hour period 43,200 s. Later oscillator-rate changes alter when visible events occur and cause modeled drift.",
+      "unit": "degrees"
+    },
+    {
+      "id": "mechanical.minuteHand",
+      "model": "mechanical",
+      "name": "Minute hand",
+      "role": "display",
+      "roleStatus": "fact",
+      "valueStatus": "derived",
+      "sourceId": "grand-seiko-mechanical",
+      "statePath": "models.mechanical.handAnglesDegrees.minute",
+      "formula": "Angle = 360 × (nominal display time / hand period) modulo 360; second period 60 s, minute period 3,600 s, hour period 43,200 s. Later oscillator-rate changes alter when visible events occur and cause modeled drift.",
+      "unit": "degrees"
+    },
+    {
+      "id": "mechanical.hourHand",
+      "model": "mechanical",
+      "name": "Hour hand",
+      "role": "display",
+      "roleStatus": "fact",
+      "valueStatus": "derived",
+      "sourceId": "grand-seiko-mechanical",
+      "statePath": "models.mechanical.handAnglesDegrees.hour",
+      "formula": "Angle = 360 × (nominal display time / hand period) modulo 360; second period 60 s, minute period 3,600 s, hour period 43,200 s. Later oscillator-rate changes alter when visible events occur and cause modeled drift.",
+      "unit": "degrees"
+    },
+    {
+      "id": "quartz.battery",
+      "model": "quartz",
+      "name": "Battery",
+      "role": "energy",
+      "roleStatus": "fact",
+      "valueStatus": "simulation",
+      "sourceId": "grand-seiko-quartz",
+      "statePath": "models.quartz.energy.available",
+      "formula": "The boolean records whether the modeled quartz energy path is enabled; it is not voltage, charge, or battery life.",
+      "unit": "boolean"
+    },
+    {
+      "id": "quartz.crystal",
+      "model": "quartz",
+      "name": "Quartz resonator",
+      "role": "timing",
+      "roleStatus": "fact",
+      "valueStatus": "simulation",
+      "sourceId": "seiko-quartz-education",
+      "statePath": "models.quartz.oscillator.cycles",
+      "formula": "Reads the exact modeled reference-cycle counter. The 32,768 Hz setting is a generic teaching parameter, not a universal watch specification.",
+      "unit": "cycles"
+    },
+    {
+      "id": "quartz.oscillator",
+      "model": "quartz",
+      "name": "Oscillator circuit",
+      "role": "timing",
+      "roleStatus": "fact",
+      "valueStatus": "simulation",
+      "sourceId": "grand-seiko-quartz",
+      "statePath": "models.quartz.oscillator.phase",
+      "formula": "Reads the modeled oscillator phase; this is not an electrical waveform or circuit-level simulation.",
+      "unit": "phase"
+    },
+    {
+      "id": "quartz.divider",
+      "model": "quartz",
+      "name": "Frequency divider",
+      "role": "timing",
+      "roleStatus": "fact",
+      "valueStatus": "simulation",
+      "sourceId": "seiko-quartz-education",
+      "statePath": "models.quartz.dividerStages",
+      "formula": "Each listed stage divides by two; the standard example uses fifteen stages from 32,768 Hz to 1 Hz.",
+      "unit": "stage counts"
+    },
+    {
+      "id": "quartz.motorDriver",
+      "model": "quartz",
+      "name": "Motor driver",
+      "role": "control",
+      "roleStatus": "fact",
+      "valueStatus": "simulation",
+      "sourceId": "grand-seiko-quartz",
+      "statePath": "models.quartz.counts.motorCommands",
+      "formula": "Counts generic one-per-second motor commands. A command is not a universal electrical pulse pattern.",
+      "unit": "commands"
+    },
+    {
+      "id": "quartz.coil",
+      "model": "quartz",
+      "name": "Coil and stator",
+      "role": "energy",
+      "roleStatus": "illustrative",
+      "valueStatus": "simulation",
+      "sourceId": "grand-seiko-quartz",
+      "statePath": "models.quartz.counts.motorCommands",
+      "formula": "The schematic separates a generic motor drive from its count; coil current and magnetic fields are not simulated.",
+      "unit": "commands"
+    },
+    {
+      "id": "quartz.rotor",
+      "model": "quartz",
+      "name": "Step-motor rotor",
+      "role": "energy",
+      "roleStatus": "fact",
+      "valueStatus": "simulation",
+      "sourceId": "grand-seiko-quartz",
+      "statePath": "models.quartz.counts.motorCommands",
+      "formula": "Shows the motor-command count as a teaching proxy; it does not claim a universal rotor angle or pulse-to-step ratio.",
+      "unit": "commands"
+    },
+    {
+      "id": "quartz.gears",
+      "model": "quartz",
+      "name": "Reduction and display gears",
+      "role": "energy",
+      "roleStatus": "fact",
+      "valueStatus": "derived",
+      "sourceId": "grand-seiko-quartz",
+      "statePath": "models.quartz.gearTrain",
+      "formula": "Reads derived hand turns, teaching gear-pair ratios, and hand angles for the configured elapsed display time. The chosen teeth are not specific to a real watch.",
+      "unit": "turns and degrees"
+    },
+    {
+      "id": "quartz.secondHand",
+      "model": "quartz",
+      "name": "Second hand",
+      "role": "display",
+      "roleStatus": "fact",
+      "valueStatus": "derived",
+      "sourceId": "grand-seiko-quartz",
+      "statePath": "models.quartz.handAnglesDegrees.second",
+      "formula": "Angle = 360 × (nominal display time / hand period) modulo 360; second period 60 s, minute period 3,600 s, hour period 43,200 s. Later oscillator-rate changes alter when visible events occur and cause modeled drift.",
+      "unit": "degrees"
+    },
+    {
+      "id": "quartz.minuteHand",
+      "model": "quartz",
+      "name": "Minute hand",
+      "role": "display",
+      "roleStatus": "fact",
+      "valueStatus": "derived",
+      "sourceId": "grand-seiko-quartz",
+      "statePath": "models.quartz.handAnglesDegrees.minute",
+      "formula": "Angle = 360 × (nominal display time / hand period) modulo 360; second period 60 s, minute period 3,600 s, hour period 43,200 s. Later oscillator-rate changes alter when visible events occur and cause modeled drift.",
+      "unit": "degrees"
+    },
+    {
+      "id": "quartz.hourHand",
+      "model": "quartz",
+      "name": "Hour hand",
+      "role": "display",
+      "roleStatus": "fact",
+      "valueStatus": "derived",
+      "sourceId": "grand-seiko-quartz",
+      "statePath": "models.quartz.handAnglesDegrees.hour",
+      "formula": "Angle = 360 × (nominal display time / hand period) modulo 360; second period 60 s, minute period 3,600 s, hour period 43,200 s. Later oscillator-rate changes alter when visible events occur and cause modeled drift.",
+      "unit": "degrees"
+    },
+    {
+      "id": "software.logicalTime",
+      "model": "software",
+      "name": "Simulation time accumulator",
+      "role": "timing",
+      "roleStatus": "derived",
+      "valueStatus": "simulation",
+      "sourceId": "fixed-timestep-author",
+      "statePath": "models.software.operatingTime",
+      "formula": "Read the software model’s accumulated logical time; this is separate from host elapsed time and requestAnimationFrame cadence.",
+      "unit": "rational seconds"
+    },
+    {
+      "id": "software.scheduler",
+      "model": "software",
+      "name": "Browser render scheduler",
+      "role": "control",
+      "roleStatus": "fact",
+      "valueStatus": "illustrative",
+      "sourceId": "mdn-animation-frame",
+      "statePath": null,
+      "formula": "No callback count is modeled. Render callbacks schedule observation only and are not authoritative logical ticks.",
+      "unit": "not modeled"
+    },
+    {
+      "id": "software.updateCounter",
+      "model": "software",
+      "name": "Logical update counter",
+      "role": "timing",
+      "roleStatus": "derived",
+      "valueStatus": "simulation",
+      "sourceId": "fixed-timestep-author",
+      "statePath": "models.software.counts.updates",
+      "formula": "Count of software state updates; it advances under the declared simulation policy, not once per rendered frame.",
+      "unit": "updates"
+    },
+    {
+      "id": "software.renderer",
+      "model": "software",
+      "name": "Renderer",
+      "role": "display",
+      "roleStatus": "fact",
+      "valueStatus": "illustrative",
+      "sourceId": "mdn-animation-frame",
+      "statePath": null,
+      "formula": "The renderer observes logical model state. Rendering and hidden-tab callback suspension do not add simulation ticks.",
+      "unit": "not modeled"
+    },
+    {
+      "id": "software.secondHand",
+      "model": "software",
+      "name": "Second hand",
+      "role": "display",
+      "roleStatus": "fact",
+      "valueStatus": "derived",
+      "sourceId": "fixed-timestep-author",
+      "statePath": "models.software.handAnglesDegrees.second",
+      "formula": "Angle = 360 × (nominal display time / hand period) modulo 360; second period 60 s, minute period 3,600 s, hour period 43,200 s. Later oscillator-rate changes alter when visible events occur and cause modeled drift.",
+      "unit": "degrees"
+    },
+    {
+      "id": "software.minuteHand",
+      "model": "software",
+      "name": "Minute hand",
+      "role": "display",
+      "roleStatus": "fact",
+      "valueStatus": "derived",
+      "sourceId": "fixed-timestep-author",
+      "statePath": "models.software.handAnglesDegrees.minute",
+      "formula": "Angle = 360 × (nominal display time / hand period) modulo 360; second period 60 s, minute period 3,600 s, hour period 43,200 s. Later oscillator-rate changes alter when visible events occur and cause modeled drift.",
+      "unit": "degrees"
+    },
+    {
+      "id": "software.hourHand",
+      "model": "software",
+      "name": "Hour hand",
+      "role": "display",
+      "roleStatus": "fact",
+      "valueStatus": "derived",
+      "sourceId": "fixed-timestep-author",
+      "statePath": "models.software.handAnglesDegrees.hour",
+      "formula": "Angle = 360 × (nominal display time / hand period) modulo 360; second period 60 s, minute period 3,600 s, hour period 43,200 s. Later oscillator-rate changes alter when visible events occur and cause modeled drift.",
+      "unit": "degrees"
+    }
+  ]
+}

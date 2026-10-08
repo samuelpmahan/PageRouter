@@ -1,0 +1,963 @@
+{
+  "schema": "capability-lab.independent.browser.v1",
+  "generatedAt": "2026-10-08T20:33:45.042Z",
+  "checks": [
+    {
+      "name": "served sources match recorded local bytes",
+      "status": "pass",
+      "observed": {
+        "files": 14,
+        "identity": "SHA-256 independent file/HTTP evidence; runtime source/version remain declared labels"
+      }
+    },
+    {
+      "name": "configured service plus browser budget snapshot",
+      "status": "pass"
+    },
+    {
+      "name": "real edited mean input changes answer",
+      "status": "pass",
+      "observed": {
+        "first": {
+          "value": 2.5
+        },
+        "changed": {
+          "value": 25
+        },
+        "replayed": true
+      }
+    },
+    {
+      "name": "higher-order recipe UI exposes real graph and trace",
+      "status": "pass",
+      "observed": {
+        "id": "composed.regressionDiagnostics",
+        "order": 4,
+        "traceRows": 24,
+        "receipt": {
+          "id": "composed.regressionDiagnostics",
+          "input": {
+            "matrix": [
+              [
+                1,
+                0
+              ],
+              [
+                1,
+                1
+              ],
+              [
+                1,
+                2
+              ]
+            ],
+            "vector": [
+              1,
+              3,
+              5
+            ]
+          },
+          "result": {
+            "coefficients": [
+              1.0000000000000002,
+              1.9999999999999998
+            ],
+            "predictions": [
+              1.0000000000000002,
+              3,
+              5
+            ],
+            "rank": 2,
+            "residualMean": -7.401486830834377e-17,
+            "residualPopulationVariance": 1.0956401461402943e-32,
+            "residuals": [
+              -2.220446049250313e-16,
+              0,
+              0
+            ],
+            "solverResidualNorm": 2.220446049250313e-16
+          },
+          "trace": {
+            "id": "composed.regressionDiagnostics",
+            "order": 4,
+            "identity": {
+              "source": "capability-lab-browser",
+              "version": "0.1.0",
+              "kind": "declared"
+            },
+            "seed": null,
+            "inputCanonical": "{\"matrix\":[[1,0],[1,1],[1,2]],\"vector\":[1,3,5]}",
+            "inputHash": "fefba6cd658aafcc",
+            "resultCanonical": "{\"coefficients\":[1.0000000000000002,1.9999999999999998],\"predictions\":[1.0000000000000002,3,5],\"rank\":2,\"residualMean\":-7.401486830834377e-17,\"residualPopulationVariance\":1.0956401461402943e-32,\"residuals\":[-2.220446049250313e-16,0,0],\"solverResidualNorm\":2.220446049250313e-16}",
+            "resultHash": "2004985962e52569",
+            "randomDraws": 0,
+            "calls": [
+              {
+                "id": "linalg.leastSquares",
+                "order": 3,
+                "identity": {
+                  "source": "capability-lab-browser",
+                  "version": "0.1.0",
+                  "kind": "declared"
+                },
+                "seed": null,
+                "inputCanonical": "{\"matrix\":[[1,0],[1,1],[1,2]],\"vector\":[1,3,5]}",
+                "inputHash": "fefba6cd658aafcc",
+                "resultCanonical": "{\"rank\":2,\"residualNorm\":2.220446049250313e-16,\"residuals\":[-2.220446049250313e-16,0,0],\"solution\":[1.0000000000000002,1.9999999999999998]}",
+                "resultHash": "aa23f4d41f71b6ad",
+                "randomDraws": 0,
+                "calls": [
+                  {
+                    "id": "linalg.qr",
+                    "order": 2,
+                    "identity": {
+                      "source": "capability-lab-browser",
+                      "version": "0.1.0",
+                      "kind": "declared"
+                    },
+                    "seed": null,
+                    "inputCanonical": "{\"matrix\":[[1,0],[1,1],[1,2]],\"tolerance\":1e-12}",
+                    "inputHash": "07cd7c7591c7b42f",
+                    "resultCanonical": "{\"q\":[[-0.5773502691896257,0.7071067811865472],[-0.5773502691896257,1.6653345369377348e-16],[-0.5773502691896257,-0.7071067811865472]],\"r\":[[-1.7320508075688772,-1.7320508075688774],[0,-1.4142135623730943]],\"rank\":2}",
+                    "resultHash": "d78db09b1b8663d3",
+                    "randomDraws": 0,
+                    "calls": [
+                      {
+                        "id": "linalg.householderFactor",
+                        "order": 0,
+                        "identity": {
+                          "source": "capability-lab-browser",
+                          "version": "0.1.0",
+                          "kind": "declared"
+                        },
+                        "seed": null,
+                        "inputCanonical": "{\"matrix\":[[1,0],[1,1],[1,2]],\"tolerance\":1e-12}",
+                        "inputHash": "07cd7c7591c7b42f",
+                        "resultCanonical": "{\"q\":[[-0.5773502691896257,0.7071067811865472],[-0.5773502691896257,1.6653345369377348e-16],[-0.5773502691896257,-0.7071067811865472]],\"r\":[[-1.7320508075688772,-1.7320508075688774],[0,-1.4142135623730943]]}",
+                        "resultHash": "fd5d49bb4a02da01",
+                        "randomDraws": 0,
+                        "calls": []
+                      },
+                      {
+                        "id": "linalg.rank",
+                        "order": 1,
+                        "identity": {
+                          "source": "capability-lab-browser",
+                          "version": "0.1.0",
+                          "kind": "declared"
+                        },
+                        "seed": null,
+                        "inputCanonical": "{\"matrix\":[[1,0],[1,1],[1,2]],\"tolerance\":1e-12}",
+                        "inputHash": "07cd7c7591c7b42f",
+                        "resultCanonical": "2",
+                        "resultHash": "af63af4c8601a015",
+                        "randomDraws": 0,
+                        "calls": [
+                          {
+                            "id": "linalg.rowEchelon",
+                            "order": 0,
+                            "identity": {
+                              "source": "capability-lab-browser",
+                              "version": "0.1.0",
+                              "kind": "declared"
+                            },
+                            "seed": null,
+                            "inputCanonical": "{\"matrix\":[[1,0],[1,1],[1,2]],\"tolerance\":1e-12}",
+                            "inputHash": "07cd7c7591c7b42f",
+                            "resultCanonical": "{\"matrix\":[[1,0],[0,2],[0,0]],\"pivotColumns\":[0,1]}",
+                            "resultHash": "af73e92ea6d2faa1",
+                            "randomDraws": 0,
+                            "calls": []
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "id": "linalg.transpose",
+                    "order": 0,
+                    "identity": {
+                      "source": "capability-lab-browser",
+                      "version": "0.1.0",
+                      "kind": "declared"
+                    },
+                    "seed": null,
+                    "inputCanonical": "{\"matrix\":[[-0.5773502691896257,0.7071067811865472],[-0.5773502691896257,1.6653345369377348e-16],[-0.5773502691896257,-0.7071067811865472]]}",
+                    "inputHash": "f3fa51fdc549675c",
+                    "resultCanonical": "[[-0.5773502691896257,-0.5773502691896257,-0.5773502691896257],[0.7071067811865472,1.6653345369377348e-16,-0.7071067811865472]]",
+                    "resultHash": "c7be3b06be4da929",
+                    "randomDraws": 0,
+                    "calls": []
+                  },
+                  {
+                    "id": "linalg.matvec",
+                    "order": 1,
+                    "identity": {
+                      "source": "capability-lab-browser",
+                      "version": "0.1.0",
+                      "kind": "declared"
+                    },
+                    "seed": null,
+                    "inputCanonical": "{\"matrix\":[[-0.5773502691896257,-0.5773502691896257,-0.5773502691896257],[0.7071067811865472,1.6653345369377348e-16,-0.7071067811865472]],\"vector\":[1,3,5]}",
+                    "inputHash": "465e420a7af42f9c",
+                    "resultCanonical": "[-5.196152422706632,-2.828427124746188]",
+                    "resultHash": "c1fe2dc031308ca4",
+                    "randomDraws": 0,
+                    "calls": [
+                      {
+                        "id": "linalg.dot",
+                        "order": 0,
+                        "identity": {
+                          "source": "capability-lab-browser",
+                          "version": "0.1.0",
+                          "kind": "declared"
+                        },
+                        "seed": null,
+                        "inputCanonical": "{\"a\":[-0.5773502691896257,-0.5773502691896257,-0.5773502691896257],\"b\":[1,3,5]}",
+                        "inputHash": "58f96eda4579abe6",
+                        "resultCanonical": "-5.196152422706632",
+                        "resultHash": "cc14212b0184d9e3",
+                        "randomDraws": 0,
+                        "calls": []
+                      },
+                      {
+                        "id": "linalg.dot",
+                        "order": 0,
+                        "identity": {
+                          "source": "capability-lab-browser",
+                          "version": "0.1.0",
+                          "kind": "declared"
+                        },
+                        "seed": null,
+                        "inputCanonical": "{\"a\":[0.7071067811865472,1.6653345369377348e-16,-0.7071067811865472],\"b\":[1,3,5]}",
+                        "inputHash": "d8573d58e797a91a",
+                        "resultCanonical": "-2.828427124746188",
+                        "resultHash": "76c23a69ffdf06f4",
+                        "randomDraws": 0,
+                        "calls": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "linalg.backSubstitute",
+                    "order": 0,
+                    "identity": {
+                      "source": "capability-lab-browser",
+                      "version": "0.1.0",
+                      "kind": "declared"
+                    },
+                    "seed": null,
+                    "inputCanonical": "{\"matrix\":[[-1.7320508075688772,-1.7320508075688774],[0,-1.4142135623730943]],\"tolerance\":1e-12,\"vector\":[-5.196152422706632,-2.828427124746188]}",
+                    "inputHash": "5e44f9860a5ab9b0",
+                    "resultCanonical": "[1.0000000000000002,1.9999999999999998]",
+                    "resultHash": "7778bf1fc905e0f0",
+                    "randomDraws": 0,
+                    "calls": []
+                  },
+                  {
+                    "id": "linalg.matvec",
+                    "order": 1,
+                    "identity": {
+                      "source": "capability-lab-browser",
+                      "version": "0.1.0",
+                      "kind": "declared"
+                    },
+                    "seed": null,
+                    "inputCanonical": "{\"matrix\":[[1,0],[1,1],[1,2]],\"vector\":[1.0000000000000002,1.9999999999999998]}",
+                    "inputHash": "3f3ae145d6a8a8de",
+                    "resultCanonical": "[1.0000000000000002,3,5]",
+                    "resultHash": "6e053fa56caab8c4",
+                    "randomDraws": 0,
+                    "calls": [
+                      {
+                        "id": "linalg.dot",
+                        "order": 0,
+                        "identity": {
+                          "source": "capability-lab-browser",
+                          "version": "0.1.0",
+                          "kind": "declared"
+                        },
+                        "seed": null,
+                        "inputCanonical": "{\"a\":[1,0],\"b\":[1.0000000000000002,1.9999999999999998]}",
+                        "inputHash": "8cb3fcba713812c8",
+                        "resultCanonical": "1.0000000000000002",
+                        "resultHash": "8bd8ac7af93c5cf0",
+                        "randomDraws": 0,
+                        "calls": []
+                      },
+                      {
+                        "id": "linalg.dot",
+                        "order": 0,
+                        "identity": {
+                          "source": "capability-lab-browser",
+                          "version": "0.1.0",
+                          "kind": "declared"
+                        },
+                        "seed": null,
+                        "inputCanonical": "{\"a\":[1,1],\"b\":[1.0000000000000002,1.9999999999999998]}",
+                        "inputHash": "bf19810d31ade627",
+                        "resultCanonical": "3",
+                        "resultHash": "af63ae4c86019e62",
+                        "randomDraws": 0,
+                        "calls": []
+                      },
+                      {
+                        "id": "linalg.dot",
+                        "order": 0,
+                        "identity": {
+                          "source": "capability-lab-browser",
+                          "version": "0.1.0",
+                          "kind": "declared"
+                        },
+                        "seed": null,
+                        "inputCanonical": "{\"a\":[1,2],\"b\":[1.0000000000000002,1.9999999999999998]}",
+                        "inputHash": "704a49d15230d9ce",
+                        "resultCanonical": "5",
+                        "resultHash": "af63a84c86019430",
+                        "randomDraws": 0,
+                        "calls": []
+                      }
+                    ]
+                  },
+                  {
+                    "id": "linalg.vectorSubtract",
+                    "order": 0,
+                    "identity": {
+                      "source": "capability-lab-browser",
+                      "version": "0.1.0",
+                      "kind": "declared"
+                    },
+                    "seed": null,
+                    "inputCanonical": "{\"a\":[1,3,5],\"b\":[1.0000000000000002,3,5]}",
+                    "inputHash": "a0934fab87b54b80",
+                    "resultCanonical": "[-2.220446049250313e-16,0,0]",
+                    "resultHash": "1dde7addb2f0b12e",
+                    "randomDraws": 0,
+                    "calls": []
+                  },
+                  {
+                    "id": "linalg.norm",
+                    "order": 0,
+                    "identity": {
+                      "source": "capability-lab-browser",
+                      "version": "0.1.0",
+                      "kind": "declared"
+                    },
+                    "seed": null,
+                    "inputCanonical": "{\"vector\":[-2.220446049250313e-16,0,0]}",
+                    "inputHash": "0c3e7cd31c7269d7",
+                    "resultCanonical": "2.220446049250313e-16",
+                    "resultHash": "aa664d5abf4b71b7",
+                    "randomDraws": 0,
+                    "calls": []
+                  }
+                ]
+              },
+              {
+                "id": "linalg.matvec",
+                "order": 1,
+                "identity": {
+                  "source": "capability-lab-browser",
+                  "version": "0.1.0",
+                  "kind": "declared"
+                },
+                "seed": null,
+                "inputCanonical": "{\"matrix\":[[1,0],[1,1],[1,2]],\"vector\":[1.0000000000000002,1.9999999999999998]}",
+                "inputHash": "3f3ae145d6a8a8de",
+                "resultCanonical": "[1.0000000000000002,3,5]",
+                "resultHash": "6e053fa56caab8c4",
+                "randomDraws": 0,
+                "calls": [
+                  {
+                    "id": "linalg.dot",
+                    "order": 0,
+                    "identity": {
+                      "source": "capability-lab-browser",
+                      "version": "0.1.0",
+                      "kind": "declared"
+                    },
+                    "seed": null,
+                    "inputCanonical": "{\"a\":[1,0],\"b\":[1.0000000000000002,1.9999999999999998]}",
+                    "inputHash": "8cb3fcba713812c8",
+                    "resultCanonical": "1.0000000000000002",
+                    "resultHash": "8bd8ac7af93c5cf0",
+                    "randomDraws": 0,
+                    "calls": []
+                  },
+                  {
+                    "id": "linalg.dot",
+                    "order": 0,
+                    "identity": {
+                      "source": "capability-lab-browser",
+                      "version": "0.1.0",
+                      "kind": "declared"
+                    },
+                    "seed": null,
+                    "inputCanonical": "{\"a\":[1,1],\"b\":[1.0000000000000002,1.9999999999999998]}",
+                    "inputHash": "bf19810d31ade627",
+                    "resultCanonical": "3",
+                    "resultHash": "af63ae4c86019e62",
+                    "randomDraws": 0,
+                    "calls": []
+                  },
+                  {
+                    "id": "linalg.dot",
+                    "order": 0,
+                    "identity": {
+                      "source": "capability-lab-browser",
+                      "version": "0.1.0",
+                      "kind": "declared"
+                    },
+                    "seed": null,
+                    "inputCanonical": "{\"a\":[1,2],\"b\":[1.0000000000000002,1.9999999999999998]}",
+                    "inputHash": "704a49d15230d9ce",
+                    "resultCanonical": "5",
+                    "resultHash": "af63a84c86019430",
+                    "randomDraws": 0,
+                    "calls": []
+                  }
+                ]
+              },
+              {
+                "id": "linalg.vectorSubtract",
+                "order": 0,
+                "identity": {
+                  "source": "capability-lab-browser",
+                  "version": "0.1.0",
+                  "kind": "declared"
+                },
+                "seed": null,
+                "inputCanonical": "{\"a\":[1,3,5],\"b\":[1.0000000000000002,3,5]}",
+                "inputHash": "a0934fab87b54b80",
+                "resultCanonical": "[-2.220446049250313e-16,0,0]",
+                "resultHash": "1dde7addb2f0b12e",
+                "randomDraws": 0,
+                "calls": []
+              },
+              {
+                "id": "statistics.mean",
+                "order": 0,
+                "identity": {
+                  "source": "capability-lab-browser",
+                  "version": "0.1.0",
+                  "kind": "declared"
+                },
+                "seed": null,
+                "inputCanonical": "{\"values\":[-2.220446049250313e-16,0,0]}",
+                "inputHash": "e974a305df99c9e4",
+                "resultCanonical": "{\"value\":-7.401486830834377e-17}",
+                "resultHash": "d1bfbc96729053fc",
+                "randomDraws": 0,
+                "calls": []
+              },
+              {
+                "id": "statistics.variance",
+                "order": 0,
+                "identity": {
+                  "source": "capability-lab-browser",
+                  "version": "0.1.0",
+                  "kind": "declared"
+                },
+                "seed": null,
+                "inputCanonical": "{\"denominator\":\"population\",\"values\":[-2.220446049250313e-16,0,0]}",
+                "inputHash": "b270e7a10cd677c5",
+                "resultCanonical": "{\"value\":1.0956401461402943e-32}",
+                "resultHash": "44146a020707fa38",
+                "randomDraws": 0,
+                "calls": []
+              }
+            ]
+          },
+          "identity": {
+            "source": "capability-lab-browser",
+            "version": "0.1.0",
+            "kind": "declared"
+          },
+          "replay": {
+            "seed": null,
+            "inputCanonical": "{\"matrix\":[[1,0],[1,1],[1,2]],\"vector\":[1,3,5]}",
+            "resultCanonical": "{\"coefficients\":[1.0000000000000002,1.9999999999999998],\"predictions\":[1.0000000000000002,3,5],\"rank\":2,\"residualMean\":-7.401486830834377e-17,\"residualPopulationVariance\":1.0956401461402943e-32,\"residuals\":[-2.220446049250313e-16,0,0],\"solverResidualNorm\":2.220446049250313e-16}",
+            "inputHash": "fefba6cd658aafcc",
+            "resultHash": "2004985962e52569",
+            "calls": 24,
+            "tracePayloadBytes": 9347
+          }
+        }
+      }
+    },
+    {
+      "name": "Node and browser recipe canonical output agree",
+      "status": "pass"
+    },
+    {
+      "name": "PCA changed observations preserve axes and shift means",
+      "status": "pass",
+      "observed": {
+        "original": {
+          "covarianceMatrix": [
+            [
+              2.6666666666666665,
+              0
+            ],
+            [
+              0,
+              0.6666666666666666
+            ]
+          ],
+          "eigenvalues": [
+            2.6666666666666665,
+            0.6666666666666666
+          ],
+          "eigenvectors": [
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "iterations": 0,
+          "means": [
+            0,
+            0
+          ],
+          "scores": [
+            [
+              -2,
+              0
+            ],
+            [
+              0,
+              -1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0
+            ]
+          ]
+        },
+        "changed": {
+          "covarianceMatrix": [
+            [
+              2.666666666666666,
+              0
+            ],
+            [
+              0,
+              0.6666666666666666
+            ]
+          ],
+          "eigenvalues": [
+            2.666666666666666,
+            0.6666666666666666
+          ],
+          "eigenvectors": [
+            [
+              1,
+              0
+            ],
+            [
+              0,
+              1
+            ]
+          ],
+          "iterations": 0,
+          "means": [
+            10,
+            20
+          ],
+          "scores": [
+            [
+              -2,
+              0
+            ],
+            [
+              0,
+              -1
+            ],
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              0
+            ]
+          ]
+        },
+        "replayed": true,
+        "differentInputTolerance": {
+          "absolute": 1e-10,
+          "relative": 1e-10
+        },
+        "sameInputReplay": "exact canonical and hash comparison"
+      }
+    },
+    {
+      "name": "domain visualization responds to new observations",
+      "status": "pass",
+      "observed": {
+        "input": {
+          "edges": [
+            0,
+            2,
+            3
+          ],
+          "values": [
+            0,
+            1,
+            2,
+            3
+          ]
+        },
+        "chartCount": 1
+      }
+    },
+    {
+      "name": "invalid domain input visibly fails and disables replay",
+      "status": "pass"
+    },
+    {
+      "name": "malformed and oversized editor inputs bounded",
+      "status": "pass"
+    },
+    {
+      "name": "mobile edit-run layout usable",
+      "status": "pass",
+      "observed": {
+        "body": 390,
+        "view": 390
+      }
+    },
+    {
+      "name": "after interactions combined managed budget snapshot",
+      "status": "pass"
+    },
+    {
+      "name": "browser source files remained unchanged",
+      "status": "pass"
+    },
+    {
+      "name": "browser console/page errors absent",
+      "status": "pass"
+    }
+  ],
+  "screenshots": [
+    {
+      "label": "recipe-trace",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/browser-2026-10-08T20-33-45-041Z-recipe-trace.png"
+    },
+    {
+      "label": "recipe-result",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/browser-2026-10-08T20-33-45-041Z-recipe-result.png"
+    },
+    {
+      "label": "recipe-visual",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/browser-2026-10-08T20-33-45-041Z-recipe-visual.png"
+    },
+    {
+      "label": "pca-visual",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/browser-2026-10-08T20-33-45-041Z-pca-visual.png"
+    },
+    {
+      "label": "histogram",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/browser-2026-10-08T20-33-45-041Z-histogram.png"
+    },
+    {
+      "label": "mobile",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/browser-2026-10-08T20-33-45-041Z-mobile.png"
+    }
+  ],
+  "errors": [],
+  "resourceSnapshots": [
+    {
+      "label": "loaded",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/browser-resource-2026-10-08T20-33-45-041Z-loaded.json",
+      "managedObservation": {
+        "groups": [
+          {
+            "rootPid": 57161,
+            "present": true,
+            "rssBytes": 600629248,
+            "members": [
+              {
+                "pid": 57161,
+                "name": "MainThread",
+                "parentPid": 38893,
+                "rssBytes": 135942144,
+                "threads": 11,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57173,
+                "name": "chrome-headless",
+                "parentPid": 57161,
+                "rssBytes": 86736896,
+                "threads": 24,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57175,
+                "name": "chrome-headless",
+                "parentPid": 57173,
+                "rssBytes": 40894464,
+                "threads": 1,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57176,
+                "name": "chrome-headless",
+                "parentPid": 57173,
+                "rssBytes": 41287680,
+                "threads": 1,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57193,
+                "name": "chrome-headless",
+                "parentPid": 57175,
+                "rssBytes": 69533696,
+                "threads": 27,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57195,
+                "name": "chrome-headless",
+                "parentPid": 57173,
+                "rssBytes": 66977792,
+                "threads": 11,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57237,
+                "name": "chrome-headless",
+                "parentPid": 57176,
+                "rssBytes": 138158080,
+                "threads": 18,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57256,
+                "name": "python3",
+                "parentPid": 57161,
+                "rssBytes": 21098496,
+                "threads": 1,
+                "state": "R (running)"
+              }
+            ]
+          },
+          {
+            "rootPid": 27734,
+            "present": true,
+            "rssBytes": 68665344,
+            "members": [
+              {
+                "pid": 27734,
+                "name": "MainThread",
+                "parentPid": 38893,
+                "rssBytes": 68665344,
+                "threads": 11,
+                "state": "S (sleeping)"
+              }
+            ]
+          }
+        ],
+        "combinedRssBytes": 669294592,
+        "budgetBytes": 2147483648,
+        "belowBudgetAtSnapshot": true,
+        "enforcement": "observed snapshot only; no operating-system hard limit established",
+        "peakEstablished": false
+      }
+    },
+    {
+      "label": "exercised",
+      "path": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/browser-resource-2026-10-08T20-33-45-041Z-exercised.json",
+      "managedObservation": {
+        "groups": [
+          {
+            "rootPid": 57161,
+            "present": true,
+            "rssBytes": 738062336,
+            "members": [
+              {
+                "pid": 57161,
+                "name": "MainThread",
+                "parentPid": 38893,
+                "rssBytes": 171384832,
+                "threads": 11,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57173,
+                "name": "chrome-headless",
+                "parentPid": 57161,
+                "rssBytes": 90333184,
+                "threads": 24,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57175,
+                "name": "chrome-headless",
+                "parentPid": 57173,
+                "rssBytes": 40894464,
+                "threads": 1,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57176,
+                "name": "chrome-headless",
+                "parentPid": 57173,
+                "rssBytes": 41287680,
+                "threads": 1,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57193,
+                "name": "chrome-headless",
+                "parentPid": 57175,
+                "rssBytes": 86499328,
+                "threads": 28,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57195,
+                "name": "chrome-headless",
+                "parentPid": 57173,
+                "rssBytes": 66977792,
+                "threads": 11,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57237,
+                "name": "chrome-headless",
+                "parentPid": 57176,
+                "rssBytes": 219459584,
+                "threads": 18,
+                "state": "S (sleeping)"
+              },
+              {
+                "pid": 57258,
+                "name": "python3",
+                "parentPid": 57161,
+                "rssBytes": 21225472,
+                "threads": 1,
+                "state": "R (running)"
+              }
+            ]
+          },
+          {
+            "rootPid": 27734,
+            "present": true,
+            "rssBytes": 68665344,
+            "members": [
+              {
+                "pid": 27734,
+                "name": "MainThread",
+                "parentPid": 38893,
+                "rssBytes": 68665344,
+                "threads": 11,
+                "state": "S (sleeping)"
+              }
+            ]
+          }
+        ],
+        "combinedRssBytes": 806727680,
+        "budgetBytes": 2147483648,
+        "belowBudgetAtSnapshot": true,
+        "enforcement": "observed snapshot only; no operating-system hard limit established",
+        "peakEstablished": false
+      }
+    }
+  ],
+  "runtime": {
+    "url": "http://127.0.0.1:4173",
+    "playwrightModule": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/work/toolteam/browser/node_modules/playwright/index.mjs",
+    "chromiumExecutable": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/work/toolteam/browser/browsers/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell",
+    "browserVersion": "156.0.8078.4",
+    "servicePid": 27734
+  },
+  "sourceFiles": [
+    {
+      "path": "index.html",
+      "bytes": 6669,
+      "sha256": "26b580a8b787c9f62f71218182b40edf2bf58676807e0ec65986f253bdc11c06"
+    },
+    {
+      "path": "ui/app.mjs",
+      "bytes": 32480,
+      "sha256": "e13d60f65578f2fc4e09b21337971d7e5d19acdfedea404f4ea032b5505f82c7"
+    },
+    {
+      "path": "ui/style.css",
+      "bytes": 33500,
+      "sha256": "551c94e5cf757ef9aa6b1ae435d177eac5401e8aa5c0fb966cc5f409cf7cacc1"
+    },
+    {
+      "path": "ui/statistics.mjs",
+      "bytes": 6481,
+      "sha256": "078f1c09855dee61c510590f94c6d0f484f4b35423594dd9bdaedbd87c36661e"
+    },
+    {
+      "path": "ui/linalg.mjs",
+      "bytes": 8703,
+      "sha256": "731da2caf818b79889955daeda864c30099714c5d89723820fc560a42f885ac4"
+    },
+    {
+      "path": "src/runtime/index.mjs",
+      "bytes": 28487,
+      "sha256": "dea6bdac9b338bf4a75e547f4daafaa3bbcd208d2d428efa5944335f9712ba76"
+    },
+    {
+      "path": "src/statistics/index.mjs",
+      "bytes": 400,
+      "sha256": "b9368e7723bc037ffa37e5fdfbb3fd9583763199cb1b92940623efbe85c36093"
+    },
+    {
+      "path": "src/statistics/core.mjs",
+      "bytes": 25590,
+      "sha256": "8db4cd8a2d62d117df56526ef044e351439ad56e6c14443e5187952299151f5d"
+    },
+    {
+      "path": "src/statistics/order.mjs",
+      "bytes": 15587,
+      "sha256": "1557d277697cbc9854420aae788768f8e569f4c39f0ead6fd49a760c0b105f93"
+    },
+    {
+      "path": "src/statistics/inference.mjs",
+      "bytes": 9421,
+      "sha256": "fc25a34f5e99ea497faae3198ae44c2b6dabc896dd225fc1f5bf87337a9f9080"
+    },
+    {
+      "path": "src/linalg/index.mjs",
+      "bytes": 301,
+      "sha256": "8a5b61ce3ece696fb5cf2f29155fc1ed5183241db2f0be8d3dae0624bf59841e"
+    },
+    {
+      "path": "src/linalg/basics.mjs",
+      "bytes": 15689,
+      "sha256": "c65dc557c91f3b8a9ab2015bf9c887d10c3fd16de212dba19fe506d476cc3bd4"
+    },
+    {
+      "path": "src/linalg/numerics.mjs",
+      "bytes": 33814,
+      "sha256": "eaf20f6201841923807ebb19b677f7853ea667dbebca18617ab93afa06d69264"
+    },
+    {
+      "path": "src/composed/index.mjs",
+      "bytes": 11647,
+      "sha256": "f34b92d9d453c67e5fde8e3b3b6d8b096f2c74871b2bd97e39cd61190ae62d3b"
+    }
+  ],
+  "summary": {
+    "pass": 13,
+    "fail": 0,
+    "observedBudgetOnly": true,
+    "osHardLimitEstablished": false
+  }
+}

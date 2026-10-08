@@ -1,0 +1,18 @@
+# Independent watch source-role checks
+
+Primary references were opened on 2026-10-08. These support component roles and the limits below; hand-derived count fixtures are separate from manufacturer claims. No manufacturer artwork or dimensions are used.
+
+| Source | Supported role or boundary | Required product interpretation |
+| --- | --- | --- |
+| [Grand Seiko mechanical explanation](https://www.grand-seiko.com/uk-en/collections/movement/mechanical) | An unwinding mainspring supplies power; the escape wheel, pallet fork, balance and hairspring regulate motion. The comparison table includes 28,800 vibrations/hour at 4 Hz. | Mainspring is stored energy; balance/hairspring supply rhythm. Four full oscillations give eight defined beats/second. Rates and component structure vary by caliber. |
+| [Seiko educational quartz explanation](https://www.seiko.co.jp/csr/toki-iku/tokiq-nazotoki/) | The battery powers a nominal 32,768-Hz reference; fifteen successive halvings give a one-second signal that drives a step motor and gears. The page explicitly qualifies the frequency as common rather than universal. | Crystal cycles, divider output, motor commands and hand steps are separate counts. The crystal is a frequency reference; the battery supplies energy. |
+| [Grand Seiko quartz explanation](https://www.grand-seiko.com/us-en/collections/movement/quartz) | Battery power, oscillator reference, IC timing and motor-driven gears are distinct. The 9F motor uses two successive pulses/steps each second. | A generic one-command-per-second model must not claim to reproduce the 9F twin-pulse mechanism. |
+| [KHK gear manufacturer PDF](https://khkgears.net/pdf/internal-tech.pdf) | Tooth counts and rotational speed define ratio magnitude. The displayed direction illustration concerns internal gears. | For a declared external pair, opposite rotation direction is a geometric derivation; the magnitude follows driver-teeth/driven-teeth. Chosen teeth are teaching parameters. |
+| [Node timer documentation](https://nodejs.org/api/timers.html) | Timer callback timing is not exact or guaranteed at a prescribed instant. | Browser/host callback pacing does not define authoritative watch logical time or physical accuracy. |
+| [MDN requestAnimationFrame documentation](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame) | Render cadence follows display scheduling and callbacks are commonly paused for hidden tabs. | Frames observe model state. Hidden-tab autoplay uses an explicit freeze policy, retained as a control action. |
+| [MDN performance.now documentation](https://developer.mozilla.org/en-US/docs/Web/API/Performance/now) | The performance clock supplies monotonic elapsed duration, distinct from a civil calendar clock. | Scheduling observations use elapsed units and a bounded buffer; they are not physical watch measurements. |
+| [Original fixed-timestep explanation](https://gafferongames.com/post/fix_your_timestep/) | A chosen fixed simulation step separates state progression from display timing. | 256 software updates/second is this teaching model's declared design choice, not an industry watch specification. |
+
+Escapement lock/release/impulse phase windows and all component coordinates remain explicitly schematic. The sources above do not validate exact contact geometry, spring dynamics, torque, wear, accuracy certification or real energy magnitudes.
+
+The independent grader checks visible geometry part IDs against component labels, actual state paths, units, source references and claim status. It also checks that the energy overlay starts from mainspring/battery rather than oscillator parts, and that selection/explosion preserve the full mechanism state and event cursor.

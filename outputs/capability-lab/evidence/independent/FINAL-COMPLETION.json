@@ -1,0 +1,113 @@
+{
+  "schema": "capability-lab.independent.final-completion.v1",
+  "status": "PASS",
+  "archiveSha256": "7c74478d20207b057772cc76477bd1e7608e8113ca1de52e6ead61c49e5f331e",
+  "archiveBytes": 645745,
+  "actualDeliveredHelperSha256": "3ca0eab7a4a8e8aeb5f1e04e7f166855b2f9e889b75166acca6c177917a1e72e",
+  "actualDeliveredHelperExecuted": true,
+  "staging": "/mnt/d/somefile/capability-lab/fresh-extractions/20261008T205602974138Z",
+  "manifestMembersVerifiedBeforeExecution": 134,
+  "postExecutionImmutableMembersUnchanged": 130,
+  "knownRegeneratedDiagnostics": [
+    {
+      "path": "outputs/capability-lab/evidence/independent/gate-latest.json",
+      "capturedSha256": "ce635a72a04571b34fba27e8ed9cd272de861b14852a2f2d5021932b4d4ea7a4",
+      "generatedSha256": "007d61f13995e64eb9849ee10d16df2f61aab84d870c383c4acf931407b883af",
+      "retainedGeneratedReceipt": "/mnt/d/somefile/capability-lab/fresh-extractions/20261008T205602974138Z/verification-evidence/delivered-generated-gate-latest.json",
+      "reason": "Delivered foundation verifier writes its own output directory; this snapshot receipt is a regenerated diagnostic, not product source."
+    },
+    {
+      "path": "outputs/capability-lab/evidence/independent/watch-gate-latest.json",
+      "capturedSha256": "a9308abe45f07dc61917480493006438dde5d8b39748b174174012c9ce89a98d",
+      "generatedSha256": "f430d29ebfdb3e873f1ee8f80ff3f226cffb395ca87a152295820c6e7c53a498",
+      "retainedGeneratedReceipt": "/mnt/d/somefile/capability-lab/fresh-extractions/20261008T205602974138Z/verification-evidence/delivered-generated-watch-gate-latest.json",
+      "reason": "Delivered foundation verifier writes its own output directory; this snapshot receipt is a regenerated diagnostic, not product source."
+    }
+  ],
+  "nodeGrade": {
+    "tests": 271,
+    "pass": 271,
+    "fail": 0
+  },
+  "checks": [
+    {
+      "name": "immutable candidate checksum",
+      "status": "pass"
+    },
+    {
+      "name": "fresh extraction and all manifest hashes",
+      "status": "pass"
+    },
+    {
+      "name": "zero-dependency-nested-Node-tests",
+      "status": "pass"
+    },
+    {
+      "name": "fresh-source-independent-gate",
+      "status": "pass"
+    },
+    {
+      "name": "fresh-source-independent-watch-gate",
+      "status": "pass"
+    },
+    {
+      "name": "fresh-source-independent-explain-gate",
+      "status": "pass"
+    },
+    {
+      "name": "fresh-source-independent-ML-mathematics",
+      "status": "pass"
+    },
+    {
+      "name": "fresh HTTP source/UI/catalog bytes",
+      "status": "pass"
+    },
+    {
+      "name": "fresh-delivered-foundation-browser",
+      "status": "pass"
+    },
+    {
+      "name": "fresh-source-browser-import-and-watch-controls",
+      "status": "pass"
+    },
+    {
+      "name": "fresh-source-browser-ML-fit-edit-predict-evaluate",
+      "status": "pass"
+    },
+    {
+      "name": "fresh-delivered-explain-browser",
+      "status": "pass"
+    },
+    {
+      "name": "all immutable extracted source/test/catalog/docs hashes and original ZIP unchanged after replay",
+      "status": "pass"
+    }
+  ],
+  "resourceSnapshots": [
+    {
+      "track": "ML",
+      "label": "loaded",
+      "managedRssBytes": 702574592
+    },
+    {
+      "track": "ML",
+      "label": "exercised",
+      "managedRssBytes": 886460416
+    },
+    {
+      "track": "Explain",
+      "label": "loaded",
+      "managedRssBytes": 689807360
+    },
+    {
+      "track": "Explain",
+      "label": "exercised",
+      "managedRssBytes": 956063744
+    }
+  ],
+  "resourceScope": "Fresh configured Lab HTTP service plus verifier Node/Chromium; snapshot observations only, no lifetime-peak or OS-hard-limit claim.",
+  "fullReceipt": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/outputs/capability-lab/evidence/independent/fresh-extraction-20261008T205602974138Z.json",
+  "fullReceiptSha256": "085fa0d1492da5b7a0beb8accc12223102ca45974f3d0b6d4d78aba5f5e7733f",
+  "fullReceiptBytes": 736275,
+  "rootGoalClosure": "Root decision follows this authoritative delivered-helper pass."
+}

@@ -1,0 +1,679 @@
+{
+  "schema": "capability-lab.independent.stage-archive.v2",
+  "generatedAt": "2026-10-08T20:53:44.590531+00:00",
+  "stage": "explain",
+  "futureStages": {},
+  "candidate": true,
+  "freshExtractionReplay": "not performed",
+  "wholeGoalStatusAtCapture": "root goal active; final delivered-archive reconstruction and goal closure pending",
+  "attemptFailures": [],
+  "status": "stable source candidate",
+  "foundationAcceptance": "root accepted prior mathematical and browser gates",
+  "watchEvidence": "independent watch mathematical/API and browser gates passed; root accepted watches",
+  "MLEvidence": "independent math/leakage/retention and real-browser gates passed; root accepted ML",
+  "ExplainEvidence": "current independent arithmetic/grounding/watch-context and all-track browser gates passed; final root acceptance and delivered-archive reconstruction remain distinct",
+  "archivePolicy": "source/test/catalog/docs/coordination plus latest small receipts; no screenshots, old evidence, dependencies or later-stage implementation",
+  "acceptedSourceHashesMatched": 38,
+  "members": [
+    {
+      "path": "outputs/capability-lab/ACCEPTANCE.md",
+      "bytes": 3819,
+      "sha256": "898d249a6ab539b1886306260a87ca264e3acfdc7b02216028fa8905afb3e277"
+    },
+    {
+      "path": "outputs/capability-lab/CONTRACT.md",
+      "bytes": 7300,
+      "sha256": "03af6dd201368eff52f3cbc0a79a78474e005f51aba1d1a16f76998098a25fa7"
+    },
+    {
+      "path": "outputs/capability-lab/EXPLAIN-CONTRACT.md",
+      "bytes": 6551,
+      "sha256": "88c490896b84051128eac3110f6cd6cfb4fa0db722b0f31cc692f1e6cbedfd71"
+    },
+    {
+      "path": "outputs/capability-lab/LEARNING-CONTRACT.md",
+      "bytes": 4302,
+      "sha256": "73a3a03b35bbbcd288187fb25a8ee5bd3635c4b8b811a7a13f5e903bbef179d3"
+    },
+    {
+      "path": "outputs/capability-lab/ML-CONTRACT.md",
+      "bytes": 5258,
+      "sha256": "3df329df415a396cd16df988d9ec12c06b19769664cbc398389c28fc462626da"
+    },
+    {
+      "path": "outputs/capability-lab/PLAN.md",
+      "bytes": 1779,
+      "sha256": "22c9b74298061824b6ce34ed998dd35f3dabb3a7d8fc5cc071bd8bed227e4f2d"
+    },
+    {
+      "path": "outputs/capability-lab/PROGRESS.md",
+      "bytes": 6038,
+      "sha256": "0377ef632e82ec3e9a83b4cf7e70e569baf8294a67812cbfa77fc8d94cbdedcd"
+    },
+    {
+      "path": "outputs/capability-lab/WATCH-CONTRACT.md",
+      "bytes": 5800,
+      "sha256": "fd199d996a09e8eb8ac30c1c0b7826b726022a4a945ad22ab53ba4aa36263d9d"
+    },
+    {
+      "path": "outputs/capability-lab/WATCH-HANDOFF.md",
+      "bytes": 1788,
+      "sha256": "1224401610ad02fc54522b60d62dc22206b2e2febb8b683bfc46a18239199b86"
+    },
+    {
+      "path": "outputs/capability-lab/catalog/composed.json",
+      "bytes": 16122,
+      "sha256": "8cc8dbd9f698fd1a29492f93907529ab98419898fbb63b2743c3e7507d8c4912"
+    },
+    {
+      "path": "outputs/capability-lab/catalog/linalg.json",
+      "bytes": 53999,
+      "sha256": "5983f911523738f48f1a53ac4a4522fe13b8e4ded16253351cda1af389d6d17d"
+    },
+    {
+      "path": "outputs/capability-lab/catalog/statistics.json",
+      "bytes": 47157,
+      "sha256": "ce0a7520160e01fa12250dac38384459008eabd3db1fb2ee26323c9eca6450fa"
+    },
+    {
+      "path": "outputs/capability-lab/catalog/watch-mechanisms.json",
+      "bytes": 17547,
+      "sha256": "61ff7447036f8dbb1b146abaed65e3f6eafb7478df845713d8d3d543b4bf429b"
+    },
+    {
+      "path": "outputs/capability-lab/docs/explain-linalg.md",
+      "bytes": 11698,
+      "sha256": "0dc3de8e4d7793e28f5298483d3ad6053ac6dea69bd482e7b6bcf81e7bc83b05"
+    },
+    {
+      "path": "outputs/capability-lab/docs/explain-statistics.md",
+      "bytes": 6756,
+      "sha256": "03f23fd595a823ed07a288a1c4d86f858cd686fa5a55c096ed9d987b61747435"
+    },
+    {
+      "path": "outputs/capability-lab/docs/explain-workbench.md",
+      "bytes": 5940,
+      "sha256": "fb724f34452959547a9dd5a7faf41ab7081118b6674acd691930772be0a9c829"
+    },
+    {
+      "path": "outputs/capability-lab/docs/linalg.md",
+      "bytes": 5980,
+      "sha256": "93f2d625a6b878067bd5d7c4c6e4439baeea0dff43fb413cf4b22e689c7e3263"
+    },
+    {
+      "path": "outputs/capability-lab/docs/ml-linalg.md",
+      "bytes": 7990,
+      "sha256": "07dc5bd9fe476bf512dadf1fe8b6f98d3bcb39ae1de3cc29bc33daea8ae9bfd1"
+    },
+    {
+      "path": "outputs/capability-lab/docs/ml-statistics.md",
+      "bytes": 8287,
+      "sha256": "953a37ae6cbf5ab39e89ffcaf4e7a738312519469e6ca564c1a279bd5949de22"
+    },
+    {
+      "path": "outputs/capability-lab/docs/ml-workbench.md",
+      "bytes": 7133,
+      "sha256": "0769567445cbb789ff305c6025aa560ae06c4447d5b88d85b4b6d864fb93a647"
+    },
+    {
+      "path": "outputs/capability-lab/docs/statistics.md",
+      "bytes": 7452,
+      "sha256": "1f8a2b660701ea1414da235dd86ddf0af8b83d0e452cd25cf2c6c215fd312aff"
+    },
+    {
+      "path": "outputs/capability-lab/docs/team-linalg-delegation.jsonl",
+      "bytes": 25196,
+      "sha256": "6b51c112fab3a31d4c2f26d9f11bbd62b7130cdd7895d5cf496fedceeeea7545"
+    },
+    {
+      "path": "outputs/capability-lab/docs/team-statistics-delegation.jsonl",
+      "bytes": 17557,
+      "sha256": "05312ba1345a7fbfad0f0c5cd90543b4e451180905554dcd11202bae68b200b5"
+    },
+    {
+      "path": "outputs/capability-lab/docs/team-workbench-delegation.jsonl",
+      "bytes": 23653,
+      "sha256": "7effc05185a4ab454c19f93778e52e89d28b22f96230757061d02fe64f1fa0bc"
+    },
+    {
+      "path": "outputs/capability-lab/docs/watch-mechanisms.md",
+      "bytes": 7026,
+      "sha256": "14abcb6a6d446538c93c11fac1c8a0516cefc264af167a0bfa882fe64335179c"
+    },
+    {
+      "path": "outputs/capability-lab/docs/watch-transport.md",
+      "bytes": 7177,
+      "sha256": "c866ea9d8c6c8bb37af15dea6491c76e6aae6f6c6cebada8f8abf8ee0876f824"
+    },
+    {
+      "path": "outputs/capability-lab/docs/watches-workbench.md",
+      "bytes": 7237,
+      "sha256": "b893841a9d8c353edf59b50dff2757a5b86169ed352ebf2200defb4b2bdf257c"
+    },
+    {
+      "path": "outputs/capability-lab/docs/workbench.md",
+      "bytes": 6513,
+      "sha256": "4778e32fc8a9492bd0e234ae6fe178b173bd6f8cca6070782bf3edf06f3fccf6"
+    },
+    {
+      "path": "outputs/capability-lab/evidence/independent/browser-latest.json",
+      "bytes": 34116,
+      "sha256": "c6c559f9d0456fab113a73507bc520464a8225e33bad9f3c24ef387d345948c8"
+    },
+    {
+      "path": "outputs/capability-lab/evidence/independent/counterexamples.md",
+      "bytes": 4594,
+      "sha256": "aa42f1a0f64656cf14906e6c8bf7f7cb9cd447bc364a26cc9c6875436ebf053e"
+    },
+    {
+      "path": "outputs/capability-lab/evidence/independent/coverage.md",
+      "bytes": 5083,
+      "sha256": "c7623ce5bb4af051794a04a391f6990bc739ee0c516d898689f7939015aec474"
+    },
+    {
+      "path": "outputs/capability-lab/evidence/independent/explain-browser-latest.json",
+      "bytes": 504802,
+      "sha256": "05ac1283b317a4784b648055394699688fd5ff1754929b649dc4c6c6091f7928"
+    },
+    {
+      "path": "outputs/capability-lab/evidence/independent/explain-gate-latest.json",
+      "bytes": 520392,
+      "sha256": "6957a24a9fea1dd61cfa6a6366747c580648d53838103623a4f7274f5c821601"
+    },
+    {
+      "path": "outputs/capability-lab/evidence/independent/full-goal-audit.md",
+      "bytes": 11176,
+      "sha256": "511c79cb896df8c4cb04b69358ce96e4c2ee7e7421a671e7137449e719cbb99b"
+    },
+    {
+      "path": "outputs/capability-lab/evidence/independent/gate-latest.json",
+      "bytes": 370613,
+      "sha256": "ce635a72a04571b34fba27e8ed9cd272de861b14852a2f2d5021932b4d4ea7a4"
+    },
+    {
+      "path": "outputs/capability-lab/evidence/independent/ml-browser-latest.json",
+      "bytes": 30168,
+      "sha256": "35d42bfbd3f994919ad996c249a09702c665ef33464df31b040c62c32615a805"
+    },
+    {
+      "path": "outputs/capability-lab/evidence/independent/ml-coverage.md",
+      "bytes": 4422,
+      "sha256": "06179d06e1d180b3a75ae05c27965bedb5301a7b24df97e2735628ef20ebc339"
+    },
+    {
+      "path": "outputs/capability-lab/evidence/independent/ml-gate-latest.json",
+      "bytes": 122301,
+      "sha256": "0391e34567a96c087de799c33df65f4aa6d2bee75a5ebb83b8a572d519667692"
+    },
+    {
+      "path": "outputs/capability-lab/evidence/independent/watch-browser-latest.json",
+      "bytes": 20208,
+      "sha256": "3321846cebccd7512bfee7ff5e2bcac7dbd8b87bb7bfbfc0e1e28a911df247fd"
+    },
+    {
+      "path": "outputs/capability-lab/evidence/independent/watch-gate-latest.json",
+      "bytes": 54139,
+      "sha256": "a9308abe45f07dc61917480493006438dde5d8b39748b174174012c9ce89a98d"
+    },
+    {
+      "path": "outputs/capability-lab/evidence/independent/watch-sources.md",
+      "bytes": 3734,
+      "sha256": "cac9e9c20e7b0fed4612fef717b81e1e7f6d315feb4ce1e017cd077c0577fd20"
+    },
+    {
+      "path": "outputs/capability-lab/evidence/root/final-grade.json",
+      "bytes": 651,
+      "sha256": "869505005c85a4c19bc4b9ddc841c71b3ffee319f1fc874320ae56157493ede9"
+    },
+    {
+      "path": "outputs/capability-lab/index.html",
+      "bytes": 6669,
+      "sha256": "26b580a8b787c9f62f71218182b40edf2bf58676807e0ec65986f253bdc11c06"
+    },
+    {
+      "path": "outputs/capability-lab/scripts/delegation-report.mjs",
+      "bytes": 7683,
+      "sha256": "559a0d2e263e24fc355fded35d6962fbeb455c9e0183703faccdeb1e752d1f46"
+    },
+    {
+      "path": "outputs/capability-lab/scripts/verify-all.mjs",
+      "bytes": 1011,
+      "sha256": "bfd23e050c63b1fb04ae16b5c837443a03e849cfedf612c79ef9ebe286f2d790"
+    },
+    {
+      "path": "outputs/capability-lab/scripts/verify-browser.mjs",
+      "bytes": 7527,
+      "sha256": "999ca1b6538567d90ad320fbb70e36288f1b44e6cbcb0e38b90abef9229d941f"
+    },
+    {
+      "path": "outputs/capability-lab/scripts/verify-explain.mjs",
+      "bytes": 15760,
+      "sha256": "7a098475dddda2cba2944174442ef2a02a8a5623bd69eaf4640e1cd1fbef520d"
+    },
+    {
+      "path": "outputs/capability-lab/scripts/verify-ml.mjs",
+      "bytes": 19787,
+      "sha256": "017b5970326c520611e4094265fd5d7f5d271e02380a3ce1c94e396f2f65d049"
+    },
+    {
+      "path": "outputs/capability-lab/scripts/verify-watches.mjs",
+      "bytes": 15759,
+      "sha256": "0a590f8e594c87b4213cf54abb5aacb5c657d8d5a695392dbeff878e6eb804ad"
+    },
+    {
+      "path": "outputs/capability-lab/serve.mjs",
+      "bytes": 1977,
+      "sha256": "767308288535a36e8fdd492a87602ca29e6761d56c97a46127ddf0d3ef2e2e80"
+    },
+    {
+      "path": "outputs/capability-lab/src/composed/index.mjs",
+      "bytes": 11647,
+      "sha256": "f34b92d9d453c67e5fde8e3b3b6d8b096f2c74871b2bd97e39cd61190ae62d3b"
+    },
+    {
+      "path": "outputs/capability-lab/src/explain/classification.mjs",
+      "bytes": 21758,
+      "sha256": "1ebbdcb513b20931319f23e4e0ac4517ebc3c044ee875a6d67761f333afdce1f"
+    },
+    {
+      "path": "outputs/capability-lab/src/explain/clustering.mjs",
+      "bytes": 13293,
+      "sha256": "75a7690eff5ec7a48abeaa2a251c99f18e14f516549bc52ae0f9aa45a605df9e"
+    },
+    {
+      "path": "outputs/capability-lab/src/explain/grounding.mjs",
+      "bytes": 33572,
+      "sha256": "588c162ab7eb3285cbcb38612b5fcd1f041bc4932f5ac508ff2ab203a9de194d"
+    },
+    {
+      "path": "outputs/capability-lab/src/explain/index.mjs",
+      "bytes": 36848,
+      "sha256": "109b9dfbaa5e0bc271681ad3676ca06c56501061df989db5f59200fc7aad8836"
+    },
+    {
+      "path": "outputs/capability-lab/src/explain/pca.mjs",
+      "bytes": 11760,
+      "sha256": "b0718f22b658ce46cd6f238d53086d74c846ec14053b6b3826acec2a879cd220"
+    },
+    {
+      "path": "outputs/capability-lab/src/explain/regression.mjs",
+      "bytes": 22658,
+      "sha256": "8ed8458f360eabf173e83dfb5ba5c55b56893c325725659ef579bc6d97ce75b9"
+    },
+    {
+      "path": "outputs/capability-lab/src/explain/watch.mjs",
+      "bytes": 30931,
+      "sha256": "825dc244b825e265e1dfff40230579a6715d3cfce661c9dbad8a573203424f0a"
+    },
+    {
+      "path": "outputs/capability-lab/src/linalg/basics.mjs",
+      "bytes": 15689,
+      "sha256": "c65dc557c91f3b8a9ab2015bf9c887d10c3fd16de212dba19fe506d476cc3bd4"
+    },
+    {
+      "path": "outputs/capability-lab/src/linalg/index.mjs",
+      "bytes": 301,
+      "sha256": "8a5b61ce3ece696fb5cf2f29155fc1ed5183241db2f0be8d3dae0624bf59841e"
+    },
+    {
+      "path": "outputs/capability-lab/src/linalg/numerics.mjs",
+      "bytes": 33814,
+      "sha256": "eaf20f6201841923807ebb19b677f7853ea667dbebca18617ab93afa06d69264"
+    },
+    {
+      "path": "outputs/capability-lab/src/ml/classification.mjs",
+      "bytes": 18647,
+      "sha256": "1a985e2b5f2c466fa47cf5b49caa64319eb5d7a72324bef05d0f1eb797e288e2"
+    },
+    {
+      "path": "outputs/capability-lab/src/ml/clustering.mjs",
+      "bytes": 21582,
+      "sha256": "5ec1afeaddb3f477b002915e6160252f96a7fa869b81183d34bfa749810e20f7"
+    },
+    {
+      "path": "outputs/capability-lab/src/ml/data.mjs",
+      "bytes": 27179,
+      "sha256": "a47764aa5c740bb542a9cb56a970b929ba7a8a62a085d00dd108db364b276d10"
+    },
+    {
+      "path": "outputs/capability-lab/src/ml/index.mjs",
+      "bytes": 28144,
+      "sha256": "fb17808e72e8548123dee83aafdac41b81f3438a535117f9bc6e41a790612909"
+    },
+    {
+      "path": "outputs/capability-lab/src/ml/pca.mjs",
+      "bytes": 19750,
+      "sha256": "c9288f81f800cced4f07716f1c9294ceaa26222482fa2913790c933afe7b7acb"
+    },
+    {
+      "path": "outputs/capability-lab/src/ml/regression.mjs",
+      "bytes": 11239,
+      "sha256": "e314d08bac8c346b74f7dc62bb4b4b4d97f8b6d1373d06ab8ea8bf031d92af1a"
+    },
+    {
+      "path": "outputs/capability-lab/src/ml/watch-data.mjs",
+      "bytes": 11396,
+      "sha256": "f2f73c9ba65ff9a285cd9daa5a971cb2c49be1151136fa3d583a2578ee5b7323"
+    },
+    {
+      "path": "outputs/capability-lab/src/runtime/index.mjs",
+      "bytes": 28487,
+      "sha256": "dea6bdac9b338bf4a75e547f4daafaa3bbcd208d2d428efa5944335f9712ba76"
+    },
+    {
+      "path": "outputs/capability-lab/src/statistics/core.mjs",
+      "bytes": 25590,
+      "sha256": "8db4cd8a2d62d117df56526ef044e351439ad56e6c14443e5187952299151f5d"
+    },
+    {
+      "path": "outputs/capability-lab/src/statistics/index.mjs",
+      "bytes": 400,
+      "sha256": "b9368e7723bc037ffa37e5fdfbb3fd9583763199cb1b92940623efbe85c36093"
+    },
+    {
+      "path": "outputs/capability-lab/src/statistics/inference.mjs",
+      "bytes": 9421,
+      "sha256": "fc25a34f5e99ea497faae3198ae44c2b6dabc896dd225fc1f5bf87337a9f9080"
+    },
+    {
+      "path": "outputs/capability-lab/src/statistics/order.mjs",
+      "bytes": 15587,
+      "sha256": "1557d277697cbc9854420aae788768f8e569f4c39f0ead6fd49a760c0b105f93"
+    },
+    {
+      "path": "outputs/capability-lab/src/watches/components.mjs",
+      "bytes": 12876,
+      "sha256": "b16cbeae50151debf73e25b705606b1ca6b545aea6dbe6d2bac394481704cbef"
+    },
+    {
+      "path": "outputs/capability-lab/src/watches/geometry.mjs",
+      "bytes": 14820,
+      "sha256": "0831135047636432c2f947ebb8811675a87314c54d49c5b35c1a5969f3365509"
+    },
+    {
+      "path": "outputs/capability-lab/src/watches/index.mjs",
+      "bytes": 8646,
+      "sha256": "34e74bdd969ac1b0e24d93ee0f83755c71dce15ff2ffa27adf8d6ad3ee49b933"
+    },
+    {
+      "path": "outputs/capability-lab/src/watches/mechanisms.mjs",
+      "bytes": 24104,
+      "sha256": "3649764c2175e00b36f3983c2ac67bf593a9302ea56141b5e5726e9563598825"
+    },
+    {
+      "path": "outputs/capability-lab/src/watches/transport.mjs",
+      "bytes": 40145,
+      "sha256": "75b1f43197f83d4c483bfb1a605b7b46645e968c4b44f4eeb98d59e567a54e4d"
+    },
+    {
+      "path": "outputs/capability-lab/test/composed/recipes.test.mjs",
+      "bytes": 4458,
+      "sha256": "4f931fcc8db915dc82c9be55d2da4b57b4521ce31f6ca480c1d8473d89316fc2"
+    },
+    {
+      "path": "outputs/capability-lab/test/explain/classification.test.mjs",
+      "bytes": 14117,
+      "sha256": "0cad0b0cf4de604e61d2ddd4612a89cbf1cdacf990c0728951fd61d11127ee6c"
+    },
+    {
+      "path": "outputs/capability-lab/test/explain/clustering.test.mjs",
+      "bytes": 5938,
+      "sha256": "97301d880c48b61973b1d9ed5be948ac7f7c2c377794a5f4c97b198c856183d0"
+    },
+    {
+      "path": "outputs/capability-lab/test/explain/grounding.test.mjs",
+      "bytes": 18609,
+      "sha256": "4c3a9066268c976d0d9694e2bdab66aa5fbd121a57603a41e5ecebe8e5b33672"
+    },
+    {
+      "path": "outputs/capability-lab/test/explain/integration.test.mjs",
+      "bytes": 7363,
+      "sha256": "6d47e1ac0ad26ca3d372103be2d4289729cd250b64c02fc00683b13942eb5fff"
+    },
+    {
+      "path": "outputs/capability-lab/test/explain/linalg-independent.test.mjs",
+      "bytes": 4995,
+      "sha256": "72954d424d58d57f3d9502871c47e22b4ebd7cc0412bee78082ec891e78c9f6a"
+    },
+    {
+      "path": "outputs/capability-lab/test/explain/pca.test.mjs",
+      "bytes": 6777,
+      "sha256": "d588c4d30270a78d9b349e72ca820f751223e7dfaf96ad777bfbfb42afeda443"
+    },
+    {
+      "path": "outputs/capability-lab/test/explain/regression-independent.test.mjs",
+      "bytes": 11130,
+      "sha256": "aec43b16e4d63c77625041d002fbe752630b75241d91ea925704f043247b1b72"
+    },
+    {
+      "path": "outputs/capability-lab/test/explain/regression.test.mjs",
+      "bytes": 11493,
+      "sha256": "786717c5c5eb0e44c565607ba2041cf51cc156e8142269305ed44325a94f3eb5"
+    },
+    {
+      "path": "outputs/capability-lab/test/explain/watch.test.mjs",
+      "bytes": 9716,
+      "sha256": "d09c750f1f9344cb6951259af15496d4df5a12e9e91cff933606489a67a692eb"
+    },
+    {
+      "path": "outputs/capability-lab/test/linalg/basics.test.mjs",
+      "bytes": 6104,
+      "sha256": "1af5193a958eec513021527d151834ebe4f4dd416e6ab325d546ddbb341d6b9e"
+    },
+    {
+      "path": "outputs/capability-lab/test/linalg/numerics.test.mjs",
+      "bytes": 8524,
+      "sha256": "5b13c63ca7d27507f09c4f8af3bf3d3e6050e66b6adc3f0dc2d163927a4f6d8e"
+    },
+    {
+      "path": "outputs/capability-lab/test/ml/classification.test.mjs",
+      "bytes": 9484,
+      "sha256": "1a3b09ee3a46d6e94f3ee9f2181bb7e7bb8d0febabc7a27cfa5da958522a4acf"
+    },
+    {
+      "path": "outputs/capability-lab/test/ml/clustering.test.mjs",
+      "bytes": 6458,
+      "sha256": "331df82f4bc31f2cd50bf399f578e5fce7354d6be6605e28c5fb8f59239d7e1b"
+    },
+    {
+      "path": "outputs/capability-lab/test/ml/data.test.mjs",
+      "bytes": 11440,
+      "sha256": "76f4c6118e6c86d1ffe12b956b072b24f5ea4ee4539c8da761361f72fbe79a45"
+    },
+    {
+      "path": "outputs/capability-lab/test/ml/integration.test.mjs",
+      "bytes": 12385,
+      "sha256": "c7de03c194b7ec0e9c7e5e1d22859f8dd4a4d6629046f1585c22aa23250cea91"
+    },
+    {
+      "path": "outputs/capability-lab/test/ml/linalg-independent.test.mjs",
+      "bytes": 2695,
+      "sha256": "34cd0703f99e54109190caf2bdda289e40015a9c1e4b0f6ace9112ecfe9289ac"
+    },
+    {
+      "path": "outputs/capability-lab/test/ml/pca.test.mjs",
+      "bytes": 6186,
+      "sha256": "9635703469ecc46ceb85993f813b0359f5a4242be6b9fe246902e748e5790072"
+    },
+    {
+      "path": "outputs/capability-lab/test/ml/regression-independent.test.mjs",
+      "bytes": 11100,
+      "sha256": "81adc06b5f20e72c8e29ad5413ac30475621c47904a190cea4928c48e9d4ce9c"
+    },
+    {
+      "path": "outputs/capability-lab/test/ml/regression.test.mjs",
+      "bytes": 4801,
+      "sha256": "e2dccf1ec533c3c90ecaac272e3dc1c9237d72c61149f1ee14015641decf49da"
+    },
+    {
+      "path": "outputs/capability-lab/test/ml/watch-data.test.mjs",
+      "bytes": 9924,
+      "sha256": "e0c8cd8f829e52a2f4606fcfe66fb422c5a359dcfc1dccedf3218fa22367cf84"
+    },
+    {
+      "path": "outputs/capability-lab/test/runtime/runtime.test.mjs",
+      "bytes": 9561,
+      "sha256": "9f77093476c0015bec6c47657fa72b7a7bc41ca95e485daa120eda9686e6dff3"
+    },
+    {
+      "path": "outputs/capability-lab/test/statistics/core.test.mjs",
+      "bytes": 7130,
+      "sha256": "6d98424323e1db4b581d418995cf2999903756a6bb0d6e8b8a697ee1af28801d"
+    },
+    {
+      "path": "outputs/capability-lab/test/statistics/cross-review.test.mjs",
+      "bytes": 5944,
+      "sha256": "253197afd973450ad1aa226fcc41eedd9e50afaa1701122142130c5890ef63cb"
+    },
+    {
+      "path": "outputs/capability-lab/test/statistics/inference.test.mjs",
+      "bytes": 6543,
+      "sha256": "8381ff583115396f381d6753177247aeaaeb1ec4b6cd81bd73aa5d21bab63d2d"
+    },
+    {
+      "path": "outputs/capability-lab/test/statistics/order.test.mjs",
+      "bytes": 4293,
+      "sha256": "72c37722935c0066c7455188b89ab47edf33b83bfcc8371cd82961444cf0fd53"
+    },
+    {
+      "path": "outputs/capability-lab/test/statistics/ui.test.mjs",
+      "bytes": 2297,
+      "sha256": "953a31a76430d75884e8f37a9f4eeff744ac36e5351e56eedb4cf1759d8c2588"
+    },
+    {
+      "path": "outputs/capability-lab/test/watches/geometry.test.mjs",
+      "bytes": 10750,
+      "sha256": "0b15bcb158181131fedd8b84ac2ba7b285d2b77db3e71db05487e48b7411842c"
+    },
+    {
+      "path": "outputs/capability-lab/test/watches/integration.test.mjs",
+      "bytes": 13090,
+      "sha256": "7bdd7fdee03a387b5ca9438f66f8a48f0347d86a37e5ec259bbfa582a4b65061"
+    },
+    {
+      "path": "outputs/capability-lab/test/watches/mechanisms-cross-review.test.mjs",
+      "bytes": 17172,
+      "sha256": "fa475ea7f0acbf2b42fe210f13421fa2952b16d8c24a01395c538282832a19dc"
+    },
+    {
+      "path": "outputs/capability-lab/test/watches/mechanisms.test.mjs",
+      "bytes": 12057,
+      "sha256": "d050fa3da53b682177bf8e7d6ed990405e656e9f29d1b8e6258d1206128a730c"
+    },
+    {
+      "path": "outputs/capability-lab/test/watches/transport.test.mjs",
+      "bytes": 16374,
+      "sha256": "2f2495a8b865a17ccca248d6ada4085fb17cba0d01f07d5831d9fb1f5fde6a0b"
+    },
+    {
+      "path": "outputs/capability-lab/ui/app.mjs",
+      "bytes": 32480,
+      "sha256": "e13d60f65578f2fc4e09b21337971d7e5d19acdfedea404f4ea032b5505f82c7"
+    },
+    {
+      "path": "outputs/capability-lab/ui/explain.mjs",
+      "bytes": 34652,
+      "sha256": "b0210e854080d6db3f8ee5a1ed1d292f1bf4cf8afb2cc903e05c4176abccbbe5"
+    },
+    {
+      "path": "outputs/capability-lab/ui/linalg.mjs",
+      "bytes": 8703,
+      "sha256": "731da2caf818b79889955daeda864c30099714c5d89723820fc560a42f885ac4"
+    },
+    {
+      "path": "outputs/capability-lab/ui/ml.mjs",
+      "bytes": 38505,
+      "sha256": "0cab6b01f7a4dd71bfa6b310da42def1635ccb61f55a649d8ca4c925d1518bec"
+    },
+    {
+      "path": "outputs/capability-lab/ui/statistics.mjs",
+      "bytes": 6481,
+      "sha256": "078f1c09855dee61c510590f94c6d0f484f4b35423594dd9bdaedbd87c36661e"
+    },
+    {
+      "path": "outputs/capability-lab/ui/style.css",
+      "bytes": 33500,
+      "sha256": "551c94e5cf757ef9aa6b1ae435d177eac5401e8aa5c0fb966cc5f409cf7cacc1"
+    },
+    {
+      "path": "outputs/capability-lab/ui/watches.mjs",
+      "bytes": 28627,
+      "sha256": "6e920689a4f15ddd17765d83c4b70b7740e8128dbb8d0a791a141204b46cc555"
+    },
+    {
+      "path": "work/capability-lab/verification/archive_snapshot.py",
+      "bytes": 13701,
+      "sha256": "72fac119ec49142ab046ca549fba547e40e1df50b2b3886d7dc3667259fd3f70"
+    },
+    {
+      "path": "work/capability-lab/verification/browser.mjs",
+      "bytes": 14619,
+      "sha256": "d0eb942717079949c996d4f79d30e7a06be396be15a69a7f3534ee3e317d4c4e"
+    },
+    {
+      "path": "work/capability-lab/verification/explain-browser.mjs",
+      "bytes": 17983,
+      "sha256": "ac6010c8257db639617041c01eb7497cce53599c8a18e61e1b886186b10be552"
+    },
+    {
+      "path": "work/capability-lab/verification/explain-fixtures.json",
+      "bytes": 3486,
+      "sha256": "5b1ee0674bbb5a351804cfa3c6e1af9d6be29dab614b0b64c1db79c8fd61905e"
+    },
+    {
+      "path": "work/capability-lab/verification/explain-gate.mjs",
+      "bytes": 24648,
+      "sha256": "3be33f1ccd430c7950ffa233e1d9777dc7aa184a2dea71016a5c10759d063c05"
+    },
+    {
+      "path": "work/capability-lab/verification/fixtures.json",
+      "bytes": 6009,
+      "sha256": "3eb9733123a45d9c7d0628c18cf542a11be273219e3079f96cf9e88ba700988b"
+    },
+    {
+      "path": "work/capability-lab/verification/fresh_extract.py",
+      "bytes": 13599,
+      "sha256": "3ca0eab7a4a8e8aeb5f1e04e7f166855b2f9e889b75166acca6c177917a1e72e"
+    },
+    {
+      "path": "work/capability-lab/verification/gate.mjs",
+      "bytes": 25224,
+      "sha256": "00f8afc61e6eea7340dbf31f92634d3371cda31ac4d1a50374af606e5fb8b21d"
+    },
+    {
+      "path": "work/capability-lab/verification/ml-browser.mjs",
+      "bytes": 15598,
+      "sha256": "28ee602b2394c42e9e8393fcbf2d46ec5eefdd42f56f6dba3ce4720eeb7e44ee"
+    },
+    {
+      "path": "work/capability-lab/verification/ml-fixtures.json",
+      "bytes": 3764,
+      "sha256": "bf9b4fca0c8c77cbb2b5c89e00c1e74e6819582633cdb9ff2950e2557b306866"
+    },
+    {
+      "path": "work/capability-lab/verification/ml-gate.mjs",
+      "bytes": 24434,
+      "sha256": "3a65648e657db23297e6fb6bfc3c0d3894f9cb4a6a3c57fb900b91ca26746de2"
+    },
+    {
+      "path": "work/capability-lab/verification/preflight.py",
+      "bytes": 7364,
+      "sha256": "151e3b1cbc59358d41a5a4c59251df5c047ae0de5ff52e1592d40da76db57a72"
+    },
+    {
+      "path": "work/capability-lab/verification/watch-browser.mjs",
+      "bytes": 19430,
+      "sha256": "29a6f3d556a68578c340ca24ea1375f0be4daeb7dc466cc22d116b28d6d4111c"
+    },
+    {
+      "path": "work/capability-lab/verification/watch-fixtures.json",
+      "bytes": 6927,
+      "sha256": "32fd93108876629387ef04728584d8e447c755f1d8798b06b9bac65caa6cb6cb"
+    },
+    {
+      "path": "work/capability-lab/verification/watch-gate.mjs",
+      "bytes": 24114,
+      "sha256": "44fedc6676ba04b34a1f2178f9d0b018ae4bbda06184d9c1ac79050474dd260b"
+    }
+  ]
+}

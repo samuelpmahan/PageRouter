@@ -17,7 +17,16 @@ for(const module of ['atlas-session.mjs','cross-language.mjs']){
   builtAtlasView=builtAtlasView.replace(sourceImport,`'./exp/atlas/${module}'`);
 }
 fs.writeFileSync(path.join(dist,'atlas-view.mjs'),builtAtlasView);
+let builtBlock5View=fs.readFileSync(path.join(root,'src/block5-view.mjs'),'utf8');
+for(const folder of ['block5/core','compression']){
+  const sourceImport=`'../exp/${folder}/`;
+  if(!builtBlock5View.includes(sourceImport))throw Error(`Block5 import mapping not found: ${folder}`);
+  builtBlock5View=builtBlock5View.replaceAll(sourceImport,`'./exp/${folder}/`);
+}
+fs.writeFileSync(path.join(dist,'block5-view.mjs'),builtBlock5View);
 fs.cpSync(path.join(root,'exp/atlas'),path.join(dist,'exp/atlas'),{recursive:true});
+fs.cpSync(path.join(root,'exp/block5'),path.join(dist,'exp/block5'),{recursive:true});
+fs.cpSync(path.join(root,'exp/compression'),path.join(dist,'exp/compression'),{recursive:true});
 fs.cpSync(path.join(root,'exp/cooperative'),path.join(dist,'exp/cooperative'),{recursive:true});
 fs.cpSync(path.join(root,'vendor/hh/services'),path.join(dist,'vendor/hh/services'),{recursive:true});
 fs.mkdirSync(path.join(dist,'vendor/hh/src'),{recursive:true});fs.copyFileSync(path.join(root,'vendor/hh/src/teacher-journey.mjs'),path.join(dist,'vendor/hh/src/teacher-journey.mjs'));
@@ -44,7 +53,7 @@ const proof={kind:'actual-HH-C6-compiled-byte-delta',baseDigest:base.digest,targ
 fs.writeFileSync(path.join(root,'evidence/hh-delta-proof.json'),JSON.stringify(proof,null,2));fs.writeFileSync(path.join(dist,'data/delta-proof.json'),JSON.stringify(proof));
 const neat=pxcEvidence.report.results.map(r=>({id:r.id,ok:r.ok,error:r.error??null,build:r.build,sourceHash:r.sourceHash,receipt:r.receipt}));
 const packageRecord=JSON.parse(fs.readFileSync(path.join(root,'package.json')));
-const sourceDigests={};for(const folder of ['src','scripts','exp/cooperative','exp/atlas'])for(const [f,v]of Object.entries(files(path.join(root,folder))))sourceDigests[folder+'/'+f]=await hash(Buffer.from(v.data,'base64'));const siteBuildId=await hash(canonical({package:packageRecord,sourceDigests,projectPins:catalog.map(p=>({id:p.id,pin:p.pin,digest:p.digest})),auditFiles:fs.existsSync(auditSource)?Object.fromEntries(await Promise.all(Object.entries(files(auditSource)).map(async([p,v])=>[p,await hash(Buffer.from(v.data,'base64'))]))):null}));
+const sourceDigests={};for(const folder of ['src','scripts','exp/cooperative','exp/atlas','exp/block5','exp/compression'])for(const [f,v]of Object.entries(files(path.join(root,folder))))sourceDigests[folder+'/'+f]=await hash(Buffer.from(v.data,'base64'));const siteBuildId=await hash(canonical({package:packageRecord,sourceDigests,projectPins:catalog.map(p=>({id:p.id,pin:p.pin,digest:p.digest})),auditFiles:fs.existsSync(auditSource)?Object.fromEntries(await Promise.all(Object.entries(files(auditSource)).map(async([p,v])=>[p,await hash(Buffer.from(v.data,'base64'))]))):null}));
 const atlasIdentity=atlasImplementationIdentity(root);
 const evaluatorIdentity=evaluatorClosure(root),buildId=evaluatorImplementationPin(evaluatorIdentity,JSON.parse(fs.readFileSync(path.join(root,'vendor/evaluator-baseline-af0c2e0f.json'))));
 const annotationReportFile=path.join(root,'exp/adversarial/evidence/justin-site-ide-qa.json');const annotationReport=fs.existsSync(annotationReportFile)?JSON.parse(fs.readFileSync(annotationReportFile)):null;const annotationProof=annotationReport?{tested:annotationReport.checks.every(c=>c.ok),passed:annotationReport.checks.filter(c=>c.ok).length,failed:annotationReport.checks.filter(c=>!c.ok).length,evidence:'data/annotation-verification.json'}:null;if(annotationReport)fs.writeFileSync(path.join(dist,'data/annotation-verification.json'),JSON.stringify({schema:'annotation-browser-verification@1',checks:annotationReport.checks,pageErrors:annotationReport.pageErrors,evaluatorCompatibility:JSON.parse(fs.readFileSync(path.join(root,'evidence/evaluator-compatibility.json')))},null,2));

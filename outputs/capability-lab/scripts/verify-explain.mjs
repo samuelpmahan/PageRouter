@@ -1,0 +1,107 @@
+#!/usr/bin/env node
+// Real-browser acceptance for model attribution, same-model perturbation, and source-grounded watch answers.
+import assert from 'node:assert/strict';
+import { access, copyFile, mkdir, writeFile } from 'node:fs/promises';
+import { dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const args=Object.fromEntries(process.argv.slice(2).map(arg=>{const [key,...rest]=arg.replace(/^--/,'').split('=');return[key,rest.join('=')||true];}));
+const url=args.url||'http://127.0.0.1:4173';
+const out=resolve(args.out||'/mnt/d/somefile/capability-lab/explain-browser-evidence');
+const evidenceDir=resolve(args.evidence||resolve(dirname(fileURLToPath(import.meta.url)),'../evidence/explain-workbench/ui'));
+await mkdir(out,{recursive:true});await mkdir(evidenceDir,{recursive:true});
+const playwrightModule=process.env.CAPABILITY_LAB_PLAYWRIGHT_MODULE||'/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/work/toolteam/browser/node_modules/playwright/index.mjs';
+const browsersPath=process.env.CAPABILITY_LAB_BROWSERS_PATH||'/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/work/toolteam/browser/browsers';
+const browserDeps=process.env.CAPABILITY_LAB_LD_LIBRARY_DIR||'/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/work/toolteam/browser/deps/usr/lib/x86_64-linux-gnu';
+const chromiumExecutable=process.env.CAPABILITY_LAB_CHROMIUM_EXECUTABLE;
+for(const [label,path,variable] of [['Playwright module',playwrightModule,'CAPABILITY_LAB_PLAYWRIGHT_MODULE'],['Playwright browser cache',browsersPath,'CAPABILITY_LAB_BROWSERS_PATH'],['browser shared-library directory',browserDeps,'CAPABILITY_LAB_LD_LIBRARY_DIR'],...(chromiumExecutable?[['Chromium executable',chromiumExecutable,'CAPABILITY_LAB_CHROMIUM_EXECUTABLE']]:[])])try{await access(path);}catch{throw new Error(`Browser verification prerequisite missing: ${label} at ${path}. Set ${variable} to an existing path; do not install dependencies.`);}
+process.env.PLAYWRIGHT_BROWSERS_PATH=browsersPath;process.env.LD_LIBRARY_PATH=[browserDeps,process.env.LD_LIBRARY_PATH].filter(Boolean).join(':');
+const {chromium}=await import(playwrightModule);
+const canonical=value=>Array.isArray(value)?`[${value.map(canonical).join(',')}]`:value&&typeof value==='object'?`{${Object.keys(value).sort().map(key=>`${JSON.stringify(key)}:${canonical(value[key])}`).join(',')}}`:JSON.stringify(value);
+let browser,page;const errors=[];
+try{
+  browser=await chromium.launch({headless:true,...(chromiumExecutable?{executablePath:chromiumExecutable}:{})});
+  page=await browser.newPage({viewport:{width:1600,height:1100},deviceScaleFactor:1});
+  page.on('pageerror',error=>errors.push(error.message));page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
+  await page.goto(url,{waitUntil:'networkidle'});
+  await page.waitForFunction(()=>window.mlLab?.getExperiment&&window.watchLab?.getState&&window.explainLab?.getState,{timeout:30000});
+  async function waitFor(predicate,label){await page.waitForFunction(predicate,{timeout:15000},label);}
+  const mlNav=page.locator('[data-workspace-mode="ml"]');await mlNav.click();
+  if(!await page.evaluate(()=>window.mlLab.getExperiment())){await page.locator('#ml-fit-button').click();await waitFor(()=>window.mlLab.getExperiment()?.config?.algorithm==='linearRegression','initial regression fit');}
+  const experiment=await page.evaluate(()=>window.mlLab.getExperiment());assert.ok(experiment,'Current fitted artifact is available');
+  const input=experiment.dataset.records[0].features;
+  const beforeModel=canonical(experiment.model);const expected=await page.evaluate(features=>window.mlLab.predict([{runId:'explain-verifier',conditionId:'explain-verifier',features}]),input);
+  await page.locator('[data-workspace-mode="explain"]').click();await waitFor(()=>document.querySelector('.workspace')?.classList.contains('explain-active'),'Explain workspace active');
+  await page.locator('#explain-input-json').fill(JSON.stringify(input));await page.locator('#explain-predict-button').click();
+  const modelState=await page.evaluate(()=>window.explainLab.getState());const modelExplanation=modelState.explanation;assert.ok(modelExplanation,'Actual explanation returned');
+  assert.equal(modelExplanation.algorithm,'linearRegression','Current default artifact is explained as linear regression');
+  const prediction=modelExplanation.attribution?.prediction;
+  assert.ok(Number.isFinite(prediction),'Explanation returns the actual numeric model prediction');
+  assert.ok(Math.abs(prediction-expected.predictions[0])<1e-9,'Explanation prediction matches the retained ML predictor');
+  const displayedPrediction=Number(await page.locator('#explain-output .explain-metric').filter({hasText:'Actual fitted prediction'}).locator('strong').innerText());
+  assert.ok(Math.abs(displayedPrediction-prediction)<1e-6,`Visible prediction summary renders the actual numeric result (${displayedPrediction} vs ${prediction})`);
+  const attribution=modelExplanation.attribution;const reference=attribution.reference?.prediction;
+  const contributionSum=(attribution.contributions||[]).reduce((sum,item)=>sum+item.contribution,0);
+  assert.ok(Number.isFinite(reference),'Attribution includes an explicit reference prediction');
+  assert.ok(Math.abs(reference+contributionSum-prediction)<=(attribution.roundoff?.tolerance??1e-8),'Reference plus feature contributions reconstructs the prediction within reported tolerance');
+  assert.ok(await page.locator('#explain-output .explain-bar-row').count()>0,'Signed contribution bars are visible');
+  await page.screenshot({path:resolve(out,'explain-model.png')});
+  const rawBefore=canonical(await page.evaluate(()=>window.mlLab.getExperiment()));
+  const changedFeature=experiment.selectedFeatures.names[0],changedIndex=experiment.selectedFeatures.indices[0];
+  await page.locator('#explain-change-feature').selectOption(changedFeature);await page.locator('#explain-change-delta').fill('0.75');await page.locator('#explain-perturb-button').click();
+  const perturbation=await page.evaluate(()=>window.explainLab.getState().perturbation);
+  assert.ok(perturbation?.modelUnchanged===true,'Perturbation reports that the fitted model did not change');assert.equal(perturbation.preprocessingRefit,false,'Perturbation reuses saved preprocessing');
+  const changed=await page.evaluate(({features,index,delta})=>window.mlLab.predict([{runId:'explain-verifier-changed',conditionId:'explain-verifier-changed',features:features.map((value,i)=>i===index?value+delta:value)}]),{features:input,index:changedIndex,delta:.75});
+  const changedPrediction=perturbation.changedPrediction?.predictions?.[0];
+  assert.ok(Math.abs(changedPrediction-changed.predictions[0])<1e-9,'Perturbed explanation equals prediction from the same saved model');
+  assert.notEqual(changedPrediction,perturbation.originalPrediction,'The selected input change alters the prediction');
+  const displayedChanged=Number(await page.locator('#explain-perturb-output .explain-metric').filter({hasText:'Changed prediction'}).locator('strong').innerText());
+  assert.ok(Math.abs(displayedChanged-changedPrediction)<1e-6,'Visible changed prediction summary renders the actual numeric result');
+  assert.equal(canonical(await page.evaluate(()=>window.mlLab.getExperiment())),rawBefore,'Explanation and perturbation leave the fitted artifact unchanged');
+  await page.locator('#explain-prepare-draft').click();await page.locator('#explain-check-button').click();
+  const validDraft=JSON.parse(await page.locator('#explain-draft').inputValue());const validCheck=await page.evaluate(draft=>window.explainLab.checkDraft(draft),validDraft);
+  assert.equal(validCheck.accepted,true,'Evidence-derived structured claim matches current retrieved context');
+  assert.match(await page.locator('#explain-claim-results').innerText(),/Claims match retrieved evidence/,'UI avoids claiming universal truth/provenance');
+  const wrong=structuredClone(validDraft);wrong.claims[0].value='unsupported-forged-value';const wrongCheck=await page.evaluate(draft=>window.explainLab.checkDraft(draft),wrong);
+  assert.equal(wrongCheck.accepted,false,'Fabricated claim value is rejected');assert.ok(wrongCheck.errors.some(error=>error.code==='wrong-value'),'Checker explains the value mismatch');
+  await page.locator('#explain-stale-fixture').click();await page.locator('#explain-check-button').click();
+  assert.equal((await page.evaluate(()=>window.explainLab.getState())).lastCheck.accepted,false,'Stale state identity claim is rejected against regenerated current context');
+
+  await page.locator('[data-workspace-mode="watches"]').click();await page.locator('#watch-duration-numerator').fill('1');await page.locator('#watch-duration-denominator').fill('8');await page.locator('#watch-advance').click();
+  const stateBeforeView=await page.evaluate(()=>window.watchLab.getState());
+  const viewed=await page.evaluate(()=>window.watchLab.setView({explode:.8,selected:'mechanical.escapeWheel'}));
+  assert.equal(canonical(viewed.state),canonical(stateBeforeView),'Explosion/selection do not mutate watch counters or logical time');
+  await page.locator('[data-workspace-mode="explain"]').click();await page.locator('#explain-watch-part').selectOption('mechanical.mainspring');await page.locator('#explain-watch-question').selectOption('energy-path');await page.locator('#explain-watch-button').click();
+  let watchState=await page.evaluate(()=>window.explainLab.getState());let watchExplanation=watchState.watchExplanation;
+  assert.equal(watchExplanation.stateIdentity?.length>0,true,'Watch answer carries a current state identity');assert.ok(watchExplanation.sources.some(source=>source.url?.startsWith('https://')),'Watch answer cites curated primary sources');assert.ok(watchExplanation.evidence.length>0,'Watch answer includes typed state evidence');
+  assert.ok(watchExplanation.question.currentPath?.mechanical&&watchExplanation.question.currentPath?.quartz,'Energy answer exposes both live model paths');
+  assert.ok(watchExplanation.question.counterexample?.afterCounts,'Energy answer includes an actual power-off counterexample run');
+  assert.match(await page.locator('#explain-watch-output').innerText(),/mainspring|battery/i,'Energy-path answer identifies the modeled source paths');
+  assert.match(await page.locator('#explain-watch-output').innerText(),/Power-off counterexample/,'Visible watch answer surfaces the counterexample arithmetic');
+  assert.match(await page.locator('#explain-watch-output').innerText(),/teaching gear pairs/,'Visible energy path shows actual gear and hand arithmetic');
+  const energySourceIds=watchExplanation.sources.map(source=>source.id);
+  assert.match(await page.locator('#explain-watch-state').innerText(),/time 1\/8 s/,'Watch sidebar refreshes to the state used for the answer');
+  await page.locator('#explain-prepare-draft').click();await page.locator('#explain-check-button').click();
+  const watchClaim=await page.evaluate(()=>window.explainLab.getState().lastCheck);assert.equal(watchClaim.accepted,true,'A structured watch claim matches current retrieved evidence');
+  await page.locator('#explain-watch-output').scrollIntoViewIfNeeded();await page.screenshot({path:resolve(out,'explain-watch.png')});
+  await page.locator('#explain-watch-question').selectOption('divider');await page.locator('#explain-watch-part').selectOption('quartz.divider');await page.locator('#explain-watch-button').click();
+  watchExplanation=await page.evaluate(()=>window.explainLab.getState().watchExplanation);assert.equal(watchExplanation.question.id,'divider');assert.ok(watchExplanation.question.stageCount>=0,'Quartz divider answer reports configured stages');
+  assert.match(await page.locator('#explain-watch-output').innerText(),/reference cycles pass through .*divide-by-two stages/,'Visible divider answer states the retained cycle/stage calculation');
+  await page.locator('#explain-watch-question').selectOption('physical-accuracy');await page.locator('#explain-watch-button').click();
+  watchExplanation=await page.evaluate(()=>window.explainLab.getState().watchExplanation);assert.ok(/unsupported|no physical measurement|not present/i.test(watchExplanation.limitation||watchExplanation.question.explanation),'Physical accuracy answer is explicitly limited');
+  await page.locator('#explain-watch-question').selectOption('unsupported-question');await page.locator('#explain-watch-button').click();
+  watchExplanation=await page.evaluate(()=>window.explainLab.getState().watchExplanation);assert.equal(watchExplanation.supported,false,'Unknown mechanism question returns an explicit unsupported outcome');
+  await page.locator('#explain-watch-question').selectOption('timing-path');await page.locator('#explain-watch-part').selectOption('mechanical.balanceWheel');await page.locator('#explain-watch-button').click();
+  await page.locator('#explain-prepare-draft').click();const staleWatchDraft=JSON.parse(await page.locator('#explain-draft').inputValue());
+  await page.locator('[data-workspace-mode="watches"]').click();await page.evaluate(()=>window.watchLab.applyAction({type:'advance',duration:{numerator:1,denominator:8},origin:'manual'}));
+  await page.locator('[data-workspace-mode="explain"]').click();const staleWatchCheck=await page.evaluate(draft=>window.explainLab.checkDraft(draft),staleWatchDraft);
+  assert.equal(staleWatchCheck.accepted,false,'Watch draft tied to an earlier logical time is rejected as stale');assert.ok(staleWatchCheck.errors.some(error=>/stale/.test(error.code)),'Stale watch evidence rejection identifies its context mismatch');
+  await page.locator('[data-workspace-mode="foundations"]').click();assert.ok(await page.locator('#capability-select option').count()>0,'Foundations mode remains reachable');
+  await page.locator('[data-workspace-mode="ml"]').click();assert.ok(await page.locator('#ml-fit-button').count(),'Machine-learning mode remains reachable');
+  const report={url,model:{algorithm:experiment.config.algorithm,sourceKind:experiment.dataset.sourceKind,prediction,contributionCount:attribution.contributions.length,roundoff:attribution.roundoff,perturbation:{original:perturbation.originalPrediction,changed:changedPrediction,modelUnchanged:perturbation.modelUnchanged,preprocessingRefit:perturbation.preprocessingRefit},claimAccepted:validCheck.accepted,forgedClaimRejected:wrongCheck.errors.map(error=>error.code),staleModelDraftRejected:true},watch:{timeBeforeView:stateBeforeView.time,timeAfterView:viewed.state.time,energySources:energySourceIds,claimAccepted:watchClaim.accepted,unsupportedQuestion:false,staleDraftRejected:staleWatchCheck.errors.map(error=>error.code)},consoleErrors:errors,screenshots:[resolve(out,'explain-model.png'),resolve(out,'explain-watch.png')]};
+  assert.deepEqual(errors,[],'No page or console errors');
+  await writeFile(resolve(out,'explain-browser-report.json'),JSON.stringify(report,null,2)+'\n');
+  await writeFile(resolve(out,'explain-raw-evidence.json'),JSON.stringify({experiment,modelExplanation,perturbation,validCheck,wrongCheck,watchExplanation,staleWatchCheck,report},null,2)+'\n');
+  for(const name of ['explain-model.png','explain-watch.png','explain-browser-report.json','explain-raw-evidence.json'])await copyFile(resolve(out,name),resolve(evidenceDir,name));
+  console.log(JSON.stringify(report,null,2));
+}catch(error){const report={url,error:error?.stack||String(error),consoleErrors:errors};try{if(page&&page.url()!=='about:blank')await page.screenshot({path:resolve(out,'explain-browser-failed.png'),fullPage:true});}catch{}await writeFile(resolve(out,'explain-browser-failure.json'),JSON.stringify(report,null,2)+'\n');console.error(JSON.stringify(report,null,2));throw error;}finally{await browser?.close();}
