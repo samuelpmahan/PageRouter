@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homeroom Heroes - Support Teachers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico">
+    <link rel="stylesheet" href="/static/style.css"> 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17482080573"></script>
+    <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'AW-17482080573'); </script> 
+    
+
+</head>
+<body class="bg-gray-800 text-gray-50">
+    <header class="bg-gradient-to-r from-green-700 to-green-900 text-white shadow-lg py-4 md:py-6 relative">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="/pages/homepage.html" class="flex items-center">
+                    <img src="/static/images/logo_transparent.png" alt="Homeroom Heroes Logo" class="h-16 md:h-20 mr-3">
+                </a>
+                <nav class="hidden md:flex ml-4">
+                    <ul class="flex space-x-4 md:space-x-8 text-lg">
+                        <li><a href="/pages/homepage.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Home</a></li>
+                        <li><a href="/pages/index.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Donate</a></li>
+                        <li><a href="/pages/register.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Sign Up</a></li>
+                        <li><a href="/pages/about.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">About</a></li>
+                        <li><a href="/pages/contact.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Contact</a></li>
+                        <li><a href="/pages/partners.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Partners</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="relative">
+                <button id="hamburgerButton" class="text-white text-3xl focus:outline-none **md:hidden**" onclick="toggleMenu()">☰</button>
+
+                <div class="menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden **md:hidden**" id="menuItems">
+                    
+                    <nav class="md:hidden">
+                        <ul class="flex flex-col text-base p-1">
+                            <li><a href="/pages/homepage.html" class="listButton block">Home</a></li>
+                            <li><a href="/pages/index.html" class="listButton block">Donate</a></li>
+                            <li><a href="/pages/register.html" class="listButton block">Sign Up</a></li>
+                            <li><a href="/pages/about.html" class="listButton block">About</a></li>
+                            <li><a href="/pages/contact.html" class="listButton block">Contact</a></li>
+                            <li><a href="/pages/partners.html" class="listButton block">Partners</a></li>
+                            <hr class="my-1 border-green-700"> </ul>
+                    </nav>
+                    
+                    <button id="loginButton" class="listButton hidden" onclick="redirectTo('/pages/login.html')">Login</button>
+                    <button id="logoutButton" class="listButton hidden" onclick="logout()">Logout</button>
+                    <button id="mypageButton" class="listButton hidden" onclick="mypage()">My Page</button>
+                    <button id="forumButton" class="listButton hidden" onclick="redirectTo('/pages/forum.html')">Forum</button>
+                    <button id="validationButton" class="listButton hidden" onclick="redirectTo('/pages/validation.html')">Validation</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <section class="bg-white p-8 rounded-lg shadow-md text-gray-800 max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold text-green-800 mb-6 text-center">Find a Teacher</h2>
+            <form id="teacher-search-form" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="state" class="block text-lg font-medium text-gray-700 mb-2">State:</label>
+                        <select id="state" name="state" onchange="populateCountiesDropdown()" required
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                            <option value="" disabled selected>Choose state</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="county" class="block text-lg font-medium text-gray-700 mb-2">County:</label>
+                        <select id="county" name="county" onchange="populateDistrictsDropdown()"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                            <option value="" disabled selected>Choose county</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="district" class="block text-lg font-medium text-gray-700 mb-2">School District:</label>
+                        <select id="district" name="district" onchange="populateSchoolsDropdown()"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                            <option value="" disabled selected>Choose district</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="school" class="block text-lg font-medium text-gray-700 mb-2">School:</label>
+                        <select id="school" name="school"
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                            <option value="" disabled selected>Choose school</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="submit" id="submitButton"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                    Find Teachers
+                </button>
+            </form>
+        </section>
+
+        <section class="bg-white p-8 rounded-lg shadow-md text-gray-800 max-w-4xl mx-auto mt-8">
+            <h3 class="text-2xl font-semibold text-green-700 mb-4 text-center">Search Results</h3>
+            <div id="teacherListGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                </div>
+            <p id="noTeachersFound" class="hidden text-gray-600 text-center mt-4">No teachers found for your selection. Please try different criteria.</p>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6 mt-8 rounded-t-lg shadow-inner text-center">
+        <div class="container mx-auto px-4 text-sm">
+            <p>&copy; 2024 Homeroom Heroes. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function redirectTo(url) {
+            window.location.href = url;
+        }
+
+        // This function dynamically shows/hides menu items based on user authentication and role.
+        async function checkAuthentication() {
+            const menuItems = document.getElementById('menuItems');
+            // Hide all dynamic buttons first to prevent flicker
+            const buttons = ['loginButton', 'logoutButton', 'mypageButton', 'validationButton','forumButton'];
+            buttons.forEach(id => {
+                const button = document.getElementById(id);
+                if (button) {
+                    button.classList.add('hidden');
+                    button.classList.remove('block'); // Ensure 'block' is removed
+                }
+            });
+
+            let userRole = null;
+
+            try {
+                const response = await fetch('/api/profile/');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.user_role) {
+                        userRole = data.user_role;
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+                // If there's an error fetching profile, assume not logged in.
+            }
+
+            // Show buttons based on user role
+            if (userRole === 'teacher') {
+                document.getElementById('logoutButton')?.classList.remove('hidden');
+                document.getElementById('logoutButton')?.classList.add('block');
+                document.getElementById('forumButton').classList.remove('hidden');
+                document.getElementById('forumButton').classList.add('block'); // Make it display as a block
+                document.getElementById('mypageButton')?.classList.remove('hidden');
+                document.getElementById('mypageButton')?.classList.add('block');
+                document.getElementById('validationButton')?.classList.remove('hidden');
+                document.getElementById('validationButton')?.classList.add('block');
+            } else if (userRole === 'admin') {
+                document.getElementById('logoutButton')?.classList.remove('hidden');
+                document.getElementById('logoutButton')?.classList.add('block');
+                document.getElementById('validationButton')?.classList.remove('hidden');
+                document.getElementById('validationButton')?.classList.add('block');
+                document.getElementById('forumButton').classList.remove('hidden');
+                document.getElementById('forumButton').classList.add('block'); // Make it display as a block
+            } else {
+                // Not logged in or unknown role, show login button
+                document.getElementById('loginButton')?.classList.remove('hidden');
+                document.getElementById('loginButton')?.classList.add('block');
+            }
+        }
+
+        function toggleMenu() {
+            const menuItems = document.getElementById('menuItems');
+            // Use classList.toggle for Tailwind's hidden utility
+            menuItems.classList.toggle('hidden');
+            // If the menu is now shown, update authentication buttons
+            if (!menuItems.classList.contains('hidden')) {
+                checkAuthentication();
+            }
+        }
+
+        async function logout() {
+            try {
+                const response = await fetch(`/profile/logout/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    window.location.href = '/'; // Redirect to root after successful logout
+                } else {
+                    console.error('Logout failed:', response.status);
+                    alert('Logout failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+                alert('An error occurred during logout. Please try again.');
+            }
+        }
+
+        async function mypage() {
+            try {
+                const response = await fetch('/profile/myinfo/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    window.location.href = '/pages/teacher.html';
+                } else {
+                    console.error('Error fetching my page info:', response.status);
+                    window.location.href = '/'; // Redirect to homepage or login if error
+                }
+            } catch (error) {
+                console.error('Error fetching my page info:', error);
+                window.location.href = '/'; // Redirect to homepage or login if error
+            }
+        }
+
+
+        // Existing search and dropdown population functions, updated for modern look
+        document.addEventListener("DOMContentLoaded", function () {
+            populateStatesDropdown();
+            // Check authentication when the page loads to set initial header state
+            checkAuthentication();
+            
+            document.getElementById('teacher-search-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                fetchTeachers();
+            });
+        });
+
+        async function populateStatesDropdown() {
+            try {
+                const response = await fetch("/api/index_states/");
+                const states = await response.json();
+                const stateDropdown = document.getElementById("state");
+                stateDropdown.innerHTML = `<option value="" disabled selected>Choose state</option>`; // Reset and add default
+                states.forEach(state => {
+                    stateDropdown.add(new Option(state, state));
+                });
+            } catch (error) {
+                console.error("Error retrieving state information:", error);
+                alert("Error retrieving state information. Please try again later.");
+            }
+        }
+
+        async function populateCountiesDropdown() {
+            const selectedState = document.getElementById("state").value;
+            const countyDropdown = document.getElementById("county");
+            countyDropdown.innerHTML = `<option value="" disabled selected>Choose county</option>`; // Reset
+            document.getElementById("district").innerHTML = `<option value="" disabled selected>Choose district</option>`; // Reset subsequent
+            document.getElementById("school").innerHTML = `<option value="" disabled selected>Choose school</option>`; // Reset subsequent
+
+            if (!selectedState) return; // Don't fetch if no state is selected
+
+            try {
+                const response = await fetch(`/api/index_counties/${selectedState}`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const counties = await response.json();
+                counties.forEach(county => {
+                    countyDropdown.add(new Option(county, county));
+                });
+            } catch (error) {
+                console.error("Error retrieving county information:", error);
+                alert("Error retrieving county information. Please try again.");
+            }
+        }
+
+        async function populateDistrictsDropdown() {
+            const selectedState = document.getElementById("state").value;
+            const selectedCounty = document.getElementById("county").value;
+            const districtDropdown = document.getElementById("district");
+            districtDropdown.innerHTML = `<option value="" disabled selected>Choose district</option>`; // Reset
+            document.getElementById("school").innerHTML = `<option value="" disabled selected>Choose school</option>`; // Reset subsequent
+
+            if (!selectedState || !selectedCounty) return;
+
+            try {
+                const response = await fetch(`/api/index_districts/${selectedState}/${selectedCounty}`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const districts = await response.json();
+                districts.forEach(district => {
+                    districtDropdown.add(new Option(district, district));
+                });
+            } catch (error) {
+                console.error("Error retrieving district information:", error);
+                alert("Error retrieving district information. Please try again.");
+            }
+        }
+
+        async function populateSchoolsDropdown() {
+            const selectedState = document.getElementById("state").value;
+            const selectedCounty = document.getElementById("county").value;
+            const selectedDistrict = document.getElementById("district").value;
+            const schoolDropdown = document.getElementById("school");
+            schoolDropdown.innerHTML = `<option value="" disabled selected>Choose school</option>`; // Reset
+
+            if (!selectedState || !selectedCounty || !selectedDistrict) return;
+
+            try {
+                const response = await fetch(`/api/index_schools/${selectedState}/${selectedCounty}/${selectedDistrict}`);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const schools = await response.json();
+                schools.forEach(school => {
+                    schoolDropdown.add(new Option(school, school));
+                });
+            } catch (error) {
+                console.error("Error retrieving school information:", error);
+                alert("Error retrieving school information. Please try again.");
+            }
+        }
+
+        async function fetchTeachers() {
+            const searchForm = document.getElementById("teacher-search-form");
+            const teacherListGrid = document.getElementById("teacherListGrid");
+            const noTeachersFoundMessage = document.getElementById("noTeachersFound");
+            teacherListGrid.innerHTML = ""; // Clear previous list
+            noTeachersFoundMessage.classList.add('hidden'); // Hide message initially
+
+            const formData = new FormData(searchForm);
+
+            try {
+                const response = await fetch("/api/index_teachers/", {
+                    method: "POST",
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    let teachers = await response.json();
+
+                    // Shuffle the teachers array to randomize the order
+                    for (let i = teachers.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [teachers[i], teachers[j]] = [teachers[j], teachers[i]];
+                    }
+
+                    if (teachers.length > 0) {
+                        teachers.forEach((teacher) => {
+                            const teacherCard = document.createElement("a");
+                            teacherCard.href = `/teacher/${encodeURIComponent(teacher.url_id)}`;
+                            teacherCard.classList.add(
+                                'block',
+                                'p-4',
+                                'bg-white', 
+                                'hover:bg-gray-200', 
+                                'text-blue-900',
+                                'font-bold',
+                                'py-2',
+                                'px-4',
+                                'rounded-lg',
+                                'transition',
+                                'duration-300',
+                                'ease-in-out',
+                                'transform',
+                                'hover:scale-105',
+                                'shadow-md',
+                                'text-center'
+                            );
+
+                            const teacherName = document.createElement("span");
+                            teacherName.textContent = teacher.name;
+                            teacherCard.appendChild(teacherName);
+                            teacherListGrid.appendChild(teacherCard);
+                        });
+                    } else {
+                        noTeachersFoundMessage.classList.remove('hidden'); // Show "No teachers found" message
+                    }
+                } else {
+                    console.error("Search failed:", response.statusText);
+                    alert("Search failed. Please try again.");
+                }
+            } catch (error) {
+                console.error("Error during teacher search:", error);
+                alert("An error occurred during search. Please try again.");
+            }
+        }
+    </script>
+</body>
+</html>

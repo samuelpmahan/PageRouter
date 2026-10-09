@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Homeroom Heroes - Discussion Detail</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico" />
+    <link rel="stylesheet" href="/static/style.css"> 
+    <!-- GOOGLE ADSENSE -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2827692846371935"
+     crossorigin="anonymous"></script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17482080573"></script>
+    <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'AW-17482080573'); </script> 
+    
+
+</head>
+<body class="bg-gray-800 text-gray-50">
+    <header class="bg-gradient-to-r from-green-700 to-green-900 text-white shadow-lg py-4 md:py-6 relative">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="/pages/homepage.html" class="flex items-center">
+                    <img src="/static/images/logo_transparent.png" alt="Homeroom Heroes Logo" class="h-16 md:h-20 mr-3">
+                </a>
+                <nav class="hidden md:flex ml-4">
+                    <ul class="flex space-x-4 md:space-x-8 text-lg">
+                        <li><a href="/pages/homepage.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Home</a></li>
+                        <li><a href="/pages/index.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Donate</a></li>
+                        <li><a href="/pages/register.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Sign Up</a></li>
+                        <li><a href="/pages/about.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">About</a></li>
+                        <li><a href="/pages/contact.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Contact</a></li>
+                        <li><a href="/pages/partners.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Partners</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="relative">
+                <button id="hamburgerButton" class="text-white text-3xl focus:outline-none **md:hidden**" onclick="toggleMenu()">☰</button>
+
+                <div class="menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden **md:hidden**" id="menuItems">
+                    
+                    <nav class="md:hidden">
+                        <ul class="flex flex-col text-base p-1">
+                            <li><a href="/pages/homepage.html" class="listButton block">Home</a></li>
+                            <li><a href="/pages/index.html" class="listButton block">Donate</a></li>
+                            <li><a href="/pages/register.html" class="listButton block">Sign Up</a></li>
+                            <li><a href="/pages/about.html" class="listButton block">About</a></li>
+                            <li><a href="/pages/contact.html" class="listButton block">Contact</a></li>
+                            <li><a href="/pages/partners.html" class="listButton block">Partners</a></li>
+                            <hr class="my-1 border-green-700"> </ul>
+                    </nav>
+                    
+                    <button id="loginButton" class="listButton hidden" onclick="redirectTo('/pages/login.html')">Login</button>
+                    <button id="logoutButton" class="listButton hidden" onclick="logout()">Logout</button>
+                    <button id="mypageButton" class="listButton hidden" onclick="mypage()">My Page</button>
+                    <button id="forumButton" class="listButton hidden" onclick="redirectTo('/pages/forum.html')">Forum</button>
+                    <button id="validationButton" class="listButton hidden" onclick="redirectTo('/pages/validation.html')">Validation</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    <main class="container mx-auto px-4 py-8">
+        <section class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-extrabold text-white mb-8 border-b border-green-700 pb-4">Discussion Detail</h2>
+            
+            <div class="mb-6">
+                <button 
+                    id="back-to-forum-button"
+                    onclick="redirectTo('/pages/forum.html')" 
+                    class="flex items-center text-green-300 hover:text-green-100 transition duration-200 bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded-lg shadow-md font-semibold"
+                >
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                    </svg>
+                    Back to Forum
+                </button>
+            </div>
+            <div id="post-detail-card" class="bg-white p-8 rounded-xl shadow-2xl text-gray-800 min-h-[300px]">
+                <div id="status-message" class="text-center p-10 text-xl font-medium text-blue-600">
+                    Loading post details...
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6 mt-8 rounded-t-lg shadow-inner text-center">
+        <div class="container mx-auto px-4 text-sm">
+            <p>&copy; 2024 Homeroom Heroes. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <div id="floating-message" class="fixed top-4 right-4 z-50 p-4 rounded-lg shadow-xl text-white font-semibold transition-opacity duration-300"></div>
+
+    <div id="modal-backdrop" class="fixed inset-0 bg-gray-900 bg-opacity-75 hidden z-50 transition-opacity duration-300"></div>
+    <div id="confirmation-modal" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white p-8 rounded-xl shadow-2xl z-50 w-full max-w-sm hidden text-gray-800">
+        <h3 class="text-xl font-bold mb-4" id="modal-title">Confirm Deletion</h3>
+        <p class="mb-6" id="modal-message">This action cannot be undone. Are you absolutely sure you want to permanently delete this item?</p>
+        <div class="flex justify-end space-x-4">
+            <button onclick="closeModal()" class="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition duration-150">Cancel</button>
+            <button id="modal-confirm-button" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-150">Delete</button>
+        </div>
+    </div>
+
+
+    <script>
+        // --- Global State ---
+        let currentUserRole = null; 
+        let currentPostId = null; 
+        let currentUserId = null; // *** ADDED: Store the current logged-in user's ID for ownership checks ***
+
+        // --- Utility Functions ---
+
+        // Helper function for redirection
+        function redirectTo(url) {
+            window.location.href = url;
+        }
+
+        // Function to toggle the mobile menu visibility
+        function toggleMenu() {
+            var menuItems = document.getElementById('menuItems');
+            menuItems.classList.toggle('hidden');
+        }
+
+        // Utility function to format dates
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        /**
+         * Parses the query parameters from the URL.
+         * @returns {Object} Key-value pairs of query parameters.
+         */
+        function getQueryParameters() {
+            const params = {};
+            window.location.search.substring(1).split('&').forEach(param => {
+                const parts = param.split('=');
+                if (parts[0]) {
+                    params[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1] || '');
+                }
+            });
+            return params;
+        }
+
+        // ----------------------------------------------------------------------
+        // --- MESSAGING AND MODAL UTILITIES ---
+        // ----------------------------------------------------------------------
+
+        /**
+         * Shows a temporary, non-blocking message to the user.
+         * @param {string} message 
+         * @param {'info'|'success'|'error'} type 
+         */
+        function showFloatingMessage(message, type = 'info') {
+            let messageBox = document.getElementById('floating-message');
+            // Ensure the box is visible and reset styles
+            messageBox.style.opacity = '1';
+            messageBox.classList.remove('bg-green-600', 'bg-red-600', 'bg-blue-600');
+
+            // Set content and color based on type
+            messageBox.textContent = message;
+            if (type === 'success') {
+                messageBox.classList.add('bg-green-600');
+            } else if (type === 'error') {
+                messageBox.classList.add('bg-red-600');
+            } else {
+                messageBox.classList.add('bg-blue-600');
+            }
+
+            // Hide after 3 seconds
+            setTimeout(() => {
+                messageBox.style.opacity = '0';
+            }, 3000);
+        }
+
+        /**
+         * Shows the confirmation modal.
+         */
+        function showModal() {
+            document.getElementById('modal-backdrop').classList.remove('hidden');
+            document.getElementById('confirmation-modal').classList.remove('hidden');
+        }
+
+        /**
+         * Hides the confirmation modal.
+         */
+        function closeModal() {
+            document.getElementById('modal-backdrop').classList.add('hidden');
+            document.getElementById('confirmation-modal').classList.add('hidden');
+        }
+
+        // ----------------------------------------------------------------------
+        // --- COMMENTING UTILITIES AND LOGIC ---
+        // ----------------------------------------------------------------------
+
+        /**
+         * Generates the HTML string for a single comment, including edit/delete buttons 
+         * for the author or admin.
+         * @param {Object} comment - The comment data object.
+         * @returns {string} HTML string for the comment.
+         */
+        function createCommentHtml(comment) {
+            
+            let actionButtonsHtml = '';
+            
+            // Check if the current user is the author OR an admin
+            if (currentUserRole === 'admin' || currentUserId === comment.user_id) {
+                // --- NEW: Edit Button ---
+                const safeContent = comment.content.replace(/'/g, "\\'").replace(/\n/g, "\\n");
+
+                const editButtonHtml = `
+                    <button 
+                        onclick="promptEditCommentForm(${comment.id}, '${safeContent}')"
+                        title="Edit Comment"
+                        class="text-blue-500 hover:text-blue-700 transition duration-150 ease-in-out p-1 rounded-full hover:bg-blue-100 mr-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>
+                    </button>
+                `;
+
+                // --- Existing: Delete Button ---
+                const deleteButtonHtml = `
+                    <button 
+                        onclick="promptDeleteCommentConfirmation(${comment.id})"
+                        title="Delete Comment"
+                        class="text-red-500 hover:text-red-700 transition duration-150 ease-in-out p-1 rounded-full hover:bg-red-100">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                `;
+                actionButtonsHtml = editButtonHtml + deleteButtonHtml;
+            }
+
+            // Updated HTML structure to support in-place editing
+            return `
+                <div id="comment-${comment.id}" class="bg-gray-50 p-4 rounded-lg shadow-inner border-l-4 border-green-500">
+                    
+                    <div id="comment-display-${comment.id}">
+                        <p class="comment-content text-sm text-gray-700 whitespace-pre-wrap overflow-wrap break-word">${comment.content}</p>
+                        <div class="text-xs text-gray-500 mt-2 flex justify-between items-center">
+                            <span>Comment by User ID: <span class="font-semibold">${comment.user_id}</span></span> 
+                            <span class="flex items-center">
+                                <span>${formatDate(comment.created_at)}</span>
+                                ${actionButtonsHtml} 
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div id="comment-edit-${comment.id}" class="hidden">
+                        </div>
+
+                </div>
+            `;
+        }
+
+        // ----------------------------------------------------------------------
+        // --- COMMENT EDITING LOGIC (NEW) ---
+        // ----------------------------------------------------------------------
+
+        /**
+         * Renders and displays the in-place edit form for a specific comment.
+         * @param {number} commentId - The ID of the comment to edit.
+         * @param {string} content - The current content of the comment (escaped).
+         */
+        function promptEditCommentForm(commentId, content) {
+            const displayArea = document.getElementById(`comment-display-${commentId}`);
+            const editArea = document.getElementById(`comment-edit-${commentId}`);
+            
+            // Hide display and show edit form area
+            displayArea.classList.add('hidden');
+            editArea.classList.remove('hidden');
+
+            editArea.innerHTML = `
+                <form id="edit-comment-form-${commentId}" onsubmit="handleCommentEditSubmission(event, ${commentId})">
+                    <textarea id="edit-comment-content-${commentId}" name="content" 
+                            class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 resize-y min-h-[80px] text-gray-800" 
+                            required>${content.replace(/\\n/g, '\n')}</textarea>
+                    
+                    <div class="flex justify-end space-x-2 mt-2">
+                        <button type="button" onclick="cancelCommentEdit(${commentId})" 
+                                class="px-3 py-1 text-sm bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400 transition duration-150">Cancel</button>
+                        <button type="submit" 
+                                class="px-3 py-1 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-150">Save</button>
+                    </div>
+                </form>
+            `;
+        }
+
+        /**
+         * Hides the edit form and reverts to the comment display mode.
+         * @param {number} commentId - The ID of the comment to revert.
+         */
+        function cancelCommentEdit(commentId) {
+            document.getElementById(`comment-display-${commentId}`).classList.remove('hidden');
+            document.getElementById(`comment-edit-${commentId}`).classList.add('hidden');
+        }
+
+
+        /**
+         * Executes the comment update API call and updates the UI.
+         * @param {Event} event - The form submission event.
+         * @param {number} commentId - The ID of the comment to update.
+         */
+        async function handleCommentEditSubmission(event, commentId) {
+            event.preventDefault(); 
+            
+            const contentTextarea = document.getElementById(`edit-comment-content-${commentId}`);
+            const content = contentTextarea.value.trim();
+
+            if (!content) {
+                showFloatingMessage('Comment content cannot be empty.', 'error');
+                return;
+            }
+
+            showFloatingMessage('Saving comment changes...', 'info');
+
+            try {
+                // Prepare the data to be sent as application/x-www-form-urlencoded
+                const formData = new URLSearchParams();
+                formData.append('content', content);
+                
+                // This assumes a PATCH/PUT endpoint at /forum/comment/{comment_id}/update
+                const response = await fetch(`/forum/comment/${commentId}/update`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                });
+
+                if (response.ok) {
+                    const updatedComment = await response.json();
+                    
+                    // 1. Update the displayed content text
+                    const contentElement = document.getElementById(`comment-display-${commentId}`).querySelector('.comment-content');
+                    if (contentElement) {
+                        contentElement.textContent = updatedComment.content;
+                    }
+                    
+                    // 2. Hide the form and show the display area
+                    cancelCommentEdit(commentId);
+                    
+                    showFloatingMessage('Comment updated successfully!', 'success');
+
+                } else {
+                    const errorData = await response.json();
+                    const detail = errorData.detail || "Failed to update comment.";
+                    console.error("Comment Edit API Error:", detail);
+                    showFloatingMessage(`Error: ${detail}`, 'error');
+                }
+
+            } catch (error) {
+                console.error("Network Error during comment update:", error);
+                showFloatingMessage('Network Error: Could not reach the server to update comment.', 'error');
+            }
+        }
+
+        /**
+         * Fetches and renders all existing comments for a post.
+         * @param {number} postId - The ID of the post.
+         */
+        async function fetchAndRenderComments(postId) {
+            const commentsListContainer = document.getElementById('comments-list-container');
+            // Show a temporary loading message inside the container while fetching
+            commentsListContainer.innerHTML = '<p class="text-gray-400 text-center p-4">Loading comments...</p>'; 
+
+            try {
+                const response = await fetch(`/forum/comments/${postId}/`);
+
+                if (response.ok) {
+                    const comments = await response.json();
+                    
+                    // Clear the loading message
+                    commentsListContainer.innerHTML = ''; 
+                    
+                    // --- CORE MODIFICATION: INSERT AD AS THE FIRST ELEMENT ---
+                    commentsListContainer.insertAdjacentHTML('beforeend', createAdSenseHtml());
+                    
+                    // Immediately run the AdSense script to process the newly inserted ad unit
+                    runAdSenseScript();
+                    // -------------------------------------------------------
+
+                    if (comments.length === 0) {
+                        // If there are no *real* comments, append a message after the ad
+                        commentsListContainer.insertAdjacentHTML('beforeend', '<p class="text-gray-500 p-4">No comments yet. Be the first to start the discussion!</p>');
+                        return;
+                    }
+
+                    // Render comments (API returns newest first, so we use append to maintain that order)
+                    comments.forEach(comment => {
+                        commentsListContainer.insertAdjacentHTML('beforeend', createCommentHtml(comment));
+                    });
+
+                } else {
+                    const errorData = await response.json();
+                    commentsListContainer.innerHTML = `<p class="text-red-500 p-4">Failed to load comments: ${errorData.detail || 'Server error.'}</p>`;
+                }
+            } catch (error) {
+                console.error("Network error fetching comments:", error);
+                commentsListContainer.innerHTML = '<p class="text-red-500 p-4">Network error. Could not load comments.</p>';
+            }
+        }
+
+        /**
+         * Dynamically prepends a newly created comment to the comments list.
+         * @param {Object} comment - The comment data object returned from the API.
+         */
+        function renderNewComment(comment) {
+            const commentsListContainer = document.getElementById('comments-list-container');
+            
+            // Check for and remove the "No comments yet" message
+            const initialMessage = commentsListContainer.querySelector('.text-gray-500');
+            if (initialMessage && initialMessage.textContent.includes('No comments yet')) {
+                commentsListContainer.innerHTML = '';
+            }
+
+            // Prepend the new comment to the top of the list
+            commentsListContainer.insertAdjacentHTML('afterbegin', createCommentHtml(comment));
+        }
+
+
+        /**
+         * Handles the submission of the comment form.
+         * @param {Event} event - The form submission event.
+         * @param {number} postId - The ID of the post the comment belongs to.
+         */
+        async function handleCommentSubmission(event, postId) {
+            event.preventDefault(); // Stop the default form submission and page reload
+
+            const contentTextarea = document.getElementById('comment-content');
+            const content = contentTextarea.value.trim();
+
+            if (!content) {
+                showFloatingMessage('Comment content cannot be empty.', 'error');
+                return;
+            }
+
+            // Prepare the data to be sent as application/x-www-form-urlencoded
+            const formData = new URLSearchParams();
+            formData.append('content', content);
+            
+            try {
+                // Call the new API endpoint
+                const response = await fetch(`/forum/posts/${postId}/comment`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData.toString()
+                });
+
+                if (response.ok) {
+                    const newComment = await response.json();
+                    showFloatingMessage('Comment posted successfully!', 'success');
+                    
+                    // 1. Clear the form field
+                    contentTextarea.value = ''; 
+                    
+                    // 2. Instantly update the UI with the new comment
+                    renderNewComment(newComment); 
+
+                    // 3. Update the comment count display
+                    const commentCountSpan = document.getElementById('comment-count-display');
+                    if (commentCountSpan) {
+                        commentCountSpan.textContent = parseInt(commentCountSpan.textContent) + 1;
+                    }
+
+                } else {
+                    const errorData = await response.json();
+                    const detail = errorData.detail || "Failed to post comment.";
+                    console.error("Comment API Error:", detail);
+                    // Provide a hint if they aren't logged in
+                    showFloatingMessage(`Error: ${detail} (Are you logged in to comment?)`, 'error');
+                }
+
+            } catch (error) {
+                console.error("Network Error during comment submission:", error);
+                showFloatingMessage('Network Error: Could not reach the server to post comment.', 'error');
+            }
+        }
+        
+        // ----------------------------------------------------------------------
+        // --- COMMENT DELETION LOGIC (NEW) ---
+        // ----------------------------------------------------------------------
+
+        /**
+         * Initiates the comment delete confirmation sequence by showing the modal.
+         * @param {number} commentId - The ID of the comment to delete.
+         */
+        function promptDeleteCommentConfirmation(commentId) {
+            // Set up the modal content
+            document.getElementById('modal-title').textContent = 'Confirm Comment Deletion';
+            document.getElementById('modal-message').textContent = 'Are you sure you want to permanently delete this comment? This cannot be undone.';
+            
+            const confirmBtn = document.getElementById('modal-confirm-button');
+            
+            // Remove previous event listener and assign new action for the current comment ID
+            confirmBtn.onclick = null; 
+            confirmBtn.onclick = () => handleDeleteComment(commentId); 
+
+            showModal();
+        }
+
+        /**
+         * Executes the comment deletion API call and updates the UI.
+         * @param {number} commentId - The ID of the comment to delete.
+         */
+        async function handleDeleteComment(commentId) {
+            closeModal(); // Close the modal immediately after confirmation
+            showFloatingMessage('Deleting comment...', 'info');
+
+            try {
+                // Call the new DELETE endpoint you created
+                const response = await fetch(`/forum/comment/${commentId}/delete`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    showFloatingMessage('Comment deleted successfully!', 'success');
+                    
+                    // 1. Remove the comment element from the DOM
+                    const commentElement = document.getElementById(`comment-${commentId}`);
+                    if (commentElement) {
+                        commentElement.remove();
+                    }
+
+                    // 2. Decrement the comment count display
+                    const commentCountSpan = document.getElementById('comment-count-display');
+                    if (commentCountSpan) {
+                        commentCountSpan.textContent = Math.max(0, parseInt(commentCountSpan.textContent) - 1);
+                    }
+                    
+                    // Optional: If the list is now empty, re-render the "No comments" message
+                    const commentsListContainer = document.getElementById('comments-list-container');
+                    if (commentsListContainer.children.length === 0) {
+                        commentsListContainer.innerHTML = '<p class="text-gray-500 p-4">No comments yet. Be the first to start the discussion!</p>';
+                    }
+
+                } else {
+                    const errorData = await response.json();
+                    const detail = errorData.detail || "Failed to delete comment.";
+                    console.error("Delete Comment API Error:", detail);
+                    showFloatingMessage(`Error deleting comment: ${detail}`, 'error');
+                }
+
+            } catch (error) {
+                console.error("Network Error during comment deletion:", error);
+                showFloatingMessage('Network Error: Could not reach the server to delete the comment.', 'error');
+            }
+        }
+
+
+        // ----------------------------------------------------------------------
+        // --- POST DETAIL, VOTE, AND DELETE LOGIC ---
+        // ----------------------------------------------------------------------
+        
+        /**
+         * Updates only the vote count display on the UI after a successful vote API call.
+         * @param {Object} post - The post data object returned from the API.
+         */
+        function updatePostDisplay(post) {
+            const voteCountSpan = document.getElementById('upvote-count');
+            if (voteCountSpan) {
+                // Update the cached count displayed to the user
+                voteCountSpan.textContent = post.upvote_count;
+                showFloatingMessage('Vote successfully recorded!', 'success');
+            }
+        }
+
+
+       /**
+         * Renders the fetched post data into the detail card, including the admin delete button
+         * and the author's edit button.
+         * @param {Object} post - The post data object.
+         */
+        function renderPost(post) {
+            // Check if status-message exists before trying to remove it
+            const statusMessage = document.getElementById('status-message');
+            if (statusMessage) {
+                 statusMessage.remove();
+            }
+
+            document.getElementById('page-title').textContent = `Homeroom Heroes - ${post.title}`;
+
+            const card = document.getElementById('post-detail-card');
+            const formattedDate = formatDate(post.created_at);
+            
+            // Store the ID for global access by the delete function
+            currentPostId = post.id;
+            
+            // Sanitize strings for use within the JS function call in HTML onclick
+            // Crucial: Replace single quotes with their escaped equivalent (\')
+            // Crucial: Replace newlines with their escaped equivalent (\n) for textarea pre-fill
+            const safeTitle = post.title.replace(/'/g, "\\'");
+            const safeContent = post.content.replace(/'/g, "\\'").replace(/\n/g, "\\n");
+
+
+            // --- NEW: Generate the Edit Post Button HTML (only if the user is the author) ---
+            let editButtonHtml = '';
+            if (currentUserId === post.user_id) {
+                editButtonHtml = `
+                    <button id="edit-post-btn"
+                        data-post-id="${post.id}"
+                        data-post-title="${post.title.replace(/"/g, '&quot;')}" 
+                        onclick="prepareEditForm(this)"
+                        title="Edit Post"
+                        class="mt-4 mr-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out flex items-center">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        Edit Post
+                    </button>
+                `;
+            }
+
+            // Generate the Delete Post Button HTML (only if the user is an admin)
+            let deleteButtonHtml = '';
+            if (currentUserRole === 'admin') {
+                deleteButtonHtml = `
+                    <button id="delete-post-btn"
+                        onclick="promptDeleteConfirmation(${post.id})"
+                        title="Delete Post"
+                        class="mt-4 px-4 py-2 bg-red-600 text-white font-semibold rounded-lg shadow-md hover:bg-red-700 transition duration-300 ease-in-out flex items-center">
+                        <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        Delete Post
+                    </button>
+                `;
+            }
+
+
+
+            // Updated HTML to include Comment Form and Comment List container
+            card.innerHTML = `
+                <div class="border-b pb-4 mb-4">
+                    
+                    <div class="flex flex-col md:flex-row md:items-center justify-between text-base text-gray-500">
+                        
+                        <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                            <button id="upvote-btn" 
+                                            onclick="handleVote(${post.id}, 1)" 
+                                            title="Upvote"
+                                            class="text-gray-500 hover:text-green-600 active:text-green-800 transition duration-150 ease-in-out p-2 rounded-full bg-gray-100 hover:bg-green-100 shadow-md">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                            </button>
+                            
+                            <span id="upvote-count" class="text-2xl font-bold text-gray-800">${post.upvote_count}</span>
+                            
+                            <button id="downvote-btn" 
+                                            onclick="handleVote(${post.id}, -1)" 
+                                            title="Downvote"
+                                            class="text-gray-500 hover:text-red-600 active:text-red-800 transition duration-150 ease-in-out p-2 rounded-full bg-gray-100 hover:bg-red-100 shadow-md">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <p class="mt-2 md:mt-0">Posted by <span class="font-semibold text-gray-700">${post.user_id}</span> on ${formattedDate}</p>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        ${editButtonHtml}
+                        ${deleteButtonHtml}
+                    </div>
+                </div>
+                
+                <div id="post-display-area">
+                    <div id="post-title-display" class="pt-4 text-lg">
+                        <h1 class="text-4xl font-extrabold text-green-800 mb-2">${post.title}</h1>
+                    </div>
+                    <div class="pt-4 text-lg">
+                        <p id="post-content" style="white-space: pre-wrap; overflow-wrap: break-word;">${post.content}</p>
+                    </div>
+                </div>
+
+                <div id="post-edit-area" class="hidden">
+                    </div>
+                
+                <div class="pt-8 mt-8 border-t border-gray-200">
+                    <h3 class="text-2xl font-bold text-green-700 mb-4">Leave a Comment</h3>
+                    
+                    <form id="comment-form" onsubmit="handleCommentSubmission(event, ${post.id})">
+                        <textarea id="comment-content" name="content" 
+                                     class="w-full p-4 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500 resize-y min-h-[100px] text-gray-800" 
+                                     placeholder="Share your thoughts..." 
+                                     required></textarea>
+                        
+                        <button type="submit" 
+                                     class="mt-3 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-300 ease-in-out">
+                            Post Comment
+                        </button>
+                    </form>
+                    
+                    <div id="comments-list" class="mt-8 space-y-4">
+                        <h3 class="text-2xl font-bold text-green-700 mb-4">
+                            <span id="comment-count-display">${post.comment_count || 0}</span> Comments
+                        </h3>
+                        <div id="comments-list-container" class="space-y-4">
+                            <p class="text-gray-500 p-4">Loading existing comments...</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // CRITICAL: After rendering the post structure, fetch and display the comments
+            fetchAndRenderComments(post.id);
+        }
+
+        /**
+         * Displays an error message in the post detail area.
+         * @param {string} message 
+         */
+        function displayError(message) {
+            const statusBox = document.getElementById('status-message');
+            // Ensure statusBox exists (it might have been removed by renderPost if an error occurred later)
+            if (statusBox) {
+                statusBox.classList.remove('text-blue-600');
+                statusBox.classList.add('text-red-600', 'font-bold');
+                statusBox.textContent = `Error: ${message}`;
+            } else {
+                 document.getElementById('post-detail-card').innerHTML = `<div id="status-message" class="text-center p-10 text-xl font-bold text-red-600">Error: ${message}</div>`;
+            }
+        }
+        // ----------------------------------------------------------------------
+        // --- POST EDITING LOGIC (NEW) ---
+        // ----------------------------------------------------------------------
+
+        /**
+         * Shows the in-line edit form for the post by injecting HTML.
+         * @param {number} postId - The ID of the post.
+         * @param {string} title - The current title of the post (escaped).
+         * @param {string} content - The current content of the post (escaped).
+         */
+        function prepareEditForm(buttonElement) {
+            const postId = buttonElement.getAttribute('data-post-id');
+            const title = buttonElement.getAttribute('data-post-title');
+            
+            // Instead of passing content through the button's HTML, 
+            // we pull it directly from the text already on the page.
+            const content = document.getElementById('post-content').textContent;
+            
+            showEditForm(postId, title, content);
+        }
+        
+        function showEditForm(postId, title, content) {
+            const displayArea = document.getElementById('post-display-area');
+            const editArea = document.getElementById('post-edit-area');
+            
+            // Hide display content and show edit form area
+            displayArea.classList.add('hidden');
+            editArea.classList.remove('hidden');
+
+            editArea.innerHTML = `
+                <form id="edit-post-form" onsubmit="handleEditSubmission(event, ${postId})">
+                    <div class="mb-4">
+                        <label for="edit-title" class="block text-xl font-bold text-green-700 mb-2">Title</label>
+                        <input type="text" id="edit-title" name="title" value="${title}" 
+                            class="w-full p-3 border border-gray-300 rounded-lg text-gray-800 focus:ring-green-500 focus:border-green-500" 
+                            required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="edit-content" class="block text-xl font-bold text-green-700 mb-2">Content</label>
+                        <textarea id="edit-content" name="content" 
+                                class="w-full p-4 border border-gray-300 rounded-lg text-gray-800 focus:ring-green-500 focus:border-green-500 resize-y min-h-[200px]" 
+                                required>${content}</textarea>
+                    </div>
+                    <div class="flex space-x-4">
+                        <button type="submit" 
+                                class="px-6 py-3 bg-green-600 text-white font-semibold rounded-lg shadow-md hover:bg-green-700 transition duration-300">
+                            Save Changes
+                        </button>
+                        <button type="button" onclick="cancelEdit()" 
+                                class="px-6 py-3 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 transition duration-300">
+                            Cancel
+                        </button>
+                    </div>
+                </form>
+            `;
+        }
+
+        /**
+         * Hides the edit form and reverts to the display mode.
+         */
+        function cancelEdit() {
+            document.getElementById('post-display-area').classList.remove('hidden');
+            document.getElementById('post-edit-area').classList.add('hidden');
+        }
+
+        /**
+         * Handles the submission of the post edit form, sending a PATCH request to the API.
+         * @param {Event} event - The form submission event.
+         * @param {number} postId - The ID of the post to update.
+         */
+        async function handleEditSubmission(event, postId) {
+            event.preventDefault(); 
+            
+            const newTitle = document.getElementById('edit-title').value.trim();
+            const newContent = document.getElementById('edit-content').value.trim();
+
+            if (!newTitle || !newContent) {
+                showFloatingMessage('Title and content cannot be empty.', 'error');
+                return;
+            }
+
+            showFloatingMessage('Saving changes...', 'info');
+
+            try {
+                const response = await fetch(`/forum/post/${postId}/update`, { 
+                    method: 'PATCH', 
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        title: newTitle,
+                        content: newContent
+                    })
+                });
+
+                if (response.ok) {
+                    const updatedPost = await response.json();
+                    
+                    // 1. Update the displayed title and content immediately
+                    document.getElementById('post-title-display').querySelector('h1').textContent = updatedPost.title;
+                    document.getElementById('post-content').textContent = updatedPost.content;
+                    
+                    // 2. Switch back to display mode
+                    cancelEdit();
+                    
+                    showFloatingMessage('Post updated successfully!', 'success');
+
+                } else {
+                    const errorData = await response.json();
+                    const detail = errorData.detail || "Failed to update post.";
+                    console.error("Edit API Error:", detail);
+                    showFloatingMessage(`Error updating post: ${detail}`, 'error');
+                }
+
+            } catch (error) {
+                console.error("Network Error during post update:", error);
+                showFloatingMessage('Network Error: Could not reach the server to update the post.', 'error');
+            }
+        }
+
+        /**
+         * Fetches a single post using the ID from the URL.
+         */
+        async function fetchPostDetail() {
+            const params = getQueryParameters();
+            const postId = params.id;
+
+            if (!postId) {
+                displayError("Post ID is missing from the URL. Please ensure you are navigating from the forum list.");
+                return;
+            }
+
+            try {
+                // Assuming the API endpoint is /forum/get_post?post_id=<ID>
+                const apiUrl = `/forum/get_post?post_id=${postId}`;
+                const response = await fetch(apiUrl);
+
+                if (response.ok) {
+                    const post = await response.json();
+                    renderPost(post);
+                    // fetchAndRenderComments is now called inside renderPost()
+                } else {
+                    const errorData = await response.json();
+                    const detail = errorData.detail || `HTTP Error: ${response.status} ${response.statusText}.`;
+                    displayError(`Failed to load post ${postId}: ${detail}`);
+                    console.error("API Error Response:", errorData);
+                }
+
+            } catch (error) {
+                displayError('Network Error: Could not reach the server to fetch the post.');
+                console.error("Fetch Error:", error);
+            }
+        }
+
+        /**
+         * Sends the vote request to the FastAPI backend.
+         * @param {number} postId - The ID of the post being voted on.
+         * @param {1 | -1} voteType - 1 for Upvote, -1 for Downvote.
+         */
+        async function handleVote(postId, voteType) {
+            const payload = { vote_type: voteType };
+            
+            try {
+                const response = await fetch(`/forum/posts/${postId}/vote`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    const updatedPost = await response.json();
+                    updatePostDisplay(updatedPost);
+                } else {
+                    const errorData = await response.json();
+                    const detail = errorData.detail || "Failed to process vote.";
+                    console.error("Vote API Error:", detail);
+                    // Display non-blocking error message
+                    showFloatingMessage(`Error: ${detail} (Are you logged in?)`, 'error');
+                }
+
+            } catch (error) {
+                console.error("Network Error during vote:", error);
+                showFloatingMessage('Network Error: Could not reach the server.', 'error');
+            }
+        }
+
+        /**
+         * Initiates the post delete confirmation sequence by showing the modal.
+         * @param {number} postId - The ID of the post to delete.
+         */
+        function promptDeleteConfirmation(postId) {
+            if (!currentUserRole === 'admin') {
+                showFloatingMessage('Access denied. Only administrators can delete posts.', 'error');
+                return;
+            }
+            
+            // Set up the modal content for POST deletion
+            document.getElementById('modal-title').textContent = 'Confirm Post Deletion';
+            document.getElementById('modal-message').textContent = 'This action cannot be undone. Are you absolutely sure you want to permanently delete this discussion?';
+
+
+            // Set up the modal confirm action before showing it
+            const confirmBtn = document.getElementById('modal-confirm-button');
+            // Remove previous event listener to prevent multiple triggers
+            confirmBtn.onclick = null; 
+            // Assign new action for the current post ID
+            confirmBtn.onclick = () => handleDeletePost(postId); 
+
+            showModal();
+        }
+
+        /**
+         * Executes the post deletion API call.
+         * @param {number} postId - The ID of the post to delete.
+         */
+        async function handleDeletePost(postId) {
+            closeModal(); // Close the modal immediately after confirmation
+            showFloatingMessage('Deleting post...', 'info');
+
+            try {
+                const response = await fetch(`/forum/post/${postId}/delete`, {
+                    method: 'DELETE',
+                });
+
+                if (response.ok) {
+                    showFloatingMessage('Post deleted successfully!', 'success');
+                    // Wait a moment for the user to see the success message, then redirect
+                    setTimeout(() => {
+                        redirectTo('/pages/forum.html');
+                    }, 1500);
+                } else {
+                    const errorData = await response.json();
+                    const detail = errorData.detail || "Failed to delete post.";
+                    console.error("Delete API Error:", detail);
+                    showFloatingMessage(`Error deleting post: ${detail}`, 'error');
+                }
+
+            } catch (error) {
+                console.error("Network Error during deletion:", error);
+                showFloatingMessage('Network Error: Could not reach the server to delete the post.', 'error');
+            }
+        }
+        
+        // --- Authentication/Navigation Functions ---
+
+        async function checkAuthentication() {
+            const buttons = ['loginButton', 'logoutButton', 'mypageButton', 'validationButton', 'forumButton'];
+            buttons.forEach(id => {
+                const button = document.getElementById(id);
+                if (button) {
+                    button.classList.add('hidden');
+                    button.classList.remove('block');
+                }
+            });
+
+            currentUserRole = null; // Reset role state
+            currentUserId = null; // Reset user ID state
+
+            try {
+                // Assuming this endpoint returns {user_role: "...", user_id: 123}
+                const response = await fetch('/api/profile/'); 
+                if (response.ok) {
+                    const data = await response.json();
+                    currentUserRole = data?.user_role; // Store the role globally
+                    currentUserId = data?.user_id; // Store the user ID globally
+                }
+            } catch (error) {
+                console.error('Network or parsing error fetching user profile:', error);
+            }
+
+            // Based on the determined role, show specific buttons by removing 'hidden' and adding 'block'
+            if (currentUserRole === 'teacher') {
+                document.getElementById('mypageButton').classList.remove('hidden');
+                document.getElementById('mypageButton').classList.add('block'); // Make it display as a block
+                document.getElementById('forumButton').classList.remove('hidden');
+                document.getElementById('forumButton').classList.add('block'); // Make it display as a block
+                document.getElementById('validationButton').classList.remove('hidden');
+                document.getElementById('validationButton').classList.add('block'); // Make it display as a block
+                document.getElementById('logoutButton').classList.remove('hidden');
+                document.getElementById('logoutButton').classList.add('block'); // Make it display as a block
+            } else if (currentUserRole === 'admin') {
+                document.getElementById('forumButton').classList.remove('hidden');
+                document.getElementById('forumButton').classList.add('block'); // Make it display as a block
+                document.getElementById('validationButton').classList.remove('hidden');
+                document.getElementById('validationButton').classList.add('block'); // Make it display as a block
+                document.getElementById('logoutButton').classList.remove('hidden');
+                document.getElementById('logoutButton').classList.add('block'); // Make it display as a block
+            } else {
+                // Default: show login if no specific role or an error occurred (unauthenticated)
+                document.getElementById('loginButton').classList.remove('hidden');
+                document.getElementById('loginButton').classList.add('block'); // Make it display as a block
+            }
+            
+            // Since role/ID is now set, fetch post detail immediately (if ID is in URL)
+            fetchPostDetail();
+        }
+
+        /**
+         * Generates the HTML string for the Google AdSense unit.
+         * IMPORTANT: You must replace 'YOUR_AD_SLOT_ID' with your actual AdSense ad slot ID.
+         * The ad style must be set to ensure it fills the container responsively.
+         * @returns {string} HTML string for the AdSense ad unit.
+         */
+        function createAdSenseHtml() {
+            // --- IMPORTANT: REPLACE 'YOUR_AD_SLOT_ID' with your actual AdSense data-ad-slot ---
+            // This example uses a common responsive display ad setup.
+            return `
+                <div id="first-comment-ad" class="bg-gray-100 p-4 rounded-lg shadow-md border-2 border-yellow-500 my-4 text-center">
+                    <p class="text-sm text-gray-700 font-semibold mb-2">Advertisement</p>
+                    <ins class="adsbygoogle"
+                        style="display:block"
+                        data-ad-client="ca-pub-2827692846371935" 
+                        data-ad-slot="YOUR_AD_SLOT_ID"
+                        data-ad-format="auto"
+                        data-full-width-responsive="true"></ins>
+                </div>
+            `;
+        }
+
+        /**
+         * Pushes the ad code into the AdSense stack and tells Google to process it.
+         * This is crucial for dynamically loaded ads.
+         */
+        function runAdSenseScript() {
+            // Check if the adsbygoogle array exists and is defined
+            if (window.adsbygoogle && window.adsbygoogle.push) {
+                // Push an empty object to the adsbygoogle array to tell the script
+                // to look for new ad units to load (e.g., the one we just inserted).
+                window.adsbygoogle.push({});
+            }
+        }
+
+        // --- Initializers ---
+
+        document.addEventListener('DOMContentLoaded', checkAuthentication);
+
+        async function mypage() {
+            try {
+                const response = await fetch('/profile/myinfo/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    window.location.href = '/pages/teacher.html';
+                } else {
+                    console.error('Error fetching my page info:', response.status);
+                    window.location.href = '/'; // Redirect to homepage or login if error
+                }
+            } catch (error) {
+                console.error('Error fetching my page info:', error);
+                window.location.href = '/'; // Redirect to homepage or login if error
+            }
+        }
+        
+        async function logout() {
+            try {
+                const response = await fetch('/profile/logout/', { method: 'POST' });
+                if (response.ok) {
+                    showFloatingMessage('Logged out successfully.', 'success');
+                    setTimeout(() => redirectTo('/pages/homepage.html'), 500);
+                } else {
+                    showFloatingMessage('Failed to log out.', 'error');
+                }
+            } catch (error) {
+                showFloatingMessage('Network error during logout.', 'error');
+            }
+        }
+
+    </script>
+</body>
+</html>

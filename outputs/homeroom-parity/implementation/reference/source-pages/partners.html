@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homeroom Heroes - Sponsors and Thank You</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico" />
+    <link rel="stylesheet" href="/static/style.css"> 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17482080573"></script>
+    <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'AW-17482080573'); </script> 
+    <!-- Event snippet for Page view conversion page -->
+    <script> gtag('event', 'conversion', {'send_to': 'AW-17482080573/AK9bCInw2e4bEL3CjZBB'}); </script>
+
+</head>
+<body class="bg-gray-800 text-gray-50">
+    <header class="bg-gradient-to-r from-green-700 to-green-900 text-white shadow-lg py-4 md:py-6 relative">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="/pages/homepage.html" class="flex items-center">
+                    <img src="/static/images/logo_transparent.png" alt="Homeroom Heroes Logo" class="h-16 md:h-20 mr-3">
+                </a>
+                <nav class="hidden md:flex ml-4">
+                    <ul class="flex space-x-4 md:space-x-8 text-lg">
+                        <li><a href="/pages/homepage.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Home</a></li>
+                        <li><a href="/pages/index.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Donate</a></li>
+                        <li><a href="/pages/register.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Sign Up</a></li>
+                        <li><a href="/pages/about.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">About</a></li>
+                        <li><a href="/pages/contact.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Contact</a></li>
+                        <li><a href="/pages/partners.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Partners</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="relative">
+                <button id="hamburgerButton" class="text-white text-3xl focus:outline-none **md:hidden**" onclick="toggleMenu()">☰</button>
+
+                <div class="menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden **md:hidden**" id="menuItems">
+                    
+                    <nav class="md:hidden">
+                        <ul class="flex flex-col text-base p-1">
+                            <li><a href="/pages/homepage.html" class="listButton block">Home</a></li>
+                            <li><a href="/pages/index.html" class="listButton block">Donate</a></li>
+                            <li><a href="/pages/register.html" class="listButton block">Sign Up</a></li>
+                            <li><a href="/pages/about.html" class="listButton block">About</a></li>
+                            <li><a href="/pages/contact.html" class="listButton block">Contact</a></li>
+                            <li><a href="/pages/partners.html" class="listButton block">Partners</a></li>
+                            <hr class="my-1 border-green-700"> </ul>
+                    </nav>
+                    
+                    <button id="loginButton" class="listButton hidden" onclick="redirectTo('/pages/login.html')">Login</button>
+                    <button id="logoutButton" class="listButton hidden" onclick="logout()">Logout</button>
+                    <button id="mypageButton" class="listButton hidden" onclick="mypage()">My Page</button>
+                    <button id="forumButton" class="listButton hidden" onclick="redirectTo('/pages/forum.html')">Forum</button>
+                    <button id="validationButton" class="listButton hidden" onclick="redirectTo('/pages/validation.html')">Validation</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <section class="bg-white p-8 rounded-lg shadow-md text-gray-800 max-w-4xl mx-auto mb-8">
+            <h2 class="text-3xl font-bold text-green-800 mb-6 text-center">Thank You to Our Partners</h2>
+            <p class="text-gray-700 text-lg leading-relaxed">We are incredibly thankful for the support of our partners. Your contributions have made a lasting impact on the lives of teachers and students, helping us grow into the organization we are today. Together, we’re making a meaningful difference in classrooms across the country.</p>
+        </section>
+
+        <section class="bg-white p-8 rounded-lg shadow-md text-gray-800 max-w-4xl mx-auto mb-8">
+            <h3 class="text-2xl font-bold text-green-700 mb-6 text-center">Financial Partners</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
+                <div class="sponsor flex flex-col items-center text-center p-4 border border-gray-200 rounded-lg shadow-sm w-full max-w-xs bg-gray-50">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Coastal Community Bank - Darrington, Wa</h3>
+                    <a href="https://www.coastalbank.com/darrington/" target="_blank" class="block">
+                        <img src="/static/images/partners/Coastal.png" alt="CCB Logo" class="mt-4 mx-auto sponsor-img">
+                    </a>
+                    <p class="text-sm text-gray-600 mt-2">Visit their website for more info!</p>
+                </div>
+                    <div class="sponsor flex flex-col items-center text-center p-4 border border-gray-200 rounded-lg shadow-sm w-full max-w-xs bg-gray-50">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Microsoft</h3>
+                    <a href="https://www.microsoft.com/" target="_blank" class="block">
+                        <img src="/static/images/partners/Microsoft-logo.png" alt="Microsoft Logo" class="mt-4 mx-auto sponsor-img">
+                    </a>
+                    <p class="text-sm text-gray-600 mt-2">Visit their website for more info!</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white p-8 rounded-lg shadow-md text-gray-800 max-w-4xl mx-auto mb-8">
+            <h3 class="text-2xl font-bold text-green-700 mb-6 text-center">Radio Partners</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
+                <div class="sponsor flex flex-col items-center text-center p-4 border border-gray-200 rounded-lg shadow-sm w-full max-w-xs bg-gray-50">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">100.7 The Wolf Seattle </h3>
+                    <a href="https://www.seattlewolf.com" target="_blank" class="block">
+                        <img src="/static/images/partners/1007TheWolf.png" alt="100.7 The Wolf Seattle Logo" class="mt-4 mx-auto sponsor-img">
+                    </a>
+                    <p class="text-sm text-gray-600 mt-2">Visit their website for more info!</p>
+                </div>
+                <div class="sponsor flex flex-col items-center text-center p-4 border border-gray-200 rounded-lg shadow-sm w-full max-w-xs bg-gray-50">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">96.5 Live Free Country </h3>
+                    <a href="https://www.livefreecountry.com" target="_blank" class="block">
+                        <img src="/static/images/partners/965CountryColor.png" alt="96.5 Live Free Country Logo" class="mt-4 mx-auto sponsor-img">
+                    </a>
+                    <p class="text-sm text-gray-600 mt-2">Visit their website for more info!</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white p-8 rounded-lg shadow-md text-gray-800 max-w-4xl mx-auto mb-8">
+            <h3 class="text-2xl font-bold text-green-700 mb-6 text-center">Event Partners</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 justify-items-center">
+                <div class="sponsor flex flex-col items-center text-center p-4 border border-gray-200 rounded-lg shadow-sm w-full max-w-xs bg-gray-50">
+                    <h3 class="text-xl font-semibold text-gray-900 mb-2">Base Camp Studio - Seattle, Wa</h3>
+                    <a href="https://www.basecamp206.com/" target="_blank" class="block">
+                        <img src="/static/images/partners/BaseCamp.png" alt="Base Camp Studio Logo" class="mt-4 mx-auto sponsor-img">
+                    </a>
+                    <p class="text-sm text-gray-600 mt-2">Visit their website for more info!</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-white p-8 rounded-lg shadow-md text-gray-800 max-w-4xl mx-auto">
+            <h3 class="text-2xl font-bold text-green-700 mb-6 text-center">Become a Partner</h3>
+            <p class="text-gray-700 text-lg leading-relaxed text-center">If you are interested in becoming a partner, please fill out the form on the <a href="/pages/contact.html" class="text-blue-600 hover:text-blue-800 font-medium transition duration-300 ease-in-out">Contact page</a>, or reach out to us on social media. Becoming a partner is easy and can make a difference in your community.</p>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6 mt-8 rounded-t-lg shadow-inner text-center">
+        <div class="container mx-auto px-4 text-sm">
+            <p>&copy; 2024 Homeroom Heroes. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function redirectTo(url) {
+            window.location.href = url;
+        }
+
+        // This function dynamically shows/hides menu items based on user authentication and role.
+        async function checkAuthentication() {
+            const menuItems = document.getElementById('menuItems');
+            // Hide all dynamic buttons first to prevent flicker
+            const buttons = ['loginButton', 'logoutButton', 'mypageButton', 'validationButton','forumButton'];
+            buttons.forEach(id => {
+                const button = document.getElementById(id);
+                if (button) {
+                    button.classList.add('hidden');
+                    button.classList.remove('block'); // Ensure 'block' is removed
+                }
+            });
+
+            let userRole = null;
+
+            try {
+                const response = await fetch('/api/profile/');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.user_role) {
+                        userRole = data.user_role;
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+                // If there's an error fetching profile, assume not logged in.
+            }
+
+            // Show buttons based on user role
+            if (userRole === 'teacher') {
+                document.getElementById('logoutButton')?.classList.remove('hidden');
+                document.getElementById('logoutButton')?.classList.add('block');
+                document.getElementById('mypageButton')?.classList.remove('hidden');
+                document.getElementById('mypageButton')?.classList.add('block');
+                document.getElementById('forumButton').classList.remove('hidden');
+                document.getElementById('forumButton').classList.add('block'); // Make it display as a block
+                document.getElementById('validationButton')?.classList.remove('hidden');
+                document.getElementById('validationButton')?.classList.add('block');
+            } else if (userRole === 'admin') {
+                document.getElementById('logoutButton')?.classList.remove('hidden');
+                document.getElementById('logoutButton')?.classList.add('block');
+                document.getElementById('validationButton')?.classList.remove('hidden');
+                document.getElementById('validationButton')?.classList.add('block');
+                document.getElementById('forumButton').classList.remove('hidden');
+                document.getElementById('forumButton').classList.add('block'); // Make it display as a block
+            } else {
+                // Not logged in or unknown role, show login button (if it's the one in the dropdown)
+                document.getElementById('loginButton')?.classList.remove('hidden');
+                document.getElementById('loginButton')?.classList.add('block');
+            }
+        }
+
+        function toggleMenu() {
+            const menuItems = document.getElementById('menuItems');
+            // Use classList.toggle for Tailwind's hidden utility
+            menuItems.classList.toggle('hidden');
+            // If the menu is now shown, update authentication buttons
+            if (!menuItems.classList.contains('hidden')) {
+                checkAuthentication();
+            }
+        }
+
+        async function logout() {
+            try {
+                const response = await fetch(`/profile/logout/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    window.location.href = '/'; // Redirect to root after successful logout
+                } else {
+                    console.error('Logout failed:', response.status);
+                    alert('Logout failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+                alert('An error occurred during logout. Please try again.');
+            }
+        }
+
+        async function mypage() {
+            try {
+                const response = await fetch('/profile/myinfo/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    window.location.href = '/pages/teacher.html';
+                } else {
+                    console.error('Error fetching my page info:', response.status);
+                    window.location.href = '/'; // Redirect to homepage or login if error
+                }
+            } catch (error) {
+                console.error('Error fetching my page info:', error);
+                window.location.href = '/'; // Redirect to homepage or login if error
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Check authentication status to adjust header navigation
+            checkAuthentication();
+        });
+    </script>
+</body>
+</html>

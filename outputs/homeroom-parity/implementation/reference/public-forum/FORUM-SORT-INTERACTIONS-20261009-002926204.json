@@ -1,0 +1,208 @@
+{
+  "schema": "homeroom-forum-sort-states.v1",
+  "capturedAt": "2026-10-09T00:29:28.312Z",
+  "limits": [
+    "Fresh unauthenticated browser; no credentials/session.",
+    "Only local in-page sort buttons were clicked; forms, New Post, post cards, votes and writes were not activated.",
+    "All non-GET requests and ad/analytics hosts were blocked."
+  ],
+  "states": [
+    {
+      "state": "default",
+      "action": "Initial public list sort; no action.",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/forum-sort-20261009-002926204-default-desktop.png",
+      "dom": {
+        "url": "https://www.helpteachers.net/pages/forum.html",
+        "title": "Homeroom Heroes - Forum Discussions",
+        "order": [
+          "Forum Styling Guide",
+          "The Teachers' Lounge is Open",
+          "Official Bug Forum"
+        ],
+        "sortButtons": [
+          {
+            "id": "sort-date-newest",
+            "text": "Date (Newest)",
+            "class": "sort-btn text-sm py-2 px-3 md:text-base md:py-2 md:px-4 active-sort bg-green-600 hover:bg-green-500",
+            "active": true
+          },
+          {
+            "id": "sort-date-oldest",
+            "text": "Date (Oldest)",
+            "class": "sort-btn bg-gray-600 hover:bg-gray-500 text-sm py-2 px-3 md:text-base md:py-2 md:px-4",
+            "active": false
+          },
+          {
+            "id": "sort-upvotes",
+            "text": "Upvotes",
+            "class": "sort-btn bg-gray-600 hover:bg-gray-500 text-sm py-2 px-3 md:text-base md:py-2 md:px-4",
+            "active": false
+          },
+          {
+            "id": "create-post-btn",
+            "text": "+ New Post",
+            "class": "sort-btn bg-indigo-600 hover:bg-indigo-700 text-sm py-2 px-3 md:text-base md:py-2 md:px-4",
+            "active": false
+          }
+        ],
+        "cardCount": 3
+      }
+    },
+    {
+      "state": "date-oldest",
+      "action": "Clicked #sort-date-oldest (client-side sort only).",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/forum-sort-20261009-002926204-date-oldest-desktop.png",
+      "dom": {
+        "url": "https://www.helpteachers.net/pages/forum.html",
+        "title": "Homeroom Heroes - Forum Discussions",
+        "order": [
+          "Official Bug Forum",
+          "The Teachers' Lounge is Open",
+          "Forum Styling Guide"
+        ],
+        "sortButtons": [
+          {
+            "id": "sort-date-newest",
+            "text": "Date (Newest)",
+            "class": "sort-btn text-sm py-2 px-3 md:text-base md:py-2 md:px-4 bg-gray-600 hover:bg-gray-500",
+            "active": false
+          },
+          {
+            "id": "sort-date-oldest",
+            "text": "Date (Oldest)",
+            "class": "sort-btn text-sm py-2 px-3 md:text-base md:py-2 md:px-4 active-sort bg-green-600 hover:bg-green-500",
+            "active": true
+          },
+          {
+            "id": "sort-upvotes",
+            "text": "Upvotes",
+            "class": "sort-btn bg-gray-600 hover:bg-gray-500 text-sm py-2 px-3 md:text-base md:py-2 md:px-4",
+            "active": false
+          },
+          {
+            "id": "create-post-btn",
+            "text": "+ New Post",
+            "class": "sort-btn bg-indigo-600 hover:bg-indigo-700 text-sm py-2 px-3 md:text-base md:py-2 md:px-4",
+            "active": false
+          }
+        ],
+        "cardCount": 3
+      }
+    },
+    {
+      "state": "upvotes",
+      "action": "Clicked #sort-upvotes (client-side sort only).",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/forum-sort-20261009-002926204-upvotes-desktop.png",
+      "dom": {
+        "url": "https://www.helpteachers.net/pages/forum.html",
+        "title": "Homeroom Heroes - Forum Discussions",
+        "order": [
+          "Official Bug Forum",
+          "Forum Styling Guide",
+          "The Teachers' Lounge is Open"
+        ],
+        "sortButtons": [
+          {
+            "id": "sort-date-newest",
+            "text": "Date (Newest)",
+            "class": "sort-btn text-sm py-2 px-3 md:text-base md:py-2 md:px-4 bg-gray-600 hover:bg-gray-500",
+            "active": false
+          },
+          {
+            "id": "sort-date-oldest",
+            "text": "Date (Oldest)",
+            "class": "sort-btn text-sm py-2 px-3 md:text-base md:py-2 md:px-4 bg-gray-600 hover:bg-gray-500",
+            "active": false
+          },
+          {
+            "id": "sort-upvotes",
+            "text": "Upvotes",
+            "class": "sort-btn text-sm py-2 px-3 md:text-base md:py-2 md:px-4 active-sort bg-green-600 hover:bg-green-500",
+            "active": true
+          },
+          {
+            "id": "create-post-btn",
+            "text": "+ New Post",
+            "class": "sort-btn bg-indigo-600 hover:bg-indigo-700 text-sm py-2 px-3 md:text-base md:py-2 md:px-4",
+            "active": false
+          }
+        ],
+        "cardCount": 3
+      }
+    }
+  ],
+  "requests": [
+    {
+      "method": "GET",
+      "url": "https://www.helpteachers.net/pages/forum.html"
+    },
+    {
+      "method": "GET",
+      "url": "https://cdn.tailwindcss.com/"
+    },
+    {
+      "method": "GET",
+      "url": "https://fonts.googleapis.com/css2"
+    },
+    {
+      "method": "GET",
+      "url": "https://www.helpteachers.net/static/style.css"
+    },
+    {
+      "method": "GET",
+      "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+    },
+    {
+      "method": "GET",
+      "url": "https://cdn.tailwindcss.com/3.4.17"
+    },
+    {
+      "method": "GET",
+      "url": "https://www.googletagmanager.com/gtag/js"
+    },
+    {
+      "method": "GET",
+      "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+    },
+    {
+      "method": "GET",
+      "url": "https://www.helpteachers.net/api/profile/"
+    },
+    {
+      "method": "GET",
+      "url": "https://www.helpteachers.net/forum/get_posts"
+    },
+    {
+      "method": "GET",
+      "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/17482080573/"
+    },
+    {
+      "method": "POST",
+      "url": "https://www.google.com/rmkt/collect/17482080573/"
+    },
+    {
+      "method": "POST",
+      "url": "https://www.google.com/ccm/collect"
+    },
+    {
+      "method": "POST",
+      "url": "https://ad.doubleclick.net/ccm/s/collect"
+    },
+    {
+      "method": "GET",
+      "url": "https://www.google.com/rmkt/collect/17482080573/"
+    },
+    {
+      "method": "GET",
+      "url": "https://www.google.com/ccm/collect"
+    },
+    {
+      "method": "GET",
+      "url": "https://ad.doubleclick.net/ccm/s/collect"
+    },
+    {
+      "method": "GET",
+      "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/17482080573/"
+    }
+  ]
+}

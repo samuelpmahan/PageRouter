@@ -1,0 +1,861 @@
+{
+  "schema": "homeroom-public-auth-shells-desktop.v1",
+  "capturedAt": "2026-10-09T01:45:11.523Z",
+  "policy": "Public rendering only. No login or reset submission. Non-GET and analytics/ad requests blocked.",
+  "observations": [
+    {
+      "name": "login",
+      "status": 200,
+      "screenshot": "login-desktop.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "url": "https://www.helpteachers.net/pages/login.html",
+      "title": "Homeroom Heroes - Login",
+      "documentWidth": 1440,
+      "headings": [
+        {
+          "text": "Log In to Your Account",
+          "rect": {
+            "x": 496,
+            "y": 192,
+            "width": 448,
+            "height": 36
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "30px",
+            "fontWeight": "700",
+            "lineHeight": "36px",
+            "color": "rgb(22, 101, 52)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "0px",
+            "margin": "0px 0px 24px",
+            "textAlign": "center",
+            "display": "block",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        }
+      ],
+      "bodyText": "Home\nDonate\nSign Up\nAbout\nContact\nPartners\n☰\nLog In to Your Account\nEmail:\nPassword:\nSubmit\n\nForgot Password Register\n\n© 2024 Homeroom Heroes. All rights reserved.",
+      "header": {
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 128
+        },
+        "style": {
+          "fontFamily": "Inter, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "24px 0px",
+          "margin": "0px",
+          "textAlign": "start",
+          "display": "block",
+          "alignItems": "normal",
+          "justifyContent": "normal"
+        }
+      },
+      "form": {
+        "rect": {
+          "x": 496,
+          "y": 252,
+          "width": 448,
+          "height": 228
+        },
+        "style": {
+          "fontFamily": "Inter, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "rgb(31, 41, 55)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "0px",
+          "margin": "0px",
+          "textAlign": "start",
+          "display": "block",
+          "alignItems": "normal",
+          "justifyContent": "normal"
+        },
+        "method": "post",
+        "action": "https://www.helpteachers.net/pages/login.html"
+      },
+      "card": {
+        "rect": {
+          "x": 464,
+          "y": 160,
+          "width": 512,
+          "height": 400
+        },
+        "style": {
+          "fontFamily": "Inter, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "rgb(31, 41, 55)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "padding": "32px",
+          "margin": "0px 368px",
+          "textAlign": "start",
+          "display": "block",
+          "alignItems": "normal",
+          "justifyContent": "normal"
+        }
+      },
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "text": "☰",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 1317.09375,
+            "y": 46,
+            "width": 26.90625,
+            "height": 36
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "30px",
+            "fontWeight": "400",
+            "lineHeight": "36px",
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "0px",
+            "margin": "0px",
+            "textAlign": "center",
+            "display": "inline-block",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Login",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "400",
+            "lineHeight": "27px",
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "12px 16px",
+            "margin": "0px",
+            "textAlign": "left",
+            "display": "block",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Logout",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "400",
+            "lineHeight": "27px",
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "12px 16px",
+            "margin": "0px",
+            "textAlign": "left",
+            "display": "none",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "My Page",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "400",
+            "lineHeight": "27px",
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "12px 16px",
+            "margin": "0px",
+            "textAlign": "left",
+            "display": "none",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Forum",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "400",
+            "lineHeight": "27px",
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "12px 16px",
+            "margin": "0px",
+            "textAlign": "left",
+            "display": "none",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Validation",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "400",
+            "lineHeight": "27px",
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "12px 16px",
+            "margin": "0px",
+            "textAlign": "left",
+            "display": "none",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "name": "email",
+          "type": "email",
+          "rect": {
+            "x": 496,
+            "y": 288,
+            "width": 448,
+            "height": 42
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "16px",
+            "fontWeight": "400",
+            "lineHeight": "24px",
+            "color": "rgb(17, 24, 39)",
+            "backgroundColor": "rgb(249, 250, 251)",
+            "padding": "8px 12px",
+            "margin": "4px 0px 0px",
+            "textAlign": "start",
+            "display": "block",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "name": "password",
+          "type": "password",
+          "rect": {
+            "x": 496,
+            "y": 382,
+            "width": 448,
+            "height": 42
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "16px",
+            "fontWeight": "400",
+            "lineHeight": "24px",
+            "color": "rgb(17, 24, 39)",
+            "backgroundColor": "rgb(249, 250, 251)",
+            "padding": "8px 12px",
+            "margin": "4px 0px 0px",
+            "textAlign": "start",
+            "display": "block",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Submit",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 496,
+            "y": 440,
+            "width": 448,
+            "height": 40
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "16px",
+            "fontWeight": "700",
+            "lineHeight": "24px",
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgb(22, 163, 74)",
+            "padding": "8px 16px",
+            "margin": "16px 0px 0px",
+            "textAlign": "center",
+            "display": "inline-block",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Forgot Password",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 615,
+            "y": 504,
+            "width": 128,
+            "height": 24
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "16px",
+            "fontWeight": "500",
+            "lineHeight": "24px",
+            "color": "rgb(37, 99, 235)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "0px",
+            "margin": "0px 16px 0px 0px",
+            "textAlign": "center",
+            "display": "inline-block",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Register",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 764,
+            "y": 504,
+            "width": 61,
+            "height": 24
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "16px",
+            "fontWeight": "500",
+            "lineHeight": "24px",
+            "color": "rgb(37, 99, 235)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "0px",
+            "margin": "0px",
+            "textAlign": "center",
+            "display": "inline-block",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        }
+      ],
+      "links": [
+        {
+          "text": "",
+          "href": "https://www.helpteachers.net/pages/homepage.html"
+        },
+        {
+          "text": "Home",
+          "href": "https://www.helpteachers.net/pages/homepage.html"
+        },
+        {
+          "text": "Donate",
+          "href": "https://www.helpteachers.net/pages/index.html"
+        },
+        {
+          "text": "Sign Up",
+          "href": "https://www.helpteachers.net/pages/register.html"
+        },
+        {
+          "text": "About",
+          "href": "https://www.helpteachers.net/pages/about.html"
+        },
+        {
+          "text": "Contact",
+          "href": "https://www.helpteachers.net/pages/contact.html"
+        },
+        {
+          "text": "Partners",
+          "href": "https://www.helpteachers.net/pages/partners.html"
+        },
+        {
+          "text": "Home",
+          "href": "https://www.helpteachers.net/pages/homepage.html"
+        },
+        {
+          "text": "Donate",
+          "href": "https://www.helpteachers.net/pages/index.html"
+        },
+        {
+          "text": "Sign Up",
+          "href": "https://www.helpteachers.net/pages/register.html"
+        },
+        {
+          "text": "About",
+          "href": "https://www.helpteachers.net/pages/about.html"
+        },
+        {
+          "text": "Contact",
+          "href": "https://www.helpteachers.net/pages/contact.html"
+        },
+        {
+          "text": "Partners",
+          "href": "https://www.helpteachers.net/pages/partners.html"
+        }
+      ]
+    },
+    {
+      "name": "forgot",
+      "status": 200,
+      "screenshot": "forgot-desktop.png",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "url": "https://www.helpteachers.net/pages/forgot.html",
+      "title": "Homeroom Heroes - Forgot Password",
+      "documentWidth": 1440,
+      "headings": [
+        {
+          "text": "Forgot Your Password?",
+          "rect": {
+            "x": 496,
+            "y": 192,
+            "width": 448,
+            "height": 36
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "30px",
+            "fontWeight": "700",
+            "lineHeight": "36px",
+            "color": "rgb(22, 101, 52)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "0px",
+            "margin": "0px 0px 24px",
+            "textAlign": "center",
+            "display": "block",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        }
+      ],
+      "bodyText": "Home\nDonate\nSign Up\nAbout\nContact\nPartners\n☰\nForgot Your Password?\n\nEnter your email address below, and we'll send you instructions on how to reset your password.\n\nEmail:\nSubmit\n\nBack to Login\n\n© 2024 Homeroom Heroes. All rights reserved.",
+      "header": {
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 128
+        },
+        "style": {
+          "fontFamily": "Inter, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "24px 0px",
+          "margin": "0px",
+          "textAlign": "start",
+          "display": "block",
+          "alignItems": "normal",
+          "justifyContent": "normal"
+        }
+      },
+      "form": {
+        "rect": {
+          "x": 496,
+          "y": 324,
+          "width": 448,
+          "height": 134
+        },
+        "style": {
+          "fontFamily": "Inter, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "rgb(31, 41, 55)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "padding": "0px",
+          "margin": "0px",
+          "textAlign": "start",
+          "display": "block",
+          "alignItems": "normal",
+          "justifyContent": "normal"
+        },
+        "method": "post",
+        "action": "https://www.helpteachers.net/pages/forgot.html"
+      },
+      "card": {
+        "rect": {
+          "x": 464,
+          "y": 160,
+          "width": 512,
+          "height": 378
+        },
+        "style": {
+          "fontFamily": "Inter, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "rgb(31, 41, 55)",
+          "backgroundColor": "rgb(255, 255, 255)",
+          "padding": "32px",
+          "margin": "0px 368px",
+          "textAlign": "start",
+          "display": "block",
+          "alignItems": "normal",
+          "justifyContent": "normal"
+        }
+      },
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "text": "☰",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 1317.09375,
+            "y": 46,
+            "width": 26.90625,
+            "height": 36
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "30px",
+            "fontWeight": "400",
+            "lineHeight": "36px",
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "0px",
+            "margin": "0px",
+            "textAlign": "center",
+            "display": "inline-block",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Login",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "400",
+            "lineHeight": "27px",
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "12px 16px",
+            "margin": "0px",
+            "textAlign": "left",
+            "display": "block",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Logout",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "400",
+            "lineHeight": "27px",
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "12px 16px",
+            "margin": "0px",
+            "textAlign": "left",
+            "display": "none",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "My Page",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "400",
+            "lineHeight": "27px",
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "12px 16px",
+            "margin": "0px",
+            "textAlign": "left",
+            "display": "none",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Forum",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "400",
+            "lineHeight": "27px",
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "12px 16px",
+            "margin": "0px",
+            "textAlign": "left",
+            "display": "none",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Validation",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 0,
+            "height": 0
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "18px",
+            "fontWeight": "400",
+            "lineHeight": "27px",
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "12px 16px",
+            "margin": "0px",
+            "textAlign": "left",
+            "display": "none",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "name": "email",
+          "type": "email",
+          "rect": {
+            "x": 496,
+            "y": 360,
+            "width": 448,
+            "height": 42
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "16px",
+            "fontWeight": "400",
+            "lineHeight": "24px",
+            "color": "rgb(17, 24, 39)",
+            "backgroundColor": "rgb(249, 250, 251)",
+            "padding": "8px 12px",
+            "margin": "4px 0px 0px",
+            "textAlign": "start",
+            "display": "block",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Submit",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 496,
+            "y": 418,
+            "width": 448,
+            "height": 40
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "16px",
+            "fontWeight": "700",
+            "lineHeight": "24px",
+            "color": "rgb(255, 255, 255)",
+            "backgroundColor": "rgb(22, 163, 74)",
+            "padding": "8px 16px",
+            "margin": "16px 0px 0px",
+            "textAlign": "center",
+            "display": "inline-block",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Back to Login",
+          "name": "",
+          "type": "submit",
+          "rect": {
+            "x": 668,
+            "y": 482,
+            "width": 104,
+            "height": 24
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "16px",
+            "fontWeight": "500",
+            "lineHeight": "24px",
+            "color": "rgb(37, 99, 235)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "padding": "0px",
+            "margin": "0px",
+            "textAlign": "center",
+            "display": "inline-block",
+            "alignItems": "normal",
+            "justifyContent": "normal"
+          }
+        }
+      ],
+      "links": [
+        {
+          "text": "",
+          "href": "https://www.helpteachers.net/pages/homepage.html"
+        },
+        {
+          "text": "Home",
+          "href": "https://www.helpteachers.net/pages/homepage.html"
+        },
+        {
+          "text": "Donate",
+          "href": "https://www.helpteachers.net/pages/index.html"
+        },
+        {
+          "text": "Sign Up",
+          "href": "https://www.helpteachers.net/pages/register.html"
+        },
+        {
+          "text": "About",
+          "href": "https://www.helpteachers.net/pages/about.html"
+        },
+        {
+          "text": "Contact",
+          "href": "https://www.helpteachers.net/pages/contact.html"
+        },
+        {
+          "text": "Partners",
+          "href": "https://www.helpteachers.net/pages/partners.html"
+        },
+        {
+          "text": "Home",
+          "href": "https://www.helpteachers.net/pages/homepage.html"
+        },
+        {
+          "text": "Donate",
+          "href": "https://www.helpteachers.net/pages/index.html"
+        },
+        {
+          "text": "Sign Up",
+          "href": "https://www.helpteachers.net/pages/register.html"
+        },
+        {
+          "text": "About",
+          "href": "https://www.helpteachers.net/pages/about.html"
+        },
+        {
+          "text": "Contact",
+          "href": "https://www.helpteachers.net/pages/contact.html"
+        },
+        {
+          "text": "Partners",
+          "href": "https://www.helpteachers.net/pages/partners.html"
+        }
+      ]
+    }
+  ],
+  "blockedRequests": [
+    {
+      "method": "GET",
+      "url": "https://www.googletagmanager.com/gtag/js?id=AW-17482080573"
+    },
+    {
+      "method": "GET",
+      "url": "https://www.googletagmanager.com/gtag/js?id=AW-17482080573"
+    }
+  ]
+}

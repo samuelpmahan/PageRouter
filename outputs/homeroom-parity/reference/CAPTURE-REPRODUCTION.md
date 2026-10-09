@@ -40,3 +40,16 @@ The focused scripts are independent. Run only the evidence set needed; the first
 `capture.mjs` now compares against `http://127.0.0.1:4188/compiled/hh/index.html#/register`, `/login`, and `/teachers` by default. This corrects its earlier source-root hash routes. The initially failed source-only capture remains preserved in its existing evidence file and is not overwritten by this script.
 
 Live scripts perform public read-only navigation and the small documented UI interactions only. They must not submit forms, authenticate, contact, donate, or activate external transactions. `capture-local-flow.mjs` drives only the explicit browser-session fixture and checks that requests remain on `HH_PREVIEW_BASE_URL`.
+
+
+## Scripts bundled with the published evidence
+
+A copy of the reusable capture scripts is included at `outputs/homeroom-parity/implementation/reference/scripts/`. From the PageRouter repository root, commands use those paths, for example:
+
+```bash
+"$NODE" outputs/homeroom-parity/implementation/reference/scripts/capture.mjs
+"$NODE" outputs/homeroom-parity/implementation/reference/scripts/capture-forum-public.mjs
+"$NODE" outputs/homeroom-parity/implementation/reference/scripts/capture-forum-post-detail.mjs
+```
+
+Set `HH_REPO_ROOT="$PWD"`; point `HH_PLAYWRIGHT_MODULE` and `HH_CHROMIUM_EXECUTABLE` at the externally available cache, and set `HH_OUTPUT_ROOT`, `HH_REFERENCE_ORIGIN`, and local preview URL overrides if needed. A compatible Node runtime and the cache's Linux shared libraries are still required.

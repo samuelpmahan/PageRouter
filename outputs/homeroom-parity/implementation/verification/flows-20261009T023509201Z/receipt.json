@@ -1,0 +1,1426 @@
+{
+  "schema": "hh-independent-browser-flows.v1",
+  "createdAt": "2026-10-09T02:35:09.205Z",
+  "leaf": "http://127.0.0.1:4196/compiled/hh/index.html",
+  "builtRoot": "/mnt/c/Users/tenni/Documents/Codex/2026-10-07/yo/work/PageRouter/checkpoint/dist/compiled/hh",
+  "checks": [
+    {
+      "name": "register-terms-focus-close-preserves-input",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "editable-registration-confirmation-and-pending-submit",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "pending-login-denial-approval-actual-login",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "create-edit-public-profile-natural-journey",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "wishlist-share-local-handoff",
+      "passed": true,
+      "details": {
+        "wishlist": {
+          "intent": true,
+          "remote": false,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-INDEPENDENT",
+          "choiceRequired": true,
+          "opened": false
+        },
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/profile-demo-teacher-1",
+          "remote": false,
+          "copied": false
+        },
+        "url": "http://127.0.0.1:4196/compiled/hh/index.html#/public-profile/profile-demo-teacher-1",
+        "outgoingNetworkRequests": []
+      }
+    },
+    {
+      "name": "directory-cascade-clear-match-empty-remember",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "contact-counter-validation-unsent-reset-form",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "about-portraits-terms-partner-contact-links",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "home-primary-actions-reference-random-local-donation",
+      "passed": true,
+      "details": {
+        "referenceReadOnly": true,
+        "randomProfileId": "demo-avery",
+        "donation": {
+          "kind": "local-handoff",
+          "message": "Donation is not connected in this preview. No payment page was opened.",
+          "remote": false
+        }
+      }
+    },
+    {
+      "name": "secrets-never-saved",
+      "passed": true,
+      "details": {
+        "storageKeys": [
+          "hh-public-directory-filters.v1",
+          "hh.teacher-journey.fixture.v1"
+        ],
+        "passwordSaved": false,
+        "available": true,
+        "stateHasPassword": false,
+        "runtimeHasPassword": false
+      }
+    },
+    {
+      "name": "forum-actual-create-reply-search-vote-report-hide-persistence",
+      "passed": true,
+      "details": {
+        "threadId": "topic-local-1",
+        "teacherModeration": "explicit authored preview role; production authority unobserved"
+      }
+    },
+    {
+      "name": "diagnostic-failure-retry-logout-reset-actual-controls",
+      "passed": true,
+      "details": {
+        "fault": "Actual local preview fault button, followed by actual Retry; no service/state injection.",
+        "logout": "Actual control",
+        "reset": "Actual control clears sample registration, consent and display identity."
+      }
+    },
+    {
+      "name": "original-devtools-survives-public-navigation",
+      "passed": true,
+      "details": {
+        "originalMount": true,
+        "originalNavigation": true,
+        "originalPanel": true,
+        "readOnly": true
+      }
+    },
+    {
+      "name": "mobile-menu-navigation-and-width",
+      "passed": true,
+      "details": null
+    },
+    {
+      "name": "embedded-mobile-controls-and-terms-focus",
+      "passed": true,
+      "details": {
+        "iframe": {
+          "x": 18,
+          "y": 757.9375,
+          "width": 354,
+          "height": 680
+        },
+        "innerDocument": {
+          "width": 352,
+          "scroll": 352
+        }
+      }
+    },
+    {
+      "name": "forum-corrupt-storage-readable-recovery",
+      "passed": true,
+      "details": {
+        "injectedFixture": "malformed local forum storage only; no auth/session injection"
+      }
+    }
+  ],
+  "console": [
+    {
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing."
+    }
+  ],
+  "requests": [
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/index.html",
+      "method": "GET",
+      "resourceType": "document"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-site.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/community.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/app.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/index.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-controller.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-site.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/community.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/webmcp.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/style-playground.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/fonts/Inter-400-600-700-latin.woff2",
+      "method": "GET",
+      "resourceType": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/teacher-journey.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/site-data.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/pxc.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/contract.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/fixtures.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/fixture-provider.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/http-provider.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/runtime.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools-data.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/style-playground.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/vendor/fast-check-4.10.2.bundle.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/vendor/fast-check-4.10.2.meta.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/devtools-board.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/hero_border.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_1.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_3.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_4.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_2.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/fonts/Fraunces-400-500-latin.woff2",
+      "method": "GET",
+      "resourceType": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/logo_transparent.png",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/teacher-of-day.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/apple.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/about/peanut.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/about/grape.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/about/Tory.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/about/jillian.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/about/william.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/about/majid.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/fontawesome/webfonts/fa-brands-400.woff2",
+      "method": "GET",
+      "resourceType": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/partners/Coastal.png",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/partners/Microsoft-logo.png",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/partners/1007TheWolf.png",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/partners/965CountryColor.png",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/partners/BaseCamp.png",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/index.html",
+      "method": "GET",
+      "resourceType": "document"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-site.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/community.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/app.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/index.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-controller.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-site.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/community.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/webmcp.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/style-playground.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/teacher-journey.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/site-data.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/pxc.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/contract.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/fixtures.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/fixture-provider.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/http-provider.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/runtime.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/fonts/Inter-400-600-700-latin.woff2",
+      "method": "GET",
+      "resourceType": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools-data.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/style-playground.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/vendor/fast-check-4.10.2.bundle.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/vendor/fast-check-4.10.2.meta.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/devtools-board.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/hero_border.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_1.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_3.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_4.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_2.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/fonts/Fraunces-400-500-latin.woff2",
+      "method": "GET",
+      "resourceType": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/logo_transparent.png",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/teacher-of-day.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/apple.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/index.html",
+      "method": "GET",
+      "resourceType": "document"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-site.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/community.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/app.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/index.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-controller.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-site.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/community.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/webmcp.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/style-playground.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/pxc.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/contract.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/fixtures.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/fixture-provider.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/http-provider.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/runtime.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/site-data.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/fonts/Inter-400-600-700-latin.woff2",
+      "method": "GET",
+      "resourceType": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/fonts/Fraunces-400-500-latin.woff2",
+      "method": "GET",
+      "resourceType": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/fontawesome/webfonts/fa-brands-400.woff2",
+      "method": "GET",
+      "resourceType": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/teacher-journey.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools-data.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/style-playground.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/vendor/fast-check-4.10.2.bundle.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/vendor/fast-check-4.10.2.meta.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/devtools-board.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/logo_transparent.png",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/hero_border.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_1.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_3.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_4.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_2.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/teacher-of-day.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/apple.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/teacher-of-day.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/about/peanut.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/about/grape.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/about/Tory.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/about/jillian.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/about/william.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/about/majid.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/index.html",
+      "method": "GET",
+      "resourceType": "document"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-site.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/community.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/app.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/index.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-controller.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-site.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/community.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/webmcp.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/style-playground.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/teacher-journey.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/site-data.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/fonts/Inter-400-600-700-latin.woff2",
+      "method": "GET",
+      "resourceType": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/pxc.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/contract.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/fixtures.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/fixture-provider.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/http-provider.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/runtime.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools-data.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/style-playground.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/vendor/fast-check-4.10.2.bundle.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/vendor/fast-check-4.10.2.meta.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/devtools-board.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/hero_border.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_1.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_3.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_4.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_2.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/fonts/Fraunces-400-500-latin.woff2",
+      "method": "GET",
+      "resourceType": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/logo_transparent.png",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/teacher-of-day.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/fontawesome/webfonts/fa-brands-400.woff2",
+      "method": "GET",
+      "resourceType": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4196/",
+      "method": "GET",
+      "resourceType": "document"
+    },
+    {
+      "url": "http://127.0.0.1:4196/styles.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/app.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled-patch.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/project-router.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/local-store.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/static-compiler.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/session-repl.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/justin-site-ide.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/atlas-view.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/block5-view.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/cooperative/hh-workbench.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/cooperative/annotation-fg.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/vendor/hh/services/pxc.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/block5/core/index.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/compression/index.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/atlas/atlas-session.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/atlas/cross-language.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/vendor/hh/services/fixture-provider.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/vendor/hh/services/runtime.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/vendor/hh/services/contract.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/vendor/hh/src/teacher-journey.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/atlas/runtime-adapter.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/atlas/calculations.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/atlas/capability-protocol.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/atlas/atlas-fg.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/vendor/hh/services/fixtures.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/block5/core/canonical.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/block5/core/pixel-cache.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/block5/core/composed.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/block5/core/events.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/block5/core/providers.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/block5/core/runtime.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/block5/core/world.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/block5/core/grid-world.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/compression/canonical.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/compression/graph.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/compression/discovery.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/compression/codec.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/compression/online.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/compression/feedback.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/vendor/hh/services/devtools-board.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/cooperative/fg-association.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/block5/core/grid-engine.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/exp/block5/core/grid-engine.mjs",
+      "method": "GET",
+      "resourceType": "fetch"
+    },
+    {
+      "url": "http://127.0.0.1:4196/data/catalog.json",
+      "method": "GET",
+      "resourceType": "fetch"
+    },
+    {
+      "url": "http://127.0.0.1:4196/data/delta-proof.json",
+      "method": "GET",
+      "resourceType": "fetch"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/index.html",
+      "method": "GET",
+      "resourceType": "document"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-site.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/community.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/app.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/index.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-controller.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/public-site.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/community.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/webmcp.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/style-playground.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/pxc.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/contract.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/fixtures.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/fixture-provider.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/http-provider.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/runtime.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/teacher-journey.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/site-data.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools-data.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/style-playground.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/vendor/fast-check-4.10.2.bundle.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/vendor/fast-check-4.10.2.meta.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/fonts/Inter-400-600-700-latin.woff2",
+      "method": "GET",
+      "resourceType": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/services/devtools-board.mjs",
+      "method": "GET",
+      "resourceType": "script"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/hero_border.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_1.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_3.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_4.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/tile_border_2.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/fonts/Fraunces-400-500-latin.woff2",
+      "method": "GET",
+      "resourceType": "font"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/logo_transparent.png",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/assets/reference/static/images/homepage/teacher-of-day.jpg",
+      "method": "GET",
+      "resourceType": "image"
+    },
+    {
+      "url": "http://127.0.0.1:4196/compiled/hh/pxc-devtools/devtools.css",
+      "method": "GET",
+      "resourceType": "stylesheet"
+    }
+  ],
+  "sourceStable": true,
+  "boundary": "Every account/form/community transition uses actual DOM controls. Script reads state only; no injected authentication or direct controller dispatch.",
+  "sourceHashes": {
+    "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "checkpoint/vendor/hh/src/community.css": "fce22dd3625f035234263c752f435bf89a396df809fdb19774a2b0ed99bc62f0",
+    "checkpoint/vendor/hh/src/community.mjs": "243b747fbdf059993a7ee9f0dc3c604bbfb1635204b098fbecc6cf841fa95ee2",
+    "checkpoint/vendor/hh/src/community.test.mjs": "f4f6a2103376e86aeb727a4ceb6d376d94278f811d3af3a22142c0486c2b464f",
+    "checkpoint/vendor/hh/src/controller.mjs": "5085dd70d0eb4f06116d565e99b5d0c98467bdabe217e582e5dc955ccde888c8",
+    "checkpoint/vendor/hh/src/index.html": "495cbc823d0d5a412bebfd02eff1833a53b30ea3970e076c3439192e8d34e582",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "593da6c0470284117d3b7e2ab0df0570e94edd3ac8d94aabc289d7f0e6352027",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "1a3537e7b8e5149cb822e437b97ddfbe24abbbe663962b57ed78ab5f16546eff",
+    "checkpoint/vendor/hh/src/public-site.css": "772448be39bc1bdd2a91e59692461bd45ea2845fd2c6288e02dfd42f494c46de",
+    "checkpoint/vendor/hh/src/public-site.mjs": "59e6918afeb97fabaeb65f0238eaa1dada0bec63ec737f99498272346e02e00e",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "d216963dd9aaed55c79c3d9beed5558024da60a6328c6c010120b1f4c792f594",
+    "checkpoint/vendor/hh/src/site-data.mjs": "61862ee060435d6d516faf99700ec6e0788bf2e96a8698e5f7461f7d9362e5d8",
+    "checkpoint/vendor/hh/src/style-playground.mjs": "b5f4b55f9861c50aeb58478913f9d27739ed9d2456f73494033ed8ed0f4af4ea",
+    "checkpoint/vendor/hh/src/styles.css": "8d20b9d8ae814d94c7fb90c027a5903eb993de0017c7e1708ac79bd645a0d956",
+    "checkpoint/vendor/hh/src/teacher-journey.mjs": "dde771c3048fba787704f2fc62606d51065775afcc067d2f907a3bf9a78c5596",
+    "checkpoint/vendor/hh/src/webmcp.mjs": "b510487715e447ce08e84804e13db52d8d94d11ee93ed84148ec73a77ea1d818",
+    "checkpoint/dist/compiled/hh/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "checkpoint/dist/compiled/hh/community.css": "fce22dd3625f035234263c752f435bf89a396df809fdb19774a2b0ed99bc62f0",
+    "checkpoint/dist/compiled/hh/community.mjs": "243b747fbdf059993a7ee9f0dc3c604bbfb1635204b098fbecc6cf841fa95ee2",
+    "checkpoint/dist/compiled/hh/controller.mjs": "5085dd70d0eb4f06116d565e99b5d0c98467bdabe217e582e5dc955ccde888c8",
+    "checkpoint/dist/compiled/hh/index.html": "495cbc823d0d5a412bebfd02eff1833a53b30ea3970e076c3439192e8d34e582",
+    "checkpoint/dist/compiled/hh/public-controller.mjs": "aa2d19ce779a341ca272065708ad5535b948561d5a60b4e7c4c1a5c87ebb600e",
+    "checkpoint/dist/compiled/hh/public-site.css": "772448be39bc1bdd2a91e59692461bd45ea2845fd2c6288e02dfd42f494c46de",
+    "checkpoint/dist/compiled/hh/public-site.mjs": "59e6918afeb97fabaeb65f0238eaa1dada0bec63ec737f99498272346e02e00e",
+    "checkpoint/dist/compiled/hh/site-data.mjs": "61862ee060435d6d516faf99700ec6e0788bf2e96a8698e5f7461f7d9362e5d8",
+    "checkpoint/dist/compiled/hh/style-playground.mjs": "5f65bec0d735386c32fcd345ab42d8c8fb145a5bc92ebcb645370056eb33397c",
+    "checkpoint/dist/compiled/hh/styles.css": "8d20b9d8ae814d94c7fb90c027a5903eb993de0017c7e1708ac79bd645a0d956",
+    "checkpoint/dist/compiled/hh/teacher-journey.mjs": "dde771c3048fba787704f2fc62606d51065775afcc067d2f907a3bf9a78c5596",
+    "checkpoint/dist/compiled/hh/webmcp.mjs": "b510487715e447ce08e84804e13db52d8d94d11ee93ed84148ec73a77ea1d818"
+  },
+  "afterHashes": {
+    "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "checkpoint/vendor/hh/src/community.css": "fce22dd3625f035234263c752f435bf89a396df809fdb19774a2b0ed99bc62f0",
+    "checkpoint/vendor/hh/src/community.mjs": "243b747fbdf059993a7ee9f0dc3c604bbfb1635204b098fbecc6cf841fa95ee2",
+    "checkpoint/vendor/hh/src/community.test.mjs": "f4f6a2103376e86aeb727a4ceb6d376d94278f811d3af3a22142c0486c2b464f",
+    "checkpoint/vendor/hh/src/controller.mjs": "5085dd70d0eb4f06116d565e99b5d0c98467bdabe217e582e5dc955ccde888c8",
+    "checkpoint/vendor/hh/src/index.html": "495cbc823d0d5a412bebfd02eff1833a53b30ea3970e076c3439192e8d34e582",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "593da6c0470284117d3b7e2ab0df0570e94edd3ac8d94aabc289d7f0e6352027",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "1a3537e7b8e5149cb822e437b97ddfbe24abbbe663962b57ed78ab5f16546eff",
+    "checkpoint/vendor/hh/src/public-site.css": "772448be39bc1bdd2a91e59692461bd45ea2845fd2c6288e02dfd42f494c46de",
+    "checkpoint/vendor/hh/src/public-site.mjs": "59e6918afeb97fabaeb65f0238eaa1dada0bec63ec737f99498272346e02e00e",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "d216963dd9aaed55c79c3d9beed5558024da60a6328c6c010120b1f4c792f594",
+    "checkpoint/vendor/hh/src/site-data.mjs": "61862ee060435d6d516faf99700ec6e0788bf2e96a8698e5f7461f7d9362e5d8",
+    "checkpoint/vendor/hh/src/style-playground.mjs": "b5f4b55f9861c50aeb58478913f9d27739ed9d2456f73494033ed8ed0f4af4ea",
+    "checkpoint/vendor/hh/src/styles.css": "8d20b9d8ae814d94c7fb90c027a5903eb993de0017c7e1708ac79bd645a0d956",
+    "checkpoint/vendor/hh/src/teacher-journey.mjs": "dde771c3048fba787704f2fc62606d51065775afcc067d2f907a3bf9a78c5596",
+    "checkpoint/vendor/hh/src/webmcp.mjs": "b510487715e447ce08e84804e13db52d8d94d11ee93ed84148ec73a77ea1d818",
+    "checkpoint/dist/compiled/hh/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "checkpoint/dist/compiled/hh/community.css": "fce22dd3625f035234263c752f435bf89a396df809fdb19774a2b0ed99bc62f0",
+    "checkpoint/dist/compiled/hh/community.mjs": "243b747fbdf059993a7ee9f0dc3c604bbfb1635204b098fbecc6cf841fa95ee2",
+    "checkpoint/dist/compiled/hh/controller.mjs": "5085dd70d0eb4f06116d565e99b5d0c98467bdabe217e582e5dc955ccde888c8",
+    "checkpoint/dist/compiled/hh/index.html": "495cbc823d0d5a412bebfd02eff1833a53b30ea3970e076c3439192e8d34e582",
+    "checkpoint/dist/compiled/hh/public-controller.mjs": "aa2d19ce779a341ca272065708ad5535b948561d5a60b4e7c4c1a5c87ebb600e",
+    "checkpoint/dist/compiled/hh/public-site.css": "772448be39bc1bdd2a91e59692461bd45ea2845fd2c6288e02dfd42f494c46de",
+    "checkpoint/dist/compiled/hh/public-site.mjs": "59e6918afeb97fabaeb65f0238eaa1dada0bec63ec737f99498272346e02e00e",
+    "checkpoint/dist/compiled/hh/site-data.mjs": "61862ee060435d6d516faf99700ec6e0788bf2e96a8698e5f7461f7d9362e5d8",
+    "checkpoint/dist/compiled/hh/style-playground.mjs": "5f65bec0d735386c32fcd345ab42d8c8fb145a5bc92ebcb645370056eb33397c",
+    "checkpoint/dist/compiled/hh/styles.css": "8d20b9d8ae814d94c7fb90c027a5903eb993de0017c7e1708ac79bd645a0d956",
+    "checkpoint/dist/compiled/hh/teacher-journey.mjs": "dde771c3048fba787704f2fc62606d51065775afcc067d2f907a3bf9a78c5596",
+    "checkpoint/dist/compiled/hh/webmcp.mjs": "b510487715e447ce08e84804e13db52d8d94d11ee93ed84148ec73a77ea1d818"
+  },
+  "completedAt": "2026-10-09T02:35:23.607Z",
+  "externalRuntimeRequests": [],
+  "passed": true
+}

@@ -1,0 +1,2156 @@
+{
+  "schema": "homeroom-public-forum-browser-capture.v1",
+  "capturedAt": "2026-10-09T00:27:00.212Z",
+  "referenceOrigin": "https://www.helpteachers.net",
+  "viewports": {
+    "desktop": {
+      "width": 1440,
+      "height": 1000
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  "limits": [
+    "Fresh unauthenticated browser context; no login/session supplied.",
+    "Public page scripts were allowed to load; only observed requests are listed. No forms submitted, no votes/comments/deletes/posts, no authenticated actions.",
+    "A 200 public HTML shell does not prove server-backed data, role permissions, or authenticated UI behavior."
+  ],
+  "routes": [
+    {
+      "name": "forum-list",
+      "size": "desktop",
+      "requestedUrl": "https://www.helpteachers.net/pages/forum.html",
+      "status": 200,
+      "navigationError": null,
+      "finalUrl": "https://www.helpteachers.net/pages/forum.html",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/forum-forum-list-desktop.png",
+      "dom": {
+        "url": "https://www.helpteachers.net/pages/forum.html",
+        "title": "Homeroom Heroes - Forum Discussions",
+        "headings": [
+          {
+            "tag": "H2",
+            "text": "The Teachers' Lounge"
+          },
+          {
+            "tag": "H3",
+            "text": "Forum Styling Guide"
+          },
+          {
+            "tag": "H3",
+            "text": "The Teachers' Lounge is Open"
+          },
+          {
+            "tag": "H3",
+            "text": "Official Bug Forum"
+          }
+        ],
+        "bodyText": "Home\nDonate\nSign Up\nAbout\nContact\nPartners\n\u2630\nThe Teachers' Lounge\nClear\n\nSort By:\n\nDate (Newest)\nDate (Oldest)\nUpvotes\n+ New Post\nForum Styling Guide\n\ud83d\udc4d\n1\n\ud83d\udcac\n0\nPosted by User: 5 on Apr 16, 2026, 02:41 AM\n\nTo style your text, wrap your words in the tags shown below.\n\n1. Bold Text\nType this: <b>Your Text</b>\nResult: Your Text\n\n2. Italic ...\n\nThe Teachers' Lounge is Open\n\ud83d\udc4d\n1\n\ud83d\udcac\n0\nPosted by User: 5 on Nov 12, 2025, 04:51 AM\nWe're thrilled to launch this dedicated space just for educators like you! The Homeroom Heroes Forum is designed to be your quick, reliable resource for peer-to-peer support, sharing creative solution...\nOfficial Bug Forum\n\ud83d\udc4d\n2\n\ud83d\udcac\n2\nPosted by User: 5 on Nov 12, 2025, 04:50 AM\nPlease comment below if you run into any significant bugs. We are doing our best to patch bugs as we find them. If you are the first to find a verified bug on our site, we will send you a thank you ...\n\n\u00a9 2024 Homeroom Heroes. All rights reserved.",
+        "controls": [
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "hamburgerButton",
+            "name": "",
+            "placeholder": "",
+            "text": "\u2630",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "id": "post-search-input",
+            "name": "",
+            "placeholder": "Search posts by keyword...",
+            "text": "",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "text": "Clear",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "sort-date-newest",
+            "name": "",
+            "placeholder": "",
+            "text": "Date (Newest)",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "sort-date-oldest",
+            "name": "",
+            "placeholder": "",
+            "text": "Date (Oldest)",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "sort-upvotes",
+            "name": "",
+            "placeholder": "",
+            "text": "Upvotes",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "create-post-btn",
+            "name": "",
+            "placeholder": "",
+            "text": "+ New Post",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          }
+        ],
+        "forms": [],
+        "links": [
+          {
+            "text": "",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          },
+          {
+            "text": "Home",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          },
+          {
+            "text": "Donate",
+            "href": "https://www.helpteachers.net/pages/index.html",
+            "target": ""
+          },
+          {
+            "text": "Sign Up",
+            "href": "https://www.helpteachers.net/pages/register.html",
+            "target": ""
+          },
+          {
+            "text": "About",
+            "href": "https://www.helpteachers.net/pages/about.html",
+            "target": ""
+          },
+          {
+            "text": "Contact",
+            "href": "https://www.helpteachers.net/pages/contact.html",
+            "target": ""
+          },
+          {
+            "text": "Partners",
+            "href": "https://www.helpteachers.net/pages/partners.html",
+            "target": ""
+          },
+          {
+            "text": "Forum Styling Guide \ud83d\udc4d 1 \ud83d\udcac 0 Posted by User: 5 on Apr 16, 2026, 02:41 AM To style your text, wrap your words in the tags shown below. 1. Bold Text Type this: <b>Your Text</b> Result: Your Text 2. Italic ...",
+            "href": "https://www.helpteachers.net/pages/post.html?id=11",
+            "target": ""
+          },
+          {
+            "text": "The Teachers' Lounge is Open \ud83d\udc4d 1 \ud83d\udcac 0 Posted by User: 5 on Nov 12, 2025, 04:51 AM We're thrilled to launch this dedicated space just for educators like you! The Homeroom Heroes Forum is designed to be your quick, reliable resource for peer-to-peer support, sharing creative solution...",
+            "href": "https://www.helpteachers.net/pages/post.html?id=6",
+            "target": ""
+          },
+          {
+            "text": "Official Bug Forum \ud83d\udc4d 2 \ud83d\udcac 2 Posted by User: 5 on Nov 12, 2025, 04:50 AM Please comment below if you run into any significant bugs. We are doing our best to patch bugs as we find them. If you are the first to find a verified bug on our site, we will send you a thank you ...",
+            "href": "https://www.helpteachers.net/pages/post.html?id=5",
+            "target": ""
+          }
+        ],
+        "classes": {
+          "loading": [],
+          "empty": []
+        },
+        "dimensions": {
+          "viewport": [
+            1440,
+            1000
+          ],
+          "document": [
+            1440,
+            1174
+          ],
+          "scrollY": 0
+        }
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/pages/forum.html"
+        },
+        {
+          "method": "GET",
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/static/style.css"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.googletagmanager.com/gtag/js"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "method": "GET",
+          "url": "https://cdn.tailwindcss.com/3.4.17"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/forum/get_posts"
+        },
+        {
+          "method": "GET",
+          "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.google.com/pagead/1p-user-list/17482080573/"
+        }
+      ],
+      "responses": [
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/pages/forum.html"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/static/style.css"
+        },
+        {
+          "status": 302,
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "status": 200,
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "status": 200,
+          "url": "https://cdn.tailwindcss.com/3.4.17"
+        },
+        {
+          "status": 200,
+          "url": "https://www.googletagmanager.com/gtag/js"
+        },
+        {
+          "status": 404,
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "status": 200,
+          "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+        },
+        {
+          "status": 200,
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "status": 200,
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/forum/get_posts"
+        },
+        {
+          "status": 204,
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "status": 200,
+          "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/17482080573/"
+        },
+        {
+          "status": 200,
+          "url": "https://www.google.com/pagead/1p-user-list/17482080573/"
+        }
+      ],
+      "errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    {
+      "name": "forum-menu-open",
+      "size": "desktop",
+      "requestedUrl": "https://www.helpteachers.net/pages/forum.html",
+      "status": 200,
+      "finalUrl": "https://www.helpteachers.net/pages/forum.html",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/forum-menu-open-desktop.png",
+      "action": "Opened hamburger; no menu link followed.",
+      "dom": {
+        "url": "https://www.helpteachers.net/pages/forum.html",
+        "title": "Homeroom Heroes - Forum Discussions",
+        "headings": [
+          {
+            "tag": "H2",
+            "text": "The Teachers' Lounge"
+          },
+          {
+            "tag": "H3",
+            "text": "Forum Styling Guide"
+          },
+          {
+            "tag": "H3",
+            "text": "The Teachers' Lounge is Open"
+          },
+          {
+            "tag": "H3",
+            "text": "Official Bug Forum"
+          }
+        ],
+        "bodyText": "Home\nDonate\nSign Up\nAbout\nContact\nPartners\n\u2630\nLogin\nThe Teachers' Lounge\nClear\n\nSort By:\n\nDate (Newest)\nDate (Oldest)\nUpvotes\n+ New Post\nForum Styling Guide\n\ud83d\udc4d\n1\n\ud83d\udcac\n0\nPosted by User: 5 on Apr 16, 2026, 02:41 AM\n\nTo style your text, wrap your words in the tags shown below.\n\n1. Bold Text\nType this: <b>Your Text</b>\nResult: Your Text\n\n2. Italic ...\n\nThe Teachers' Lounge is Open\n\ud83d\udc4d\n1\n\ud83d\udcac\n0\nPosted by User: 5 on Nov 12, 2025, 04:51 AM\nWe're thrilled to launch this dedicated space just for educators like you! The Homeroom Heroes Forum is designed to be your quick, reliable resource for peer-to-peer support, sharing creative solution...\nOfficial Bug Forum\n\ud83d\udc4d\n2\n\ud83d\udcac\n2\nPosted by User: 5 on Nov 12, 2025, 04:50 AM\nPlease comment below if you run into any significant bugs. We are doing our best to patch bugs as we find them. If you are the first to find a verified bug on our site, we will send you a thank you ...\n\n\u00a9 2024 Homeroom Heroes. All rights reserved.",
+        "controls": [
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "hamburgerButton",
+            "name": "",
+            "placeholder": "",
+            "text": "\u2630",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "loginButton",
+            "name": "",
+            "placeholder": "",
+            "text": "Login",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "id": "post-search-input",
+            "name": "",
+            "placeholder": "Search posts by keyword...",
+            "text": "",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "text": "Clear",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "sort-date-newest",
+            "name": "",
+            "placeholder": "",
+            "text": "Date (Newest)",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "sort-date-oldest",
+            "name": "",
+            "placeholder": "",
+            "text": "Date (Oldest)",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "sort-upvotes",
+            "name": "",
+            "placeholder": "",
+            "text": "Upvotes",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "create-post-btn",
+            "name": "",
+            "placeholder": "",
+            "text": "+ New Post",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          }
+        ],
+        "forms": [],
+        "links": [
+          {
+            "text": "",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          },
+          {
+            "text": "Home",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          },
+          {
+            "text": "Donate",
+            "href": "https://www.helpteachers.net/pages/index.html",
+            "target": ""
+          },
+          {
+            "text": "Sign Up",
+            "href": "https://www.helpteachers.net/pages/register.html",
+            "target": ""
+          },
+          {
+            "text": "About",
+            "href": "https://www.helpteachers.net/pages/about.html",
+            "target": ""
+          },
+          {
+            "text": "Contact",
+            "href": "https://www.helpteachers.net/pages/contact.html",
+            "target": ""
+          },
+          {
+            "text": "Partners",
+            "href": "https://www.helpteachers.net/pages/partners.html",
+            "target": ""
+          },
+          {
+            "text": "Forum Styling Guide \ud83d\udc4d 1 \ud83d\udcac 0 Posted by User: 5 on Apr 16, 2026, 02:41 AM To style your text, wrap your words in the tags shown below. 1. Bold Text Type this: <b>Your Text</b> Result: Your Text 2. Italic ...",
+            "href": "https://www.helpteachers.net/pages/post.html?id=11",
+            "target": ""
+          },
+          {
+            "text": "The Teachers' Lounge is Open \ud83d\udc4d 1 \ud83d\udcac 0 Posted by User: 5 on Nov 12, 2025, 04:51 AM We're thrilled to launch this dedicated space just for educators like you! The Homeroom Heroes Forum is designed to be your quick, reliable resource for peer-to-peer support, sharing creative solution...",
+            "href": "https://www.helpteachers.net/pages/post.html?id=6",
+            "target": ""
+          },
+          {
+            "text": "Official Bug Forum \ud83d\udc4d 2 \ud83d\udcac 2 Posted by User: 5 on Nov 12, 2025, 04:50 AM Please comment below if you run into any significant bugs. We are doing our best to patch bugs as we find them. If you are the first to find a verified bug on our site, we will send you a thank you ...",
+            "href": "https://www.helpteachers.net/pages/post.html?id=5",
+            "target": ""
+          }
+        ],
+        "classes": {
+          "loading": [],
+          "empty": []
+        },
+        "dimensions": {
+          "viewport": [
+            1440,
+            1000
+          ],
+          "document": [
+            1440,
+            1174
+          ],
+          "scrollY": 0
+        }
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    {
+      "name": "forum-list",
+      "size": "mobile",
+      "requestedUrl": "https://www.helpteachers.net/pages/forum.html",
+      "status": 200,
+      "navigationError": null,
+      "finalUrl": "https://www.helpteachers.net/pages/forum.html",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/forum-forum-list-mobile.png",
+      "dom": {
+        "url": "https://www.helpteachers.net/pages/forum.html",
+        "title": "Homeroom Heroes - Forum Discussions",
+        "headings": [
+          {
+            "tag": "H2",
+            "text": "The Teachers' Lounge"
+          },
+          {
+            "tag": "H3",
+            "text": "Forum Styling Guide"
+          },
+          {
+            "tag": "H3",
+            "text": "The Teachers' Lounge is Open"
+          },
+          {
+            "tag": "H3",
+            "text": "Official Bug Forum"
+          }
+        ],
+        "bodyText": "\u2630\nThe Teachers' Lounge\nClear\n\nSort By:\n\nDate (Newest)\nDate (Oldest)\nUpvotes\n+ New Post\nForum Styling Guide\n\ud83d\udc4d\n1\n\ud83d\udcac\n0\nPosted by User: 5 on Apr 16, 2026, 02:41 AM\n\nTo style your text, wrap your words in the tags shown below.\n\n1. Bold Text\nType this: <b>Your Text</b>\nResult: Your Text\n\n2. Italic ...\n\nThe Teachers' Lounge is Open\n\ud83d\udc4d\n1\n\ud83d\udcac\n0\nPosted by User: 5 on Nov 12, 2025, 04:51 AM\nWe're thrilled to launch this dedicated space just for educators like you! The Homeroom Heroes Forum is designed to be your quick, reliable resource for peer-to-peer support, sharing creative solution...\nOfficial Bug Forum\n\ud83d\udc4d\n2\n\ud83d\udcac\n2\nPosted by User: 5 on Nov 12, 2025, 04:50 AM\nPlease comment below if you run into any significant bugs. We are doing our best to patch bugs as we find them. If you are the first to find a verified bug on our site, we will send you a thank you ...\n\n\u00a9 2024 Homeroom Heroes. All rights reserved.",
+        "controls": [
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "hamburgerButton",
+            "name": "",
+            "placeholder": "",
+            "text": "\u2630",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "id": "post-search-input",
+            "name": "",
+            "placeholder": "Search posts by keyword...",
+            "text": "",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "text": "Clear",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "sort-date-newest",
+            "name": "",
+            "placeholder": "",
+            "text": "Date (Newest)",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "sort-date-oldest",
+            "name": "",
+            "placeholder": "",
+            "text": "Date (Oldest)",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "sort-upvotes",
+            "name": "",
+            "placeholder": "",
+            "text": "Upvotes",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "create-post-btn",
+            "name": "",
+            "placeholder": "",
+            "text": "+ New Post",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          }
+        ],
+        "forms": [],
+        "links": [
+          {
+            "text": "",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          },
+          {
+            "text": "Forum Styling Guide \ud83d\udc4d 1 \ud83d\udcac 0 Posted by User: 5 on Apr 16, 2026, 02:41 AM To style your text, wrap your words in the tags shown below. 1. Bold Text Type this: <b>Your Text</b> Result: Your Text 2. Italic ...",
+            "href": "https://www.helpteachers.net/pages/post.html?id=11",
+            "target": ""
+          },
+          {
+            "text": "The Teachers' Lounge is Open \ud83d\udc4d 1 \ud83d\udcac 0 Posted by User: 5 on Nov 12, 2025, 04:51 AM We're thrilled to launch this dedicated space just for educators like you! The Homeroom Heroes Forum is designed to be your quick, reliable resource for peer-to-peer support, sharing creative solution...",
+            "href": "https://www.helpteachers.net/pages/post.html?id=6",
+            "target": ""
+          },
+          {
+            "text": "Official Bug Forum \ud83d\udc4d 2 \ud83d\udcac 2 Posted by User: 5 on Nov 12, 2025, 04:50 AM Please comment below if you run into any significant bugs. We are doing our best to patch bugs as we find them. If you are the first to find a verified bug on our site, we will send you a thank you ...",
+            "href": "https://www.helpteachers.net/pages/post.html?id=5",
+            "target": ""
+          }
+        ],
+        "classes": {
+          "loading": [],
+          "empty": []
+        },
+        "dimensions": {
+          "viewport": [
+            390,
+            844
+          ],
+          "document": [
+            390,
+            1286
+          ],
+          "scrollY": 0
+        }
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/pages/forum.html"
+        },
+        {
+          "method": "GET",
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/static/style.css"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.googletagmanager.com/gtag/js"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "method": "GET",
+          "url": "https://cdn.tailwindcss.com/3.4.17"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/forum/get_posts"
+        },
+        {
+          "method": "GET",
+          "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.google.com/pagead/1p-user-list/17482080573/"
+        }
+      ],
+      "responses": [
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/pages/forum.html"
+        },
+        {
+          "status": 302,
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/static/style.css"
+        },
+        {
+          "status": 200,
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "status": 200,
+          "url": "https://cdn.tailwindcss.com/3.4.17"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "status": 200,
+          "url": "https://www.googletagmanager.com/gtag/js"
+        },
+        {
+          "status": 404,
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/forum/get_posts"
+        },
+        {
+          "status": 200,
+          "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+        },
+        {
+          "status": 200,
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "status": 200,
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "status": 204,
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "status": 200,
+          "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/17482080573/"
+        },
+        {
+          "status": 200,
+          "url": "https://www.google.com/pagead/1p-user-list/17482080573/"
+        }
+      ],
+      "errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    {
+      "name": "forum-menu-open",
+      "size": "mobile",
+      "requestedUrl": "https://www.helpteachers.net/pages/forum.html",
+      "status": 200,
+      "finalUrl": "https://www.helpteachers.net/pages/forum.html",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/forum-menu-open-mobile.png",
+      "action": "Opened hamburger; no menu link followed.",
+      "dom": {
+        "url": "https://www.helpteachers.net/pages/forum.html",
+        "title": "Homeroom Heroes - Forum Discussions",
+        "headings": [
+          {
+            "tag": "H2",
+            "text": "The Teachers' Lounge"
+          },
+          {
+            "tag": "H3",
+            "text": "Forum Styling Guide"
+          },
+          {
+            "tag": "H3",
+            "text": "The Teachers' Lounge is Open"
+          },
+          {
+            "tag": "H3",
+            "text": "Official Bug Forum"
+          }
+        ],
+        "bodyText": "\u2630\nHome\nDonate\nSign Up\nAbout\nContact\nPartners\nLogin\nThe Teachers' Lounge\nClear\n\nSort By:\n\nDate (Newest)\nDate (Oldest)\nUpvotes\n+ New Post\nForum Styling Guide\n\ud83d\udc4d\n1\n\ud83d\udcac\n0\nPosted by User: 5 on Apr 16, 2026, 02:41 AM\n\nTo style your text, wrap your words in the tags shown below.\n\n1. Bold Text\nType this: <b>Your Text</b>\nResult: Your Text\n\n2. Italic ...\n\nThe Teachers' Lounge is Open\n\ud83d\udc4d\n1\n\ud83d\udcac\n0\nPosted by User: 5 on Nov 12, 2025, 04:51 AM\nWe're thrilled to launch this dedicated space just for educators like you! The Homeroom Heroes Forum is designed to be your quick, reliable resource for peer-to-peer support, sharing creative solution...\nOfficial Bug Forum\n\ud83d\udc4d\n2\n\ud83d\udcac\n2\nPosted by User: 5 on Nov 12, 2025, 04:50 AM\nPlease comment below if you run into any significant bugs. We are doing our best to patch bugs as we find them. If you are the first to find a verified bug on our site, we will send you a thank you ...\n\n\u00a9 2024 Homeroom Heroes. All rights reserved.",
+        "controls": [
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "hamburgerButton",
+            "name": "",
+            "placeholder": "",
+            "text": "\u2630",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "loginButton",
+            "name": "",
+            "placeholder": "",
+            "text": "Login",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "input",
+            "type": "text",
+            "id": "post-search-input",
+            "name": "",
+            "placeholder": "Search posts by keyword...",
+            "text": "",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "",
+            "name": "",
+            "placeholder": "",
+            "text": "Clear",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "sort-date-newest",
+            "name": "",
+            "placeholder": "",
+            "text": "Date (Newest)",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "sort-date-oldest",
+            "name": "",
+            "placeholder": "",
+            "text": "Date (Oldest)",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "sort-upvotes",
+            "name": "",
+            "placeholder": "",
+            "text": "Upvotes",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "create-post-btn",
+            "name": "",
+            "placeholder": "",
+            "text": "+ New Post",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          }
+        ],
+        "forms": [],
+        "links": [
+          {
+            "text": "",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          },
+          {
+            "text": "Home",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          },
+          {
+            "text": "Donate",
+            "href": "https://www.helpteachers.net/pages/index.html",
+            "target": ""
+          },
+          {
+            "text": "Sign Up",
+            "href": "https://www.helpteachers.net/pages/register.html",
+            "target": ""
+          },
+          {
+            "text": "About",
+            "href": "https://www.helpteachers.net/pages/about.html",
+            "target": ""
+          },
+          {
+            "text": "Contact",
+            "href": "https://www.helpteachers.net/pages/contact.html",
+            "target": ""
+          },
+          {
+            "text": "Partners",
+            "href": "https://www.helpteachers.net/pages/partners.html",
+            "target": ""
+          },
+          {
+            "text": "Forum Styling Guide \ud83d\udc4d 1 \ud83d\udcac 0 Posted by User: 5 on Apr 16, 2026, 02:41 AM To style your text, wrap your words in the tags shown below. 1. Bold Text Type this: <b>Your Text</b> Result: Your Text 2. Italic ...",
+            "href": "https://www.helpteachers.net/pages/post.html?id=11",
+            "target": ""
+          },
+          {
+            "text": "The Teachers' Lounge is Open \ud83d\udc4d 1 \ud83d\udcac 0 Posted by User: 5 on Nov 12, 2025, 04:51 AM We're thrilled to launch this dedicated space just for educators like you! The Homeroom Heroes Forum is designed to be your quick, reliable resource for peer-to-peer support, sharing creative solution...",
+            "href": "https://www.helpteachers.net/pages/post.html?id=6",
+            "target": ""
+          },
+          {
+            "text": "Official Bug Forum \ud83d\udc4d 2 \ud83d\udcac 2 Posted by User: 5 on Nov 12, 2025, 04:50 AM Please comment below if you run into any significant bugs. We are doing our best to patch bugs as we find them. If you are the first to find a verified bug on our site, we will send you a thank you ...",
+            "href": "https://www.helpteachers.net/pages/post.html?id=5",
+            "target": ""
+          }
+        ],
+        "classes": {
+          "loading": [],
+          "empty": []
+        },
+        "dimensions": {
+          "viewport": [
+            390,
+            844
+          ],
+          "document": [
+            390,
+            1286
+          ],
+          "scrollY": 0
+        }
+      },
+      "errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    {
+      "name": "create-post",
+      "size": "desktop",
+      "requestedUrl": "https://www.helpteachers.net/pages/create_post.html",
+      "status": 200,
+      "navigationError": null,
+      "finalUrl": "https://www.helpteachers.net/pages/403.html",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/forum-create-post-desktop.png",
+      "dom": {
+        "url": "https://www.helpteachers.net/pages/403.html",
+        "title": "403 - Forbidden - Homeroom Heroes",
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "403"
+          }
+        ],
+        "bodyText": "403\n\nForbidden\n\nYou do not have permission to access this page.\n\nGo to Homepage\n\n\u00a9 2024 Homeroom Heroes. All rights reserved.",
+        "controls": [],
+        "forms": [],
+        "links": [
+          {
+            "text": "",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          },
+          {
+            "text": "Go to Homepage",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          }
+        ],
+        "classes": {
+          "loading": [],
+          "empty": []
+        },
+        "dimensions": {
+          "viewport": [
+            1440,
+            1000
+          ],
+          "document": [
+            1440,
+            1000
+          ],
+          "scrollY": 0
+        }
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/pages/create_post.html"
+        },
+        {
+          "method": "GET",
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/static/style.css"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.googletagmanager.com/gtag/js"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "method": "GET",
+          "url": "https://cdn.tailwindcss.com/3.4.17"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/pages/403.html"
+        },
+        {
+          "method": "GET",
+          "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "method": "GET",
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+        }
+      ],
+      "responses": [
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/pages/create_post.html"
+        },
+        {
+          "status": 302,
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/static/style.css"
+        },
+        {
+          "status": 200,
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "status": 200,
+          "url": "https://cdn.tailwindcss.com/3.4.17"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "status": 200,
+          "url": "https://www.googletagmanager.com/gtag/js"
+        },
+        {
+          "status": 404,
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/pages/403.html"
+        },
+        {
+          "status": 200,
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "status": 200,
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "status": 200,
+          "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+        }
+      ],
+      "errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "Permission Check Failed: Not authenticated or session expired. 404"
+      ]
+    },
+    {
+      "name": "create-post",
+      "size": "mobile",
+      "requestedUrl": "https://www.helpteachers.net/pages/create_post.html",
+      "status": 200,
+      "navigationError": null,
+      "finalUrl": "https://www.helpteachers.net/pages/403.html",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/forum-create-post-mobile.png",
+      "dom": {
+        "url": "https://www.helpteachers.net/pages/403.html",
+        "title": "403 - Forbidden - Homeroom Heroes",
+        "headings": [
+          {
+            "tag": "H1",
+            "text": "403"
+          }
+        ],
+        "bodyText": "403\n\nForbidden\n\nYou do not have permission to access this page.\n\nGo to Homepage\n\n\u00a9 2024 Homeroom Heroes. All rights reserved.",
+        "controls": [],
+        "forms": [],
+        "links": [
+          {
+            "text": "",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          },
+          {
+            "text": "Go to Homepage",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          }
+        ],
+        "classes": {
+          "loading": [],
+          "empty": []
+        },
+        "dimensions": {
+          "viewport": [
+            390,
+            844
+          ],
+          "document": [
+            390,
+            844
+          ],
+          "scrollY": 0
+        }
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/pages/create_post.html"
+        },
+        {
+          "method": "GET",
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/static/style.css"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.googletagmanager.com/gtag/js"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "method": "GET",
+          "url": "https://cdn.tailwindcss.com/3.4.17"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/pages/403.html"
+        },
+        {
+          "method": "GET",
+          "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "method": "GET",
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+        }
+      ],
+      "responses": [
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/pages/create_post.html"
+        },
+        {
+          "status": 302,
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/static/style.css"
+        },
+        {
+          "status": 200,
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "status": 200,
+          "url": "https://cdn.tailwindcss.com/3.4.17"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "status": 200,
+          "url": "https://www.googletagmanager.com/gtag/js"
+        },
+        {
+          "status": 404,
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "status": 404,
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/pages/403.html"
+        },
+        {
+          "status": 200,
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "status": 200,
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "status": 200,
+          "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+        }
+      ],
+      "errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "Permission Check Failed: Not authenticated or session expired. 404",
+        "Failed to load resource: the server responded with a status of 404 (Not Found)",
+        "Failed to fetch profile. Status: 404"
+      ]
+    },
+    {
+      "name": "post-detail-no-id",
+      "size": "desktop",
+      "requestedUrl": "https://www.helpteachers.net/pages/post.html",
+      "status": 200,
+      "navigationError": null,
+      "finalUrl": "https://www.helpteachers.net/pages/post.html",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/forum-post-detail-no-id-desktop.png",
+      "dom": {
+        "url": "https://www.helpteachers.net/pages/post.html",
+        "title": "Homeroom Heroes - Discussion Detail",
+        "headings": [
+          {
+            "tag": "H2",
+            "text": "Discussion Detail"
+          }
+        ],
+        "bodyText": "Home\nDonate\nSign Up\nAbout\nContact\nPartners\n\u2630\nDiscussion Detail\nBack to Forum\nError: Post ID is missing from the URL. Please ensure you are navigating from the forum list.\n\n\u00a9 2024 Homeroom Heroes. All rights reserved.",
+        "controls": [
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "hamburgerButton",
+            "name": "",
+            "placeholder": "",
+            "text": "\u2630",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "back-to-forum-button",
+            "name": "",
+            "placeholder": "",
+            "text": "Back to Forum",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          }
+        ],
+        "forms": [],
+        "links": [
+          {
+            "text": "",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          },
+          {
+            "text": "Home",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          },
+          {
+            "text": "Donate",
+            "href": "https://www.helpteachers.net/pages/index.html",
+            "target": ""
+          },
+          {
+            "text": "Sign Up",
+            "href": "https://www.helpteachers.net/pages/register.html",
+            "target": ""
+          },
+          {
+            "text": "About",
+            "href": "https://www.helpteachers.net/pages/about.html",
+            "target": ""
+          },
+          {
+            "text": "Contact",
+            "href": "https://www.helpteachers.net/pages/contact.html",
+            "target": ""
+          },
+          {
+            "text": "Partners",
+            "href": "https://www.helpteachers.net/pages/partners.html",
+            "target": ""
+          }
+        ],
+        "classes": {
+          "loading": [],
+          "empty": []
+        },
+        "dimensions": {
+          "viewport": [
+            1440,
+            1000
+          ],
+          "document": [
+            1440,
+            1000
+          ],
+          "scrollY": 0
+        }
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/pages/post.html"
+        },
+        {
+          "method": "GET",
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/static/style.css"
+        },
+        {
+          "method": "GET",
+          "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.googletagmanager.com/gtag/js"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "method": "GET",
+          "url": "https://cdn.tailwindcss.com/3.4.17"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "method": "GET",
+          "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202610080101/show_ads_impl.js"
+        },
+        {
+          "method": "GET",
+          "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "method": "GET",
+          "url": "https://googleads.g.doubleclick.net/pagead/html/r20261007/r20190131/zrt_lookup.html"
+        },
+        {
+          "method": "GET",
+          "url": "https://googleads.g.doubleclick.net/pagead/ads"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.google.com/pagead/1p-user-list/17482080573/"
+        },
+        {
+          "method": "GET",
+          "url": "https://ep1.adtrafficquality.google/getconfig/sodar"
+        },
+        {
+          "method": "GET",
+          "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js"
+        },
+        {
+          "method": "GET",
+          "url": "https://ep2.adtrafficquality.google/sodar/sodar2/255/runner.html"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.google.com/recaptcha/api2/aframe"
+        },
+        {
+          "method": "GET",
+          "url": "https://pagead2.googlesyndication.com/pagead/sodar"
+        },
+        {
+          "method": "GET",
+          "url": "https://pagead2.googlesyndication.com/bg/bicbSm1QHv6PCE7k41PwdE0n8BoGbNC7zjsNTNo3qrw.js"
+        },
+        {
+          "method": "GET",
+          "url": "https://ep2.adtrafficquality.google/generate_204"
+        },
+        {
+          "method": "GET",
+          "url": "https://ep1.adtrafficquality.google/pagead/sodar"
+        }
+      ],
+      "responses": [
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/pages/post.html"
+        },
+        {
+          "status": 302,
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "status": 200,
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "status": 200,
+          "url": "https://cdn.tailwindcss.com/3.4.17"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/static/style.css"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "status": 200,
+          "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+        },
+        {
+          "status": 404,
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "status": 200,
+          "url": "https://www.googletagmanager.com/gtag/js"
+        },
+        {
+          "status": 200,
+          "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+        },
+        {
+          "status": 200,
+          "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202610080101/show_ads_impl.js"
+        },
+        {
+          "status": 200,
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "status": 200,
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "status": 204,
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "status": 200,
+          "url": "https://googleads.g.doubleclick.net/pagead/html/r20261007/r20190131/zrt_lookup.html"
+        },
+        {
+          "status": 200,
+          "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/17482080573/"
+        },
+        {
+          "status": 200,
+          "url": "https://googleads.g.doubleclick.net/pagead/ads"
+        },
+        {
+          "status": 200,
+          "url": "https://www.google.com/pagead/1p-user-list/17482080573/"
+        },
+        {
+          "status": 200,
+          "url": "https://ep1.adtrafficquality.google/getconfig/sodar"
+        },
+        {
+          "status": 200,
+          "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js"
+        },
+        {
+          "status": 200,
+          "url": "https://www.google.com/recaptcha/api2/aframe"
+        },
+        {
+          "status": 200,
+          "url": "https://ep2.adtrafficquality.google/sodar/sodar2/255/runner.html"
+        },
+        {
+          "status": 204,
+          "url": "https://pagead2.googlesyndication.com/pagead/sodar"
+        },
+        {
+          "status": 200,
+          "url": "https://pagead2.googlesyndication.com/bg/bicbSm1QHv6PCE7k41PwdE0n8BoGbNC7zjsNTNo3qrw.js"
+        },
+        {
+          "status": 204,
+          "url": "https://ep2.adtrafficquality.google/generate_204"
+        },
+        {
+          "status": 204,
+          "url": "https://ep1.adtrafficquality.google/pagead/sodar"
+        }
+      ],
+      "errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    },
+    {
+      "name": "post-detail-no-id",
+      "size": "mobile",
+      "requestedUrl": "https://www.helpteachers.net/pages/post.html",
+      "status": 200,
+      "navigationError": null,
+      "finalUrl": "https://www.helpteachers.net/pages/post.html",
+      "screenshot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/outputs/homeroom-parity/reference/screenshots/forum-post-detail-no-id-mobile.png",
+      "dom": {
+        "url": "https://www.helpteachers.net/pages/post.html",
+        "title": "Homeroom Heroes - Discussion Detail",
+        "headings": [
+          {
+            "tag": "H2",
+            "text": "Discussion Detail"
+          }
+        ],
+        "bodyText": "\u2630\nDiscussion Detail\nBack to Forum\nError: Post ID is missing from the URL. Please ensure you are navigating from the forum list.\n\n\u00a9 2024 Homeroom Heroes. All rights reserved.",
+        "controls": [
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "hamburgerButton",
+            "name": "",
+            "placeholder": "",
+            "text": "\u2630",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          },
+          {
+            "tag": "button",
+            "type": "submit",
+            "id": "back-to-forum-button",
+            "name": "",
+            "placeholder": "",
+            "text": "Back to Forum",
+            "value": "",
+            "required": false,
+            "disabled": false,
+            "ariaExpanded": null,
+            "ariaLabel": null
+          }
+        ],
+        "forms": [],
+        "links": [
+          {
+            "text": "",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "target": ""
+          }
+        ],
+        "classes": {
+          "loading": [],
+          "empty": []
+        },
+        "dimensions": {
+          "viewport": [
+            390,
+            844
+          ],
+          "document": [
+            390,
+            844
+          ],
+          "scrollY": 0
+        }
+      },
+      "requests": [
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/pages/post.html"
+        },
+        {
+          "method": "GET",
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/static/style.css"
+        },
+        {
+          "method": "GET",
+          "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.googletagmanager.com/gtag/js"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "method": "GET",
+          "url": "https://cdn.tailwindcss.com/3.4.17"
+        },
+        {
+          "method": "GET",
+          "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "method": "GET",
+          "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202610050101/show_ads_impl.js"
+        },
+        {
+          "method": "GET",
+          "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "method": "GET",
+          "url": "https://googleads.g.doubleclick.net/pagead/html/r20261007/r20190131/zrt_lookup.html"
+        },
+        {
+          "method": "GET",
+          "url": "https://googleads.g.doubleclick.net/pagead/ads"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.google.com/pagead/1p-user-list/17482080573/"
+        },
+        {
+          "method": "GET",
+          "url": "https://ep1.adtrafficquality.google/getconfig/sodar"
+        },
+        {
+          "method": "GET",
+          "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js"
+        },
+        {
+          "method": "GET",
+          "url": "https://ep2.adtrafficquality.google/sodar/sodar2/255/runner.html"
+        },
+        {
+          "method": "GET",
+          "url": "https://www.google.com/recaptcha/api2/aframe"
+        },
+        {
+          "method": "GET",
+          "url": "https://pagead2.googlesyndication.com/pagead/sodar"
+        },
+        {
+          "method": "GET",
+          "url": "https://pagead2.googlesyndication.com/bg/bicbSm1QHv6PCE7k41PwdE0n8BoGbNC7zjsNTNo3qrw.js"
+        },
+        {
+          "method": "GET",
+          "url": "https://ep2.adtrafficquality.google/generate_204"
+        },
+        {
+          "method": "GET",
+          "url": "https://ep1.adtrafficquality.google/pagead/sodar"
+        }
+      ],
+      "responses": [
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/pages/post.html"
+        },
+        {
+          "status": 302,
+          "url": "https://cdn.tailwindcss.com/"
+        },
+        {
+          "status": 200,
+          "url": "https://fonts.googleapis.com/css2"
+        },
+        {
+          "status": 200,
+          "url": "https://cdn.tailwindcss.com/3.4.17"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/static/style.css"
+        },
+        {
+          "status": 200,
+          "url": "https://www.helpteachers.net/static/images/logo_transparent.png"
+        },
+        {
+          "status": 200,
+          "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+        },
+        {
+          "status": 404,
+          "url": "https://www.helpteachers.net/api/profile/"
+        },
+        {
+          "status": 200,
+          "url": "https://www.googletagmanager.com/gtag/js"
+        },
+        {
+          "status": 200,
+          "url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2"
+        },
+        {
+          "status": 200,
+          "url": "https://pagead2.googlesyndication.com/pagead/managed/js/adsense/m202610050101/show_ads_impl.js"
+        },
+        {
+          "status": 200,
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "status": 200,
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "status": 200,
+          "url": "https://googleads.g.doubleclick.net/pagead/html/r20261007/r20190131/zrt_lookup.html"
+        },
+        {
+          "status": 204,
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        },
+        {
+          "status": 200,
+          "url": "https://googleads.g.doubleclick.net/pagead/ads"
+        },
+        {
+          "status": 200,
+          "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/17482080573/"
+        },
+        {
+          "status": 200,
+          "url": "https://www.google.com/pagead/1p-user-list/17482080573/"
+        },
+        {
+          "status": 200,
+          "url": "https://ep1.adtrafficquality.google/getconfig/sodar"
+        },
+        {
+          "status": 200,
+          "url": "https://ep2.adtrafficquality.google/sodar/sodar2.js"
+        },
+        {
+          "status": 200,
+          "url": "https://www.google.com/recaptcha/api2/aframe"
+        },
+        {
+          "status": 200,
+          "url": "https://ep2.adtrafficquality.google/sodar/sodar2/255/runner.html"
+        },
+        {
+          "status": 204,
+          "url": "https://pagead2.googlesyndication.com/pagead/sodar"
+        },
+        {
+          "status": 200,
+          "url": "https://pagead2.googlesyndication.com/bg/bicbSm1QHv6PCE7k41PwdE0n8BoGbNC7zjsNTNo3qrw.js"
+        },
+        {
+          "status": 204,
+          "url": "https://ep2.adtrafficquality.google/generate_204"
+        },
+        {
+          "status": 204,
+          "url": "https://ep1.adtrafficquality.google/pagead/sodar"
+        }
+      ],
+      "errors": [
+        "Failed to load resource: the server responded with a status of 404 (Not Found)"
+      ]
+    }
+  ],
+  "blockedActions": [
+    {
+      "name": "forum-list",
+      "size": "desktop",
+      "unexpectedNonGet": [
+        {
+          "method": "POST",
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        }
+      ]
+    },
+    {
+      "name": "forum-list",
+      "size": "mobile",
+      "unexpectedNonGet": [
+        {
+          "method": "POST",
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        }
+      ]
+    },
+    {
+      "name": "create-post",
+      "size": "desktop",
+      "unexpectedNonGet": [
+        {
+          "method": "POST",
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        }
+      ]
+    },
+    {
+      "name": "create-post",
+      "size": "mobile",
+      "unexpectedNonGet": [
+        {
+          "method": "POST",
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        }
+      ]
+    },
+    {
+      "name": "post-detail-no-id",
+      "size": "desktop",
+      "unexpectedNonGet": [
+        {
+          "method": "POST",
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        }
+      ]
+    },
+    {
+      "name": "post-detail-no-id",
+      "size": "mobile",
+      "unexpectedNonGet": [
+        {
+          "method": "POST",
+          "url": "https://www.google.com/rmkt/collect/17482080573/"
+        },
+        {
+          "method": "POST",
+          "url": "https://www.google.com/ccm/collect"
+        },
+        {
+          "method": "POST",
+          "url": "https://ad.doubleclick.net/ccm/s/collect"
+        }
+      ]
+    }
+  ],
+  "nonGetInterpretation": {
+    "observedThirdPartyTelemetry": [
+      [
+        "POST",
+        "https://ad.doubleclick.net/ccm/s/collect"
+      ],
+      [
+        "POST",
+        "https://www.google.com/ccm/collect"
+      ],
+      [
+        "POST",
+        "https://www.google.com/rmkt/collect/17482080573/"
+      ]
+    ],
+    "siteNonGetRequests": [],
+    "note": "Initial public navigation allowed the site\u2019s Google/DoubleClick analytics/ad scripts to run. They emitted passive telemetry POSTs on load without a user interaction. No request to a helpteachers.net mutation endpoint occurred; no form, post, vote, comment, delete, or login action was performed. The blockedActions field\u2019s unexpectedNonGet entries refer to these third-party telemetry requests and do not mean they were blocked."
+  }
+}

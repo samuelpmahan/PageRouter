@@ -6,6 +6,7 @@ import {staticSpec} from '../src/static-compiler.mjs';
 import {atlasImplementationIdentity} from './atlas-identity.mjs';
 import {preservePxCube} from './preserve-pxcube.mjs';
 import {evaluatorClosure,evaluatorImplementationPin} from './evaluator-identity.mjs';
+import {relocateHhServiceImports} from './relocate-hh-imports.mjs';
 const root=path.resolve(import.meta.dirname,'..'),dist=path.join(root,'dist');
 fs.mkdirSync(dist,{recursive:true});
 for(const f of ['index.html','app.mjs','session-repl.mjs','justin-site-ide.mjs','styles.css','static-compiler.mjs','compiled-patch.mjs','project-router.mjs','local-store.mjs','sw.js'])fs.copyFileSync(path.join(root,'src',f),path.join(dist,f));
@@ -37,14 +38,24 @@ function files(dir){const o={};function walk(d,p=''){for(const name of fs.readdi
 
 const pxcEvidence=JSON.parse(fs.readFileSync(path.join(root,'evidence/pxcube-build.json')));
 const pxcRelocation=await preservePxCube(root,pxcEvidence,files);
-const hh=path.join(root,'build/hh');fs.mkdirSync(hh,{recursive:true});fs.cpSync(path.join(root,'vendor/hh/src'),hh,{recursive:true});fs.cpSync(path.join(root,'vendor/hh/services'),path.join(hh,'services'),{recursive:true});const helper=path.join(hh,'pxc-devtools/devtools-data.mjs');fs.writeFileSync(helper,fs.readFileSync(helper,'utf8').replace("'../../services/pxc.mjs'","'../services/pxc.mjs'"));
-const styleAdapter=path.join(hh,'style-playground.mjs');const styleSource=fs.readFileSync(styleAdapter,'utf8');const sourceImport="'../services/style-playground.mjs'";if(styleSource.split(sourceImport).length!==3)throw Error('Unexpected HH style service import mapping');fs.writeFileSync(styleAdapter,styleSource.replaceAll(sourceImport,"'./services/style-playground.mjs'"));
+const hh=path.join(root,'build/hh');fs.mkdirSync(hh,{recursive:true});fs.cpSync(path.join(root,'vendor/hh/src'),hh,{recursive:true,filter:source=>!source.endsWith('.test.mjs')});fs.cpSync(path.join(root,'vendor/hh/services'),path.join(hh,'services'),{recursive:true});relocateHhServiceImports(hh);
 const justin=path.join(root,'build/justin');fs.mkdirSync(justin,{recursive:true});fs.cpSync(path.join(root,'vendor/justin'),justin,{recursive:true});
 // Technical portability fixes only. Original prose/links preserved.
 for(const f of fs.readdirSync(justin).filter(f=>f.endsWith('.html'))){let html=fs.readFileSync(path.join(justin,f),'utf8');html=html.replace('https://cdn.tailwindcss.com','./dependencies/tailwind.js');html=html.replace('static/pictures/hero.jpg','static/pictures/jbrundage.jpg');fs.writeFileSync(path.join(justin,f),html);}
 const projectDefs=[{id:'pxcube',title:'PxCube',subtitle:'14 actual crisp-packaged experiences including Connect Four baseline and PxC migration',dir:pxcRelocation.directory,pin:'Connect Four baseline → PxC + seek-tree migration',source:'https://drive.google.com/drive/folders/1kalwzut63qJEQLiy0OC9aVuDbrEdcXKb',entry:'index.html',trusted:true},{id:'hh',title:'Homeroom Heroes',subtitle:'C6 browser PxC + synthetic fixture DI',dir:hh,pin:'C6 • 7462b8a200a6',source:'https://drive.google.com/file/d/1U1YBFvEOmJG-ZHVZnBr7TogjsLmWXoNz/view',entry:'index.html',trusted:true},{id:'justin',title:'Justin’s standalone site',subtitle:'Pinned leaf • technical portability fixes only',dir:justin,pin:'9fccd18d3077 • local technical patch',source:'https://github.com/EngSmallz/BrundageForCommunity/tree/9fccd18d3077a30f70c26824981fd11718bd761b',entry:'index.html',trusted:true}];
 const catalog=[];
 for(const p of projectDefs){const snapshot=await buildSnapshot(staticSpec(p.id,files(p.dir)));if(p.id==='hh')fs.writeFileSync(path.join(dist,'data',`${p.id}.snapshot.json`),JSON.stringify(snapshot));else fs.writeFileSync(path.join(dist,'data',`${p.id}.snapshot.json.gz`),gzipSync(JSON.stringify(packSnapshot(snapshot)),{level:9}));fs.cpSync(p.dir,path.join(dist,'compiled',p.id),{recursive:true});catalog.push({...p,dir:undefined,digest:snapshot.digest,fileCount:Object.keys(snapshot.files).length,bytes:Object.values(snapshot.files).reduce((n,x)=>n+x.bytes,0)});}
+// Preserve the captured source-site URLs on static hosts that do not provide
+// server-side rewrites. The compiled HH app normalizes these hash routes.
+const hhPageAliases=['homepage.html','index.html','find_teachers.html','forum.html','create_post.html',
+  'post.html','teacher.html','about.html','contact.html','partners.html','login.html','forgot.html',
+  'register.html','terms_conditions.html'];
+const pagesDir=path.join(dist,'pages');fs.mkdirSync(pagesDir,{recursive:true});
+for(const page of hhPageAliases){
+  const target=`../compiled/hh/index.html#/pages/${page}`;
+  const html=`<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Homeroom Heroes</title><p>Opening Homeroom Heroes… <a href="${target}">Continue</a></p><script>location.replace(${JSON.stringify(target)}+location.search)</script></html>`;
+  fs.writeFileSync(path.join(pagesDir,page),html);
+}
 const base=JSON.parse(fs.readFileSync(path.join(dist,'data/hh.snapshot.json')));const sources=files(hh);const original=Buffer.from(sources['styles.css'].data,'base64').toString();sources['styles.css']={encoding:'utf8',data:original+'\n/* locally compiled delta: inspection accent */\nh1 { color: #38bdf8; }\n'};
 const spec=staticSpec('hh',sources);const target=await buildSnapshot(spec,{baseline:base});const clean=await buildSnapshot(spec);const patch=await createPatch(base,target),applied=await applyPatch(base,patch);
 if(applied.digest!==clean.digest||canonical(applied.files)!==canonical(clean.files))throw Error('Delta != clean build');

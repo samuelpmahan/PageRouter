@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homeroom Heroes - Contact Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17482080573"></script>
+    <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'AW-17482080573'); </script> 
+    <!-- Event snippet for Page view conversion page -->
+    <script> gtag('event', 'conversion', {'send_to': 'AW-17482080573/AK9bCInw2e4bEL3CjZBB'}); </script>
+
+</head>
+<body class="bg-gray-800 text-gray-50">
+    <header class="bg-gradient-to-r from-green-700 to-green-900 text-white shadow-lg py-4 md:py-6 relative">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="/pages/homepage.html" class="flex items-center">
+                    <img src="/static/images/logo_transparent.png" alt="Homeroom Heroes Logo" class="h-16 md:h-20 mr-3">
+                </a>
+                <nav class="hidden md:flex ml-4">
+                    <ul class="flex space-x-4 md:space-x-8 text-lg">
+                        <li><a href="/pages/homepage.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Home</a></li>
+                        <li><a href="/pages/index.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Donate</a></li>
+                        <li><a href="/pages/register.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Sign Up</a></li>
+                        <li><a href="/pages/about.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">About</a></li>
+                        <li><a href="/pages/contact.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Contact</a></li>
+                        <li><a href="/pages/partners.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Partners</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="relative">
+                <button id="hamburgerButton" class="text-white text-3xl focus:outline-none **md:hidden**" onclick="toggleMenu()">☰</button>
+
+                <div class="menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden **md:hidden**" id="menuItems">
+                    
+                    <nav class="md:hidden">
+                        <ul class="flex flex-col text-base p-1">
+                            <li><a href="/pages/homepage.html" class="listButton block">Home</a></li>
+                            <li><a href="/pages/index.html" class="listButton block">Donate</a></li>
+                            <li><a href="/pages/register.html" class="listButton block">Sign Up</a></li>
+                            <li><a href="/pages/about.html" class="listButton block">About</a></li>
+                            <li><a href="/pages/contact.html" class="listButton block">Contact</a></li>
+                            <li><a href="/pages/partners.html" class="listButton block">Partners</a></li>
+                            <hr class="my-1 border-green-700"> </ul>
+                    </nav>
+                    
+                    <button id="loginButton" class="listButton hidden" onclick="redirectTo('/pages/login.html')">Login</button>
+                    <button id="logoutButton" class="listButton hidden" onclick="logout()">Logout</button>
+                    <button id="mypageButton" class="listButton hidden" onclick="mypage()">My Page</button>
+                    <button id="forumButton" class="listButton hidden" onclick="redirectTo('/pages/forum.html')">Forum</button>
+                    <button id="validationButton" class="listButton hidden" onclick="redirectTo('/pages/validation.html')">Validation</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <section class="bg-white p-8 rounded-lg shadow-md text-gray-800 mb-8">
+            <h2 class="text-3xl font-bold text-green-800 mb-6 text-center">Contact Information</h2>
+            <p class="mb-4 text-center">If you have any questions, feedback, or need assistance, please feel free to reach out to us:</p>
+            
+            <ul class="space-y-3 max-w-lg mx-auto text-lg">
+                <div class="max-w-xs mx-auto space-y-3">
+                    <li class="flex items-center">
+                        <div class="flex items-center w-36"> 
+                            <i class="fab fa-instagram text-green-600 w-8"></i> 
+                            <span class="ml-2">Instagram:</span>
+                        </div>
+                        <a href="https://www.instagram.com/homeroom_heroes/" target="_blank" class="text-green-600 hover:underline flex-grow">@Homeroom_Heroes</a>
+                    </li>
+                    
+                    <li class="flex items-center">
+                        <div class="flex items-center w-36"> 
+                            <i class="fab fa-twitter text-green-600 w-8"></i> 
+                            <span class="ml-2">Twitter:</span>
+                        </div>
+                        <a href="https://www.x.com/Homeroom_Heroes" target="_blank" class="text-green-600 hover:underline flex-grow">@Homeroom_Heroes</a>
+                    </li>
+                    
+                    <li class="flex items-center">
+                        <div class="flex items-center w-36"> 
+                            <i class="fab fa-linkedin text-green-600 w-8"></i> 
+                            <span class="ml-2">LinkedIn:</span>
+                        </div>
+                        <a href="https://www.linkedin.com/company/homeroom-heroes/" target="_blank" class="text-green-600 hover:underline flex-grow">Homeroom Heroes</a>
+                    </li>
+                    
+                    <li class="flex items-center">
+                        <div class="flex items-center w-36"> 
+                            <i class="fab fa-facebook text-green-600 w-8"></i> 
+                            <span class="ml-2">Facebook:</span>
+                        </div>
+                        <a href="https://www.facebook.com/profile.php?id=61557539257533" target="_blank" class="text-green-600 hover:underline flex-grow">Homeroom Heroes</a>
+                    </li>
+                    
+                    <li class="flex items-center">
+                        <div class="flex items-center w-36"> 
+                            <i class="fab fa-threads text-green-600 w-8"></i> 
+                            <span class="ml-2">Threads:</span>
+                        </div>
+                        <a href="https://www.threads.com/@homeroom_heroes" target="_blank" class="text-green-600 hover:underline flex-grow">@Homeroom_Heroes</a>
+                    </li>
+                </div>
+            </ul>
+        </section>
+
+        <section class="bg-white p-8 rounded-lg shadow-md text-gray-800">
+            <h2 class="text-3xl font-bold text-green-800 mb-6 text-center">Contact Form</h2>
+            <p class="mb-6 text-center">You can also send us a message using the contact form below:</p>
+
+            <form id="contact-form" method="post" enctype="multipart/form-data" class="space-y-6 max-w-lg mx-auto">
+                <div>
+                    <label for="name" class="block text-lg font-medium text-gray-700 mb-2">Name:</label>
+                    <input type="text" id="name" name="name"
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                </div>
+                <div>
+                    <label for="email" class="block text-lg font-medium text-gray-700 mb-2">Email:</label>
+                    <input type="email" id="email" name="email"
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                </div>
+                <div>
+                    <label for="subject" class="block text-lg font-medium text-gray-700 mb-2">Subject:</label>
+                    <input type="text" id="subject" name="subject"
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                </div>
+                <div>
+                    <label for="message" class="block text-lg font-medium text-gray-700 mb-2">Message:</label>
+                    <textarea id="message" name="message" maxlength="250" rows="4"
+                                  oninput="updateCharacterCount()" required
+                                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900 resize-y"></textarea>
+                    <div id="charCount" class="text-sm text-gray-500 mt-1">250 characters remaining</div>
+                </div>
+
+                <div class="g-recaptcha" data-sitekey="6Lf9uiIqAAAAAMt19WMR4q0aO-JMqks9Du0yHHlL"></div>
+                
+                <button id="submitButton" type="submit"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md mt-6">
+                    Submit
+                </button>
+            </form>
+            <div id="contact-message" class="mt-4 text-center text-green-700 font-semibold"></div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6 mt-8 rounded-t-lg shadow-inner text-center">
+        <div class="container mx-auto px-4 text-sm">
+            <p>&copy; 2024 Homeroom Heroes. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function redirectTo(url) {
+            window.location.href = url;
+        }
+
+        function toggleMenu() {
+            const menuItems = document.getElementById('menuItems');
+            menuItems?.classList.toggle('hidden');
+        }
+
+        async function checkAuthentication() {
+            const buttons = [
+                'loginButton', 'logoutButton', 'mypageButton',
+                'validationButton',
+                'forumButton'
+            ];
+            buttons.forEach(id => document.getElementById(id)?.classList.add('hidden'));
+
+            try {
+                const response = await fetch('/api/profile/');
+                const data = await response.json();
+                if (response.ok && data?.user_role) {
+                    if (data.user_role === 'teacher') {
+                        document.getElementById('logoutButton')?.classList.remove('hidden');
+                        document.getElementById('mypageButton')?.classList.remove('hidden');
+                        document.getElementById('validationButton')?.classList.remove('hidden');
+                        document.getElementById('forumButton')?.classList.remove('hidden');
+                    } else if (data.user_role === 'admin') {
+                        document.getElementById('logoutButton')?.classList.remove('hidden');
+                        document.getElementById('validationButton')?.classList.remove('hidden');
+                        document.getElementById('forumButton')?.classList.remove('hidden');
+                    }
+                } else {
+                    document.getElementById('loginButton')?.classList.remove('hidden');
+                }
+            } catch (error) {
+                console.error('Auth check error:', error);
+                document.getElementById('loginButton')?.classList.remove('hidden');
+            }
+        }
+
+        function updateCharacterCount() {
+            const messageElement = document.getElementById("message");
+            const countElement = document.getElementById("charCount");
+            if (messageElement && countElement) {
+                const charsRemaining = 250 - messageElement.value.length;
+                countElement.textContent = charsRemaining + " characters remaining";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            updateCharacterCount();
+            checkAuthentication();
+
+            const contactForm = document.getElementById("contact-form");
+            const submitButton = document.getElementById("submitButton");
+            const contactMessageDiv = document.getElementById("contact-message");
+
+            // Debugging checks (useful to keep temporarily)
+            if (!contactForm) {
+                console.error("DEBUG: 'contact-form' ID not found in HTML!");
+            }
+            if (!submitButton) {
+                console.error("DEBUG: 'submitButton' ID not found in HTML!");
+            }
+
+            if (contactForm && submitButton) {
+                submitButton.addEventListener("click", async function (event) {
+                    event.preventDefault();
+
+                    contactMessageDiv.textContent = "Sending your message...";
+                    contactMessageDiv.style.color = '#10B981'; // Green
+                    submitButton.disabled = true;
+
+                    const formData = new FormData(contactForm);
+                    let recaptchaResponse = '';
+
+                    // Get reCAPTCHA response
+                    if (typeof grecaptcha !== 'undefined' && grecaptcha.getResponse) {
+                        recaptchaResponse = grecaptcha.getResponse();
+                    }
+
+                    if (!recaptchaResponse) {
+                        contactMessageDiv.textContent = "Please complete the reCAPTCHA to send your message.";
+                        contactMessageDiv.style.color = 'orange';
+                        submitButton.disabled = false;
+                        grecaptcha.reset();
+                        return;
+                    }
+
+                    // --- THIS IS THE KEY CHANGE FOR THE 422 ERROR ---
+                    // Changed 'g-recaptcha-response' to 'recaptcha_response' to match backend parameter name
+                    formData.append('recaptcha_response', recaptchaResponse); 
+
+                    try {
+                        const response = await fetch("/api/contact_us/", {
+                            method: "POST",
+                            body: formData,
+                        });
+                        const responseData = await response.json();
+
+                        if (response.ok) {
+                            contactMessageDiv.textContent = responseData.message || "Message sent successfully!";
+                            contactMessageDiv.style.color = '#10B981';
+                            contactForm.reset();
+                            updateCharacterCount();
+                            grecaptcha.reset();
+                        } else {
+                            // Backend might send 'detail' instead of 'message' for errors
+                            const errorMessage = responseData.message || responseData.detail || "Message submission failed. Please try again.";
+                            contactMessageDiv.textContent = errorMessage;
+                            contactMessageDiv.style.color = 'red';
+                            grecaptcha.reset();
+                        }
+                    } catch (error) {
+                        console.error("Error submitting form:", error);
+                        contactMessageDiv.textContent = "An error occurred. Please try again.";
+                        contactMessageDiv.style.color = 'red';
+                        grecaptcha.reset();
+                    } finally {
+                        submitButton.disabled = false;
+                    }
+                });
+            }
+        });
+
+        async function logout() {
+            try {
+                const response = await fetch(`/profile/logout/`, { method: 'POST', headers: { 'Content-Type': 'application/json' }});
+                if (response.ok) { window.location.href = '/'; }
+                else { console.error('Logout failed:', response.status); alert('Logout failed.'); }
+            } catch (error) { console.error('Error during logout:', error); alert('An error occurred during logout.'); }
+        }
+
+        async function mypage() {
+            try {
+                const response = await fetch('/profile/myinfo/', { method: 'GET', headers: { 'Content-Type': 'application/json' }});
+                if (response.ok) { window.location.href = '/pages/teacher.html'; }
+                else { console.error('Error fetching my page info:', response.status); window.location.href = '/'; }
+            } catch (error) { console.error('Error fetching my page info:', error); window.location.href = '/'; }
+        }
+    </script>
+</body>
+</html>

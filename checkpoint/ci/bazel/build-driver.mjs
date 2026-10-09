@@ -54,10 +54,19 @@ try {
   const pkg=JSON.parse(fs.readFileSync(path.join(root,'package.json')));
   const testArgs=pkg.scripts.test.split(/\s+/);
   if(testArgs.shift()!=='node' || testArgs.shift()!=='--test') throw Error('Review changed npm test command before updating Bazel driver');
-  const files=testArgs.flatMap(pattern=>pattern.includes('*') ? fs.readdirSync(path.join(root,path.dirname(pattern))).filter(name=>name.endsWith('.test.mjs')).map(name=>path.join(path.dirname(pattern),name)) : [pattern]);
+  const testOptions=[];
+  while(testArgs[0]?.startsWith('--')) testOptions.push(testArgs.shift());
+  if(!testOptions.includes('--test-concurrency=2')) throw Error('Node test worker concurrency must remain bounded at 2');
+  const patterns=testArgs;
+  const files=patterns.flatMap(pattern=>pattern.includes('*') ? fs.readdirSync(path.join(root,path.dirname(pattern))).filter(name=>name.endsWith('.test.mjs')).map(name=>path.join(path.dirname(pattern),name)) : [pattern]);
+  // Run the HH change directly, then again as part of the complete source suite.
+  const hhTests=fs.readdirSync(path.join(root,'vendor/hh/src')).filter(name=>name.endsWith('.test.mjs')).map(name=>path.join('vendor/hh/src',name));
+  hhTests.push(...fs.readdirSync(path.join(root,'exp/cooperative')).filter(name=>name.endsWith('.test.mjs')&&/(hh|community|public)/i.test(name)).map(name=>path.join('exp/cooperative',name)));
+  hhTests.push('scripts/hh-built-imports.test.mjs');
+  if(hhTests.length) run('Targeted HH controller/community regressions',['--test','--test-concurrency=2',...hhTests]);
   // Executes exactly the current npm test suite with declared Node, without npm's shell.
-  run('npm test suite against freshly assembled site',['--test',...files]);
-  run('Built Atlas import closure',['--test','scripts/atlas-built-imports.test.mjs']);
+  run('npm test suite against freshly assembled site',['--test',...testOptions,...files]);
+  run('Built Atlas import closure',['--test','--test-concurrency=2','scripts/atlas-built-imports.test.mjs']);
   fs.mkdirSync(path.dirname(site),{recursive:true});
   fs.cpSync(path.join(root,'dist'),site,{recursive:true});
   fs.cpSync(path.join(root,'evidence'),evidence,{recursive:true});

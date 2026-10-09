@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homeroom Heroes - Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico" />
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <link rel="stylesheet" href="/static/style.css"> 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17482080573"></script>
+    <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'AW-17482080573'); </script> 
+    <!-- Event snippet for Page view conversion page -->
+    <script> gtag('event', 'conversion', {'send_to': 'AW-17482080573/AK9bCInw2e4bEL3CjZBB'}); </script>
+
+</head>
+<body class="bg-gray-800 text-gray-50">
+    <header class="bg-gradient-to-r from-green-700 to-green-900 text-white shadow-lg py-4 md:py-6 relative">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="/pages/homepage.html" class="flex items-center">
+                    <img src="/static/images/logo_transparent.png" alt="Homeroom Heroes Logo" class="h-16 md:h-20 mr-3">
+                </a>
+                <nav class="hidden md:flex ml-4">
+                    <ul class="flex space-x-4 md:space-x-8 text-lg">
+                        <li><a href="/pages/homepage.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Home</a></li>
+                        <li><a href="/pages/index.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Donate</a></li>
+                        <li><a href="/pages/register.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Sign Up</a></li>
+                        <li><a href="/pages/about.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">About</a></li>
+                        <li><a href="/pages/contact.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Contact</a></li>
+                        <li><a href="/pages/partners.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Partners</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="relative">
+                <button id="hamburgerButton" class="text-white text-3xl focus:outline-none **md:hidden**" onclick="toggleMenu()">☰</button>
+
+                <div class="menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden **md:hidden**" id="menuItems">
+                    
+                    <nav class="md:hidden">
+                        <ul class="flex flex-col text-base p-1">
+                            <li><a href="/pages/homepage.html" class="listButton block">Home</a></li>
+                            <li><a href="/pages/index.html" class="listButton block">Donate</a></li>
+                            <li><a href="/pages/register.html" class="listButton block">Sign Up</a></li>
+                            <li><a href="/pages/about.html" class="listButton block">About</a></li>
+                            <li><a href="/pages/contact.html" class="listButton block">Contact</a></li>
+                            <li><a href="/pages/partners.html" class="listButton block">Partners</a></li>
+                            <hr class="my-1 border-green-700"> </ul>
+                    </nav>
+                    
+                    <button id="loginButton" class="listButton hidden" onclick="redirectTo('/pages/login.html')">Login</button>
+                    <button id="logoutButton" class="listButton hidden" onclick="logout()">Logout</button>
+                    <button id="mypageButton" class="listButton hidden" onclick="mypage()">My Page</button>
+                    <button id="forumButton" class="listButton hidden" onclick="redirectTo('/pages/forum.html')">Forum</button>
+                    <button id="validationButton" class="listButton hidden" onclick="redirectTo('/pages/validation.html')">Validation</button>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container mx-auto px-4 py-8">
+        <section class="bg-white p-8 rounded-lg shadow-md text-gray-800 max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold text-green-800 mb-4 text-center">User Registration</h2>
+            <p class="text-gray-700 text-lg mb-6 text-center">Please fill out the form below. If your school is not present in the list, please go to the <a href="/pages/contact.html" class="text-blue-600 hover:text-blue-800 font-medium transition duration-300 ease-in-out">Contact page</a> and send us a message.</p>
+
+            <form id="registration-form" method="post" class="space-y-4">
+                <div>
+                    <label for="name" class="block text-lg font-medium text-gray-700 mb-2">Name:</label>
+                    <input type="text" id="name" name="name" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                </div>
+
+                <div>
+                    <label for="email" class="block text-lg font-medium text-gray-700 mb-2">Email:</label>
+                    <input type="email" id="email" name="email" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                </div>
+
+                <div>
+                    <label for="phone_number" class="block text-lg font-medium text-gray-700 mb-2">Phone Number:</label>
+                    <input type="text" id="phone_number" name="phone_number" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                </div>
+
+                <div>
+                    <label for="password" class="block text-lg font-medium text-gray-700 mb-2">Password:</label>
+                    <input type="password" id="password" name="password" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                </div>
+
+                <div>
+                    <label for="confirm_password" class="block text-lg font-medium text-gray-700 mb-2">Confirm Password:</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                </div>
+
+                <div>
+                    <label for="state" class="block text-lg font-medium text-gray-700 mb-2">State:</label>
+                    <select id="state" name="state" onchange="populateCountiesDropdown()" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                        <option value="" disabled selected>Choose state</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="county" class="block text-lg font-medium text-gray-700 mb-2">County:</label>
+                    <select id="county" name="county" onchange="populateDistrictsDropdown()" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                        <option value="" disabled selected>Choose county</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="district" class="block text-lg font-medium text-gray-700 mb-2">School District:</label>
+                    <select id="district" name="district" onchange="populateSchoolsDropdown()" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                        <option value="" disabled selected>Choose district</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="school" class="block text-lg font-medium text-gray-700 mb-2">School:</label>
+                    <select id="school" name="school" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-base bg-gray-50 text-gray-900">
+                        <option value="" disabled selected>Choose school</option>
+                    </select>
+                </div>
+
+                <div class="pt-4">
+                    <button id="termsButton" type="button" onclick="openTermsConditions()"
+                            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                        Terms and Conditions
+                    </button>
+                </div>
+
+                <div id="termsConditionsModal" class="modal hidden">
+                    <div class="modal-content">
+                        <span class="close" onclick="closeTermsConditions()">&times;</span>
+                        <iframe src="/pages/terms_conditions.html" width="100%" height="500px" title="Terms and Conditions"></iframe>
+                    </div>
+                </div>
+
+                <div class="flex items-center mt-4">
+                    <input type="checkbox" id="termsCheckbox" name="termsCheckbox" required
+                           class="h-4 w-4 text-green-600 focus:ring-green-500 border-gray-300 rounded">
+                    <label for="termsCheckbox" class="ml-2 block text-sm text-gray-700">I have read the Terms and Conditions</label>
+                </div>
+
+                <div class="g-recaptcha mt-4" data-sitekey="6Lf9uiIqAAAAAMt19WMR4q0aO-JMqks9Du0yHHlL"></div>
+
+                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4 mt-6">
+                    <button id="submitButton" type="submit"
+                            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                        Submit
+                    </button>
+                    <button id="loginButton" type="button" onclick="redirectTo('/pages/login.html')"
+                            class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+                        Login
+                    </button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6 mt-8 rounded-t-lg shadow-inner text-center">
+        <div class="container mx-auto px-4 text-sm">
+            <p>&copy; 2024 Homeroom Heroes. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function redirectTo(url) {
+            window.location.href = url;
+        }
+
+        // This function dynamically shows/hides menu items based on user authentication and role.
+        async function checkAuthentication() {
+            const menuItems = document.getElementById('menuItems');
+            // Hide all dynamic buttons first to prevent flicker
+            const buttons = ['loginButton', 'logoutButton', 'mypageButton', 'validationButton', 'forumButton'];
+            buttons.forEach(id => {
+                const button = document.getElementById(id);
+                if (button) {
+                    button.classList.add('hidden');
+                    button.classList.remove('block'); // Ensure 'block' is removed
+                }
+            });
+
+            let userRole = null;
+
+            try {
+                const response = await fetch('/api/profile/');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.user_role) {
+                        userRole = data.user_role;
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching user profile:', error);
+                // If there's an error fetching profile, assume not logged in.
+            }
+
+            // Show buttons based on user role
+            if (userRole === 'teacher') {
+                document.getElementById('logoutButton')?.classList.remove('hidden');
+                document.getElementById('logoutButton')?.classList.add('block');
+                document.getElementById('mypageButton')?.classList.remove('hidden');
+                document.getElementById('mypageButton')?.classList.add('block');
+                document.getElementById('forumButton').classList.remove('hidden');
+                document.getElementById('forumButton').classList.add('block'); // Make it display as a block
+                document.getElementById('validationButton')?.classList.remove('hidden');
+                document.getElementById('validationButton')?.classList.add('block');
+            } else if (userRole === 'admin') {
+                document.getElementById('logoutButton')?.classList.remove('hidden');
+                document.getElementById('logoutButton')?.classList.add('block');
+                document.getElementById('validationButton')?.classList.remove('hidden');
+                document.getElementById('validationButton')?.classList.add('block');
+                document.getElementById('forumButton').classList.remove('hidden');
+                document.getElementById('forumButton').classList.add('block'); // Make it display as a block
+            } else {
+                // Not logged in or unknown role, show login button (if it's the one in the dropdown)
+                document.getElementById('loginButton')?.classList.remove('hidden');
+                document.getElementById('loginButton')?.classList.add('block');
+            }
+        }
+
+        function toggleMenu() {
+            const menuItems = document.getElementById('menuItems');
+            // Use classList.toggle for Tailwind's hidden utility
+            menuItems.classList.toggle('hidden');
+            // If the menu is now shown, update authentication buttons
+            if (!menuItems.classList.contains('hidden')) {
+                checkAuthentication();
+            }
+        }
+
+        async function logout() {
+            try {
+                const response = await fetch(`/profile/logout/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    window.location.href = '/'; // Redirect to root after successful logout
+                } else {
+                    console.error('Logout failed:', response.status);
+                    alert('Logout failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error during logout:', error);
+                alert('An error occurred during logout. Please try again.');
+            }
+        }
+
+        async function mypage() {
+            try {
+                const response = await fetch('/profile/myinfo/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    window.location.href = '/pages/teacher.html';
+                } else {
+                    console.error('Error fetching my page info:', response.status);
+                    window.location.href = '/'; // Redirect to homepage or login if error
+                }
+            } catch (error) {
+                console.error('Error fetching my page info:', error);
+                window.location.href = '/'; // Redirect to homepage or login if error
+            }
+        }
+
+        async function populateStatesDropdown() {
+            try {
+                const response = await fetch("/api/get_states/");
+                if (!response.ok) throw new Error('Network response was not ok.');
+                const states = await response.json();
+                const stateDropdown = document.getElementById("state");
+                stateDropdown.innerHTML = "";
+                const chooseStateOption = new Option("Choose state", "", true, true); // selected and disabled
+                chooseStateOption.disabled = true;
+                stateDropdown.add(chooseStateOption);
+                states.forEach(state => {
+                    const option = new Option(state, state);
+                    stateDropdown.add(option);
+                });
+            } catch (error) {
+                console.error("Error retrieving state information:", error);
+                alert("Error retrieving state information. Please try again later.");
+            }
+        }
+
+        async function populateCountiesDropdown() {
+            try {
+                const selectedState = document.getElementById("state").value;
+                if (!selectedState) {
+                    document.getElementById("county").innerHTML = '<option value="" disabled selected>Choose county</option>';
+                    document.getElementById("district").innerHTML = '<option value="" disabled selected>Choose district</option>';
+                    document.getElementById("school").innerHTML = '<option value="" disabled selected>Choose school</option>';
+                    return;
+                }
+                const response = await fetch(`/api/get_counties/${selectedState}`);
+                if (!response.ok) throw new Error('Network response was not ok.');
+                const counties = await response.json();
+                const countyDropdown = document.getElementById("county");
+                countyDropdown.innerHTML = "";
+                const chooseCountyOption = new Option("Choose county", "", true, true);
+                chooseCountyOption.disabled = true;
+                countyDropdown.add(chooseCountyOption);
+                counties.forEach(county => {
+                    const option = new Option(county, county);
+                    countyDropdown.add(option);
+                });
+                // Reset subsequent dropdowns
+                document.getElementById("district").innerHTML = '<option value="" disabled selected>Choose district</option>';
+                document.getElementById("school").innerHTML = '<option value="" disabled selected>Choose school</option>';
+            } catch (error) {
+                console.error("Error retrieving county information:", error);
+                alert("Error retrieving county information. Please try again later.");
+            }
+        }
+
+        async function populateDistrictsDropdown() {
+            try {
+                const selectedState = document.getElementById("state").value;
+                const selectedCounty = document.getElementById("county").value;
+                if (!selectedState || !selectedCounty) {
+                    document.getElementById("district").innerHTML = '<option value="" disabled selected>Choose district</option>';
+                    document.getElementById("school").innerHTML = '<option value="" disabled selected>Choose school</option>';
+                    return;
+                }
+                const response = await fetch(`/api/get_districts/${selectedState}/${selectedCounty}`);
+                if (!response.ok) throw new Error('Network response was not ok.');
+                const districts = await response.json();
+                const districtDropdown = document.getElementById("district");
+                districtDropdown.innerHTML = "";
+                const chooseDistrictOption = new Option("Choose district", "", true, true);
+                chooseDistrictOption.disabled = true;
+                districtDropdown.add(chooseDistrictOption);
+                districts.forEach(district => {
+                    const option = new Option(district, district);
+                    districtDropdown.add(option);
+                });
+                // Reset subsequent dropdowns
+                document.getElementById("school").innerHTML = '<option value="" disabled selected>Choose school</option>';
+            } catch (error) {
+                console.error("Error retrieving district information:", error);
+                alert("Error retrieving district information. Please try again later.");
+            }
+        }
+
+        async function populateSchoolsDropdown() {
+            try {
+                const selectedState = document.getElementById("state").value;
+                const selectedCounty = document.getElementById("county").value;
+                const selectedDistrict = document.getElementById("district").value;
+                if (!selectedState || !selectedCounty || !selectedDistrict) {
+                    document.getElementById("school").innerHTML = '<option value="" disabled selected>Choose school</option>';
+                    return;
+                }
+                const response = await fetch(`/api/get_schools/${selectedState}/${selectedCounty}/${selectedDistrict}`);
+                if (!response.ok) throw new Error('Network response was not ok.');
+                const schools = await response.json();
+                const schoolDropdown = document.getElementById("school");
+                schoolDropdown.innerHTML = "";
+                const chooseSchoolOption = new Option("Choose school", "", true, true);
+                chooseSchoolOption.disabled = true;
+                schoolDropdown.add(chooseSchoolOption);
+                schools.forEach(school => {
+                    const option = new Option(school, school);
+                    schoolDropdown.add(option);
+                });
+            } catch (error) {
+                console.error("Error retrieving school information:", error);
+                alert("Error retrieving school information. Please try again later.");
+            }
+        }
+
+        // Function to open the T&C modal
+        function openTermsConditions() {
+            document.getElementById('termsConditionsModal').classList.remove('hidden');
+            document.getElementById('termsConditionsModal').classList.add('flex'); // Add flex to center
+        }
+
+        // Function to close the T&C modal
+        function closeTermsConditions() {
+            document.getElementById('termsConditionsModal').classList.add('hidden');
+            document.getElementById('termsConditionsModal').classList.remove('flex'); // Remove flex when hidden
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Check authentication status to adjust header navigation
+            checkAuthentication();
+            populateStatesDropdown(); // Populate states on page load
+
+            const registrationForm = document.getElementById("registration-form");
+            const submitButton = document.getElementById("submitButton");
+
+            submitButton.addEventListener("click", async function (event) {
+                event.preventDefault();
+
+                // Basic front-end password validation
+                const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirm_password').value;
+                if (password !== confirmPassword) {
+                    alert('Passwords do not match! Please ensure both password fields are identical.');
+                    return; // Stop form submission
+                }
+
+                // Check terms and conditions checkbox
+                const termsCheckbox = document.getElementById('termsCheckbox');
+                if (!termsCheckbox.checked) {
+                    alert('You must agree to the Terms and Conditions to register.');
+                    return;
+                }
+
+                const formData = new FormData(registrationForm);
+
+                // Include the reCAPTCHA response in your form data
+                const recaptchaResponse = grecaptcha.getResponse();
+                if (!recaptchaResponse) {
+                    alert('Please complete the reCAPTCHA verification.');
+                    return; // Stop form submission
+                }
+                formData.append('recaptcha_response', recaptchaResponse); // Correct form field name
+
+                try {
+                    const response = await fetch("/profile/register/", {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    // Parse JSON response. FastAPI's HTTPException returns JSON.
+                    let data;
+                    try {
+                        data = await response.json();
+                    } catch (jsonError) {
+                        // If response is not JSON (e.g., a server crash returning plain text/HTML)
+                        console.error('Server response was not valid JSON:', jsonError);
+                        // Fallback for non-JSON responses
+                        alert(`An unexpected error occurred. Server responded with status: ${response.status}. Please try again later.`);
+                        grecaptcha.reset();
+                        return;
+                    }
+
+
+                    if (response.ok) {
+                        // Success: Prioritize 'detail' for more descriptive message
+                        alert(data.detail || data.message || 'Registration successful! Check your email.');
+                        window.location.href = '/pages/homepage.html'; // Or a confirmation page
+                    } else {
+                        // Error: Prioritize 'detail' for specific error messages
+                        // Fallback to 'message' then generic error if 'detail' isn't there
+                        alert(data.detail || data.message || `Registration failed with status: ${response.status}. Please try again.`);
+                        grecaptcha.reset(); // Reset reCAPTCHA after a failed attempt
+                    }
+                } catch (error) {
+                    console.error('Network or unhandled JavaScript error:', error);
+                    // Provide a more informative error message for network issues or unhandled JS errors
+                    alert(`A network error occurred or the server is unreachable. Please check your internet connection and try again. Error: ${error.message || error}`);
+                    grecaptcha.reset(); // Reset reCAPTCHA on unhandled error
+                }
+            });
+        });
+    </script>
+</body>
+</html>

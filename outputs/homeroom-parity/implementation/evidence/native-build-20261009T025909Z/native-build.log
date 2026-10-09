@@ -1,0 +1,54 @@
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "8fcdb2485ebc68f00392d647b3d3d9130f0d4bb9f72c69ee258086dd63e1c122", "mkdir": "48893b0fb21436b54619db80486e83ef39dfccaf1aefe83dfa00c02d6146e8c0", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "c626229526bb58ec2d0f585f3c3ae1412e6f973b4353385042d11c38d8426917"}}
+✔ a failed crisp package blocks publication (1.526028ms)
+✔ a source build requires successful results for every declared target and a live site (0.859023ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 103.147049
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+Analyzing: target //:site (7 packages loaded, 1527 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1528 targets configured).
+[1 / 2] checking cached actions
+[1 / 2] [Prepa] Building and verifying PageRouter from source
+[1 / 2] [Sched] Building and verifying PageRouter from source
+[1 / 2] Building and verifying PageRouter from source; 1s linux-sandbox
+[1 / 2] Building and verifying PageRouter from source; 31s linux-sandbox
+[1 / 2] Building and verifying PageRouter from source; 91s linux-sandbox
+[1 / 2] Building and verifying PageRouter from source; 151s linux-sandbox
+[1 / 2] Building and verifying PageRouter from source; 211s linux-sandbox
+[1 / 2] Building and verifying PageRouter from source; 271s linux-sandbox
+[1 / 2] Building and verifying PageRouter from source; 331s linux-sandbox
+[1 / 2] Building and verifying PageRouter from source; 391s linux-sandbox
+[1 / 2] Building and verifying PageRouter from source; 452s linux-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 787 files; all 14 PxCube packages succeeded; fresh output siteBuildId 8026b8ce64d0fc3cc7c053b527cf41d62e0e2b2233e28e466853dba402abb2f5
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+[2 / 2] no actions running
+INFO: Elapsed time: 489.372s, Critical Path: 475.39s
+INFO: 2 processes: 1 internal, 1 linux-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":787,"siteBuildId":"8026b8ce64d0fc3cc7c053b527cf41d62e0e2b2233e28e466853dba402abb2f5","pxcubePackages":14}

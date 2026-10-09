@@ -1,0 +1,1168 @@
+{
+  "schema": "hh-independent-native-readback.v1",
+  "createdAt": "2026-10-09T03:09:47.175Z",
+  "leaf": "http://127.0.0.1:4195/compiled/hh/index.html",
+  "builtRoot": "/mnt/c/users/tenni/documents/codex/2026-10-07/yo/work/github-publication/bazel-output-final/245a46e81e4dd49b026454d1b33006b3/execroot/pagerouter/bazel-out/k8-fastbuild/bin/site.site/compiled/hh",
+  "acceptedCapture": "outputs/homeroom-parity/implementation/verification/public-20261009T025104881Z/capture.json",
+  "boundary": "Native delivery binding to reviewed code/assets; production services are not invoked.",
+  "checks": [
+    {
+      "name": "reviewed-runtime-and-asset-byte-binding",
+      "passed": true,
+      "details": {
+        "reviewedPins": 63,
+        "metadataDifferences": [
+          {
+            "path": "vendor/fast-check-4.10.2.meta.mjs",
+            "acceptedHash": "4c9c76254b6551ce6744315fcc55d900a973e9fb81f601611b02fa4be2aa22a0",
+            "nativeHash": "d188af7fd471728fd923609c3012c0ffbceb152ee2f13911a8323546e322d5ba"
+          },
+          {
+            "path": "vendor/fast-check-4.10.2.provenance.json",
+            "acceptedHash": "d66b565385f04e61ebc531796549501753f50f00d2b2095d8cc8fe236ee5a7a2",
+            "nativeHash": "a17210aa21c59d6959404c0d282af888af5edf0646f043150ad2bc13e283d442"
+          }
+        ],
+        "additionalFiles": [
+          "services/CHECKPOINT.md",
+          "services/README.md",
+          "vendor/fast-check-4.10.2.LICENSE.txt",
+          "vendor/pure-rand-8.4.2.LICENSE.txt"
+        ]
+      }
+    },
+    {
+      "name": "native-http-bytes-index.html",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "sha256": "495cbc823d0d5a412bebfd02eff1833a53b30ea3970e076c3439192e8d34e582"
+      }
+    },
+    {
+      "name": "native-http-bytes-app.mjs",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "sha256": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3"
+      }
+    },
+    {
+      "name": "native-http-bytes-public-controller.mjs",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "sha256": "aa2d19ce779a341ca272065708ad5535b948561d5a60b4e7c4c1a5c87ebb600e"
+      }
+    },
+    {
+      "name": "native-http-bytes-services/index.mjs",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "sha256": "f7fade286781a86f5339cd1014247fdfc1307bea9de67d318c2b3140741b8838"
+      }
+    },
+    {
+      "name": "native-http-bytes-public-site.css",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "sha256": "42cf0492447d04ab9428440d084356ce3638d38d37ac0ddfa84bf35004f3a458"
+      }
+    },
+    {
+      "name": "desktop-native-menu-terms-navigation",
+      "passed": true,
+      "details": {
+        "route": "http://127.0.0.1:4195/compiled/hh/index.html#/register",
+        "width": 1440
+      }
+    },
+    {
+      "name": "mobile-native-menu-terms-navigation",
+      "passed": true,
+      "details": {
+        "route": "http://127.0.0.1:4195/compiled/hh/index.html#/register",
+        "width": 390
+      }
+    },
+    {
+      "name": "native-pagerouter-iframe-controls",
+      "passed": true,
+      "details": {
+        "iframe": {
+          "x": 18,
+          "y": 221.9375,
+          "width": 354,
+          "height": 680
+        },
+        "url": "http://127.0.0.1:4195/#/hh/run"
+      }
+    }
+  ],
+  "differences": [
+    {
+      "path": "vendor/fast-check-4.10.2.meta.mjs",
+      "acceptedHash": "4c9c76254b6551ce6744315fcc55d900a973e9fb81f601611b02fa4be2aa22a0",
+      "nativeHash": "d188af7fd471728fd923609c3012c0ffbceb152ee2f13911a8323546e322d5ba"
+    },
+    {
+      "path": "vendor/fast-check-4.10.2.provenance.json",
+      "acceptedHash": "d66b565385f04e61ebc531796549501753f50f00d2b2095d8cc8fe236ee5a7a2",
+      "nativeHash": "a17210aa21c59d6959404c0d282af888af5edf0646f043150ad2bc13e283d442"
+    }
+  ],
+  "additionalFiles": [
+    "services/CHECKPOINT.md",
+    "services/README.md",
+    "vendor/fast-check-4.10.2.LICENSE.txt",
+    "vendor/pure-rand-8.4.2.LICENSE.txt"
+  ],
+  "console": [
+    {
+      "device": "mobile",
+      "type": "warning",
+      "text": "An iframe which has both allow-scripts and allow-same-origin for its sandbox attribute can escape its sandboxing."
+    }
+  ],
+  "requests": [
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/index.html",
+      "method": "GET",
+      "type": "document"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/public-site.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/community.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/app.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/fonts/Inter-400-600-700-latin.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/index.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/public-controller.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/public-site.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/community.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/webmcp.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/pxc-devtools/devtools.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/style-playground.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/teacher-journey.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/pxc.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/contract.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/fixtures.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/fixture-provider.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/http-provider.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/runtime.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/site-data.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/style-playground.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/vendor/fast-check-4.10.2.bundle.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/vendor/fast-check-4.10.2.meta.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/pxc-devtools/devtools-data.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/devtools-board.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/hero_border.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/tile_border_1.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/tile_border_3.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/tile_border_4.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/tile_border_2.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/fonts/Fraunces-400-500-latin.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/logo_transparent.png",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/teacher-of-day.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "desktop",
+      "url": "http://127.0.0.1:4195/compiled/hh/pxc-devtools/devtools.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/index.html",
+      "method": "GET",
+      "type": "document"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/public-site.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/community.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/app.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/index.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/public-controller.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/public-site.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/community.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/webmcp.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/pxc-devtools/devtools.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/style-playground.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/fonts/Inter-400-600-700-latin.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/teacher-journey.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/site-data.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/pxc.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/contract.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/fixtures.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/fixture-provider.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/http-provider.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/runtime.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/pxc-devtools/devtools-data.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/style-playground.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/vendor/fast-check-4.10.2.bundle.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/vendor/fast-check-4.10.2.meta.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/devtools-board.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/hero_border.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/tile_border_1.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/tile_border_3.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/tile_border_4.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/tile_border_2.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/fonts/Fraunces-400-500-latin.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/logo_transparent.png",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/teacher-of-day.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/pxc-devtools/devtools.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/",
+      "method": "GET",
+      "type": "document"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/styles.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/app.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled-patch.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/project-router.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/local-store.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/static-compiler.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/session-repl.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/justin-site-ide.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/atlas-view.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/block5-view.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/cooperative/hh-workbench.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/cooperative/annotation-fg.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/vendor/hh/services/pxc.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/atlas/atlas-session.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/atlas/cross-language.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/block5/core/index.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/compression/index.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/vendor/hh/services/fixture-provider.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/vendor/hh/services/runtime.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/vendor/hh/services/contract.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/vendor/hh/src/teacher-journey.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/atlas/runtime-adapter.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/atlas/calculations.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/atlas/capability-protocol.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/atlas/atlas-fg.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/block5/core/canonical.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/block5/core/pixel-cache.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/block5/core/composed.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/block5/core/events.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/block5/core/providers.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/block5/core/runtime.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/block5/core/world.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/block5/core/grid-world.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/compression/canonical.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/compression/graph.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/compression/discovery.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/compression/codec.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/compression/online.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/compression/feedback.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/vendor/hh/services/fixtures.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/vendor/hh/services/devtools-board.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/cooperative/fg-association.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/block5/core/grid-engine.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/exp/block5/core/grid-engine.mjs",
+      "method": "GET",
+      "type": "fetch"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/data/catalog.json",
+      "method": "GET",
+      "type": "fetch"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/data/delta-proof.json",
+      "method": "GET",
+      "type": "fetch"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/index.html",
+      "method": "GET",
+      "type": "document"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/public-site.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/community.css",
+      "method": "GET",
+      "type": "stylesheet"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/app.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/index.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/public-controller.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/public-site.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/community.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/webmcp.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/pxc-devtools/devtools.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/style-playground.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/fonts/Inter-400-600-700-latin.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/pxc.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/contract.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/fixtures.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/fixture-provider.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/http-provider.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/runtime.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/site-data.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/teacher-journey.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/style-playground.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/vendor/fast-check-4.10.2.bundle.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/vendor/fast-check-4.10.2.meta.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/pxc-devtools/devtools-data.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/services/devtools-board.mjs",
+      "method": "GET",
+      "type": "script"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/hero_border.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/tile_border_1.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/tile_border_3.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/tile_border_4.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/tile_border_2.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/fonts/Fraunces-400-500-latin.woff2",
+      "method": "GET",
+      "type": "font"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/logo_transparent.png",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/assets/reference/static/images/homepage/teacher-of-day.jpg",
+      "method": "GET",
+      "type": "image"
+    },
+    {
+      "device": "mobile",
+      "url": "http://127.0.0.1:4195/compiled/hh/pxc-devtools/devtools.css",
+      "method": "GET",
+      "type": "stylesheet"
+    }
+  ],
+  "failures": [],
+  "before": {
+    "app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "assets/apple.jpg": "813f9fff77bec3b9947c28ba30f4dd4589d031a22c79978ccf76925dc5bd7eff",
+    "assets/favicon.ico": "5a212f2ed1fbd5a1f90bff55946966ebbac2e25713262676bb8a25bd64d23d7e",
+    "assets/hero_border.jpg": "d221d00958211ad77ba5db6bf7bfbdcdbcb9966fe078740dd7289c4e368a4db7",
+    "assets/logo_transparent.png": "dc37f79dc8e4a0550282c2e0203a2fdf2d9666f25cb3ebda265ba2794d4501cd",
+    "assets/reference/fonts/DM-Sans-400-500-latin.woff2": "9fea608a947e67020c33cad9a6fe3d60c54119dfb8cff87768a8117a15ed7543",
+    "assets/reference/fonts/Fraunces-400-500-latin.woff2": "7f9d191d999336d3b9790afa72e1358e50a13b06d4f289341e92a311967a80f9",
+    "assets/reference/fonts/Fraunces-browser-observed.woff2": "7f9d191d999336d3b9790afa72e1358e50a13b06d4f289341e92a311967a80f9",
+    "assets/reference/fonts/Inter-400-600-700-latin.woff2": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62",
+    "assets/reference/fonts/Inter-browser-observed.woff2": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62",
+    "assets/reference/fonts/site-fonts.css": "db2b69007d6b242bbd811ca17dd9c7c144707c5b330023b6630de9fc16a1bf03",
+    "assets/reference/static/fontawesome/css/all.min.css": "c22cfb6520a7fdbb738632834019acf47c78b1279462c0eb4cb83bae83ecb5a7",
+    "assets/reference/static/fontawesome/webfonts/fa-brands-400.woff2": "3a8924cd5203a28628716aedb5cef0943da4c3b44e3ffcee90ab06387b41c490",
+    "assets/reference/static/images/about/Tory.jpg": "b014a9d9340d41bc87390086a57ef2f61848aa13eca7a6b150127201e64c4a6f",
+    "assets/reference/static/images/about/grape.jpg": "c8ad9d3b292076688b76bd458689bfbfa288048d27028fca579a7d0b0df32fa4",
+    "assets/reference/static/images/about/jillian.jpg": "5acce3e403deee54c4a0ee7ff1e738c9fa3493eca5d29ef0c2da569977545013",
+    "assets/reference/static/images/about/majid.jpg": "ed48fe9e120012cb6c98291a302c9f7c324b903e2693a8128f9d8de5652f4376",
+    "assets/reference/static/images/about/peanut.jpg": "2594f6023e9b2ab5b9098166f6a9f1b5338a8ba053a9cdbb5a7c8a5a3df6ed97",
+    "assets/reference/static/images/about/william.jpg": "1f56d1714e4137a0f7eb2356a9ebca66e076d557965d2e087fd830ca86bbdd37",
+    "assets/reference/static/images/apple.jpg": "813f9fff77bec3b9947c28ba30f4dd4589d031a22c79978ccf76925dc5bd7eff",
+    "assets/reference/static/images/favicon.ico": "5a212f2ed1fbd5a1f90bff55946966ebbac2e25713262676bb8a25bd64d23d7e",
+    "assets/reference/static/images/homepage/hero_border.jpg": "d221d00958211ad77ba5db6bf7bfbdcdbcb9966fe078740dd7289c4e368a4db7",
+    "assets/reference/static/images/homepage/teacher-of-day.jpg": "5e736f5b64a103dc18f2aa570061fc43d0e2219fe8a6b6dd1f94297fe14b04bd",
+    "assets/reference/static/images/homepage/tile_border_1.jpg": "54fd022bab5a985f7a0b59dd266b18944ec8af164a80cd9b99d523a0e89616fb",
+    "assets/reference/static/images/homepage/tile_border_2.jpg": "6b9bb79653d87b2c31d8d3b2ea88e1c5e1aaf1aa653020030ae8c765fa633fe9",
+    "assets/reference/static/images/homepage/tile_border_3.jpg": "81bdff068353022d4e06dfbb491ac2233f04d94e32a17ec44fa3a64ec1966aa9",
+    "assets/reference/static/images/homepage/tile_border_4.jpg": "30db5bcf15afc159686ff36bc4ed79b440ec88bda293df335896de5e82b18fb9",
+    "assets/reference/static/images/logo_transparent.png": "dc37f79dc8e4a0550282c2e0203a2fdf2d9666f25cb3ebda265ba2794d4501cd",
+    "assets/reference/static/images/partners/1007TheWolf.png": "89a137a1a389f772c9eceff3aba5071df43e70d825d3febf1e2c36dcfea001a3",
+    "assets/reference/static/images/partners/965CountryColor.png": "c47b09fa3db1404d9c704dc2141443b279dd214cf82974d0a79d5b8402c9f19c",
+    "assets/reference/static/images/partners/BaseCamp.png": "7a6ac79eefe2bab38fb4ef72742481fa95f1156b2ac4954014e65a5458012447",
+    "assets/reference/static/images/partners/Coastal.png": "0bf1256c50c81a450356b2f29d6aee82fd32b103bb0d876275bda67610af4ae5",
+    "assets/reference/static/images/partners/Microsoft-logo.png": "6bd42b7b8bd0cc73a781234fad70bdb923ee49d3ed0a4cb0b84cfa8c55a74ed1",
+    "assets/reference/static/images/regions/PNW.jpg": "d9ca4cfef4ac02f78cbac9920579813f7bd66d90826630744f0e7723983f393c",
+    "assets/reference/static/style.css": "3ab78ae4495d6dbd8fa166b3b7233dc97b6f9f145c0152aad59a0fbccb3d9830",
+    "community.css": "d1a56e7a338759e6042443c4d1a8072a32edc850dea808692fb01806d61b3629",
+    "community.mjs": "243b747fbdf059993a7ee9f0dc3c604bbfb1635204b098fbecc6cf841fa95ee2",
+    "controller.mjs": "5085dd70d0eb4f06116d565e99b5d0c98467bdabe217e582e5dc955ccde888c8",
+    "index.html": "495cbc823d0d5a412bebfd02eff1833a53b30ea3970e076c3439192e8d34e582",
+    "public-controller.mjs": "aa2d19ce779a341ca272065708ad5535b948561d5a60b4e7c4c1a5c87ebb600e",
+    "public-site.css": "42cf0492447d04ab9428440d084356ce3638d38d37ac0ddfa84bf35004f3a458",
+    "public-site.mjs": "59e6918afeb97fabaeb65f0238eaa1dada0bec63ec737f99498272346e02e00e",
+    "pxc-devtools/devtools-data.mjs": "d1ddf55add6e35c6b9059e77e35855c1183b5b0be51543b778a5c7adfecb5215",
+    "pxc-devtools/devtools.css": "9d4e3fe307218dba3cf962f73d0b34d35c400188595ad39a7be6043abcb3d731",
+    "pxc-devtools/devtools.mjs": "9de145615034167617842854fa8f4b0200ae83207016065922583aad388a0e07",
+    "services/CHECKPOINT.md": "ffbc86d2408fbb3b1abb97585f2fa1265d96361996063060e9b7e23694b086e0",
+    "services/PROVENANCE.json": "5e9f88b24c02fc870daf7c988025ef89c1e5e14861ba001e131a696a9b4f504a",
+    "services/README.md": "24e662368cf573b23e74de4b6d428effa62e978887683230e62f0ab624c6f728",
+    "services/contract.mjs": "6d50ddd27ac35df190a5e3c65e5fc4e5c269ca52ae8febb1d9d332bc2597738c",
+    "services/devtools-board.mjs": "90113ea78b98ae526db03f0a5ff7cf43c41190a886a7bf8c0d2639edacde8999",
+    "services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "services/fixtures.mjs": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+    "services/http-provider.mjs": "d0cc961336c553bc2e83cfe2e5796a7510a95ae6d77307ca75f19e1c79b2ba71",
+    "services/index.mjs": "f7fade286781a86f5339cd1014247fdfc1307bea9de67d318c2b3140741b8838",
+    "services/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+    "services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+    "services/style-playground.mjs": "0c6a6d2b9131b942848c0c0bde9b5a3fcaf51d23b77152b7e6debc5456e75112",
+    "site-data.mjs": "61862ee060435d6d516faf99700ec6e0788bf2e96a8698e5f7461f7d9362e5d8",
+    "style-playground.mjs": "5f65bec0d735386c32fcd345ab42d8c8fb145a5bc92ebcb645370056eb33397c",
+    "styles.css": "8d20b9d8ae814d94c7fb90c027a5903eb993de0017c7e1708ac79bd645a0d956",
+    "teacher-journey.mjs": "dde771c3048fba787704f2fc62606d51065775afcc067d2f907a3bf9a78c5596",
+    "vendor/fast-check-4.10.2.LICENSE.txt": "b2bd24f5c975f659433271170b17e0a769b12ef8065bbca6dcd5511d57e94ce0",
+    "vendor/fast-check-4.10.2.bundle.mjs": "28fc0e4dc36e31eb48577b319cec521931b4bc88556205a76d82cde763a34d06",
+    "vendor/fast-check-4.10.2.meta.mjs": "d188af7fd471728fd923609c3012c0ffbceb152ee2f13911a8323546e322d5ba",
+    "vendor/fast-check-4.10.2.provenance.json": "a17210aa21c59d6959404c0d282af888af5edf0646f043150ad2bc13e283d442",
+    "vendor/pure-rand-8.4.2.LICENSE.txt": "e9d6a94ab01c6c9ab68c099d3ba8dd9f8aca60f2e2250c2302275405fca9e806",
+    "webmcp.mjs": "b510487715e447ce08e84804e13db52d8d94d11ee93ed84148ec73a77ea1d818"
+  },
+  "after": {
+    "app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "assets/apple.jpg": "813f9fff77bec3b9947c28ba30f4dd4589d031a22c79978ccf76925dc5bd7eff",
+    "assets/favicon.ico": "5a212f2ed1fbd5a1f90bff55946966ebbac2e25713262676bb8a25bd64d23d7e",
+    "assets/hero_border.jpg": "d221d00958211ad77ba5db6bf7bfbdcdbcb9966fe078740dd7289c4e368a4db7",
+    "assets/logo_transparent.png": "dc37f79dc8e4a0550282c2e0203a2fdf2d9666f25cb3ebda265ba2794d4501cd",
+    "assets/reference/fonts/DM-Sans-400-500-latin.woff2": "9fea608a947e67020c33cad9a6fe3d60c54119dfb8cff87768a8117a15ed7543",
+    "assets/reference/fonts/Fraunces-400-500-latin.woff2": "7f9d191d999336d3b9790afa72e1358e50a13b06d4f289341e92a311967a80f9",
+    "assets/reference/fonts/Fraunces-browser-observed.woff2": "7f9d191d999336d3b9790afa72e1358e50a13b06d4f289341e92a311967a80f9",
+    "assets/reference/fonts/Inter-400-600-700-latin.woff2": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62",
+    "assets/reference/fonts/Inter-browser-observed.woff2": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62",
+    "assets/reference/fonts/site-fonts.css": "db2b69007d6b242bbd811ca17dd9c7c144707c5b330023b6630de9fc16a1bf03",
+    "assets/reference/static/fontawesome/css/all.min.css": "c22cfb6520a7fdbb738632834019acf47c78b1279462c0eb4cb83bae83ecb5a7",
+    "assets/reference/static/fontawesome/webfonts/fa-brands-400.woff2": "3a8924cd5203a28628716aedb5cef0943da4c3b44e3ffcee90ab06387b41c490",
+    "assets/reference/static/images/about/Tory.jpg": "b014a9d9340d41bc87390086a57ef2f61848aa13eca7a6b150127201e64c4a6f",
+    "assets/reference/static/images/about/grape.jpg": "c8ad9d3b292076688b76bd458689bfbfa288048d27028fca579a7d0b0df32fa4",
+    "assets/reference/static/images/about/jillian.jpg": "5acce3e403deee54c4a0ee7ff1e738c9fa3493eca5d29ef0c2da569977545013",
+    "assets/reference/static/images/about/majid.jpg": "ed48fe9e120012cb6c98291a302c9f7c324b903e2693a8128f9d8de5652f4376",
+    "assets/reference/static/images/about/peanut.jpg": "2594f6023e9b2ab5b9098166f6a9f1b5338a8ba053a9cdbb5a7c8a5a3df6ed97",
+    "assets/reference/static/images/about/william.jpg": "1f56d1714e4137a0f7eb2356a9ebca66e076d557965d2e087fd830ca86bbdd37",
+    "assets/reference/static/images/apple.jpg": "813f9fff77bec3b9947c28ba30f4dd4589d031a22c79978ccf76925dc5bd7eff",
+    "assets/reference/static/images/favicon.ico": "5a212f2ed1fbd5a1f90bff55946966ebbac2e25713262676bb8a25bd64d23d7e",
+    "assets/reference/static/images/homepage/hero_border.jpg": "d221d00958211ad77ba5db6bf7bfbdcdbcb9966fe078740dd7289c4e368a4db7",
+    "assets/reference/static/images/homepage/teacher-of-day.jpg": "5e736f5b64a103dc18f2aa570061fc43d0e2219fe8a6b6dd1f94297fe14b04bd",
+    "assets/reference/static/images/homepage/tile_border_1.jpg": "54fd022bab5a985f7a0b59dd266b18944ec8af164a80cd9b99d523a0e89616fb",
+    "assets/reference/static/images/homepage/tile_border_2.jpg": "6b9bb79653d87b2c31d8d3b2ea88e1c5e1aaf1aa653020030ae8c765fa633fe9",
+    "assets/reference/static/images/homepage/tile_border_3.jpg": "81bdff068353022d4e06dfbb491ac2233f04d94e32a17ec44fa3a64ec1966aa9",
+    "assets/reference/static/images/homepage/tile_border_4.jpg": "30db5bcf15afc159686ff36bc4ed79b440ec88bda293df335896de5e82b18fb9",
+    "assets/reference/static/images/logo_transparent.png": "dc37f79dc8e4a0550282c2e0203a2fdf2d9666f25cb3ebda265ba2794d4501cd",
+    "assets/reference/static/images/partners/1007TheWolf.png": "89a137a1a389f772c9eceff3aba5071df43e70d825d3febf1e2c36dcfea001a3",
+    "assets/reference/static/images/partners/965CountryColor.png": "c47b09fa3db1404d9c704dc2141443b279dd214cf82974d0a79d5b8402c9f19c",
+    "assets/reference/static/images/partners/BaseCamp.png": "7a6ac79eefe2bab38fb4ef72742481fa95f1156b2ac4954014e65a5458012447",
+    "assets/reference/static/images/partners/Coastal.png": "0bf1256c50c81a450356b2f29d6aee82fd32b103bb0d876275bda67610af4ae5",
+    "assets/reference/static/images/partners/Microsoft-logo.png": "6bd42b7b8bd0cc73a781234fad70bdb923ee49d3ed0a4cb0b84cfa8c55a74ed1",
+    "assets/reference/static/images/regions/PNW.jpg": "d9ca4cfef4ac02f78cbac9920579813f7bd66d90826630744f0e7723983f393c",
+    "assets/reference/static/style.css": "3ab78ae4495d6dbd8fa166b3b7233dc97b6f9f145c0152aad59a0fbccb3d9830",
+    "community.css": "d1a56e7a338759e6042443c4d1a8072a32edc850dea808692fb01806d61b3629",
+    "community.mjs": "243b747fbdf059993a7ee9f0dc3c604bbfb1635204b098fbecc6cf841fa95ee2",
+    "controller.mjs": "5085dd70d0eb4f06116d565e99b5d0c98467bdabe217e582e5dc955ccde888c8",
+    "index.html": "495cbc823d0d5a412bebfd02eff1833a53b30ea3970e076c3439192e8d34e582",
+    "public-controller.mjs": "aa2d19ce779a341ca272065708ad5535b948561d5a60b4e7c4c1a5c87ebb600e",
+    "public-site.css": "42cf0492447d04ab9428440d084356ce3638d38d37ac0ddfa84bf35004f3a458",
+    "public-site.mjs": "59e6918afeb97fabaeb65f0238eaa1dada0bec63ec737f99498272346e02e00e",
+    "pxc-devtools/devtools-data.mjs": "d1ddf55add6e35c6b9059e77e35855c1183b5b0be51543b778a5c7adfecb5215",
+    "pxc-devtools/devtools.css": "9d4e3fe307218dba3cf962f73d0b34d35c400188595ad39a7be6043abcb3d731",
+    "pxc-devtools/devtools.mjs": "9de145615034167617842854fa8f4b0200ae83207016065922583aad388a0e07",
+    "services/CHECKPOINT.md": "ffbc86d2408fbb3b1abb97585f2fa1265d96361996063060e9b7e23694b086e0",
+    "services/PROVENANCE.json": "5e9f88b24c02fc870daf7c988025ef89c1e5e14861ba001e131a696a9b4f504a",
+    "services/README.md": "24e662368cf573b23e74de4b6d428effa62e978887683230e62f0ab624c6f728",
+    "services/contract.mjs": "6d50ddd27ac35df190a5e3c65e5fc4e5c269ca52ae8febb1d9d332bc2597738c",
+    "services/devtools-board.mjs": "90113ea78b98ae526db03f0a5ff7cf43c41190a886a7bf8c0d2639edacde8999",
+    "services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "services/fixtures.mjs": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+    "services/http-provider.mjs": "d0cc961336c553bc2e83cfe2e5796a7510a95ae6d77307ca75f19e1c79b2ba71",
+    "services/index.mjs": "f7fade286781a86f5339cd1014247fdfc1307bea9de67d318c2b3140741b8838",
+    "services/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+    "services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+    "services/style-playground.mjs": "0c6a6d2b9131b942848c0c0bde9b5a3fcaf51d23b77152b7e6debc5456e75112",
+    "site-data.mjs": "61862ee060435d6d516faf99700ec6e0788bf2e96a8698e5f7461f7d9362e5d8",
+    "style-playground.mjs": "5f65bec0d735386c32fcd345ab42d8c8fb145a5bc92ebcb645370056eb33397c",
+    "styles.css": "8d20b9d8ae814d94c7fb90c027a5903eb993de0017c7e1708ac79bd645a0d956",
+    "teacher-journey.mjs": "dde771c3048fba787704f2fc62606d51065775afcc067d2f907a3bf9a78c5596",
+    "vendor/fast-check-4.10.2.LICENSE.txt": "b2bd24f5c975f659433271170b17e0a769b12ef8065bbca6dcd5511d57e94ce0",
+    "vendor/fast-check-4.10.2.bundle.mjs": "28fc0e4dc36e31eb48577b319cec521931b4bc88556205a76d82cde763a34d06",
+    "vendor/fast-check-4.10.2.meta.mjs": "d188af7fd471728fd923609c3012c0ffbceb152ee2f13911a8323546e322d5ba",
+    "vendor/fast-check-4.10.2.provenance.json": "a17210aa21c59d6959404c0d282af888af5edf0646f043150ad2bc13e283d442",
+    "vendor/pure-rand-8.4.2.LICENSE.txt": "e9d6a94ab01c6c9ab68c099d3ba8dd9f8aca60f2e2250c2302275405fca9e806",
+    "webmcp.mjs": "b510487715e447ce08e84804e13db52d8d94d11ee93ed84148ec73a77ea1d818"
+  },
+  "builtStable": true,
+  "externalRuntimeRequests": [],
+  "completedAt": "2026-10-09T03:09:55.057Z",
+  "passed": true
+}

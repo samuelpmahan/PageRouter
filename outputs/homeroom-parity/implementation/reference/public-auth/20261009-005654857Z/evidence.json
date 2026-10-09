@@ -1,0 +1,351 @@
+{
+  "schema": "homeroom-public-auth-shells.v1",
+  "capturedAt": "2026-10-09T00:57:00.568Z",
+  "policy": "Public navigation/render only. No login or password reset submission. Non-GET and analytics/ad requests were blocked.",
+  "observations": [
+    {
+      "name": "login",
+      "status": 200,
+      "screenshot": "login-mobile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "url": "https://www.helpteachers.net/pages/login.html",
+      "title": "Homeroom Heroes - Login",
+      "headings": [
+        "Log In to Your Account"
+      ],
+      "body": "☰\nLog In to Your Account\nEmail:\nPassword:\nSubmit\n\nForgot Password Register\n\n© 2024 Homeroom Heroes. All rights reserved.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "text": "☰",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Login",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Logout",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "My Page",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Forum",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Validation",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "name": "email",
+          "type": "email",
+          "placeholder": "",
+          "value": ""
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "name": "password",
+          "type": "password",
+          "placeholder": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Submit",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Forgot Password",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Register",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        }
+      ],
+      "forms": [
+        {
+          "method": "post",
+          "action": "https://www.helpteachers.net/pages/login.html",
+          "fields": [
+            {
+              "name": "email",
+              "type": "email"
+            },
+            {
+              "name": "password",
+              "type": "password"
+            },
+            {
+              "name": "",
+              "type": "submit"
+            }
+          ]
+        }
+      ],
+      "links": [
+        {
+          "text": "",
+          "href": "https://www.helpteachers.net/pages/homepage.html"
+        },
+        {
+          "text": "Home",
+          "href": "https://www.helpteachers.net/pages/homepage.html"
+        },
+        {
+          "text": "Donate",
+          "href": "https://www.helpteachers.net/pages/index.html"
+        },
+        {
+          "text": "Sign Up",
+          "href": "https://www.helpteachers.net/pages/register.html"
+        },
+        {
+          "text": "About",
+          "href": "https://www.helpteachers.net/pages/about.html"
+        },
+        {
+          "text": "Contact",
+          "href": "https://www.helpteachers.net/pages/contact.html"
+        },
+        {
+          "text": "Partners",
+          "href": "https://www.helpteachers.net/pages/partners.html"
+        },
+        {
+          "text": "Home",
+          "href": "https://www.helpteachers.net/pages/homepage.html"
+        },
+        {
+          "text": "Donate",
+          "href": "https://www.helpteachers.net/pages/index.html"
+        },
+        {
+          "text": "Sign Up",
+          "href": "https://www.helpteachers.net/pages/register.html"
+        },
+        {
+          "text": "About",
+          "href": "https://www.helpteachers.net/pages/about.html"
+        },
+        {
+          "text": "Contact",
+          "href": "https://www.helpteachers.net/pages/contact.html"
+        },
+        {
+          "text": "Partners",
+          "href": "https://www.helpteachers.net/pages/partners.html"
+        }
+      ]
+    },
+    {
+      "name": "forgot",
+      "status": 200,
+      "screenshot": "forgot-mobile.png",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "url": "https://www.helpteachers.net/pages/forgot.html",
+      "title": "Homeroom Heroes - Forgot Password",
+      "headings": [
+        "Forgot Your Password?"
+      ],
+      "body": "☰\nForgot Your Password?\n\nEnter your email address below, and we'll send you instructions on how to reset your password.\n\nEmail:\nSubmit\n\nBack to Login\n\n© 2024 Homeroom Heroes. All rights reserved.",
+      "controls": [
+        {
+          "tag": "BUTTON",
+          "text": "☰",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Login",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Logout",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "My Page",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Forum",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Validation",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "INPUT",
+          "text": "",
+          "name": "email",
+          "type": "email",
+          "placeholder": "",
+          "value": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Submit",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        },
+        {
+          "tag": "BUTTON",
+          "text": "Back to Login",
+          "name": "",
+          "type": "submit",
+          "value": ""
+        }
+      ],
+      "forms": [
+        {
+          "method": "post",
+          "action": "https://www.helpteachers.net/pages/forgot.html",
+          "fields": [
+            {
+              "name": "email",
+              "type": "email"
+            },
+            {
+              "name": "",
+              "type": "submit"
+            }
+          ]
+        }
+      ],
+      "links": [
+        {
+          "text": "",
+          "href": "https://www.helpteachers.net/pages/homepage.html"
+        },
+        {
+          "text": "Home",
+          "href": "https://www.helpteachers.net/pages/homepage.html"
+        },
+        {
+          "text": "Donate",
+          "href": "https://www.helpteachers.net/pages/index.html"
+        },
+        {
+          "text": "Sign Up",
+          "href": "https://www.helpteachers.net/pages/register.html"
+        },
+        {
+          "text": "About",
+          "href": "https://www.helpteachers.net/pages/about.html"
+        },
+        {
+          "text": "Contact",
+          "href": "https://www.helpteachers.net/pages/contact.html"
+        },
+        {
+          "text": "Partners",
+          "href": "https://www.helpteachers.net/pages/partners.html"
+        },
+        {
+          "text": "Home",
+          "href": "https://www.helpteachers.net/pages/homepage.html"
+        },
+        {
+          "text": "Donate",
+          "href": "https://www.helpteachers.net/pages/index.html"
+        },
+        {
+          "text": "Sign Up",
+          "href": "https://www.helpteachers.net/pages/register.html"
+        },
+        {
+          "text": "About",
+          "href": "https://www.helpteachers.net/pages/about.html"
+        },
+        {
+          "text": "Contact",
+          "href": "https://www.helpteachers.net/pages/contact.html"
+        },
+        {
+          "text": "Partners",
+          "href": "https://www.helpteachers.net/pages/partners.html"
+        }
+      ]
+    }
+  ],
+  "blockedRequests": [
+    {
+      "method": "GET",
+      "url": "https://www.googletagmanager.com/gtag/js?id=AW-17482080573",
+      "reason": "analytics-or-advertising"
+    },
+    {
+      "method": "GET",
+      "url": "https://www.googletagmanager.com/gtag/js?id=AW-17482080573",
+      "reason": "analytics-or-advertising"
+    }
+  ],
+  "files": [
+    {
+      "file": "login-mobile.png",
+      "bytes": 41682,
+      "sha256": "5fd72328a66714c64f7072404a97fac7e794c3c3b710486f78b23bce203f04ae"
+    },
+    {
+      "file": "forgot-mobile.png",
+      "bytes": 44889,
+      "sha256": "a85ad90731d04622d29776baa31aca9a2e21a189ae060133faedcc18c8922f4a"
+    }
+  ]
+}

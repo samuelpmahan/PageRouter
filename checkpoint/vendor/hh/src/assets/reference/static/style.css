@@ -1,0 +1,142 @@
+/* Ensure the font is applied globally */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #1f2937; /* Tailwind's bg-gray-800 */
+    color: #f9fafb; /* Tailwind's text-gray-50 */
+}
+
+/* Custom styles for hamburger menu items */
+.menu-items .listButton,
+.menu-items ul a {
+    /* Retain original properties for button/link look */
+    width: 100%;
+    text-align: left;
+    padding: 0.75rem 1rem;
+    color: white; /* Base text color */
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    /* Apply text size to match the main navbar: text-lg is typically 1.125rem */
+    font-size: 1.125rem; 
+    transition: color 0.3s ease, background-color 0.3s ease; /* Ensure text color transitions */
+    border-radius: 0.375rem; /* rounded-md */
+    text-decoration: none; /* Remove underline if links are not buttons */
+}
+
+.menu-items .listButton:hover,
+.menu-items ul a:hover {
+    /* 1. Green Hover for Text: Tailwind's text-green-200 is close to #b4edc8 */
+    color: #b4edc8; 
+    
+    /* 2. Light Background Hover: Optional, for a subtle background effect */
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Modal specific styles (now using Tailwind for display control) */
+.modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 50;
+}
+
+/* Add a separate class to show it */
+.modal.is-visible {
+    display: none;
+}
+
+.modal-content {
+    background-color: #ffffff; /* White background for content */
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+    max-width: 48rem; /* Equivalent to max-w-2xl or max-w-3xl, chosen 48rem for a good width */
+    width: 90%; /* Responsive width */
+    position: relative;
+    color: #1f2937; /* Dark text for modal content */
+}
+
+.modal-content .close {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.75rem;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    color: #4b5563; /* Gray text for close button */
+    transition: color 0.2s;
+}
+
+.modal-content .close:hover {
+    color: #1f2937; /* Darker gray on hover */
+}
+
+.teacher-home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+}
+.teacher-home img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 9999px;
+    border: 2px solid #34d399;
+    margin-bottom: 1rem;
+}
+.teacher-details h2 {
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: #10b981;
+    margin-bottom: 0.5rem;
+}
+.teacher-details p {
+    font-size: 1.125rem;
+    color: #e1e1e2;
+}
+
+.sort-btn {
+    border-radius: 0.5rem; /* rounded-lg equivalent */
+    font-weight: 600; /* font-semibold equivalent */
+    transition: all 0.2s;
+    white-space: nowrap; /* Prevent button text from wrapping unless needed */
+}
+
+.text-outline-black {
+            /* Standard, cross-browser technique for creating a text outline */
+            text-shadow: 
+                -1px -1px 0 #000, /* Top-left */
+                 1px -1px 0 #000, /* Top-right */
+                -1px 1px 0 #000, /* Bottom-left */
+                 1px 1px 0 #000; /* Bottom-right */
+        }
+        
+.metrics-card {
+background: rgba(255, 255, 255, 0.07);
+border: 1px solid rgba(255, 255, 255, 0.12);
+border-radius: 10px;
+padding: 1rem 1.25rem;
+}
+.metrics-number {
+font-family: 'Fraunces', serif;
+font-size: 28px;
+font-weight: 500;
+line-height: 1;
+color: #ffffff;
+}
+.metrics-number .suffix {
+font-size: 16px;
+font-weight: 400;
+}
+.metrics-divider {
+width: 24px;
+height: 2px;
+border-radius: 2px;
+margin: 7px 0 8px;
+}

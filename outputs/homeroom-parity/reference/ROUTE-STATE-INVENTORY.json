@@ -143,6 +143,62 @@
       "evidence": "PUBLIC-JOURNEY-EVIDENCE.json page 2; DISCOVERABILITY-EVIDENCE.json profile route"
     },
     {
+      "id": "forum-public-list",
+      "url": "https://www.helpteachers.net/pages/forum.html",
+      "surface": "Public forum discussion list",
+      "entry": "The Forum control exists in the header DOM but is hidden for anonymous visitors. Direct public navigation returned 200.",
+      "observations": [
+        "Anonymous browser load fetched /forum/get_posts (GET 200) and rendered three cards at capture time: Forum Styling Guide, The Teachers\u2019 Lounge is Open, Official Bug Forum.",
+        "Search input #post-search-input; Clear; Date (Newest) is initially active; Date (Oldest), Upvotes, + New Post, Load 10 More Discussions. No list form.",
+        "Sort controls only reorder cards in page state. Default newest order, oldest order and upvote order are captured.",
+        "Anonymous /api/profile/ GET returned 404 and expanded menu showed Login. The public list remains readable."
+      ],
+      "screenshots": [
+        "screenshots/forum-forum-list-desktop.png",
+        "screenshots/forum-forum-list-mobile.png",
+        "screenshots/forum-menu-open-desktop.png",
+        "screenshots/forum-menu-open-mobile.png",
+        "screenshots/forum-sort-20261009-002926204-default-desktop.png",
+        "screenshots/forum-sort-20261009-002926204-date-oldest-desktop.png",
+        "screenshots/forum-sort-20261009-002926204-upvotes-desktop.png"
+      ],
+      "evidence": "public-forum/FORUM-PUBLIC-CAPTURE.json; public-forum/FORUM-SORT-INTERACTIONS-20261009-002926204.json; source-pages/forum.html",
+      "serviceBoundary": "Post list was read-only public GET data; future contents/accuracy and API behavior are outside frontend parity."
+    },
+    {
+      "id": "forum-create-post-anonymous",
+      "url": "https://www.helpteachers.net/pages/create_post.html",
+      "surface": "Create discussion route, anonymous runtime",
+      "observations": [
+        "Public static source contains form#post-form, title name=title required maxlength=255, body name=content required, Submit New Post button.",
+        "Runtime direct navigation ended at /pages/403.html (HTTP navigation response 200 but final URL is 403 page), displaying \u201cYou do not have permission to access this page.\u201d Anonymous profile check returned 404."
+      ],
+      "screenshots": [
+        "screenshots/forum-create-post-desktop.png",
+        "screenshots/forum-create-post-mobile.png"
+      ],
+      "evidence": "public-forum/FORUM-PUBLIC-CAPTURE.json; source-pages/create_post.html",
+      "classification": "Anonymous write UI is gated at runtime; authenticated create behavior unobserved. No submit performed."
+    },
+    {
+      "id": "forum-post-detail-public",
+      "url": "https://www.helpteachers.net/pages/post.html?id=11",
+      "surface": "Public discussion detail, opened from first list card",
+      "observations": [
+        "First list card linked to id=11 (\u201cForum Styling Guide\u201d). Post GET /forum/get_post and comments GET /forum/comments/11/ returned 200; profile check returned 404.",
+        "Visible title/body, vote count 1, upvote/downvote controls, comment form and 0 Comments. Form#comment-form includes required textarea #comment-content name=content placeholder \u201cShare your thoughts\u2026\u201d and Post Comment button.",
+        "Vote/comment controls were visible but not activated; comments are listed with public data but no form text was entered. No-ID route shows a missing-ID message."
+      ],
+      "screenshots": [
+        "screenshots/forum-20261009-003159459-post-detail-desktop.png",
+        "screenshots/forum-20261009-003159459-post-detail-mobile.png",
+        "screenshots/forum-post-detail-no-id-desktop.png",
+        "screenshots/forum-post-detail-no-id-mobile.png"
+      ],
+      "evidence": "public-forum/FORUM-POST-DETAIL-20261009-003159459.json; public-forum/FORUM-PUBLIC-CAPTURE.json; source-pages/post.html",
+      "classification": "Public read-only detail observed. Authenticated role behavior and all mutation outcomes unknown."
+    },
+    {
       "id": "global-menu-auth-gated",
       "url": "https://www.helpteachers.net/pages/homepage.html",
       "surface": "Global navigation / hidden account links",
@@ -224,7 +280,8 @@
     "No live forms submitted, no login, wishlist, share, donation or contact transactions performed.",
     "No public route to Privacy was found within inspected surfaces; existence elsewhere unknown.",
     "The source-only preview 404 was caused by an incomplete docroot during startup, as shown by missing service module; correctly assembled local comparison uses checkpoint/dist compiled page.",
-    "Parity target is the full discoverable public frontend, excluding backend/live services. Current C6 implementation is intentionally narrower. Authenticated role-gated screens remain unobserved. The local demo-login click was not exercised; authenticated fixture state was injected for post-login UI inspection."
+    "Parity target is the full discoverable public frontend, excluding backend/live services. Current C6 implementation is intentionally narrower. Authenticated role-gated screens remain unobserved. The local demo-login click was not exercised; authenticated fixture state was injected for post-login UI inspection.",
+    "Forum public listing and a public discussion detail were captured without authentication. Create-post is denied anonymously; authenticated create/vote/comment/edit/delete behavior remains unobserved."
   ],
   "artifactFiles": [
     "BROWSER-EVIDENCE.json",

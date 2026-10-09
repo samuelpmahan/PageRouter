@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homeroom Heroes - About Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="/static/images/favicon.ico" />
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17482080573"></script>
+    <script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'AW-17482080573'); </script> 
+    <!-- Event snippet for Page view conversion page -->
+    <script> gtag('event', 'conversion', {'send_to': 'AW-17482080573/AK9bCInw2e4bEL3CjZBB'}); </script>
+    
+</head>
+<body class="bg-gray-800 text-gray-50">
+    <header class="bg-gradient-to-r from-green-700 to-green-900 text-white shadow-lg py-4 md:py-6 relative">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <a href="/pages/homepage.html" class="flex items-center">
+                    <img src="/static/images/logo_transparent.png" alt="Homeroom Heroes Logo" class="h-16 md:h-20 mr-3">
+                </a>
+                <nav class="hidden md:flex ml-4">
+                    <ul class="flex space-x-4 md:space-x-8 text-lg">
+                        <li><a href="/pages/homepage.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Home</a></li>
+                        <li><a href="/pages/index.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Donate</a></li>
+                        <li><a href="/pages/register.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Sign Up</a></li>
+                        <li><a href="/pages/about.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">About</a></li>
+                        <li><a href="/pages/contact.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Contact</a></li>
+                        <li><a href="/pages/partners.html" class="hover:text-green-200 transition duration-300 ease-in-out rounded-md p-2">Partners</a></li>
+                    </ul>
+                </nav>
+            </div>
+
+            <div class="relative">
+                <button id="hamburgerButton" class="text-white text-3xl focus:outline-none **md:hidden**" onclick="toggleMenu()">☰</button>
+
+                <div class="menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 hidden **md:hidden**" id="menuItems">
+                    
+                    <nav class="md:hidden">
+                        <ul class="flex flex-col text-base p-1">
+                            <li><a href="/pages/homepage.html" class="listButton block">Home</a></li>
+                            <li><a href="/pages/index.html" class="listButton block">Donate</a></li>
+                            <li><a href="/pages/register.html" class="listButton block">Sign Up</a></li>
+                            <li><a href="/pages/about.html" class="listButton block">About</a></li>
+                            <li><a href="/pages/contact.html" class="listButton block">Contact</a></li>
+                            <li><a href="/pages/partners.html" class="listButton block">Partners</a></li>
+                            <hr class="my-1 border-green-700"> </ul>
+                    </nav>
+                    
+                    <button id="loginButton" class="listButton hidden" onclick="redirectTo('/pages/login.html')">Login</button>
+                    <button id="logoutButton" class="listButton hidden" onclick="logout()">Logout</button>
+                    <button id="mypageButton" class="listButton hidden" onclick="mypage()">My Page</button>
+                    <button id="forumButton" class="listButton hidden" onclick="redirectTo('/pages/forum.html')">Forum</button>
+                    <button id="validationButton" class="listButton hidden" onclick="redirectTo('/pages/validation.html')">Validation</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <section class="bg-white p-8 rounded-lg shadow-md mb-8 text-gray-800">
+            <h2 class="text-3xl font-bold text-green-800 mb-4">About Us</h2>
+            <p class="text-lg leading-relaxed">We are Homeroom Heroes, a 501(c) registered charity dedicated to supporting educators and enriching classrooms across the nation.</p>
+        </section>
+
+        <section class="bg-white p-8 rounded-lg shadow-md mb-8 text-gray-800">
+            <h2 class="text-3xl font-bold text-green-800 mb-4">Our Mission</h2>
+            <p class="text-lg leading-relaxed">At Homeroom Heroes, our mission is to serve as a pivotal bridge between educators and community supporters, fostering meaningful connections that enhance educational experiences. With a steadfast commitment to the transformative power of education, we empower teachers by providing a platform to articulate their needs and aspirations, while enabling compassionate individuals to directly contribute to the enrichment of classrooms nationwide. Through our collaborative efforts, we strive to cultivate a brighter future for generations to come, one classroom at a time.</p>
+        </section>
+
+        <section class="bg-white p-8 rounded-lg shadow-md mb-8 text-gray-800">
+            <h2 class="text-3xl font-bold text-green-800 mb-4">How Do We Do That?</h2>
+            <p class="text-lg leading-relaxed">At Homeroom Heroes, we simplify the process for teachers to showcase their needs by creating profiles and hosting curated wishlists of essential classroom supplies through Amazon. Our platform enables community members to make a direct impact by selecting and sending items straight to teachers’ classrooms—no middlemen, no extra fees. Every donation directly supports students by enhancing their learning environments. Together, we bridge the gap between community generosity and classroom success.</p>
+        </section>
+
+        <section class='bg-white p-8 rounded-lg shadow-md mb-8 text-gray-800'>
+            <h2 class="text-3xl font-bold text-green-800 mb-4">Website Terms and Conditions</h2>
+            <button id="termsButton" onclick="openTermsConditions()" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105 shadow-md">Terms and Conditions</button>
+        </section>
+
+        <div id="termsConditionsModal" class="modal hidden">
+            <div class="modal-content">
+                <span class="close" onclick="closeTermsConditions()">&times;</span>
+                <iframe src="/pages/terms_conditions.html" width="100%" height="500px" class="border-none"></iframe>
+            </div>
+        </div>
+
+        <section class="bg-white p-8 rounded-lg shadow-md mb-8 text-gray-800">
+            <h2 class="text-3xl font-bold text-green-800 mb-4 text-center">Meet the Team</h2>
+            <p class="text-lg leading-relaxed text-center mb-8">We are a passionate team dedicated to making a positive impact on education. Get to know the individuals behind the project.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="team-member flex flex-col items-center text-center p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <img src="/static/images/about/peanut.jpg" alt="Team Member 1" class="w-32 h-32 object-cover rounded-full border-4 border-green-400 mb-4">
+                    <h5 class="text-xl font-semibold text-green-700 mb-2">Justin Brundage</h5>
+                    <p class="text-lg font-medium text-gray-700 mb-4">Founder, CEO, & President</p>
+                    <p class="text-base leading-relaxed text-gray-600">I'm Justin Brundage, Founder and CEO of Homeroom Heroes. My journey began in August 2023, where I was inspired by a local radio station's effort to support teachers by fulfilling their classroom wish lists. Learning that teachers face the brunt of an $850 supplies bill, drove me to find a solution.</p>
+                    <p class="text-base leading-relaxed text-gray-600 mt-2">Growing up in a close-knit community, I experienced firsthand the profound impact teachers have on shaping lives. That's what pushed me to start Homeroom Heroes: a direct bridge between people who want to help and the teachers who need it. Unlike traditional donor sites, there is no middleman, no red tape, just classrooms getting what they need.</p>
+                    <p class="text-base leading-relaxed text-gray-600 mt-2">When I'm not working on changing education, you can usually find me out exploring the Pacific Northwest with my family and cheering on my alma mater Wazzu.</p>
+                    <p class="text-base leading-relaxed text-gray-600 mt-2">Join me in honoring the dedication of our teachers and making a lasting impact on education.</p>
+                </div>
+
+                <div class="team-member flex flex-col items-center text-center p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <img src="/static/images/about/grape.jpg" alt="Team Member 2" class="w-32 h-32 object-cover rounded-full border-4 border-green-400 mb-4">
+                    <h5 class="text-xl font-semibold text-green-700 mb-2">Sam Mahan</h5>
+                    <p class="text-lg font-medium text-gray-700 mb-4">Co-Founder, CTO, & Treasurer</p>
+                    <p class="text-base leading-relaxed text-gray-600">I'm Samuel Mahan, a software engineer dedicated to driving technological innovation and making a meaningful impact in the industry. With a background in Electrical and Electronics Engineering from Washington State University, I've honed my skills through various roles, including software development at Amazon and Adaptiva. My journey in the tech world began with a passion for problem-solving and a relentless drive to learn and adapt. Justin and I met during our freshman year at Washington State University, where our shared curiosity for technology sparked a lasting friendship and collaborative spirit. Today, I leverage my expertise to create robust backend services and firmware solutions, ensuring optimal performance and reliability. I'm committed to pushing boundaries and embracing new technologies to drive forward progress in the ever-evolving landscape of software engineering.</p>
+                </div>
+
+                <div class="team-member flex flex-col items-center text-center p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <img src="/static/images/about/Tory.jpg" alt="Team Member 3" class="w-32 h-32 object-cover rounded-full border-4 border-green-400 mb-4">
+                    <h5 class="text-xl font-semibold text-green-700 mb-2">Tory Furr</h5>
+                    <p class="text-lg font-medium text-gray-700 mb-4">COO & Secretary of the Board</p>
+                    <p class="text-base leading-relaxed text-gray-600">Born and raised in the Pacific Northwest, I've seen firsthand the struggles many families face. Through my work as a property manager for income-restricted housing, I've witnessed the direct and profound impact that a good education has on a child's future. This experience ignited my passion for helping others, inspiring me to join Homeroom Heroes. My dedication to our community extends beyond my professional life, and in my free time, you can find me enjoying crafts, video games, hiking, and baking. I believe that by supporting our teachers, we're not just providing supplies; we're investing in the lives of our students and building a stronger, more resilient community for everyone.</p>
+                </div>
+        
+                 <div class="team-member flex flex-col items-center text-center p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <img src="/static/images/about/jillian.jpg" alt="Team Member 4" class="w-32 h-32 object-cover rounded-full border-4 border-green-400 mb-4">
+                    <h5 class="text-xl font-semibold text-green-700 mb-2">Jillian Ortega</h5>
+                    <p class="text-lg font-medium text-gray-700 mb-4">Board Member</p>
+                    <p class="text-base leading-relaxed text-gray-600">I'm Jillian Ortega, I am an electrical engineer, a wife, and a mother of two children. As my children are nearing the age to enter the public school system the quality of education and the access to the tools they need to learn and thrive has become paramount. That is why I am honored to join this organization on the board of directors. I look forward to serving this community to the best of my abilities.</p>
+                </div> 
+        
+                 <div class="team-member flex flex-col items-center text-center p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <img src="/static/images/about/william.jpg" alt="Team Member 5" class="w-32 h-32 object-cover rounded-full border-4 border-green-400 mb-4">
+                    <h5 class="text-xl font-semibold text-green-700 mb-2">William Chappell</h5>
+                    <p class="text-lg font-medium text-gray-700 mb-4">Board Member</p>
+                    <p class="text-base leading-relaxed text-gray-600">I'm William Chappell, a Spokane Falls Community College alumnus and the oldest of four brothers. All three of my younger brothers are still in the public school system, which means education isn't just something I care about in the abstract. It's something I think about for the people closest to me every single day. Joining Homeroom Heroes felt like a natural extension of that. I want to make sure students in our community have access to the supplies they need to learn and grow, and I'm excited to help make that happen.</p>
+                </div> 
+
+                 <div class="team-member flex flex-col items-center text-center p-4 bg-gray-100 rounded-lg shadow-sm">
+                    <img src="/static/images/about/majid.jpg" alt="Team Member 6" class="w-32 h-32 object-cover rounded-full border-4 border-green-400 mb-4">
+                    <h5 class="text-xl font-semibold text-green-700 mb-2">Majid Al-Hadrami</h5>
+                    <p class="text-lg font-medium text-gray-700 mb-4">Board Member</p>
+                    <p class="text-base leading-relaxed text-gray-600">I'm Majid Al-Hadrami, a 5th grade teacher, and it is my 4th year as a certificated public school employee. I have worked in several schools at both primary and secondary age levels across Washington state since 2018, primarily in Title 1 schools.</p>
+                    <p class="text-base leading-relaxed text-gray-600 mt-2">Coming from a family of educators, teaching is my passion. Supporting teachers, and by extension students, through this organization is a good way for me to get involved with the greater community.</p>
+                    <p class="text-base leading-relaxed text-gray-600 mt-2">Outside of school, you can find me swimming, lifting, at trivia or karaoke nights, or playing music and video games with friends and colleagues. I look forward to being involved with Homeroom Heroes!</p>
+                </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6 mt-8 rounded-t-lg shadow-inner text-center">
+        <div class="container mx-auto px-4 text-sm">
+            <p>&copy; 2024 Homeroom Heroes. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Helper function for redirection
+        function redirectTo(url) {
+            window.location.href = url;
+        }
+
+        // Function to toggle the mobile menu visibility
+        function toggleMenu() {
+            var menuItems = document.getElementById('menuItems');
+            // This robustly toggles Tailwind's 'hidden' class
+            menuItems.classList.toggle('hidden');
+        }
+
+        // Function to check user authentication role and display relevant buttons
+        async function checkAuthentication() {
+            // First, hide ALL dynamic buttons and remove any explicit display styles (like 'block')
+            // This ensures a clean slate before showing the correct ones.
+            const buttons = [
+                'loginButton', 'logoutButton', 'mypageButton',
+                'validationButton',
+                'forumButton'
+            ];
+
+            buttons.forEach(id => {
+                const button = document.getElementById(id);
+                if (button) {
+                    button.classList.add('hidden');
+                    button.classList.remove('block'); // Important: Remove 'block' if it was added
+                }
+            });
+
+            let userRole = null; // Default to no role
+
+            try {
+                const response = await fetch('/api/profile/');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data && data.user_role) {
+                        userRole = data.user_role;
+                    } else {
+                        console.warn('Profile data missing user_role or is null:', data);
+                    }
+                } else {
+                    console.error('Failed to fetch profile. Status:', response.status);
+                }
+            } catch (error) {
+                console.error('Network or parsing error fetching user profile:', error);
+            }
+
+            // Based on the determined role, show specific buttons by removing 'hidden' and adding 'block'
+            if (userRole === 'teacher') {
+                document.getElementById('mypageButton').classList.remove('hidden');
+                document.getElementById('mypageButton').classList.add('block'); // Make it display as a block
+                document.getElementById('forumButton').classList.remove('hidden');
+                document.getElementById('forumButton').classList.add('block'); // Make it display as a block
+                document.getElementById('validationButton').classList.remove('hidden');
+                document.getElementById('validationButton').classList.add('block'); // Make it display as a block
+                document.getElementById('logoutButton').classList.remove('hidden');
+                document.getElementById('logoutButton').classList.add('block'); // Make it display as a block
+            } else if (userRole === 'admin') {
+                document.getElementById('forumButton').classList.remove('hidden');
+                document.getElementById('forumButton').classList.add('block'); // Make it display as a block
+                document.getElementById('validationButton').classList.remove('hidden');
+                document.getElementById('validationButton').classList.add('block'); // Make it display as a block
+                document.getElementById('logoutButton').classList.remove('hidden');
+                document.getElementById('logoutButton').classList.add('block'); // Make it display as a block
+            } else {
+                // Default: show login if no specific role or an error occurred (unauthenticated)
+                document.getElementById('loginButton').classList.remove('hidden');
+                document.getElementById('loginButton').classList.add('block'); // Make it display as a block
+            }
+        }
+
+        // Function to log out the user
+        async function logout() {
+            try {
+                const response = await fetch(`/profile/logout/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                window.location.href = '/'; // Redirect to root after logout
+            } catch (error) {
+                console.error('Error during logout:', error);
+            }
+        }
+
+        // Function to redirect to my page
+        async function mypage() {
+            try {
+                const response = await fetch('/profile/myinfo/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+                if (response.ok) {
+                    window.location.href = '/pages/teacher.html';
+                } else {
+                    console.error('Error:', response.status);
+                    window.location.href = '/'; // Redirect to home or login if error
+                }
+            } catch (error) {
+                console.error('Error fetching my page info:', error);
+                window.location.href = '/'; // Redirect to home or login on network error
+            }
+        }
+
+        // Function to open the T&C modal
+        function openTermsConditions() {
+            document.getElementById('termsConditionsModal').classList.remove('hidden');
+        }
+
+        // Function to close the T&C modal
+        function closeTermsConditions() {
+            document.getElementById('termsConditionsModal').classList.add('hidden');
+        }
+
+        // Call checkAuthentication on page load to set initial button visibility
+        window.onload = function() {
+            checkAuthentication();
+        };
+    </script>
+</body>
+</html>

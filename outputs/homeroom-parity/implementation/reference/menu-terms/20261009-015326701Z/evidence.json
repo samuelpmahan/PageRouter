@@ -1,0 +1,2209 @@
+{
+  "schema": "homeroom-menu-terms-overlays.v1",
+  "capturedAt": "2026-10-09T01:53:37.210Z",
+  "policy": "Public menu and Terms modal opened only. Registration fields untouched; terms checkbox unchanged; no form submissions; all non-GET/analytics blocked.",
+  "snapshots": [
+    {
+      "name": "menu-expanded",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "url": "https://www.helpteachers.net/pages/homepage.html",
+      "header": {
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 390,
+          "height": 96
+        },
+        "style": {
+          "fontFamily": "Inter, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "linear-gradient(to right, rgb(21, 128, 61), rgb(20, 83, 45))",
+          "padding": "16px 0px",
+          "margin": "0px",
+          "display": "block",
+          "position": "relative",
+          "top": "0px",
+          "right": "0px",
+          "width": "390px",
+          "borderRadius": "0px",
+          "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+          "flexDirection": "row",
+          "gap": "normal"
+        }
+      },
+      "hamburger": {
+        "rect": {
+          "x": 347.09375,
+          "y": 30,
+          "width": 26.90625,
+          "height": 36
+        },
+        "style": {
+          "fontFamily": "Inter, sans-serif",
+          "fontSize": "30px",
+          "fontWeight": "400",
+          "lineHeight": "36px",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "display": "inline-block",
+          "position": "static",
+          "top": "auto",
+          "right": "auto",
+          "width": "26.9062px",
+          "borderRadius": "0px",
+          "boxShadow": "none",
+          "flexDirection": "row",
+          "gap": "normal"
+        }
+      },
+      "menu": {
+        "rect": {
+          "x": 182,
+          "y": 74,
+          "width": 192,
+          "height": 364
+        },
+        "style": {
+          "fontFamily": "Inter, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(22, 101, 52)",
+          "backgroundImage": "none",
+          "padding": "4px 0px",
+          "margin": "8px 0px 0px",
+          "display": "block",
+          "position": "absolute",
+          "top": "36px",
+          "right": "0px",
+          "width": "192px",
+          "borderRadius": "6px",
+          "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+          "flexDirection": "row",
+          "gap": "normal"
+        },
+        "className": "menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 **md:hidden**",
+        "items": [
+          {
+            "text": "Home",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "rect": {
+              "x": 186,
+              "y": 82,
+              "width": 184,
+              "height": 48
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "24px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "184px",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Donate",
+            "href": "https://www.helpteachers.net/pages/index.html",
+            "rect": {
+              "x": 186,
+              "y": 130,
+              "width": 184,
+              "height": 48
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "24px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "184px",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Sign Up",
+            "href": "https://www.helpteachers.net/pages/register.html",
+            "rect": {
+              "x": 186,
+              "y": 178,
+              "width": 184,
+              "height": 48
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "24px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "184px",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "About",
+            "href": "https://www.helpteachers.net/pages/about.html",
+            "rect": {
+              "x": 186,
+              "y": 226,
+              "width": 184,
+              "height": 48
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "24px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "184px",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Contact",
+            "href": "https://www.helpteachers.net/pages/contact.html",
+            "rect": {
+              "x": 186,
+              "y": 274,
+              "width": 184,
+              "height": 48
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "24px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "184px",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Partners",
+            "href": "https://www.helpteachers.net/pages/partners.html",
+            "rect": {
+              "x": 186,
+              "y": 322,
+              "width": 184,
+              "height": 48
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "24px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "184px",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Login",
+            "href": null,
+            "rect": {
+              "x": 182,
+              "y": 383,
+              "width": 192,
+              "height": 51
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "27px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "192px",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Logout",
+            "href": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "27px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "none",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "100%",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "My Page",
+            "href": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "27px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "none",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "100%",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Forum",
+            "href": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "27px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "none",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "100%",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Validation",
+            "href": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "27px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "none",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "100%",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          }
+        ]
+      },
+      "screenshot": "menu-expanded-mobile.png"
+    },
+    {
+      "name": "menu-expanded",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "url": "https://www.helpteachers.net/pages/homepage.html",
+      "header": {
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "width": 1440,
+          "height": 128
+        },
+        "style": {
+          "fontFamily": "Inter, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "linear-gradient(to right, rgb(21, 128, 61), rgb(20, 83, 45))",
+          "padding": "24px 0px",
+          "margin": "0px",
+          "display": "block",
+          "position": "relative",
+          "top": "0px",
+          "right": "0px",
+          "width": "1440px",
+          "borderRadius": "0px",
+          "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+          "flexDirection": "row",
+          "gap": "normal"
+        }
+      },
+      "hamburger": {
+        "rect": {
+          "x": 1317.09375,
+          "y": 46,
+          "width": 26.90625,
+          "height": 36
+        },
+        "style": {
+          "fontFamily": "Inter, sans-serif",
+          "fontSize": "30px",
+          "fontWeight": "400",
+          "lineHeight": "36px",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgba(0, 0, 0, 0)",
+          "backgroundImage": "none",
+          "padding": "0px",
+          "margin": "0px",
+          "display": "inline-block",
+          "position": "static",
+          "top": "auto",
+          "right": "auto",
+          "width": "26.9062px",
+          "borderRadius": "0px",
+          "boxShadow": "none",
+          "flexDirection": "row",
+          "gap": "normal"
+        }
+      },
+      "menu": {
+        "rect": {
+          "x": 1152,
+          "y": 90,
+          "width": 192,
+          "height": 59
+        },
+        "style": {
+          "fontFamily": "Inter, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "rgb(255, 255, 255)",
+          "backgroundColor": "rgb(22, 101, 52)",
+          "backgroundImage": "none",
+          "padding": "4px 0px",
+          "margin": "8px 0px 0px",
+          "display": "block",
+          "position": "absolute",
+          "top": "36px",
+          "right": "0px",
+          "width": "192px",
+          "borderRadius": "6px",
+          "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.1) 0px 4px 6px -4px",
+          "flexDirection": "row",
+          "gap": "normal"
+        },
+        "className": "menu-items absolute right-0 top-full mt-2 w-48 bg-green-800 rounded-md shadow-lg py-1 z-20 **md:hidden**",
+        "items": [
+          {
+            "text": "Home",
+            "href": "https://www.helpteachers.net/pages/homepage.html",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "24px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "100%",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Donate",
+            "href": "https://www.helpteachers.net/pages/index.html",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "24px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "100%",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Sign Up",
+            "href": "https://www.helpteachers.net/pages/register.html",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "24px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "100%",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "About",
+            "href": "https://www.helpteachers.net/pages/about.html",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "24px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "100%",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Contact",
+            "href": "https://www.helpteachers.net/pages/contact.html",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "24px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "100%",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Partners",
+            "href": "https://www.helpteachers.net/pages/partners.html",
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "24px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "100%",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Login",
+            "href": null,
+            "rect": {
+              "x": 1152,
+              "y": 94,
+              "width": 192,
+              "height": 51
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "27px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "192px",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Logout",
+            "href": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "27px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "none",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "100%",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "My Page",
+            "href": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "27px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "none",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "100%",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Forum",
+            "href": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "27px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "none",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "100%",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          },
+          {
+            "text": "Validation",
+            "href": null,
+            "rect": {
+              "x": 0,
+              "y": 0,
+              "width": 0,
+              "height": 0
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "27px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "12px 16px",
+              "margin": "0px",
+              "display": "none",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "100%",
+              "borderRadius": "6px",
+              "boxShadow": "none",
+              "flexDirection": "row",
+              "gap": "normal"
+            }
+          }
+        ]
+      },
+      "screenshot": "menu-expanded-desktop.png"
+    },
+    {
+      "name": "terms-modal-open",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "url": "https://www.helpteachers.net/pages/register.html",
+      "modal": {
+        "rect": {
+          "x": 0,
+          "y": 16,
+          "width": 390,
+          "height": 828
+        },
+        "style": {
+          "fontFamily": "Inter, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "rgb(31, 41, 55)",
+          "backgroundColor": "rgba(0, 0, 0, 0.5)",
+          "backgroundImage": "none",
+          "padding": "0px",
+          "margin": "16px 0px 0px",
+          "display": "flex",
+          "position": "fixed",
+          "top": "0px",
+          "right": "0px",
+          "width": "390px",
+          "height": "828px",
+          "border": "0px solid rgb(229, 231, 235)",
+          "borderRadius": "0px",
+          "boxShadow": "none",
+          "overflow": "visible"
+        },
+        "className": "modal flex",
+        "content": {
+          "rect": {
+            "x": 19.5,
+            "y": 156,
+            "width": 351,
+            "height": 548
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "16px",
+            "fontWeight": "400",
+            "lineHeight": "24px",
+            "color": "rgb(31, 41, 55)",
+            "backgroundColor": "rgb(255, 255, 255)",
+            "backgroundImage": "none",
+            "padding": "24px",
+            "margin": "0px",
+            "display": "block",
+            "position": "relative",
+            "top": "0px",
+            "right": "0px",
+            "width": "351px",
+            "height": "548px",
+            "border": "0px solid rgb(229, 231, 235)",
+            "borderRadius": "8px",
+            "boxShadow": "rgba(0, 0, 0, 0.2) 0px 10px 15px 0px",
+            "overflow": "visible"
+          },
+          "className": "modal-content"
+        },
+        "iframe": {
+          "rect": {
+            "x": 43.5,
+            "y": 180,
+            "width": 303,
+            "height": 500
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "16px",
+            "fontWeight": "400",
+            "lineHeight": "24px",
+            "color": "rgb(31, 41, 55)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "backgroundImage": "none",
+            "padding": "0px",
+            "margin": "0px",
+            "display": "block",
+            "position": "static",
+            "top": "auto",
+            "right": "auto",
+            "width": "303px",
+            "height": "500px",
+            "border": "0px solid rgb(229, 231, 235)",
+            "borderRadius": "0px",
+            "boxShadow": "none",
+            "overflow": "clip"
+          },
+          "title": "Terms and Conditions",
+          "src": "https://www.helpteachers.net/pages/terms_conditions.html"
+        },
+        "close": {
+          "rect": {
+            "x": 336.5,
+            "y": 164,
+            "width": 22,
+            "height": 48
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "32px",
+            "fontWeight": "700",
+            "lineHeight": "48px",
+            "color": "rgb(75, 85, 99)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "backgroundImage": "none",
+            "padding": "0px",
+            "margin": "0px",
+            "display": "block",
+            "position": "absolute",
+            "top": "8px",
+            "right": "12px",
+            "width": "22px",
+            "height": "48px",
+            "border": "0px solid rgb(229, 231, 235)",
+            "borderRadius": "0px",
+            "boxShadow": "none",
+            "overflow": "visible"
+          },
+          "text": "×"
+        }
+      },
+      "legal": {
+        "url": "https://www.helpteachers.net/pages/terms_conditions.html",
+        "title": "Terms and Conditions - Homeroom Heroes",
+        "body": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 303,
+            "height": 19922.5
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "16px",
+            "fontWeight": "400",
+            "lineHeight": "24px",
+            "color": "rgb(249, 250, 251)",
+            "backgroundColor": "rgb(31, 41, 55)",
+            "backgroundImage": "none",
+            "padding": "0px",
+            "margin": "0px",
+            "display": "flex",
+            "position": "static",
+            "top": "auto",
+            "right": "auto",
+            "width": "303px",
+            "height": "19922.5px",
+            "border": "0px solid rgb(229, 231, 235)",
+            "borderRadius": "0px",
+            "boxShadow": "none",
+            "overflow": "visible"
+          },
+          "text": "Terms and Conditions\nIntroduction\n\nThese terms and conditions govern your use of our website; by using our website, you accept these terms and conditions in full. If you disagree with these terms and conditions or any part of these terms and conditions, you must not use our website.\n\nCharitable Mission & Board Discretion\n\nHomeroom Heroes is a registered 501(c)(3) nonprofit organization. While our platform facilitates a bridge between donors and specific classroom wishlists, Homeroom Heroes maintains final discretion and control over the use of all directly donated resources. To maintain our charitable status, all donations made via this platform are considered contributions to Homeroom Heroe"
+        },
+        "elements": [
+          {
+            "tag": "H4",
+            "text": "Terms and Conditions",
+            "rect": {
+              "x": 16,
+              "y": 16,
+              "width": 271,
+              "height": 72
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "30px",
+              "fontWeight": "700",
+              "lineHeight": "36px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "271px",
+              "height": "72px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "SECTION",
+            "text": "Introduction\n\nThese terms and conditions govern your use of our website; by using our website, you accept these terms and conditions in full. If you disagree with these terms and conditions or any part of these terms and conditions, you mus",
+            "rect": {
+              "x": 16,
+              "y": 136,
+              "width": 271,
+              "height": 4896.25
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "16px",
+              "fontWeight": "400",
+              "lineHeight": "24px",
+              "color": "rgb(31, 41, 55)",
+              "backgroundColor": "rgb(255, 255, 255)",
+              "backgroundImage": "none",
+              "padding": "32px",
+              "margin": "0px 0px 32px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "271px",
+              "height": "4896.25px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "8px",
+              "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.1) 0px 2px 4px -2px",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "H1",
+            "text": "Introduction",
+            "rect": {
+              "x": 48,
+              "y": 168,
+              "width": 207,
+              "height": 40
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "36px",
+              "fontWeight": "700",
+              "lineHeight": "40px",
+              "color": "rgb(22, 101, 52)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 16px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "207px",
+              "height": "40px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "P",
+            "text": "These terms and conditions govern your use of our website; by using our website, you accept these terms and conditions in full. If you disagree with these terms and conditions or any part of these terms and conditions, you must not use our ",
+            "rect": {
+              "x": 48,
+              "y": 224,
+              "width": 207,
+              "height": 351
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "29.25px",
+              "color": "rgb(55, 65, 81)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 24px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "207px",
+              "height": "351px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "H2",
+            "text": "Charitable Mission & Board Discretion",
+            "rect": {
+              "x": 48,
+              "y": 599,
+              "width": 207,
+              "height": 144
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "30px",
+              "fontWeight": "600",
+              "lineHeight": "36px",
+              "color": "rgb(21, 128, 61)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 12px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "207px",
+              "height": "144px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "P",
+            "text": "Homeroom Heroes is a registered 501(c)(3) nonprofit organization. While our platform facilitates a bridge between donors and specific classroom wishlists, Homeroom Heroes maintains final discretion and control over the use of all directly d",
+            "rect": {
+              "x": 48,
+              "y": 755,
+              "width": 207,
+              "height": 819
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "29.25px",
+              "color": "rgb(55, 65, 81)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 24px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "207px",
+              "height": "819px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "H2",
+            "text": "Non-Discrimination Statement",
+            "rect": {
+              "x": 48,
+              "y": 1598,
+              "width": 207,
+              "height": 108
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "30px",
+              "fontWeight": "600",
+              "lineHeight": "36px",
+              "color": "rgb(21, 128, 61)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 12px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "207px",
+              "height": "108px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "P",
+            "text": "Homeroom Heroes is committed to serving teachers and students without regard to race, color, religion, sex, national origin, disability, or any other legally protected characteristic. Our vetting process evaluates employment and eligibility",
+            "rect": {
+              "x": 48,
+              "y": 1718,
+              "width": 207,
+              "height": 438.75
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "29.25px",
+              "color": "rgb(55, 65, 81)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 24px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "207px",
+              "height": "438.75px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "H2",
+            "text": "Tax-Deductibility & Gift-in-Kind Disclosures",
+            "rect": {
+              "x": 48,
+              "y": 2180.75,
+              "width": 207,
+              "height": 144
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "30px",
+              "fontWeight": "600",
+              "lineHeight": "36px",
+              "color": "rgb(21, 128, 61)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 12px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "207px",
+              "height": "144px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "P",
+            "text": "Purchases made through third-party wishlists (e.g., Amazon.com or Amazon.ca) are transactions between the user and the third-party retailer. For tax purposes, your retailer purchase receipt serves as proof of the \"Fair Market Value\" of your",
+            "rect": {
+              "x": 48,
+              "y": 2336.75,
+              "width": 207,
+              "height": 643.5
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "29.25px",
+              "color": "rgb(55, 65, 81)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 24px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "207px",
+              "height": "643.5px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "H2",
+            "text": "Intellectual Property Rights",
+            "rect": {
+              "x": 48,
+              "y": 3004.25,
+              "width": 207,
+              "height": 108
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "30px",
+              "fontWeight": "600",
+              "lineHeight": "36px",
+              "color": "rgb(21, 128, 61)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 12px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "207px",
+              "height": "108px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "P",
+            "text": "Unless otherwise stated, we or our licensors own the intellectual property rights in the website and material on the website. Subject to the license below, all these intellectual property rights are reserved.",
+            "rect": {
+              "x": 48,
+              "y": 3124.25,
+              "width": 207,
+              "height": 292.5
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "29.25px",
+              "color": "rgb(55, 65, 81)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 24px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "207px",
+              "height": "292.5px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "H2",
+            "text": "Changes to Terms and Conditions",
+            "rect": {
+              "x": 48,
+              "y": 3440.75,
+              "width": 207,
+              "height": 108
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "30px",
+              "fontWeight": "600",
+              "lineHeight": "36px",
+              "color": "rgb(21, 128, 61)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 12px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "207px",
+              "height": "108px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "P",
+            "text": "We may revise these terms and conditions from time-to-time. Revised terms and conditions will apply to the use of our website from the date of the publication of the revised terms and conditions on our website. Please check this page regula",
+            "rect": {
+              "x": 48,
+              "y": 3560.75,
+              "width": 207,
+              "height": 438.75
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "29.25px",
+              "color": "rgb(55, 65, 81)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 24px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "207px",
+              "height": "438.75px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "H2",
+            "text": "Amazon Affiliate Disclosure",
+            "rect": {
+              "x": 48,
+              "y": 4023.5,
+              "width": 207,
+              "height": 108
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "30px",
+              "fontWeight": "600",
+              "lineHeight": "36px",
+              "color": "rgb(21, 128, 61)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 12px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "207px",
+              "height": "108px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "P",
+            "text": "As an Amazon Associate, we earn from qualifying purchases. All commissions earned through the Amazon Associates program are used exclusively to support the operational costs of Homeroom Heroes and to fund direct donations to classrooms.",
+            "rect": {
+              "x": 48,
+              "y": 4143.5,
+              "width": 207,
+              "height": 380.25
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "29.25px",
+              "color": "rgb(55, 65, 81)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 24px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "207px",
+              "height": "380.25px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          }
+        ]
+      },
+      "screenshot": "terms-modal-mobile-viewport.png"
+    },
+    {
+      "name": "terms-modal-open",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "url": "https://www.helpteachers.net/pages/register.html",
+      "modal": {
+        "rect": {
+          "x": 0,
+          "y": 16,
+          "width": 1440,
+          "height": 984
+        },
+        "style": {
+          "fontFamily": "Inter, sans-serif",
+          "fontSize": "16px",
+          "fontWeight": "400",
+          "lineHeight": "24px",
+          "color": "rgb(31, 41, 55)",
+          "backgroundColor": "rgba(0, 0, 0, 0.5)",
+          "backgroundImage": "none",
+          "padding": "0px",
+          "margin": "16px 0px 0px",
+          "display": "flex",
+          "position": "fixed",
+          "top": "0px",
+          "right": "0px",
+          "width": "1440px",
+          "height": "984px",
+          "border": "0px solid rgb(229, 231, 235)",
+          "borderRadius": "0px",
+          "boxShadow": "none",
+          "overflow": "visible"
+        },
+        "className": "modal flex",
+        "content": {
+          "rect": {
+            "x": 336,
+            "y": 234,
+            "width": 768,
+            "height": 548
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "16px",
+            "fontWeight": "400",
+            "lineHeight": "24px",
+            "color": "rgb(31, 41, 55)",
+            "backgroundColor": "rgb(255, 255, 255)",
+            "backgroundImage": "none",
+            "padding": "24px",
+            "margin": "0px",
+            "display": "block",
+            "position": "relative",
+            "top": "0px",
+            "right": "0px",
+            "width": "768px",
+            "height": "548px",
+            "border": "0px solid rgb(229, 231, 235)",
+            "borderRadius": "8px",
+            "boxShadow": "rgba(0, 0, 0, 0.2) 0px 10px 15px 0px",
+            "overflow": "visible"
+          },
+          "className": "modal-content"
+        },
+        "iframe": {
+          "rect": {
+            "x": 360,
+            "y": 258,
+            "width": 720,
+            "height": 500
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "16px",
+            "fontWeight": "400",
+            "lineHeight": "24px",
+            "color": "rgb(31, 41, 55)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "backgroundImage": "none",
+            "padding": "0px",
+            "margin": "0px",
+            "display": "block",
+            "position": "static",
+            "top": "auto",
+            "right": "auto",
+            "width": "720px",
+            "height": "500px",
+            "border": "0px solid rgb(229, 231, 235)",
+            "borderRadius": "0px",
+            "boxShadow": "none",
+            "overflow": "clip"
+          },
+          "title": "Terms and Conditions",
+          "src": "https://www.helpteachers.net/pages/terms_conditions.html"
+        },
+        "close": {
+          "rect": {
+            "x": 1070,
+            "y": 242,
+            "width": 22,
+            "height": 48
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "32px",
+            "fontWeight": "700",
+            "lineHeight": "48px",
+            "color": "rgb(75, 85, 99)",
+            "backgroundColor": "rgba(0, 0, 0, 0)",
+            "backgroundImage": "none",
+            "padding": "0px",
+            "margin": "0px",
+            "display": "block",
+            "position": "absolute",
+            "top": "8px",
+            "right": "12px",
+            "width": "22px",
+            "height": "48px",
+            "border": "0px solid rgb(229, 231, 235)",
+            "borderRadius": "0px",
+            "boxShadow": "none",
+            "overflow": "visible"
+          },
+          "text": "×"
+        }
+      },
+      "legal": {
+        "url": "https://www.helpteachers.net/pages/terms_conditions.html",
+        "title": "Terms and Conditions - Homeroom Heroes",
+        "body": {
+          "rect": {
+            "x": 0,
+            "y": 0,
+            "width": 720,
+            "height": 9254
+          },
+          "style": {
+            "fontFamily": "Inter, sans-serif",
+            "fontSize": "16px",
+            "fontWeight": "400",
+            "lineHeight": "24px",
+            "color": "rgb(249, 250, 251)",
+            "backgroundColor": "rgb(31, 41, 55)",
+            "backgroundImage": "none",
+            "padding": "0px",
+            "margin": "0px",
+            "display": "flex",
+            "position": "static",
+            "top": "auto",
+            "right": "auto",
+            "width": "720px",
+            "height": "9254px",
+            "border": "0px solid rgb(229, 231, 235)",
+            "borderRadius": "0px",
+            "boxShadow": "none",
+            "overflow": "visible"
+          },
+          "text": "Terms and Conditions\nIntroduction\n\nThese terms and conditions govern your use of our website; by using our website, you accept these terms and conditions in full. If you disagree with these terms and conditions or any part of these terms and conditions, you must not use our website.\n\nCharitable Mission & Board Discretion\n\nHomeroom Heroes is a registered 501(c)(3) nonprofit organization. While our platform facilitates a bridge between donors and specific classroom wishlists, Homeroom Heroes maintains final discretion and control over the use of all directly donated resources. To maintain our charitable status, all donations made via this platform are considered contributions to Homeroom Heroe"
+        },
+        "elements": [
+          {
+            "tag": "H4",
+            "text": "Terms and Conditions",
+            "rect": {
+              "x": 56,
+              "y": 16,
+              "width": 608,
+              "height": 36
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "30px",
+              "fontWeight": "700",
+              "lineHeight": "36px",
+              "color": "rgb(255, 255, 255)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "608px",
+              "height": "36px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "SECTION",
+            "text": "Introduction\n\nThese terms and conditions govern your use of our website; by using our website, you accept these terms and conditions in full. If you disagree with these terms and conditions or any part of these terms and conditions, you mus",
+            "rect": {
+              "x": 56,
+              "y": 100,
+              "width": 608,
+              "height": 2117.5
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "16px",
+              "fontWeight": "400",
+              "lineHeight": "24px",
+              "color": "rgb(31, 41, 55)",
+              "backgroundColor": "rgb(255, 255, 255)",
+              "backgroundImage": "none",
+              "padding": "32px",
+              "margin": "0px 0px 32px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "608px",
+              "height": "2117.5px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "8px",
+              "boxShadow": "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.1) 0px 2px 4px -2px",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "H1",
+            "text": "Introduction",
+            "rect": {
+              "x": 88,
+              "y": 132,
+              "width": 544,
+              "height": 40
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "36px",
+              "fontWeight": "700",
+              "lineHeight": "40px",
+              "color": "rgb(22, 101, 52)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 16px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "544px",
+              "height": "40px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "P",
+            "text": "These terms and conditions govern your use of our website; by using our website, you accept these terms and conditions in full. If you disagree with these terms and conditions or any part of these terms and conditions, you must not use our ",
+            "rect": {
+              "x": 88,
+              "y": 188,
+              "width": 544,
+              "height": 146.25
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "29.25px",
+              "color": "rgb(55, 65, 81)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 24px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "544px",
+              "height": "146.25px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "H2",
+            "text": "Charitable Mission & Board Discretion",
+            "rect": {
+              "x": 88,
+              "y": 358.25,
+              "width": 544,
+              "height": 72
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "30px",
+              "fontWeight": "600",
+              "lineHeight": "36px",
+              "color": "rgb(21, 128, 61)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 12px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "544px",
+              "height": "72px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "P",
+            "text": "Homeroom Heroes is a registered 501(c)(3) nonprofit organization. While our platform facilitates a bridge between donors and specific classroom wishlists, Homeroom Heroes maintains final discretion and control over the use of all directly d",
+            "rect": {
+              "x": 88,
+              "y": 442.25,
+              "width": 544,
+              "height": 292.5
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "29.25px",
+              "color": "rgb(55, 65, 81)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 24px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "544px",
+              "height": "292.5px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "H2",
+            "text": "Non-Discrimination Statement",
+            "rect": {
+              "x": 88,
+              "y": 758.75,
+              "width": 544,
+              "height": 36
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "30px",
+              "fontWeight": "600",
+              "lineHeight": "36px",
+              "color": "rgb(21, 128, 61)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 12px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "544px",
+              "height": "36px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "P",
+            "text": "Homeroom Heroes is committed to serving teachers and students without regard to race, color, religion, sex, national origin, disability, or any other legally protected characteristic. Our vetting process evaluates employment and eligibility",
+            "rect": {
+              "x": 88,
+              "y": 806.75,
+              "width": 544,
+              "height": 146.25
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "29.25px",
+              "color": "rgb(55, 65, 81)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 24px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "544px",
+              "height": "146.25px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "H2",
+            "text": "Tax-Deductibility & Gift-in-Kind Disclosures",
+            "rect": {
+              "x": 88,
+              "y": 977,
+              "width": 544,
+              "height": 72
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "30px",
+              "fontWeight": "600",
+              "lineHeight": "36px",
+              "color": "rgb(21, 128, 61)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 12px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "544px",
+              "height": "72px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "P",
+            "text": "Purchases made through third-party wishlists (e.g., Amazon.com or Amazon.ca) are transactions between the user and the third-party retailer. For tax purposes, your retailer purchase receipt serves as proof of the \"Fair Market Value\" of your",
+            "rect": {
+              "x": 88,
+              "y": 1061,
+              "width": 544,
+              "height": 234
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "29.25px",
+              "color": "rgb(55, 65, 81)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 24px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "544px",
+              "height": "234px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "H2",
+            "text": "Intellectual Property Rights",
+            "rect": {
+              "x": 88,
+              "y": 1319,
+              "width": 544,
+              "height": 36
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "30px",
+              "fontWeight": "600",
+              "lineHeight": "36px",
+              "color": "rgb(21, 128, 61)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 12px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "544px",
+              "height": "36px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "P",
+            "text": "Unless otherwise stated, we or our licensors own the intellectual property rights in the website and material on the website. Subject to the license below, all these intellectual property rights are reserved.",
+            "rect": {
+              "x": 88,
+              "y": 1367,
+              "width": 544,
+              "height": 117
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "29.25px",
+              "color": "rgb(55, 65, 81)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 24px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "544px",
+              "height": "117px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "H2",
+            "text": "Changes to Terms and Conditions",
+            "rect": {
+              "x": 88,
+              "y": 1508,
+              "width": 544,
+              "height": 36
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "30px",
+              "fontWeight": "600",
+              "lineHeight": "36px",
+              "color": "rgb(21, 128, 61)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 12px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "544px",
+              "height": "36px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "P",
+            "text": "We may revise these terms and conditions from time-to-time. Revised terms and conditions will apply to the use of our website from the date of the publication of the revised terms and conditions on our website. Please check this page regula",
+            "rect": {
+              "x": 88,
+              "y": 1556,
+              "width": 544,
+              "height": 146.25
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "29.25px",
+              "color": "rgb(55, 65, 81)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 24px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "544px",
+              "height": "146.25px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "H2",
+            "text": "Amazon Affiliate Disclosure",
+            "rect": {
+              "x": 88,
+              "y": 1726.25,
+              "width": 544,
+              "height": 36
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "30px",
+              "fontWeight": "600",
+              "lineHeight": "36px",
+              "color": "rgb(21, 128, 61)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 12px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "544px",
+              "height": "36px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          },
+          {
+            "tag": "P",
+            "text": "As an Amazon Associate, we earn from qualifying purchases. All commissions earned through the Amazon Associates program are used exclusively to support the operational costs of Homeroom Heroes and to fund direct donations to classrooms.",
+            "rect": {
+              "x": 88,
+              "y": 1774.25,
+              "width": 544,
+              "height": 146.25
+            },
+            "style": {
+              "fontFamily": "Inter, sans-serif",
+              "fontSize": "18px",
+              "fontWeight": "400",
+              "lineHeight": "29.25px",
+              "color": "rgb(55, 65, 81)",
+              "backgroundColor": "rgba(0, 0, 0, 0)",
+              "backgroundImage": "none",
+              "padding": "0px",
+              "margin": "0px 0px 24px",
+              "display": "block",
+              "position": "static",
+              "top": "auto",
+              "right": "auto",
+              "width": "544px",
+              "height": "146.25px",
+              "border": "0px solid rgb(229, 231, 235)",
+              "borderRadius": "0px",
+              "boxShadow": "none",
+              "overflow": "visible"
+            }
+          }
+        ]
+      },
+      "screenshot": "terms-modal-desktop-viewport.png"
+    }
+  ],
+  "blockedRequests": [
+    {
+      "method": "GET",
+      "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2827692846371935"
+    },
+    {
+      "method": "GET",
+      "url": "https://www.googletagmanager.com/gtag/js?id=AW-17482080573"
+    },
+    {
+      "method": "GET",
+      "url": "https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2827692846371935"
+    },
+    {
+      "method": "GET",
+      "url": "https://www.googletagmanager.com/gtag/js?id=AW-17482080573"
+    },
+    {
+      "method": "GET",
+      "url": "https://www.googletagmanager.com/gtag/js?id=AW-17482080573"
+    },
+    {
+      "method": "GET",
+      "url": "https://www.googletagmanager.com/gtag/js?id=AW-17482080573"
+    }
+  ]
+}
