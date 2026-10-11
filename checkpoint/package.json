@@ -7,7 +7,7 @@
     "bundle:fast-check": "node scripts/build-fast-check-bundle.mjs",
     "build:pxcube": "node scripts/build-pxcube.mjs",
     "build": "node scripts/assemble.mjs",
-    "test": "node --test --test-concurrency=2 exp/cooperative/*.test.mjs exp/adversarial/*.test.mjs scripts/evaluator-identity.test.mjs scripts/hh-built-imports.test.mjs exp/atlas/*.test.mjs scripts/capability-ladder-view.test.mjs exp/block5/*.test.mjs exp/block5/core/*.test.mjs exp/compression/*.test.mjs vendor/hh/src/*.test.mjs",
+    "test": "node --test --test-concurrency=2 exp/cooperative/*.test.mjs exp/adversarial/*.test.mjs scripts/evaluator-identity.test.mjs scripts/hh-built-imports.test.mjs scripts/capability-lab-built.test.mjs exp/atlas/*.test.mjs scripts/capability-ladder-view.test.mjs exp/block5/*.test.mjs exp/block5/core/*.test.mjs exp/compression/*.test.mjs vendor/hh/src/*.test.mjs",
     "benchmark:block5": "node scripts/block5-benchmark.mjs",
     "test:block5:browser": "node scripts/block5-browser-smoke.mjs",
     "preview": "node scripts/preview.mjs",
@@ -24,7 +24,8 @@
     "Game Boy cartridge picker with Connect Four baseline and a same-rules PxC + seek-tree migration",
     "Bounded HH style playground with seeded fast-check variants, real PxC receipts, and a safe CSS-variable boundary",
     "PxCube Atlas: live bounded program search, concrete counterexamples, real Part provenance and persistent-session replay/cache inspection",
-    "Atlas capability ladder: independently callable Parse, Validate, Interpret and Execute Parts, composed execution, editable literal definitions and replay/cache evidence"
+    "Atlas capability ladder: independently callable Parse, Validate, Interpret and Execute Parts, composed execution, editable literal definitions and replay/cache evidence",
+    "Capability Lab: pinned browser candidate with editable inputs, actual execution, explanations and replay"
   ],
   "releaseChannel": "candidate",
   "devDependencies": {

@@ -184,6 +184,21 @@ The Bazel source build compiles all authored PxCube sources and refuses the hist
 Create an immutable source checkpoint using `evidence/create-checkpoint.py --baseline-commit VERIFIED_PAGES_COMMIT --base-source-commit VERIFIED_BASE_SOURCE_COMMIT --base-checkpoint VERIFIED_BASE_CHECKPOINT_BUILD_ID`. This exports the complete materialized source, including Atlas, and attributes its baseline without inventing a new Git source commit. Root supplies the observed new Drive file URL to `evidence/finalize-atlas-publication.py` after upload. The GitHub deployment now compiles current checked-out source; the original immutable checkpoint remains provenance for the import.
 
 
+## Capability Lab candidate
+
+Open `#/capability-lab/run` or the full-page `compiled/capability-lab/index.html`
+entry. The executable static browser source and catalogs are copied from
+PageRouter commit `c9214c9db53b6d8c550df516ef6553bc7f7bfa70`, with
+every source blob pinned in `vendor/capability-lab/SOURCE-PIN.json`. The
+independent final receipt for the delivered candidate reports 271/271 tests;
+this integration separately checks the copied source pin, assembled catalog,
+and every local browser module import. The original Node preview server is
+only a local static-file host and is not needed by GitHub Pages.
+
+The Lab retains its own Foundations, Watches, Machine learning, and Explain
+workspaces. The PageRouter layer supplies discovery and a run frame; it does
+not impose the HH composition seam or declare a human release milestone.
+
 ## Executable capability ladder
 
 Open `#/pxcube/atlas` for a JSON definition editor above the existing search and

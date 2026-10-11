@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f7fa">
+    <title>Capability Lab</title>
+    <link rel="stylesheet" href="./ui/style.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Capability Lab home"><span class="brand-mark">C</span><span>Capability <b>Lab</b></span></a>
+      <nav class="workspace-nav" aria-label="Workbench mode"><button type="button" class="mode-button active" data-workspace-mode="foundations" aria-pressed="true">Foundations</button><button type="button" class="mode-button" data-workspace-mode="watches" aria-pressed="false">Watches</button><button type="button" class="mode-button" data-workspace-mode="ml" aria-pressed="false">Machine learning</button><button type="button" class="mode-button" data-workspace-mode="explain" aria-pressed="false">Explain</button></nav>
+      <div class="top-meta"><span class="live-dot"></span><span id="system-status" role="status">Loading capabilities…</span><span class="version-tag">FOUNDATIONS</span></div>
+    </header>
+    <main class="shell">
+      <section class="intro">
+        <div><p class="eyebrow">A numerical workbench</p><h1>Make the computation <em>visible.</em></h1><p class="intro-copy">Choose a capability, inspect its inputs, then follow the math through its dependencies and results.</p></div>
+        <div class="order-note"><span class="order-icon">↗</span><div><strong>Learning priority</strong><span>Order 0 → 1 · Order 1 → 1 · Order 2 → 2 · Order 3 → 4</span><small>Declared preference, not measured benefit</small></div></div>
+      </section>
+
+      <section class="workspace" aria-label="Capability workbench">
+        <aside class="panel library-panel">
+          <div class="panel-heading"><div><p class="eyebrow">Explore</p><h2>Capabilities</h2></div><span id="capability-count" class="count-pill">0</span></div>
+          <label class="search-wrap"><span aria-hidden="true">⌕</span><input id="search-capabilities" type="search" placeholder="Search capabilities…" autocomplete="off" aria-label="Search capabilities"></label>
+          <div class="filter-row" role="group" aria-label="Filter capabilities"><button class="filter-chip active" data-filter="all">All</button><button class="filter-chip" data-filter="atomic">Atomic</button><button class="filter-chip" data-filter="composed">Composed</button></div>
+          <label class="sr-only" for="capability-select">Selected capability</label><select id="capability-select" class="sr-only" aria-label="Selected capability"></select>
+          <div id="capability-list" class="capability-list" role="listbox" aria-label="Capabilities"></div>
+          <div class="library-footer"><span class="legend-dot atomic-dot"></span>Atomic <span class="legend-dot composed-dot"></span>Composed</div>
+        </aside>
+
+        <section class="panel work-panel" aria-label="Run a capability">
+          <div class="panel-heading"><div><p class="eyebrow">01 / Configure</p><h2 id="selected-title">Select a capability</h2></div><span id="kind-badge" class="kind-badge">—</span></div>
+          <p id="selected-description" class="description">Choose an item from the library to inspect its definition and prepare an input.</p>
+          <div id="definition" class="definition" hidden></div>
+          <div class="editor-heading"><label for="input-editor">Input object <span>JSON</span></label><button id="format-button" class="text-button" type="button">Format</button></div>
+          <textarea id="input-editor" spellcheck="false" aria-label="Input JSON" aria-describedby="input-help" placeholder="Select a capability to load an example input…" disabled></textarea>
+          <div class="editor-foot"><span id="input-help">Inputs must be JSON objects. Examples are independently checkable.</span><span id="json-status" class="json-status">Waiting for selection</span></div>
+          <div id="examples" class="examples" aria-label="Example inputs"></div>
+          <div class="action-row"><button id="run-button" class="primary-button" type="button" disabled><span>Run capability</span><span aria-hidden="true">→</span></button><button id="replay-button" class="secondary-button" type="button" disabled title="Run the same input again and compare canonical output">Replay</button><span id="run-status" class="run-status" role="status"></span></div>
+          <section class="graph-section"><div class="section-heading"><div><p class="eyebrow">02 / Structure</p><h3>Dependency map</h3></div><span class="section-hint">Actual declared calls</span></div><div id="dependency-graph" class="dependency-graph" aria-live="polite"><div class="empty-state">Select a capability to see its dependencies.</div></div></section>
+        </section>
+
+        <section class="panel output-panel" aria-label="Execution output">
+          <div class="panel-heading"><div><p class="eyebrow">03 / Inspect</p><h2>Execution</h2></div><span id="execution-badge" class="execution-badge">Ready</span></div>
+          <div class="output-tabs" role="tablist" aria-label="Execution views"><button class="output-tab active" data-view="result" role="tab" aria-selected="true">Result</button><button class="output-tab" data-view="trace" role="tab" aria-selected="false">Call trace <span id="trace-count">0</span></button><button class="output-tab" data-view="visual" role="tab" aria-selected="false">Data view</button></div>
+          <div id="result-view" class="output-view active" role="tabpanel"><div id="result" class="result-content"><div class="empty-result"><span class="empty-glyph">ƒ</span><strong>No execution yet</strong><span>Run a capability to see its result and explanation.</span></div></div></div>
+          <div id="trace-view" class="output-view" role="tabpanel" hidden><div id="execution-trace" class="trace-content"><div class="empty-state">Composed calls will appear here in execution order.</div></div></div>
+          <div id="visual-view" class="output-view" role="tabpanel" hidden><div id="data-view" class="data-view"><div class="empty-state">Structured values and small charts appear after a run.</div></div></div>
+          <div id="extension-views"></div>
+          <div id="run-meta" class="run-meta" hidden></div>
+        </section>
+      </section>
+      <footer class="page-footer"><span>Capability Lab <span id="build-version">· local session</span></span><span>Finite doubles · explicit assumptions · reproducible calls</span></footer>
+    </main>
+    <script type="module" src="./ui/app.mjs"></script>
+  </body>
+</html>
