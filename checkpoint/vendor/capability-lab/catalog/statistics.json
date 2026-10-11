@@ -1,0 +1,2035 @@
+{
+  "domain": "statistics",
+  "capabilities": [
+    {
+      "id": "statistics.mean",
+      "title": "Arithmetic mean",
+      "description": "The central average of a nonempty finite sample.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              1,
+              2,
+              3
+            ]
+          },
+          "expected": {
+            "value": 2
+          }
+        }
+      ],
+      "formula": "sum(xᵢ / n), using compensated summation.",
+      "caveats": ""
+    },
+    {
+      "id": "statistics.variance",
+      "title": "Variance",
+      "description": "Population or sample spread, computed with Welford updates to reduce cancellation.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "denominator": {
+            "type": "string",
+            "enum": [
+              "population",
+              "sample"
+            ]
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              1,
+              2,
+              3
+            ],
+            "denominator": "population"
+          },
+          "expected": {
+            "value": 0.6666666666666666
+          }
+        }
+      ],
+      "formula": "M₂ / n for population variance; M₂ / (n - 1) for sample variance.",
+      "caveats": "Sample variance requires at least two values; population variance accepts one."
+    },
+    {
+      "id": "statistics.weightedMean",
+      "title": "Weighted mean",
+      "description": "Average with nonnegative weights and a positive total weight.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "weights": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "values",
+          "weights"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              1,
+              3,
+              10
+            ],
+            "weights": [
+              1,
+              2,
+              1
+            ]
+          },
+          "expected": {
+            "value": 4.25
+          }
+        }
+      ],
+      "formula": "Σ(wᵢxᵢ) / Σwᵢ; weights are scaled before summing.",
+      "caveats": ""
+    },
+    {
+      "id": "statistics.weightedVariance",
+      "title": "Weighted population variance",
+      "description": "Spread around the weighted mean using a population denominator.",
+      "kind": "composed",
+      "dependsOn": [
+        "statistics.weightedMean"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "weights": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "values",
+          "weights"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              1,
+              3,
+              10
+            ],
+            "weights": [
+              1,
+              2,
+              1
+            ]
+          },
+          "expected": {
+            "value": 11.6875
+          }
+        }
+      ],
+      "formula": "Σ(wᵢ(xᵢ - μw)²) / Σwᵢ; weighted mean is obtained through the declared dependency.",
+      "caveats": "This is a population-weighted variance. Reliability-weight sample corrections are not applied."
+    },
+    {
+      "id": "statistics.onlineUpdate",
+      "title": "Online moment update",
+      "description": "Add one observation to a retained count, mean, and M₂ state without storing past values.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "mean": {
+                "type": "number"
+              },
+              "m2": {
+                "type": "number",
+                "minimum": 0
+              },
+              "variance": {
+                "type": "number",
+                "minimum": 0
+              }
+            },
+            "required": [
+              "count",
+              "mean",
+              "m2"
+            ],
+            "additionalProperties": false
+          },
+          "value": {
+            "type": "number"
+          },
+          "denominator": {
+            "type": "string",
+            "enum": [
+              "population",
+              "sample"
+            ]
+          }
+        },
+        "required": [
+          "state",
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "mean": {
+            "type": "number"
+          },
+          "m2": {
+            "type": "number",
+            "minimum": 0
+          },
+          "variance": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "count",
+          "mean",
+          "m2",
+          "variance"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "state": {
+              "count": 0,
+              "mean": 0,
+              "m2": 0
+            },
+            "value": 5
+          },
+          "expected": {
+            "count": 1,
+            "mean": 5,
+            "m2": 0,
+            "variance": 0
+          }
+        }
+      ],
+      "formula": "Welford update: δ = x - μ; μ′ = μ + δ/n′; M₂′ = M₂ + δ(x - μ′).",
+      "caveats": "The empty state is explicitly {count: 0, mean: 0, m2: 0}. A returned variance may be passed back as optional derived metadata; it is validated, ignored, and recomputed from count/mean/m2. Sample variance is undefined until the count reaches two."
+    },
+    {
+      "id": "statistics.onlineMoments",
+      "title": "Online moments",
+      "description": "Summarize observations with the same bounded-state Welford update used for streaming.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "denominator": {
+            "type": "string",
+            "enum": [
+              "population",
+              "sample"
+            ]
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "mean": {
+            "type": "number"
+          },
+          "m2": {
+            "type": "number",
+            "minimum": 0
+          },
+          "variance": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "count",
+          "mean",
+          "m2",
+          "variance"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              1,
+              2,
+              3
+            ],
+            "denominator": "population"
+          },
+          "expected": {
+            "count": 3,
+            "mean": 2,
+            "m2": 2,
+            "variance": 0.6666666666666666
+          }
+        }
+      ],
+      "formula": "Welford updates with constant memory; M₂ is the accumulated squared deviation.",
+      "caveats": ""
+    },
+    {
+      "id": "statistics.covariance",
+      "title": "Covariance",
+      "description": "Joint linear variation for paired samples.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "y": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "denominator": {
+            "type": "string",
+            "enum": [
+              "population",
+              "sample"
+            ]
+          }
+        },
+        "required": [
+          "x",
+          "y"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "x": [
+              2,
+              4,
+              6
+            ],
+            "y": [
+              1,
+              3,
+              5
+            ],
+            "denominator": "sample"
+          },
+          "expected": {
+            "value": 4
+          }
+        }
+      ],
+      "formula": "Running co-moment divided by n for population or n - 1 for sample covariance.",
+      "caveats": "The two arrays must be nonempty and equal in length; sample covariance requires at least two pairs."
+    },
+    {
+      "id": "statistics.correlation",
+      "title": "Pearson correlation",
+      "description": "Scale-free linear association for two paired numeric samples.",
+      "kind": "composed",
+      "dependsOn": [
+        "statistics.covariance",
+        "statistics.variance"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "y": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "x",
+          "y"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "x": [
+              2,
+              4,
+              6
+            ],
+            "y": [
+              1,
+              3,
+              5
+            ]
+          },
+          "expected": {
+            "value": 1
+          }
+        }
+      ],
+      "formula": "Cov(X,Y) / (sd(X) sd(Y)); the same population denominator is used for each term.",
+      "caveats": "Undefined if either input has zero variance."
+    },
+    {
+      "id": "statistics.standardDeviation",
+      "title": "Standard deviation",
+      "description": "Square root of variance with an explicit denominator convention.",
+      "kind": "composed",
+      "dependsOn": [
+        "statistics.variance"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "denominator": {
+            "type": "string",
+            "enum": [
+              "population",
+              "sample"
+            ]
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              1,
+              2,
+              3
+            ],
+            "denominator": "sample"
+          },
+          "expected": {
+            "value": 1
+          }
+        }
+      ],
+      "formula": "sqrt(variance).",
+      "caveats": ""
+    },
+    {
+      "id": "statistics.zScores",
+      "title": "Z scores",
+      "description": "Center values at their mean and divide by their selected standard deviation.",
+      "kind": "composed",
+      "dependsOn": [
+        "statistics.mean",
+        "statistics.standardDeviation"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "denominator": {
+            "type": "string",
+            "enum": [
+              "population",
+              "sample"
+            ]
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "mean": {
+            "type": "number"
+          },
+          "standardDeviation": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "values",
+          "mean",
+          "standardDeviation"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              2,
+              4,
+              6
+            ]
+          },
+          "expected": {
+            "values": [
+              -1.224744871391589,
+              0,
+              1.224744871391589
+            ],
+            "mean": 4,
+            "standardDeviation": 1.632993161855452
+          }
+        }
+      ],
+      "formula": "(xᵢ - mean(x)) / sd(x).",
+      "caveats": "Constant samples have no finite z scores and are rejected."
+    },
+    {
+      "id": "statistics.standardizedSummary",
+      "title": "Standardized summary",
+      "description": "Report the mean and spread together with their derived z scores.",
+      "kind": "composed",
+      "dependsOn": [
+        "statistics.mean",
+        "statistics.standardDeviation",
+        "statistics.zScores"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "denominator": {
+            "type": "string",
+            "enum": [
+              "population",
+              "sample"
+            ]
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "mean": {
+            "type": "number"
+          },
+          "standardDeviation": {
+            "type": "number",
+            "minimum": 0
+          },
+          "zScores": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "mean",
+          "standardDeviation",
+          "zScores"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              2,
+              4,
+              6
+            ]
+          },
+          "expected": {
+            "mean": 4,
+            "standardDeviation": 1.632993161855452,
+            "zScores": [
+              -1.224744871391589,
+              0,
+              1.224744871391589
+            ]
+          }
+        }
+      ],
+      "formula": "Combines the declared mean, standard-deviation, and z-score capabilities.",
+      "caveats": "This composition has dependency depth three from variance → standard deviation → z scores → summary."
+    },
+    {
+      "id": "statistics.pairedDifferences",
+      "title": "Paired differences",
+      "description": "Subtract the second observation from its matched first observation.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "y": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "x",
+          "y"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "x": [
+              4,
+              8,
+              3
+            ],
+            "y": [
+              1,
+              5,
+              7
+            ]
+          },
+          "expected": {
+            "values": [
+              3,
+              3,
+              -4
+            ]
+          }
+        }
+      ],
+      "formula": "dᵢ = xᵢ - yᵢ.",
+      "caveats": "Pair order and equal array lengths are required."
+    },
+    {
+      "id": "statistics.welchMeanDifference",
+      "title": "Welch independent-groups comparison",
+      "description": "Estimate the mean difference with a Welch standard error and degrees of freedom.",
+      "kind": "composed",
+      "dependsOn": [
+        "statistics.mean",
+        "statistics.variance"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "a": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2
+          },
+          "b": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2
+          }
+        },
+        "required": [
+          "a",
+          "b"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "meanA": {
+            "type": "number"
+          },
+          "meanB": {
+            "type": "number"
+          },
+          "difference": {
+            "type": "number"
+          },
+          "standardError": {
+            "type": "number",
+            "minimum": 0
+          },
+          "degreesOfFreedom": {
+            "type": "number",
+            "minimum": 0
+          },
+          "testStatistic": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "meanA",
+          "meanB",
+          "difference",
+          "standardError",
+          "degreesOfFreedom",
+          "testStatistic"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "a": [
+              2,
+              4,
+              6
+            ],
+            "b": [
+              1,
+              2,
+              3
+            ]
+          },
+          "expected": {
+            "meanA": 4,
+            "meanB": 2,
+            "difference": 2,
+            "standardError": 1.2909944487358056,
+            "degreesOfFreedom": 2.9411764705882355,
+            "testStatistic": 1.5491933384829668
+          }
+        }
+      ],
+      "formula": "Difference = mean(A) - mean(B); Welch SE = sqrt(sA²/nA + sB²/nB), with Welch-Satterthwaite degrees of freedom.",
+      "caveats": "This reports a test statistic but no p-value because no t-distribution CDF is included. Samples must each contain at least two observations; zero standard error is rejected."
+    },
+    {
+      "id": "statistics.quantile",
+      "title": "Quantile",
+      "description": "Interpolated sample quantile using Hyndman-Fan type 7.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "number"
+            }
+          },
+          "probability": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "values",
+          "probability"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "probability": 0.5
+          },
+          "expected": {
+            "value": 2.5
+          }
+        }
+      ],
+      "formula": "h=(n-1)p; interpolate x[floor(h)] and x[ceil(h)]",
+      "caveats": "Linear interpolation; p is in [0,1]."
+    },
+    {
+      "id": "statistics.median",
+      "title": "Median",
+      "description": "Middle value under the type 7 quantile convention.",
+      "kind": "composed",
+      "dependsOn": [
+        "statistics.quantile"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              1,
+              2,
+              3,
+              4
+            ]
+          },
+          "expected": {
+            "value": 2.5
+          }
+        }
+      ]
+    },
+    {
+      "id": "statistics.count",
+      "title": "Count",
+      "description": "Count finite numeric observations; empty input has count zero.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              4,
+              -1,
+              4
+            ]
+          },
+          "expected": {
+            "value": 3
+          }
+        },
+        {
+          "input": {
+            "values": []
+          },
+          "expected": {
+            "value": 0
+          }
+        }
+      ]
+    },
+    {
+      "id": "statistics.sum",
+      "title": "Sum",
+      "description": "Add finite values using Neumaier compensated summation.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              10000000000000000,
+              1,
+              -10000000000000000
+            ]
+          },
+          "expected": {
+            "value": 1
+          }
+        },
+        {
+          "input": {
+            "values": []
+          },
+          "expected": {
+            "value": 0
+          }
+        }
+      ],
+      "formula": "Compensated floating-point accumulation; the final result must remain finite."
+    },
+    {
+      "id": "statistics.extrema",
+      "title": "Minimum and maximum",
+      "description": "Return the smallest and largest finite values.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "min": {
+            "type": "number"
+          },
+          "max": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "min",
+          "max"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              3,
+              -2,
+              7,
+              7
+            ]
+          },
+          "expected": {
+            "min": -2,
+            "max": 7
+          }
+        }
+      ]
+    },
+    {
+      "id": "statistics.range",
+      "title": "Range",
+      "description": "Compute maximum minus minimum through the extrema capability.",
+      "kind": "composed",
+      "dependsOn": [
+        "statistics.extrema"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              3,
+              -2,
+              7,
+              7
+            ]
+          },
+          "expected": {
+            "value": 9
+          }
+        }
+      ],
+      "formula": "max(values) - min(values)"
+    },
+    {
+      "id": "statistics.rank",
+      "title": "Ranks",
+      "description": "One-based ranks with explicit tie handling.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "number"
+            }
+          },
+          "method": {
+            "type": "string",
+            "enum": [
+              "average",
+              "min",
+              "max",
+              "dense",
+              "ordinal"
+            ]
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "ranks": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "ranks"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              30,
+              10,
+              10,
+              20
+            ]
+          },
+          "expected": {
+            "ranks": [
+              4,
+              1.5,
+              1.5,
+              3
+            ]
+          }
+        }
+      ],
+      "caveats": "Ordinal breaks ties by original input order."
+    },
+    {
+      "id": "statistics.empiricalCdf",
+      "title": "Empirical CDF",
+      "description": "Fraction of observations at or below each query point.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "number"
+            }
+          },
+          "points": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "values",
+          "points"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "points": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "points"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              1,
+              2,
+              2,
+              4
+            ],
+            "points": [
+              0,
+              2,
+              5
+            ]
+          },
+          "expected": {
+            "points": [
+              {
+                "x": 0,
+                "y": 0
+              },
+              {
+                "x": 2,
+                "y": 0.75
+              },
+              {
+                "x": 5,
+                "y": 1
+              }
+            ]
+          }
+        }
+      ],
+      "formula": "F_n(x)=count(x_i<=x)/n"
+    },
+    {
+      "id": "statistics.histogram",
+      "title": "Histogram",
+      "description": "Counts in equal-width bins or explicit edges; rightmost edge is inclusive.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "number"
+            }
+          },
+          "bins": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000
+          },
+          "edges": {
+            "type": "array",
+            "minItems": 2,
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "bins": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "x0": {
+                  "type": "number"
+                },
+                "x1": {
+                  "type": "number"
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "x0",
+                "x1",
+                "count"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "bins"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              0,
+              1,
+              2,
+              3
+            ],
+            "edges": [
+              0,
+              2,
+              3
+            ]
+          },
+          "expected": {
+            "bins": [
+              {
+                "x0": 0,
+                "x1": 2,
+                "count": 2
+              },
+              {
+                "x0": 2,
+                "x1": 3,
+                "count": 2
+              }
+            ]
+          }
+        }
+      ],
+      "caveats": "Values outside explicit edges are omitted; at most 10,000 equal-width bins or 10,000 explicit intervals."
+    },
+    {
+      "id": "statistics.describe",
+      "title": "Descriptive summary",
+      "description": "Combines count, range, moments, and quartiles.",
+      "kind": "composed",
+      "dependsOn": [
+        "statistics.mean",
+        "statistics.variance",
+        "statistics.quantile"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "number"
+            }
+          },
+          "denominator": {
+            "type": "string",
+            "enum": [
+              "sample",
+              "population"
+            ]
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "mean": {
+            "type": "number"
+          },
+          "variance": {
+            "type": "number"
+          },
+          "standardDeviation": {
+            "type": "number"
+          },
+          "min": {
+            "type": "number"
+          },
+          "q1": {
+            "type": "number"
+          },
+          "median": {
+            "type": "number"
+          },
+          "q3": {
+            "type": "number"
+          },
+          "max": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "count",
+          "mean",
+          "variance",
+          "standardDeviation",
+          "min",
+          "q1",
+          "median",
+          "q3",
+          "max"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              1,
+              2,
+              3,
+              4
+            ],
+            "denominator": "population"
+          },
+          "expected": {
+            "count": 4,
+            "mean": 2.5,
+            "variance": 1.25,
+            "standardDeviation": 1.118033988749895,
+            "min": 1,
+            "q1": 1.75,
+            "median": 2.5,
+            "q3": 3.25,
+            "max": 4
+          }
+        }
+      ],
+      "caveats": "Variance denominator is explicit; sample variance is undefined for a singleton and will fail in the variance capability."
+    },
+    {
+      "id": "statistics.robustSummary",
+      "title": "Robust summary",
+      "description": "Median, median absolute deviation, and interquartile range.",
+      "kind": "composed",
+      "dependsOn": [
+        "statistics.quantile"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "values"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "median": {
+            "type": "number"
+          },
+          "mad": {
+            "type": "number"
+          },
+          "q1": {
+            "type": "number"
+          },
+          "q3": {
+            "type": "number"
+          },
+          "iqr": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "count",
+          "median",
+          "mad",
+          "q1",
+          "q3",
+          "iqr"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              1,
+              2,
+              3,
+              4,
+              100
+            ]
+          },
+          "expected": {
+            "count": 5,
+            "median": 3,
+            "mad": 1,
+            "q1": 2,
+            "q3": 4,
+            "iqr": 2
+          }
+        }
+      ]
+    },
+    {
+      "id": "statistics.resampleWithReplacement",
+      "title": "Seeded resample with replacement",
+      "description": "Draw a fixed-size sample using a recorded unsigned 32-bit seed.",
+      "kind": "atomic",
+      "dependsOn": [],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100000,
+            "items": {
+              "type": "number"
+            }
+          },
+          "sampleSize": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          }
+        },
+        "required": [
+          "values",
+          "sampleSize",
+          "seed"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100000,
+            "items": {
+              "type": "number"
+            }
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          }
+        },
+        "required": [
+          "values",
+          "seed"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              10,
+              20,
+              30
+            ],
+            "sampleSize": 6,
+            "seed": 1
+          },
+          "expected": {
+            "values": [
+              10,
+              10,
+              20,
+              10,
+              20,
+              10
+            ],
+            "seed": 1
+          }
+        }
+      ],
+      "formula": "Xorshift32; each draw uses floor(u × n) to select an input index. Seed zero maps to a documented nonzero internal state. A bootstrap run draws all replicate samples from one continuous seeded stream.",
+      "caveats": "Sampling is with replacement; sampleSize is capped at 100000. The returned seed is the exact input seed."
+    },
+    {
+      "id": "statistics.bootstrapMeanCI",
+      "title": "Bootstrap mean confidence interval",
+      "description": "Build a percentile interval from deterministic bootstrap means.",
+      "kind": "composed",
+      "dependsOn": [
+        "statistics.resampleWithReplacement",
+        "statistics.mean",
+        "statistics.quantile"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "values": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 100000,
+            "items": {
+              "type": "number"
+            }
+          },
+          "replicates": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "values",
+          "replicates",
+          "seed",
+          "confidence"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "estimate": {
+            "type": "number"
+          },
+          "lower": {
+            "type": "number"
+          },
+          "upper": {
+            "type": "number"
+          },
+          "replicates": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "estimate",
+          "lower",
+          "upper",
+          "replicates",
+          "seed",
+          "confidence"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "values": [
+              0,
+              10
+            ],
+            "replicates": 1,
+            "seed": 1,
+            "confidence": 0.8
+          },
+          "expected": {
+            "estimate": 5,
+            "lower": 0,
+            "upper": 0,
+            "replicates": 1,
+            "seed": 1,
+            "confidence": 0.8
+          }
+        }
+      ],
+      "formula": "Percentile bootstrap: resample n observations with replacement; report quantiles at (1 - confidence)/2 and 1 - (1 - confidence)/2.",
+      "caveats": "Requires at least two observations. This is an approximate percentile interval and may exclude the point estimate; few replicates give very coarse bounds. Replicates are capped at 1000, and replicates × sample count at 100000 to keep trace size bounded."
+    },
+    {
+      "id": "statistics.bootstrapPairedDifferenceCI",
+      "title": "Paired bootstrap difference interval",
+      "description": "Bootstrap the mean of matched first-minus-second differences.",
+      "kind": "composed",
+      "dependsOn": [
+        "statistics.pairedDifferences",
+        "statistics.bootstrapMeanCI"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "x": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 100000,
+            "items": {
+              "type": "number"
+            }
+          },
+          "y": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 100000,
+            "items": {
+              "type": "number"
+            }
+          },
+          "replicates": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "x",
+          "y",
+          "replicates",
+          "seed",
+          "confidence"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "estimate": {
+            "type": "number"
+          },
+          "lower": {
+            "type": "number"
+          },
+          "upper": {
+            "type": "number"
+          },
+          "replicates": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4294967295
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        },
+        "required": [
+          "estimate",
+          "lower",
+          "upper",
+          "replicates",
+          "seed",
+          "confidence"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "x": [
+              2,
+              2
+            ],
+            "y": [
+              1,
+              1
+            ],
+            "replicates": 5,
+            "seed": 7,
+            "confidence": 0.9
+          },
+          "expected": {
+            "estimate": 1,
+            "lower": 1,
+            "upper": 1,
+            "replicates": 5,
+            "seed": 7,
+            "confidence": 0.9
+          }
+        }
+      ],
+      "formula": "dᵢ = xᵢ - yᵢ; apply the seeded percentile bootstrap to d.",
+      "caveats": "Pairs must be matched and both groups need at least two observations. The interval targets the mean paired difference."
+    }
+  ]
+}
