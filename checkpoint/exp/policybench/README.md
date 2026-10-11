@@ -15,3 +15,9 @@ policy splits its budget between planning (simulator units) and memory (metered 
 The `.mjs` modules here are generated from the TypeScript source (D:/t-t-1, `node tools/emit-pagerouter.mjs`); the test is authored here.
 
 Headless match (from checkpoint/): `node exp/policybench/cli/match.mjs planner scout --rules clash=seeded-coin`
+
+## Flick Puck (`flick-puck/`)
+
+Second game, owner's design: a board split by a centre wall with a gap, 5 discs per side, flick any of your (slow enough) discs any time, empty your side to win. Real time is sliced into GOs of fixed physics steps; physics is integer-only (fixed point, frozen sine table, exact integer sqrt) so matches replay bit-exactly. Rules: gap, discs, flicks per GO, steps per GO, seeded aim noise, friction, grab speed. Policies: sniper, spray, patient, planner (simulator). The engine and PxC driver needed no changes. `flick-puck.test.mjs` checks replay, PxC == engine, integer state, and rule validation.
+
+Headless: `node exp/policybench/cli/flick.mjs match planner spray --rules aimNoise=4` or `... robin --seeds 5`.
