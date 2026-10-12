@@ -171,6 +171,9 @@ test('a missed shot superseded by a made one is reported, warned, and does not f
   assert.equal(pr.status, 0, pr.stdout + pr.stderr);
   assert.equal(fs.readFileSync(outputs, 'utf8'), 'made=true\nshots=2\n');
   assert.match(fs.readFileSync(summary, 'utf8'), /\*\*Missed, superseded by `right`\*\*: `called-shots\/wrong\.shot\.json`/);
-  assert.match(pr.stdout, /^::warning file=called-shots\/wrong\.shot\.json,title=Called shot missed, superseded by right: wrong::superseded by right: the output does change/m);
-  assert.match(pr.stdout, /^::notice file=called-shots\/right\.shot\.json,title=Called shot made: right/m);
+  // Property values escape ',' and ':' so a title is not cut at its first comma.
+  assert.match(pr.stdout, /^::warning file=called-shots\/wrong\.shot\.json,title=Called shot missed%2C superseded by right%3A wrong::superseded by right: the output does change/m);
+  // Made shots share one notice: GitHub keeps at most 10 annotations of a level per step.
+  assert.match(pr.stdout, /^::notice title=Called shots made%3A 1 of 2::right: 1 of 1 clauses made$/m);
+  assert.equal((pr.stdout.match(/^::notice /gm) ?? []).length, 1);
 });

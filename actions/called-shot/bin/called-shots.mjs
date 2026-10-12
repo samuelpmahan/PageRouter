@@ -151,18 +151,28 @@ function addedShots(repo, config, base) {
   });
 }
 
+// In GitHub Actions: step outputs, the job summary, and annotations, which
+// show on the pull request's checks and are readable through the checks API
+// without the logs. GitHub keeps at most 10 annotations of each level per
+// step, so every made shot goes into one summary notice, and each missed or
+// superseded shot gets its own error or warning.
 function githubOutputs(values, summary, verdicts = []) {
   if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, Object.entries(values).map(([k, v]) => `${k}=${v}\n`).join(''));
   if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary + '\n');
   if (process.env.GITHUB_ACTIONS !== 'true') return;
   const escape = s => String(s).replaceAll('%', '%25').replaceAll('\r', '%0D').replaceAll('\n', '%0A');
-  for (const { file, report, superseded } of verdicts) {
-    const made = report.results.filter(r => r.pass).map(r => r.id), missed = report.results.filter(r => !r.pass);
-    const detail = report.made
-      ? `${made.length} of ${report.results.length} clauses made: ${made.join(', ')}`
-      : [...(superseded ? [`superseded by ${superseded.by}: ${superseded.reason}`] : []), ...report.problems, ...missed.map(r => `${r.id} ${r.kind}: ${r.evidence[0]}`), ...(report.precheck && !report.precheck.pass ? ['precheck: every clause was already true on the baseline'] : [])].join('\n');
-    const [level, verdict] = report.made ? ['notice', 'made'] : superseded ? ['warning', `missed, superseded by ${superseded.by}`] : ['error', 'missed'];
-    console.log(`::${level} file=${file},title=${escape(`Called shot ${verdict}: ${report.shot}`)}::${escape(detail)}`);
+  // Workflow command properties are comma-separated key=value pairs.
+  const property = s => escape(s).replaceAll(':', '%3A').replaceAll(',', '%2C');
+  const madeShots = verdicts.filter(v => v.report.made);
+  if (madeShots.length) {
+    const lines = madeShots.map(({ report }) => `${report.shot}: ${report.results.length} of ${report.results.length} clauses made`);
+    console.log(`::notice title=${property(`Called shots made: ${madeShots.length} of ${verdicts.length}`)}::${escape(lines.join('\n'))}`);
+  }
+  for (const { file, report, superseded } of verdicts.filter(v => !v.report.made)) {
+    const missed = report.results.filter(r => !r.pass);
+    const detail = [...(superseded ? [`superseded by ${superseded.by}: ${superseded.reason}`] : []), ...report.problems, ...missed.map(r => `${r.id} ${r.kind}: ${r.evidence[0]}`), ...(report.precheck && !report.precheck.pass ? ['precheck: every clause was already true on the baseline'] : [])].join('\n');
+    const [level, verdict] = superseded ? ['warning', `missed, superseded by ${superseded.by}`] : ['error', 'missed'];
+    console.log(`::${level} file=${property(file)},title=${property(`Called shot ${verdict}: ${report.shot}`)}::${escape(detail)}`);
   }
 }
 

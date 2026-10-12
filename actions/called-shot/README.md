@@ -75,8 +75,10 @@ baseline in a detached git worktree and the working tree in place, then grades.
 ```
 
 The action grades every shot the change adds under `calledDir`, writes each
-report to the job summary, annotates each verdict on the pull request, sets
-outputs `made` and `shots`, and fails when any shot is missed. Inputs:
+report to the job summary, annotates the pull request (one notice listing
+every made shot, and an error or warning for each missed or superseded shot;
+GitHub keeps at most 10 annotations of each level per step), sets outputs
+`made` and `shots`, and fails when any shot is missed. Inputs:
 `config`, `base`, `candidate-output`, `require-shot`.
 
 When a change adds several shots, each is graded at the last commit that
