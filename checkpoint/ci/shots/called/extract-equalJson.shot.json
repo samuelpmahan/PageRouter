@@ -1,0 +1,117 @@
+{
+  "schema": "called-shot@0",
+  "id": "extract-equalJson",
+  "call": [
+    {
+      "id": "S1",
+      "text": "Source changes are exactly: exp/block5/core/composed.mjs, exp/block5/core/runtime.mjs and ci/shots/called/events.jsonl modified; exp/kernel/equal-json.mjs, exp/kernel/equal-json.test.mjs and ci/shots/called/extract-equalJson.shot.json added; nothing removed."
+    },
+    {
+      "id": "S2",
+      "text": "The top-level function equalJson moves from exp/block5/core/composed.mjs to exp/kernel/equal-json.mjs with its declaration text unchanged."
+    },
+    {
+      "id": "S3",
+      "text": "The top-level function equalJson moves from exp/block5/core/runtime.mjs to exp/kernel/equal-json.mjs with its declaration text unchanged."
+    },
+    {
+      "id": "S4",
+      "text": "In exp/block5/core/composed.mjs and exp/block5/core/runtime.mjs, every top-level statement other than imports, comments and the equalJson declaration is unchanged."
+    },
+    {
+      "id": "S5",
+      "text": "The built site modifies exactly data/catalog.json, exp/block5/core/composed.mjs and exp/block5/core/runtime.mjs, adds exactly exp/kernel/equal-json.mjs and exp/kernel/equal-json.test.mjs, and removes nothing."
+    },
+    {
+      "id": "S6",
+      "text": "In the built site's data/catalog.json, only $.release.siteBuildId changes."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "ci/shots/called/events.jsonl",
+        "exp/block5/core/composed.mjs",
+        "exp/block5/core/runtime.mjs"
+      ],
+      "added": [
+        "ci/shots/called/extract-equalJson.shot.json",
+        "exp/kernel/equal-json.mjs",
+        "exp/kernel/equal-json.test.mjs"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S2"
+      ],
+      "kind": "ast.moved",
+      "symbol": "equalJson",
+      "from": "exp/block5/core/composed.mjs",
+      "to": "exp/kernel/equal-json.mjs",
+      "body": "identical"
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S3"
+      ],
+      "kind": "ast.moved",
+      "symbol": "equalJson",
+      "from": "exp/block5/core/runtime.mjs",
+      "to": "exp/kernel/equal-json.mjs",
+      "body": "identical"
+    },
+    {
+      "id": "C4",
+      "covers": [
+        "S4"
+      ],
+      "kind": "ast.onlyImportsChanged",
+      "files": [
+        "exp/block5/core/composed.mjs",
+        "exp/block5/core/runtime.mjs"
+      ],
+      "except": [
+        "equalJson"
+      ]
+    },
+    {
+      "id": "C5",
+      "covers": [
+        "S5"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [
+        "data/catalog.json",
+        "exp/block5/core/composed.mjs",
+        "exp/block5/core/runtime.mjs"
+      ],
+      "added": [
+        "exp/kernel/equal-json.mjs",
+        "exp/kernel/equal-json.test.mjs"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C6",
+      "covers": [
+        "S6"
+      ],
+      "kind": "json.changedPathsExactly",
+      "file": "data/catalog.json",
+      "paths": [
+        "$.release.siteBuildId"
+      ]
+    }
+  ],
+  "baseline": {
+    "commit": "ee4b496f51b26c5932498e5c5edb3c605cdac1f4"
+  }
+}
