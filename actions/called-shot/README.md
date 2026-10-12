@@ -109,8 +109,8 @@ untracked ones that are not ignored.
 
 | kind | checks |
 |---|---|
-| `ast.moved` | top-level function `symbol` is declared in `from` and not `to` on the baseline, and in `to` and not `from` on the candidate; with `body: identical`, its text is unchanged |
-| `ast.onlyImportsChanged` | in each of `files`, every top-level statement other than imports, comments and `except` declarations is identical. It does not check which imports. |
+| `ast.moved` | top-level function `symbol` (a function declaration, or a `const`/`let`/`var` bound to a function or arrow) is declared in `from` and not `to` on the baseline, and in `to` and not `from` on the candidate; with `body: identical`, its text is unchanged, not counting an `export` prefix |
+| `ast.onlyImportsChanged` | in each of `files`, every top-level statement other than imports, comments and the declarations of `except` names is identical. In a `const`/`let`/`var` declaration only the excepted declarators drop out, so a change to a neighbor declared in the same statement still misses. It does not check which imports. |
 | `source.changedExactly` | the source files `modified`, `added` and `removed` are exactly these |
 | `output.changedExactly` | the output files `modified`, `added` and `removed` are exactly these (`site.changedExactly` is the older name) |
 | `json.changedPathsExactly` | in `file` (output, or source with `in: source`), exactly these JSON paths differ |

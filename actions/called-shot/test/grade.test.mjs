@@ -155,3 +155,34 @@ test('a findings clause names the exact finding that appeared', async () => {
   const called = await grade(shotFile(shot([{ rule: 'no-console-log', file: 'src/a.mjs' }])), { baseline: base, candidate: cand });
   assert.equal(called.made, true, evidence(called));
 });
+
+test('except can name a const: removing a const copy and importing it is made', async () => {
+  const base = tree({ 'v.mjs': "const $ = id => id;\nconst esc = s => String(s ?? '').replace(/&/g, '&amp;');\nexport const view = x => esc(x);\n" });
+  const cand = tree({ 'v.mjs': "import {esc} from './html.mjs';\nconst $ = id => id;\nexport const view = x => esc(x);\n" });
+  const shot = { id: 'const', sourceRoot: '.', call: [{ id: 'S1', text: 'x' }], clauses: [{ id: 'C1', covers: ['S1'], kind: 'ast.onlyImportsChanged', files: ['v.mjs'], except: ['esc'] }] };
+  const report = await gradeShot(shotFile(shot), { baseline: base, candidate: cand });
+  assert.equal(report.results[0].pass, true, evidence(report));
+});
+
+test('except drops only the named declarator: a change to its neighbor still misses', async () => {
+  const base = tree({ 'v.mjs': "const $ = id => id, esc = s => s;\nexport const view = x => esc(x);\n" });
+  const removed = tree({ 'v.mjs': "import {esc} from './html.mjs';\nconst $ = id => id;\nexport const view = x => esc(x);\n" });
+  const touched = tree({ 'v.mjs': "import {esc} from './html.mjs';\nconst $ = id => id.trim();\nexport const view = x => esc(x);\n" });
+  const shot = { id: 'neighbor', sourceRoot: '.', call: [{ id: 'S1', text: 'x' }], clauses: [{ id: 'C1', covers: ['S1'], kind: 'ast.onlyImportsChanged', files: ['v.mjs'], except: ['esc'] }] };
+  assert.equal((await gradeShot(shotFile(shot), { baseline: base, candidate: removed })).results[0].pass, true);
+  const missed = await gradeShot(shotFile(shot), { baseline: base, candidate: touched });
+  assert.equal(missed.results[0].pass, false);
+  assert.match(evidence(missed), /v\.mjs: statement 1 other than imports differs/);
+});
+
+test('ast.moved follows a const arrow function, ignoring an export prefix, and still checks the body', async () => {
+  const base = tree({ 'a.mjs': "export const esc = s => String(s ?? '');\n" });
+  const same = tree({ 'a.mjs': "import {esc} from './k.mjs';\nexport {esc};\n", 'k.mjs': "// kernel\nconst esc = s => String(s ?? '');\nexport {esc};\n" });
+  const edited = tree({ 'a.mjs': "import {esc} from './k.mjs';\nexport {esc};\n", 'k.mjs': "const esc = s => String(s);\nexport {esc};\n" });
+  const shot = { id: 'moved-const', sourceRoot: '.', call: [{ id: 'S1', text: 'x' }], clauses: [{ id: 'C1', covers: ['S1'], kind: 'ast.moved', symbol: 'esc', from: 'a.mjs', to: 'k.mjs', body: 'identical' }] };
+  const made = await gradeShot(shotFile(shot), { baseline: base, candidate: same });
+  assert.equal(made.results[0].pass, true, evidence(made));
+  assert.match(evidence(made), /esc: a\.mjs line 1 → k\.mjs line 2, text identical/);
+  const missed = await gradeShot(shotFile(shot), { baseline: base, candidate: edited });
+  assert.equal(missed.results[0].pass, false);
+});
