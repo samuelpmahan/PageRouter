@@ -123,9 +123,21 @@ function addedShots(repo, config, base) {
   return out.split('\n').filter(f => f.endsWith('.shot.json')).sort();
 }
 
-function githubOutputs(values, summary) {
+// In GitHub Actions: step outputs, the job summary, and one annotation per
+// verdict, which shows on the pull request's checks and is readable through
+// the checks API without the logs.
+function githubOutputs(values, summary, verdicts = []) {
   if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, Object.entries(values).map(([k, v]) => `${k}=${v}\n`).join(''));
   if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary + '\n');
+  if (process.env.GITHUB_ACTIONS !== 'true') return;
+  const escape = s => String(s).replaceAll('%', '%25').replaceAll('\r', '%0D').replaceAll('\n', '%0A');
+  for (const { file, report } of verdicts) {
+    const made = report.results.filter(r => r.pass).map(r => r.id), missed = report.results.filter(r => !r.pass);
+    const detail = report.made
+      ? `${made.length} of ${report.results.length} clauses made: ${made.join(', ')}`
+      : [...report.problems, ...missed.map(r => `${r.id} ${r.kind}: ${r.evidence[0]}`), ...(report.precheck && !report.precheck.pass ? ['precheck: every clause was already true on the baseline'] : [])].join('\n');
+    console.log(`::${report.made ? 'notice' : 'error'} file=${file},title=${escape(`Called shot ${report.made ? 'made' : 'missed'}: ${report.shot}`)}::${escape(detail)}`);
+  }
 }
 
 async function main() {
@@ -181,7 +193,7 @@ async function main() {
     const made = results.every(r => r.report.made);
     githubOutputs({ made: String(made), shots: results.length },
       ['### Called shots', '', ...results.map(r => `**${r.report.made ? 'Made' : 'Missed'}**: \`${r.file}\``), '',
-        ...results.map(r => '```text\n' + r.text + '\n```')].join('\n'));
+        ...results.map(r => '```text\n' + r.text + '\n```')].join('\n'), results);
     return made ? 0 : 1;
   } finally {
     builder.close();
