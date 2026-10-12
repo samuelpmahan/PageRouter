@@ -1,2 +1,3 @@
 # Preserve exact checkpoint bytes, including the few files with CRLF endings.
 checkpoint/** -text
+checkpoint/ci/shots/called/events.jsonl merge=union

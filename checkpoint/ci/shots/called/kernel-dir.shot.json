@@ -1,0 +1,84 @@
+{
+  "schema": "called-shot@0",
+  "id": "kernel-dir",
+  "sourceRoot": ".",
+  "baseline": {
+    "commit": "f550ec1af864f8470bb51c9b20765813b8593abc"
+  },
+  "call": [
+    {
+      "id": "S1",
+      "text": "Source changes are exactly: .gitattributes, checkpoint/package.json, checkpoint/scripts/assemble.mjs and checkpoint/ci/shots/called/events.jsonl modified; checkpoint/exp/kernel/README.md, checkpoint/exp/kernel/layout.test.mjs and checkpoint/ci/shots/called/kernel-dir.shot.json added; nothing removed."
+    },
+    {
+      "id": "S2",
+      "text": ".gitattributes gains exactly one line and no existing line changes."
+    },
+    {
+      "id": "S3",
+      "text": "The built site adds exactly exp/kernel/README.md and exp/kernel/layout.test.mjs, modifies only data/catalog.json, and removes nothing."
+    },
+    {
+      "id": "S4",
+      "text": "In the built site's data/catalog.json, only $.release.siteBuildId changes."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        ".gitattributes",
+        "checkpoint/ci/shots/called/events.jsonl",
+        "checkpoint/package.json",
+        "checkpoint/scripts/assemble.mjs"
+      ],
+      "added": [
+        "checkpoint/ci/shots/called/kernel-dir.shot.json",
+        "checkpoint/exp/kernel/README.md",
+        "checkpoint/exp/kernel/layout.test.mjs"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S2"
+      ],
+      "kind": "text.onlyLinesAdded",
+      "files": [
+        ".gitattributes"
+      ],
+      "lines": 1
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S3"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [
+        "data/catalog.json"
+      ],
+      "added": [
+        "exp/kernel/README.md",
+        "exp/kernel/layout.test.mjs"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C4",
+      "covers": [
+        "S4"
+      ],
+      "kind": "json.changedPathsExactly",
+      "file": "data/catalog.json",
+      "paths": [
+        "$.release.siteBuildId"
+      ]
+    }
+  ]
+}
