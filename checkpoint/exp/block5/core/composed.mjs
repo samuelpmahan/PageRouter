@@ -3,6 +3,7 @@ import { canonicalJson, cloneJson, validateJson } from './canonical.mjs';
 import { createPixelCache } from './pixel-cache.mjs';
 import { PROVIDER_IDENTITY, resolveProvider } from './providers.mjs';
 import { equalJson } from '../../kernel/equal-json.mjs';
+import { freezeTree as deepFreeze } from '../../kernel/freeze.mjs';
 
 const exactKeys = (value, expected, label) => {
   if (!value || typeof value !== 'object' || Array.isArray(value) || canonicalJson(Object.keys(value).sort()) !== canonicalJson([...expected].sort())) {
@@ -11,14 +12,6 @@ const exactKeys = (value, expected, label) => {
 };
 const preparedPlans = new WeakMap();
 const frozenProgramPlans = new WeakMap();
-
-function deepFreeze(value) {
-  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
-    for (const child of Object.values(value)) deepFreeze(child);
-    Object.freeze(value);
-  }
-  return value;
-}
 
 function isDeepFrozen(value, seen = new Set()) {
   if (!value || typeof value !== 'object') return true;

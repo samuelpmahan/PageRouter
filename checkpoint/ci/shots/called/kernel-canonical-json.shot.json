@@ -1,0 +1,138 @@
+{
+  "schema": "called-shot@0",
+  "id": "kernel-canonical-json",
+  "call": [
+    {
+      "id": "S1",
+      "text": "The top-level const plainObject and the function declarations validateJson and canonicalJson leave exp/block5/core/canonical.mjs and are declared in exp/kernel/canonical.mjs, the text of each identical to the declaration it replaces, not counting an export prefix."
+    },
+    {
+      "id": "S2",
+      "text": "In exp/kernel/canonical.mjs every top-level statement other than imports, comments and the declarations of plainObject, validateJson and canonicalJson is unchanged."
+    },
+    {
+      "id": "S3",
+      "text": "Source changes are exactly: exp/block5/core/canonical.mjs, exp/block5/core/core.test.mjs, exp/kernel/canonical.mjs, exp/kernel/canonical.test.mjs and ci/shots/called/events.jsonl modified; ci/shots/called/kernel-canonical-json.shot.json added; nothing removed."
+    },
+    {
+      "id": "S4",
+      "text": "The built site modifies exactly exp/block5/core/canonical.mjs, exp/block5/core/core.test.mjs, exp/kernel/canonical.mjs, exp/kernel/canonical.test.mjs and data/catalog.json, adds nothing and removes nothing."
+    },
+    {
+      "id": "S5",
+      "text": "In the built data/catalog.json exactly one JSON path changes: $.release.siteBuildId."
+    },
+    {
+      "id": "S6",
+      "text": "In the built data/catalog.json, $.release.siteBuildId is 566150dbbb20a759e23f9dd4d0a1d4a62faaa3d1944438e2aed3f3d9841e2224."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "ast.moved",
+      "symbol": "plainObject",
+      "from": "exp/block5/core/canonical.mjs",
+      "to": "exp/kernel/canonical.mjs",
+      "body": "identical"
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S1"
+      ],
+      "kind": "ast.moved",
+      "symbol": "validateJson",
+      "from": "exp/block5/core/canonical.mjs",
+      "to": "exp/kernel/canonical.mjs",
+      "body": "identical"
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S1"
+      ],
+      "kind": "ast.moved",
+      "symbol": "canonicalJson",
+      "from": "exp/block5/core/canonical.mjs",
+      "to": "exp/kernel/canonical.mjs",
+      "body": "identical"
+    },
+    {
+      "id": "C4",
+      "covers": [
+        "S2"
+      ],
+      "kind": "ast.onlyImportsChanged",
+      "files": [
+        "exp/kernel/canonical.mjs"
+      ],
+      "except": [
+        "plainObject",
+        "validateJson",
+        "canonicalJson"
+      ]
+    },
+    {
+      "id": "C5",
+      "covers": [
+        "S3"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "ci/shots/called/events.jsonl",
+        "exp/block5/core/canonical.mjs",
+        "exp/block5/core/core.test.mjs",
+        "exp/kernel/canonical.mjs",
+        "exp/kernel/canonical.test.mjs"
+      ],
+      "added": [
+        "ci/shots/called/kernel-canonical-json.shot.json"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C6",
+      "covers": [
+        "S4"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [
+        "data/catalog.json",
+        "exp/block5/core/canonical.mjs",
+        "exp/block5/core/core.test.mjs",
+        "exp/kernel/canonical.mjs",
+        "exp/kernel/canonical.test.mjs"
+      ],
+      "added": [],
+      "removed": []
+    },
+    {
+      "id": "C7",
+      "covers": [
+        "S5"
+      ],
+      "kind": "json.changedPathsExactly",
+      "file": "data/catalog.json",
+      "paths": [
+        "$.release.siteBuildId"
+      ]
+    },
+    {
+      "id": "C8",
+      "covers": [
+        "S6"
+      ],
+      "kind": "json.valueEquals",
+      "file": "data/catalog.json",
+      "path": "$.release.siteBuildId",
+      "value": "566150dbbb20a759e23f9dd4d0a1d4a62faaa3d1944438e2aed3f3d9841e2224"
+    }
+  ],
+  "baseline": {
+    "commit": "c8b1b021a8e2485c695dda1ad4bb95ca120dfbc3"
+  }
+}

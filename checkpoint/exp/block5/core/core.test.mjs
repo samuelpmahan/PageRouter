@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -215,16 +215,33 @@ test('grid engine source digest pins the exact preserved public rule engine copy
 
 test('provider identity changes when only a copied grid-engine lexical helper changes', async () => {
   const sourceDir = fileURLToPath(new URL('.', import.meta.url));
+  const kernelDir = fileURLToPath(new URL('../../kernel/', import.meta.url));
   const temporaryDir = mkdtempSync(join(tmpdir(), 'block5-provider-pin-'));
-  try {
+  // Each copy keeps the exp/ layout, block5/core/ beside kernel/, so
+  // canonical.mjs's import of ../../kernel/canonical.mjs resolves inside it.
+  // Kernel modules import only kernel modules, so copying every one of them
+  // closes the kernel side of the import graph.
+  const copyProviders = async (name, engineSource) => {
+    const coreCopy = join(temporaryDir, name, 'block5', 'core');
+    const kernelCopy = join(temporaryDir, name, 'kernel');
+    mkdirSync(coreCopy, { recursive: true });
+    mkdirSync(kernelCopy);
     for (const filename of ['canonical.mjs', 'world.mjs', 'providers.mjs']) {
-      writeFileSync(join(temporaryDir, filename), readFileSync(join(sourceDir, filename)));
+      writeFileSync(join(coreCopy, filename), readFileSync(join(sourceDir, filename)));
     }
+    for (const filename of readdirSync(kernelDir).filter(file => file.endsWith('.mjs') && !file.endsWith('.test.mjs'))) {
+      writeFileSync(join(kernelCopy, filename), readFileSync(join(kernelDir, filename)));
+    }
+    writeFileSync(join(coreCopy, 'grid-engine.mjs'), engineSource);
+    return import(pathToFileURL(join(coreCopy, 'providers.mjs')).href);
+  };
+  try {
     const originalEngine = readFileSync(join(sourceDir, 'grid-engine.mjs'), 'utf8');
+    const unchanged = await copyProviders('unchanged', originalEngine);
+    assert.equal(unchanged.PROVIDER_IDENTITY.implementationId, PROVIDER_IDENTITY.implementationId, 'an unedited copy must reproduce the provider identity');
     const helperOnlyEdit = originalEngine.replace("const nouns = new Set(['BABA', 'WALL', 'ROCK', 'FLAG']);", "const nouns = new Set(['BABA', 'WALL', 'ROCK', 'FLAG', 'DOOR']);");
     assert.notEqual(helperOnlyEdit, originalEngine, 'probe must change only the lexical noun helper');
-    writeFileSync(join(temporaryDir, 'grid-engine.mjs'), helperOnlyEdit);
-    const changed = await import(pathToFileURL(join(temporaryDir, 'providers.mjs')).href);
+    const changed = await copyProviders('changed', helperOnlyEdit);
 
     assert.notEqual(changed.PROVIDER_IDENTITY.implementationId, PROVIDER_IDENTITY.implementationId);
     assert.throws(() => changed.resolveProvider(changed.CALCULATIONS.gridStep, PROVIDER_IDENTITY), /identity mismatch/i);
