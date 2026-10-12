@@ -1,13 +1,7 @@
 // A read-only projection of the native AnnotationFG graph onto actual PxC Part addresses.
 // No Calculation is invoked here; callers can use the result as a preflight plan.
 
-const freeze = (value) => {
-  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
-    Object.freeze(value);
-    for (const child of Object.values(value)) freeze(child);
-  }
-  return value;
-};
+import {freezeTreeParentFirst as freeze} from '../kernel/freeze.mjs';
 
 export function deriveFGAssociations({fg, output, addresses = {}, inputAddresses = {}, pxc} = {}) {
   if (fg?.kind !== 'composed' || !fg.internalGraph || typeof output !== 'string') {

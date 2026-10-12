@@ -1,0 +1,206 @@
+{
+  "schema": "called-shot@0",
+  "id": "kernel-freeze",
+  "call": [
+    {
+      "id": "S1",
+      "text": "The function declaration freezeTree leaves exp/compression/feedback.mjs and exp/compression/graph.mjs and is declared in exp/kernel/freeze.mjs, its text identical to each removed copy."
+    },
+    {
+      "id": "S2",
+      "text": "The function declaration freeze leaves exp/atlas/capability-protocol.mjs and exp/atlas/runtime-adapter.mjs and is declared in exp/kernel/freeze.mjs, its text identical to each removed copy."
+    },
+    {
+      "id": "S3",
+      "text": "In exp/compression/feedback.mjs and exp/compression/graph.mjs every top-level statement other than imports, comments and freezeTree is unchanged."
+    },
+    {
+      "id": "S4",
+      "text": "In exp/atlas/capability-protocol.mjs and exp/atlas/runtime-adapter.mjs every top-level statement other than imports, comments and freeze is unchanged."
+    },
+    {
+      "id": "S5",
+      "text": "In exp/cooperative/annotation-fg.mjs every top-level statement other than imports, comments and freezeTree is unchanged."
+    },
+    {
+      "id": "S6",
+      "text": "Source changes are exactly: exp/atlas/capability-protocol.mjs, exp/atlas/runtime-adapter.mjs, exp/compression/feedback.mjs, exp/compression/graph.mjs, exp/cooperative/annotation-fg.mjs, exp/cooperative/fg-association.mjs and ci/shots/called/events.jsonl modified; exp/kernel/freeze.mjs, exp/kernel/freeze.test.mjs and ci/shots/called/kernel-freeze.shot.json added; nothing removed."
+    },
+    {
+      "id": "S7",
+      "text": "The built site modifies exactly exp/atlas/capability-protocol.mjs, exp/atlas/runtime-adapter.mjs, exp/compression/feedback.mjs, exp/compression/graph.mjs, exp/cooperative/annotation-fg.mjs, exp/cooperative/fg-association.mjs and data/catalog.json, adds exactly exp/kernel/freeze.mjs and exp/kernel/freeze.test.mjs, and removes nothing."
+    },
+    {
+      "id": "S8",
+      "text": "In the built data/catalog.json exactly eleven JSON paths change: $.release.siteBuildId, $.release.atlasIdentity.digest, the sha256 and bytes entries of exp/atlas/capability-protocol.mjs, exp/atlas/runtime-adapter.mjs, exp/cooperative/annotation-fg.mjs and exp/cooperative/fg-association.mjs under $.release.atlasIdentity.files, and the new key $.release.atlasIdentity.files.exp/kernel/freeze.mjs."
+    },
+    {
+      "id": "S9",
+      "text": "In the built data/catalog.json, $.release.atlasIdentity.digest is 73d7fe69ca43a07abeaaf4003758c9080e60ed0d167549583830852b3c9a3fe3."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "ast.moved",
+      "symbol": "freezeTree",
+      "from": "exp/compression/feedback.mjs",
+      "to": "exp/kernel/freeze.mjs",
+      "body": "identical"
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S1"
+      ],
+      "kind": "ast.moved",
+      "symbol": "freezeTree",
+      "from": "exp/compression/graph.mjs",
+      "to": "exp/kernel/freeze.mjs",
+      "body": "identical"
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S2"
+      ],
+      "kind": "ast.moved",
+      "symbol": "freeze",
+      "from": "exp/atlas/capability-protocol.mjs",
+      "to": "exp/kernel/freeze.mjs",
+      "body": "identical"
+    },
+    {
+      "id": "C4",
+      "covers": [
+        "S2"
+      ],
+      "kind": "ast.moved",
+      "symbol": "freeze",
+      "from": "exp/atlas/runtime-adapter.mjs",
+      "to": "exp/kernel/freeze.mjs",
+      "body": "identical"
+    },
+    {
+      "id": "C5",
+      "covers": [
+        "S3"
+      ],
+      "kind": "ast.onlyImportsChanged",
+      "files": [
+        "exp/compression/feedback.mjs",
+        "exp/compression/graph.mjs"
+      ],
+      "except": [
+        "freezeTree"
+      ]
+    },
+    {
+      "id": "C6",
+      "covers": [
+        "S4"
+      ],
+      "kind": "ast.onlyImportsChanged",
+      "files": [
+        "exp/atlas/capability-protocol.mjs",
+        "exp/atlas/runtime-adapter.mjs"
+      ],
+      "except": [
+        "freeze"
+      ]
+    },
+    {
+      "id": "C7",
+      "covers": [
+        "S5"
+      ],
+      "kind": "ast.onlyImportsChanged",
+      "files": [
+        "exp/cooperative/annotation-fg.mjs"
+      ],
+      "except": [
+        "freezeTree"
+      ]
+    },
+    {
+      "id": "C8",
+      "covers": [
+        "S6"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "ci/shots/called/events.jsonl",
+        "exp/atlas/capability-protocol.mjs",
+        "exp/atlas/runtime-adapter.mjs",
+        "exp/compression/feedback.mjs",
+        "exp/compression/graph.mjs",
+        "exp/cooperative/annotation-fg.mjs",
+        "exp/cooperative/fg-association.mjs"
+      ],
+      "added": [
+        "ci/shots/called/kernel-freeze.shot.json",
+        "exp/kernel/freeze.mjs",
+        "exp/kernel/freeze.test.mjs"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C9",
+      "covers": [
+        "S7"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [
+        "data/catalog.json",
+        "exp/atlas/capability-protocol.mjs",
+        "exp/atlas/runtime-adapter.mjs",
+        "exp/compression/feedback.mjs",
+        "exp/compression/graph.mjs",
+        "exp/cooperative/annotation-fg.mjs",
+        "exp/cooperative/fg-association.mjs"
+      ],
+      "added": [
+        "exp/kernel/freeze.mjs",
+        "exp/kernel/freeze.test.mjs"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C10",
+      "covers": [
+        "S8"
+      ],
+      "kind": "json.changedPathsExactly",
+      "file": "data/catalog.json",
+      "paths": [
+        "$.release.atlasIdentity.digest",
+        "$.release.atlasIdentity.files.exp/atlas/capability-protocol.mjs.bytes",
+        "$.release.atlasIdentity.files.exp/atlas/capability-protocol.mjs.sha256",
+        "$.release.atlasIdentity.files.exp/atlas/runtime-adapter.mjs.bytes",
+        "$.release.atlasIdentity.files.exp/atlas/runtime-adapter.mjs.sha256",
+        "$.release.atlasIdentity.files.exp/cooperative/annotation-fg.mjs.bytes",
+        "$.release.atlasIdentity.files.exp/cooperative/annotation-fg.mjs.sha256",
+        "$.release.atlasIdentity.files.exp/cooperative/fg-association.mjs.bytes",
+        "$.release.atlasIdentity.files.exp/cooperative/fg-association.mjs.sha256",
+        "$.release.atlasIdentity.files.exp/kernel/freeze.mjs",
+        "$.release.siteBuildId"
+      ]
+    },
+    {
+      "id": "C11",
+      "covers": [
+        "S9"
+      ],
+      "kind": "json.valueEquals",
+      "file": "data/catalog.json",
+      "path": "$.release.atlasIdentity.digest",
+      "value": "73d7fe69ca43a07abeaaf4003758c9080e60ed0d167549583830852b3c9a3fe3"
+    }
+  ],
+  "baseline": {
+    "commit": "ee4b496f51b26c5932498e5c5edb3c605cdac1f4"
+  }
+}
