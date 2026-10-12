@@ -19,14 +19,14 @@ const srcExpImport=/((?:\bfrom\s*|\bimport\s*\(\s*)['"])\.\.\/exp\//g;
 for(const f of siteSources.copied){const from=path.join(root,'src',f),text=/\.m?js$/.test(f)?fs.readFileSync(from,'utf8'):'';if(srcExpImport.test(text))fs.writeFileSync(path.join(dist,f),text.replace(srcExpImport,'$1./exp/'));else fs.copyFileSync(from,path.join(dist,f));srcExpImport.lastIndex=0;}
 const atlasViewSource=fs.readFileSync(path.join(root,'src/atlas-view.mjs'),'utf8');
 let builtAtlasView=atlasViewSource;
-for(const module of ['atlas-session.mjs','cross-language.mjs']){
-  const sourceImport=`'../exp/atlas/${module}'`;
-  if(builtAtlasView.split(sourceImport).length!==2)throw Error(`Unexpected Atlas runtime import mapping: ${module}`);
-  builtAtlasView=builtAtlasView.replace(sourceImport,`'./exp/atlas/${module}'`);
+for(const module of ['atlas/atlas-session.mjs','atlas/cross-language.mjs','kernel/html.mjs']){
+  const sourceImport=`'../exp/${module}'`;
+  if(builtAtlasView.split(sourceImport).length!==2)throw Error(`Unexpected atlas-view.mjs import mapping: ${module}`);
+  builtAtlasView=builtAtlasView.replace(sourceImport,`'./exp/${module}'`);
 }
 fs.writeFileSync(path.join(dist,'atlas-view.mjs'),builtAtlasView);
 let builtBlock5View=fs.readFileSync(path.join(root,'src/block5-view.mjs'),'utf8');
-for(const folder of ['block5/core','compression']){
+for(const folder of ['block5/core','compression','kernel']){
   const sourceImport=`'../exp/${folder}/`;
   if(!builtBlock5View.includes(sourceImport))throw Error(`Block5 import mapping not found: ${folder}`);
   builtBlock5View=builtBlock5View.replaceAll(sourceImport,`'./exp/${folder}/`);
