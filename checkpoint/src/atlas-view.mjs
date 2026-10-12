@@ -1,7 +1,7 @@
 import {createAtlasSession,createCapabilityProtocol,createAtlasCompositionDefinition} from '../exp/atlas/atlas-session.mjs';
 import {captureAtlasCase,runAtlasJs,compareAtlasObservations} from '../exp/atlas/cross-language.mjs';
+import {esc} from '../exp/kernel/html.mjs';
 
-const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pretty = value => JSON.stringify(value, null, 2);
 function download(name, value) {
   const url = URL.createObjectURL(new Blob([pretty(value)], {type:'application/json'}));

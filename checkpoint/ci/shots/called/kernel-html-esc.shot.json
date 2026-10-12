@@ -1,0 +1,74 @@
+{
+  "schema": "called-shot@0",
+  "id": "kernel-html-esc",
+  "call": [
+    {
+      "id": "S1",
+      "text": "Source changes under checkpoint/ are exactly: scripts/assemble.mjs, src/app.mjs, src/atlas-view.mjs, src/block5-view.mjs, src/justin-site-ide.mjs and ci/shots/called/events.jsonl modified; exp/kernel/html.mjs, exp/kernel/html.test.mjs and ci/shots/called/kernel-html-esc.shot.json added; nothing removed."
+    },
+    {
+      "id": "S2",
+      "text": "The built site modifies exactly app.mjs, atlas-view.mjs, block5-view.mjs, justin-site-ide.mjs and data/catalog.json, adds exactly exp/kernel/html.mjs and exp/kernel/html.test.mjs, and removes nothing."
+    },
+    {
+      "id": "S3",
+      "text": "In the built data/catalog.json exactly one JSON path changes: $.release.siteBuildId. $.release.buildId, $.release.evaluatorIdentity and $.release.atlasIdentity do not change."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "ci/shots/called/events.jsonl",
+        "scripts/assemble.mjs",
+        "src/app.mjs",
+        "src/atlas-view.mjs",
+        "src/block5-view.mjs",
+        "src/justin-site-ide.mjs"
+      ],
+      "added": [
+        "ci/shots/called/kernel-html-esc.shot.json",
+        "exp/kernel/html.mjs",
+        "exp/kernel/html.test.mjs"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S2"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [
+        "app.mjs",
+        "atlas-view.mjs",
+        "block5-view.mjs",
+        "data/catalog.json",
+        "justin-site-ide.mjs"
+      ],
+      "added": [
+        "exp/kernel/html.mjs",
+        "exp/kernel/html.test.mjs"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S3"
+      ],
+      "kind": "json.changedPathsExactly",
+      "file": "data/catalog.json",
+      "paths": [
+        "$.release.siteBuildId"
+      ]
+    }
+  ],
+  "baseline": {
+    "commit": "ee4b496f51b26c5932498e5c5edb3c605cdac1f4"
+  }
+}
