@@ -78,6 +78,42 @@ a predicate. It supports `role: detector` and `requires:`; rules using
 crudlint's grouping (`group`, `collapse`) are refused rather than reported
 hit by hit.
 
+## Crosscheck
+
+The grader proves the clauses. It cannot tell whether a sentence promises
+more than its clauses check, and a person believes the whole sentence once a
+shot is made. `crosscheck.mjs` asks independent checkers exactly that, in
+Atlas's cross-verification form (`exp/atlas/cross-language.mjs`):
+
+- **Case.** `batch.json`: one item per sentence with the clauses that cover
+  it, plus seeded gold items with a known gap (an uncheckable claim appended,
+  `body: identical` dropped from an `ast.moved` clause, a JSON clause pointed
+  at another path) and controls that are covered. Content-addressed `case_id`.
+  Nothing in the batch marks which items are gold; `key.json` holds that.
+- **Observations.** One file per checker, `kompozed.shots.crosscheck-observation.v1`:
+  for every item, `covered`, or `gap` with a verbatim quote of the first
+  unchecked words. A quote that is not a substring of the sentence is no answer.
+- **Comparison.** The observations are composed through a PxC FunctionalGuarantee
+  (`vendor/hh/services/pxc.mjs`) into `/crosscheck/agreement`: two of three
+  decide each item, and the first difference is named by path. `report.md`
+  shows every checker's quote; gold catch rate and control false alarms are
+  scored per checker.
+
+Checkers answer from `crosscheck/prompt.md` and the batch only, each in its
+own directory, without the key. They judge coverage, never whether a shot was
+made.
+
+```sh
+node ci/shots/crosscheck.mjs batch   DIR ci/shots/called/*.shot.json     # batch.json and key.json
+node ci/shots/crosscheck.mjs compare DIR ci/shots/called/*.shot.json     # after DIR/<checker>-<n>.json exist
+```
+
+The first run, `called/crosscheck-2026-10-12/`, used three Haiku checkers on
+the first four shots: 4 of 4 gold caught by each, 0 of 2 controls flagged, verdicts
+unanimous on all 25 items. 13 of 19 real sentences had a gap, all of them descriptive
+claims the clauses do not check (what an import says, what a workflow step
+runs, "because" explanations).
+
 ## Records
 
 `called/` holds every shot, its call event and its grade. The first two:

@@ -1,0 +1,32 @@
+{
+  "format": "kompozed.shots.crosscheck-observation.v1",
+  "checker": "haiku-2",
+  "case_id": "sha256:d953bcec0e96fd29abe95db67d7aa996574a59577f31ab4015b4fa8e9beecaa5",
+  "observables": {
+    "x09e447": { "verdict": "gap", "unchecked": "no PxCube package, snapshot or delta file changes" },
+    "x0a317b": { "verdict": "gap", "unchecked": "tells a checker to answer each item covered or gap" },
+    "x0b55df": { "verdict": "gap", "unchecked": "the build runs faster than before" },
+    "x13961d": { "verdict": "covered", "unchecked": null },
+    "x15500d": { "verdict": "gap", "unchecked": "because Bazel's inputs do not include ci/shots/" },
+    "x27675a": { "verdict": "gap", "unchecked": "added to the npm test list in package.json" },
+    "x36ea5f": { "verdict": "covered", "unchecked": null },
+    "x4c7870": { "verdict": "covered", "unchecked": null },
+    "x525d71": { "verdict": "covered", "unchecked": null },
+    "x5ba803": { "verdict": "gap", "unchecked": "runs a crudlint predicate set" },
+    "x5f966a": { "verdict": "gap", "unchecked": "builds a crosscheck batch" },
+    "x6121d6": { "verdict": "gap", "unchecked": "one step that installs ci/shots from its lock and runs its tests" },
+    "x6ed9e1": { "verdict": "gap", "unchecked": "with its body unchanged" },
+    "x73e294": { "verdict": "gap", "unchecked": "import safePath from ./paths.mjs" },
+    "x77077b": { "verdict": "gap", "unchecked": "Three Haiku checkers answer the same batch without seeing each other's answers or the gold key" },
+    "x7aa283": { "verdict": "covered", "unchecked": null },
+    "xa6138c": { "verdict": "gap", "unchecked": "because scripts/ files are hashed into that identity" },
+    "xb2f89f": { "verdict": "gap", "unchecked": "adds paths.mjs to the list of source modules it copies into the site" },
+    "xb4a49a": { "verdict": "covered", "unchecked": null },
+    "xbd987f": { "verdict": "gap", "unchecked": "import safePath from ./paths.mjs" },
+    "xc2e613": { "verdict": "gap", "unchecked": "deterministic grader" },
+    "xc6ee28": { "verdict": "gap", "unchecked": "only at $.release.siteBuildId" },
+    "xcf1b92": { "verdict": "gap", "unchecked": "stops listing src files by hand" },
+    "xe86558": { "verdict": "covered", "unchecked": null },
+    "xffeab7": { "verdict": "covered", "unchecked": null }
+  }
+}

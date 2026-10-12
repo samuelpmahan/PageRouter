@@ -1,0 +1,55 @@
+{
+  "shot": "grader-in-ci",
+  "shotSha256": "bb9a07f041a4e0362570f893dccbd047f869aaa1cdec88eac266f288ac893a65",
+  "sourceRoot": ".",
+  "problems": [],
+  "called": {
+    "at": "2026-10-12T07:33:20Z"
+  },
+  "precheck": {
+    "pass": true,
+    "clausesTrueOnBaseline": [
+      "C3"
+    ]
+  },
+  "results": [
+    {
+      "id": "C1",
+      "kind": "source.changedExactly",
+      "covers": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "pass": true,
+      "evidence": [
+        "source: modified [.github/workflows/deploy-pages.yml, checkpoint/.github/workflows/deploy-pages.yml] added [checkpoint/ci/shots/README.md, checkpoint/ci/shots/called/derive-site-copy-list.grade.json, checkpoint/ci/shots/called/derive-site-copy-list.shot.json, checkpoint/ci/shots/called/events.jsonl, checkpoint/ci/shots/called/extract-safePath.called.grade.json, checkpoint/ci/shots/called/extract-safePath.naive.grade.json, checkpoint/ci/shots/called/extract-safePath.shot.json, checkpoint/ci/shots/called/grader-in-ci.shot.json, checkpoint/ci/shots/crudlint/rule-tests/.gitkeep, checkpoint/ci/shots/crudlint/rules/.gitkeep, checkpoint/ci/shots/crudlint/sgconfig.yml, checkpoint/ci/shots/crudlint/utils/.gitkeep, checkpoint/ci/shots/crudlint.mjs, checkpoint/ci/shots/grade.mjs, checkpoint/ci/shots/package-lock.json, checkpoint/ci/shots/package.json, checkpoint/ci/shots/shoot.sh, checkpoint/ci/shots/test/grade.test.mjs] removed [none]"
+      ]
+    },
+    {
+      "id": "C2",
+      "kind": "text.onlyLinesAdded",
+      "covers": [
+        "S3"
+      ],
+      "pass": true,
+      "evidence": [
+        ".github/workflows/deploy-pages.yml: 5 lines added (candidate lines 44-48), called 5; no baseline line changed",
+        "checkpoint/.github/workflows/deploy-pages.yml: 5 lines added (candidate lines 44-48), called 5; no baseline line changed"
+      ]
+    },
+    {
+      "id": "C3",
+      "kind": "site.changedExactly",
+      "covers": [
+        "S5"
+      ],
+      "pass": true,
+      "evidence": [
+        "site: modified [none] added [none] removed [none]"
+      ]
+    }
+  ],
+  "made": true
+}
