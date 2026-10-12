@@ -1,0 +1,173 @@
+{
+  "schema": "called-shot@0",
+  "id": "extract-import-closure",
+  "call": [
+    {
+      "id": "S1",
+      "text": "Source changes are exactly: package.json, scripts/atlas-identity.mjs, scripts/evaluator-identity.mjs and ci/shots/called/events.jsonl modified; scripts/import-closure.mjs, scripts/import-closure.test.mjs and ci/shots/called/extract-import-closure.shot.json added; nothing removed."
+    },
+    {
+      "id": "S2",
+      "text": "In package.json only $.scripts.test changes, and its new value is exactly: node --test --test-concurrency=2 exp/cooperative/*.test.mjs exp/adversarial/*.test.mjs scripts/evaluator-identity.test.mjs scripts/import-closure.test.mjs scripts/hh-built-imports.test.mjs scripts/capability-lab-built.test.mjs exp/policybench/*.test.mjs exp/atlas/*.test.mjs scripts/capability-ladder-view.test.mjs scripts/site-imports.test.mjs exp/block5/*.test.mjs exp/block5/core/*.test.mjs exp/compression/*.test.mjs exp/kernel/*.test.mjs vendor/hh/src/*.test.mjs"
+    },
+    {
+      "id": "S3",
+      "text": "In scripts/atlas-identity.mjs every top-level statement other than imports, comments and the declarations of sha and atlasImplementationIdentity is identical."
+    },
+    {
+      "id": "S4",
+      "text": "In scripts/evaluator-identity.mjs every top-level statement other than imports, comments and the declarations of sha, canonical and evaluatorClosure is identical."
+    },
+    {
+      "id": "S5",
+      "text": "The built site modifies exactly data/catalog.json, adds nothing and removes nothing."
+    },
+    {
+      "id": "S6",
+      "text": "In the built site's data/catalog.json only $.release.siteBuildId changes, to 662378f0baa8e5de742431db28dee1be150ccd8d0d0ef119e267eee9856bc16b."
+    },
+    {
+      "id": "S7",
+      "text": "In the built site's data/catalog.json, $.release.evaluatorIdentity.digest is 572f02f674ac1cdf8b27664a803d4d06ac32ac16833a527f14718a33b249cdff, $.release.buildId is af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492 and $.release.atlasIdentity.digest is 73d7fe69ca43a07abeaaf4003758c9080e60ed0d167549583830852b3c9a3fe3."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "ci/shots/called/events.jsonl",
+        "package.json",
+        "scripts/atlas-identity.mjs",
+        "scripts/evaluator-identity.mjs"
+      ],
+      "added": [
+        "ci/shots/called/extract-import-closure.shot.json",
+        "scripts/import-closure.mjs",
+        "scripts/import-closure.test.mjs"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S2"
+      ],
+      "kind": "json.changedPathsExactly",
+      "in": "source",
+      "file": "package.json",
+      "paths": [
+        "$.scripts.test"
+      ]
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S2"
+      ],
+      "kind": "json.valueEquals",
+      "in": "source",
+      "file": "package.json",
+      "path": "$.scripts.test",
+      "value": "node --test --test-concurrency=2 exp/cooperative/*.test.mjs exp/adversarial/*.test.mjs scripts/evaluator-identity.test.mjs scripts/import-closure.test.mjs scripts/hh-built-imports.test.mjs scripts/capability-lab-built.test.mjs exp/policybench/*.test.mjs exp/atlas/*.test.mjs scripts/capability-ladder-view.test.mjs scripts/site-imports.test.mjs exp/block5/*.test.mjs exp/block5/core/*.test.mjs exp/compression/*.test.mjs exp/kernel/*.test.mjs vendor/hh/src/*.test.mjs"
+    },
+    {
+      "id": "C4",
+      "covers": [
+        "S3"
+      ],
+      "kind": "ast.onlyImportsChanged",
+      "files": [
+        "scripts/atlas-identity.mjs"
+      ],
+      "except": [
+        "sha",
+        "atlasImplementationIdentity"
+      ]
+    },
+    {
+      "id": "C5",
+      "covers": [
+        "S4"
+      ],
+      "kind": "ast.onlyImportsChanged",
+      "files": [
+        "scripts/evaluator-identity.mjs"
+      ],
+      "except": [
+        "sha",
+        "canonical",
+        "evaluatorClosure"
+      ]
+    },
+    {
+      "id": "C6",
+      "covers": [
+        "S5"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [
+        "data/catalog.json"
+      ],
+      "added": [],
+      "removed": []
+    },
+    {
+      "id": "C7",
+      "covers": [
+        "S6"
+      ],
+      "kind": "json.changedPathsExactly",
+      "file": "data/catalog.json",
+      "paths": [
+        "$.release.siteBuildId"
+      ]
+    },
+    {
+      "id": "C8",
+      "covers": [
+        "S6"
+      ],
+      "kind": "json.valueEquals",
+      "file": "data/catalog.json",
+      "path": "$.release.siteBuildId",
+      "value": "662378f0baa8e5de742431db28dee1be150ccd8d0d0ef119e267eee9856bc16b"
+    },
+    {
+      "id": "C9",
+      "covers": [
+        "S7"
+      ],
+      "kind": "json.valueEquals",
+      "file": "data/catalog.json",
+      "path": "$.release.evaluatorIdentity.digest",
+      "value": "572f02f674ac1cdf8b27664a803d4d06ac32ac16833a527f14718a33b249cdff"
+    },
+    {
+      "id": "C10",
+      "covers": [
+        "S7"
+      ],
+      "kind": "json.valueEquals",
+      "file": "data/catalog.json",
+      "path": "$.release.buildId",
+      "value": "af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492"
+    },
+    {
+      "id": "C11",
+      "covers": [
+        "S7"
+      ],
+      "kind": "json.valueEquals",
+      "file": "data/catalog.json",
+      "path": "$.release.atlasIdentity.digest",
+      "value": "73d7fe69ca43a07abeaaf4003758c9080e60ed0d167549583830852b3c9a3fe3"
+    }
+  ],
+  "baseline": {
+    "commit": "c8b1b021a8e2485c695dda1ad4bb95ca120dfbc3"
+  }
+}
