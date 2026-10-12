@@ -1,0 +1,65 @@
+{
+  "schema": "called-shot@0",
+  "id": "per-shot-candidate",
+  "sourceRoot": ".",
+  "baseline": {
+    "commit": "a0cd8690bdf35d63bfa84a0e059ba95420bfa60a"
+  },
+  "call": [
+    {
+      "id": "S1",
+      "text": "Source changes are exactly: actions/called-shot/README.md, actions/called-shot/bin/called-shots.mjs, actions/called-shot/test/cli.test.mjs and checkpoint/ci/shots/called/events.jsonl modified; checkpoint/ci/shots/called/per-shot-candidate.shot.json added; nothing removed."
+    },
+    {
+      "id": "S2",
+      "text": "In actions/called-shot/bin/called-shots.mjs, no top-level statement other than imports changes, except the functions addedShots and main."
+    },
+    {
+      "id": "S3",
+      "text": "The built site is byte-identical to the baseline."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "actions/called-shot/README.md",
+        "actions/called-shot/bin/called-shots.mjs",
+        "actions/called-shot/test/cli.test.mjs",
+        "checkpoint/ci/shots/called/events.jsonl"
+      ],
+      "added": [
+        "checkpoint/ci/shots/called/per-shot-candidate.shot.json"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S2"
+      ],
+      "kind": "ast.onlyImportsChanged",
+      "files": [
+        "actions/called-shot/bin/called-shots.mjs"
+      ],
+      "except": [
+        "addedShots",
+        "main"
+      ]
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S3"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [],
+      "added": [],
+      "removed": []
+    }
+  ]
+}

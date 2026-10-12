@@ -68,8 +68,14 @@ baseline in a detached git worktree and the working tree in place, then grades.
 ```
 
 The action grades every shot the change adds under `calledDir`, writes each
-report to the job summary, sets outputs `made` and `shots`, and fails when any
-shot is missed. Inputs: `config`, `base`, `candidate-output`, `require-shot`.
+report to the job summary, annotates each verdict on the pull request, sets
+outputs `made` and `shots`, and fails when any shot is missed. Inputs:
+`config`, `base`, `candidate-output`, `require-shot`.
+
+When a change adds several shots in separate commits, each is graded at the
+last commit before the next shot was added, and the last one at the head, so
+a later shot's change is never counted against an earlier one. Merge commits
+are skipped when finding where shots were added.
 
 ## Rules
 

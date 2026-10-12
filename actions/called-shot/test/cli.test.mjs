@@ -84,3 +84,31 @@ test('a pull request that adds no shot passes, unless a shot is required', () =>
   assert.equal(run(['pr', '--base', head]).status, 0);
   assert.equal(run(['pr', '--base', head, '--require-shot']).status, 1);
 });
+
+test('each shot is graded at its own commits, also under a pull request merge commit', () => {
+  const base2 = git('rev-parse', 'HEAD');
+  for (const letter of ['c', 'd']) {
+    write(`add-${letter}.json`, JSON.stringify(shot(`add-${letter}`, `src/${letter}.txt is added; the output adds ${letter}.txt and changes manifest.json.`, [
+      { kind: 'source.changedExactly', modified: [], added: [`src/${letter}.txt`], removed: [] },
+      { kind: 'output.changedExactly', modified: ['manifest.json'], added: [`${letter}.txt`], removed: [] },
+    ])));
+    assert.equal(run(['call', `add-${letter}.json`]).status, 0);
+    fs.rmSync(path.join(repo, `add-${letter}.json`));
+    write(`src/${letter}.txt`, `${letter}\n`);
+    git('add', '-A');
+    git('commit', '-q', '-m', `add ${letter}`);
+  }
+  const feature = git('rev-parse', 'HEAD');
+  // As on pull_request: HEAD is a merge whose first parent is the base.
+  git('checkout', '-q', '--detach', base2);
+  git('merge', '-q', '--no-ff', '--no-edit', feature);
+  const outputs = path.join(repo, '..', `${path.basename(repo)}-outputs2`);
+  const pr = run(['pr', '--base', base2], { GITHUB_OUTPUT: outputs });
+  assert.equal(pr.status, 0, pr.stdout + pr.stderr);
+  assert.equal(fs.readFileSync(outputs, 'utf8'), 'made=true\nshots=2\n');
+  assert.match(pr.stderr, /called-shots\/add-c\.shot\.json: graded at [0-9a-f]{12}, before the next shot was added/);
+  // Graded at HEAD instead, the first shot sees the second shot's change and misses.
+  const atHead = run(['grade', 'called-shots/add-c.shot.json']);
+  assert.equal(atHead.status, 1);
+  assert.match(atHead.stdout, /source added: happened but was not called: src\/d\.txt/);
+});

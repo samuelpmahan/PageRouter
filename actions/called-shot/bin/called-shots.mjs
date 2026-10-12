@@ -118,9 +118,28 @@ async function gradeOne(repo, config, builder, file, { base, candidate, candidat
   return { report, text: renderReport(report, shot) };
 }
 
+// Shots added since base, in the order their commits landed, each with the
+// commit to grade it at: the last commit before the next shot was added, so
+// a later shot's change is never counted against an earlier one. The last
+// shot is graded at HEAD (null).
 function addedShots(repo, config, base) {
-  const out = git(repo, ['diff', '--name-only', '--diff-filter=A', `${base}...HEAD`, '--', config.calledDir]);
-  return out.split('\n').filter(f => f.endsWith('.shot.json')).sort();
+  // --no-merges: on pull_request, HEAD is a merge whose own diff would hold every shot at once.
+  const log = git(repo, ['log', '--reverse', '--topo-order', '--no-merges', '--diff-filter=A', '--format=commit %H', '--name-only', `${base}..HEAD`, '--', config.calledDir]);
+  const added = [];
+  let commit = null;
+  for (const line of log.split('\n')) {
+    if (line.startsWith('commit ')) commit = line.slice(7);
+    else if (line.endsWith('.shot.json') && !added.some(s => s.file === line)) added.push({ file: line, commit });
+  }
+  if (!added.length) {
+    // Shots added only by a merge: grade them at HEAD.
+    const out = git(repo, ['diff', '--name-only', '--diff-filter=A', `${base}...HEAD`, '--', config.calledDir]);
+    return out.split('\n').filter(f => f.endsWith('.shot.json')).sort().map(file => ({ file, at: null }));
+  }
+  return added.map((shot, i) => {
+    const next = added.slice(i + 1).find(s => s.commit !== shot.commit);
+    return { file: shot.file, at: next ? git(repo, ['rev-parse', `${next.commit}^`]) : null };
+  });
 }
 
 // In GitHub Actions: step outputs, the job summary, and one annotation per
@@ -185,8 +204,9 @@ async function main() {
       return options['require-shot'] ? 1 : 0;
     }
     const results = [];
-    for (const file of shots) {
-      const graded = await gradeOne(repo, config, builder, path.join(repo, file), { candidateOutput: options['candidate-output'] });
+    for (const { file, at } of shots) {
+      if (at) console.error(`[called-shots] ${file}: graded at ${at.slice(0, 12)}, before the next shot was added`);
+      const graded = await gradeOne(repo, config, builder, path.join(repo, file), at ? { candidate: at } : { candidateOutput: options['candidate-output'] });
       console.log(graded.text + '\n');
       results.push({ file, ...graded });
     }
