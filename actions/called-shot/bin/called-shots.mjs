@@ -118,10 +118,11 @@ async function gradeOne(repo, config, builder, file, { base, candidate, candidat
   return { report, text: renderReport(report, shot) };
 }
 
-// Shots added since base, in the order their commits landed, each with the
-// commit to grade it at: the last commit before the next shot was added, so
-// a later shot's change is never counted against an earlier one. The last
-// shot is graded at HEAD (null).
+// Shots added since base, each with the commit to grade it at. A shot is
+// graded at the last commit that contains it and no other shot's change:
+// on a straight line, the commit before the next shot was added; with lanes
+// merged as branches, the head of its own lane. null means HEAD itself (or a
+// commit with HEAD's exact tree), so an output already built can be reused.
 function addedShots(repo, config, base) {
   // --no-merges: on pull_request, HEAD is a merge whose own diff would hold every shot at once.
   const log = git(repo, ['log', '--reverse', '--topo-order', '--no-merges', '--diff-filter=A', '--format=commit %H', '--name-only', `${base}..HEAD`, '--', config.calledDir]);
@@ -136,15 +137,17 @@ function addedShots(repo, config, base) {
     const out = git(repo, ['diff', '--name-only', '--diff-filter=A', `${base}...HEAD`, '--', config.calledDir]);
     return out.split('\n').filter(f => f.endsWith('.shot.json')).sort().map(file => ({ file, at: null }));
   }
-  return added.map((shot, i) => {
-    const next = added.slice(i + 1).find(s => s.commit !== shot.commit);
-    return { file: shot.file, at: next ? git(repo, ['rev-parse', `${next.commit}^`]) : null };
+  const contains = (ancestor, commit) => git(repo, ['merge-base', '--is-ancestor', ancestor, commit], { quiet: true }) !== null;
+  const commits = git(repo, ['rev-list', '--reverse', '--topo-order', '--no-merges', `${base}..HEAD`]).split('\n').filter(Boolean);
+  const headTree = git(repo, ['rev-parse', 'HEAD^{tree}']);
+  return added.map(shot => {
+    const others = added.filter(s => s.commit !== shot.commit && !contains(s.commit, shot.commit));
+    const own = commits.filter(c => contains(shot.commit, c) && !others.some(s => contains(s.commit, c)));
+    const at = own.at(-1) ?? shot.commit;
+    return { file: shot.file, at: git(repo, ['rev-parse', `${at}^{tree}`]) === headTree ? null : at };
   });
 }
 
-// In GitHub Actions: step outputs, the job summary, and one annotation per
-// verdict, which shows on the pull request's checks and is readable through
-// the checks API without the logs.
 function githubOutputs(values, summary, verdicts = []) {
   if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, Object.entries(values).map(([k, v]) => `${k}=${v}\n`).join(''));
   if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary + '\n');

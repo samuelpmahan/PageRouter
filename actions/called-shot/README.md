@@ -72,10 +72,12 @@ report to the job summary, annotates each verdict on the pull request, sets
 outputs `made` and `shots`, and fails when any shot is missed. Inputs:
 `config`, `base`, `candidate-output`, `require-shot`.
 
-When a change adds several shots in separate commits, each is graded at the
-last commit before the next shot was added, and the last one at the head, so
-a later shot's change is never counted against an earlier one. Merge commits
-are skipped when finding where shots were added.
+When a change adds several shots, each is graded at the last commit that
+contains it and no other shot's change: on a straight line, the commit before
+the next shot was added; with lanes merged as branches, the head of its own
+lane. A later or parallel shot's change is never counted against another
+shot. Merge commits are skipped when finding where shots were added, and a
+commit with exactly the head's tree reuses the head's output.
 
 ## Rules
 

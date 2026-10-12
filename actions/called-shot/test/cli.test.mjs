@@ -112,3 +112,41 @@ test('each shot is graded at its own commits, also under a pull request merge co
   assert.equal(atHead.status, 1);
   assert.match(atHead.stdout, /source added: happened but was not called: src\/d\.txt/);
 });
+
+test('lanes merged as branches: each shot is graded at the head of its own lane', () => {
+  const base3 = git('rev-parse', 'HEAD');
+  git('checkout', '-q', '-b', 'integration');
+  for (const letter of ['e', 'f']) {
+    git('checkout', '-q', '-b', `lane-${letter}`, base3);
+    write(`add-${letter}.json`, JSON.stringify(shot(`add-${letter}`, `src/${letter}.txt is added; the output adds ${letter}.txt and changes manifest.json.`, [
+      { kind: 'source.changedExactly', modified: [], added: [`src/${letter}.txt`], removed: [] },
+      { kind: 'output.changedExactly', modified: ['manifest.json'], added: [`${letter}.txt`], removed: [] },
+    ])));
+    assert.equal(run(['call', `add-${letter}.json`]).status, 0);
+    fs.rmSync(path.join(repo, `add-${letter}.json`));
+    write(`src/${letter}.txt`, `${letter}\n`);
+    git('add', '-A');
+    git('commit', '-q', '-m', `lane ${letter}`);
+  }
+  git('checkout', '-q', 'integration');
+  // Both lanes appended to the call log; keep both lines, as merge=union would.
+  for (const letter of ['e', 'f']) {
+    const merged = spawnSync('git', ['merge', '-q', '--no-ff', '--no-edit', `lane-${letter}`], { cwd: repo, encoding: 'utf8' });
+    if (merged.status !== 0) {
+      const lines = new Set();
+      for (const side of ['HEAD', `lane-${letter}`]) for (const l of git('show', `${side}:called-shots/events.jsonl`).split('\n')) if (l) lines.add(l);
+      write('called-shots/events.jsonl', [...lines].join('\n') + '\n');
+      git('add', '-A');
+      git('commit', '-q', '--no-edit');
+    }
+  }
+  const integration = git('rev-parse', 'HEAD');
+  git('checkout', '-q', '--detach', base3);
+  git('merge', '-q', '--no-ff', '--no-edit', integration);
+  const pr = run(['pr', '--base', base3]);
+  assert.equal(pr.status, 0, pr.stdout + pr.stderr);
+  for (const letter of ['e', 'f']) {
+    assert.match(pr.stderr, new RegExp(`add-${letter}\\.shot\\.json: graded at ${git('rev-parse', `lane-${letter}`).slice(0, 12)}`));
+    assert.match(pr.stdout, new RegExp(`MADE {2}add-${letter}`));
+  }
+});
