@@ -6,6 +6,16 @@ import { loadManifest, validateManifestShape } from './manifest.mjs';
 import { hashSources } from './hasher.mjs';
 import { findMountUses, findPersistedMountPrefixes } from './scanner.mjs';
 
+// Build clock. SOURCE_DATE_EPOCH (seconds) makes a build reproducible: every
+// timestamp it writes is that declared time instead of the wall clock.
+function buildTime() {
+  const declared = process.env.SOURCE_DATE_EPOCH;
+  if (declared === undefined || declared === '') return new Date();
+  if (!/^\d+$/.test(declared)) throw Error(`SOURCE_DATE_EPOCH must be whole seconds, got ${declared}`);
+  return new Date(Number(declared) * 1000);
+}
+const reproducible = () => Boolean(process.env.SOURCE_DATE_EPOCH);
+
 export async function hashAppSources(appDir, manifest) {
   const source = await hashSources(appDir, [manifest.outDir, '.crisp']);
   return manifest.manifestSource
@@ -151,7 +161,7 @@ export async function checkApp(appDir, { pxcPath } = {}) {
 
 export async function packageApp(appDir, { pxcPath } = {}) {
   const { manifest, sourceHash, usedMounts } = await gather(appDir, pxcPath);
-  const packagedAt = new Date().toISOString();
+  const packagedAt = buildTime().toISOString();
 
   // Compose the base cartridge first. The base packages exactly as if it were
   // a standalone THING (its own build runs, its own receipt is written into
@@ -259,7 +269,8 @@ export async function packageApp(appDir, { pxcPath } = {}) {
     build: {
       command: manifest.build,
       exitCode: build.exitCode,
-      durationMs: build.durationMs,
+      // A measurement, not a fact about the package: omitted from reproducible builds.
+      durationMs: reproducible() ? null : build.durationMs,
       timedOut: build.timedOut,
     },
     validation: {

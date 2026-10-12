@@ -1,9 +1,9 @@
 {
-  "schema": "pagerouter-frozen-baseline@1",
-  "stableDigest": "c216d9aa0e76de11b07d9cd7538f4fcd1efac74719dc129113285b3506db3c20",
+  "schema": "pagerouter-frozen-baseline@2",
+  "siteBuildId": "48b5ff2115e15e1f80d4871802b6e2ce9d3fde2114386042dfcf427ad0c1dfd0",
   "siteFiles": 829,
   "pxcubePackages": 14,
+  "sourceDateEpoch": 1791787301,
   "toolchain": { "node": "24.19.0", "bazel": "7.4.1", "os": "Linux x86_64" },
-  "evidence": "Two cold Bazel builds of the same source (separate output roots) gave different siteBuildId values but this identical stableDigest.",
-  "sourceCommit": "72ba17df7a3fa24cd197b5fab230cedf159eee0f"
+  "evidence": "Two cold Bazel builds (ext4 and tmpfs output roots, different directory orderings) produced byte-identical sites with this siteBuildId."
 }
