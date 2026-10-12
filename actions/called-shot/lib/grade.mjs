@@ -1,17 +1,16 @@
-#!/usr/bin/env node
 // Grade a called shot. Every verdict is computed, not judged, and every line
 // of evidence names a file, a line range, a statement or a JSON path.
 //
-//   node ci/shots/grade.mjs --shot S.shot.json --baseline TREE --candidate TREE
-//        [--baseline-site DIR --candidate-site DIR] [--events events.jsonl] [--json OUT]
-//
-// TREE is a repository root. The shot's sourceRoot ("checkpoint" when absent)
-// is the directory its source paths are relative to.
+// Trees are repository roots. A shot's sourceRoot (the configured default
+// when absent) is the directory its source paths are relative to. Outputs are
+// the built directories the configuration names, for the baseline and the
+// candidate. "site" in clause kinds is an older name for "output".
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
-import { runPredicates, ruleFiles, DEFAULT_CONFIG } from './crudlint.mjs';
+import { runPredicates, ruleFiles } from './crudlint.mjs';
 
 const require = createRequire(import.meta.url);
 const sha = bytes => crypto.createHash('sha256').update(bytes).digest('hex');
@@ -47,13 +46,35 @@ function findFunction(root, name) {
 const declaredName = statement => declarationOf(statement)?.childForFieldName?.('name')?.text ?? null;
 
 // ------------------------------------------------------------ files
-function listTree(root) {
+// Source files are what git counts as the repository: tracked files plus
+// untracked ones that are not ignored. Build output in an ignored directory is
+// not source. A directory outside git is walked whole, minus SKIP.
+function gitFiles(root) {
+  const inside = spawnSync('git', ['-C', root, 'rev-parse', '--is-inside-work-tree'], { encoding: 'utf8' });
+  if (inside.status !== 0 || inside.stdout.trim() !== 'true') return null;
+  const listed = spawnSync('git', ['-C', root, 'ls-files', '-z', '--cached', '--others', '--exclude-standard'], { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
+  if (listed.status !== 0) return null;
+  return [...new Set(listed.stdout.split('\0').filter(Boolean))].sort();
+}
+function listTree(root, excluded = []) {
   const out = new Map();
   if (!fs.existsSync(root)) return out;
+  const skipped = new Set(excluded.map(p => path.resolve(p)));
+  const tracked = gitFiles(root);
+  if (tracked) {
+    for (const rel of tracked) {
+      const full = path.join(root, rel);
+      if ([...skipped].some(s => path.resolve(full) === s || path.resolve(full).startsWith(s + path.sep))) continue;
+      if (fs.existsSync(full) && fs.lstatSync(full).isFile()) out.set(rel, sha(fs.readFileSync(full)));
+    }
+    return out;
+  }
   const walk = (dir, rel) => {
     for (const name of fs.readdirSync(dir).sort()) {
       if (SKIP.has(name) || name.startsWith('bazel-')) continue;
-      const full = path.join(dir, name), r = rel ? `${rel}/${name}` : name, stat = fs.lstatSync(full);
+      const full = path.join(dir, name), r = rel ? `${rel}/${name}` : name;
+      if (skipped.has(path.resolve(full))) continue;
+      const stat = fs.lstatSync(full);
       if (stat.isDirectory()) walk(full, r);
       else if (stat.isFile()) out.set(r, sha(fs.readFileSync(full)));
     }
@@ -77,7 +98,7 @@ function jsonPaths(a, b, at = '$', out = []) {
 }
 
 // ------------------------------------------------------------ clause kinds
-// Each takes (clause, sides) where sides = {base, cand, baseSite, candSite}
+// Each takes (clause, sides) where sides = {base, cand, baseOut, candOut, predicates}
 // and returns {pass, evidence: [plain sentences]}.
 function setVerdict(label, clause, actual) {
   const evidence = [];
@@ -131,13 +152,13 @@ export const CLAUSES = {
     }
     return { pass, evidence };
   },
-  'source.changedExactly'(c, s) { return setVerdict('source', c, changes(listTree(s.base), listTree(s.cand))); },
-  'site.changedExactly'(c, s) {
-    if (!s.baseSite || !s.candSite) return { pass: false, evidence: ['site clause needs --baseline-site and --candidate-site'] };
-    return setVerdict('site', c, changes(listTree(s.baseSite), listTree(s.candSite)));
+  'source.changedExactly'(c, s) { return setVerdict('source', c, changes(listTree(s.base, s.baseExclude), listTree(s.cand, s.candExclude))); },
+  'output.changedExactly'(c, s) {
+    if (!s.baseOut || !s.candOut) return { pass: false, evidence: ['an output clause needs the baseline and candidate outputs'] };
+    return setVerdict('output', c, changes(listTree(s.baseOut), listTree(s.candOut)));
   },
   'json.changedPathsExactly'(c, s) {
-    const dir = c.in === 'source' ? [s.base, s.cand] : [s.baseSite, s.candSite];
+    const dir = c.in === 'source' ? [s.base, s.cand] : [s.baseOut, s.candOut];
     const [a, b] = dir.map(d => JSON.parse(fs.readFileSync(path.join(d, c.file), 'utf8')));
     const actual = jsonPaths(a, b), { missing, unexpected } = compareSet(c.paths, actual);
     return {
@@ -145,6 +166,15 @@ export const CLAUSES = {
       evidence: [`${c.file} changed at: ${actual.join(', ') || 'nothing'}`,
         ...missing.map(p => `called but did not change: ${p}`), ...unexpected.map(p => `changed but was not called: ${p}`)],
     };
+  },
+  'json.valueEquals'(c, s) {
+    const dir = c.in === 'source' ? s.cand : s.candOut;
+    const file = path.join(dir ?? '', c.file);
+    if (!dir || !fs.existsSync(file)) return { pass: false, evidence: [`${c.file} is missing from the candidate ${c.in === 'source' ? 'tree' : 'output'}`] };
+    let value = JSON.parse(fs.readFileSync(file, 'utf8'));
+    for (const key of c.path.replace(/^\$\.?/, '').split('.').filter(Boolean)) value = value?.[key];
+    const pass = JSON.stringify(value) === JSON.stringify(c.value);
+    return { pass, evidence: [`${c.file} ${c.path} is ${JSON.stringify(value)}${pass ? '' : `, called ${JSON.stringify(c.value)}`}`] };
   },
   'text.onlyLinesAdded'(c, s) {
     const evidence = [];
@@ -163,7 +193,7 @@ export const CLAUSES = {
     return { pass, evidence };
   },
   'crudlint.findingsChangedExactly'(c, s) {
-    const configDir = c.config ? path.join(s.cand, c.config) : DEFAULT_CONFIG;
+    const configDir = c.config ? path.join(s.cand, c.config) : s.predicates;
     const rules = ruleFiles(configDir);
     const [a, b] = [s.base, s.cand].map(side => runPredicates(side, { src: c.src ?? ['src'], configDir }));
     const keysA = new Set(a.map(findingKey)), keysB = new Set(b.map(findingKey));
@@ -182,6 +212,7 @@ export const CLAUSES = {
     return { pass, evidence };
   },
 };
+CLAUSES['site.changedExactly'] = CLAUSES['output.changedExactly'];
 
 // ------------------------------------------------------------ the shot
 export function validateShot(shot) {
@@ -200,11 +231,13 @@ export function validateShot(shot) {
   return problems;
 }
 
-export async function grade(shotFile, { baseline, candidate, baselineSite, candidateSite, events }) {
+// exclude: repository-relative paths left out of source comparisons (the call records, when configured).
+export async function grade(shotFile, { baseline, candidate, baselineOutput, candidateOutput, events, defaultSourceRoot = '.', predicates = null, exclude = [] }) {
   await loadParsers();
   const bytes = fs.readFileSync(shotFile), shot = JSON.parse(bytes), shotSha = sha(bytes);
-  const root = shot.sourceRoot ?? 'checkpoint';
-  const sides = { base: path.join(baseline, root), cand: path.join(candidate, root), baseSite: baselineSite, candSite: candidateSite };
+  const root = shot.sourceRoot ?? defaultSourceRoot;
+  const sides = { base: path.join(baseline, root), cand: path.join(candidate, root), baseOut: baselineOutput, candOut: candidateOutput, predicates,
+    baseExclude: exclude.map(p => path.join(baseline, p)), candExclude: exclude.map(p => path.join(candidate, p)) };
   const report = { shot: shot.id, shotSha256: shotSha, sourceRoot: root, problems: validateShot(shot), called: null, precheck: null, results: [] };
   if (events) {
     const logged = fs.readFileSync(events, 'utf8').split('\n').filter(Boolean).map(line => JSON.parse(line))
@@ -216,7 +249,7 @@ export async function grade(shotFile, { baseline, candidate, baselineSite, candi
   report.results = shot.clauses.map(c => ({ id: c.id, kind: c.kind, covers: c.covers, ...CLAUSES[c.kind](c, sides) }));
   // The ball must not already be in the pocket: graded against itself, the
   // baseline has to miss at least one clause.
-  const self = { base: sides.base, cand: sides.base, baseSite: sides.baseSite, candSite: sides.baseSite };
+  const self = { ...sides, cand: sides.base, candOut: sides.baseOut, candExclude: sides.baseExclude };
   const alreadyMade = shot.clauses.filter(c => CLAUSES[c.kind](c, self).pass).map(c => c.id);
   report.precheck = { pass: alreadyMade.length < shot.clauses.length, clausesTrueOnBaseline: alreadyMade };
   return { ...report, made: report.precheck.pass && report.results.every(r => r.pass) };
@@ -234,18 +267,4 @@ export function renderReport(report, shot) {
     ? `  precheck: the baseline misses at least one clause (true on baseline: ${report.precheck.clausesTrueOnBaseline.join(', ') || 'none'})`
     : '  precheck failed: every clause is already true on the baseline; the ball was already in the pocket');
   return lines.join('\n');
-}
-
-if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
-  const args = process.argv.slice(2), option = name => { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : undefined; };
-  const shotFile = option('--shot');
-  if (!shotFile || !option('--baseline') || !option('--candidate')) {
-    console.error('usage: node grade.mjs --shot S --baseline TREE --candidate TREE [--baseline-site D --candidate-site D] [--events F] [--json OUT]');
-    process.exit(2);
-  }
-  const report = await grade(shotFile, { baseline: option('--baseline'), candidate: option('--candidate'),
-    baselineSite: option('--baseline-site'), candidateSite: option('--candidate-site'), events: option('--events') });
-  if (option('--json')) fs.writeFileSync(option('--json'), JSON.stringify(report, null, 2) + '\n');
-  console.log(renderReport(report, JSON.parse(fs.readFileSync(shotFile, 'utf8'))));
-  process.exit(report.made ? 0 : 1);
 }

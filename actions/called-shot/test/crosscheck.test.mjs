@@ -1,6 +1,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { buildBatch, validateAnswer, compare, score, OBSERVATION } from '../crosscheck.mjs';
+import { buildBatch, validateAnswer, compare, score, OBSERVATION } from '../lib/crosscheck.mjs';
+import { canonical } from '../lib/canonical.mjs';
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
 
 const shot = {
   id: 'mini', call: [
@@ -87,4 +91,20 @@ test('a gold quote on the same earlier gap the checker found in the unmutated se
   checker.observables[goldId] = { verdict: 'gap', unchecked: checker.observables[real].unchecked };
   const comparison = await compare(batch, [checker, oracle('b'), oracle('c')]);
   assert.equal(score(comparison, key).perChecker.a.goldPointed, 4);
+});
+
+test('canonical JSON matches the recorded crosscheck case id', () => {
+  assert.equal(canonical({ b: [1, 'x', null], a: { d: true, c: 2.5 } }), '{"a":{"c":2.5,"d":true},"b":[1,"x",null]}');
+  // Inside PageRouter, the recorded batch must still hash to its own case id.
+  const recorded = path.resolve(import.meta.dirname, '../../../checkpoint/ci/shots/called/crosscheck-2026-10-12/batch.json');
+  if (!fs.existsSync(recorded)) return;
+  const { case_id, ...payload } = JSON.parse(fs.readFileSync(recorded, 'utf8'));
+  assert.equal('sha256:' + crypto.createHash('sha256').update(canonical(payload)).digest('hex'), case_id);
+});
+
+test('the pinned PxC kernel is byte-identical to PageRouter\'s, when run inside PageRouter', () => {
+  const pinned = fs.readFileSync(path.resolve(import.meta.dirname, '../vendor/pxc.mjs'));
+  assert.equal(crypto.createHash('sha256').update(pinned).digest('hex'), '1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9');
+  const source = path.resolve(import.meta.dirname, '../../../checkpoint/vendor/hh/services/pxc.mjs');
+  if (fs.existsSync(source)) assert.ok(fs.readFileSync(source).equals(pinned));
 });

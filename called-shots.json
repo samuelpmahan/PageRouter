@@ -1,0 +1,9 @@
+{
+  "schema": "called-shots-config@1",
+  "workingDirectory": "checkpoint",
+  "build": "PAGEROUTER_BAZEL_OUTPUT_ROOT=\"$CALLED_SHOTS_SCRATCH/bazel\" bash ci/bazel/run.sh",
+  "output": "bazel-bin/site.site",
+  "defaultSourceRoot": "checkpoint",
+  "calledDir": "checkpoint/ci/shots/called",
+  "predicates": "checkpoint/ci/shots/crudlint"
+}
