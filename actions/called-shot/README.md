@@ -46,6 +46,13 @@ node <package>/bin/called-shots.mjs grade called-shots/my-change.shot.json
 node <package>/bin/called-shots.mjs pr    --base origin/main             # every shot added since main
 ```
 
+A shot that missed because the call itself was wrong stays in the record.
+Call a corrected shot with a new id, then
+`called-shots supersede <old> --by <new> --reason "<why>"` appends a
+`shot.superseded` event to the call log. `pr` still grades and reports the old
+shot, as a warning, and does not fail on it once the new shot is made in the
+same run. Only a later call can supersede.
+
 `call` records the baseline commit (HEAD unless the shot names one), copies
 the shot into `calledDir` and logs its sha256 and the time. `grade` builds the
 baseline in a detached git worktree and the working tree in place, then grades.
