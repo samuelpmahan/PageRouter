@@ -1,0 +1,64 @@
+{
+  "schema": "called-shot@0",
+  "id": "extract-flag-v2",
+  "call": [
+    {
+      "id": "S1",
+      "text": "Source changes are exactly: exp/policybench/cli/flick.mjs, exp/policybench/cli/match.mjs, exp/policybench/cli/tournament.mjs and ci/shots/called/events.jsonl modified; exp/policybench/cli/args.mjs, exp/policybench/cli-args.test.mjs, ci/shots/called/extract-flag.shot.json and ci/shots/called/extract-flag-v2.shot.json added; nothing removed."
+    },
+    {
+      "id": "S2",
+      "text": "The built site is byte-identical to the baseline site: no file in it is modified, added or removed."
+    },
+    {
+      "id": "S3",
+      "text": "The built site's data/catalog.json reports release.siteBuildId 117749fa614b7cda9b7443da0afe449220f0baadce74b10eff9aacf6074ed9ea."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "ci/shots/called/events.jsonl",
+        "exp/policybench/cli/flick.mjs",
+        "exp/policybench/cli/match.mjs",
+        "exp/policybench/cli/tournament.mjs"
+      ],
+      "added": [
+        "ci/shots/called/extract-flag-v2.shot.json",
+        "ci/shots/called/extract-flag.shot.json",
+        "exp/policybench/cli-args.test.mjs",
+        "exp/policybench/cli/args.mjs"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S2"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [],
+      "added": [],
+      "removed": []
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S3"
+      ],
+      "kind": "json.valueEquals",
+      "in": "output",
+      "file": "data/catalog.json",
+      "path": "$.release.siteBuildId",
+      "value": "117749fa614b7cda9b7443da0afe449220f0baadce74b10eff9aacf6074ed9ea"
+    }
+  ],
+  "baseline": {
+    "commit": "ee4b496f51b26c5932498e5c5edb3c605cdac1f4"
+  }
+}

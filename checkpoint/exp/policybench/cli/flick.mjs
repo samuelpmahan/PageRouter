@@ -9,10 +9,11 @@ import { runMatch, replay } from '../engine/index.mjs';
 import { runPxcMatch } from '../pxc/index.mjs';
 import { resolveConfig } from '../core/index.mjs';
 import { flickPuck, sniper, spray, patient, planner, sideOf } from '../flick-puck/index.mjs';
+import { flagReader } from './args.mjs';
 const LIB = { 'fp-sniper': sniper, 'fp-spray': spray, 'fp-patient': patient, 'fp-planner': planner };
 const SHORT = { sniper: 'fp-sniper', spray: 'fp-spray', patient: 'fp-patient', planner: 'fp-planner' };
 const args = process.argv.slice(2);
-const flag = (k, d) => { const i = args.indexOf(`--${k}`); return i >= 0 ? (args[i + 1] ?? d) : d; };
+const flag = flagReader(args);
 const rules = {};
 for (const kv of flag('rules', '').split(',').filter(Boolean)) {
     const [k, v] = kv.split('=');
