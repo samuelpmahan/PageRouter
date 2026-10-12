@@ -1,0 +1,76 @@
+{
+  "schema": "called-shot@0",
+  "id": "kernel-ledger",
+  "baseline": {
+    "commit": "6a0d88e5f645399834cff7cb82e49aed6707b213"
+  },
+  "call": [
+    {
+      "id": "S1",
+      "text": "Source changes are exactly: exp/kernel/README.md and ci/shots/called/events.jsonl modified; ci/controls/README.md, ci/controls/fetch-trusted.sh, ci/controls/harness.mjs, ci/controls/results.json and ci/shots/called/kernel-ledger.shot.json added; nothing removed."
+    },
+    {
+      "id": "S2",
+      "text": "The built site changes exactly exp/kernel/README.md and data/catalog.json, and adds or removes nothing."
+    },
+    {
+      "id": "S3",
+      "text": "In the built site's data/catalog.json, only $.release.siteBuildId changes, and it is 3e49053f58be918be95b037931797190c1a368061fe4ddbcd2f763efd1af863d."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "ci/shots/called/events.jsonl",
+        "exp/kernel/README.md"
+      ],
+      "added": [
+        "ci/controls/README.md",
+        "ci/controls/fetch-trusted.sh",
+        "ci/controls/harness.mjs",
+        "ci/controls/results.json",
+        "ci/shots/called/kernel-ledger.shot.json"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S2"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [
+        "data/catalog.json",
+        "exp/kernel/README.md"
+      ],
+      "added": [],
+      "removed": []
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S3"
+      ],
+      "kind": "json.changedPathsExactly",
+      "file": "data/catalog.json",
+      "paths": [
+        "$.release.siteBuildId"
+      ]
+    },
+    {
+      "id": "C4",
+      "covers": [
+        "S3"
+      ],
+      "kind": "json.valueEquals",
+      "file": "data/catalog.json",
+      "path": "$.release.siteBuildId",
+      "value": "3e49053f58be918be95b037931797190c1a368061fe4ddbcd2f763efd1af863d"
+    }
+  ]
+}
