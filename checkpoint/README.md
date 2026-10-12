@@ -44,8 +44,7 @@ requests without deploying, and deploys successful main builds to GitHub Pages.
 It detects this `checkpoint/` layout and a future root `package.json` layout.
 When moving the checkpoint contents to root, keep its Bazel files, `ci/`,
 `.nvmrc`, `.gitignore`, and mirrored `.github/workflows/deploy-pages.yml` together.
-The split compiled transport remains for separate later cleanup; Actions no
-longer consumes it. The source archive manifest records the original import,
+The old split compiled transport was removed from the repository root. The source archive manifest records the original import,
 not the current edited source identity; the build receipt records current inputs.
 
 The existing npm scripts remain available for manual development. Browser smoke

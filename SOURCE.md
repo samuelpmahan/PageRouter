@@ -18,9 +18,9 @@ See [build instructions](checkpoint/README.md). The checkpoint is candidate 0.0.
 it does not claim human acceptance.
 
 The root Pages workflow now builds source with Bazel, validates pull requests,
-and deploys successful main builds. `artifact.json`, `deploy-materialize.py` and
-`compiled-artifact.part*` remain as historical transport for separate later
-cleanup; they are no longer deployment inputs. Later application experiments
+and deploys successful main builds. The old split compiled transport
+(`artifact.json`, `deploy-materialize.py`, `compiled-artifact.part*`) was removed;
+it remains in git history before the cleanup commit. Later application experiments
 on `parallel-compressing-bootstrap` are not imported by this build change.
 
 The original archive manifest describes imported bytes. Current checked-out

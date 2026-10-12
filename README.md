@@ -25,5 +25,5 @@ bash ci/bazel/run.sh
 The fresh site is `checkpoint/bazel-bin/site.site`; source inputs, output hashes
 and successful build checks are recorded beside it. [Build details](checkpoint/README.md).
 GitHub Actions uses the same target on pull requests and deploys successful main
-builds. The split compiled artifact is retained for later cleanup and is no longer
-the deployment input. The workflow also supports moving the checkpoint to root.
+builds. The workflow also supports moving the checkpoint to root.
+Agents work from a frozen baseline tag: [freeze and verify](checkpoint/ci/freeze/README.md).
