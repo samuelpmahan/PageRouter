@@ -1,0 +1,67 @@
+{
+  "schema": "called-shot@0",
+  "id": "kernel-canonical-lax",
+  "call": [
+    {
+      "id": "S1",
+      "text": "Source changes are exactly: src/compiled-patch.mjs and ci/shots/called/events.jsonl modified; exp/kernel/canonical.mjs, exp/kernel/canonical.test.mjs and ci/shots/called/kernel-canonical-lax.shot.json added; nothing removed."
+    },
+    {
+      "id": "S2",
+      "text": "The built site modifies exactly compiled-patch.mjs and data/catalog.json, adds exactly exp/kernel/canonical.mjs and exp/kernel/canonical.test.mjs, and removes nothing; every snapshot, delta and target file under data/ other than catalog.json is byte-identical."
+    },
+    {
+      "id": "S3",
+      "text": "In the built site's data/catalog.json only $.release.siteBuildId changes; every project snapshot digest and the HH known target digest stay the same."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "ci/shots/called/events.jsonl",
+        "src/compiled-patch.mjs"
+      ],
+      "added": [
+        "ci/shots/called/kernel-canonical-lax.shot.json",
+        "exp/kernel/canonical.mjs",
+        "exp/kernel/canonical.test.mjs"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S2"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [
+        "compiled-patch.mjs",
+        "data/catalog.json"
+      ],
+      "added": [
+        "exp/kernel/canonical.mjs",
+        "exp/kernel/canonical.test.mjs"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S3"
+      ],
+      "kind": "json.changedPathsExactly",
+      "file": "data/catalog.json",
+      "paths": [
+        "$.release.siteBuildId"
+      ]
+    }
+  ],
+  "baseline": {
+    "commit": "ee4b496f51b26c5932498e5c5edb3c605cdac1f4"
+  }
+}

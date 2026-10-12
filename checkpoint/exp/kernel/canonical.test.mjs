@@ -1,0 +1,59 @@
+import {test} from 'node:test';
+import assert from 'node:assert/strict';
+import {canonicalLax} from './canonical.mjs';
+
+// JSON data: RFC 8785 text.
+const data = [
+  [null, 'null'], [true, 'true'], [false, 'false'], [0, '0'], [-0, '0'], [1e21, '1e+21'], [1e-7, '1e-7'],
+  [0.1 + 0.2, '0.30000000000000004'], [-1.5, '-1.5'], ['', '""'], ['a"b\\c\n\u0001', '"a\\"b\\\\c\\n\\u0001"'],
+  ['€😀', '"€😀"'], [[], '[]'], [{}, '{}'], [[1, [2, [3]]], '[1,[2,[3]]]'],
+  [{b: 1, a: [true, null], c: {z: '', y: {}}}, '{"a":[true,null],"b":1,"c":{"y":{},"z":""}}'],
+  // Keys sort by UTF-16 code units, not by code point or locale.
+  [{'😀': 1, 'ﬁ': 2, 'b': 3, 'B': 4, '10': 5, '9': 6}, '{"10":5,"9":6,"B":4,"b":3,"😀":1,"ﬁ":2}'],
+  [Object.assign(Object.create(null), {b: 2, a: 1}), '{"a":1,"b":2}'],
+];
+
+test('canonicalLax writes RFC 8785 canonical text for JSON data', () => {
+  for (const [value, text] of data) assert.equal(canonicalLax(value), text);
+});
+
+test('canonical text parses back to equal data and is a fixed point', () => {
+  for (const [value, text] of data) {
+    assert.deepEqual(JSON.parse(text), JSON.parse(JSON.stringify(value)));
+    assert.equal(canonicalLax(JSON.parse(text)), text);
+  }
+});
+
+// Current behavior on values that are not JSON data. Each line is pinned on
+// purpose: changing one changes snapshot digests and the site build identity,
+// so it must be a called change, not a side effect.
+test('canonicalLax pins its current behavior on values that are not JSON data', () => {
+  const cycle = {}; cycle.self = cycle;
+  const cases = [
+    ['[undefined] and [] collide', [undefined], '[]'],
+    ['[] itself', [], '[]'],
+    ['undefined between elements leaves an empty slot', [1, undefined, 2], '[1,,2]'],
+    ['a sparse array keeps its hole', [, 1], '[,1]'],
+    ['a function element leaves an empty slot', [() => 1], '[]'],
+    ['NaN becomes null', NaN, 'null'],
+    ['Infinity becomes null', Infinity, 'null'],
+    ['-Infinity becomes null', -Infinity, 'null'],
+    ['NaN inside an object becomes null', {a: NaN}, '{"a":null}'],
+    ['{a:undefined} writes the word undefined (not JSON)', {a: undefined}, '{"a":undefined}'],
+    ['a function property writes the word undefined', {f() {}}, '{"f":undefined}'],
+    ['toJSON is not called', {toJSON: () => 'x'}, '{"toJSON":undefined}'],
+    ['Date has no own keys', new Date(0), '{}'],
+    ['Map has no own keys', new Map([[1, 2]]), '{}'],
+    ['Set has no own keys', new Set([1]), '{}'],
+    ['a boxed number has no own keys', Object(1), '{}'],
+    ['a class instance writes its own keys', new (class P { constructor() { this.a = 1; } })(), '{"a":1}'],
+    ['inherited keys are skipped', Object.assign(Object.create({inherited: 1}), {own: 2}), '{"own":2}'],
+    ['a lone surrogate is escaped, not rejected', {'\ud800': '\udc00'}, '{"\\ud800":"\\udc00"}'],
+  ];
+  for (const [name, value, text] of cases) assert.equal(canonicalLax(value), text, name);
+  assert.equal(canonicalLax(undefined), undefined, 'undefined gives undefined, not a string');
+  assert.equal(canonicalLax(() => 1), undefined, 'a function gives undefined');
+  assert.equal(canonicalLax(Symbol('s')), undefined, 'a Symbol gives undefined');
+  assert.throws(() => canonicalLax(1n), TypeError, 'BigInt throws from JSON.stringify');
+  assert.throws(() => canonicalLax(cycle), RangeError, 'a cycle overflows the stack');
+});
