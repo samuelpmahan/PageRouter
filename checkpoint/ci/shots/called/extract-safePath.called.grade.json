@@ -1,0 +1,77 @@
+{
+  "shot": "extract-safePath",
+  "shotSha256": "da3e0027cca9a5abc56aa1c7cb266b3309cdc8ee201c8e76014162b981cf3e82",
+  "sourceRoot": "checkpoint",
+  "problems": [],
+  "called": {
+    "at": "2026-10-12T07:10:56Z"
+  },
+  "precheck": {
+    "pass": true,
+    "clausesTrueOnBaseline": [
+      "C2"
+    ]
+  },
+  "results": [
+    {
+      "id": "C1",
+      "kind": "ast.moved",
+      "covers": [
+        "S1"
+      ],
+      "pass": true,
+      "evidence": [
+        "safePath: src/compiled-patch.mjs lines 14-17 → src/paths.mjs lines 2-5, text identical (sha256 496d786b3ba0)"
+      ]
+    },
+    {
+      "id": "C2",
+      "kind": "ast.onlyImportsChanged",
+      "covers": [
+        "S2"
+      ],
+      "pass": true,
+      "evidence": [
+        "src/compiled-patch.mjs: 18 other statements identical; imports +[import {safePath} from './paths.mjs';]",
+        "src/project-router.mjs: 6 other statements identical; imports −[import {safePath} from './compiled-patch.mjs';] +[import {safePath} from './paths.mjs';]",
+        "src/static-compiler.mjs: 1 other statements identical; imports −[import {fromBase64,safePath} from './compiled-patch.mjs';] +[import {fromBase64} from './compiled-patch.mjs';] +[import {safePath} from './paths.mjs';]"
+      ]
+    },
+    {
+      "id": "C3",
+      "kind": "source.changedExactly",
+      "covers": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "pass": true,
+      "evidence": [
+        "source: modified [scripts/assemble.mjs, src/compiled-patch.mjs, src/project-router.mjs, src/static-compiler.mjs] added [src/paths.mjs] removed [none]"
+      ]
+    },
+    {
+      "id": "C4",
+      "kind": "site.changedExactly",
+      "covers": [
+        "S4"
+      ],
+      "pass": true,
+      "evidence": [
+        "site: modified [compiled-patch.mjs, data/catalog.json, project-router.mjs, static-compiler.mjs] added [paths.mjs] removed [none]"
+      ]
+    },
+    {
+      "id": "C5",
+      "kind": "json.changedPathsExactly",
+      "covers": [
+        "S5"
+      ],
+      "pass": true,
+      "evidence": [
+        "data/catalog.json changed at: $.release.siteBuildId"
+      ]
+    }
+  ],
+  "made": true
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "called-shot@0",
+  "id": "derive-site-copy-list",
+  "baseline": { "commit": "7d0f607", "siteBuildId": "48b5ff2115e15e1f80d4871802b6e2ce9d3fde2114386042dfcf427ad0c1dfd0" },
+  "call": [
+    { "id": "S1", "text": "scripts/assemble.mjs stops listing src files by hand; a new scripts/site-closure.mjs computes them by following index.html references and relative module imports from index.html and sw.js, and returns exactly the ten files the list named." },
+    { "id": "S2", "text": "A new scripts/site-imports.test.mjs, added to the npm test list in package.json, fails the build if any relative import in the built site does not resolve to a file." },
+    { "id": "S3", "text": "Source changes are exactly those four files: assemble.mjs and package.json modified, site-closure.mjs and site-imports.test.mjs added." },
+    { "id": "S4", "text": "The built site changes in exactly one file, data/catalog.json, and only at $.release.siteBuildId, because scripts/ files are hashed into that identity." }
+  ],
+  "clauses": [
+    { "id": "C1", "covers": ["S1", "S2", "S3"], "kind": "source.changedExactly", "modified": ["package.json", "scripts/assemble.mjs"], "added": ["scripts/site-closure.mjs", "scripts/site-imports.test.mjs"], "removed": [] },
+    { "id": "C2", "covers": ["S4"], "kind": "site.changedExactly", "modified": ["data/catalog.json"], "added": [], "removed": [] },
+    { "id": "C3", "covers": ["S4"], "kind": "json.changedPathsExactly", "file": "data/catalog.json", "paths": ["$.release.siteBuildId"] }
+  ]
+}
