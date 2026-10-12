@@ -1,13 +1,13 @@
 import {Part,PxC} from '../../vendor/hh/services/pxc.mjs';
 import {AtlasRuntime,preflightRecipe} from './runtime-adapter.mjs';
 import {canonical,clone} from './calculations.mjs';
+import {freeze} from '../kernel/freeze.mjs';
 
 const FORMAT='kompozed.atlas.recipe.v1';
 const IMPLEMENTATION='exp/atlas/capability-protocol.mjs';
 const RUNGS=['parse','validate','interpret','execute'];
 const PREVIOUS={validate:'parse',interpret:'validate',execute:'interpret'};
 const IMPLEMENTATION_INPUTS={source:'/protocol/implementations/source',protocol:'/protocol/implementations/protocol',kernel:'/protocol/implementations/kernel',domain:'/protocol/implementations/domain'};
-function freeze(value){if(value&&typeof value==='object'){Object.values(value).forEach(freeze);Object.freeze(value);}return value;}
 function plain(value){return value!==null&&typeof value==='object'&&!Array.isArray(value)&&[Object.prototype,null].includes(Object.getPrototypeOf(value));}
 // Accept only lossless finite JSON data. In particular, never invoke caller accessors.
 function finiteCopy(value,seen=new Set()){
