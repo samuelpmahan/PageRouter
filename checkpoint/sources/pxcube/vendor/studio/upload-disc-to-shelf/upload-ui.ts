@@ -176,15 +176,17 @@ function suggestPlastics() {
   const seed = experience.seedAt(input('seed').value);
   const guide = plasticGuides[seed.manufacturer] ?? { values: [], source: '' };
   const preferred = input('plastic').value;
-  const unavailable = guide.values.length === 0;
-  input('plastic').replaceChildren(...['', ...guide.values].map(value => { const option = document.createElement('option'); option.value = value; option.textContent = value || (unavailable ? `Plastics not loaded for ${seed.manufacturer}` : 'Choose plastic'); return option; }));
-  input('plastic').value = guide.values.includes(preferred) ? preferred : '';
-  input('plastic').disabled = unavailable;
+  // A guide is a suggestion, not a gate (ported from DiscStudio 6.5.x): a disc from a manufacturer outside the small
+  // guide can still be saved, with plastic left unspecified or recorded as an explicit unknown blend.
+  const choices = ['', ...guide.values.filter(value => value !== 'Unknown / not listed'), 'Unknown / not listed'];
+  input('plastic').replaceChildren(...choices.map(value => { const option = document.createElement('option'); option.value = value; option.textContent = value || 'Not specified'; return option; }));
+  input('plastic').value = choices.includes(preferred) ? preferred : '';
+  input('plastic').disabled = false;
   updateSaveState();
   const link = $('plastic-source') as HTMLAnchorElement; link.href = guide.source; link.textContent = `${seed.manufacturer} plastic guide`; link.hidden = !guide.source;
 }
 function updateSaveState() {
- input('save').disabled = photoBusy || input('plastic').disabled || !input('seed').value || !input('plastic').value;
+ input('save').disabled = photoBusy || input('plastic').disabled || !input('seed').value;
 }
 ['change', 'input'].forEach(event => input('plastic').addEventListener(event, updateSaveState));
 input('nickname').addEventListener('input', () => { nicknameDirty = input('nickname').value !== autoNickname; });
