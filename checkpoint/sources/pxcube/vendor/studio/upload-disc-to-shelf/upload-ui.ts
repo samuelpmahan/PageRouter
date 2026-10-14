@@ -165,9 +165,11 @@ function preview() {
 }
 $('composer').addEventListener('input', event => { const id=(event.target as HTMLElement).id; if (event.target !== $('depiction-choice') && !finishIds.includes(id)) preview(); });
 function suggestPlastics() {
+  const list = $('plastic-options');
   if (!input('seed').value) {
-   input('plastic').replaceChildren(new Option('Choose a mold first', ''));
+   list.replaceChildren();
    input('plastic').value = '';
+   input('plastic').placeholder = 'Choose a mold first';
    input('plastic').disabled = true;
    input('save').disabled = true;
    ($('plastic-source') as HTMLAnchorElement).hidden = true;
@@ -175,16 +177,21 @@ function suggestPlastics() {
   }
   const seed = experience.seedAt(input('seed').value);
   const guide = plasticGuides[seed.manufacturer] ?? { values: [], source: '' };
-  const preferred = input('plastic').value;
-  const unavailable = guide.values.length === 0;
-  input('plastic').replaceChildren(...['', ...guide.values].map(value => { const option = document.createElement('option'); option.value = value; option.textContent = value || (unavailable ? `Plastics not loaded for ${seed.manufacturer}` : 'Choose plastic'); return option; }));
-  input('plastic').value = guide.values.includes(preferred) ? preferred : '';
-  input('plastic').disabled = unavailable;
+  // The plastic box is free text (as in DiscStudio 6.6.0): whatever the player types is kept and saved. The
+  // manufacturer's guide only fills the suggestions. A suggestion from a different manufacturer's guide is cleared
+  // when the mold changes; anything typed by hand stays.
+  const choices = [...guide.values.filter(value => value !== 'Unknown / not listed'), 'Unknown / not listed'];
+  list.replaceChildren(...choices.map(value => new Option(value, value)));
+  const preferred = input('plastic').value.trim();
+  const fromAnotherGuide = Object.values(plasticGuides).some(other => other.values.includes(preferred)) && !choices.includes(preferred);
+  if (fromAnotherGuide) input('plastic').value = '';
+  input('plastic').placeholder = guide.values.length ? `${seed.manufacturer} plastic, or type your own` : 'Type the plastic (optional)';
+  input('plastic').disabled = false;
   updateSaveState();
   const link = $('plastic-source') as HTMLAnchorElement; link.href = guide.source; link.textContent = `${seed.manufacturer} plastic guide`; link.hidden = !guide.source;
 }
 function updateSaveState() {
- input('save').disabled = photoBusy || input('plastic').disabled || !input('seed').value || !input('plastic').value;
+ input('save').disabled = photoBusy || input('plastic').disabled || !input('seed').value;
 }
 ['change', 'input'].forEach(event => input('plastic').addEventListener(event, updateSaveState));
 input('nickname').addEventListener('input', () => { nicknameDirty = input('nickname').value !== autoNickname; });

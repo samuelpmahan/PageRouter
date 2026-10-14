@@ -1,6 +1,38 @@
 {
   "repository": "PnC (local integration repository)",
   "commit": "6f7937bc1eebd22bf3135f50c9edf714b122902a",
+  "localChanges": [
+    {
+      "file": "upload-disc-to-shelf/upload-ui.ts",
+      "from": "cfb4f52c7eab8c66a7868556266f54d278c7da1b5fc4eca5345cdce99856f6dc",
+      "to": "948928e112dc2a5f295a75f9b2f649ff52972d200b682b5994440cbfc1e8964a",
+      "reason": "Plastic is optional (ported from DiscStudio 6.5.x): every manufacturer offers Not specified and Unknown / not listed, and Save no longer requires a plastic, so molds outside the three-manufacturer plastic guide can be saved."
+    },
+    {
+      "file": "upload-disc-to-shelf/index.html",
+      "from": "85031a31a8bdc9b5e1a32eba39e10da6286d7aff6e0d2047bbf694ee989d171b",
+      "to": "3e552e12126b8cb58517087f3639d1a4e7a4fbc6de86816b39747a1fcfb2fd15",
+      "reason": "The plastic select drops its required attribute and reads 'Plastic optional' / 'Not specified', as in DiscStudio 6.5.x; with required, the browser blocked Save with 'Please select an item in the list' even after Save was enabled."
+    },
+    {
+      "file": "upload-disc-to-shelf/upload-ui.ts",
+      "from": "948928e112dc2a5f295a75f9b2f649ff52972d200b682b5994440cbfc1e8964a",
+      "to": "3dbdaf66a7845d926802ce930122e5a9e59d53e3e9d2954235364d34e11f53ab",
+      "reason": "Plastic is free text with suggestions (as in DiscStudio 6.6.0): whatever is typed is kept; the guide fills a datalist."
+    },
+    {
+      "file": "upload-disc-to-shelf/index.html",
+      "from": "3e552e12126b8cb58517087f3639d1a4e7a4fbc6de86816b39747a1fcfb2fd15",
+      "to": "660e9d6a6ee17740e46cd0e503860ac4e820a7b81c99e621c8beabe2ff69c6dc",
+      "reason": "The plastic select becomes a text input with a datalist of suggestions."
+    },
+    {
+      "file": "upload-disc-to-shelf/plastics.ts",
+      "from": "7fdb6fe8fa1b0ecf57eb2e4b4c9e2471f53edb323c4ffc5ee388bf9d0c5cc004",
+      "to": "8f48b1e5be6c2e09e9444c4c5fc9a4fe2bb171d0d15d0a0bbd819cac05dcb3df",
+      "reason": "Plastic suggestions for all 42 catalog manufacturers (318 plastics), each with its source URL and sourceKind, retrieved 2026-10-13; byte-identical to DiscStudio 6.6.0's plastics.ts."
+    }
+  ],
   "files": {
     "part-first-kernel/src/inspect.mjs": "54a140e605934104e1123fc5c5df54c04b20d80b925bcb72e867e94b47de2bc8",
     "part-first-kernel/src/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
@@ -32,7 +64,7 @@
     "upload-disc-to-shelf/experiences.test.ts": "2ec2a70afc11b725fa209b0e69806ec4df35a77010439d4fa43a0d9b68c64670",
     "upload-disc-to-shelf/experiences.ts": "b54a20fa4d8a124b083b422db8884a6178960e5a7ce1d449514d21fe86586364",
     "upload-disc-to-shelf/import-integration.test.ts": "22cd045c7fe69fd7d61d170c8d682363718321eca618c8689341c72f5c047120",
-    "upload-disc-to-shelf/index.html": "85031a31a8bdc9b5e1a32eba39e10da6286d7aff6e0d2047bbf694ee989d171b",
+    "upload-disc-to-shelf/index.html": "660e9d6a6ee17740e46cd0e503860ac4e820a7b81c99e621c8beabe2ff69c6dc",
     "upload-disc-to-shelf/legacy-archive.test.ts": "62053ca074ee1ea8d5f69cc8235c86ef986b4507fde5c031352c3a3abf6294e9",
     "upload-disc-to-shelf/model.test.ts": "6271071ccf82492fd0a00b872200597ea7ec565a559d9587b5040f128903a280",
     "upload-disc-to-shelf/model.ts": "e15654106b19055e5ff05d77fd22a31d66592c256298a0b934e0ac4a535ded98",
@@ -47,7 +79,7 @@
     "upload-disc-to-shelf/persistence.test.ts": "6328fec0b735615eceb245208e2af6258322c7c0515233a8940a18caf5da14df",
     "upload-disc-to-shelf/persistence.ts": "266cb6aa4fae9659eb32dbb6028892eff7ac5a8721017a7cf9aa69f78a635f72",
     "upload-disc-to-shelf/persistent-experience.ts": "a3feab21bab2ef2d06e06795ba45ed895d948a20e7bc374c95c8456c1dafacea",
-    "upload-disc-to-shelf/plastics.ts": "7fdb6fe8fa1b0ecf57eb2e4b4c9e2471f53edb323c4ffc5ee388bf9d0c5cc004",
+    "upload-disc-to-shelf/plastics.ts": "8f48b1e5be6c2e09e9444c4c5fc9a4fe2bb171d0d15d0a0bbd819cac05dcb3df",
     "upload-disc-to-shelf/sandbox-cases.test.ts": "ba337fcce0015530cafa91ad075347e3e54099bbc33da6f0176d1ef31e24ad38",
     "upload-disc-to-shelf/sandbox-cases.ts": "65867ec56e299134363ecc878fb3e7d49ca88a250c9f4782edaec58729a1f77e",
     "upload-disc-to-shelf/sandbox-ui.ts": "4b662c33b9f7781c0359c2b999a6904d9267d9278987e00af32a039109a4780b",
@@ -56,7 +88,7 @@
     "upload-disc-to-shelf/shelf-ui.ts": "c45cff922c4c191e127bb793b3de7ea9905bcbfb56f5d8c788c4fc77948d5acc",
     "upload-disc-to-shelf/shelf.test.ts": "d277bf1a19f1929ce45939d082b20020a59310bf71e9e10dddd3fc5ad2ed7ad9",
     "upload-disc-to-shelf/style.css": "7ebfbf2d6d28b0feac11e85c936242f08f06bbf3bbea40e10d36bd8e3353dcc7",
-    "upload-disc-to-shelf/upload-ui.ts": "cfb4f52c7eab8c66a7868556266f54d278c7da1b5fc4eca5345cdce99856f6dc",
+    "upload-disc-to-shelf/upload-ui.ts": "3dbdaf66a7845d926802ce930122e5a9e59d53e3e9d2954235364d34e11f53ab",
     "upload-disc-to-shelf/vendor/painter/core.mjs": "c0fc0bdc37c3c5ad420f736ca8f4bb082b150fddd388cd4e35fa52e45538fff4",
     "upload-disc-to-shelf/vendor/painter/families/botanical.mjs": "b66c179e84956b1d300bbe66ef8b291d0a556c5cc8373424e1bcaafcc753b786",
     "upload-disc-to-shelf/vendor/painter/families/cartography.mjs": "46b5fe9b45d141c881b9930e633c3b8b8e2596f23276349e5abaa55e810c4baa",
