@@ -1,0 +1,825 @@
+{
+ "17f2c532480c8b101f51b34302d9ba2515c94d9ff3928603bd2b1700d13dadfd": {
+  "name": "servo-01-original",
+  "v3Status": "accepted",
+  "abstainReasons": [],
+  "proposalStatus": "MAYBE",
+  "proposalEllipse": {
+   "centerX": 574.336656901445,
+   "centerY": 766.0386054141975,
+   "radiusX": 507.4219890768258,
+   "radiusY": 484.8371126117827,
+   "axisAngle": -1.1969619380149803
+  },
+  "diagnostic": null,
+  "refinement": "MAYBE",
+  "refinementReason": "paired-rim-evidence-refined-review-only",
+  "ellipse": {
+   "centerX": 580.3371917868928,
+   "centerY": 789.0791455663658,
+   "radiusX": 519.4783323732713,
+   "radiusY": 509.11812749174254,
+   "axisAngle": -1.1969619380149803
+  },
+  "ms": 7040
+ },
+ "9c5217888e5c370be2eee85744eeda68e147eadd5d8c3ea7695f0c2bc00adb62": {
+  "name": "servo-02-landscape",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 683.7220954013145,
+   "centerY": 595.6010607576367,
+   "radiusX": 620.3694638805683,
+   "radiusY": 554.642601256289,
+   "axisAngle": 0.005703073089349253
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 5009
+ },
+ "74c44a20e07ee507af3d130fa8386dc8041f141698d0f2cba3a6b5201e9817ae": {
+  "name": "servo-03-low-res",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 239.4135130350954,
+   "centerY": 320.3447553569112,
+   "radiusX": 219.61968505842614,
+   "radiusY": 215.53862368191886,
+   "axisAngle": -1.3478612918740724
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 4554
+ },
+ "fa7f7b294cd86c7c5c72e41dc0518b673177a8dbbdebd7e6d7dd2b7a26020f44": {
+  "name": "servo-04-off-center",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px",
+   "low_exact_contour_fraction"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 577.518116626103,
+   "centerY": 769.4855042996165,
+   "radiusX": 661.7918172791325,
+   "radiusY": 519.7809211341528,
+   "axisAngle": 1.5701301883787426
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 2880
+ },
+ "9a877dede751e1067aabc7b0e6e25f0ab473547220ed47ba2ae30d3a30ed1634": {
+  "name": "servo-05-tight",
+  "v3Status": "accepted",
+  "abstainReasons": [],
+  "proposalStatus": "MAYBE",
+  "proposalEllipse": {
+   "centerX": 545.1657915779841,
+   "centerY": 550.591397602748,
+   "radiusX": 508.3020157018671,
+   "radiusY": 491.3961744960901,
+   "axisAngle": 1.095661259135161
+  },
+  "diagnostic": null,
+  "refinement": "MAYBE",
+  "refinementReason": "paired-rim-evidence-refined-review-only",
+  "ellipse": {
+   "centerX": 546.7234848915605,
+   "centerY": 548.7039675606818,
+   "radiusX": 514.5933357083385,
+   "radiusY": 514.5933357083385,
+   "axisAngle": 1.095661259135161
+  },
+  "ms": 5030
+ },
+ "2204c818ac3de243593966d9a7122bc87239bca4b257034984691287e93bd945": {
+  "name": "servo-06-cut-off",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px",
+   "low_exact_contour_fraction"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 646.6336973676665,
+   "centerY": 861.7332002573331,
+   "radiusX": 740.9968276976817,
+   "radiusY": 582.0054557166759,
+   "axisAngle": -1.5701223462277842
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 3200
+ },
+ "d27746a61d256435bf0726e26daf73cbb18c35cbb2a4706d56ae557707058f61": {
+  "name": "servo-07-small",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px",
+   "low_exact_contour_fraction"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 577.5201717007482,
+   "centerY": 769.5056977561469,
+   "radiusX": 661.779440099838,
+   "radiusY": 519.7630880692996,
+   "axisAngle": -1.5707935663503063
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 2820
+ },
+ "fab6b0ab84e886586f6f762a2357283df958cbe2d6fefedcc97536416a7e8f61": {
+  "name": "servo-08-dark",
+  "v3Status": "accepted",
+  "abstainReasons": [],
+  "proposalStatus": "MAYBE",
+  "proposalEllipse": {
+   "centerX": 580.5457167505439,
+   "centerY": 785.5724718589792,
+   "radiusX": 487.7822891356906,
+   "radiusY": 487.0388939780904,
+   "axisAngle": -0.21679806271110103
+  },
+  "diagnostic": null,
+  "refinement": "MAYBE",
+  "refinementReason": "paired-rim-evidence-refined-review-only",
+  "ellipse": {
+   "centerX": 582.6596911483065,
+   "centerY": 785.3665975775991,
+   "radiusX": 513.0367574319719,
+   "radiusY": 512.4172729631684,
+   "axisAngle": -0.21679806271110103
+  },
+  "ms": 4967
+ },
+ "3d60c594924595bc0bf8c491ffa962b15b140a8487246af5bbef4b62eea24c59": {
+  "name": "servo-09-warm-light",
+  "v3Status": "accepted",
+  "abstainReasons": [],
+  "proposalStatus": "MAYBE",
+  "proposalEllipse": {
+   "centerX": 577.7414049460115,
+   "centerY": 769.5631774933074,
+   "radiusX": 532.6290262699655,
+   "radiusY": 517.6023254301895,
+   "axisAngle": -1.397294350967368
+  },
+  "diagnostic": null,
+  "refinement": "ABSTAIN",
+  "refinementReason": "insufficient-conic-geometry-consensus",
+  "ellipse": null,
+  "ms": 3925
+ },
+ "1dc1ca118d38a20fac74da3e392c68bffba260e55a2a3226eda0d941f739f39c": {
+  "name": "servo-10-tilted",
+  "v3Status": "accepted",
+  "abstainReasons": [],
+  "proposalStatus": "MAYBE",
+  "proposalEllipse": {
+   "centerX": 574.0475132231377,
+   "centerY": 774.4383886018987,
+   "radiusX": 463.53189266209495,
+   "radiusY": 430.7285227014637,
+   "axisAngle": -1.3327356409537767
+  },
+  "diagnostic": null,
+  "refinement": "ABSTAIN",
+  "refinementReason": "insufficient-conic-geometry-consensus",
+  "ellipse": null,
+  "ms": 4399
+ },
+ "b1e1015054a9d3cce37495867cc5521507e63902f3e76c02477e4c006701e53a": {
+  "name": "servo-11-heavy-jpeg",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 585.532427770237,
+   "centerY": 866.3511596931578,
+   "radiusX": 592.6788605961833,
+   "radiusY": 503.65115940687986,
+   "axisAngle": -1.5476229100230627
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 5349
+ },
+ "1a61c80983bc06f9ad3dc292da61cb9c89615e9e83665c0baaccd3feabef707c": {
+  "name": "servo-12-motion-blur",
+  "v3Status": "accepted",
+  "abstainReasons": [],
+  "proposalStatus": "MAYBE",
+  "proposalEllipse": {
+   "centerX": 577.5798732301398,
+   "centerY": 770.3082777230479,
+   "radiusX": 514.1223119639004,
+   "radiusY": 496.72934956017974,
+   "axisAngle": -0.25965712835964094
+  },
+  "diagnostic": null,
+  "refinement": "MAYBE",
+  "refinementReason": "paired-rim-evidence-refined-review-only",
+  "ellipse": {
+   "centerX": 578.4202560503345,
+   "centerY": 787.5778240330997,
+   "radiusX": 527.1899403794514,
+   "radiusY": 512.6384384537502,
+   "axisAngle": -0.25965712835964094
+  },
+  "ms": 5557
+ },
+ "5d9956dc7b98e1a06edf33ea3af7ab9870332be72bf2bb7c8c18b197d7fbc037": {
+  "name": "anchor-01-original",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 577.4446905032237,
+   "centerY": 769.4937355763167,
+   "radiusX": 661.8067731412328,
+   "radiusY": 519.7853859129167,
+   "axisAngle": -1.5701233618038737
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 2545
+ },
+ "7d81d3e807860a29ba015eba35028af771911931a0b1af345fc9d27afd498dc1": {
+  "name": "anchor-02-landscape",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 769.538290262129,
+   "centerY": 577.3851287344863,
+   "radiusX": 692.5380681815618,
+   "radiusY": 496.7227956899661,
+   "axisAngle": -0.0006639182549861289
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 2725
+ },
+ "2b3866e01b0b6ed3c4e513997605d8deef70f4e4c4f4573a23ed4430f21749db": {
+  "name": "anchor-03-low-res",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 240.35042675264694,
+   "centerY": 320.31682479757654,
+   "radiusX": 275.50733184197986,
+   "radiusY": 216.2946342403509,
+   "axisAngle": 1.5701371160606499
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 2456
+ },
+ "ef0f2185a63d5720fcb406e983b02a17dccf1bcb13abca65a392c1ef87979dc6": {
+  "name": "anchor-04-off-center",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px",
+   "low_exact_contour_fraction"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 577.3572728248874,
+   "centerY": 769.6083223241241,
+   "radiusX": 661.9239842163258,
+   "radiusY": 519.743425267043,
+   "axisAngle": 1.5707957223559808
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 3298
+ },
+ "973cf1f8274a3845615b2bc2b18b7dcdbdad294170da219da49edaf70ed4dc64": {
+  "name": "anchor-05-tight",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 587.4761966181667,
+   "centerY": 587.6388664951289,
+   "radiusX": 504.4455193632032,
+   "radiusY": 503.6685850592442,
+   "axisAngle": 1.558902278357757
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 4922
+ },
+ "2f86462c5f12d8379a7f91c4d96a087201b042669248e84e7fc656f5c6b32668": {
+  "name": "anchor-06-cut-off",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px",
+   "low_exact_contour_fraction"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 692.4000877221382,
+   "centerY": 923.0045874690887,
+   "radiusX": 793.7541823093886,
+   "radiusY": 623.1600384297134,
+   "axisAngle": -1.570780846586135
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 2491
+ },
+ "7029db794b7c608d21c14285f75d50fd209a9a386fe0b44cd080a226a7503111": {
+  "name": "anchor-07-small",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 568.045144331048,
+   "centerY": 770.4206989372117,
+   "radiusX": 652.763122329824,
+   "radiusY": 514.8355703750276,
+   "axisAngle": 1.5687300761375482
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 4553
+ },
+ "08e8bd5f817f82656e282ae85f5bb9fcc00b5f666efa492200287bc364ae0436": {
+  "name": "anchor-08-dark",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 577.7467870738975,
+   "centerY": 769.5462981887607,
+   "radiusX": 661.7075627324182,
+   "radiusY": 519.695885459078,
+   "axisAngle": 1.570792001314099
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 3062
+ },
+ "841cb9f650df184e5a9cb7b1cafafc8f37c2f6d2963b68bb74f12f21eab783a9": {
+  "name": "anchor-09-warm-light",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 577.4579311658832,
+   "centerY": 769.4155572758386,
+   "radiusX": 661.8205047188219,
+   "radiusY": 519.7803901691444,
+   "axisAngle": -1.5701120321441282
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 2541
+ },
+ "68a34a6dcc6b481ec6d75937de181f70a542e11f52055efd3df7b581cefbcf80": {
+  "name": "anchor-10-tilted",
+  "v3Status": "accepted",
+  "abstainReasons": [],
+  "proposalStatus": "MAYBE",
+  "proposalEllipse": {
+   "centerX": 584.0782744941259,
+   "centerY": 793.1943211553631,
+   "radiusX": 514.5050826124167,
+   "radiusY": 501.0543578926491,
+   "axisAngle": -0.6741090142964943
+  },
+  "diagnostic": null,
+  "refinement": "ABSTAIN",
+  "refinementReason": "insufficient-joint-face-rim-background-support",
+  "ellipse": null,
+  "ms": 3369
+ },
+ "de8e83ff495a4cab53b3d271e9f0d959998b7b5ca8fce23b96e0e645a9908d71": {
+  "name": "anchor-11-heavy-jpeg",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 577.5339302206661,
+   "centerY": 769.5022067851294,
+   "radiusX": 661.8252083583196,
+   "radiusY": 519.7921454516057,
+   "axisAngle": 1.5701216393683195
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 2862
+ },
+ "5ee5982aa42cd9f9afc883eed83e6d46bf59855b6f3ce2c74354e055cd6ebd82": {
+  "name": "anchor-12-motion-blur",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 577.4606532785601,
+   "centerY": 769.3363132687044,
+   "radiusX": 661.8763837444077,
+   "radiusY": 519.7598501035266,
+   "axisAngle": 1.570145612179739
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 2734
+ },
+ "a991e7798c2d6287f9b346bd252b23d153ff86617431cae5ad16c11f3746d2d5": {
+  "name": "buzzz-01-original",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 770.084137299314,
+   "centerY": 1026.0990747194035,
+   "radiusX": 882.4749732422583,
+   "radiusY": 693.1231724603929,
+   "axisAngle": 1.5691141136764433
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 3355
+ },
+ "4c689432c69a478a512cfa40135657c70d946f77326515b08ae096015f60811e": {
+  "name": "buzzz-02-landscape",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 1025.597394553047,
+   "centerY": 770.378652006637,
+   "radiusX": 919.9908648991213,
+   "radiusY": 663.5582262030533,
+   "axisAngle": -0.000662215423575141
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 2681
+ },
+ "f82c58703fa22534993384444922867d4873757085075ab558b5c09029274f9a": {
+  "name": "buzzz-03-low-res",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 240.35935447477883,
+   "centerY": 320.1141290391824,
+   "radiusX": 275.4776165417448,
+   "radiusY": 216.27197628937614,
+   "axisAngle": -1.5707854696811743
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 2693
+ },
+ "27ce1c45756635a58364d956ece7366172cc27162b14c5ed38351fde13d10df9": {
+  "name": "buzzz-04-off-center",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px",
+   "low_exact_contour_fraction"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 778.6177792965159,
+   "centerY": 1030.9614281784734,
+   "radiusX": 879.7682704098094,
+   "radiusY": 691.5878492694075,
+   "axisAngle": 1.568656096402048
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 4080
+ },
+ "83f92dc6e6416d612973b0f871042fb15bf4c49ef774a445dd12a4e14ad584e7": {
+  "name": "buzzz-05-tight",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px",
+   "low_exact_contour_fraction"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 704.9764626156395,
+   "centerY": 705.0413929234069,
+   "radiusX": 634.3290810203813,
+   "radiusY": 579.2846688064807,
+   "axisAngle": -0.0036503253218418408
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 4369
+ },
+ "fa7873727568b3921920f3e6bdfc7d9912c95fb80933bed02af48bba74c7cd8c": {
+  "name": "buzzz-06-cut-off",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px",
+   "low_exact_contour_fraction"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 826.1057218799864,
+   "centerY": 1108.7830065212158,
+   "radiusX": 953.0118444479273,
+   "radiusY": 748.5152466820044,
+   "axisAngle": -1.5664355956071025
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 4164
+ },
+ "8c998620109022082d2639a7fab1afb27f4ac898321b131c3f985b227fd378db": {
+  "name": "buzzz-07-small",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px",
+   "low_exact_contour_fraction"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 753.8030836150972,
+   "centerY": 1050.0245488780374,
+   "radiusX": 900.4060271741808,
+   "radiusY": 691.5738061199208,
+   "axisAngle": -1.5642021186918535
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 5014
+ },
+ "fbf69c800879ec8a799d5d3462d5c26a08d6f24fb1df0dff571d55577457ac82": {
+  "name": "buzzz-08-dark",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 770.0736457526258,
+   "centerY": 1026.232799273184,
+   "radiusX": 882.5994467502113,
+   "radiusY": 693.1316921627422,
+   "axisAngle": 1.5701179845874806
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 3871
+ },
+ "0e69dfc92ad4d3de57f5f5213dab4077809439598fe4adec2073783d497df2d1": {
+  "name": "buzzz-09-warm-light",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 769.9927538421157,
+   "centerY": 1026.1385091289721,
+   "radiusX": 882.4986767064973,
+   "radiusY": 693.1814420025362,
+   "axisAngle": 1.5701189337141637
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 4024
+ },
+ "fc12bac1cc03caa234e77f8f679f0b6a7d4c4e29530723cfdf7965cf1effb6f3": {
+  "name": "buzzz-10-tilted",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 770.1837967624285,
+   "centerY": 1026.1853531180348,
+   "radiusX": 882.4466736899591,
+   "radiusY": 693.1810129661617,
+   "axisAngle": 1.5707961609700156
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 3280
+ },
+ "ac1b0b14018b690d965974b2cba262e88c2016f295b4e0c63ac9b5f8a48917d3": {
+  "name": "buzzz-11-heavy-jpeg",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 770.1501555453581,
+   "centerY": 1026.0500165326619,
+   "radiusX": 882.4822290451046,
+   "radiusY": 693.2815671859365,
+   "axisAngle": 1.5707917291782199
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 3933
+ },
+ "0a36232d72eda287b95f2dfb143972b6e454227c19bf2f48c4f1a443ef2f2622": {
+  "name": "buzzz-12-motion-blur",
+  "v3Status": "abstained",
+  "abstainReasons": [
+   "low_exact_outer_rim_support",
+   "low_octant_coverage",
+   "low_exact_silhouette_score",
+   "nearby_edge_displacement_gt_1px"
+  ],
+  "proposalStatus": "FAIL",
+  "proposalEllipse": null,
+  "diagnostic": {
+   "centerX": 770.3332388472938,
+   "centerY": 1026.2529031237598,
+   "radiusX": 882.4840230403188,
+   "radiusY": 692.9077792063879,
+   "axisAngle": 1.5689787211803585
+  },
+  "refinement": null,
+  "refinementReason": null,
+  "ellipse": null,
+  "ms": 3309
+ }
+}

@@ -1,0 +1,309 @@
+<title>PxC Kernel Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,500..800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a ledger. A narrow index rail on the left, entries in one reading column; data blocks may run wider inside their own scroll. */
+:root {
+  --bg: #f6f7f6; --panel: #ffffff; --ink: #18201e; --muted: #5a6662; --rule: #d6dcda;
+  --accent: #0f6b62;        /* the kernel: a deep teal */
+  --call: #2a62c9; --input: #1f8a4c; --prov: #7a3fb0; --dec: #a8740a; --bad: #b0302a;  /* the trace view's own edge colours */
+  --chip-bg: #e9eeec;
+  --display: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+  --body: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111615; --panel: #182120; --ink: #e4ebe9; --muted: #9aa8a4; --rule: #2c3836;
+  --accent: #4fc2b4; --call: #7aa5f2; --input: #5dc98a; --prov: #b98ae6; --dec: #e0b04a; --bad: #f08a80; --chip-bg: #22302e; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #111615; --panel: #182120; --ink: #e4ebe9; --muted: #9aa8a4; --rule: #2c3836;
+  --accent: #4fc2b4; --call: #7aa5f2; --input: #5dc98a; --prov: #b98ae6; --dec: #e0b04a; --bad: #f08a80; --chip-bg: #22302e; color-scheme: dark }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font: 17px/1.6 var(--body); padding-inline: 16px; padding-block: 0 64px; }
+.wrap { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 40px; }
+nav.rail { position: sticky; top: env(safe-area-inset-top, 0px); align-self: start; padding-top: 40px; font: 500 13px/1.4 var(--display); }
+nav.rail ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+nav.rail a { color: var(--muted); text-decoration: none; display: flex; gap: 8px; }
+nav.rail a:hover, nav.rail a:focus-visible { color: var(--accent); outline: none; }
+nav.rail .n { font-family: var(--mono); font-size: 11px; color: var(--muted); opacity: 0.6; min-width: 1.6em; }
+main { min-width: 0; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; letter-spacing: -0.01em; margin: 0; }
+h1 { font-size: clamp(34px, 5vw, 52px); font-stretch: 112%; font-weight: 800; line-height: 1.05; }
+h2 { font-size: 26px; font-stretch: 105%; font-weight: 750; margin-bottom: 6px; }
+h3 { font-size: 16px; font-weight: 700; }
+.eyebrow { font: 600 12px/1 var(--display); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+p { margin: 0; max-width: 68ch; }
+section { padding-block: 44px 8px; border-top: 1px solid var(--rule); display: grid; gap: 16px; }
+header.hero { padding-block: 44px 28px; display: grid; gap: 14px; }
+.lede { font-size: 19px; color: var(--ink); }
+.muted { color: var(--muted); }
+code, .mono { font-family: var(--mono); font-size: 0.86em; }
+.strip { display: flex; flex-wrap: wrap; gap: 10px 28px; font-family: var(--display); }
+.strip div { display: grid; }
+.strip b { font-size: 26px; font-weight: 750; font-variant-numeric: tabular-nums; }
+.strip span { font-size: 12px; color: var(--muted); letter-spacing: 0.04em; }
+.source { font: 12px/1.4 var(--mono); color: var(--muted); }
+
+/* the loop */
+.loop { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font: 600 13px/1 var(--display); }
+.loop span { padding: 7px 10px; border: 1px solid var(--rule); border-radius: 3px; background: var(--panel); }
+.loop i { color: var(--muted); font-style: normal; }
+
+/* versions */
+.versions { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; }
+.ver { text-align: left; font: inherit; color: inherit; background: var(--panel); border: 1px solid var(--rule); border-radius: 4px; padding: 12px; cursor: pointer; display: grid; gap: 6px; }
+.ver:hover, .ver:focus-visible { border-color: var(--accent); outline: none; }
+.ver[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.ver .vn { font: 800 22px/1 var(--display); color: var(--accent); }
+.ver .vs { font: 11px var(--mono); color: var(--muted); }
+.ver .vt { font-size: 14px; line-height: 1.45; }
+
+/* ledger */
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.controls input { font: 15px var(--body); padding: 7px 10px; border: 1px solid var(--rule); border-radius: 3px; background: var(--panel); color: var(--ink); min-width: 0; flex: 1 1 220px; }
+.chip { font: 600 11px/1 var(--display); letter-spacing: 0.06em; text-transform: uppercase; padding: 5px 8px; border-radius: 999px; background: var(--chip-bg); color: var(--muted); border: 1px solid transparent; cursor: pointer; }
+.chip[aria-pressed="true"] { border-color: currentColor; }
+.st-adopted { color: var(--accent); } .st-fixed { color: var(--input); } .st-refined { color: var(--call); }
+.st-deferred { color: var(--dec); } .st-declined, .st-removed { color: var(--muted); } .st-open { color: var(--prov); }
+.entries { display: grid; gap: 0; border-top: 1px solid var(--rule); }
+details.entry { border-bottom: 1px solid var(--rule); }
+details.entry summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 3.2em 3em minmax(0, 1fr) auto; gap: 12px; align-items: baseline; padding: 10px 2px; }
+details.entry summary::-webkit-details-marker { display: none; }
+details.entry summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.seq { font: 600 13px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.vtag { font: 11px var(--mono); color: var(--muted); }
+.concept { font-size: 15.5px; line-height: 1.45; min-width: 0; }
+.body { padding: 0 2px 14px calc(6.2em + 24px); display: grid; gap: 8px; font-size: 15px; }
+.body dt { font: 600 11px/1 var(--display); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.body dd { margin: 2px 0 6px; max-width: 72ch; }
+.hw { border-left: 3px solid var(--dec); padding-left: 12px; }
+
+/* tables */
+.scroll { overflow-x: auto; border: 1px solid var(--rule); border-radius: 4px; background: var(--panel); }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+th { font: 600 11px/1.2 var(--display); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+td.flow { font-family: var(--mono); font-size: 12.5px; min-width: 300px; }
+.arrow { color: var(--prov); }
+.down { color: var(--input); font-weight: 600; }
+
+/* figures */
+.figs { display: grid; gap: 28px; }
+figure.trace { margin: 0; display: grid; gap: 8px; }
+.trace-frame { overflow-x: auto; border: 1px solid var(--rule); border-radius: 4px; background: #fbfbf9; padding: 6px; }
+.trace-frame img { max-width: none; height: auto; display: block; }
+figcaption { font-size: 15px; max-width: 72ch; }
+.fig-id { font: 600 12px var(--mono); color: var(--accent); }
+.verdict { display: block; font: 13px var(--mono); color: var(--input); margin-top: 4px; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font: 13px var(--display); }
+.legend span::before { content: ''; display: inline-block; width: 18px; height: 3px; margin-right: 6px; vertical-align: middle; background: currentColor; }
+.l-call { color: var(--call); } .l-input { color: var(--input); } .l-prov { color: var(--prov); } .l-dec { color: var(--dec); }
+
+.callout { border: 1px solid var(--prov); border-radius: 4px; padding: 16px; display: grid; gap: 10px; background: var(--panel); }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.two > div { min-width: 0; display: grid; gap: 6px; align-content: start; }
+ul.tight { margin: 0; padding-left: 18px; display: grid; gap: 4px; max-width: 70ch; }
+
+@media (max-width: 820px) {
+  .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  nav.rail { position: static; padding-top: 20px; }
+  nav.rail ol { grid-auto-flow: column; overflow-x: auto; padding-bottom: 6px; }
+  nav.rail a { white-space: nowrap; }
+  details.entry summary { grid-template-columns: 2.6em minmax(0, 1fr) auto; }
+  details.entry .vtag { display: none; }
+  .body { padding-left: 2px; }
+}
+@media (prefers-reduced-motion: no-preference) { details.entry[open] .body { animation: in 160ms ease-out; } @keyframes in { from { opacity: 0.4; transform: translateY(-2px); } to { opacity: 1; transform: none; } } }
+</style>
+
+<div class="wrap">
+<nav class="rail" aria-label="Sections">
+  <ol>
+    <li><a href="#top"><span class="n">00</span>Kernel</a></li>
+    <li><a href="#loop"><span class="n">01</span>How a concept enters</a></li>
+    <li><a href="#versions"><span class="n">02</span>Versions</a></li>
+    <li><a href="#ledger"><span class="n">03</span>Necessity ledger</a></li>
+    <li><a href="#traces"><span class="n">04</span>Traces</a></li>
+    <li><a href="#removed"><span class="n">05</span>What it removed</a></li>
+    <li><a href="#flows"><span class="n">06</span>Flows found</a></li>
+    <li><a href="#audit"><span class="n">07</span>Audit</a></li>
+    <li><a href="#open"><span class="n">08</span>Open</a></li>
+  </ol>
+</nav>
+<main>
+<header class="hero" id="top">
+  <div class="eyebrow">PxC kernel · v0.6</div>
+  <h1>PxC Kernel Ledger</h1>
+  <p class="lede">A kernel for Parts, Calculations and Ticks, grown one concept at a time. Every concept is in the ledger below because at least one of five contest entries hit friction without it. Each entry carries the evidence that forced it in, and, where the call was a judgment, the argument Hegel and Wittgenstein would have had about it.</p>
+  <div class="strip" id="strip"></div>
+  <p class="source">Sources: ledger/necessity.jsonl · node --test test/*.test.mjs at commit 826d49e (300 tests; 297 pass, 3 are round-6 friction tests that assert a bug fixed after the round, flipped by their entries next round) · miner/out/flows.json · verify/AUDIT.md</p>
+</header>
+
+<section id="loop">
+  <div class="eyebrow">01</div>
+  <h2>How a concept enters</h2>
+  <p>Five Sonnet agents each built a different domain on the kernel: circuits from NAND gates, fitted models with leakage audits, explanations as checked claims, tic-tac-toe with seated policies, and an agent-allocation simulation. Each round they migrated to the newest kernel, re-drew every picture, wrote each claim before looking, and reported friction. A concept entered the kernel only when friction converged, usually from two or more entries; a single request waited.</p>
+  <div class="loop" aria-label="The round loop">
+    <span>friction in five domains</span><i>→</i><span>convergence</span><i>→</i><span>Hegel against Wittgenstein</span><i>→</i><span>kernel change</span><i>→</i><span>tests, mutation-checked</span><i>→</i><span>claims, then pictures</span><i>→</i><span>independent audit</span>
+  </div>
+</section>
+
+<section id="versions">
+  <div class="eyebrow">02</div>
+  <h2>Versions</h2>
+  <p class="muted">Select a version to filter the ledger to the concepts it added.</p>
+  <div class="versions" id="versions-list"></div>
+</section>
+
+<section id="ledger">
+  <div class="eyebrow">03</div>
+  <h2>Necessity ledger</h2>
+  <p>Every concept, fix, refinement, deferral and decline, in the order it happened. Open an entry for the friction that forced it and the evidence; the amber block is the Hegel and Wittgenstein argument where one was needed.</p>
+  <div class="controls">
+    <label class="mono" for="q" hidden>Search the ledger</label>
+    <input id="q" type="search" placeholder="Search concepts, entries, evidence (e.g. slot, else, E N23)">
+    <div id="chips" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+  </div>
+  <div class="source" id="count"></div>
+  <div class="entries" id="entries"></div>
+</section>
+
+<section id="traces">
+  <div class="eyebrow">04</div>
+  <h2>Traces</h2>
+  <p>The kernel draws each run from its own trace: a box per call, and edges from exact provenance. Every picture was checked against claims written before looking; these four are from v0.4 to v0.6.</p>
+  <div class="legend"><span class="l-call">earlier call's output into an input</span><span class="l-input">the caller's input</span><span class="l-prov">where an output came from</span><span class="l-dec">what a decision read</span></div>
+  <div class="figs">
+<!--FIGURES-->
+  </div>
+</section>
+
+<section id="removed">
+  <div class="eyebrow">05</div>
+  <h2>What the kernel removed from the entries</h2>
+  <p>A good kernel concept deletes code in its users. These counts are each entry's own before and after, from its FRICTION.md.</p>
+  <div class="scroll"><table>
+    <thead><tr><th>Entry</th><th>What went away</th><th>Before</th><th>After</th><th>Round</th></tr></thead>
+    <tbody>
+      <tr><td>All five</td><td>Contracts that existed only to emit a boolean for a condition</td><td class="num">8</td><td class="num down">0</td><td>4 (v0.4)</td></tr>
+      <tr><td>E game</td><td>Contracts on the path of one ply</td><td class="num">6</td><td class="num down">2</td><td>4</td></tr>
+      <tr><td>E game</td><td>Calls in a short match</td><td class="num">79</td><td class="num down">55</td><td>4</td></tr>
+      <tr><td>E game</td><td>Time to read every cached trace through world.node (minimax included)</td><td class="num">153 s</td><td class="num down">1.7 s</td><td>4</td></tr>
+      <tr><td>D explanations</td><td>Restated guards in the claim router</td><td class="num">7</td><td class="num down">1</td><td>5 (v0.5)</td></tr>
+      <tr><td>D explanations</td><td>Typed complements (occurrences)</td><td class="num">9</td><td class="num down">0</td><td>5</td></tr>
+      <tr><td>B circuits</td><td>Steps restating the clock guard in the gated counter</td><td class="num">5</td><td class="num down">1</td><td>5</td></tr>
+      <tr><td>B circuits</td><td>Latch trajectories kept by hand outside prove</td><td class="num">2</td><td class="num down">0</td><td>5</td></tr>
+      <tr><td>E game</td><td>Fills that existed only to dodge contract-fill precedence</td><td class="num">3</td><td class="num down">0</td><td>5</td></tr>
+      <tr><td>B circuits</td><td>Trace scans that counted where a fault landed</td><td class="num">5</td><td class="num down">0</td><td>6 (v0.6)</td></tr>
+      <tr><td>D explanations</td><td>Trace-search helpers replaced by fillReach</td><td class="num">4</td><td class="num down">0</td><td>6</td></tr>
+      <tr><td>F agents</td><td>Examples identified only by position</td><td class="num">6</td><td class="num down">0</td><td>6</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="flows">
+  <div class="eyebrow">06</div>
+  <h2>Flows found in the traces</h2>
+  <p>The flow miner reads every receipt the contest pictures produce and looks for sibling calls wired together by exact provenance, where every intermediate result is consumed inside the window. A shape that recurs and is not a composition anywhere is a subflow nobody has named yet.</p>
+  <div class="source" id="flow-stats"></div>
+  <h3>Named by nobody, used across entries</h3>
+  <div class="scroll"><table id="t-cross"></table></div>
+  <h3>Recurring and not a composition anywhere</h3>
+  <div class="scroll"><table id="t-disc"></table></div>
+  <h3>Recurring and already a composition (confirmed by use)</h3>
+  <div class="scroll"><table id="t-conf"></table></div>
+  <div class="two">
+    <div><h3>What the miner says</h3><ul class="tight">
+      <li>Entries C and D both compute column means as <code>lin.transpose → stat.mean</code>, independently. That is an interface two domains needed and neither named.</li>
+      <li>Entry C's standardizer runs <code>stat.mean → stat.standardDeviation → vec.standardize</code> by hand; entry A already declared that flow as the composition <code>stat.zScores</code>.</li>
+      <li>Entry E's minimax runs <code>game.legalMoves → game.apply → game.outcome</code> a thousand times in imperative code: a composition waiting to be declared.</li>
+      <li>Entry F's eleven-step tick exists twice: as a composition and as an imperative copy.</li>
+    </ul></div>
+    <div><h3>How it was checked</h3><ul class="tight">
+      <li>Drive ticks are excluded; a drive is already a concept.</li>
+      <li>Repeated identical runs count once (distinct input hashes).</li>
+      <li>A shape is dropped when a longer one containing it occurs as often.</li>
+      <li>One mined edge was confirmed against its trace: in C's run 1, call #9 <code>stat.mean</code> reads <code>at [0]</code> of #8 <code>lin.transpose</code>, inside #7 <code>fitted.standardizer.fit</code>.</li>
+    </ul></div>
+  </div>
+</section>
+
+<section id="audit">
+  <div class="eyebrow">07</div>
+  <h2>Independent audit of the kernel's pictures</h2>
+  <p>An Opus agent that had not seen the work checked all 54 kernel picture claims against the pictures, the facts files and the code. It confirmed 51 and refuted 3. The refutations were real: brackets in a crowded margin shared lanes and hid one another, decision edges shared one vertical, a long header dropped its verdict mark, and decisions carried by a cache hit pointed at unrelated boxes with the same number in the current run. All four defects are fixed in v0.6, each refuted claim is corrected, and the cache-hit case now has a regression test.</p>
+  <div class="strip"><div><b>51</b><span>claims confirmed</span></div><div><b>3</b><span>refuted, all fixed</span></div><div><b>36 of 39</b><span>author verdicts agreed</span></div><div><b>4</b><span>view defects found</span></div></div>
+  <p class="source">verify/AUDIT.md · verify/AUDIT-RESPONSE.md</p>
+</section>
+
+<section id="open">
+  <div class="eyebrow">08</div>
+  <h2>Open</h2>
+  <div class="callout">
+    <h3>The kernel draws a call tree; every domain draws something else</h3>
+    <p>In round 6 each entry named where the kernel's picture of its domain and the domain's own picture disagree most. All five answers had one shape. Circuits think in timing diagrams, fitted models in functions of training rows, explanations in a claim table, the game in moves by players, the allocator in a Gantt chart. Readers of kernel pictures take the plumbing for the meaning: a routing decision read as the explanation, an integrator bottleneck invisible across sixteen tick pictures.</p>
+    <p class="hw"><b>Hegel:</b> the trace is the whole, and each domain picture is a moment of it, a projection that must stay answerable to the whole. <b>Wittgenstein:</b> the domain's picture is the use; the call tree is grammar, and nobody reads grammar for meaning. The question for v0.7: can the kernel carry a projection, a declared domain view over a trace with provenance back to its nodes, so a domain picture is checked against the trace instead of drawn beside it?</p>
+  </div>
+  <h3>Deferred, with one requester each</h3>
+  <ul class="tight" id="deferred"></ul>
+</section>
+</main>
+</div>
+
+<script>
+/*DATA*/
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const L = DATA.ledger;
+const counts = L.reduce((m, e) => (m[e.status] = (m[e.status] || 0) + 1, m), {});
+$('#strip').innerHTML = [
+  [L.length, 'ledger entries'], [DATA.versions.length, 'kernel versions'], [5, 'domain entries'], [6, 'contest rounds'],
+  [(counts.adopted || 0) + (counts.fixed || 0) + (counts.refined || 0), 'adopted, fixed or refined'], [DATA.flows.stats.receipts, 'receipts mined'],
+].map(([n, t]) => `<div><b>${n}</b><span>${t}</span></div>`).join('');
+
+let vFilter = null; let sFilter = null;
+$('#versions-list').innerHTML = DATA.versions.map((v) => `<button class="ver" type="button" data-v="${v.v}" aria-pressed="false"><span class="vn">v${v.v}</span><span class="vs">ledger ${v.seqs[0]}–${v.seqs[1]}</span><span class="vt">${esc(v.theme)}</span></button>`).join('');
+$('#versions-list').addEventListener('click', (ev) => {
+  const b = ev.target.closest('.ver'); if (!b) return;
+  vFilter = vFilter === b.dataset.v ? null : b.dataset.v;
+  document.querySelectorAll('.ver').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.v === vFilter)));
+  render(); if (vFilter) $('#ledger').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+});
+const statuses = ['adopted', 'fixed', 'refined', 'deferred', 'declined', 'removed', 'open'].filter((s) => counts[s]);
+$('#chips').innerHTML = statuses.map((s) => `<button type="button" class="chip st-${s}" data-s="${s}" aria-pressed="false">${s} ${counts[s]}</button>`).join('');
+$('#chips').addEventListener('click', (ev) => {
+  const b = ev.target.closest('.chip'); if (!b) return;
+  sFilter = sFilter === b.dataset.s ? null : b.dataset.s;
+  document.querySelectorAll('.chip').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.s === sFilter)));
+  render();
+});
+$('#q').addEventListener('input', render);
+function render() {
+  const q = $('#q').value.trim().toLowerCase();
+  const rows = L.filter((e) => (!vFilter || e.version === vFilter) && (!sFilter || e.status === sFilter)
+    && (!q || JSON.stringify(e).toLowerCase().includes(q)));
+  $('#count').textContent = `${rows.length} of ${L.length} entries${vFilter ? ` · v${vFilter}` : ''}${sFilter ? ` · ${sFilter}` : ''}${q ? ` · “${q}”` : ''}`;
+  $('#entries').innerHTML = rows.map((e) => `
+    <details class="entry"><summary><span class="seq">${e.seq}</span><span class="vtag">v${e.version}</span><span class="concept">${esc(e.concept)}</span><span class="chip st-${e.status}">${e.status}</span></summary>
+      <dl class="body">
+        <div><dt>Forced by</dt><dd>${esc(e.forcedBy)}</dd></div>
+        <div><dt>Evidence</dt><dd>${esc(e.evidence)}</dd></div>
+        ${e.source ? `<div><dt>Source</dt><dd>${esc(e.source)}</dd></div>` : ''}
+        ${e.hegelWittgenstein ? `<div class="hw"><dt>Hegel and Wittgenstein</dt><dd>${esc(e.hegelWittgenstein)}</dd></div>` : ''}
+      </dl></details>`).join('') || '<p class="muted" style="padding:12px 2px">No entries match. Clear the search or the filters.</p>';
+}
+render();
+
+const flowRow = (s, kind) => `<tr><td class="flow">${s.contracts.map(esc).join(' <span class="arrow">→</span> ')}</td><td class="num">${s.count}</td><td>${esc((s.domainEntries.length ? s.domainEntries : s.entries).join(', '))}</td>${kind === 'conf' ? `<td class="num">${s.alreadyComposed}/${s.count}</td>` : `<td>${esc(s.parents.slice(0, 2).join(', '))}</td>`}</tr>`;
+const head = (last) => `<thead><tr><th>Flow</th><th>Times</th><th>Entries</th><th>${last}</th></tr></thead>`;
+$('#t-cross').innerHTML = head('Inside') + `<tbody>${DATA.flows.crossEntry.map((s) => flowRow(s, 'cross')).join('')}</tbody>`;
+$('#t-disc').innerHTML = head('Inside') + `<tbody>${DATA.flows.discovered.map((s) => flowRow(s, 'disc')).join('')}</tbody>`;
+$('#t-conf').innerHTML = head('Composed') + `<tbody>${DATA.flows.confirmed.map((s) => flowRow(s, 'conf')).join('')}</tbody>`;
+const st = DATA.flows.stats;
+$('#flow-stats').textContent = `${st.receipts} receipts · ${st.windows.toLocaleString('en-US')} candidate windows · ${st.shapes} shapes · ${st.afterPruning} after pruning`;
+$('#deferred').innerHTML = L.filter((e) => e.status === 'deferred').slice(-3).map((e) => `<li><span class="mono">${e.seq}</span> ${esc(e.concept)}</li>`).join('');
+</script>
