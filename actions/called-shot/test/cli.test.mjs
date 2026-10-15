@@ -106,9 +106,74 @@ test('each shot is graded at its own commits, also under a pull request merge co
   const pr = run(['pr', '--base', base2], { GITHUB_OUTPUT: outputs });
   assert.equal(pr.status, 0, pr.stdout + pr.stderr);
   assert.equal(fs.readFileSync(outputs, 'utf8'), 'made=true\nshots=2\n');
-  assert.match(pr.stderr, /called-shots\/add-c\.shot\.json: graded at [0-9a-f]{12}, before the next shot was added/);
+  assert.match(pr.stderr, /called-shots\/add-c\.shot\.json: graded at [0-9a-f]{12}, the last commit with this shot and no other shot.s change/);
   // Graded at HEAD instead, the first shot sees the second shot's change and misses.
   const atHead = run(['grade', 'called-shots/add-c.shot.json']);
   assert.equal(atHead.status, 1);
   assert.match(atHead.stdout, /source added: happened but was not called: src\/d\.txt/);
+});
+
+test('lanes merged as branches: each shot is graded at the head of its own lane', () => {
+  const base3 = git('rev-parse', 'HEAD');
+  git('checkout', '-q', '-b', 'integration');
+  for (const letter of ['e', 'f']) {
+    git('checkout', '-q', '-b', `lane-${letter}`, base3);
+    write(`add-${letter}.json`, JSON.stringify(shot(`add-${letter}`, `src/${letter}.txt is added; the output adds ${letter}.txt and changes manifest.json.`, [
+      { kind: 'source.changedExactly', modified: [], added: [`src/${letter}.txt`], removed: [] },
+      { kind: 'output.changedExactly', modified: ['manifest.json'], added: [`${letter}.txt`], removed: [] },
+    ])));
+    assert.equal(run(['call', `add-${letter}.json`]).status, 0);
+    fs.rmSync(path.join(repo, `add-${letter}.json`));
+    write(`src/${letter}.txt`, `${letter}\n`);
+    git('add', '-A');
+    git('commit', '-q', '-m', `lane ${letter}`);
+  }
+  git('checkout', '-q', 'integration');
+  // Both lanes appended to the call log; keep both lines, as merge=union would.
+  for (const letter of ['e', 'f']) {
+    const merged = spawnSync('git', ['merge', '-q', '--no-ff', '--no-edit', `lane-${letter}`], { cwd: repo, encoding: 'utf8' });
+    if (merged.status !== 0) {
+      const lines = new Set();
+      for (const side of ['HEAD', `lane-${letter}`]) for (const l of git('show', `${side}:called-shots/events.jsonl`).split('\n')) if (l) lines.add(l);
+      write('called-shots/events.jsonl', [...lines].join('\n') + '\n');
+      git('add', '-A');
+      git('commit', '-q', '--no-edit');
+    }
+  }
+  const integration = git('rev-parse', 'HEAD');
+  git('checkout', '-q', '--detach', base3);
+  git('merge', '-q', '--no-ff', '--no-edit', integration);
+  const pr = run(['pr', '--base', base3]);
+  assert.equal(pr.status, 0, pr.stdout + pr.stderr);
+  for (const letter of ['e', 'f']) {
+    assert.match(pr.stderr, new RegExp(`add-${letter}\\.shot\\.json: graded at ${git('rev-parse', `lane-${letter}`).slice(0, 12)}`));
+    assert.match(pr.stdout, new RegExp(`MADE {2}add-${letter}`));
+  }
+});
+
+test('a missed shot superseded by a made one is reported, warned, and does not fail the run', () => {
+  const base4 = git('rev-parse', 'HEAD');
+  write('wrong.json', JSON.stringify(shot('wrong', 'Nothing in the output changes.', [{ kind: 'output.changedExactly', modified: [], added: [], removed: [] }])));
+  assert.equal(run(['call', 'wrong.json']).status, 0);
+  write('right.json', JSON.stringify(shot('right', 'The output adds g.txt and changes manifest.json.', [{ kind: 'output.changedExactly', modified: ['manifest.json'], added: ['g.txt'], removed: [] }])));
+  assert.equal(run(['call', 'right.json']).status, 0);
+  for (const f of ['wrong.json', 'right.json']) fs.rmSync(path.join(repo, f));
+  write('src/g.txt', 'g\n');
+  git('add', '-A');
+  git('commit', '-q', '-m', 'add g, with a wrong call and its replacement');
+  assert.equal(run(['pr', '--base', base4]).status, 1, 'unsuperseded, the miss fails the run');
+  assert.equal(run(['supersede', 'right', '--by', 'wrong', '--reason', 'x']).status, 2, 'only a later call can supersede');
+  assert.equal(run(['supersede', 'wrong', '--by', 'right', '--reason', 'the output does change: g.txt is shipped']).status, 0);
+  git('add', '-A');
+  git('commit', '-q', '-m', 'supersede wrong');
+  const summary = path.join(repo, '..', `${path.basename(repo)}-summary4`), outputs = path.join(repo, '..', `${path.basename(repo)}-outputs4`);
+  const pr = run(['pr', '--base', base4], { GITHUB_ACTIONS: 'true', GITHUB_STEP_SUMMARY: summary, GITHUB_OUTPUT: outputs });
+  assert.equal(pr.status, 0, pr.stdout + pr.stderr);
+  assert.equal(fs.readFileSync(outputs, 'utf8'), 'made=true\nshots=2\n');
+  assert.match(fs.readFileSync(summary, 'utf8'), /\*\*Missed, superseded by `right`\*\*: `called-shots\/wrong\.shot\.json`/);
+  // Property values escape ',' and ':' so a title is not cut at its first comma.
+  assert.match(pr.stdout, /^::warning file=called-shots\/wrong\.shot\.json,title=Called shot missed%2C superseded by right%3A wrong::superseded by right: the output does change/m);
+  // Made shots share one notice: GitHub keeps at most 10 annotations of a level per step.
+  assert.match(pr.stdout, /^::notice title=Called shots made%3A 1 of 2::right: 1 of 1 clauses made$/m);
+  assert.equal((pr.stdout.match(/^::notice /gm) ?? []).length, 1);
 });

@@ -1,0 +1,564 @@
+{
+ "trustedDir": "fetched by ci/controls/fetch-trusted.sh",
+ "families": {
+  "canonical JSON": {
+   "control": {
+    "library": "canonicalize 5.1.0",
+    "passesItsOwnTests": true,
+    "suite": {
+     "pass": 86,
+     "total": 86,
+     "failing": []
+    },
+    "rfc8785": {
+     "pass": 6,
+     "total": 6,
+     "failing": []
+    }
+   },
+   "subjects": {
+    "exp/kernel/canonical.mjs canonicalLax": {
+     "suite": {
+      "pass": 50,
+      "total": 86,
+      "failing": [
+       "arrays > null and undefined values in array",
+       "objects > object with undefined value",
+       "objects > object with symbol value",
+       "circular references > object referencing itself throws",
+       "circular references > array referencing itself throws",
+       "circular references > nested circular reference throws",
+       "deep nesting > deeply nested arrays do not overflow the call stack",
+       "deep nesting > deeply nested objects do not overflow the call stack",
+       "values with no JSON representation > function-valued property is skipped",
+       "values with no JSON representation > function in array becomes null",
+       "values with no JSON representation > toJSON returning undefined skips the property",
+       "values with no JSON representation > toJSON returning undefined in array becomes null",
+       "boxed primitives > boxed Number is unwrapped",
+       "boxed primitives > boxed String is unwrapped",
+       "boxed primitives > boxed Boolean is unwrapped",
+       "boxed primitives > boxed NaN throws",
+       "unusual objects and arrays > sparse array holes become null",
+       "NaN handling > NaN in array",
+       "NaN handling > NaN in object",
+       "NaN handling > NaN as top-level value",
+       "Infinity handling > Infinity in array",
+       "Infinity handling > Infinity in object",
+       "Infinity handling > -Infinity as top-level value",
+       "Unicode handling > lone high surrogate in value throws",
+       "Unicode handling > lone low surrogate in value throws",
+       "Unicode handling > lone high surrogate before a non-low-surrogate throws",
+       "Unicode handling > lone surrogate in object key throws",
+       "Unicode handling > reversed surrogate pair throws",
+       "Unicode handling > lone surrogate as array element throws",
+       "string escaping > lone surrogate in a long string is rejected",
+       "toJSON > object with toJSON",
+       "toJSON > nested object with toJSON is serialized recursively",
+       "toJSON > toJSON returning NaN throws",
+       "toJSON > toJSON resolving to a primitive inside an array",
+       "toJSON > top-level toJSON resolving to a primitive returns its serialization",
+       "toJSON > toJSON returning self throws"
+      ]
+     },
+     "rfc8785": {
+      "pass": 6,
+      "total": 6,
+      "failing": []
+     },
+     "edges": {
+      "undefined": "undefined",
+      "{a:undefined}": "\"{\\\"a\\\":undefined}\"",
+      "[undefined]": "\"[]\"",
+      "sparse [,1]": "\"[,1]\"",
+      "NaN": "\"null\"",
+      "Infinity": "\"null\"",
+      "-0": "\"0\"",
+      "1e21": "\"1e+21\"",
+      "function": "undefined",
+      "Symbol": "undefined",
+      "BigInt": "throws TypeError",
+      "Date(0)": "\"{}\"",
+      "Map": "\"{}\"",
+      "class instance": "\"{\\\"a\\\":1}\"",
+      "null-prototype {a:1}": "\"{\\\"a\\\":1}\"",
+      "cycle": "throws RangeError",
+      "toJSON": "\"{\\\"toJSON\\\":undefined}\"",
+      "lone surrogate key": "\"{\\\"\\\\ud800\\\":1}\""
+     },
+     "signature": "8a55fc4f6257"
+    },
+    "exp/kernel/canonical.mjs canonicalJson": {
+     "suite": {
+      "pass": 46,
+      "total": 86,
+      "failing": [
+       "arrays > null and undefined values in array",
+       "objects > object with undefined value",
+       "objects > object with symbol value",
+       "primitive values > undefined",
+       "primitive values > symbol",
+       "circular references > object referencing itself throws",
+       "circular references > array referencing itself throws",
+       "circular references > nested circular reference throws",
+       "deep nesting > deeply nested arrays do not overflow the call stack",
+       "deep nesting > deeply nested objects do not overflow the call stack",
+       "values with no JSON representation > function-valued property is skipped",
+       "values with no JSON representation > function in array becomes null",
+       "values with no JSON representation > toJSON returning undefined skips the property",
+       "values with no JSON representation > toJSON returning undefined in array becomes null",
+       "values with no JSON representation > top-level function returns undefined",
+       "boxed primitives > boxed Number is unwrapped",
+       "boxed primitives > boxed String is unwrapped",
+       "boxed primitives > boxed Boolean is unwrapped",
+       "boxed primitives > boxed NaN throws",
+       "unusual objects and arrays > sparse array holes become null",
+       "unusual objects and arrays > inherited properties are not serialized",
+       "NaN handling > NaN in array",
+       "NaN handling > NaN in object",
+       "NaN handling > NaN as top-level value",
+       "Infinity handling > Infinity in array",
+       "Infinity handling > Infinity in object",
+       "Infinity handling > -Infinity as top-level value",
+       "Unicode handling > lone high surrogate in value throws",
+       "Unicode handling > lone low surrogate in value throws",
+       "Unicode handling > lone high surrogate before a non-low-surrogate throws",
+       "Unicode handling > lone surrogate in object key throws",
+       "Unicode handling > reversed surrogate pair throws",
+       "Unicode handling > lone surrogate as array element throws",
+       "string escaping > lone surrogate in a long string is rejected",
+       "toJSON > object with toJSON",
+       "toJSON > nested object with toJSON is serialized recursively",
+       "toJSON > toJSON returning NaN throws",
+       "toJSON > toJSON resolving to a primitive inside an array",
+       "toJSON > top-level toJSON resolving to a primitive returns its serialization",
+       "toJSON > toJSON returning self throws"
+      ]
+     },
+     "rfc8785": {
+      "pass": 6,
+      "total": 6,
+      "failing": []
+     },
+     "edges": {
+      "undefined": "throws TypeError",
+      "{a:undefined}": "throws TypeError",
+      "[undefined]": "throws TypeError",
+      "sparse [,1]": "throws TypeError",
+      "NaN": "throws TypeError",
+      "Infinity": "throws TypeError",
+      "-0": "\"0\"",
+      "1e21": "\"1e+21\"",
+      "function": "throws TypeError",
+      "Symbol": "throws TypeError",
+      "BigInt": "throws TypeError",
+      "Date(0)": "throws TypeError",
+      "Map": "throws TypeError",
+      "class instance": "throws TypeError",
+      "null-prototype {a:1}": "\"{\\\"a\\\":1}\"",
+      "cycle": "throws TypeError",
+      "toJSON": "throws TypeError",
+      "lone surrogate key": "\"{\\\"\\\\ud800\\\":1}\""
+     },
+     "signature": "cea9e6ebce4f"
+    },
+    "exp/atlas/calculations.mjs canonical (kept)": {
+     "suite": {
+      "pass": 46,
+      "total": 86,
+      "failing": [
+       "arrays > null and undefined values in array",
+       "objects > object with undefined value",
+       "objects > object with symbol value",
+       "primitive values > undefined",
+       "primitive values > symbol",
+       "circular references > object referencing itself throws",
+       "circular references > array referencing itself throws",
+       "circular references > nested circular reference throws",
+       "deep nesting > deeply nested arrays do not overflow the call stack",
+       "deep nesting > deeply nested objects do not overflow the call stack",
+       "values with no JSON representation > function-valued property is skipped",
+       "values with no JSON representation > function in array becomes null",
+       "values with no JSON representation > toJSON returning undefined skips the property",
+       "values with no JSON representation > toJSON returning undefined in array becomes null",
+       "values with no JSON representation > top-level function returns undefined",
+       "boxed primitives > boxed Number is unwrapped",
+       "boxed primitives > boxed String is unwrapped",
+       "boxed primitives > boxed Boolean is unwrapped",
+       "boxed primitives > boxed NaN throws",
+       "unusual objects and arrays > sparse array holes become null",
+       "unusual objects and arrays > inherited properties are not serialized",
+       "NaN handling > NaN in array",
+       "NaN handling > NaN in object",
+       "NaN handling > NaN as top-level value",
+       "Infinity handling > Infinity in array",
+       "Infinity handling > Infinity in object",
+       "Infinity handling > -Infinity as top-level value",
+       "Unicode handling > lone high surrogate in value throws",
+       "Unicode handling > lone low surrogate in value throws",
+       "Unicode handling > lone high surrogate before a non-low-surrogate throws",
+       "Unicode handling > lone surrogate in object key throws",
+       "Unicode handling > reversed surrogate pair throws",
+       "Unicode handling > lone surrogate as array element throws",
+       "string escaping > lone surrogate in a long string is rejected",
+       "toJSON > object with toJSON",
+       "toJSON > nested object with toJSON is serialized recursively",
+       "toJSON > toJSON returning NaN throws",
+       "toJSON > toJSON resolving to a primitive inside an array",
+       "toJSON > top-level toJSON resolving to a primitive returns its serialization",
+       "toJSON > toJSON returning self throws"
+      ]
+     },
+     "rfc8785": {
+      "pass": 6,
+      "total": 6,
+      "failing": []
+     },
+     "edges": {
+      "undefined": "throws TypeError",
+      "{a:undefined}": "throws TypeError",
+      "[undefined]": "throws TypeError",
+      "sparse [,1]": "\"[,1]\"",
+      "NaN": "throws TypeError",
+      "Infinity": "throws TypeError",
+      "-0": "\"0\"",
+      "1e21": "\"1e+21\"",
+      "function": "throws TypeError",
+      "Symbol": "throws TypeError",
+      "BigInt": "throws TypeError",
+      "Date(0)": "throws TypeError",
+      "Map": "throws TypeError",
+      "class instance": "throws TypeError",
+      "null-prototype {a:1}": "\"{\\\"a\\\":1}\"",
+      "cycle": "throws RangeError",
+      "toJSON": "throws TypeError",
+      "lone surrogate key": "\"{\\\"\\\\ud800\\\":1}\""
+     },
+     "signature": "2fe4f5651c46"
+    },
+    "exp/block5/core/grid-engine.mjs canonical (kept, external copy)": {
+     "suite": {
+      "pass": 50,
+      "total": 86,
+      "failing": [
+       "arrays > null and undefined values in array",
+       "objects > object with undefined value",
+       "objects > object with symbol value",
+       "circular references > object referencing itself throws",
+       "circular references > array referencing itself throws",
+       "circular references > nested circular reference throws",
+       "deep nesting > deeply nested arrays do not overflow the call stack",
+       "deep nesting > deeply nested objects do not overflow the call stack",
+       "values with no JSON representation > function-valued property is skipped",
+       "values with no JSON representation > function in array becomes null",
+       "values with no JSON representation > toJSON returning undefined skips the property",
+       "values with no JSON representation > toJSON returning undefined in array becomes null",
+       "boxed primitives > boxed Number is unwrapped",
+       "boxed primitives > boxed String is unwrapped",
+       "boxed primitives > boxed Boolean is unwrapped",
+       "boxed primitives > boxed NaN throws",
+       "unusual objects and arrays > sparse array holes become null",
+       "NaN handling > NaN in array",
+       "NaN handling > NaN in object",
+       "NaN handling > NaN as top-level value",
+       "Infinity handling > Infinity in array",
+       "Infinity handling > Infinity in object",
+       "Infinity handling > -Infinity as top-level value",
+       "Unicode handling > lone high surrogate in value throws",
+       "Unicode handling > lone low surrogate in value throws",
+       "Unicode handling > lone high surrogate before a non-low-surrogate throws",
+       "Unicode handling > lone surrogate in object key throws",
+       "Unicode handling > reversed surrogate pair throws",
+       "Unicode handling > lone surrogate as array element throws",
+       "string escaping > lone surrogate in a long string is rejected",
+       "toJSON > object with toJSON",
+       "toJSON > nested object with toJSON is serialized recursively",
+       "toJSON > toJSON returning NaN throws",
+       "toJSON > toJSON resolving to a primitive inside an array",
+       "toJSON > top-level toJSON resolving to a primitive returns its serialization",
+       "toJSON > toJSON returning self throws"
+      ]
+     },
+     "rfc8785": {
+      "pass": 6,
+      "total": 6,
+      "failing": []
+     },
+     "edges": {
+      "undefined": "undefined",
+      "{a:undefined}": "\"{\\\"a\\\":undefined}\"",
+      "[undefined]": "\"[]\"",
+      "sparse [,1]": "\"[,1]\"",
+      "NaN": "\"null\"",
+      "Infinity": "\"null\"",
+      "-0": "\"0\"",
+      "1e21": "\"1e+21\"",
+      "function": "undefined",
+      "Symbol": "undefined",
+      "BigInt": "throws TypeError",
+      "Date(0)": "\"{}\"",
+      "Map": "\"{}\"",
+      "class instance": "\"{\\\"a\\\":1}\"",
+      "null-prototype {a:1}": "\"{\\\"a\\\":1}\"",
+      "cycle": "throws RangeError",
+      "toJSON": "\"{\\\"toJSON\\\":undefined}\"",
+      "lone surrogate key": "\"{\\\"\\\\ud800\\\":1}\""
+     },
+     "signature": "8a55fc4f6257"
+    },
+    "exp/compression/canonical.mjs canonical (kept)": {
+     "suite": {
+      "pass": 43,
+      "total": 86,
+      "failing": [
+       "arrays > null and undefined values in array",
+       "objects > object with undefined value",
+       "objects > object with symbol value",
+       "objects > object with symbol key",
+       "primitive values > undefined",
+       "primitive values > symbol",
+       "circular references > object referencing itself throws",
+       "circular references > array referencing itself throws",
+       "circular references > nested circular reference throws",
+       "deep nesting > deeply nested arrays do not overflow the call stack",
+       "deep nesting > deeply nested objects do not overflow the call stack",
+       "values with no JSON representation > function-valued property is skipped",
+       "values with no JSON representation > function in array becomes null",
+       "values with no JSON representation > toJSON returning undefined skips the property",
+       "values with no JSON representation > toJSON returning undefined in array becomes null",
+       "values with no JSON representation > top-level function returns undefined",
+       "boxed primitives > boxed Number is unwrapped",
+       "boxed primitives > boxed String is unwrapped",
+       "boxed primitives > boxed Boolean is unwrapped",
+       "boxed primitives > boxed NaN throws",
+       "unusual objects and arrays > sparse array holes become null",
+       "unusual objects and arrays > inherited properties are not serialized",
+       "unusual objects and arrays > non-enumerable properties are not serialized",
+       "NaN handling > NaN in array",
+       "NaN handling > NaN in object",
+       "NaN handling > NaN as top-level value",
+       "Infinity handling > Infinity in array",
+       "Infinity handling > Infinity in object",
+       "Infinity handling > -Infinity as top-level value",
+       "number serialization > serializes as 0",
+       "Unicode handling > lone high surrogate in value throws",
+       "Unicode handling > lone low surrogate in value throws",
+       "Unicode handling > lone high surrogate before a non-low-surrogate throws",
+       "Unicode handling > lone surrogate in object key throws",
+       "Unicode handling > reversed surrogate pair throws",
+       "Unicode handling > lone surrogate as array element throws",
+       "string escaping > lone surrogate in a long string is rejected",
+       "toJSON > object with toJSON",
+       "toJSON > nested object with toJSON is serialized recursively",
+       "toJSON > toJSON returning NaN throws",
+       "toJSON > toJSON resolving to a primitive inside an array",
+       "toJSON > top-level toJSON resolving to a primitive returns its serialization",
+       "toJSON > toJSON returning self throws"
+      ]
+     },
+     "rfc8785": {
+      "pass": 6,
+      "total": 6,
+      "failing": []
+     },
+     "edges": {
+      "undefined": "throws TypeError",
+      "{a:undefined}": "throws TypeError",
+      "[undefined]": "throws TypeError",
+      "sparse [,1]": "throws TypeError",
+      "NaN": "throws TypeError",
+      "Infinity": "throws TypeError",
+      "-0": "\"-0\"",
+      "1e21": "\"1e+21\"",
+      "function": "throws TypeError",
+      "Symbol": "throws TypeError",
+      "BigInt": "throws TypeError",
+      "Date(0)": "throws TypeError",
+      "Map": "throws TypeError",
+      "class instance": "throws TypeError",
+      "null-prototype {a:1}": "\"{\\\"a\\\":1}\"",
+      "cycle": "throws TypeError",
+      "toJSON": "throws TypeError",
+      "lone surrogate key": "\"{\\\"\\\\ud800\\\":1}\""
+     },
+     "signature": "dd9171bc1b95"
+    }
+   },
+   "behaviorClasses": [
+    [
+     "exp/kernel/canonical.mjs canonicalLax",
+     "exp/block5/core/grid-engine.mjs canonical (kept, external copy)"
+    ],
+    [
+     "exp/kernel/canonical.mjs canonicalJson"
+    ],
+    [
+     "exp/atlas/calculations.mjs canonical (kept)"
+    ],
+    [
+     "exp/compression/canonical.mjs canonical (kept)"
+    ]
+   ]
+  },
+  "HTML escaping": {
+   "control": {
+    "library": "escape-html 1.0.3",
+    "passesItsOwnTests": true,
+    "suite": {
+     "pass": 30,
+     "total": 30,
+     "failing": []
+    }
+   },
+   "subjects": {
+    "exp/kernel/html.mjs esc": {
+     "suite": {
+      "pass": 28,
+      "total": 30,
+      "failing": [
+       "escapeHtml(string) > when string is undefined > should return &quot;undefined&quot;",
+       "escapeHtml(string) > when string is null > should return &quot;null&quot;"
+      ]
+     },
+     "signature": "92bfc1127700"
+    },
+    "src/session-repl.mjs escape (frozen)": {
+     "suite": {
+      "pass": 28,
+      "total": 30,
+      "failing": [
+       "escapeHtml(string) > when string is undefined > should return &quot;undefined&quot;",
+       "escapeHtml(string) > when string is null > should return &quot;null&quot;"
+      ]
+     },
+     "signature": "92bfc1127700"
+    }
+   },
+   "behaviorClasses": [
+    [
+     "exp/kernel/html.mjs esc",
+     "src/session-repl.mjs escape (frozen)"
+    ]
+   ]
+  },
+  "deep equality": {
+   "control": {
+    "library": "fast-deep-equal 3.1.3",
+    "passesItsOwnTests": true,
+    "suite": {
+     "pass": 110,
+     "total": 110,
+     "failing": []
+    }
+   },
+   "subjects": {
+    "exp/kernel/equal-json.mjs equalJson": {
+     "suite": {
+      "pass": 96,
+      "total": 110,
+      "failing": [
+       "scalars > NaN and NaN are equal",
+       "scalars > NaN and NaN are equal (reversed)",
+       "objects > objects with different `toString` functions returning same values are equal",
+       "objects > objects with different `toString` functions returning same values are equal (reversed)",
+       "Date objects > not equal date objects",
+       "Date objects > not equal date objects (reversed)",
+       "Date objects > date and object are not equal",
+       "Date objects > date and object are not equal (reversed)",
+       "RegExp objects > not equal RegExp objects (different pattern)",
+       "RegExp objects > not equal RegExp objects (different pattern) (reversed)",
+       "RegExp objects > not equal RegExp objects (different flags)",
+       "RegExp objects > not equal RegExp objects (different flags) (reversed)",
+       "RegExp objects > RegExp and object are not equal",
+       "RegExp objects > RegExp and object are not equal (reversed)"
+      ]
+     },
+     "signature": "1b5bf2e76a6a"
+    }
+   },
+   "behaviorClasses": [
+    [
+     "exp/kernel/equal-json.mjs equalJson"
+    ]
+   ]
+  },
+  "deep freeze": {
+   "control": {
+    "library": "deep-freeze 0.0.1",
+    "passesItsOwnTests": true,
+    "suite": {
+     "pass": 2,
+     "total": 2,
+     "failing": []
+    }
+   },
+   "subjects": {
+    "exp/kernel/freeze.mjs freezeTree": {
+     "suite": {
+      "pass": 0,
+      "total": 2,
+      "failing": [
+       "deep freeze > assertion 1",
+       "deep freeze > assertion 2"
+      ]
+     },
+     "signature": "96517ff1478b"
+    },
+    "exp/kernel/freeze.mjs freeze": {
+     "suite": {
+      "pass": 0,
+      "total": 2,
+      "failing": [
+       "deep freeze > assertion 1",
+       "deep freeze > assertion 2"
+      ]
+     },
+     "signature": "96517ff1478b"
+    },
+    "exp/kernel/freeze.mjs freezeTreeParentFirst": {
+     "suite": {
+      "pass": 0,
+      "total": 2,
+      "failing": [
+       "deep freeze > assertion 1",
+       "deep freeze > assertion 2"
+      ]
+     },
+     "signature": "96517ff1478b"
+    }
+   },
+   "behaviorClasses": [
+    [
+     "exp/kernel/freeze.mjs freezeTree",
+     "exp/kernel/freeze.mjs freeze",
+     "exp/kernel/freeze.mjs freezeTreeParentFirst"
+    ]
+   ]
+  },
+  "SHA-256": {
+   "control": {
+    "library": "node:crypto",
+    "passesItsOwnTests": true,
+    "suite": {
+     "pass": 4,
+     "total": 4,
+     "failing": []
+    }
+   },
+   "subjects": {
+    "scripts/import-closure.mjs sha256Hex": {
+     "suite": {
+      "pass": 4,
+      "total": 4,
+      "failing": []
+     },
+     "signature": "b8e985127647"
+    }
+   },
+   "behaviorClasses": [
+    [
+     "scripts/import-closure.mjs sha256Hex"
+    ]
+   ]
+  }
+ }
+}

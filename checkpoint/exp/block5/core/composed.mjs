@@ -2,6 +2,8 @@ import { Part, PxC } from '../../../vendor/hh/services/pxc.mjs';
 import { canonicalJson, cloneJson, validateJson } from './canonical.mjs';
 import { createPixelCache } from './pixel-cache.mjs';
 import { PROVIDER_IDENTITY, resolveProvider } from './providers.mjs';
+import { equalJson } from '../../kernel/equal-json.mjs';
+import { freezeTree as deepFreeze } from '../../kernel/freeze.mjs';
 
 const exactKeys = (value, expected, label) => {
   if (!value || typeof value !== 'object' || Array.isArray(value) || canonicalJson(Object.keys(value).sort()) !== canonicalJson([...expected].sort())) {
@@ -10,25 +12,6 @@ const exactKeys = (value, expected, label) => {
 };
 const preparedPlans = new WeakMap();
 const frozenProgramPlans = new WeakMap();
-
-function deepFreeze(value) {
-  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
-    for (const child of Object.values(value)) deepFreeze(child);
-    Object.freeze(value);
-  }
-  return value;
-}
-
-function equalJson(left, right) {
-  if (left === right) return true;
-  if (left === null || right === null || typeof left !== 'object' || typeof right !== 'object') return false;
-  if (Array.isArray(left) || Array.isArray(right)) {
-    return Array.isArray(left) && Array.isArray(right) && left.length === right.length && left.every((value, index) => equalJson(value, right[index]));
-  }
-  const leftKeys = Object.keys(left);
-  if (leftKeys.length !== Object.keys(right).length) return false;
-  return leftKeys.every(key => Object.hasOwn(right, key) && equalJson(left[key], right[key]));
-}
 
 function isDeepFrozen(value, seen = new Set()) {
   if (!value || typeof value !== 'object') return true;

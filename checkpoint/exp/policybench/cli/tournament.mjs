@@ -15,8 +15,9 @@ import { runMatch, replay } from '../engine/index.mjs';
 import { resolveConfig } from '../core/index.mjs';
 import { seededRandom } from '../policies/index.mjs';
 import { tacXTic, stayer, scout, planner } from '../tac-x-tic/index.mjs';
+import { flagReader } from './args.mjs';
 const args = process.argv.slice(2);
-const flag = (k, d) => { const i = args.indexOf(`--${k}`); return i >= 0 ? (args[i + 1] ?? d) : d; };
+const flag = flagReader(args);
 const library = { 'txt-stayer': stayer, 'txt-scout': scout, 'txt-planner': planner, 'seeded-random': seededRandom };
 const factories = { 'base:stayer': library['txt-stayer'], 'base:scout': library['txt-scout'], 'base:planner': library['txt-planner'], 'base:random': seededRandom };
 // tsx does not typecheck: two authored policies once ran with type errors that silently invalidated their plans.

@@ -6,6 +6,7 @@ import { createPixelCache } from './pixel-cache.mjs';
 import { DEFAULT_RECIPE, PROVIDER_IDENTITY, resolveProvider, validateRecipe } from './providers.mjs';
 import { createInitialWorld, normalizeWorld } from './world.mjs';
 import { createGridWorld, DEFAULT_GRID_RECIPE, normalizeGridWorld } from './grid-world.mjs';
+import { equalJson } from '../../kernel/equal-json.mjs';
 
 const VALID_MODES = new Set(['uncached', 'atomic', 'composed']);
 const atomicCacheScopes = new Map();
@@ -19,17 +20,6 @@ function atomicCacheScope(calculation) {
 
 function activeRules(recipe) {
   return recipe.rules.filter(rule => rule.enabled !== false);
-}
-
-function equalJson(left, right) {
-  if (left === right) return true;
-  if (left === null || right === null || typeof left !== 'object' || typeof right !== 'object') return false;
-  if (Array.isArray(left) || Array.isArray(right)) {
-    return Array.isArray(left) && Array.isArray(right) && left.length === right.length && left.every((value, index) => equalJson(value, right[index]));
-  }
-  const leftKeys = Object.keys(left);
-  if (leftKeys.length !== Object.keys(right).length) return false;
-  return leftKeys.every(key => Object.hasOwn(right, key) && equalJson(left[key], right[key]));
 }
 
 function matchingProgramAt(program, rules, start, inputByPort) {

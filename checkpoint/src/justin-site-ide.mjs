@@ -1,6 +1,6 @@
 import {createAnnotationRuntime} from './exp/cooperative/annotation-fg.mjs';
 import {Part,PxC} from './vendor/hh/services/pxc.mjs';
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+import {esc} from '../exp/kernel/html.mjs';
 const pages=['index.html','about.html','policy.html','community.html','blog.html','contact.html'];
 const fixes={
  F01:[{route:'*',selector:'body > header > div > div.flex',count:1,kind:'style',values:{height:'auto',flexWrap:'wrap',gap:'12px',padding:'16px'}},{route:'*',selector:'body > header nav',count:1,kind:'style',values:{display:'flex',width:'100%',flexWrap:'wrap',gap:'12px'}},{route:'*',selector:'body > header nav > a',count:6,kind:'style',values:{marginLeft:'0px'}}],

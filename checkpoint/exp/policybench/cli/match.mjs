@@ -13,12 +13,13 @@ import { resolveConfig } from '../core/index.mjs';
 import { seededRandom } from '../policies/index.mjs';
 import { tacXTic, stayer, scout, planner } from '../tac-x-tic/index.mjs';
 import { AUTHORED } from '../tac-x-tic/contrib/index.mjs';
+import { flagReader } from './args.mjs';
 export const LIBRARY = {
     'txt-stayer': stayer, 'txt-scout': scout, 'txt-planner': planner, 'seeded-random': seededRandom,
 };
 const SHORT = { stayer: 'txt-stayer', scout: 'txt-scout', planner: 'txt-planner', random: 'seeded-random' };
 const args = process.argv.slice(2);
-const flag = (k, d) => { const i = args.indexOf(`--${k}`); return i >= 0 ? (args[i + 1] ?? d) : d; };
+const flag = flagReader(args);
 const pos = args.filter((a, i) => !a.startsWith('--') && !(i > 0 && (args[i - 1] ?? '').startsWith('--')));
 const [pa = 'planner', pb = 'scout'] = pos;
 const seed = flag('seed', 'demo');

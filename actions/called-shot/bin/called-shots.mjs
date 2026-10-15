@@ -8,6 +8,9 @@
 //   call  <shot.json>
 //       Validates the shot, records the baseline commit (HEAD when absent),
 //       copies it to <calledDir>/<id>.shot.json and logs its sha256 and time.
+//   supersede <id> --by <id> --reason "<why>"
+//       Records that a missed shot was replaced by a later call. The miss stays
+//       in the record and the report but no longer fails `pr` once <by> is made.
 //   grade <shot.json> [--base <ref>] [--candidate <ref>] [--candidate-output <dir>] [--json <file>]
 //       Builds the base (the shot's baseline commit by default) and the
 //       candidate (the working tree by default), grades, prints the report.
@@ -118,10 +121,11 @@ async function gradeOne(repo, config, builder, file, { base, candidate, candidat
   return { report, text: renderReport(report, shot) };
 }
 
-// Shots added since base, in the order their commits landed, each with the
-// commit to grade it at: the last commit before the next shot was added, so
-// a later shot's change is never counted against an earlier one. The last
-// shot is graded at HEAD (null).
+// Shots added since base, each with the commit to grade it at. A shot is
+// graded at the last commit that contains it and no other shot's change:
+// on a straight line, the commit before the next shot was added; with lanes
+// merged as branches, the head of its own lane. null means HEAD itself (or a
+// commit with HEAD's exact tree), so an output already built can be reused.
 function addedShots(repo, config, base) {
   // --no-merges: on pull_request, HEAD is a merge whose own diff would hold every shot at once.
   const log = git(repo, ['log', '--reverse', '--topo-order', '--no-merges', '--diff-filter=A', '--format=commit %H', '--name-only', `${base}..HEAD`, '--', config.calledDir]);
@@ -136,26 +140,39 @@ function addedShots(repo, config, base) {
     const out = git(repo, ['diff', '--name-only', '--diff-filter=A', `${base}...HEAD`, '--', config.calledDir]);
     return out.split('\n').filter(f => f.endsWith('.shot.json')).sort().map(file => ({ file, at: null }));
   }
-  return added.map((shot, i) => {
-    const next = added.slice(i + 1).find(s => s.commit !== shot.commit);
-    return { file: shot.file, at: next ? git(repo, ['rev-parse', `${next.commit}^`]) : null };
+  const contains = (ancestor, commit) => git(repo, ['merge-base', '--is-ancestor', ancestor, commit], { quiet: true }) !== null;
+  const commits = git(repo, ['rev-list', '--reverse', '--topo-order', '--no-merges', `${base}..HEAD`]).split('\n').filter(Boolean);
+  const headTree = git(repo, ['rev-parse', 'HEAD^{tree}']);
+  return added.map(shot => {
+    const others = added.filter(s => s.commit !== shot.commit && !contains(s.commit, shot.commit));
+    const own = commits.filter(c => contains(shot.commit, c) && !others.some(s => contains(s.commit, c)));
+    const at = own.at(-1) ?? shot.commit;
+    return { file: shot.file, at: git(repo, ['rev-parse', `${at}^{tree}`]) === headTree ? null : at };
   });
 }
 
-// In GitHub Actions: step outputs, the job summary, and one annotation per
-// verdict, which shows on the pull request's checks and is readable through
-// the checks API without the logs.
+// In GitHub Actions: step outputs, the job summary, and annotations, which
+// show on the pull request's checks and are readable through the checks API
+// without the logs. GitHub keeps at most 10 annotations of each level per
+// step, so every made shot goes into one summary notice, and each missed or
+// superseded shot gets its own error or warning.
 function githubOutputs(values, summary, verdicts = []) {
   if (process.env.GITHUB_OUTPUT) fs.appendFileSync(process.env.GITHUB_OUTPUT, Object.entries(values).map(([k, v]) => `${k}=${v}\n`).join(''));
   if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, summary + '\n');
   if (process.env.GITHUB_ACTIONS !== 'true') return;
   const escape = s => String(s).replaceAll('%', '%25').replaceAll('\r', '%0D').replaceAll('\n', '%0A');
-  for (const { file, report } of verdicts) {
-    const made = report.results.filter(r => r.pass).map(r => r.id), missed = report.results.filter(r => !r.pass);
-    const detail = report.made
-      ? `${made.length} of ${report.results.length} clauses made: ${made.join(', ')}`
-      : [...report.problems, ...missed.map(r => `${r.id} ${r.kind}: ${r.evidence[0]}`), ...(report.precheck && !report.precheck.pass ? ['precheck: every clause was already true on the baseline'] : [])].join('\n');
-    console.log(`::${report.made ? 'notice' : 'error'} file=${file},title=${escape(`Called shot ${report.made ? 'made' : 'missed'}: ${report.shot}`)}::${escape(detail)}`);
+  // Workflow command properties are comma-separated key=value pairs.
+  const property = s => escape(s).replaceAll(':', '%3A').replaceAll(',', '%2C');
+  const madeShots = verdicts.filter(v => v.report.made);
+  if (madeShots.length) {
+    const lines = madeShots.map(({ report }) => `${report.shot}: ${report.results.length} of ${report.results.length} clauses made`);
+    console.log(`::notice title=${property(`Called shots made: ${madeShots.length} of ${verdicts.length}`)}::${escape(lines.join('\n'))}`);
+  }
+  for (const { file, report, superseded } of verdicts.filter(v => !v.report.made)) {
+    const missed = report.results.filter(r => !r.pass);
+    const detail = [...(superseded ? [`superseded by ${superseded.by}: ${superseded.reason}`] : []), ...report.problems, ...missed.map(r => `${r.id} ${r.kind}: ${r.evidence[0]}`), ...(report.precheck && !report.precheck.pass ? ['precheck: every clause was already true on the baseline'] : [])].join('\n');
+    const [level, verdict] = superseded ? ['warning', `missed, superseded by ${superseded.by}`] : ['error', 'missed'];
+    console.log(`::${level} file=${property(file)},title=${property(`Called shot ${verdict}: ${report.shot}`)}::${escape(detail)}`);
   }
 }
 
@@ -164,9 +181,25 @@ async function main() {
   const { positional, options } = parse(rest);
   const repo = repoRoot();
   if (command === 'init') return init(repo, options);
-  if (!['call', 'grade', 'pr', 'crosscheck'].includes(command)) { console.error(fs.readFileSync(import.meta.filename, 'utf8').split('\n').slice(1, 22).join('\n')); process.exit(2); }
+  if (!['call', 'supersede', 'grade', 'pr', 'crosscheck'].includes(command)) { console.error(fs.readFileSync(import.meta.filename, 'utf8').split('\n').slice(1, 25).join('\n')); process.exit(2); }
   const config = loadConfig(repo, options.config ?? CONFIG_FILE);
   if (command === 'call') return call(repo, config, positional[0] ?? fail('call needs a shot file'));
+  const eventsFile = path.join(repo, config.calledDir, 'events.jsonl');
+  const events = () => fs.existsSync(eventsFile) ? fs.readFileSync(eventsFile, 'utf8').split('\n').filter(Boolean).map(line => JSON.parse(line)) : [];
+  // supersede <id> --by <id> --reason "<text>": a missed shot replaced by a later
+  // call. The miss stays in the record and the report; it no longer fails `pr`
+  // when the superseding shot is graded made in the same run.
+  if (command === 'supersede') {
+    const [id] = positional, by = options.by, reason = options.reason;
+    if (!id || !by || !reason) fail('supersede <id> --by <id> --reason "<why>"');
+    // The log's order is the order of calls; timestamps can tie within a second.
+    const callIndex = shot => { const i = events().findIndex(e => e.event === 'shot.called' && e.shot === shot); return i >= 0 ? i : fail(`${shot} was never called`); };
+    for (const shot of [id, by]) if (!fs.existsSync(path.join(repo, config.calledDir, `${shot}.shot.json`))) fail(`${config.calledDir}/${shot}.shot.json not found`);
+    if (!(callIndex(by) > callIndex(id))) fail(`${by} must be called after ${id}`);
+    const event = { event: 'shot.superseded', shot: id, by, reason, at: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z') };
+    fs.appendFileSync(eventsFile, JSON.stringify(event) + '\n');
+    return console.log(`${id} superseded by ${by}`);
+  }
   if (command === 'crosscheck') {
     const [mode, dir, ...shots] = positional;
     if (mode === 'batch') {
@@ -205,14 +238,20 @@ async function main() {
     }
     const results = [];
     for (const { file, at } of shots) {
-      if (at) console.error(`[called-shots] ${file}: graded at ${at.slice(0, 12)}, before the next shot was added`);
+      if (at) console.error(`[called-shots] ${file}: graded at ${at.slice(0, 12)}, the last commit with this shot and no other shot's change`);
       const graded = await gradeOne(repo, config, builder, path.join(repo, file), at ? { candidate: at } : { candidateOutput: options['candidate-output'] });
       console.log(graded.text + '\n');
       results.push({ file, ...graded });
     }
-    const made = results.every(r => r.report.made);
+    // A missed shot superseded by a shot made in this run does not fail it.
+    const supersessions = events().filter(e => e.event === 'shot.superseded');
+    for (const r of results) {
+      const s = supersessions.findLast(e => e.shot === r.report.shot);
+      if (!r.report.made && s && results.some(o => o.report.shot === s.by && o.report.made)) r.superseded = s;
+    }
+    const made = results.every(r => r.report.made || r.superseded);
     githubOutputs({ made: String(made), shots: results.length },
-      ['### Called shots', '', ...results.map(r => `**${r.report.made ? 'Made' : 'Missed'}**: \`${r.file}\``), '',
+      ['### Called shots', '', ...results.map(r => `**${r.report.made ? 'Made' : r.superseded ? `Missed, superseded by \`${r.superseded.by}\`` : 'Missed'}**: \`${r.file}\``), '',
         ...results.map(r => '```text\n' + r.text + '\n```')].join('\n'), results);
     return made ? 0 : 1;
   } finally {
