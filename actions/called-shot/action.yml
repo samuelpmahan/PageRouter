@@ -1,0 +1,44 @@
+name: Called shot
+description: Grade called shots added by a change. Builds the baseline and the change with the repository's own command, checks every clause, and reports exact evidence.
+
+inputs:
+  config:
+    description: Path of the configuration file, relative to the repository root.
+    default: called-shots.json
+  base:
+    description: Commit to look for added shots against. Defaults to the pull request base, or the commit before a push.
+    default: ''
+  candidate-output:
+    description: An output the workflow already built for this change. When set, the change is not built again.
+    default: ''
+  require-shot:
+    description: Fail when the change adds no called shot.
+    default: 'false'
+
+outputs:
+  made:
+    description: true when every added shot was made.
+    value: ${{ steps.grade.outputs.made }}
+  shots:
+    description: Number of shots graded.
+    value: ${{ steps.grade.outputs.shots }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install the grader
+      shell: bash
+      run: npm ci --no-audit --no-fund --prefix "$GITHUB_ACTION_PATH"
+    - name: Grade called shots
+      id: grade
+      shell: bash
+      env:
+        CALLED_SHOTS_CONFIG: ${{ inputs.config }}
+        CALLED_SHOTS_BASE: ${{ inputs.base || github.event.pull_request.base.sha || github.event.before }}
+        CALLED_SHOTS_CANDIDATE_OUTPUT: ${{ inputs.candidate-output }}
+        CALLED_SHOTS_REQUIRE_SHOT: ${{ inputs.require-shot }}
+      run: |
+        args=(pr --config "$CALLED_SHOTS_CONFIG" --base "$CALLED_SHOTS_BASE")
+        [[ -n "$CALLED_SHOTS_CANDIDATE_OUTPUT" ]] && args+=(--candidate-output "$CALLED_SHOTS_CANDIDATE_OUTPUT")
+        [[ "$CALLED_SHOTS_REQUIRE_SHOT" == true ]] && args+=(--require-shot)
+        node "$GITHUB_ACTION_PATH/bin/called-shots.mjs" "${args[@]}"

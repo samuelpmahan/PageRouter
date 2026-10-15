@@ -1,0 +1,20 @@
+name: Called shots
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  grade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      # Install whatever the build command in called-shots.json needs here.
+      - uses: samuelpmahan/PageRouter/actions/called-shot@__ACTION_REF__

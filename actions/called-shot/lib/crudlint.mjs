@@ -1,8 +1,9 @@
 // crudlint predicate runner: ast-grep rules in, crudlint findings out.
 //
-// The predicate set lives in ci/shots/crudlint/ in crudlint's layout
-// (sgconfig.yml, rules/, utils/, rule-tests/), so crudlint rule files drop in
-// unchanged. The shipped set is empty: a project describes its own cases.
+// A repository's predicate set is a directory in crudlint's layout
+// (sgconfig.yml, rules/, utils/, rule-tests/), named by "predicates" in
+// called-shots.json, so crudlint rule files drop in unchanged. With none
+// configured the set is empty and finds nothing.
 //
 // Finding shape is crudlint's: {rule, layer, tool, file, line, endLine,
 // message, caseIds, snippet}, file relative to the project root with forward
@@ -12,17 +13,16 @@
 // use crudlint's grouping metadata (group, collapse) are refused rather than
 // silently reported per hit.
 //
-//   node ci/shots/crudlint.mjs <projectRoot> [--src src,scripts] [--config dir]
 import fs from 'node:fs';
 import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-export const DEFAULT_CONFIG = path.join(import.meta.dirname, 'crudlint');
 const TEST_PATH = /(^|\/)(tests?|__tests__|__mocks__)\/|\.(test|spec)\.[cm]?[tj]sx?$/;
 
-export function ruleFiles(configDir = DEFAULT_CONFIG) {
+export function ruleFiles(configDir) {
+  if (!configDir) return [];
   const dir = path.join(configDir, 'rules');
   if (!fs.existsSync(dir)) return [];
   return fs.readdirSync(dir).filter(name => /\.ya?ml$/.test(name)).sort();
@@ -43,7 +43,7 @@ function finding(rule, file, line, endLine, message, snippet) {
   return { rule, layer: 2, tool: 'ast-grep', file, line, endLine, message, caseIds: [], snippet: String(snippet ?? '').replace(/\s+/g, ' ').trim().slice(0, 200) };
 }
 
-export function runPredicates(projectRoot, { src = ['src'], configDir = DEFAULT_CONFIG } = {}) {
+export function runPredicates(projectRoot, { src = ['src'], configDir = null } = {}) {
   if (!ruleFiles(configDir).length) return [];
   const root = path.resolve(projectRoot);
   const targets = src.map(dir => path.join(root, dir)).filter(dir => fs.existsSync(dir));
@@ -74,12 +74,4 @@ export function runPredicates(projectRoot, { src = ['src'], configDir = DEFAULT_
     }
   }
   return findings.sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line || a.rule.localeCompare(b.rule));
-}
-
-if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
-  const [projectRoot, ...rest] = process.argv.slice(2);
-  if (!projectRoot) { console.error('usage: node crudlint.mjs <projectRoot> [--src src,scripts] [--config dir]'); process.exit(2); }
-  const option = name => { const i = rest.indexOf(name); return i >= 0 ? rest[i + 1] : undefined; };
-  const findings = runPredicates(projectRoot, { src: (option('--src') ?? 'src').split(','), configDir: option('--config') ?? DEFAULT_CONFIG });
-  console.log(JSON.stringify(findings, null, 1));
 }

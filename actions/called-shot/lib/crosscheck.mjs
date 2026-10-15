@@ -1,7 +1,7 @@
-#!/usr/bin/env node
 // Crosscheck: do a shot's sentences say exactly what its clauses check?
 //
-// Built in Atlas's cross-verification form (exp/atlas/cross-language.mjs):
+// Built in the cross-verification form of PageRouter's Atlas
+// (checkpoint/exp/atlas/cross-language.mjs):
 // a content-addressed case (the batch), one observation per independent
 // checker, and a comparison composed through a PxC FunctionalGuarantee
 // into /crosscheck/agreement with the first disagreement named by path.
@@ -10,15 +10,10 @@
 // answer one question per item: is every claim in this sentence checked by
 // these clauses? "covered", or "gap" with a verbatim quote of the unchecked
 // words. A quote that is not a substring of the sentence is not an answer.
-//
-//   node crosscheck.mjs batch DIR SHOT.json...   writes DIR/batch.json and DIR/key.json
-//   node crosscheck.mjs compare DIR              reads DIR/batch.json, DIR/key.json, DIR/<checker>.json
-//                                                writes DIR/comparison.json and DIR/report.md
-import fs from 'node:fs';
-import path from 'node:path';
+
 import crypto from 'node:crypto';
-import { Part, PxC } from '../../vendor/hh/services/pxc.mjs';
-import { canonical } from '../../exp/atlas/calculations.mjs';
+import { Part, PxC } from '../vendor/pxc.mjs';
+import { canonical } from './canonical.mjs';
 
 export const BATCH = 'kompozed.shots.crosscheck-batch.v1';
 export const KEY = 'kompozed.shots.crosscheck-key.v1';
@@ -32,8 +27,10 @@ export const CLAUSE_KINDS = {
   'ast.moved': 'Top-level function `symbol` is declared in `from` and not in `to` on the baseline, and in `to` and not in `from` on the candidate. With body: "identical", the declaration text is unchanged; without it, the body is not checked.',
   'ast.onlyImportsChanged': 'In each of `files`, every top-level statement other than imports, comments and the `except` declarations is textually identical.',
   'source.changedExactly': 'The source files modified, added and removed are exactly the listed ones. It checks which files changed, not what is inside them.',
-  'site.changedExactly': 'The built site files modified, added and removed are exactly the listed ones. An empty list means the site is byte-identical.',
+  'output.changedExactly': 'The built output files modified, added and removed are exactly the listed ones. Empty lists mean the output is byte-identical.',
+  'site.changedExactly': 'The same as output.changedExactly (an older name).',
   'json.changedPathsExactly': 'In the JSON `file`, exactly the listed JSON paths have different values; every other value is equal.',
+  'json.valueEquals': 'In the candidate\'s JSON `file`, the value at `path` equals `value`.',
   'text.onlyLinesAdded': 'In each of `files`, every baseline line survives in order and exactly `lines` lines are added. It does not check what the added lines say.',
   'crudlint.findingsChangedExactly': 'Running the crudlint predicate set, exactly the listed findings appear and disappear.',
 };
@@ -187,25 +184,4 @@ export function renderReport(batch, key, comparison, scores, shots) {
     out.push('');
   }
   return out.join('\n');
-}
-
-if (process.argv[1] && path.resolve(process.argv[1]) === path.resolve(import.meta.filename)) {
-  const [command, dir, ...rest] = process.argv.slice(2);
-  const read = f => JSON.parse(fs.readFileSync(f, 'utf8')), write = (f, v) => fs.writeFileSync(f, typeof v === 'string' ? v : JSON.stringify(v, null, 2) + '\n');
-  if (command === 'batch') {
-    const { batch, key } = buildBatch(rest.map(read));
-    fs.mkdirSync(dir, { recursive: true });
-    write(path.join(dir, 'batch.json'), batch); write(path.join(dir, 'key.json'), key);
-    console.log(`${batch.items.length} items, case ${batch.case_id}`);
-  } else if (command === 'compare') {
-    const batch = read(path.join(dir, 'batch.json')), key = read(path.join(dir, 'key.json'));
-    const shotFiles = rest.length ? rest : [];
-    const observations = fs.readdirSync(dir).filter(f => /^[a-z]+-\d+\.json$/.test(f)).sort().map(f => read(path.join(dir, f)));
-    const comparison = await compare(batch, observations), scores = score(comparison, key);
-    write(path.join(dir, 'comparison.json'), { ...comparison, scores });
-    write(path.join(dir, 'report.md'), renderReport(batch, key, comparison, scores, shotFiles.map(read)) + '\n');
-    console.log(fs.readFileSync(path.join(dir, 'report.md'), 'utf8'));
-  } else {
-    console.error('usage: node crosscheck.mjs batch DIR SHOT.json... | compare DIR SHOT.json...'); process.exit(2);
-  }
 }
