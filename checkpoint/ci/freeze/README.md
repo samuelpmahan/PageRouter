@@ -11,18 +11,17 @@ cd checkpoint
 bash ci/freeze/verify-baseline.sh
 ```
 
-This runs the same Bazel target as GitHub Actions (`ci/bazel/run.sh`), then
-compares a stable digest of `bazel-bin/site.site` against `baseline.json`.
+This runs the same Bazel target as GitHub Actions (`ci/bazel/run.sh`) and
+requires the built site to be byte-identical to the baseline: the same
+`siteBuildId`, which is the hash of every file's hash.
 
-Why a stable digest and not `siteBuildId`: the build is reproducible in content
-but not in bytes. The pinned PxCube packager writes wall-clock fields
-(`packagedAt`, `runId`, `durationMs`), and those cascade into the compiled
-snapshot and the catalog. Two cold builds of the same commit differed in 34 of
-829 files for exactly these reasons and no others. `stable-digest.mjs` masks
-those fields only, re-hashes the compiled snapshot by masked file content, and
-hashes everything else byte for byte. It never edits the site. The masking
-lives here rather than in the packager because the packager is pinned vendor
-code; a fixed build clock in PxCube would remove the need for it.
+The build is reproducible because its one varying input, the clock, is
+declared. `source-date-epoch.txt` holds a fixed time (whole seconds since
+1970); the driver passes it to every step as `SOURCE_DATE_EPOCH`. PxCube's
+packager, run ids and tidy registry write that time instead of the wall clock,
+the run id (also the service-worker cache name) ends in a digest of the build
+inputs, and wall-clock durations are left out of shipped receipts. Two cold
+builds on different filesystems produce identical bytes.
 
 ## Path to success when the build fails
 
@@ -48,9 +47,9 @@ code; a fixed build clock in PxCube would remove the need for it.
 7. **`verify-output.mjs` fails**. The output does not match its own receipt,
    which points at a corrupted cache. Rebuild with a fresh
    `PAGEROUTER_BAZEL_OUTPUT_ROOT`.
-8. **`BASELINE MISMATCH`**. The build succeeded but the site differs. Run
-   `node ci/freeze/stable-digest.mjs bazel-bin/site.site --files` here and on a
-   known-good build, and diff the records. On a clean checkout of the tag this
+8. **`BASELINE MISMATCH`**. The build succeeded but the bytes differ. Compare
+   `siteFiles` in `bazel-bin/site.receipt.json` with a known-good build's
+   receipt to list the differing files. On a clean checkout of the tag this
    means the environment differs; record it before any agent starts.
 
 Windows: the build needs Linux (bash, Linux sandboxing, host `sh`/`cp`). Run it
@@ -58,20 +57,20 @@ in WSL2 with the toolchain above installed inside WSL, not with Windows Node.
 
 ## Path to the frozen, tagged commit
 
-1. Land the commit on `main` and wait for the Actions build to pass.
+1. Land the commit on `main` and wait for the Actions build to pass. Its
+   `siteBuildId` must equal `baseline.json`.
 2. Tag that exact commit, annotated, with the stable digest in the message:
 
    ```sh
-   git tag -a baseline/pagerouter-2026-10-12 <commit> \
-     -m "stableDigest c216d9aa0e76de11b07d9cd7538f4fcd1efac74719dc129113285b3506db3c20"
-   git push origin baseline/pagerouter-2026-10-12
+   git tag -a baseline/pagerouter-<date> <commit> -m "siteBuildId <from baseline.json>"
+   git push origin baseline/pagerouter-<date>
    ```
 
    Tags are never moved. A new baseline gets a new tag and a new `baseline.json`.
 3. Each agent, local or cloud, starts with:
 
    ```sh
-   git clone --depth 1 --branch baseline/pagerouter-2026-10-12 \
+   git clone --depth 1 --branch baseline/pagerouter-<date> \
      https://github.com/samuelpmahan/PageRouter agent-<name>
    cd agent-<name>/checkpoint
    bash ci/freeze/verify-baseline.sh
@@ -84,6 +83,5 @@ in WSL2 with the toolchain above installed inside WSL, not with Windows Node.
 
 ## Files
 
-- `baseline.json`: expected stable digest, toolchain, and the evidence for it.
-- `stable-digest.mjs`: computes the stable digest of a built site.
+- `baseline.json`: expected `siteBuildId`, toolchain, and the evidence for it.
 - `verify-baseline.sh`: builds, then compares against the baseline.

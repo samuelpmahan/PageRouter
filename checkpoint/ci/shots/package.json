@@ -1,0 +1,15 @@
+{
+  "name": "pagerouter-called-shots",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Deterministic grader for called shots, with an empty crudlint predicate set. Not a site build input.",
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "dependencies": {
+    "@ast-grep/cli": "0.50.0",
+    "tree-sitter-wasms": "0.1.12",
+    "web-tree-sitter": "0.20.8"
+  }
+}

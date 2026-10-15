@@ -1,0 +1,522 @@
+{
+  "format": "kompozed.shots.crosscheck-comparison.v1",
+  "case_id": "sha256:d953bcec0e96fd29abe95db67d7aa996574a59577f31ab4015b4fa8e9beecaa5",
+  "agreement": {
+    "accepted": true,
+    "item_count": 25,
+    "first_difference": null,
+    "items": [
+      {
+        "id": "x09e447",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "no PxCube package, snapshot or delta file changes"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "no PxCube package, snapshot or delta file changes"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "no PxCube package, snapshot or delta file changes"
+          }
+        }
+      },
+      {
+        "id": "x0a317b",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "tells a checker to answer each item covered or gap"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "tells a checker to answer each item covered or gap"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "tells a checker to answer each item covered or gap"
+          }
+        }
+      },
+      {
+        "id": "x0b55df",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "the build runs faster than before"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "the build runs faster than before"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "the build runs faster than before"
+          }
+        }
+      },
+      {
+        "id": "x13961d",
+        "majority": "covered",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-2": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-3": {
+            "verdict": "covered",
+            "unchecked": null
+          }
+        }
+      },
+      {
+        "id": "x15500d",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "because Bazel's inputs do not include ci/shots/"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "because Bazel's inputs do not include ci/shots/"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "because Bazel's inputs do not include ci/shots/"
+          }
+        }
+      },
+      {
+        "id": "x27675a",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "added to the npm test list in package.json"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "added to the npm test list in package.json"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "added to the npm test list in package.json"
+          }
+        }
+      },
+      {
+        "id": "x36ea5f",
+        "majority": "covered",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-2": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-3": {
+            "verdict": "covered",
+            "unchecked": null
+          }
+        }
+      },
+      {
+        "id": "x4c7870",
+        "majority": "covered",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-2": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-3": {
+            "verdict": "covered",
+            "unchecked": null
+          }
+        }
+      },
+      {
+        "id": "x525d71",
+        "majority": "covered",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-2": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-3": {
+            "verdict": "covered",
+            "unchecked": null
+          }
+        }
+      },
+      {
+        "id": "x5ba803",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "runs a crudlint predicate set"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "runs a crudlint predicate set"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "runs a crudlint predicate set"
+          }
+        }
+      },
+      {
+        "id": "x5f966a",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "builds a crosscheck batch"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "builds a crosscheck batch"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "builds a crosscheck batch from the called shots"
+          }
+        }
+      },
+      {
+        "id": "x6121d6",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "one step that installs ci/shots from its lock and runs its tests"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "one step that installs ci/shots from its lock and runs its tests"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "one step that installs ci/shots from its lock and runs its tests"
+          }
+        }
+      },
+      {
+        "id": "x6ed9e1",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "with its body unchanged"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "with its body unchanged"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "with its body unchanged"
+          }
+        }
+      },
+      {
+        "id": "x73e294",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "import safePath from ./paths.mjs"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "import safePath from ./paths.mjs"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "import safePath from ./paths.mjs"
+          }
+        }
+      },
+      {
+        "id": "x77077b",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "Three Haiku checkers answer the same batch"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "Three Haiku checkers answer the same batch without seeing each other's answers or the gold key"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "Three Haiku checkers answer the same batch without seeing each other's answers or the gold key"
+          }
+        }
+      },
+      {
+        "id": "x7aa283",
+        "majority": "covered",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-2": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-3": {
+            "verdict": "covered",
+            "unchecked": null
+          }
+        }
+      },
+      {
+        "id": "xa6138c",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "because scripts/ files are hashed into that identity"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "because scripts/ files are hashed into that identity"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "because scripts/ files are hashed into that identity"
+          }
+        }
+      },
+      {
+        "id": "xb2f89f",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "adds paths.mjs to the list of source modules it copies into the site"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "adds paths.mjs to the list of source modules it copies into the site"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "adds paths.mjs to the list of source modules it copies into the site"
+          }
+        }
+      },
+      {
+        "id": "xb4a49a",
+        "majority": "covered",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-2": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-3": {
+            "verdict": "covered",
+            "unchecked": null
+          }
+        }
+      },
+      {
+        "id": "xbd987f",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "import safePath from ./paths.mjs"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "import safePath from ./paths.mjs"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "import safePath from ./paths.mjs"
+          }
+        }
+      },
+      {
+        "id": "xc2e613",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "deterministic grader"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "deterministic grader"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "deterministic grader"
+          }
+        }
+      },
+      {
+        "id": "xc6ee28",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "only at $.release.siteBuildId"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "only at $.release.siteBuildId"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "only at $.release.siteBuildId"
+          }
+        }
+      },
+      {
+        "id": "xcf1b92",
+        "majority": "gap",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "gap",
+            "unchecked": "stops listing src files by hand"
+          },
+          "haiku-2": {
+            "verdict": "gap",
+            "unchecked": "stops listing src files by hand"
+          },
+          "haiku-3": {
+            "verdict": "gap",
+            "unchecked": "stops listing src files by hand"
+          }
+        }
+      },
+      {
+        "id": "xe86558",
+        "majority": "covered",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-2": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-3": {
+            "verdict": "covered",
+            "unchecked": null
+          }
+        }
+      },
+      {
+        "id": "xffeab7",
+        "majority": "covered",
+        "unanimous": true,
+        "answers": {
+          "haiku-1": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-2": {
+            "verdict": "covered",
+            "unchecked": null
+          },
+          "haiku-3": {
+            "verdict": "covered",
+            "unchecked": null
+          }
+        }
+      }
+    ]
+  },
+  "producer": {
+    "calculation": "crosscheck_agreement_fg",
+    "calculation_part": "/crosscheck/fg",
+    "output_part": "/crosscheck/agreement",
+    "kernel": "vendor/hh/services/pxc.mjs"
+  },
+  "scores": {
+    "perChecker": {
+      "haiku-1": {
+        "goldCaught": 4,
+        "goldPointed": 4,
+        "gold": 4,
+        "falseAlarms": 0,
+        "controls": 2,
+        "invalid": 0
+      },
+      "haiku-2": {
+        "goldCaught": 4,
+        "goldPointed": 4,
+        "gold": 4,
+        "falseAlarms": 0,
+        "controls": 2,
+        "invalid": 0
+      },
+      "haiku-3": {
+        "goldCaught": 4,
+        "goldPointed": 4,
+        "gold": 4,
+        "falseAlarms": 0,
+        "controls": 2,
+        "invalid": 0
+      }
+    },
+    "majorityGoldCaught": 4,
+    "gold": 4
+  }
+}

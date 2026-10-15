@@ -7,9 +7,13 @@ import {atlasImplementationIdentity} from './atlas-identity.mjs';
 import {preservePxCube} from './preserve-pxcube.mjs';
 import {evaluatorClosure,evaluatorImplementationPin} from './evaluator-identity.mjs';
 import {relocateHhServiceImports} from './relocate-hh-imports.mjs';
+import {siteSourceClosure} from './site-closure.mjs';
 const root=path.resolve(import.meta.dirname,'..'),dist=path.join(root,'dist');
 fs.mkdirSync(dist,{recursive:true});
-for(const f of ['index.html','app.mjs','session-repl.mjs','justin-site-ide.mjs','styles.css','static-compiler.mjs','compiled-patch.mjs','project-router.mjs','local-store.mjs','sw.js'])fs.copyFileSync(path.join(root,'src',f),path.join(dist,f));
+// index.html loads the app; app.mjs registers sw.js by URL, not by import.
+// atlas-view.mjs and block5-view.mjs are rewritten below, not copied.
+const siteSources=siteSourceClosure(path.join(root,'src'),{entries:['index.html','sw.js'],rewritten:['atlas-view.mjs','block5-view.mjs']});
+for(const f of siteSources.copied)fs.copyFileSync(path.join(root,'src',f),path.join(dist,f));
 const atlasViewSource=fs.readFileSync(path.join(root,'src/atlas-view.mjs'),'utf8');
 let builtAtlasView=atlasViewSource;
 for(const module of ['atlas-session.mjs','cross-language.mjs']){

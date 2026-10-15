@@ -1,0 +1,33 @@
+{
+  "schema": "called-shot@0",
+  "id": "crosscheck-pool",
+  "sourceRoot": ".",
+  "baseline": { "commit": "d291a64", "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1" },
+  "call": [
+    { "id": "S1", "text": "A new checkpoint/ci/shots/crosscheck.mjs builds a crosscheck batch from the called shots, one item per sentence with the clauses that cover it, plus seeded gold items whose answer is known, and composes the checkers' observations into an agreement through a PxC FunctionalGuarantee, in Atlas's case, observation and comparison form." },
+    { "id": "S2", "text": "checkpoint/ci/shots/crosscheck/prompt.md tells a checker to answer each item covered or gap, and for a gap to quote verbatim the words of the sentence that no clause checks." },
+    { "id": "S3", "text": "Three Haiku checkers answer the same batch without seeing each other's answers or the gold key; the batch, the key, their three observations, the comparison and a rendered report are recorded in checkpoint/ci/shots/called/crosscheck-2026-10-12/." },
+    { "id": "S4", "text": "Source changes are exactly: checkpoint/ci/shots/README.md and called/events.jsonl modified; crosscheck.mjs, crosscheck/prompt.md, test/crosscheck.test.mjs, called/crosscheck-pool.shot.json, called/grader-in-ci.grade.json and the seven crosscheck records added; nothing removed." },
+    { "id": "S5", "text": "The built site is byte-identical to the baseline." }
+  ],
+  "clauses": [
+    { "id": "C1", "covers": ["S1", "S2", "S3", "S4"], "kind": "source.changedExactly",
+      "modified": ["checkpoint/ci/shots/README.md", "checkpoint/ci/shots/called/events.jsonl"],
+      "added": [
+        "checkpoint/ci/shots/called/crosscheck-2026-10-12/batch.json",
+        "checkpoint/ci/shots/called/crosscheck-2026-10-12/comparison.json",
+        "checkpoint/ci/shots/called/crosscheck-2026-10-12/haiku-1.json",
+        "checkpoint/ci/shots/called/crosscheck-2026-10-12/haiku-2.json",
+        "checkpoint/ci/shots/called/crosscheck-2026-10-12/haiku-3.json",
+        "checkpoint/ci/shots/called/crosscheck-2026-10-12/key.json",
+        "checkpoint/ci/shots/called/crosscheck-2026-10-12/report.md",
+        "checkpoint/ci/shots/called/crosscheck-pool.shot.json",
+        "checkpoint/ci/shots/called/grader-in-ci.grade.json",
+        "checkpoint/ci/shots/crosscheck.mjs",
+        "checkpoint/ci/shots/crosscheck/prompt.md",
+        "checkpoint/ci/shots/test/crosscheck.test.mjs"
+      ],
+      "removed": [] },
+    { "id": "C2", "covers": ["S5"], "kind": "site.changedExactly", "modified": [], "added": [], "removed": [] }
+  ]
+}

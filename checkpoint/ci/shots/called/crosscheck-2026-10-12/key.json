@@ -1,0 +1,118 @@
+{
+  "format": "kompozed.shots.crosscheck-key.v1",
+  "case_id": "sha256:d953bcec0e96fd29abe95db67d7aa996574a59577f31ab4015b4fa8e9beecaa5",
+  "real": {
+    "xb4a49a": {
+      "shot": "extract-safePath",
+      "sentence": "S1"
+    },
+    "x73e294": {
+      "shot": "extract-safePath",
+      "sentence": "S2"
+    },
+    "xb2f89f": {
+      "shot": "extract-safePath",
+      "sentence": "S3"
+    },
+    "x7aa283": {
+      "shot": "extract-safePath",
+      "sentence": "S4"
+    },
+    "x09e447": {
+      "shot": "extract-safePath",
+      "sentence": "S5"
+    },
+    "xcf1b92": {
+      "shot": "derive-site-copy-list",
+      "sentence": "S1"
+    },
+    "x27675a": {
+      "shot": "derive-site-copy-list",
+      "sentence": "S2"
+    },
+    "xffeab7": {
+      "shot": "derive-site-copy-list",
+      "sentence": "S3"
+    },
+    "xa6138c": {
+      "shot": "derive-site-copy-list",
+      "sentence": "S4"
+    },
+    "xc2e613": {
+      "shot": "grader-in-ci",
+      "sentence": "S1"
+    },
+    "x5ba803": {
+      "shot": "grader-in-ci",
+      "sentence": "S2"
+    },
+    "x6121d6": {
+      "shot": "grader-in-ci",
+      "sentence": "S3"
+    },
+    "x36ea5f": {
+      "shot": "grader-in-ci",
+      "sentence": "S4"
+    },
+    "x15500d": {
+      "shot": "grader-in-ci",
+      "sentence": "S5"
+    },
+    "x5f966a": {
+      "shot": "crosscheck-pool",
+      "sentence": "S1"
+    },
+    "x0a317b": {
+      "shot": "crosscheck-pool",
+      "sentence": "S2"
+    },
+    "x77077b": {
+      "shot": "crosscheck-pool",
+      "sentence": "S3"
+    },
+    "xe86558": {
+      "shot": "crosscheck-pool",
+      "sentence": "S4"
+    },
+    "x13961d": {
+      "shot": "crosscheck-pool",
+      "sentence": "S5"
+    }
+  },
+  "gold": {
+    "x0b55df": {
+      "expect": "gap",
+      "span": "and the build runs faster than before",
+      "mutation": "appended-claim",
+      "from": "extract-safePath/S1",
+      "fromItem": "xb4a49a"
+    },
+    "xbd987f": {
+      "expect": "gap",
+      "span": "and no reviewer needs to read the diff",
+      "mutation": "appended-claim",
+      "from": "extract-safePath/S2",
+      "fromItem": "x73e294"
+    },
+    "x6ed9e1": {
+      "expect": "gap",
+      "span": "body unchanged",
+      "mutation": "dropped-body-check",
+      "from": "extract-safePath/S1"
+    },
+    "xc6ee28": {
+      "expect": "gap",
+      "span": "$.release.siteBuildId",
+      "mutation": "swapped-json-path",
+      "from": "derive-site-copy-list/S4"
+    }
+  },
+  "controls": {
+    "x4c7870": {
+      "expect": "covered"
+    },
+    "x525d71": {
+      "expect": "covered"
+    }
+  }
+}

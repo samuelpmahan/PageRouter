@@ -1,0 +1,51 @@
+{
+  "shot": "derive-site-copy-list",
+  "shotSha256": "61ddd498a2b9eb8f56c8c8e0c785c293757d8c99e0b14ab7df7af6bfa3c5230f",
+  "sourceRoot": "checkpoint",
+  "problems": [],
+  "called": {
+    "at": "2026-10-12T07:29:02Z"
+  },
+  "precheck": {
+    "pass": true,
+    "clausesTrueOnBaseline": []
+  },
+  "results": [
+    {
+      "id": "C1",
+      "kind": "source.changedExactly",
+      "covers": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "pass": true,
+      "evidence": [
+        "source: modified [package.json, scripts/assemble.mjs] added [scripts/site-closure.mjs, scripts/site-imports.test.mjs] removed [none]"
+      ]
+    },
+    {
+      "id": "C2",
+      "kind": "site.changedExactly",
+      "covers": [
+        "S4"
+      ],
+      "pass": true,
+      "evidence": [
+        "site: modified [data/catalog.json] added [none] removed [none]"
+      ]
+    },
+    {
+      "id": "C3",
+      "kind": "json.changedPathsExactly",
+      "covers": [
+        "S4"
+      ],
+      "pass": true,
+      "evidence": [
+        "data/catalog.json changed at: $.release.siteBuildId"
+      ]
+    }
+  ],
+  "made": true
+}

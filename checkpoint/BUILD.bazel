@@ -5,7 +5,7 @@ load("//ci/bazel:site.bzl", "pagerouter_site")
 pagerouter_site(
     name = "site",
     srcs = glob(
-        ["src/**", "scripts/**", "exp/**", "sources/**", "vendor/**", "evidence/**", "package*.json"],
+        ["src/**", "scripts/**", "exp/**", "sources/**", "vendor/**", "evidence/**", "package*.json", "source-date-epoch.txt"],
         exclude = [
             "**/node_modules/**", "**/.git/**", "**/.github/**", "**/.pxcube/**",
             "**/.crisp/**", "**/dist/**", "**/__pycache__/**",

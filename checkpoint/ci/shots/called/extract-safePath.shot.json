@@ -1,0 +1,20 @@
+{
+  "schema": "called-shot@0",
+  "id": "extract-safePath",
+  "baseline": { "site": "siteA", "siteBuildId": "3b89cabe2eb85ed021e870a53a06705c1aad4b4cbd26a5c644de1de8c9a89fa0" },
+  "call": [
+    { "id": "S1", "text": "Move the function safePath out of src/compiled-patch.mjs into a new file src/paths.mjs, with its body unchanged." },
+    { "id": "S2", "text": "src/compiled-patch.mjs, src/project-router.mjs and src/static-compiler.mjs import safePath from ./paths.mjs; nothing else in those three files changes." },
+    { "id": "S3", "text": "scripts/assemble.mjs adds paths.mjs to the list of source modules it copies into the site." },
+    { "id": "S4", "text": "The built site changes in exactly five places: the three edited modules and data/catalog.json change, and paths.mjs is added." },
+    { "id": "S5", "text": "In data/catalog.json only the site build identity changes; no PxCube package, snapshot or delta file changes." }
+  ],
+  "clauses": [
+    { "id": "C1", "covers": ["S1"], "kind": "ast.moved", "symbol": "safePath", "from": "src/compiled-patch.mjs", "to": "src/paths.mjs", "body": "identical" },
+    { "id": "C2", "covers": ["S2"], "kind": "ast.onlyImportsChanged", "files": ["src/compiled-patch.mjs", "src/project-router.mjs", "src/static-compiler.mjs"], "except": ["safePath"] },
+    { "id": "C3", "covers": ["S1", "S2", "S3"], "kind": "source.changedExactly", "modified": ["scripts/assemble.mjs", "src/compiled-patch.mjs", "src/project-router.mjs", "src/static-compiler.mjs"], "added": ["src/paths.mjs"], "removed": [] },
+    { "id": "C4", "covers": ["S4"], "kind": "site.changedExactly", "modified": ["compiled-patch.mjs", "data/catalog.json", "project-router.mjs", "static-compiler.mjs"], "added": ["paths.mjs"], "removed": [] },
+    { "id": "C5", "covers": ["S5"], "kind": "json.changedPathsExactly", "file": "data/catalog.json", "paths": ["$.release.siteBuildId"] }
+  ],
+  "precheck": "C1 must be false on the baseline: src/paths.mjs does not exist yet, so the ball is not already in the pocket."
+}

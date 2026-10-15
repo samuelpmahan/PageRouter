@@ -1,0 +1,40 @@
+{
+  "schema": "called-shot@0",
+  "id": "grader-in-ci",
+  "sourceRoot": ".",
+  "baseline": { "commit": "1ceef5c", "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1" },
+  "call": [
+    { "id": "S1", "text": "A new checkpoint/ci/shots/ holds the deterministic grader (grade.mjs), the script that builds a base commit and the working tree and grades a shot (shoot.sh), its dependency lock, its tests, a README defining the shot format and rules, and the shot records made so far." },
+    { "id": "S2", "text": "checkpoint/ci/shots/crudlint.mjs runs a crudlint predicate set (ast-grep rules under ci/shots/crudlint/) and emits crudlint's finding shape; the shipped predicate set is empty." },
+    { "id": "S3", "text": "Both copies of deploy-pages.yml gain exactly five lines, one step that installs ci/shots from its lock and runs its tests; no existing line changes." },
+    { "id": "S4", "text": "Source changes are exactly 18 files added under checkpoint/ci/shots/ and the two workflow files modified." },
+    { "id": "S5", "text": "The built site is byte-identical to the baseline, because Bazel's inputs do not include ci/shots/." }
+  ],
+  "clauses": [
+    { "id": "C1", "covers": ["S1", "S2", "S3", "S4"], "kind": "source.changedExactly",
+      "modified": [".github/workflows/deploy-pages.yml", "checkpoint/.github/workflows/deploy-pages.yml"],
+      "added": [
+        "checkpoint/ci/shots/README.md",
+        "checkpoint/ci/shots/called/derive-site-copy-list.grade.json",
+        "checkpoint/ci/shots/called/derive-site-copy-list.shot.json",
+        "checkpoint/ci/shots/called/events.jsonl",
+        "checkpoint/ci/shots/called/extract-safePath.called.grade.json",
+        "checkpoint/ci/shots/called/extract-safePath.naive.grade.json",
+        "checkpoint/ci/shots/called/extract-safePath.shot.json",
+        "checkpoint/ci/shots/called/grader-in-ci.shot.json",
+        "checkpoint/ci/shots/crudlint.mjs",
+        "checkpoint/ci/shots/crudlint/rule-tests/.gitkeep",
+        "checkpoint/ci/shots/crudlint/rules/.gitkeep",
+        "checkpoint/ci/shots/crudlint/sgconfig.yml",
+        "checkpoint/ci/shots/crudlint/utils/.gitkeep",
+        "checkpoint/ci/shots/grade.mjs",
+        "checkpoint/ci/shots/package-lock.json",
+        "checkpoint/ci/shots/package.json",
+        "checkpoint/ci/shots/shoot.sh",
+        "checkpoint/ci/shots/test/grade.test.mjs"
+      ],
+      "removed": [] },
+    { "id": "C2", "covers": ["S3"], "kind": "text.onlyLinesAdded", "files": [".github/workflows/deploy-pages.yml", "checkpoint/.github/workflows/deploy-pages.yml"], "lines": 5 },
+    { "id": "C3", "covers": ["S5"], "kind": "site.changedExactly", "modified": [], "added": [], "removed": [] }
+  ]
+}
