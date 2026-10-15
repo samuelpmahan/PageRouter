@@ -1,9 +1,13 @@
 {
-  "schema": "pagerouter-frozen-baseline@1",
-  "stableDigest": "c216d9aa0e76de11b07d9cd7538f4fcd1efac74719dc129113285b3506db3c20",
+  "schema": "pagerouter-frozen-baseline@2",
+  "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1",
   "siteFiles": 829,
   "pxcubePackages": 14,
-  "toolchain": { "node": "24.19.0", "bazel": "7.4.1", "os": "Linux x86_64" },
-  "evidence": "Two cold Bazel builds of the same source (separate output roots) gave different siteBuildId values but this identical stableDigest.",
-  "sourceCommit": "72ba17df7a3fa24cd197b5fab230cedf159eee0f"
+  "sourceDateEpoch": 1791787301,
+  "toolchain": {
+    "node": "24.19.0",
+    "bazel": "7.4.1",
+    "os": "Linux x86_64"
+  },
+  "evidence": "Commits 1ceef5c, d291a64 and 4fe57d2 each built cold to this siteBuildId (the later two change only files outside the Bazel inputs). Commit 7d0f607 showed ext4 and tmpfs output roots build byte-identical sites."
 }

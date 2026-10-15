@@ -1,0 +1,19 @@
+{
+  "schema": "called-shot@0",
+  "id": "baseline-records",
+  "sourceRoot": ".",
+  "baseline": { "commit": "4fe57d2", "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1" },
+  "call": [
+    { "id": "S1", "text": "In checkpoint/ci/freeze/baseline.json, only $.siteBuildId and $.evidence change." },
+    { "id": "S2", "text": "Source changes are exactly: checkpoint/ci/freeze/baseline.json and checkpoint/ci/shots/called/events.jsonl modified; checkpoint/ci/shots/called/baseline-records.shot.json and checkpoint/ci/shots/called/crosscheck-pool.grade.json added; nothing removed." },
+    { "id": "S3", "text": "The built site is byte-identical to the baseline." }
+  ],
+  "clauses": [
+    { "id": "C1", "covers": ["S1"], "kind": "json.changedPathsExactly", "in": "source", "file": "checkpoint/ci/freeze/baseline.json", "paths": ["$.evidence", "$.siteBuildId"] },
+    { "id": "C2", "covers": ["S2"], "kind": "source.changedExactly",
+      "modified": ["checkpoint/ci/freeze/baseline.json", "checkpoint/ci/shots/called/events.jsonl"],
+      "added": ["checkpoint/ci/shots/called/baseline-records.shot.json", "checkpoint/ci/shots/called/crosscheck-pool.grade.json"],
+      "removed": [] },
+    { "id": "C3", "covers": ["S3"], "kind": "site.changedExactly", "modified": [], "added": [], "removed": [] }
+  ]
+}

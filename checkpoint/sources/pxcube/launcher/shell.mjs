@@ -375,7 +375,7 @@ for (const [id, manifest] of manifests) {
   const name = make('td', manifest.title); name.append(make('small', manifest.build));
   const outcome = make('td', result ? (result.ok ? 'Packaged' : 'Failed') : 'No evidence', result ? (result.ok ? 'good' : 'bad') : '');
   const actions = make('td'); actions.append(button('Build', () => inspectBuild(id)), button('Manifest', () => inspectManifest(id)));
-  row.append(name, outcome, make('td', result?.build ? `${result.build.durationMs} ms` : '—'), make('td', result?.outputHashes ? Object.keys(result.outputHashes).length : '—'), actions); $('build-rows').append(row);
+  row.append(name, outcome, make('td', Number.isFinite(result?.build?.durationMs) ? `${result.build.durationMs} ms` : '—'), make('td', result?.outputHashes ? Object.keys(result.outputHashes).length : '—'), actions); $('build-rows').append(row);
 }
 document.querySelectorAll('[data-view]').forEach(el => el.onclick = () => { if (el.dataset.view === 'experiences') selectTab('exp'); showView(el.dataset.view); });
 document.querySelectorAll('#tabs button').forEach(el => el.onclick = () => selectTab(el.dataset.tab));

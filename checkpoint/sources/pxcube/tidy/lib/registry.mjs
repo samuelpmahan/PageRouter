@@ -5,6 +5,15 @@ import { fileURLToPath } from 'node:url';
 const TIDY_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 export const DEFAULT_REGISTRY = join(TIDY_ROOT, 'registry.json');
 
+// Build clock. SOURCE_DATE_EPOCH (seconds) makes a build reproducible: every
+// timestamp it writes is that declared time instead of the wall clock.
+function buildTime() {
+  const declared = process.env.SOURCE_DATE_EPOCH;
+  if (declared === undefined || declared === '') return new Date();
+  if (!/^\d+$/.test(declared)) throw Error(`SOURCE_DATE_EPOCH must be whole seconds, got ${declared}`);
+  return new Date(Number(declared) * 1000);
+}
+
 export class TidyError extends Error {
   constructor(code, message) {
     super(message);
@@ -41,7 +50,7 @@ export async function registerStage(id, { source, title = null } = {}, registryP
   if (registry.stages[id]) {
     throw new TidyError('register', `stage "${id}" is already registered (source: ${registry.stages[id].source})`);
   }
-  const now = new Date().toISOString();
+  const now = buildTime().toISOString();
   registry.stages[id] = {
     id,
     source, // tidy registry pointer, e.g. "exp/hello"
@@ -82,7 +91,7 @@ export async function promoteStage(id, { bySam = false, receiptPath } = {}, regi
   if (!Array.isArray(receipt.chunks) || receipt.chunks.length === 0) {
     throw new TidyError('promote', `receipt ${receiptPath} has no chunks to freeze`);
   }
-  const now = new Date().toISOString();
+  const now = buildTime().toISOString();
   stage.track = 'clean';
   stage.frozen = true;
   stage.chunks = receipt.chunks.map((c) => ({ path: c.path, sha256: c.sha256 }));

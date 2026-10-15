@@ -1,0 +1,43 @@
+{
+  "shot": "crosscheck-pool",
+  "shotSha256": "3124b677488d5302ddc6311808fc064a76437f9e16e18de06224b4e2d9fdd7ee",
+  "sourceRoot": ".",
+  "problems": [],
+  "called": {
+    "at": "2026-10-12T07:41:01Z"
+  },
+  "precheck": {
+    "pass": true,
+    "clausesTrueOnBaseline": [
+      "C2"
+    ]
+  },
+  "results": [
+    {
+      "id": "C1",
+      "kind": "source.changedExactly",
+      "covers": [
+        "S1",
+        "S2",
+        "S3",
+        "S4"
+      ],
+      "pass": true,
+      "evidence": [
+        "source: modified [checkpoint/ci/shots/README.md, checkpoint/ci/shots/called/events.jsonl] added [checkpoint/ci/shots/called/crosscheck-2026-10-12/batch.json, checkpoint/ci/shots/called/crosscheck-2026-10-12/comparison.json, checkpoint/ci/shots/called/crosscheck-2026-10-12/haiku-1.json, checkpoint/ci/shots/called/crosscheck-2026-10-12/haiku-2.json, checkpoint/ci/shots/called/crosscheck-2026-10-12/haiku-3.json, checkpoint/ci/shots/called/crosscheck-2026-10-12/key.json, checkpoint/ci/shots/called/crosscheck-2026-10-12/report.md, checkpoint/ci/shots/called/crosscheck-pool.shot.json, checkpoint/ci/shots/called/grader-in-ci.grade.json, checkpoint/ci/shots/crosscheck/prompt.md, checkpoint/ci/shots/crosscheck.mjs, checkpoint/ci/shots/test/crosscheck.test.mjs] removed [none]"
+      ]
+    },
+    {
+      "id": "C2",
+      "kind": "site.changedExactly",
+      "covers": [
+        "S5"
+      ],
+      "pass": true,
+      "evidence": [
+        "site: modified [none] added [none] removed [none]"
+      ]
+    }
+  ],
+  "made": true
+}

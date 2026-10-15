@@ -12,6 +12,7 @@ const [site, evidence, receipt, log] = [siteArg,evidenceArg,receiptArg,logArg].m
 const scratch = fs.mkdtempSync(path.join(os.tmpdir(),'pagerouter-build-'));
 const root = path.join(scratch,'source'), tools = path.join(scratch,'tools');
 const transcript = [], sourceInputs = [];
+let sourceDateEpoch = '';
 const sha = bytes => createHash('sha256').update(bytes).digest('hex');
 function copy(relative, from, to) {
   if (path.isAbsolute(relative) || relative.split('/').some(part=>!part || part==='..' || part==='.')) throw Error(`Invalid declared input: ${relative}`);
@@ -22,7 +23,7 @@ function copy(relative, from, to) {
 }
 function run(label,args) {
   console.log(label);
-  const result=spawnSync(path.join(tools,'bin/node'),args,{cwd:root,env:{LANG:'C.UTF-8',TZ:'UTC',PATH:path.join(tools,'bin'),HOME:scratch,TMPDIR:scratch},encoding:'utf8',maxBuffer:32*1024*1024,timeout:300000});
+  const result=spawnSync(path.join(tools,'bin/node'),args,{cwd:root,env:{LANG:'C.UTF-8',TZ:'UTC',SOURCE_DATE_EPOCH:sourceDateEpoch,PATH:path.join(tools,'bin'),HOME:scratch,TMPDIR:scratch},encoding:'utf8',maxBuffer:32*1024*1024,timeout:300000});
   transcript.push(`\n${label}\n${result.stdout ?? ''}${result.stderr ?? ''}`);
   if(result.error || result.status!==0) throw Error(`${label} failed: ${result.error?.message ?? result.status}`);
 }
@@ -40,6 +41,10 @@ try {
   for(const generated of ['dist','build','sources/pxcube/.pxcube']) {
     if(fs.existsSync(path.join(root,generated))) throw Error(`Generated input forbidden: ${generated}`);
   }
+  // The build clock is a declared input, so the same commit builds the same bytes.
+  const epochFile=path.join(root,'source-date-epoch.txt');
+  sourceDateEpoch=fs.existsSync(epochFile)?fs.readFileSync(epochFile,'utf8').trim():'';
+  if(!/^\d+$/.test(sourceDateEpoch)) throw Error('source-date-epoch.txt must hold whole seconds since 1970');
   // The original scripts own all application compilation and packaging.
   run('Self-host fast-check',['scripts/build-fast-check-bundle.mjs']);
   run('Compile PxCube/neat and crisp-package every experience',['scripts/build-pxcube.mjs']);
@@ -80,7 +85,7 @@ try {
     }
   }
   walk(site);sourceInputs.sort((a,b)=>a.path.localeCompare(b.path));
-  const record={schema:'pagerouter-source-build@1',node:process.version,recipe:{driverSha256:sha(fs.readFileSync(fileURLToPath(import.meta.url))),helpersSha256:sha(fs.readFileSync(new URL('./build-helpers.mjs',import.meta.url)))},toolchain:JSON.parse(fs.readFileSync(path.join(tools,'toolchain.json'))),sourceInputs,sourceDigest:sha(JSON.stringify(sourceInputs)),siteFiles:outputFiles,siteDigest:sha(JSON.stringify(outputFiles)),siteBuildId:catalog.release.siteBuildId,pxcube:{rebuilt:true,packages:pxc.report.results.length,relocated:false},crispExactCompiledEquality:true};
+  const record={schema:'pagerouter-source-build@1',node:process.version,recipe:{driverSha256:sha(fs.readFileSync(fileURLToPath(import.meta.url))),helpersSha256:sha(fs.readFileSync(new URL('./build-helpers.mjs',import.meta.url)))},toolchain:JSON.parse(fs.readFileSync(path.join(tools,'toolchain.json'))),sourceInputs,sourceDigest:sha(JSON.stringify(sourceInputs)),siteFiles:outputFiles,siteDigest:sha(JSON.stringify(outputFiles)),siteBuildId:catalog.release.siteBuildId,sourceDateEpoch:Number(sourceDateEpoch),pxcube:{rebuilt:true,packages:pxc.report.results.length,relocated:false},crispExactCompiledEquality:true};
   fs.writeFileSync(receipt,JSON.stringify(record,null,2)+'\n');
   transcript.push(`Built ${outputFiles.length} files; all ${record.pxcube.packages} PxCube packages succeeded; fresh output siteBuildId ${record.siteBuildId}`);
   fs.writeFileSync(log,transcript.join('\n')+'\n');

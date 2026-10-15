@@ -10,6 +10,16 @@ import { pathToFileURL, fileURLToPath } from 'node:url';
 import { hashAppSources } from '../crisp/lib/packager.mjs';
 import { loadManifest } from '../crisp/lib/manifest.mjs';
 import { validateWorkItem } from '../vendor/neat/dist/work-items.js';
+
+// Build clock. SOURCE_DATE_EPOCH (seconds) makes a build reproducible: every
+// timestamp it writes is that declared time instead of the wall clock.
+function buildTime() {
+  const declared = process.env.SOURCE_DATE_EPOCH;
+  if (declared === undefined || declared === '') return new Date();
+  if (!/^\d+$/.test(declared)) throw Error(`SOURCE_DATE_EPOCH must be whole seconds, got ${declared}`);
+  return new Date(Number(declared) * 1000);
+}
+const reproducible = () => Boolean(process.env.SOURCE_DATE_EPOCH);
 import { resolveTargets, workingTreeChanges } from './affected-targets.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
@@ -33,6 +43,25 @@ function copyTree(source, target, excluded = []) {
     if (stat.isDirectory()) copyTree(from, to, excluded);
     else if (stat.isFile()) fs.copyFileSync(from, to);
   }
+}
+// Content address of everything a PxCube build reads: this tree (without its
+// own .pxcube state) plus the HH Part runtime it borrows. The run id ends in
+// this digest, and sw.js uses the run id as its cache name, so visitors'
+// caches change exactly when the inputs change.
+function inputDigest(repo) {
+  const entries = {};
+  const walk = dir => {
+    for (const name of fs.readdirSync(dir).sort()) {
+      if (name === '.crisp' || (dir === repo && ['.pxcube', '.git', 'node_modules'].includes(name))) continue;
+      const file = path.join(dir, name), stat = fs.lstatSync(file);
+      if (stat.isDirectory()) walk(file);
+      else if (stat.isFile()) entries[path.relative(repo, file).split(path.sep).join('/')] = sha(fs.readFileSync(file));
+    }
+  };
+  walk(repo);
+  const hhPxcSource = path.resolve(repo, '../../vendor/hh/services/pxc.mjs');
+  if (fs.existsSync(hhPxcSource)) entries['../../vendor/hh/services/pxc.mjs'] = sha(fs.readFileSync(hhPxcSource));
+  return sha(JSON.stringify(entries));
 }
 function hashes(directory) {
   const entries = {};
@@ -69,8 +98,11 @@ async function importPackage(staged, destination, manifest, verifyReceipt) {
 export async function build(repo = root, { refreshRegistry = false, stagedRoot = null } = {}) {
   const state = path.join(repo, '.pxcube'); fs.mkdirSync(state, { recursive: true });
   const lock = path.join(state, 'build.lock'); const fd = fs.openSync(lock, 'wx');
-  const runId = `${new Date().toISOString().replace(/[:.]/g, '-')}-${randomUUID().slice(0, 8)}`;
+  const stamp = buildTime().toISOString().replace(/[:.]/g, '-');
+  const runId = reproducible() ? `${stamp}-${inputDigest(repo).slice(0, 8)}` : `${stamp}-${randomUUID().slice(0, 8)}`;
   const run = path.join(state, 'runs', runId), work = path.join(run, 'work'), assembly = path.join(run, 'assembly');
+  // A reproducible id repeats for identical inputs: rebuild that run from empty.
+  fs.rmSync(run, { recursive: true, force: true });
   try {
     fs.mkdirSync(work, { recursive: true }); fs.mkdirSync(path.join(assembly, 'experiences'), { recursive: true });
     for (const folder of ['crisp', 'kompoze', 'tidy', 'mock-pxc', 'launcher', 'local', 'vendor']) copyTree(path.join(repo, folder), path.join(work, folder));
@@ -143,7 +175,7 @@ export async function build(repo = root, { refreshRegistry = false, stagedRoot =
         sourceHash = await hashAppSources(destination, manifest);
         registration = registry.apps[id];
         if (!registration || refreshRegistry) {
-          registration = { track: 'exp', manifest, sourceHash, sharedToolsHash, registeredAt: new Date().toISOString() };
+          registration = { track: 'exp', manifest, sourceHash, sharedToolsHash, registeredAt: buildTime().toISOString() };
           registry.apps[id] = registration;
         }
         if (!['exp', 'clean'].includes(registration.track)) throw Error('Invalid tidy registration track.');
