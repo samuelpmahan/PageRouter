@@ -1,0 +1,63 @@
+{
+  "schema": "called-shot@0",
+  "id": "verdict-annotations",
+  "sourceRoot": ".",
+  "baseline": {
+    "commit": "939909da6e258e03788491431a5963b6a5c51519"
+  },
+  "call": [
+    {
+      "id": "S1",
+      "text": "Source changes are exactly: actions/called-shot/bin/called-shots.mjs and checkpoint/ci/shots/called/events.jsonl modified; checkpoint/ci/shots/called/verdict-annotations.shot.json added; nothing removed."
+    },
+    {
+      "id": "S2",
+      "text": "In actions/called-shot/bin/called-shots.mjs, no top-level statement other than imports changes, except the functions githubOutputs and main."
+    },
+    {
+      "id": "S3",
+      "text": "The built site is byte-identical to the baseline."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "actions/called-shot/bin/called-shots.mjs",
+        "checkpoint/ci/shots/called/events.jsonl"
+      ],
+      "added": [
+        "checkpoint/ci/shots/called/verdict-annotations.shot.json"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S2"
+      ],
+      "kind": "ast.onlyImportsChanged",
+      "files": [
+        "actions/called-shot/bin/called-shots.mjs"
+      ],
+      "except": [
+        "githubOutputs",
+        "main"
+      ]
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S3"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [],
+      "added": [],
+      "removed": []
+    }
+  ]
+}

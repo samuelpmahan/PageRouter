@@ -18,6 +18,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Locate source build root
         id: source
         shell: bash
@@ -41,8 +43,8 @@ jobs:
           curl --fail --location --retry 3 "https://github.com/bazelbuild/bazel/releases/download/${version}/bazel-${version}-linux-x86_64" --output "$RUNNER_TEMP/bazel"
           echo "c97f02133adce63f0c28678ac1f21d65fa8255c80429b588aeeba8a1fac6202b  $RUNNER_TEMP/bazel" | sha256sum --check
           chmod +x "$RUNNER_TEMP/bazel"
-      - name: Called-shot grader and predicate tests
-        working-directory: ${{ steps.source.outputs.root }}/ci/shots
+      - name: Called-shot package tests
+        working-directory: actions/called-shot
         run: |
           npm ci --no-audit --no-fund
           npm test
@@ -52,6 +54,13 @@ jobs:
           BAZEL: ${{ runner.temp }}/bazel
           PAGEROUTER_BAZEL_OUTPUT_ROOT: ${{ runner.temp }}/bazel-output
         run: bash ci/bazel/run.sh
+      - name: Grade called shots added by this pull request
+        if: github.event_name == 'pull_request'
+        uses: ./actions/called-shot
+        env:
+          BAZEL: ${{ runner.temp }}/bazel
+        with:
+          candidate-output: ${{ steps.source.outputs.root }}/bazel-bin/site.site
       - name: Upload build evidence
         uses: actions/upload-artifact@v4
         with:
