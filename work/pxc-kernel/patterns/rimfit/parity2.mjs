@@ -1,0 +1,21 @@
+import { requireDiscStudio, WORK, cases } from './paths.mjs';
+import { chromium } from 'playwright'; import fs from 'node:fs';
+const cases = cases;
+const DS = requireDiscStudio();
+const { recoverRimEllipseV3 } = await import(`${DS}/rimfit-v3/recover.mjs`);
+const idx = JSON.parse(fs.readFileSync(`${WORK}/raw/index.json`,'utf8'));
+const pick = (r) => ({ status: r.status, lc: r.ellipse?.localCrop ?? r.diagnosticFit?.localCrop ?? null, q: (({supportFraction,supportedOctants,medianSilhouetteScore,medianDisplacementPx,exactContourFraction,finiteContourFraction})=>({supportFraction,supportedOctants,medianSilhouetteScore,medianDisplacementPx,exactContourFraction,finiteContourFraction}))(r.algorithm.quality), runs: r.algorithm.quality.exactOptimizerRuns?.slice(0,3) });
+const b = await chromium.launch(); const p = await b.newPage(); await p.goto('http://localhost:4173/');
+const n = 'servo-01-original', c = cases.find(x => x.name === n), rec = idx.find(x=>x.name===n);
+const br = await p.evaluate(async (b64) => {
+  const blob = await (await fetch('data:image/jpeg;base64,' + b64)).blob(); const bmp = await createImageBitmap(blob);
+  const cv = document.createElement('canvas'); cv.width = bmp.width; cv.height = bmp.height; const ctx = cv.getContext('2d'); ctx.drawImage(bmp, 0, 0);
+  const { recoverRimEllipseV3 } = await import('./rimfit-v3/recover.mjs');
+  const r = recoverRimEllipseV3({ width: bmp.width, height: bmp.height, data: ctx.getImageData(0,0,bmp.width,bmp.height).data }, { maxRefinementDimension: 384 });
+  const q = r.algorithm.quality;
+  return { status: r.status, lc: r.ellipse?.localCrop ?? r.diagnosticFit?.localCrop ?? null, q: { supportFraction: q.supportFraction, supportedOctants: q.supportedOctants, medianSilhouetteScore: q.medianSilhouetteScore, medianDisplacementPx: q.medianDisplacementPx, exactContourFraction: q.exactContourFraction, finiteContourFraction: q.finiteContourFraction }, runs: q.exactOptimizerRuns?.slice(0,3), probe: [Math.exp(0.1234567), Math.cbrt(0.3456), Math.pow(0.7,2.4), Math.atan2(0.3,0.7), Math.sin(1e5)] };
+}, fs.readFileSync(c.file).toString('base64'));
+const full = { width: rec.width, height: rec.height, data: new Uint8ClampedArray(fs.readFileSync(rec.path)) };
+const nr = pick(recoverRimEllipseV3(full, { maxRefinementDimension: 384 }));
+console.log('browser', JSON.stringify(br)); console.log('node   ', JSON.stringify({...nr, probe:[Math.exp(0.1234567), Math.cbrt(0.3456), Math.pow(0.7,2.4), Math.atan2(0.3,0.7), Math.sin(1e5)]}));
+await b.close();

@@ -1,0 +1,7684 @@
+{
+  "discovered": [
+    {
+      "contracts": [
+        "game.apply",
+        "game.outcome"
+      ],
+      "length": 2,
+      "count": 8097,
+      "internal": [
+        "0.board>1.board"
+      ],
+      "ext": [
+        "literal>0.player",
+        "x0>0.board",
+        "x1>0.cell"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "policy.choose"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 16194,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#10",
+            "#11"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#13",
+            "#14"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#16",
+            "#17"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "game.legalMoves",
+        "game.apply"
+      ],
+      "length": 2,
+      "count": 4519,
+      "internal": [
+        "0.cells~>1.cell"
+      ],
+      "ext": [
+        "literal>1.player",
+        "x0>0.board",
+        "x0>1.board"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "policy.choose"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 9038,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#9",
+            "#10"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#12",
+            "#13"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#15",
+            "#16"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "agents.clock",
+        "agents.advance",
+        "agents.integrate",
+        "agents.measure#before",
+        "agents.demand",
+        "agents.frontier",
+        "agents.allocate#primary",
+        "agents.evaluate",
+        "agents.commit",
+        "agents.measure#after",
+        "agents.capacity"
+      ],
+      "length": 11,
+      "count": 224,
+      "internal": [
+        "0.tick>1.t",
+        "0.tick>2.t",
+        "0.tick>8.t",
+        "1.state>2.state",
+        "2.state>3.state",
+        "2.state>5.state",
+        "2.state>8.state",
+        "3.counts>4.counts",
+        "4.limit>5.limit",
+        "5.constraints>6.constraints",
+        "5.constraints>7.constraints",
+        "5.idle>6.idle",
+        "5.idle>7.idle",
+        "5.ready>6.ready",
+        "5.ready>7.ready",
+        "6.assignments>7.assignments",
+        "6.assignments>8.assignments",
+        "7.accepted>8.accepted",
+        "7.reason>8.reason",
+        "8.state>9.state",
+        "9.counts>10.counts"
+      ],
+      "ext": [
+        "x0>1.state",
+        "x1>10.config",
+        "x1>2.config",
+        "x1>4.config",
+        "x1>5.config"
+      ],
+      "entries": [
+        "f-agents"
+      ],
+      "domainEntries": [
+        "f-agents"
+      ],
+      "parents": [
+        "agents.tick"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 4480,
+      "examples": [
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 1,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9",
+            "#11",
+            "#13",
+            "#14",
+            "#15"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 2,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9",
+            "#11",
+            "#13",
+            "#14",
+            "#15"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 3,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9",
+            "#11",
+            "#13",
+            "#14",
+            "#15"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "game.legalMoves",
+        "game.apply",
+        "game.outcome"
+      ],
+      "length": 3,
+      "count": 1033,
+      "internal": [
+        "0.cells~>1.cell",
+        "1.board>2.board"
+      ],
+      "ext": [
+        "literal>1.player",
+        "x0>0.board",
+        "x0>1.board"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "policy.choose"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 4132,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#9",
+            "#10",
+            "#11"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#12",
+            "#13",
+            "#14"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#15",
+            "#16",
+            "#17"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "game.legalMoves",
+        "game.apply",
+        "game.outcome"
+      ],
+      "length": 3,
+      "count": 51,
+      "internal": [
+        "0.cells~>1.cell",
+        "1.board>2.board"
+      ],
+      "ext": [
+        "x0>0.board",
+        "x0>1.board",
+        "x1>1.player"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "policy.choose"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 204,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#6",
+            "#7",
+            "#8"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#26185 policy.choose",
+          "calls": [
+            "#26187",
+            "#26188",
+            "#26189"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#28758 policy.choose",
+          "calls": [
+            "#28760",
+            "#28761",
+            "#28762"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "lin.transpose",
+        "vec.standardize",
+        "lin.transpose"
+      ],
+      "length": 3,
+      "count": 15,
+      "internal": [
+        "0.matrix~>1.values",
+        "1.values>2.matrix"
+      ],
+      "ext": [
+        "x0>0.matrix",
+        "x1>1.center",
+        "x1>1.scale"
+      ],
+      "entries": [
+        "c-fitted"
+      ],
+      "domainEntries": [
+        "c-fitted"
+      ],
+      "parents": [
+        "fitted.standardizer.apply"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 60,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#12 fitted.standardizer.apply",
+          "calls": [
+            "#13",
+            "#14",
+            "#15"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#16 fitted.standardizer.apply",
+          "calls": [
+            "#17",
+            "#18",
+            "#19"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#12 fitted.standardizer.apply",
+          "calls": [
+            "#13",
+            "#14",
+            "#15"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "lin.transpose",
+        "lin.matvec"
+      ],
+      "length": 2,
+      "count": 13,
+      "internal": [
+        "0.matrix~>1.vector"
+      ],
+      "ext": [
+        "x0>0.matrix",
+        "x1>1.matrix"
+      ],
+      "entries": [
+        "c-fitted",
+        "d-explain",
+        "a"
+      ],
+      "domainEntries": [
+        "c-fitted",
+        "d-explain",
+        "a"
+      ],
+      "parents": [
+        "lin.matmul"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 52,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#25 lin.matmul",
+          "calls": [
+            "#26",
+            "#27"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#25 lin.matmul",
+          "calls": [
+            "#26",
+            "#27"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 4,
+          "parent": "#24 lin.matmul",
+          "calls": [
+            "#25",
+            "#26"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "explain.featureIndex",
+        "explain.attribute#before",
+        "explain.nudge",
+        "explain.attribute#after",
+        "explain.difference#prediction"
+      ],
+      "length": 5,
+      "count": 4,
+      "internal": [
+        "0.index>2.index",
+        "1.prediction>4.before",
+        "2.input>3.input",
+        "3.prediction>4.after"
+      ],
+      "ext": [
+        "x0>0.feature",
+        "x1>0.model",
+        "x1>1.model",
+        "x1>3.model",
+        "x2>1.baseline",
+        "x2>3.baseline",
+        "x3>1.input",
+        "x3>2.input",
+        "x4>2.delta"
+      ],
+      "entries": [
+        "d-explain"
+      ],
+      "domainEntries": [
+        "d-explain"
+      ],
+      "parents": [
+        "explain.effect"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 32,
+      "examples": [
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 9,
+          "parent": "#4 explain.effect",
+          "calls": [
+            "#5",
+            "#6",
+            "#7",
+            "#8",
+            "#14"
+          ]
+        },
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 10,
+          "parent": "#4 explain.effect",
+          "calls": [
+            "#5",
+            "#6",
+            "#7",
+            "#8",
+            "#14"
+          ]
+        },
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 15,
+          "parent": "#4 explain.effect",
+          "calls": [
+            "#5",
+            "#6",
+            "#7",
+            "#8",
+            "#14"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "lin.transpose",
+        "stat.mean"
+      ],
+      "length": 2,
+      "count": 8,
+      "internal": [
+        "0.matrix~>1.values"
+      ],
+      "ext": [
+        "x0>0.matrix"
+      ],
+      "entries": [
+        "c-fitted",
+        "d-explain"
+      ],
+      "domainEntries": [
+        "c-fitted",
+        "d-explain"
+      ],
+      "parents": [
+        "fitted.standardizer.fit",
+        "fitted.standardizer.apply",
+        "explain.baselineMeans"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 24,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#7 fitted.standardizer.fit",
+          "calls": [
+            "#8",
+            "#9"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#7 fitted.standardizer.fit",
+          "calls": [
+            "#8",
+            "#9"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 4,
+          "parent": "#7 fitted.standardizer.fit",
+          "calls": [
+            "#8",
+            "#9"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "explain.withIntercept",
+        "lin.dot"
+      ],
+      "length": 2,
+      "count": 9,
+      "internal": [
+        "0.values>1.b"
+      ],
+      "ext": [
+        "x0>0.values",
+        "x1>1.a"
+      ],
+      "entries": [
+        "d-explain"
+      ],
+      "domainEntries": [
+        "d-explain"
+      ],
+      "parents": [
+        "explain.predict"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 18,
+      "examples": [
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 3,
+          "parent": "#3 explain.predict",
+          "calls": [
+            "#4",
+            "#5"
+          ]
+        },
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 3,
+          "parent": "#6 explain.predict",
+          "calls": [
+            "#7",
+            "#8"
+          ]
+        },
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 9,
+          "parent": "#10 explain.predict",
+          "calls": [
+            "#11",
+            "#12"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "fitted.matrix.withIntercept",
+        "lin.leastSquares"
+      ],
+      "length": 2,
+      "count": 5,
+      "internal": [
+        "0.matrix>1.matrix"
+      ],
+      "ext": [
+        "x0>0.matrix",
+        "x1>1.vector"
+      ],
+      "entries": [
+        "c-fitted"
+      ],
+      "domainEntries": [
+        "c-fitted"
+      ],
+      "parents": [
+        "fitted.linear.fit"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 10,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 4,
+          "parent": "#20 fitted.linear.fit",
+          "calls": [
+            "#21",
+            "#22"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 13,
+          "parent": "#10 fitted.linear.fit",
+          "calls": [
+            "#11",
+            "#12"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 14,
+          "parent": "#10 fitted.linear.fit",
+          "calls": [
+            "#11",
+            "#12"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "explain.featureIndex",
+        "explain.checkContributionClaim"
+      ],
+      "length": 2,
+      "count": 5,
+      "internal": [
+        "0.index>1.index"
+      ],
+      "ext": [
+        "x0>0.feature",
+        "x0>1.claim",
+        "x1>0.model",
+        "x1>1.model",
+        "x2>1.contributions",
+        "x3>1.tolerance"
+      ],
+      "entries": [
+        "d-explain"
+      ],
+      "domainEntries": [
+        "d-explain"
+      ],
+      "parents": [
+        "explain.checkClaim"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 10,
+      "examples": [
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 6,
+          "parent": "#1 explain.checkClaim",
+          "calls": [
+            "#2",
+            "#3"
+          ]
+        },
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 7,
+          "parent": "#1 explain.checkClaim",
+          "calls": [
+            "#2",
+            "#3"
+          ]
+        },
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 11,
+          "parent": "#1 explain.checkClaim",
+          "calls": [
+            "#2",
+            "#3"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "explain.effect",
+        "explain.checkAgreement"
+      ],
+      "length": 2,
+      "count": 5,
+      "internal": [
+        "0.predictionChange>1.actual"
+      ],
+      "ext": [
+        "computed>1.subject",
+        "x0>0.baseline",
+        "x1>0.delta",
+        "x1>0.feature",
+        "x1>1.claimed",
+        "x2>0.input",
+        "x3>0.model",
+        "x4>1.tolerance"
+      ],
+      "entries": [
+        "d-explain"
+      ],
+      "domainEntries": [
+        "d-explain"
+      ],
+      "parents": [
+        "explain.checkEffectClaim"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 10,
+      "examples": [
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 9,
+          "parent": "#3 explain.checkEffectClaim",
+          "calls": [
+            "#4",
+            "#16"
+          ]
+        },
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 10,
+          "parent": "#3 explain.checkEffectClaim",
+          "calls": [
+            "#4",
+            "#16"
+          ]
+        },
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 15,
+          "parent": "#3 explain.checkEffectClaim",
+          "calls": [
+            "#4",
+            "#16"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "explain.nudge",
+        "explain.predict#sweep"
+      ],
+      "length": 2,
+      "count": 5,
+      "internal": [
+        "0.input>1.input"
+      ],
+      "ext": [
+        "x0>0.delta",
+        "x1>0.index",
+        "x2>0.input",
+        "x3>1.model"
+      ],
+      "entries": [
+        "d-explain"
+      ],
+      "domainEntries": [
+        "d-explain"
+      ],
+      "parents": [
+        "explain.sweepStep"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 10,
+      "examples": [
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 23,
+          "parent": "#5 explain.sweepStep",
+          "calls": [
+            "#6",
+            "#7"
+          ]
+        },
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 23,
+          "parent": "#8 explain.sweepStep",
+          "calls": [
+            "#9",
+            "#10"
+          ]
+        },
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 23,
+          "parent": "#13 explain.sweepStep",
+          "calls": [
+            "#14",
+            "#15"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "fitted.kmeans.assign",
+        "fitted.kmeans.update"
+      ],
+      "length": 2,
+      "count": 2,
+      "internal": [
+        "0.labels>1.labels"
+      ],
+      "ext": [
+        "x0>0.centroids",
+        "x0>1.centroids",
+        "x1>0.matrix",
+        "x1>1.matrix"
+      ],
+      "entries": [
+        "c-fitted"
+      ],
+      "domainEntries": [
+        "c-fitted"
+      ],
+      "parents": [
+        "fitted.kmeans.step"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 4,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 8,
+          "parent": "#3 fitted.kmeans.step",
+          "calls": [
+            "#4",
+            "#5"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 8,
+          "parent": "#6 fitted.kmeans.step",
+          "calls": [
+            "#7",
+            "#8"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "half",
+        "half"
+      ],
+      "length": 2,
+      "count": 2,
+      "internal": [
+        "0.y>1.x"
+      ],
+      "ext": [
+        "x0>0.x"
+      ],
+      "entries": [
+        "v03"
+      ],
+      "domainEntries": [],
+      "parents": [
+        "quarter"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 2,
+      "examples": [
+        {
+          "entry": "v03",
+          "world": "v03-cache",
+          "run": 1,
+          "parent": "#1 quarter",
+          "calls": [
+            "#2",
+            "#4"
+          ]
+        },
+        {
+          "entry": "v03",
+          "world": "v03-cache",
+          "run": 2,
+          "parent": "#3 quarter",
+          "calls": [
+            "#4",
+            "#6"
+          ]
+        }
+      ]
+    }
+  ],
+  "confirmed": [
+    {
+      "contracts": [
+        "agents.clock",
+        "agents.advance",
+        "agents.integrate",
+        "agents.measure#before",
+        "agents.demand",
+        "agents.frontier",
+        "agents.allocate#primary"
+      ],
+      "length": 7,
+      "count": 260,
+      "internal": [
+        "0.tick>1.t",
+        "0.tick>2.t",
+        "1.state>2.state",
+        "2.state>3.state",
+        "2.state>5.state",
+        "3.counts>4.counts",
+        "4.limit>5.limit",
+        "5.constraints>6.constraints",
+        "5.idle>6.idle",
+        "5.ready>6.ready"
+      ],
+      "ext": [
+        "x0>1.state",
+        "x1>2.config",
+        "x1>4.config",
+        "x1>5.config"
+      ],
+      "entries": [
+        "f-agents"
+      ],
+      "domainEntries": [
+        "f-agents"
+      ],
+      "parents": [
+        "agents.tick"
+      ],
+      "alreadyComposed": 260,
+      "composedShare": 1,
+      "score": 3120,
+      "examples": [
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 1,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 2,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 3,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "agents.evaluate",
+        "agents.commit",
+        "agents.measure#after",
+        "agents.capacity"
+      ],
+      "length": 4,
+      "count": 260,
+      "internal": [
+        "0.accepted>1.accepted",
+        "0.reason>1.reason",
+        "1.state>2.state",
+        "2.counts>3.counts"
+      ],
+      "ext": [
+        "x0>0.assignments",
+        "x0>1.assignments",
+        "x1>0.constraints",
+        "x2>0.idle",
+        "x3>0.ready",
+        "x4>1.state",
+        "x5>1.t",
+        "x6>3.config"
+      ],
+      "entries": [
+        "f-agents"
+      ],
+      "domainEntries": [
+        "f-agents"
+      ],
+      "parents": [
+        "agents.tick"
+      ],
+      "alreadyComposed": 260,
+      "composedShare": 1,
+      "score": 1560,
+      "examples": [
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 1,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#11",
+            "#13",
+            "#14",
+            "#15"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 2,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#11",
+            "#13",
+            "#14",
+            "#15"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 3,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#11",
+            "#13",
+            "#14",
+            "#15"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "agents.clock",
+        "agents.advance",
+        "agents.integrate",
+        "agents.measure#before",
+        "agents.demand",
+        "agents.frontier",
+        "agents.allocate#primary",
+        "agents.allocate#shadow",
+        "agents.regret"
+      ],
+      "length": 9,
+      "count": 38,
+      "internal": [
+        "0.tick>1.t",
+        "0.tick>2.t",
+        "1.state>2.state",
+        "2.state>3.state",
+        "2.state>5.state",
+        "3.counts>4.counts",
+        "4.limit>5.limit",
+        "5.constraints>6.constraints",
+        "5.constraints>7.constraints",
+        "5.idle>6.idle",
+        "5.idle>7.idle",
+        "5.ready>6.ready",
+        "5.ready>7.ready",
+        "6.score>8.primary",
+        "7.score>8.shadow"
+      ],
+      "ext": [
+        "x0>1.state",
+        "x1>2.config",
+        "x1>4.config",
+        "x1>5.config"
+      ],
+      "entries": [
+        "f-agents"
+      ],
+      "domainEntries": [
+        "f-agents"
+      ],
+      "parents": [
+        "agents.tick"
+      ],
+      "alreadyComposed": 38,
+      "composedShare": 1,
+      "score": 608,
+      "examples": [
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 1,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9",
+            "#11",
+            "#13"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 2,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9",
+            "#11",
+            "#13"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 3,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9",
+            "#11",
+            "#13"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "policy.choose#O",
+        "game.moveLegal"
+      ],
+      "length": 2,
+      "count": 151,
+      "internal": [
+        "0.cell>1.cell"
+      ],
+      "ext": [
+        "x0>0.board",
+        "x0>1.board",
+        "x1>0.player"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.ply"
+      ],
+      "alreadyComposed": 151,
+      "composedShare": 1,
+      "score": 302,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 1,
+          "parent": "#12 match.ply",
+          "calls": [
+            "#13",
+            "#15"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 1,
+          "parent": "#30 match.ply",
+          "calls": [
+            "#31",
+            "#33"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 1,
+          "parent": "#48 match.ply",
+          "calls": [
+            "#49",
+            "#51"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "policy.choose#X",
+        "game.moveLegal"
+      ],
+      "length": 2,
+      "count": 149,
+      "internal": [
+        "0.cell>1.cell"
+      ],
+      "ext": [
+        "x0>0.board",
+        "x0>1.board",
+        "x1>0.player"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.ply"
+      ],
+      "alreadyComposed": 149,
+      "composedShare": 1,
+      "score": 298,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 1,
+          "parent": "#3 match.ply",
+          "calls": [
+            "#4",
+            "#6"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 1,
+          "parent": "#21 match.ply",
+          "calls": [
+            "#22",
+            "#24"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 1,
+          "parent": "#39 match.ply",
+          "calls": [
+            "#40",
+            "#42"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "lin.transpose",
+        "lin.matmul",
+        "lin.matvec",
+        "lin.solve"
+      ],
+      "length": 4,
+      "count": 13,
+      "internal": [
+        "0.matrix>1.a",
+        "0.matrix>2.matrix",
+        "1.matrix>3.matrix",
+        "2.vector>3.vector"
+      ],
+      "ext": [
+        "x0>0.matrix",
+        "x0>1.b",
+        "x1>2.vector"
+      ],
+      "entries": [
+        "c-fitted",
+        "d-explain",
+        "a"
+      ],
+      "domainEntries": [
+        "c-fitted",
+        "d-explain",
+        "a"
+      ],
+      "parents": [
+        "lin.leastSquares"
+      ],
+      "alreadyComposed": 13,
+      "composedShare": 1,
+      "score": 156,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#23 lin.leastSquares",
+          "calls": [
+            "#24",
+            "#25",
+            "#33",
+            "#36"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#23 lin.leastSquares",
+          "calls": [
+            "#24",
+            "#25",
+            "#33",
+            "#36"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 4,
+          "parent": "#22 lin.leastSquares",
+          "calls": [
+            "#23",
+            "#24",
+            "#32",
+            "#35"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "fitted.split.byGroup",
+        "fitted.rows.select#train",
+        "fitted.rows.select#test",
+        "fitted.values.select#train",
+        "fitted.values.select#test",
+        "fitted.standardizer.fit",
+        "fitted.standardizer.apply#train",
+        "fitted.standardizer.apply#test",
+        "fitted.linear.fit",
+        "fitted.linear.apply",
+        "fitted.error.mse#model"
+      ],
+      "length": 11,
+      "count": 7,
+      "internal": [
+        "0.testRows>2.rows",
+        "0.testRows>4.rows",
+        "0.trainRows>1.rows",
+        "0.trainRows>3.rows",
+        "1.matrix>5.matrix",
+        "1.matrix>6.matrix",
+        "2.matrix>7.matrix",
+        "3.values>8.targets",
+        "4.values>10.actual",
+        "5.model>6.model",
+        "5.model>7.model",
+        "6.matrix>8.matrix",
+        "7.matrix>9.matrix",
+        "8.model>9.model",
+        "9.values>10.predicted"
+      ],
+      "ext": [
+        "x0>0.groups",
+        "x1>0.period",
+        "x2>1.matrix",
+        "x2>2.matrix",
+        "x3>3.values",
+        "x3>4.values",
+        "x4>8.penalty"
+      ],
+      "entries": [
+        "c-fitted"
+      ],
+      "domainEntries": [
+        "c-fitted"
+      ],
+      "parents": [
+        "fitted.pipeline.regression"
+      ],
+      "alreadyComposed": 7,
+      "composedShare": 1,
+      "score": 140,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#7",
+            "#12",
+            "#16",
+            "#20",
+            "#37",
+            "#42"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 4,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#7",
+            "#12",
+            "#16",
+            "#20",
+            "#36",
+            "#45"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 11,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#7",
+            "#12",
+            "#16",
+            "#20",
+            "#37",
+            "#43"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "adder.full#bit0",
+        "adder.full#bit1",
+        "adder.full#bit2",
+        "adder.full#bit3"
+      ],
+      "length": 4,
+      "count": 23,
+      "internal": [
+        "0.carry>1.cin",
+        "1.carry>2.cin",
+        "2.carry>3.cin"
+      ],
+      "ext": [
+        "x0>0.a",
+        "x0>1.a",
+        "x0>2.a",
+        "x0>3.a",
+        "x1>0.b",
+        "x1>1.b",
+        "x1>2.b",
+        "x1>3.b",
+        "x2>0.cin"
+      ],
+      "entries": [
+        "b-circuits"
+      ],
+      "domainEntries": [
+        "b-circuits"
+      ],
+      "parents": [
+        "adder.ripple4"
+      ],
+      "alreadyComposed": 23,
+      "composedShare": 1,
+      "score": 138,
+      "examples": [
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#1 adder.ripple4",
+          "calls": [
+            "#2",
+            "#29",
+            "#56",
+            "#83"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 2,
+          "parent": "#1 adder.ripple4",
+          "calls": [
+            "#2",
+            "#29",
+            "#56",
+            "#87"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#2 adder.ripple4",
+          "calls": [
+            "#3",
+            "#28",
+            "#40",
+            "#41"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply"
+      ],
+      "length": 5,
+      "count": 12,
+      "internal": [
+        "0.board>1.board",
+        "0.moves>1.moves",
+        "0.status>1.status",
+        "1.board>2.board",
+        "1.moves>2.moves",
+        "1.status>2.status",
+        "2.board>3.board",
+        "2.moves>3.moves",
+        "2.status>3.status",
+        "3.board>4.board",
+        "3.moves>4.moves",
+        "3.status>4.status"
+      ],
+      "ext": [
+        "literal>0.player",
+        "literal>1.player",
+        "literal>2.player",
+        "literal>3.player",
+        "literal>4.player",
+        "x0>0.board",
+        "x1>0.moves",
+        "x2>0.status"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.play"
+      ],
+      "alreadyComposed": 12,
+      "composedShare": 1,
+      "score": 96,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#10",
+            "#18",
+            "#26",
+            "#34",
+            "#42"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#50"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#26",
+            "#34",
+            "#42",
+            "#50",
+            "#51"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply"
+      ],
+      "length": 4,
+      "count": 15,
+      "internal": [
+        "0.board>1.board",
+        "0.moves>1.moves",
+        "0.status>1.status",
+        "1.board>2.board",
+        "1.moves>2.moves",
+        "1.status>2.status",
+        "2.board>3.board",
+        "2.moves>3.moves",
+        "2.status>3.status"
+      ],
+      "ext": [
+        "literal>0.player",
+        "literal>1.player",
+        "literal>2.player",
+        "literal>3.player",
+        "x0>0.board",
+        "x1>0.moves",
+        "x2>0.status"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.play"
+      ],
+      "alreadyComposed": 15,
+      "composedShare": 1,
+      "score": 90,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#10",
+            "#18",
+            "#26",
+            "#34"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#18",
+            "#26",
+            "#34",
+            "#42"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#26",
+            "#34",
+            "#42",
+            "#50"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply"
+      ],
+      "length": 6,
+      "count": 9,
+      "internal": [
+        "0.board>1.board",
+        "0.moves>1.moves",
+        "0.status>1.status",
+        "1.board>2.board",
+        "1.moves>2.moves",
+        "1.status>2.status",
+        "2.board>3.board",
+        "2.moves>3.moves",
+        "2.status>3.status",
+        "3.board>4.board",
+        "3.moves>4.moves",
+        "3.status>4.status",
+        "4.board>5.board",
+        "4.moves>5.moves",
+        "4.status>5.status"
+      ],
+      "ext": [
+        "literal>0.player",
+        "literal>1.player",
+        "literal>2.player",
+        "literal>3.player",
+        "literal>4.player",
+        "literal>5.player",
+        "x0>0.board",
+        "x1>0.moves",
+        "x2>0.status"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.play"
+      ],
+      "alreadyComposed": 9,
+      "composedShare": 1,
+      "score": 90,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#10",
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#50"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#50",
+            "#51"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#26",
+            "#34",
+            "#42",
+            "#50",
+            "#51",
+            "#52"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "fitted.standardizer.apply#train",
+        "fitted.standardizer.apply#test",
+        "fitted.linear.fit",
+        "fitted.linear.apply",
+        "fitted.error.mse#model"
+      ],
+      "length": 5,
+      "count": 10,
+      "internal": [
+        "0.matrix>2.matrix",
+        "1.matrix>3.matrix",
+        "2.model>3.model",
+        "3.values>4.predicted"
+      ],
+      "ext": [
+        "x0>0.matrix",
+        "x1>0.model",
+        "x1>1.model",
+        "x2>1.matrix",
+        "x3>2.penalty",
+        "x4>2.targets",
+        "x5>4.actual"
+      ],
+      "entries": [
+        "c-fitted"
+      ],
+      "domainEntries": [
+        "c-fitted"
+      ],
+      "parents": [
+        "fitted.pipeline.regression"
+      ],
+      "alreadyComposed": 10,
+      "composedShare": 1,
+      "score": 80,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#12",
+            "#16",
+            "#20",
+            "#37",
+            "#42"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#12",
+            "#16",
+            "#20",
+            "#37",
+            "#42"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 4,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#12",
+            "#16",
+            "#20",
+            "#36",
+            "#45"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "match.ply",
+        "match.ply",
+        "match.ply"
+      ],
+      "length": 3,
+      "count": 18,
+      "internal": [
+        "0.board>1.board",
+        "0.moves>1.moves",
+        "0.status>1.status",
+        "1.board>2.board",
+        "1.moves>2.moves",
+        "1.status>2.status"
+      ],
+      "ext": [
+        "literal>0.player",
+        "literal>1.player",
+        "literal>2.player",
+        "x0>0.board",
+        "x1>0.moves",
+        "x2>0.status"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.play"
+      ],
+      "alreadyComposed": 18,
+      "composedShare": 1,
+      "score": 72,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#10",
+            "#18",
+            "#26"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#18",
+            "#26",
+            "#34"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#26",
+            "#34",
+            "#42"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply"
+      ],
+      "length": 7,
+      "count": 6,
+      "internal": [
+        "0.board>1.board",
+        "0.moves>1.moves",
+        "0.status>1.status",
+        "1.board>2.board",
+        "1.moves>2.moves",
+        "1.status>2.status",
+        "2.board>3.board",
+        "2.moves>3.moves",
+        "2.status>3.status",
+        "3.board>4.board",
+        "3.moves>4.moves",
+        "3.status>4.status",
+        "4.board>5.board",
+        "4.moves>5.moves",
+        "4.status>5.status",
+        "5.board>6.board",
+        "5.moves>6.moves",
+        "5.status>6.status"
+      ],
+      "ext": [
+        "literal>0.player",
+        "literal>1.player",
+        "literal>2.player",
+        "literal>3.player",
+        "literal>4.player",
+        "literal>5.player",
+        "literal>6.player",
+        "x0>0.board",
+        "x1>0.moves",
+        "x2>0.status"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.play"
+      ],
+      "alreadyComposed": 6,
+      "composedShare": 1,
+      "score": 72,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#10",
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#50",
+            "#51"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#50",
+            "#51",
+            "#52"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#1 match.play",
+          "calls": [
+            "#10",
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#43",
+            "#44"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "fitted.split.byGroup",
+        "fitted.rows.select#train",
+        "fitted.rows.select#test",
+        "fitted.values.select#train",
+        "fitted.values.select#test",
+        "fitted.standardizer.fit",
+        "fitted.standardizer.apply#train",
+        "fitted.standardizer.apply#test",
+        "fitted.linear.fit",
+        "fitted.linear.apply",
+        "fitted.error.mse#model"
+      ],
+      "length": 11,
+      "count": 3,
+      "internal": [
+        "0.testRows>2.rows",
+        "0.testRows>4.rows",
+        "0.trainRows>1.rows",
+        "0.trainRows>3.rows",
+        "1.matrix>6.matrix",
+        "2.matrix>7.matrix",
+        "3.values>8.targets",
+        "4.values>10.actual",
+        "5.model>6.model",
+        "5.model>7.model",
+        "6.matrix>8.matrix",
+        "7.matrix>9.matrix",
+        "8.model>9.model",
+        "9.values>10.predicted"
+      ],
+      "ext": [
+        "x0>0.groups",
+        "x1>0.period",
+        "x2>1.matrix",
+        "x2>2.matrix",
+        "x2>5.matrix",
+        "x3>3.values",
+        "x3>4.values",
+        "x4>8.penalty"
+      ],
+      "entries": [
+        "c-fitted"
+      ],
+      "domainEntries": [
+        "c-fitted"
+      ],
+      "parents": [
+        "fitted.pipeline.regression"
+      ],
+      "alreadyComposed": 3,
+      "composedShare": 1,
+      "score": 60,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#7",
+            "#12",
+            "#16",
+            "#20",
+            "#37",
+            "#42"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 12,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#7",
+            "#12",
+            "#16",
+            "#20",
+            "#37",
+            "#43"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 14,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#7",
+            "#8",
+            "#9",
+            "#10",
+            "#26",
+            "#32"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "gate.not",
+        "gate.nand",
+        "gate.nand",
+        "gate.nand"
+      ],
+      "length": 4,
+      "count": 8,
+      "internal": [
+        "0.q>1.b",
+        "1.q>3.a",
+        "2.q>3.b"
+      ],
+      "ext": [
+        "x0>0.a",
+        "x0>2.b",
+        "x1>1.a",
+        "x2>2.a"
+      ],
+      "entries": [
+        "b-circuits"
+      ],
+      "domainEntries": [
+        "b-circuits"
+      ],
+      "parents": [
+        "gate.mux"
+      ],
+      "alreadyComposed": 8,
+      "composedShare": 1,
+      "score": 48,
+      "examples": [
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#43 gate.mux",
+          "calls": [
+            "#44",
+            "#45",
+            "#46",
+            "#47"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#49 gate.mux",
+          "calls": [
+            "#50",
+            "#51",
+            "#52",
+            "#53"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 2,
+          "parent": "#25 gate.mux",
+          "calls": [
+            "#26",
+            "#27",
+            "#28",
+            "#29"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply"
+      ],
+      "length": 9,
+      "count": 3,
+      "internal": [
+        "0.board>1.board",
+        "0.moves>1.moves",
+        "0.status>1.status",
+        "1.board>2.board",
+        "1.moves>2.moves",
+        "1.status>2.status",
+        "2.board>3.board",
+        "2.moves>3.moves",
+        "2.status>3.status",
+        "3.board>4.board",
+        "3.moves>4.moves",
+        "3.status>4.status",
+        "4.board>5.board",
+        "4.moves>5.moves",
+        "4.status>5.status",
+        "5.board>6.board",
+        "5.moves>6.moves",
+        "5.status>6.status",
+        "6.board>7.board",
+        "6.moves>7.moves",
+        "6.status>7.status",
+        "7.board>8.board",
+        "7.moves>8.moves",
+        "7.status>8.status"
+      ],
+      "ext": [
+        "literal>0.board",
+        "literal>0.moves",
+        "literal>0.player",
+        "literal>0.status",
+        "literal>1.player",
+        "literal>2.player",
+        "literal>3.player",
+        "literal>4.player",
+        "literal>5.player",
+        "literal>6.player",
+        "literal>7.player",
+        "literal>8.player"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.play"
+      ],
+      "alreadyComposed": 3,
+      "composedShare": 1,
+      "score": 48,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#2",
+            "#10",
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#50",
+            "#51",
+            "#52"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#1 match.play",
+          "calls": [
+            "#2",
+            "#10",
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#43",
+            "#44",
+            "#45"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 8,
+          "parent": "#1 match.play",
+          "calls": [
+            "#2",
+            "#10",
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#50",
+            "#58",
+            "#59"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "adder.ripple4",
+        "ff.dff#bit0"
+      ],
+      "length": 2,
+      "count": 20,
+      "internal": [
+        "0.sum~>1.d"
+      ],
+      "ext": [
+        "literal>0.b",
+        "literal>0.cin",
+        "x0>0.a",
+        "x0>1.state",
+        "x1>1.clk"
+      ],
+      "entries": [
+        "b-circuits"
+      ],
+      "domainEntries": [
+        "b-circuits"
+      ],
+      "parents": [
+        "counter.tick"
+      ],
+      "alreadyComposed": 20,
+      "composedShare": 1,
+      "score": 40,
+      "examples": [
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#1 counter.tick",
+          "calls": [
+            "#2",
+            "#42"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 2,
+          "parent": "#1 counter.tick",
+          "calls": [
+            "#2",
+            "#24"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 3,
+          "parent": "#1 counter.tick",
+          "calls": [
+            "#2",
+            "#10"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "match.ply",
+        "match.ply"
+      ],
+      "length": 2,
+      "count": 20,
+      "internal": [
+        "0.board>1.board",
+        "0.moves>1.moves",
+        "0.status>1.status"
+      ],
+      "ext": [
+        "literal>0.player",
+        "literal>1.player",
+        "x0>0.board",
+        "x1>0.moves",
+        "x2>0.status"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.play"
+      ],
+      "alreadyComposed": 20,
+      "composedShare": 1,
+      "score": 40,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#10",
+            "#18"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#18",
+            "#26"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#26",
+            "#34"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "adder.half",
+        "adder.half",
+        "gate.or",
+        "gate.and"
+      ],
+      "length": 4,
+      "count": 6,
+      "internal": [
+        "0.carry>2.a",
+        "0.sum>1.a",
+        "1.carry>2.b",
+        "2.q>3.a"
+      ],
+      "ext": [
+        "literal>3.b",
+        "x0>0.a",
+        "x1>0.b",
+        "x2>1.b"
+      ],
+      "entries": [
+        "b-circuits"
+      ],
+      "domainEntries": [
+        "b-circuits"
+      ],
+      "parents": [
+        "adder.full"
+      ],
+      "alreadyComposed": 6,
+      "composedShare": 1,
+      "score": 36,
+      "examples": [
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 2,
+          "parent": "#56 adder.full",
+          "calls": [
+            "#57",
+            "#67",
+            "#77",
+            "#83"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#166 adder.full",
+          "calls": [
+            "#167",
+            "#177",
+            "#187",
+            "#193"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 2,
+          "parent": "#2 adder.full",
+          "calls": [
+            "#3",
+            "#13",
+            "#23",
+            "#29"
+          ]
+        }
+      ]
+    }
+  ],
+  "receipts": 846,
+  "traces": 846,
+  "windows": 1445269,
+  "shapes": 197,
+  "closedShapesSeenTwice": 181,
+  "afterPruning": 53,
+  "crossEntry": [
+    {
+      "contracts": [
+        "lin.transpose",
+        "lin.matmul",
+        "lin.matvec",
+        "lin.solve"
+      ],
+      "length": 4,
+      "count": 13,
+      "internal": [
+        "0.matrix>1.a",
+        "0.matrix>2.matrix",
+        "1.matrix>3.matrix",
+        "2.vector>3.vector"
+      ],
+      "ext": [
+        "x0>0.matrix",
+        "x0>1.b",
+        "x1>2.vector"
+      ],
+      "entries": [
+        "c-fitted",
+        "d-explain",
+        "a"
+      ],
+      "domainEntries": [
+        "c-fitted",
+        "d-explain",
+        "a"
+      ],
+      "parents": [
+        "lin.leastSquares"
+      ],
+      "alreadyComposed": 13,
+      "composedShare": 1,
+      "score": 156,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#23 lin.leastSquares",
+          "calls": [
+            "#24",
+            "#25",
+            "#33",
+            "#36"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#23 lin.leastSquares",
+          "calls": [
+            "#24",
+            "#25",
+            "#33",
+            "#36"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 4,
+          "parent": "#22 lin.leastSquares",
+          "calls": [
+            "#23",
+            "#24",
+            "#32",
+            "#35"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "lin.transpose",
+        "lin.matvec"
+      ],
+      "length": 2,
+      "count": 13,
+      "internal": [
+        "0.matrix~>1.vector"
+      ],
+      "ext": [
+        "x0>0.matrix",
+        "x1>1.matrix"
+      ],
+      "entries": [
+        "c-fitted",
+        "d-explain",
+        "a"
+      ],
+      "domainEntries": [
+        "c-fitted",
+        "d-explain",
+        "a"
+      ],
+      "parents": [
+        "lin.matmul"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 52,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#25 lin.matmul",
+          "calls": [
+            "#26",
+            "#27"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#25 lin.matmul",
+          "calls": [
+            "#26",
+            "#27"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 4,
+          "parent": "#24 lin.matmul",
+          "calls": [
+            "#25",
+            "#26"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "lin.transpose",
+        "stat.mean"
+      ],
+      "length": 2,
+      "count": 8,
+      "internal": [
+        "0.matrix~>1.values"
+      ],
+      "ext": [
+        "x0>0.matrix"
+      ],
+      "entries": [
+        "c-fitted",
+        "d-explain"
+      ],
+      "domainEntries": [
+        "c-fitted",
+        "d-explain"
+      ],
+      "parents": [
+        "fitted.standardizer.fit",
+        "fitted.standardizer.apply",
+        "explain.baselineMeans"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 24,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#7 fitted.standardizer.fit",
+          "calls": [
+            "#8",
+            "#9"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#7 fitted.standardizer.fit",
+          "calls": [
+            "#8",
+            "#9"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 4,
+          "parent": "#7 fitted.standardizer.fit",
+          "calls": [
+            "#8",
+            "#9"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "stat.mean",
+        "stat.standardDeviation",
+        "vec.standardize"
+      ],
+      "length": 3,
+      "count": 2,
+      "internal": [
+        "0.value>2.center",
+        "1.value>2.scale"
+      ],
+      "ext": [
+        "literal>1.denominator",
+        "x0>0.values",
+        "x0>1.values",
+        "x0>2.values"
+      ],
+      "entries": [
+        "c-fitted",
+        "a"
+      ],
+      "domainEntries": [
+        "c-fitted",
+        "a"
+      ],
+      "parents": [
+        "fitted.standardizer.apply",
+        "stat.zScores"
+      ],
+      "alreadyComposed": 1,
+      "composedShare": 0.5,
+      "score": 12,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 28,
+          "parent": "#16 fitted.standardizer.apply",
+          "calls": [
+            "#18",
+            "#19",
+            "#21"
+          ]
+        },
+        {
+          "entry": "a",
+          "world": "a",
+          "run": 1,
+          "parent": "#1 stat.zScores",
+          "calls": [
+            "#2",
+            "#3",
+            "#5"
+          ]
+        }
+      ]
+    }
+  ],
+  "top": [
+    {
+      "contracts": [
+        "game.apply",
+        "game.outcome"
+      ],
+      "length": 2,
+      "count": 8097,
+      "internal": [
+        "0.board>1.board"
+      ],
+      "ext": [
+        "literal>0.player",
+        "x0>0.board",
+        "x1>0.cell"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "policy.choose"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 16194,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#10",
+            "#11"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#13",
+            "#14"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#16",
+            "#17"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "game.legalMoves",
+        "game.apply"
+      ],
+      "length": 2,
+      "count": 4519,
+      "internal": [
+        "0.cells~>1.cell"
+      ],
+      "ext": [
+        "literal>1.player",
+        "x0>0.board",
+        "x0>1.board"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "policy.choose"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 9038,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#9",
+            "#10"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#12",
+            "#13"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#15",
+            "#16"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "agents.clock",
+        "agents.advance",
+        "agents.integrate",
+        "agents.measure#before",
+        "agents.demand",
+        "agents.frontier",
+        "agents.allocate#primary",
+        "agents.evaluate",
+        "agents.commit",
+        "agents.measure#after",
+        "agents.capacity"
+      ],
+      "length": 11,
+      "count": 224,
+      "internal": [
+        "0.tick>1.t",
+        "0.tick>2.t",
+        "0.tick>8.t",
+        "1.state>2.state",
+        "2.state>3.state",
+        "2.state>5.state",
+        "2.state>8.state",
+        "3.counts>4.counts",
+        "4.limit>5.limit",
+        "5.constraints>6.constraints",
+        "5.constraints>7.constraints",
+        "5.idle>6.idle",
+        "5.idle>7.idle",
+        "5.ready>6.ready",
+        "5.ready>7.ready",
+        "6.assignments>7.assignments",
+        "6.assignments>8.assignments",
+        "7.accepted>8.accepted",
+        "7.reason>8.reason",
+        "8.state>9.state",
+        "9.counts>10.counts"
+      ],
+      "ext": [
+        "x0>1.state",
+        "x1>10.config",
+        "x1>2.config",
+        "x1>4.config",
+        "x1>5.config"
+      ],
+      "entries": [
+        "f-agents"
+      ],
+      "domainEntries": [
+        "f-agents"
+      ],
+      "parents": [
+        "agents.tick"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 4480,
+      "examples": [
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 1,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9",
+            "#11",
+            "#13",
+            "#14",
+            "#15"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 2,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9",
+            "#11",
+            "#13",
+            "#14",
+            "#15"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 3,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9",
+            "#11",
+            "#13",
+            "#14",
+            "#15"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "game.legalMoves",
+        "game.apply",
+        "game.outcome"
+      ],
+      "length": 3,
+      "count": 1033,
+      "internal": [
+        "0.cells~>1.cell",
+        "1.board>2.board"
+      ],
+      "ext": [
+        "literal>1.player",
+        "x0>0.board",
+        "x0>1.board"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "policy.choose"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 4132,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#9",
+            "#10",
+            "#11"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#12",
+            "#13",
+            "#14"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#15",
+            "#16",
+            "#17"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "agents.clock",
+        "agents.advance",
+        "agents.integrate",
+        "agents.measure#before",
+        "agents.demand",
+        "agents.frontier",
+        "agents.allocate#primary"
+      ],
+      "length": 7,
+      "count": 260,
+      "internal": [
+        "0.tick>1.t",
+        "0.tick>2.t",
+        "1.state>2.state",
+        "2.state>3.state",
+        "2.state>5.state",
+        "3.counts>4.counts",
+        "4.limit>5.limit",
+        "5.constraints>6.constraints",
+        "5.idle>6.idle",
+        "5.ready>6.ready"
+      ],
+      "ext": [
+        "x0>1.state",
+        "x1>2.config",
+        "x1>4.config",
+        "x1>5.config"
+      ],
+      "entries": [
+        "f-agents"
+      ],
+      "domainEntries": [
+        "f-agents"
+      ],
+      "parents": [
+        "agents.tick"
+      ],
+      "alreadyComposed": 260,
+      "composedShare": 1,
+      "score": 3120,
+      "examples": [
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 1,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 2,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 3,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "agents.evaluate",
+        "agents.commit",
+        "agents.measure#after",
+        "agents.capacity"
+      ],
+      "length": 4,
+      "count": 260,
+      "internal": [
+        "0.accepted>1.accepted",
+        "0.reason>1.reason",
+        "1.state>2.state",
+        "2.counts>3.counts"
+      ],
+      "ext": [
+        "x0>0.assignments",
+        "x0>1.assignments",
+        "x1>0.constraints",
+        "x2>0.idle",
+        "x3>0.ready",
+        "x4>1.state",
+        "x5>1.t",
+        "x6>3.config"
+      ],
+      "entries": [
+        "f-agents"
+      ],
+      "domainEntries": [
+        "f-agents"
+      ],
+      "parents": [
+        "agents.tick"
+      ],
+      "alreadyComposed": 260,
+      "composedShare": 1,
+      "score": 1560,
+      "examples": [
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 1,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#11",
+            "#13",
+            "#14",
+            "#15"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 2,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#11",
+            "#13",
+            "#14",
+            "#15"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 3,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#11",
+            "#13",
+            "#14",
+            "#15"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "agents.clock",
+        "agents.advance",
+        "agents.integrate",
+        "agents.measure#before",
+        "agents.demand",
+        "agents.frontier",
+        "agents.allocate#primary",
+        "agents.allocate#shadow",
+        "agents.regret"
+      ],
+      "length": 9,
+      "count": 38,
+      "internal": [
+        "0.tick>1.t",
+        "0.tick>2.t",
+        "1.state>2.state",
+        "2.state>3.state",
+        "2.state>5.state",
+        "3.counts>4.counts",
+        "4.limit>5.limit",
+        "5.constraints>6.constraints",
+        "5.constraints>7.constraints",
+        "5.idle>6.idle",
+        "5.idle>7.idle",
+        "5.ready>6.ready",
+        "5.ready>7.ready",
+        "6.score>8.primary",
+        "7.score>8.shadow"
+      ],
+      "ext": [
+        "x0>1.state",
+        "x1>2.config",
+        "x1>4.config",
+        "x1>5.config"
+      ],
+      "entries": [
+        "f-agents"
+      ],
+      "domainEntries": [
+        "f-agents"
+      ],
+      "parents": [
+        "agents.tick"
+      ],
+      "alreadyComposed": 38,
+      "composedShare": 1,
+      "score": 608,
+      "examples": [
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 1,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9",
+            "#11",
+            "#13"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 2,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9",
+            "#11",
+            "#13"
+          ]
+        },
+        {
+          "entry": "f-agents",
+          "world": "f-agents",
+          "run": 3,
+          "parent": "#1 agents.tick",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#8",
+            "#9",
+            "#11",
+            "#13"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "policy.choose#O",
+        "game.moveLegal"
+      ],
+      "length": 2,
+      "count": 151,
+      "internal": [
+        "0.cell>1.cell"
+      ],
+      "ext": [
+        "x0>0.board",
+        "x0>1.board",
+        "x1>0.player"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.ply"
+      ],
+      "alreadyComposed": 151,
+      "composedShare": 1,
+      "score": 302,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 1,
+          "parent": "#12 match.ply",
+          "calls": [
+            "#13",
+            "#15"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 1,
+          "parent": "#30 match.ply",
+          "calls": [
+            "#31",
+            "#33"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 1,
+          "parent": "#48 match.ply",
+          "calls": [
+            "#49",
+            "#51"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "policy.choose#X",
+        "game.moveLegal"
+      ],
+      "length": 2,
+      "count": 149,
+      "internal": [
+        "0.cell>1.cell"
+      ],
+      "ext": [
+        "x0>0.board",
+        "x0>1.board",
+        "x1>0.player"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.ply"
+      ],
+      "alreadyComposed": 149,
+      "composedShare": 1,
+      "score": 298,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 1,
+          "parent": "#3 match.ply",
+          "calls": [
+            "#4",
+            "#6"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 1,
+          "parent": "#21 match.ply",
+          "calls": [
+            "#22",
+            "#24"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 1,
+          "parent": "#39 match.ply",
+          "calls": [
+            "#40",
+            "#42"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "game.legalMoves",
+        "game.apply",
+        "game.outcome"
+      ],
+      "length": 3,
+      "count": 51,
+      "internal": [
+        "0.cells~>1.cell",
+        "1.board>2.board"
+      ],
+      "ext": [
+        "x0>0.board",
+        "x0>1.board",
+        "x1>1.player"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "policy.choose"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 204,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#4 policy.choose",
+          "calls": [
+            "#6",
+            "#7",
+            "#8"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#26185 policy.choose",
+          "calls": [
+            "#26187",
+            "#26188",
+            "#26189"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#28758 policy.choose",
+          "calls": [
+            "#28760",
+            "#28761",
+            "#28762"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "lin.transpose",
+        "lin.matmul",
+        "lin.matvec",
+        "lin.solve"
+      ],
+      "length": 4,
+      "count": 13,
+      "internal": [
+        "0.matrix>1.a",
+        "0.matrix>2.matrix",
+        "1.matrix>3.matrix",
+        "2.vector>3.vector"
+      ],
+      "ext": [
+        "x0>0.matrix",
+        "x0>1.b",
+        "x1>2.vector"
+      ],
+      "entries": [
+        "c-fitted",
+        "d-explain",
+        "a"
+      ],
+      "domainEntries": [
+        "c-fitted",
+        "d-explain",
+        "a"
+      ],
+      "parents": [
+        "lin.leastSquares"
+      ],
+      "alreadyComposed": 13,
+      "composedShare": 1,
+      "score": 156,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#23 lin.leastSquares",
+          "calls": [
+            "#24",
+            "#25",
+            "#33",
+            "#36"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#23 lin.leastSquares",
+          "calls": [
+            "#24",
+            "#25",
+            "#33",
+            "#36"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 4,
+          "parent": "#22 lin.leastSquares",
+          "calls": [
+            "#23",
+            "#24",
+            "#32",
+            "#35"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "fitted.split.byGroup",
+        "fitted.rows.select#train",
+        "fitted.rows.select#test",
+        "fitted.values.select#train",
+        "fitted.values.select#test",
+        "fitted.standardizer.fit",
+        "fitted.standardizer.apply#train",
+        "fitted.standardizer.apply#test",
+        "fitted.linear.fit",
+        "fitted.linear.apply",
+        "fitted.error.mse#model"
+      ],
+      "length": 11,
+      "count": 7,
+      "internal": [
+        "0.testRows>2.rows",
+        "0.testRows>4.rows",
+        "0.trainRows>1.rows",
+        "0.trainRows>3.rows",
+        "1.matrix>5.matrix",
+        "1.matrix>6.matrix",
+        "2.matrix>7.matrix",
+        "3.values>8.targets",
+        "4.values>10.actual",
+        "5.model>6.model",
+        "5.model>7.model",
+        "6.matrix>8.matrix",
+        "7.matrix>9.matrix",
+        "8.model>9.model",
+        "9.values>10.predicted"
+      ],
+      "ext": [
+        "x0>0.groups",
+        "x1>0.period",
+        "x2>1.matrix",
+        "x2>2.matrix",
+        "x3>3.values",
+        "x3>4.values",
+        "x4>8.penalty"
+      ],
+      "entries": [
+        "c-fitted"
+      ],
+      "domainEntries": [
+        "c-fitted"
+      ],
+      "parents": [
+        "fitted.pipeline.regression"
+      ],
+      "alreadyComposed": 7,
+      "composedShare": 1,
+      "score": 140,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#7",
+            "#12",
+            "#16",
+            "#20",
+            "#37",
+            "#42"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 4,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#7",
+            "#12",
+            "#16",
+            "#20",
+            "#36",
+            "#45"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 11,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#7",
+            "#12",
+            "#16",
+            "#20",
+            "#37",
+            "#43"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "adder.full#bit0",
+        "adder.full#bit1",
+        "adder.full#bit2",
+        "adder.full#bit3"
+      ],
+      "length": 4,
+      "count": 23,
+      "internal": [
+        "0.carry>1.cin",
+        "1.carry>2.cin",
+        "2.carry>3.cin"
+      ],
+      "ext": [
+        "x0>0.a",
+        "x0>1.a",
+        "x0>2.a",
+        "x0>3.a",
+        "x1>0.b",
+        "x1>1.b",
+        "x1>2.b",
+        "x1>3.b",
+        "x2>0.cin"
+      ],
+      "entries": [
+        "b-circuits"
+      ],
+      "domainEntries": [
+        "b-circuits"
+      ],
+      "parents": [
+        "adder.ripple4"
+      ],
+      "alreadyComposed": 23,
+      "composedShare": 1,
+      "score": 138,
+      "examples": [
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#1 adder.ripple4",
+          "calls": [
+            "#2",
+            "#29",
+            "#56",
+            "#83"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 2,
+          "parent": "#1 adder.ripple4",
+          "calls": [
+            "#2",
+            "#29",
+            "#56",
+            "#87"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#2 adder.ripple4",
+          "calls": [
+            "#3",
+            "#28",
+            "#40",
+            "#41"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply"
+      ],
+      "length": 5,
+      "count": 12,
+      "internal": [
+        "0.board>1.board",
+        "0.moves>1.moves",
+        "0.status>1.status",
+        "1.board>2.board",
+        "1.moves>2.moves",
+        "1.status>2.status",
+        "2.board>3.board",
+        "2.moves>3.moves",
+        "2.status>3.status",
+        "3.board>4.board",
+        "3.moves>4.moves",
+        "3.status>4.status"
+      ],
+      "ext": [
+        "literal>0.player",
+        "literal>1.player",
+        "literal>2.player",
+        "literal>3.player",
+        "literal>4.player",
+        "x0>0.board",
+        "x1>0.moves",
+        "x2>0.status"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.play"
+      ],
+      "alreadyComposed": 12,
+      "composedShare": 1,
+      "score": 96,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#10",
+            "#18",
+            "#26",
+            "#34",
+            "#42"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#50"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#26",
+            "#34",
+            "#42",
+            "#50",
+            "#51"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply"
+      ],
+      "length": 4,
+      "count": 15,
+      "internal": [
+        "0.board>1.board",
+        "0.moves>1.moves",
+        "0.status>1.status",
+        "1.board>2.board",
+        "1.moves>2.moves",
+        "1.status>2.status",
+        "2.board>3.board",
+        "2.moves>3.moves",
+        "2.status>3.status"
+      ],
+      "ext": [
+        "literal>0.player",
+        "literal>1.player",
+        "literal>2.player",
+        "literal>3.player",
+        "x0>0.board",
+        "x1>0.moves",
+        "x2>0.status"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.play"
+      ],
+      "alreadyComposed": 15,
+      "composedShare": 1,
+      "score": 90,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#10",
+            "#18",
+            "#26",
+            "#34"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#18",
+            "#26",
+            "#34",
+            "#42"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#26",
+            "#34",
+            "#42",
+            "#50"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply"
+      ],
+      "length": 6,
+      "count": 9,
+      "internal": [
+        "0.board>1.board",
+        "0.moves>1.moves",
+        "0.status>1.status",
+        "1.board>2.board",
+        "1.moves>2.moves",
+        "1.status>2.status",
+        "2.board>3.board",
+        "2.moves>3.moves",
+        "2.status>3.status",
+        "3.board>4.board",
+        "3.moves>4.moves",
+        "3.status>4.status",
+        "4.board>5.board",
+        "4.moves>5.moves",
+        "4.status>5.status"
+      ],
+      "ext": [
+        "literal>0.player",
+        "literal>1.player",
+        "literal>2.player",
+        "literal>3.player",
+        "literal>4.player",
+        "literal>5.player",
+        "x0>0.board",
+        "x1>0.moves",
+        "x2>0.status"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.play"
+      ],
+      "alreadyComposed": 9,
+      "composedShare": 1,
+      "score": 90,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#10",
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#50"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#50",
+            "#51"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#26",
+            "#34",
+            "#42",
+            "#50",
+            "#51",
+            "#52"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "fitted.standardizer.apply#train",
+        "fitted.standardizer.apply#test",
+        "fitted.linear.fit",
+        "fitted.linear.apply",
+        "fitted.error.mse#model"
+      ],
+      "length": 5,
+      "count": 10,
+      "internal": [
+        "0.matrix>2.matrix",
+        "1.matrix>3.matrix",
+        "2.model>3.model",
+        "3.values>4.predicted"
+      ],
+      "ext": [
+        "x0>0.matrix",
+        "x1>0.model",
+        "x1>1.model",
+        "x2>1.matrix",
+        "x3>2.penalty",
+        "x4>2.targets",
+        "x5>4.actual"
+      ],
+      "entries": [
+        "c-fitted"
+      ],
+      "domainEntries": [
+        "c-fitted"
+      ],
+      "parents": [
+        "fitted.pipeline.regression"
+      ],
+      "alreadyComposed": 10,
+      "composedShare": 1,
+      "score": 80,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#12",
+            "#16",
+            "#20",
+            "#37",
+            "#42"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#12",
+            "#16",
+            "#20",
+            "#37",
+            "#42"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 4,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#12",
+            "#16",
+            "#20",
+            "#36",
+            "#45"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "match.ply",
+        "match.ply",
+        "match.ply"
+      ],
+      "length": 3,
+      "count": 18,
+      "internal": [
+        "0.board>1.board",
+        "0.moves>1.moves",
+        "0.status>1.status",
+        "1.board>2.board",
+        "1.moves>2.moves",
+        "1.status>2.status"
+      ],
+      "ext": [
+        "literal>0.player",
+        "literal>1.player",
+        "literal>2.player",
+        "x0>0.board",
+        "x1>0.moves",
+        "x2>0.status"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.play"
+      ],
+      "alreadyComposed": 18,
+      "composedShare": 1,
+      "score": 72,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#10",
+            "#18",
+            "#26"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#18",
+            "#26",
+            "#34"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#26",
+            "#34",
+            "#42"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply"
+      ],
+      "length": 7,
+      "count": 6,
+      "internal": [
+        "0.board>1.board",
+        "0.moves>1.moves",
+        "0.status>1.status",
+        "1.board>2.board",
+        "1.moves>2.moves",
+        "1.status>2.status",
+        "2.board>3.board",
+        "2.moves>3.moves",
+        "2.status>3.status",
+        "3.board>4.board",
+        "3.moves>4.moves",
+        "3.status>4.status",
+        "4.board>5.board",
+        "4.moves>5.moves",
+        "4.status>5.status",
+        "5.board>6.board",
+        "5.moves>6.moves",
+        "5.status>6.status"
+      ],
+      "ext": [
+        "literal>0.player",
+        "literal>1.player",
+        "literal>2.player",
+        "literal>3.player",
+        "literal>4.player",
+        "literal>5.player",
+        "literal>6.player",
+        "x0>0.board",
+        "x1>0.moves",
+        "x2>0.status"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.play"
+      ],
+      "alreadyComposed": 6,
+      "composedShare": 1,
+      "score": 72,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#10",
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#50",
+            "#51"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#50",
+            "#51",
+            "#52"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#1 match.play",
+          "calls": [
+            "#10",
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#43",
+            "#44"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "lin.transpose",
+        "vec.standardize",
+        "lin.transpose"
+      ],
+      "length": 3,
+      "count": 15,
+      "internal": [
+        "0.matrix~>1.values",
+        "1.values>2.matrix"
+      ],
+      "ext": [
+        "x0>0.matrix",
+        "x1>1.center",
+        "x1>1.scale"
+      ],
+      "entries": [
+        "c-fitted"
+      ],
+      "domainEntries": [
+        "c-fitted"
+      ],
+      "parents": [
+        "fitted.standardizer.apply"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 60,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#12 fitted.standardizer.apply",
+          "calls": [
+            "#13",
+            "#14",
+            "#15"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#16 fitted.standardizer.apply",
+          "calls": [
+            "#17",
+            "#18",
+            "#19"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#12 fitted.standardizer.apply",
+          "calls": [
+            "#13",
+            "#14",
+            "#15"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "fitted.split.byGroup",
+        "fitted.rows.select#train",
+        "fitted.rows.select#test",
+        "fitted.values.select#train",
+        "fitted.values.select#test",
+        "fitted.standardizer.fit",
+        "fitted.standardizer.apply#train",
+        "fitted.standardizer.apply#test",
+        "fitted.linear.fit",
+        "fitted.linear.apply",
+        "fitted.error.mse#model"
+      ],
+      "length": 11,
+      "count": 3,
+      "internal": [
+        "0.testRows>2.rows",
+        "0.testRows>4.rows",
+        "0.trainRows>1.rows",
+        "0.trainRows>3.rows",
+        "1.matrix>6.matrix",
+        "2.matrix>7.matrix",
+        "3.values>8.targets",
+        "4.values>10.actual",
+        "5.model>6.model",
+        "5.model>7.model",
+        "6.matrix>8.matrix",
+        "7.matrix>9.matrix",
+        "8.model>9.model",
+        "9.values>10.predicted"
+      ],
+      "ext": [
+        "x0>0.groups",
+        "x1>0.period",
+        "x2>1.matrix",
+        "x2>2.matrix",
+        "x2>5.matrix",
+        "x3>3.values",
+        "x3>4.values",
+        "x4>8.penalty"
+      ],
+      "entries": [
+        "c-fitted"
+      ],
+      "domainEntries": [
+        "c-fitted"
+      ],
+      "parents": [
+        "fitted.pipeline.regression"
+      ],
+      "alreadyComposed": 3,
+      "composedShare": 1,
+      "score": 60,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#7",
+            "#12",
+            "#16",
+            "#20",
+            "#37",
+            "#42"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 12,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#7",
+            "#12",
+            "#16",
+            "#20",
+            "#37",
+            "#43"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 14,
+          "parent": "#1 fitted.pipeline.regression",
+          "calls": [
+            "#2",
+            "#3",
+            "#4",
+            "#5",
+            "#6",
+            "#7",
+            "#8",
+            "#9",
+            "#10",
+            "#26",
+            "#32"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "lin.transpose",
+        "lin.matvec"
+      ],
+      "length": 2,
+      "count": 13,
+      "internal": [
+        "0.matrix~>1.vector"
+      ],
+      "ext": [
+        "x0>0.matrix",
+        "x1>1.matrix"
+      ],
+      "entries": [
+        "c-fitted",
+        "d-explain",
+        "a"
+      ],
+      "domainEntries": [
+        "c-fitted",
+        "d-explain",
+        "a"
+      ],
+      "parents": [
+        "lin.matmul"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 52,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#25 lin.matmul",
+          "calls": [
+            "#26",
+            "#27"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#25 lin.matmul",
+          "calls": [
+            "#26",
+            "#27"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 4,
+          "parent": "#24 lin.matmul",
+          "calls": [
+            "#25",
+            "#26"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "gate.not",
+        "gate.nand",
+        "gate.nand",
+        "gate.nand"
+      ],
+      "length": 4,
+      "count": 8,
+      "internal": [
+        "0.q>1.b",
+        "1.q>3.a",
+        "2.q>3.b"
+      ],
+      "ext": [
+        "x0>0.a",
+        "x0>2.b",
+        "x1>1.a",
+        "x2>2.a"
+      ],
+      "entries": [
+        "b-circuits"
+      ],
+      "domainEntries": [
+        "b-circuits"
+      ],
+      "parents": [
+        "gate.mux"
+      ],
+      "alreadyComposed": 8,
+      "composedShare": 1,
+      "score": 48,
+      "examples": [
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#43 gate.mux",
+          "calls": [
+            "#44",
+            "#45",
+            "#46",
+            "#47"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#49 gate.mux",
+          "calls": [
+            "#50",
+            "#51",
+            "#52",
+            "#53"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 2,
+          "parent": "#25 gate.mux",
+          "calls": [
+            "#26",
+            "#27",
+            "#28",
+            "#29"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply",
+        "match.ply"
+      ],
+      "length": 9,
+      "count": 3,
+      "internal": [
+        "0.board>1.board",
+        "0.moves>1.moves",
+        "0.status>1.status",
+        "1.board>2.board",
+        "1.moves>2.moves",
+        "1.status>2.status",
+        "2.board>3.board",
+        "2.moves>3.moves",
+        "2.status>3.status",
+        "3.board>4.board",
+        "3.moves>4.moves",
+        "3.status>4.status",
+        "4.board>5.board",
+        "4.moves>5.moves",
+        "4.status>5.status",
+        "5.board>6.board",
+        "5.moves>6.moves",
+        "5.status>6.status",
+        "6.board>7.board",
+        "6.moves>7.moves",
+        "6.status>7.status",
+        "7.board>8.board",
+        "7.moves>8.moves",
+        "7.status>8.status"
+      ],
+      "ext": [
+        "literal>0.board",
+        "literal>0.moves",
+        "literal>0.player",
+        "literal>0.status",
+        "literal>1.player",
+        "literal>2.player",
+        "literal>3.player",
+        "literal>4.player",
+        "literal>5.player",
+        "literal>6.player",
+        "literal>7.player",
+        "literal>8.player"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.play"
+      ],
+      "alreadyComposed": 3,
+      "composedShare": 1,
+      "score": 48,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#2",
+            "#10",
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#50",
+            "#51",
+            "#52"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 2,
+          "parent": "#1 match.play",
+          "calls": [
+            "#2",
+            "#10",
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#43",
+            "#44",
+            "#45"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 8,
+          "parent": "#1 match.play",
+          "calls": [
+            "#2",
+            "#10",
+            "#18",
+            "#26",
+            "#34",
+            "#42",
+            "#50",
+            "#58",
+            "#59"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "adder.ripple4",
+        "ff.dff#bit0"
+      ],
+      "length": 2,
+      "count": 20,
+      "internal": [
+        "0.sum~>1.d"
+      ],
+      "ext": [
+        "literal>0.b",
+        "literal>0.cin",
+        "x0>0.a",
+        "x0>1.state",
+        "x1>1.clk"
+      ],
+      "entries": [
+        "b-circuits"
+      ],
+      "domainEntries": [
+        "b-circuits"
+      ],
+      "parents": [
+        "counter.tick"
+      ],
+      "alreadyComposed": 20,
+      "composedShare": 1,
+      "score": 40,
+      "examples": [
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#1 counter.tick",
+          "calls": [
+            "#2",
+            "#42"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 2,
+          "parent": "#1 counter.tick",
+          "calls": [
+            "#2",
+            "#24"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 3,
+          "parent": "#1 counter.tick",
+          "calls": [
+            "#2",
+            "#10"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "match.ply",
+        "match.ply"
+      ],
+      "length": 2,
+      "count": 20,
+      "internal": [
+        "0.board>1.board",
+        "0.moves>1.moves",
+        "0.status>1.status"
+      ],
+      "ext": [
+        "literal>0.player",
+        "literal>1.player",
+        "x0>0.board",
+        "x1>0.moves",
+        "x2>0.status"
+      ],
+      "entries": [
+        "e-game"
+      ],
+      "domainEntries": [
+        "e-game"
+      ],
+      "parents": [
+        "match.play"
+      ],
+      "alreadyComposed": 20,
+      "composedShare": 1,
+      "score": 40,
+      "examples": [
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#10",
+            "#18"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#18",
+            "#26"
+          ]
+        },
+        {
+          "entry": "e-game",
+          "world": "e",
+          "run": 4,
+          "parent": "#1 match.play",
+          "calls": [
+            "#26",
+            "#34"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "adder.half",
+        "adder.half",
+        "gate.or",
+        "gate.and"
+      ],
+      "length": 4,
+      "count": 6,
+      "internal": [
+        "0.carry>2.a",
+        "0.sum>1.a",
+        "1.carry>2.b",
+        "2.q>3.a"
+      ],
+      "ext": [
+        "literal>3.b",
+        "x0>0.a",
+        "x1>0.b",
+        "x2>1.b"
+      ],
+      "entries": [
+        "b-circuits"
+      ],
+      "domainEntries": [
+        "b-circuits"
+      ],
+      "parents": [
+        "adder.full"
+      ],
+      "alreadyComposed": 6,
+      "composedShare": 1,
+      "score": 36,
+      "examples": [
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 2,
+          "parent": "#56 adder.full",
+          "calls": [
+            "#57",
+            "#67",
+            "#77",
+            "#83"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#166 adder.full",
+          "calls": [
+            "#167",
+            "#177",
+            "#187",
+            "#193"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 2,
+          "parent": "#2 adder.full",
+          "calls": [
+            "#3",
+            "#13",
+            "#23",
+            "#29"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "adder.half",
+        "adder.half",
+        "gate.or"
+      ],
+      "length": 3,
+      "count": 8,
+      "internal": [
+        "0.carry>2.a",
+        "0.sum>1.a",
+        "1.carry>2.b"
+      ],
+      "ext": [
+        "x0>0.a",
+        "x1>0.b",
+        "x2>1.b"
+      ],
+      "entries": [
+        "b-circuits"
+      ],
+      "domainEntries": [
+        "b-circuits"
+      ],
+      "parents": [
+        "adder.full"
+      ],
+      "alreadyComposed": 8,
+      "composedShare": 1,
+      "score": 32,
+      "examples": [
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#1 adder.full",
+          "calls": [
+            "#2",
+            "#12",
+            "#22"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#2 adder.full",
+          "calls": [
+            "#3",
+            "#13",
+            "#23"
+          ]
+        },
+        {
+          "entry": "b-circuits",
+          "world": "b-circuits",
+          "run": 1,
+          "parent": "#29 adder.full",
+          "calls": [
+            "#30",
+            "#40",
+            "#50"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "explain.featureIndex",
+        "explain.attribute#before",
+        "explain.nudge",
+        "explain.attribute#after",
+        "explain.difference#prediction"
+      ],
+      "length": 5,
+      "count": 4,
+      "internal": [
+        "0.index>2.index",
+        "1.prediction>4.before",
+        "2.input>3.input",
+        "3.prediction>4.after"
+      ],
+      "ext": [
+        "x0>0.feature",
+        "x1>0.model",
+        "x1>1.model",
+        "x1>3.model",
+        "x2>1.baseline",
+        "x2>3.baseline",
+        "x3>1.input",
+        "x3>2.input",
+        "x4>2.delta"
+      ],
+      "entries": [
+        "d-explain"
+      ],
+      "domainEntries": [
+        "d-explain"
+      ],
+      "parents": [
+        "explain.effect"
+      ],
+      "alreadyComposed": 0,
+      "composedShare": 0,
+      "score": 32,
+      "examples": [
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 9,
+          "parent": "#4 explain.effect",
+          "calls": [
+            "#5",
+            "#6",
+            "#7",
+            "#8",
+            "#14"
+          ]
+        },
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 10,
+          "parent": "#4 explain.effect",
+          "calls": [
+            "#5",
+            "#6",
+            "#7",
+            "#8",
+            "#14"
+          ]
+        },
+        {
+          "entry": "d-explain",
+          "world": "d-explain",
+          "run": 15,
+          "parent": "#4 explain.effect",
+          "calls": [
+            "#5",
+            "#6",
+            "#7",
+            "#8",
+            "#14"
+          ]
+        }
+      ]
+    },
+    {
+      "contracts": [
+        "fitted.matrix.withIntercept",
+        "fitted.ridge.augment",
+        "lin.leastSquares"
+      ],
+      "length": 3,
+      "count": 7,
+      "internal": [
+        "0.matrix>1.matrix",
+        "1.matrix>2.matrix",
+        "1.vector>2.vector"
+      ],
+      "ext": [
+        "x0>0.matrix",
+        "x1>1.penalty",
+        "x2>1.vector"
+      ],
+      "entries": [
+        "c-fitted"
+      ],
+      "domainEntries": [
+        "c-fitted"
+      ],
+      "parents": [
+        "fitted.linear.fit"
+      ],
+      "alreadyComposed": 7,
+      "composedShare": 1,
+      "score": 28,
+      "examples": [
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 1,
+          "parent": "#20 fitted.linear.fit",
+          "calls": [
+            "#21",
+            "#22",
+            "#23"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 2,
+          "parent": "#20 fitted.linear.fit",
+          "calls": [
+            "#21",
+            "#22",
+            "#23"
+          ]
+        },
+        {
+          "entry": "c-fitted",
+          "world": "c-fitted",
+          "run": 11,
+          "parent": "#20 fitted.linear.fit",
+          "calls": [
+            "#21",
+            "#22",
+            "#23"
+          ]
+        }
+      ]
+    }
+  ],
+  "byEntry": {
+    "b-circuits": [
+      {
+        "contracts": [
+          "adder.full#bit0",
+          "adder.full#bit1",
+          "adder.full#bit2",
+          "adder.full#bit3"
+        ],
+        "length": 4,
+        "count": 23,
+        "internal": [
+          "0.carry>1.cin",
+          "1.carry>2.cin",
+          "2.carry>3.cin"
+        ],
+        "ext": [
+          "x0>0.a",
+          "x0>1.a",
+          "x0>2.a",
+          "x0>3.a",
+          "x1>0.b",
+          "x1>1.b",
+          "x1>2.b",
+          "x1>3.b",
+          "x2>0.cin"
+        ],
+        "entries": [
+          "b-circuits"
+        ],
+        "domainEntries": [
+          "b-circuits"
+        ],
+        "parents": [
+          "adder.ripple4"
+        ],
+        "alreadyComposed": 23,
+        "composedShare": 1,
+        "score": 138,
+        "examples": [
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 1,
+            "parent": "#1 adder.ripple4",
+            "calls": [
+              "#2",
+              "#29",
+              "#56",
+              "#83"
+            ]
+          },
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 2,
+            "parent": "#1 adder.ripple4",
+            "calls": [
+              "#2",
+              "#29",
+              "#56",
+              "#87"
+            ]
+          },
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 1,
+            "parent": "#2 adder.ripple4",
+            "calls": [
+              "#3",
+              "#28",
+              "#40",
+              "#41"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "gate.not",
+          "gate.nand",
+          "gate.nand",
+          "gate.nand"
+        ],
+        "length": 4,
+        "count": 8,
+        "internal": [
+          "0.q>1.b",
+          "1.q>3.a",
+          "2.q>3.b"
+        ],
+        "ext": [
+          "x0>0.a",
+          "x0>2.b",
+          "x1>1.a",
+          "x2>2.a"
+        ],
+        "entries": [
+          "b-circuits"
+        ],
+        "domainEntries": [
+          "b-circuits"
+        ],
+        "parents": [
+          "gate.mux"
+        ],
+        "alreadyComposed": 8,
+        "composedShare": 1,
+        "score": 48,
+        "examples": [
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 1,
+            "parent": "#43 gate.mux",
+            "calls": [
+              "#44",
+              "#45",
+              "#46",
+              "#47"
+            ]
+          },
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 1,
+            "parent": "#49 gate.mux",
+            "calls": [
+              "#50",
+              "#51",
+              "#52",
+              "#53"
+            ]
+          },
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 2,
+            "parent": "#25 gate.mux",
+            "calls": [
+              "#26",
+              "#27",
+              "#28",
+              "#29"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "adder.ripple4",
+          "ff.dff#bit0"
+        ],
+        "length": 2,
+        "count": 20,
+        "internal": [
+          "0.sum~>1.d"
+        ],
+        "ext": [
+          "literal>0.b",
+          "literal>0.cin",
+          "x0>0.a",
+          "x0>1.state",
+          "x1>1.clk"
+        ],
+        "entries": [
+          "b-circuits"
+        ],
+        "domainEntries": [
+          "b-circuits"
+        ],
+        "parents": [
+          "counter.tick"
+        ],
+        "alreadyComposed": 20,
+        "composedShare": 1,
+        "score": 40,
+        "examples": [
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 1,
+            "parent": "#1 counter.tick",
+            "calls": [
+              "#2",
+              "#42"
+            ]
+          },
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 2,
+            "parent": "#1 counter.tick",
+            "calls": [
+              "#2",
+              "#24"
+            ]
+          },
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 3,
+            "parent": "#1 counter.tick",
+            "calls": [
+              "#2",
+              "#10"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "adder.half",
+          "adder.half",
+          "gate.or",
+          "gate.and"
+        ],
+        "length": 4,
+        "count": 6,
+        "internal": [
+          "0.carry>2.a",
+          "0.sum>1.a",
+          "1.carry>2.b",
+          "2.q>3.a"
+        ],
+        "ext": [
+          "literal>3.b",
+          "x0>0.a",
+          "x1>0.b",
+          "x2>1.b"
+        ],
+        "entries": [
+          "b-circuits"
+        ],
+        "domainEntries": [
+          "b-circuits"
+        ],
+        "parents": [
+          "adder.full"
+        ],
+        "alreadyComposed": 6,
+        "composedShare": 1,
+        "score": 36,
+        "examples": [
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 2,
+            "parent": "#56 adder.full",
+            "calls": [
+              "#57",
+              "#67",
+              "#77",
+              "#83"
+            ]
+          },
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 1,
+            "parent": "#166 adder.full",
+            "calls": [
+              "#167",
+              "#177",
+              "#187",
+              "#193"
+            ]
+          },
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 2,
+            "parent": "#2 adder.full",
+            "calls": [
+              "#3",
+              "#13",
+              "#23",
+              "#29"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "adder.half",
+          "adder.half",
+          "gate.or"
+        ],
+        "length": 3,
+        "count": 8,
+        "internal": [
+          "0.carry>2.a",
+          "0.sum>1.a",
+          "1.carry>2.b"
+        ],
+        "ext": [
+          "x0>0.a",
+          "x1>0.b",
+          "x2>1.b"
+        ],
+        "entries": [
+          "b-circuits"
+        ],
+        "domainEntries": [
+          "b-circuits"
+        ],
+        "parents": [
+          "adder.full"
+        ],
+        "alreadyComposed": 8,
+        "composedShare": 1,
+        "score": 32,
+        "examples": [
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 1,
+            "parent": "#1 adder.full",
+            "calls": [
+              "#2",
+              "#12",
+              "#22"
+            ]
+          },
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 1,
+            "parent": "#2 adder.full",
+            "calls": [
+              "#3",
+              "#13",
+              "#23"
+            ]
+          },
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 1,
+            "parent": "#29 adder.full",
+            "calls": [
+              "#30",
+              "#40",
+              "#50"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "gate.nand",
+          "gate.nand",
+          "gate.nand",
+          "gate.nand"
+        ],
+        "length": 4,
+        "count": 4,
+        "internal": [
+          "0.q>1.b",
+          "0.q>2.b",
+          "1.q>3.a",
+          "2.q>3.b"
+        ],
+        "ext": [
+          "x0>0.a",
+          "x0>1.a",
+          "x1>0.b",
+          "x1>2.a"
+        ],
+        "entries": [
+          "b-circuits"
+        ],
+        "domainEntries": [
+          "b-circuits"
+        ],
+        "parents": [
+          "gate.xor"
+        ],
+        "alreadyComposed": 4,
+        "composedShare": 1,
+        "score": 24,
+        "examples": [
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 1,
+            "parent": "#3 gate.xor",
+            "calls": [
+              "#4",
+              "#5",
+              "#6",
+              "#7"
+            ]
+          },
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 1,
+            "parent": "#13 gate.xor",
+            "calls": [
+              "#14",
+              "#15",
+              "#16",
+              "#17"
+            ]
+          },
+          {
+            "entry": "b-circuits",
+            "world": "b-circuits",
+            "run": 1,
+            "parent": "#4 gate.xor",
+            "calls": [
+              "#5",
+              "#6",
+              "#7",
+              "#8"
+            ]
+          }
+        ]
+      }
+    ],
+    "c-fitted": [
+      {
+        "contracts": [
+          "lin.transpose",
+          "lin.matmul",
+          "lin.matvec",
+          "lin.solve"
+        ],
+        "length": 4,
+        "count": 13,
+        "internal": [
+          "0.matrix>1.a",
+          "0.matrix>2.matrix",
+          "1.matrix>3.matrix",
+          "2.vector>3.vector"
+        ],
+        "ext": [
+          "x0>0.matrix",
+          "x0>1.b",
+          "x1>2.vector"
+        ],
+        "entries": [
+          "c-fitted",
+          "d-explain",
+          "a"
+        ],
+        "domainEntries": [
+          "c-fitted",
+          "d-explain",
+          "a"
+        ],
+        "parents": [
+          "lin.leastSquares"
+        ],
+        "alreadyComposed": 13,
+        "composedShare": 1,
+        "score": 156,
+        "examples": [
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 1,
+            "parent": "#23 lin.leastSquares",
+            "calls": [
+              "#24",
+              "#25",
+              "#33",
+              "#36"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 2,
+            "parent": "#23 lin.leastSquares",
+            "calls": [
+              "#24",
+              "#25",
+              "#33",
+              "#36"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 4,
+            "parent": "#22 lin.leastSquares",
+            "calls": [
+              "#23",
+              "#24",
+              "#32",
+              "#35"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "fitted.split.byGroup",
+          "fitted.rows.select#train",
+          "fitted.rows.select#test",
+          "fitted.values.select#train",
+          "fitted.values.select#test",
+          "fitted.standardizer.fit",
+          "fitted.standardizer.apply#train",
+          "fitted.standardizer.apply#test",
+          "fitted.linear.fit",
+          "fitted.linear.apply",
+          "fitted.error.mse#model"
+        ],
+        "length": 11,
+        "count": 7,
+        "internal": [
+          "0.testRows>2.rows",
+          "0.testRows>4.rows",
+          "0.trainRows>1.rows",
+          "0.trainRows>3.rows",
+          "1.matrix>5.matrix",
+          "1.matrix>6.matrix",
+          "2.matrix>7.matrix",
+          "3.values>8.targets",
+          "4.values>10.actual",
+          "5.model>6.model",
+          "5.model>7.model",
+          "6.matrix>8.matrix",
+          "7.matrix>9.matrix",
+          "8.model>9.model",
+          "9.values>10.predicted"
+        ],
+        "ext": [
+          "x0>0.groups",
+          "x1>0.period",
+          "x2>1.matrix",
+          "x2>2.matrix",
+          "x3>3.values",
+          "x3>4.values",
+          "x4>8.penalty"
+        ],
+        "entries": [
+          "c-fitted"
+        ],
+        "domainEntries": [
+          "c-fitted"
+        ],
+        "parents": [
+          "fitted.pipeline.regression"
+        ],
+        "alreadyComposed": 7,
+        "composedShare": 1,
+        "score": 140,
+        "examples": [
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 1,
+            "parent": "#1 fitted.pipeline.regression",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#7",
+              "#12",
+              "#16",
+              "#20",
+              "#37",
+              "#42"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 4,
+            "parent": "#1 fitted.pipeline.regression",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#7",
+              "#12",
+              "#16",
+              "#20",
+              "#36",
+              "#45"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 11,
+            "parent": "#1 fitted.pipeline.regression",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#7",
+              "#12",
+              "#16",
+              "#20",
+              "#37",
+              "#43"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "fitted.standardizer.apply#train",
+          "fitted.standardizer.apply#test",
+          "fitted.linear.fit",
+          "fitted.linear.apply",
+          "fitted.error.mse#model"
+        ],
+        "length": 5,
+        "count": 10,
+        "internal": [
+          "0.matrix>2.matrix",
+          "1.matrix>3.matrix",
+          "2.model>3.model",
+          "3.values>4.predicted"
+        ],
+        "ext": [
+          "x0>0.matrix",
+          "x1>0.model",
+          "x1>1.model",
+          "x2>1.matrix",
+          "x3>2.penalty",
+          "x4>2.targets",
+          "x5>4.actual"
+        ],
+        "entries": [
+          "c-fitted"
+        ],
+        "domainEntries": [
+          "c-fitted"
+        ],
+        "parents": [
+          "fitted.pipeline.regression"
+        ],
+        "alreadyComposed": 10,
+        "composedShare": 1,
+        "score": 80,
+        "examples": [
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 1,
+            "parent": "#1 fitted.pipeline.regression",
+            "calls": [
+              "#12",
+              "#16",
+              "#20",
+              "#37",
+              "#42"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 2,
+            "parent": "#1 fitted.pipeline.regression",
+            "calls": [
+              "#12",
+              "#16",
+              "#20",
+              "#37",
+              "#42"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 4,
+            "parent": "#1 fitted.pipeline.regression",
+            "calls": [
+              "#12",
+              "#16",
+              "#20",
+              "#36",
+              "#45"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "lin.transpose",
+          "vec.standardize",
+          "lin.transpose"
+        ],
+        "length": 3,
+        "count": 15,
+        "internal": [
+          "0.matrix~>1.values",
+          "1.values>2.matrix"
+        ],
+        "ext": [
+          "x0>0.matrix",
+          "x1>1.center",
+          "x1>1.scale"
+        ],
+        "entries": [
+          "c-fitted"
+        ],
+        "domainEntries": [
+          "c-fitted"
+        ],
+        "parents": [
+          "fitted.standardizer.apply"
+        ],
+        "alreadyComposed": 0,
+        "composedShare": 0,
+        "score": 60,
+        "examples": [
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 1,
+            "parent": "#12 fitted.standardizer.apply",
+            "calls": [
+              "#13",
+              "#14",
+              "#15"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 1,
+            "parent": "#16 fitted.standardizer.apply",
+            "calls": [
+              "#17",
+              "#18",
+              "#19"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 2,
+            "parent": "#12 fitted.standardizer.apply",
+            "calls": [
+              "#13",
+              "#14",
+              "#15"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "fitted.split.byGroup",
+          "fitted.rows.select#train",
+          "fitted.rows.select#test",
+          "fitted.values.select#train",
+          "fitted.values.select#test",
+          "fitted.standardizer.fit",
+          "fitted.standardizer.apply#train",
+          "fitted.standardizer.apply#test",
+          "fitted.linear.fit",
+          "fitted.linear.apply",
+          "fitted.error.mse#model"
+        ],
+        "length": 11,
+        "count": 3,
+        "internal": [
+          "0.testRows>2.rows",
+          "0.testRows>4.rows",
+          "0.trainRows>1.rows",
+          "0.trainRows>3.rows",
+          "1.matrix>6.matrix",
+          "2.matrix>7.matrix",
+          "3.values>8.targets",
+          "4.values>10.actual",
+          "5.model>6.model",
+          "5.model>7.model",
+          "6.matrix>8.matrix",
+          "7.matrix>9.matrix",
+          "8.model>9.model",
+          "9.values>10.predicted"
+        ],
+        "ext": [
+          "x0>0.groups",
+          "x1>0.period",
+          "x2>1.matrix",
+          "x2>2.matrix",
+          "x2>5.matrix",
+          "x3>3.values",
+          "x3>4.values",
+          "x4>8.penalty"
+        ],
+        "entries": [
+          "c-fitted"
+        ],
+        "domainEntries": [
+          "c-fitted"
+        ],
+        "parents": [
+          "fitted.pipeline.regression"
+        ],
+        "alreadyComposed": 3,
+        "composedShare": 1,
+        "score": 60,
+        "examples": [
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 2,
+            "parent": "#1 fitted.pipeline.regression",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#7",
+              "#12",
+              "#16",
+              "#20",
+              "#37",
+              "#42"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 12,
+            "parent": "#1 fitted.pipeline.regression",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#7",
+              "#12",
+              "#16",
+              "#20",
+              "#37",
+              "#43"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 14,
+            "parent": "#1 fitted.pipeline.regression",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#7",
+              "#8",
+              "#9",
+              "#10",
+              "#26",
+              "#32"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "lin.transpose",
+          "lin.matvec"
+        ],
+        "length": 2,
+        "count": 13,
+        "internal": [
+          "0.matrix~>1.vector"
+        ],
+        "ext": [
+          "x0>0.matrix",
+          "x1>1.matrix"
+        ],
+        "entries": [
+          "c-fitted",
+          "d-explain",
+          "a"
+        ],
+        "domainEntries": [
+          "c-fitted",
+          "d-explain",
+          "a"
+        ],
+        "parents": [
+          "lin.matmul"
+        ],
+        "alreadyComposed": 0,
+        "composedShare": 0,
+        "score": 52,
+        "examples": [
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 1,
+            "parent": "#25 lin.matmul",
+            "calls": [
+              "#26",
+              "#27"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 2,
+            "parent": "#25 lin.matmul",
+            "calls": [
+              "#26",
+              "#27"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 4,
+            "parent": "#24 lin.matmul",
+            "calls": [
+              "#25",
+              "#26"
+            ]
+          }
+        ]
+      }
+    ],
+    "d-explain": [
+      {
+        "contracts": [
+          "lin.transpose",
+          "lin.matmul",
+          "lin.matvec",
+          "lin.solve"
+        ],
+        "length": 4,
+        "count": 13,
+        "internal": [
+          "0.matrix>1.a",
+          "0.matrix>2.matrix",
+          "1.matrix>3.matrix",
+          "2.vector>3.vector"
+        ],
+        "ext": [
+          "x0>0.matrix",
+          "x0>1.b",
+          "x1>2.vector"
+        ],
+        "entries": [
+          "c-fitted",
+          "d-explain",
+          "a"
+        ],
+        "domainEntries": [
+          "c-fitted",
+          "d-explain",
+          "a"
+        ],
+        "parents": [
+          "lin.leastSquares"
+        ],
+        "alreadyComposed": 13,
+        "composedShare": 1,
+        "score": 156,
+        "examples": [
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 1,
+            "parent": "#23 lin.leastSquares",
+            "calls": [
+              "#24",
+              "#25",
+              "#33",
+              "#36"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 2,
+            "parent": "#23 lin.leastSquares",
+            "calls": [
+              "#24",
+              "#25",
+              "#33",
+              "#36"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 4,
+            "parent": "#22 lin.leastSquares",
+            "calls": [
+              "#23",
+              "#24",
+              "#32",
+              "#35"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "lin.transpose",
+          "lin.matvec"
+        ],
+        "length": 2,
+        "count": 13,
+        "internal": [
+          "0.matrix~>1.vector"
+        ],
+        "ext": [
+          "x0>0.matrix",
+          "x1>1.matrix"
+        ],
+        "entries": [
+          "c-fitted",
+          "d-explain",
+          "a"
+        ],
+        "domainEntries": [
+          "c-fitted",
+          "d-explain",
+          "a"
+        ],
+        "parents": [
+          "lin.matmul"
+        ],
+        "alreadyComposed": 0,
+        "composedShare": 0,
+        "score": 52,
+        "examples": [
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 1,
+            "parent": "#25 lin.matmul",
+            "calls": [
+              "#26",
+              "#27"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 2,
+            "parent": "#25 lin.matmul",
+            "calls": [
+              "#26",
+              "#27"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 4,
+            "parent": "#24 lin.matmul",
+            "calls": [
+              "#25",
+              "#26"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "explain.featureIndex",
+          "explain.attribute#before",
+          "explain.nudge",
+          "explain.attribute#after",
+          "explain.difference#prediction"
+        ],
+        "length": 5,
+        "count": 4,
+        "internal": [
+          "0.index>2.index",
+          "1.prediction>4.before",
+          "2.input>3.input",
+          "3.prediction>4.after"
+        ],
+        "ext": [
+          "x0>0.feature",
+          "x1>0.model",
+          "x1>1.model",
+          "x1>3.model",
+          "x2>1.baseline",
+          "x2>3.baseline",
+          "x3>1.input",
+          "x3>2.input",
+          "x4>2.delta"
+        ],
+        "entries": [
+          "d-explain"
+        ],
+        "domainEntries": [
+          "d-explain"
+        ],
+        "parents": [
+          "explain.effect"
+        ],
+        "alreadyComposed": 0,
+        "composedShare": 0,
+        "score": 32,
+        "examples": [
+          {
+            "entry": "d-explain",
+            "world": "d-explain",
+            "run": 9,
+            "parent": "#4 explain.effect",
+            "calls": [
+              "#5",
+              "#6",
+              "#7",
+              "#8",
+              "#14"
+            ]
+          },
+          {
+            "entry": "d-explain",
+            "world": "d-explain",
+            "run": 10,
+            "parent": "#4 explain.effect",
+            "calls": [
+              "#5",
+              "#6",
+              "#7",
+              "#8",
+              "#14"
+            ]
+          },
+          {
+            "entry": "d-explain",
+            "world": "d-explain",
+            "run": 15,
+            "parent": "#4 explain.effect",
+            "calls": [
+              "#5",
+              "#6",
+              "#7",
+              "#8",
+              "#14"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "lin.transpose",
+          "stat.mean"
+        ],
+        "length": 2,
+        "count": 8,
+        "internal": [
+          "0.matrix~>1.values"
+        ],
+        "ext": [
+          "x0>0.matrix"
+        ],
+        "entries": [
+          "c-fitted",
+          "d-explain"
+        ],
+        "domainEntries": [
+          "c-fitted",
+          "d-explain"
+        ],
+        "parents": [
+          "fitted.standardizer.fit",
+          "fitted.standardizer.apply",
+          "explain.baselineMeans"
+        ],
+        "alreadyComposed": 0,
+        "composedShare": 0,
+        "score": 24,
+        "examples": [
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 1,
+            "parent": "#7 fitted.standardizer.fit",
+            "calls": [
+              "#8",
+              "#9"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 2,
+            "parent": "#7 fitted.standardizer.fit",
+            "calls": [
+              "#8",
+              "#9"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 4,
+            "parent": "#7 fitted.standardizer.fit",
+            "calls": [
+              "#8",
+              "#9"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "explain.withIntercept",
+          "lin.dot"
+        ],
+        "length": 2,
+        "count": 9,
+        "internal": [
+          "0.values>1.b"
+        ],
+        "ext": [
+          "x0>0.values",
+          "x1>1.a"
+        ],
+        "entries": [
+          "d-explain"
+        ],
+        "domainEntries": [
+          "d-explain"
+        ],
+        "parents": [
+          "explain.predict"
+        ],
+        "alreadyComposed": 0,
+        "composedShare": 0,
+        "score": 18,
+        "examples": [
+          {
+            "entry": "d-explain",
+            "world": "d-explain",
+            "run": 3,
+            "parent": "#3 explain.predict",
+            "calls": [
+              "#4",
+              "#5"
+            ]
+          },
+          {
+            "entry": "d-explain",
+            "world": "d-explain",
+            "run": 3,
+            "parent": "#6 explain.predict",
+            "calls": [
+              "#7",
+              "#8"
+            ]
+          },
+          {
+            "entry": "d-explain",
+            "world": "d-explain",
+            "run": 9,
+            "parent": "#10 explain.predict",
+            "calls": [
+              "#11",
+              "#12"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "explain.attribute",
+          "explain.checkReconstruction",
+          "explain.checkClaim",
+          "explain.allAccepted"
+        ],
+        "length": 4,
+        "count": 2,
+        "internal": [
+          "0.baselinePrediction>1.baselinePrediction",
+          "0.contributions>1.contributions",
+          "0.contributions>2.contributions",
+          "0.prediction>1.prediction",
+          "0.prediction>2.prediction",
+          "1.accepted>3.verdicts",
+          "1.reason>3.verdicts",
+          "2.accepted>3.verdicts",
+          "2.reason>3.verdicts"
+        ],
+        "ext": [
+          "x0>0.baseline",
+          "x0>2.baseline",
+          "x1>0.input",
+          "x1>2.input",
+          "x2>0.model",
+          "x2>2.model",
+          "x3>1.tolerance",
+          "x3>2.tolerance",
+          "x4>2.claim"
+        ],
+        "entries": [
+          "d-explain"
+        ],
+        "domainEntries": [
+          "d-explain"
+        ],
+        "parents": [
+          "explain.checkedClaim"
+        ],
+        "alreadyComposed": 2,
+        "composedShare": 1,
+        "score": 12,
+        "examples": [
+          {
+            "entry": "d-explain",
+            "world": "d-explain",
+            "run": 19,
+            "parent": "#1 explain.checkedClaim",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5"
+            ]
+          },
+          {
+            "entry": "d-explain",
+            "world": "d-explain",
+            "run": 20,
+            "parent": "#1 explain.checkedClaim",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#9"
+            ]
+          }
+        ]
+      }
+    ],
+    "e-game": [
+      {
+        "contracts": [
+          "game.apply",
+          "game.outcome"
+        ],
+        "length": 2,
+        "count": 8097,
+        "internal": [
+          "0.board>1.board"
+        ],
+        "ext": [
+          "literal>0.player",
+          "x0>0.board",
+          "x1>0.cell"
+        ],
+        "entries": [
+          "e-game"
+        ],
+        "domainEntries": [
+          "e-game"
+        ],
+        "parents": [
+          "policy.choose"
+        ],
+        "alreadyComposed": 0,
+        "composedShare": 0,
+        "score": 16194,
+        "examples": [
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 2,
+            "parent": "#4 policy.choose",
+            "calls": [
+              "#10",
+              "#11"
+            ]
+          },
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 2,
+            "parent": "#4 policy.choose",
+            "calls": [
+              "#13",
+              "#14"
+            ]
+          },
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 2,
+            "parent": "#4 policy.choose",
+            "calls": [
+              "#16",
+              "#17"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "game.legalMoves",
+          "game.apply"
+        ],
+        "length": 2,
+        "count": 4519,
+        "internal": [
+          "0.cells~>1.cell"
+        ],
+        "ext": [
+          "literal>1.player",
+          "x0>0.board",
+          "x0>1.board"
+        ],
+        "entries": [
+          "e-game"
+        ],
+        "domainEntries": [
+          "e-game"
+        ],
+        "parents": [
+          "policy.choose"
+        ],
+        "alreadyComposed": 0,
+        "composedShare": 0,
+        "score": 9038,
+        "examples": [
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 2,
+            "parent": "#4 policy.choose",
+            "calls": [
+              "#9",
+              "#10"
+            ]
+          },
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 2,
+            "parent": "#4 policy.choose",
+            "calls": [
+              "#12",
+              "#13"
+            ]
+          },
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 2,
+            "parent": "#4 policy.choose",
+            "calls": [
+              "#15",
+              "#16"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "game.legalMoves",
+          "game.apply",
+          "game.outcome"
+        ],
+        "length": 3,
+        "count": 1033,
+        "internal": [
+          "0.cells~>1.cell",
+          "1.board>2.board"
+        ],
+        "ext": [
+          "literal>1.player",
+          "x0>0.board",
+          "x0>1.board"
+        ],
+        "entries": [
+          "e-game"
+        ],
+        "domainEntries": [
+          "e-game"
+        ],
+        "parents": [
+          "policy.choose"
+        ],
+        "alreadyComposed": 0,
+        "composedShare": 0,
+        "score": 4132,
+        "examples": [
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 2,
+            "parent": "#4 policy.choose",
+            "calls": [
+              "#9",
+              "#10",
+              "#11"
+            ]
+          },
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 2,
+            "parent": "#4 policy.choose",
+            "calls": [
+              "#12",
+              "#13",
+              "#14"
+            ]
+          },
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 2,
+            "parent": "#4 policy.choose",
+            "calls": [
+              "#15",
+              "#16",
+              "#17"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "policy.choose#O",
+          "game.moveLegal"
+        ],
+        "length": 2,
+        "count": 151,
+        "internal": [
+          "0.cell>1.cell"
+        ],
+        "ext": [
+          "x0>0.board",
+          "x0>1.board",
+          "x1>0.player"
+        ],
+        "entries": [
+          "e-game"
+        ],
+        "domainEntries": [
+          "e-game"
+        ],
+        "parents": [
+          "match.ply"
+        ],
+        "alreadyComposed": 151,
+        "composedShare": 1,
+        "score": 302,
+        "examples": [
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 1,
+            "parent": "#12 match.ply",
+            "calls": [
+              "#13",
+              "#15"
+            ]
+          },
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 1,
+            "parent": "#30 match.ply",
+            "calls": [
+              "#31",
+              "#33"
+            ]
+          },
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 1,
+            "parent": "#48 match.ply",
+            "calls": [
+              "#49",
+              "#51"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "policy.choose#X",
+          "game.moveLegal"
+        ],
+        "length": 2,
+        "count": 149,
+        "internal": [
+          "0.cell>1.cell"
+        ],
+        "ext": [
+          "x0>0.board",
+          "x0>1.board",
+          "x1>0.player"
+        ],
+        "entries": [
+          "e-game"
+        ],
+        "domainEntries": [
+          "e-game"
+        ],
+        "parents": [
+          "match.ply"
+        ],
+        "alreadyComposed": 149,
+        "composedShare": 1,
+        "score": 298,
+        "examples": [
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 1,
+            "parent": "#3 match.ply",
+            "calls": [
+              "#4",
+              "#6"
+            ]
+          },
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 1,
+            "parent": "#21 match.ply",
+            "calls": [
+              "#22",
+              "#24"
+            ]
+          },
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 1,
+            "parent": "#39 match.ply",
+            "calls": [
+              "#40",
+              "#42"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "game.legalMoves",
+          "game.apply",
+          "game.outcome"
+        ],
+        "length": 3,
+        "count": 51,
+        "internal": [
+          "0.cells~>1.cell",
+          "1.board>2.board"
+        ],
+        "ext": [
+          "x0>0.board",
+          "x0>1.board",
+          "x1>1.player"
+        ],
+        "entries": [
+          "e-game"
+        ],
+        "domainEntries": [
+          "e-game"
+        ],
+        "parents": [
+          "policy.choose"
+        ],
+        "alreadyComposed": 0,
+        "composedShare": 0,
+        "score": 204,
+        "examples": [
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 2,
+            "parent": "#4 policy.choose",
+            "calls": [
+              "#6",
+              "#7",
+              "#8"
+            ]
+          },
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 2,
+            "parent": "#26185 policy.choose",
+            "calls": [
+              "#26187",
+              "#26188",
+              "#26189"
+            ]
+          },
+          {
+            "entry": "e-game",
+            "world": "e",
+            "run": 2,
+            "parent": "#28758 policy.choose",
+            "calls": [
+              "#28760",
+              "#28761",
+              "#28762"
+            ]
+          }
+        ]
+      }
+    ],
+    "f-agents": [
+      {
+        "contracts": [
+          "agents.clock",
+          "agents.advance",
+          "agents.integrate",
+          "agents.measure#before",
+          "agents.demand",
+          "agents.frontier",
+          "agents.allocate#primary",
+          "agents.evaluate",
+          "agents.commit",
+          "agents.measure#after",
+          "agents.capacity"
+        ],
+        "length": 11,
+        "count": 224,
+        "internal": [
+          "0.tick>1.t",
+          "0.tick>2.t",
+          "0.tick>8.t",
+          "1.state>2.state",
+          "2.state>3.state",
+          "2.state>5.state",
+          "2.state>8.state",
+          "3.counts>4.counts",
+          "4.limit>5.limit",
+          "5.constraints>6.constraints",
+          "5.constraints>7.constraints",
+          "5.idle>6.idle",
+          "5.idle>7.idle",
+          "5.ready>6.ready",
+          "5.ready>7.ready",
+          "6.assignments>7.assignments",
+          "6.assignments>8.assignments",
+          "7.accepted>8.accepted",
+          "7.reason>8.reason",
+          "8.state>9.state",
+          "9.counts>10.counts"
+        ],
+        "ext": [
+          "x0>1.state",
+          "x1>10.config",
+          "x1>2.config",
+          "x1>4.config",
+          "x1>5.config"
+        ],
+        "entries": [
+          "f-agents"
+        ],
+        "domainEntries": [
+          "f-agents"
+        ],
+        "parents": [
+          "agents.tick"
+        ],
+        "alreadyComposed": 0,
+        "composedShare": 0,
+        "score": 4480,
+        "examples": [
+          {
+            "entry": "f-agents",
+            "world": "f-agents",
+            "run": 1,
+            "parent": "#1 agents.tick",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#8",
+              "#9",
+              "#11",
+              "#13",
+              "#14",
+              "#15"
+            ]
+          },
+          {
+            "entry": "f-agents",
+            "world": "f-agents",
+            "run": 2,
+            "parent": "#1 agents.tick",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#8",
+              "#9",
+              "#11",
+              "#13",
+              "#14",
+              "#15"
+            ]
+          },
+          {
+            "entry": "f-agents",
+            "world": "f-agents",
+            "run": 3,
+            "parent": "#1 agents.tick",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#8",
+              "#9",
+              "#11",
+              "#13",
+              "#14",
+              "#15"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "agents.clock",
+          "agents.advance",
+          "agents.integrate",
+          "agents.measure#before",
+          "agents.demand",
+          "agents.frontier",
+          "agents.allocate#primary"
+        ],
+        "length": 7,
+        "count": 260,
+        "internal": [
+          "0.tick>1.t",
+          "0.tick>2.t",
+          "1.state>2.state",
+          "2.state>3.state",
+          "2.state>5.state",
+          "3.counts>4.counts",
+          "4.limit>5.limit",
+          "5.constraints>6.constraints",
+          "5.idle>6.idle",
+          "5.ready>6.ready"
+        ],
+        "ext": [
+          "x0>1.state",
+          "x1>2.config",
+          "x1>4.config",
+          "x1>5.config"
+        ],
+        "entries": [
+          "f-agents"
+        ],
+        "domainEntries": [
+          "f-agents"
+        ],
+        "parents": [
+          "agents.tick"
+        ],
+        "alreadyComposed": 260,
+        "composedShare": 1,
+        "score": 3120,
+        "examples": [
+          {
+            "entry": "f-agents",
+            "world": "f-agents",
+            "run": 1,
+            "parent": "#1 agents.tick",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#8",
+              "#9"
+            ]
+          },
+          {
+            "entry": "f-agents",
+            "world": "f-agents",
+            "run": 2,
+            "parent": "#1 agents.tick",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#8",
+              "#9"
+            ]
+          },
+          {
+            "entry": "f-agents",
+            "world": "f-agents",
+            "run": 3,
+            "parent": "#1 agents.tick",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#8",
+              "#9"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "agents.evaluate",
+          "agents.commit",
+          "agents.measure#after",
+          "agents.capacity"
+        ],
+        "length": 4,
+        "count": 260,
+        "internal": [
+          "0.accepted>1.accepted",
+          "0.reason>1.reason",
+          "1.state>2.state",
+          "2.counts>3.counts"
+        ],
+        "ext": [
+          "x0>0.assignments",
+          "x0>1.assignments",
+          "x1>0.constraints",
+          "x2>0.idle",
+          "x3>0.ready",
+          "x4>1.state",
+          "x5>1.t",
+          "x6>3.config"
+        ],
+        "entries": [
+          "f-agents"
+        ],
+        "domainEntries": [
+          "f-agents"
+        ],
+        "parents": [
+          "agents.tick"
+        ],
+        "alreadyComposed": 260,
+        "composedShare": 1,
+        "score": 1560,
+        "examples": [
+          {
+            "entry": "f-agents",
+            "world": "f-agents",
+            "run": 1,
+            "parent": "#1 agents.tick",
+            "calls": [
+              "#11",
+              "#13",
+              "#14",
+              "#15"
+            ]
+          },
+          {
+            "entry": "f-agents",
+            "world": "f-agents",
+            "run": 2,
+            "parent": "#1 agents.tick",
+            "calls": [
+              "#11",
+              "#13",
+              "#14",
+              "#15"
+            ]
+          },
+          {
+            "entry": "f-agents",
+            "world": "f-agents",
+            "run": 3,
+            "parent": "#1 agents.tick",
+            "calls": [
+              "#11",
+              "#13",
+              "#14",
+              "#15"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "agents.clock",
+          "agents.advance",
+          "agents.integrate",
+          "agents.measure#before",
+          "agents.demand",
+          "agents.frontier",
+          "agents.allocate#primary",
+          "agents.allocate#shadow",
+          "agents.regret"
+        ],
+        "length": 9,
+        "count": 38,
+        "internal": [
+          "0.tick>1.t",
+          "0.tick>2.t",
+          "1.state>2.state",
+          "2.state>3.state",
+          "2.state>5.state",
+          "3.counts>4.counts",
+          "4.limit>5.limit",
+          "5.constraints>6.constraints",
+          "5.constraints>7.constraints",
+          "5.idle>6.idle",
+          "5.idle>7.idle",
+          "5.ready>6.ready",
+          "5.ready>7.ready",
+          "6.score>8.primary",
+          "7.score>8.shadow"
+        ],
+        "ext": [
+          "x0>1.state",
+          "x1>2.config",
+          "x1>4.config",
+          "x1>5.config"
+        ],
+        "entries": [
+          "f-agents"
+        ],
+        "domainEntries": [
+          "f-agents"
+        ],
+        "parents": [
+          "agents.tick"
+        ],
+        "alreadyComposed": 38,
+        "composedShare": 1,
+        "score": 608,
+        "examples": [
+          {
+            "entry": "f-agents",
+            "world": "f-agents",
+            "run": 1,
+            "parent": "#1 agents.tick",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#8",
+              "#9",
+              "#11",
+              "#13"
+            ]
+          },
+          {
+            "entry": "f-agents",
+            "world": "f-agents",
+            "run": 2,
+            "parent": "#1 agents.tick",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#8",
+              "#9",
+              "#11",
+              "#13"
+            ]
+          },
+          {
+            "entry": "f-agents",
+            "world": "f-agents",
+            "run": 3,
+            "parent": "#1 agents.tick",
+            "calls": [
+              "#2",
+              "#3",
+              "#4",
+              "#5",
+              "#6",
+              "#8",
+              "#9",
+              "#11",
+              "#13"
+            ]
+          }
+        ]
+      }
+    ],
+    "a": [
+      {
+        "contracts": [
+          "lin.transpose",
+          "lin.matmul",
+          "lin.matvec",
+          "lin.solve"
+        ],
+        "length": 4,
+        "count": 13,
+        "internal": [
+          "0.matrix>1.a",
+          "0.matrix>2.matrix",
+          "1.matrix>3.matrix",
+          "2.vector>3.vector"
+        ],
+        "ext": [
+          "x0>0.matrix",
+          "x0>1.b",
+          "x1>2.vector"
+        ],
+        "entries": [
+          "c-fitted",
+          "d-explain",
+          "a"
+        ],
+        "domainEntries": [
+          "c-fitted",
+          "d-explain",
+          "a"
+        ],
+        "parents": [
+          "lin.leastSquares"
+        ],
+        "alreadyComposed": 13,
+        "composedShare": 1,
+        "score": 156,
+        "examples": [
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 1,
+            "parent": "#23 lin.leastSquares",
+            "calls": [
+              "#24",
+              "#25",
+              "#33",
+              "#36"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 2,
+            "parent": "#23 lin.leastSquares",
+            "calls": [
+              "#24",
+              "#25",
+              "#33",
+              "#36"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 4,
+            "parent": "#22 lin.leastSquares",
+            "calls": [
+              "#23",
+              "#24",
+              "#32",
+              "#35"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "lin.transpose",
+          "lin.matvec"
+        ],
+        "length": 2,
+        "count": 13,
+        "internal": [
+          "0.matrix~>1.vector"
+        ],
+        "ext": [
+          "x0>0.matrix",
+          "x1>1.matrix"
+        ],
+        "entries": [
+          "c-fitted",
+          "d-explain",
+          "a"
+        ],
+        "domainEntries": [
+          "c-fitted",
+          "d-explain",
+          "a"
+        ],
+        "parents": [
+          "lin.matmul"
+        ],
+        "alreadyComposed": 0,
+        "composedShare": 0,
+        "score": 52,
+        "examples": [
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 1,
+            "parent": "#25 lin.matmul",
+            "calls": [
+              "#26",
+              "#27"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 2,
+            "parent": "#25 lin.matmul",
+            "calls": [
+              "#26",
+              "#27"
+            ]
+          },
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 4,
+            "parent": "#24 lin.matmul",
+            "calls": [
+              "#25",
+              "#26"
+            ]
+          }
+        ]
+      },
+      {
+        "contracts": [
+          "stat.mean",
+          "stat.standardDeviation",
+          "vec.standardize"
+        ],
+        "length": 3,
+        "count": 2,
+        "internal": [
+          "0.value>2.center",
+          "1.value>2.scale"
+        ],
+        "ext": [
+          "literal>1.denominator",
+          "x0>0.values",
+          "x0>1.values",
+          "x0>2.values"
+        ],
+        "entries": [
+          "c-fitted",
+          "a"
+        ],
+        "domainEntries": [
+          "c-fitted",
+          "a"
+        ],
+        "parents": [
+          "fitted.standardizer.apply",
+          "stat.zScores"
+        ],
+        "alreadyComposed": 1,
+        "composedShare": 0.5,
+        "score": 12,
+        "examples": [
+          {
+            "entry": "c-fitted",
+            "world": "c-fitted",
+            "run": 28,
+            "parent": "#16 fitted.standardizer.apply",
+            "calls": [
+              "#18",
+              "#19",
+              "#21"
+            ]
+          },
+          {
+            "entry": "a",
+            "world": "a",
+            "run": 1,
+            "parent": "#1 stat.zScores",
+            "calls": [
+              "#2",
+              "#3",
+              "#5"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

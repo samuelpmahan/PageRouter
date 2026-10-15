@@ -1,0 +1,587 @@
+[
+ {
+  "name": "servo-01-original",
+  "file": "/home/claude/fitlab/cases/servo-01-original.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 580.811279296875,
+   "cy": 785.1256103515625,
+   "rx": 525.1080932617188,
+   "ry": 507.4184875488281,
+   "angle": 122.56265258789062,
+   "inliers": 291,
+   "n": 360,
+   "res_med": 1.7994872331619263
+  },
+  "note": "Original phone photo",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "servo-02-landscape",
+  "file": "/home/claude/fitlab/cases/servo-02-landscape.jpg",
+  "width": 1536,
+  "height": 1152,
+  "truth": {
+   "cx": 785.1256103515625,
+   "cy": 570.188720703125,
+   "rx": 525.1080932617188,
+   "ry": 507.4184875488281,
+   "angle": 32.562652587890625
+  },
+  "note": "Rotated to landscape",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "servo-03-low-res",
+  "file": "/home/claude/fitlab/cases/servo-03-low-res.jpg",
+  "width": 480,
+  "height": 640,
+  "truth": {
+   "cx": 242.00469970703125,
+   "cy": 327.1356506347656,
+   "rx": 218.79502868652344,
+   "ry": 211.4243621826172,
+   "angle": 122.56265258789062
+  },
+  "note": "Downscaled to 640 px",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "servo-04-off-center",
+  "file": "/home/claude/fitlab/cases/servo-04-off-center.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 368.6400146484375,
+   "cy": 460.79998779296875,
+   "rx": 525.1080932617188,
+   "ry": 507.4184875488281,
+   "angle": 122.56264877319336
+  },
+  "note": "Disc toward a corner (padded backdrop)",
+  "rim_in_frame": 0.6027777777777777
+ },
+ {
+  "name": "servo-05-tight",
+  "file": "/home/claude/fitlab/cases/servo-05-tight.jpg",
+  "width": 1094,
+  "height": 1094,
+  "truth": {
+   "cx": 547.2390747070312,
+   "cy": 547.2390747070312,
+   "rx": 525.1080932617188,
+   "ry": 507.4184875488281,
+   "angle": 122.56265258789062
+  },
+  "note": "Tight square crop, 3% margin",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "servo-06-cut-off",
+  "file": "/home/claude/fitlab/cases/servo-06-cut-off.jpg",
+  "width": 1290,
+  "height": 1720,
+  "truth": {
+   "cx": 856.9970703125,
+   "cy": 645.3291015625,
+   "rx": 525.1080932617188,
+   "ry": 507.4184875488281,
+   "angle": 122.56265640258789
+  },
+  "note": "Frame cuts off 8% of the disc (padded backdrop)",
+  "rim_in_frame": 0.8208333333333333
+ },
+ {
+  "name": "servo-07-small",
+  "file": "/home/claude/fitlab/cases/servo-07-small.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 576.0,
+   "cy": 768.0,
+   "rx": 205.05389404296875,
+   "ry": 198.1461181640625,
+   "angle": 122.56265258789062
+  },
+  "note": "Disc fills 35% of the frame (padded backdrop)",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "servo-08-dark",
+  "file": "/home/claude/fitlab/cases/servo-08-dark.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 580.811279296875,
+   "cy": 785.1256103515625,
+   "rx": 525.1080932617188,
+   "ry": 507.4184875488281,
+   "angle": 122.56265258789062,
+   "inliers": 291,
+   "n": 360,
+   "res_med": 1.7994872331619263
+  },
+  "note": "Dim indoor exposure",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "servo-09-warm-light",
+  "file": "/home/claude/fitlab/cases/servo-09-warm-light.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 580.811279296875,
+   "cy": 785.1256103515625,
+   "rx": 525.1080932617188,
+   "ry": 507.4184875488281,
+   "angle": 122.56265258789062,
+   "inliers": 291,
+   "n": 360,
+   "res_med": 1.7994872331619263
+  },
+  "note": "Warm lamp white balance",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "servo-10-tilted",
+  "file": "/home/claude/fitlab/cases/servo-10-tilted.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 579.2349243164062,
+   "cy": 786.6117553710938,
+   "rx": 489.5741271972656,
+   "ry": 456.3788757324219,
+   "angle": 102.85013389587402
+  },
+  "note": "Phone tilted (perspective)",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "servo-11-heavy-jpeg",
+  "file": "/home/claude/fitlab/cases/servo-11-heavy-jpeg.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 580.811279296875,
+   "cy": 785.1256103515625,
+   "rx": 525.1080932617188,
+   "ry": 507.4184875488281,
+   "angle": 122.56265258789062,
+   "inliers": 291,
+   "n": 360,
+   "res_med": 1.7994872331619263
+  },
+  "note": "Heavy JPEG compression",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "servo-12-motion-blur",
+  "file": "/home/claude/fitlab/cases/servo-12-motion-blur.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 580.811279296875,
+   "cy": 785.1256103515625,
+   "rx": 525.1080932617188,
+   "ry": 507.4184875488281,
+   "angle": 122.56265258789062,
+   "inliers": 291,
+   "n": 360,
+   "res_med": 1.7994872331619263
+  },
+  "note": "Motion blur",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "anchor-01-original",
+  "file": "/home/claude/fitlab/cases/anchor-01-original.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 587.3545532226562,
+   "cy": 788.0436401367188,
+   "rx": 569.2450561523438,
+   "ry": 536.125,
+   "angle": 169.01925659179688,
+   "inliers": 1562,
+   "n": 1734,
+   "res_med": 0.5840674042701721
+  },
+  "note": "Original phone photo",
+  "rim_in_frame": 0.9652777777777778
+ },
+ {
+  "name": "anchor-02-landscape",
+  "file": "/home/claude/fitlab/cases/anchor-02-landscape.jpg",
+  "width": 1536,
+  "height": 1152,
+  "truth": {
+   "cx": 788.0436401367188,
+   "cy": 563.6454467773438,
+   "rx": 569.2450561523438,
+   "ry": 536.125,
+   "angle": 79.01925659179688
+  },
+  "note": "Rotated to landscape",
+  "rim_in_frame": 0.9597222222222223
+ },
+ {
+  "name": "anchor-03-low-res",
+  "file": "/home/claude/fitlab/cases/anchor-03-low-res.jpg",
+  "width": 480,
+  "height": 640,
+  "truth": {
+   "cx": 244.73106384277344,
+   "cy": 328.35150146484375,
+   "rx": 237.18544006347656,
+   "ry": 223.38540649414062,
+   "angle": 169.01925659179688
+  },
+  "note": "Downscaled to 640 px",
+  "rim_in_frame": 0.9652777777777778
+ },
+ {
+  "name": "anchor-04-off-center",
+  "file": "/home/claude/fitlab/cases/anchor-04-off-center.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 368.6399841308594,
+   "cy": 460.79998779296875,
+   "rx": 569.2450561523438,
+   "ry": 536.125,
+   "angle": 169.01925659179688
+  },
+  "note": "Disc toward a corner (padded backdrop)",
+  "rim_in_frame": 0.5527777777777778
+ },
+ {
+  "name": "anchor-05-tight",
+  "file": "/home/claude/fitlab/cases/anchor-05-tight.jpg",
+  "width": 1171,
+  "height": 1171,
+  "truth": {
+   "cx": 585.8461303710938,
+   "cy": 585.8461303710938,
+   "rx": 569.2450561523438,
+   "ry": 536.125,
+   "angle": 169.01925659179688
+  },
+  "note": "Tight square crop, 3% margin",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "anchor-06-cut-off",
+  "file": "/home/claude/fitlab/cases/anchor-06-cut-off.jpg",
+  "width": 1381,
+  "height": 1842,
+  "truth": {
+   "cx": 917.4571533203125,
+   "cy": 690.8562622070312,
+   "rx": 569.2450561523438,
+   "ry": 536.125,
+   "angle": 169.01925659179688
+  },
+  "note": "Frame cuts off 8% of the disc (padded backdrop)",
+  "rim_in_frame": 0.8041666666666667
+ },
+ {
+  "name": "anchor-07-small",
+  "file": "/home/claude/fitlab/cases/anchor-07-small.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 576.0,
+   "cy": 768.0,
+   "rx": 207.64051818847656,
+   "ry": 195.55947875976562,
+   "angle": 169.01925659179688
+  },
+  "note": "Disc fills 35% of the frame (padded backdrop)",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "anchor-08-dark",
+  "file": "/home/claude/fitlab/cases/anchor-08-dark.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 587.3545532226562,
+   "cy": 788.0436401367188,
+   "rx": 569.2450561523438,
+   "ry": 536.125,
+   "angle": 169.01925659179688,
+   "inliers": 1562,
+   "n": 1734,
+   "res_med": 0.5840674042701721
+  },
+  "note": "Dim indoor exposure",
+  "rim_in_frame": 0.9652777777777778
+ },
+ {
+  "name": "anchor-09-warm-light",
+  "file": "/home/claude/fitlab/cases/anchor-09-warm-light.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 587.3545532226562,
+   "cy": 788.0436401367188,
+   "rx": 569.2450561523438,
+   "ry": 536.125,
+   "angle": 169.01925659179688,
+   "inliers": 1562,
+   "n": 1734,
+   "res_med": 0.5840674042701721
+  },
+  "note": "Warm lamp white balance",
+  "rim_in_frame": 0.9652777777777778
+ },
+ {
+  "name": "anchor-10-tilted",
+  "file": "/home/claude/fitlab/cases/anchor-10-tilted.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 585.2932739257812,
+   "cy": 791.8928833007812,
+   "rx": 511.9018249511719,
+   "ry": 500.8583984375,
+   "angle": 143.1415901184082
+  },
+  "note": "Phone tilted (perspective)",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "anchor-11-heavy-jpeg",
+  "file": "/home/claude/fitlab/cases/anchor-11-heavy-jpeg.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 587.3545532226562,
+   "cy": 788.0436401367188,
+   "rx": 569.2450561523438,
+   "ry": 536.125,
+   "angle": 169.01925659179688,
+   "inliers": 1562,
+   "n": 1734,
+   "res_med": 0.5840674042701721
+  },
+  "note": "Heavy JPEG compression",
+  "rim_in_frame": 0.9652777777777778
+ },
+ {
+  "name": "anchor-12-motion-blur",
+  "file": "/home/claude/fitlab/cases/anchor-12-motion-blur.jpg",
+  "width": 1152,
+  "height": 1536,
+  "truth": {
+   "cx": 587.3545532226562,
+   "cy": 788.0436401367188,
+   "rx": 569.2450561523438,
+   "ry": 536.125,
+   "angle": 169.01925659179688,
+   "inliers": 1562,
+   "n": 1734,
+   "res_med": 0.5840674042701721
+  },
+  "note": "Motion blur",
+  "rim_in_frame": 0.9652777777777778
+ },
+ {
+  "name": "buzzz-01-original",
+  "file": "/home/claude/fitlab/cases/buzzz-01-original.jpg",
+  "width": 1536,
+  "height": 2048,
+  "truth": {
+   "cx": 806.151611328125,
+   "cy": 1081.57177734375,
+   "rx": 674.60205078125,
+   "ry": 653.5609741210938,
+   "angle": 179.90736389160156,
+   "inliers": 1443,
+   "n": 1663,
+   "res_med": 1.424204707145691
+  },
+  "note": "Original phone photo",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "buzzz-02-landscape",
+  "file": "/home/claude/fitlab/cases/buzzz-02-landscape.jpg",
+  "width": 2048,
+  "height": 1536,
+  "truth": {
+   "cx": 1081.57177734375,
+   "cy": 728.848388671875,
+   "rx": 674.60205078125,
+   "ry": 653.5609741210938,
+   "angle": 89.90736389160156
+  },
+  "note": "Rotated to landscape",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "buzzz-03-low-res",
+  "file": "/home/claude/fitlab/cases/buzzz-03-low-res.jpg",
+  "width": 480,
+  "height": 640,
+  "truth": {
+   "cx": 251.92237854003906,
+   "cy": 337.9911804199219,
+   "rx": 210.81314086914062,
+   "ry": 204.23780822753906,
+   "angle": 179.90736389160156
+  },
+  "note": "Downscaled to 640 px",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "buzzz-04-off-center",
+  "file": "/home/claude/fitlab/cases/buzzz-04-off-center.jpg",
+  "width": 1536,
+  "height": 2048,
+  "truth": {
+   "cx": 491.5199890136719,
+   "cy": 614.4000244140625,
+   "rx": 674.60205078125,
+   "ry": 653.5609741210938,
+   "angle": 179.90736389160156
+  },
+  "note": "Disc toward a corner (padded backdrop)",
+  "rim_in_frame": 0.6486111111111111
+ },
+ {
+  "name": "buzzz-05-tight",
+  "file": "/home/claude/fitlab/cases/buzzz-05-tight.jpg",
+  "width": 1407,
+  "height": 1407,
+  "truth": {
+   "cx": 703.9263916015625,
+   "cy": 703.9263916015625,
+   "rx": 674.60205078125,
+   "ry": 653.5609741210938,
+   "angle": 179.90735626220703
+  },
+  "note": "Tight square crop, 3% margin",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "buzzz-06-cut-off",
+  "file": "/home/claude/fitlab/cases/buzzz-06-cut-off.jpg",
+  "width": 1660,
+  "height": 2213,
+  "truth": {
+   "cx": 1102.3753662109375,
+   "cy": 830.1019287109375,
+   "rx": 674.60205078125,
+   "ry": 653.5609741210938,
+   "angle": 179.9073715209961
+  },
+  "note": "Frame cuts off 8% of the disc (padded backdrop)",
+  "rim_in_frame": 0.8097222222222222
+ },
+ {
+  "name": "buzzz-07-small",
+  "file": "/home/claude/fitlab/cases/buzzz-07-small.jpg",
+  "width": 1536,
+  "height": 2048,
+  "truth": {
+   "cx": 768.0,
+   "cy": 1024.0,
+   "rx": 273.05841064453125,
+   "ry": 264.5416259765625,
+   "angle": 179.9073486328125
+  },
+  "note": "Disc fills 35% of the frame (padded backdrop)",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "buzzz-08-dark",
+  "file": "/home/claude/fitlab/cases/buzzz-08-dark.jpg",
+  "width": 1536,
+  "height": 2048,
+  "truth": {
+   "cx": 806.151611328125,
+   "cy": 1081.57177734375,
+   "rx": 674.60205078125,
+   "ry": 653.5609741210938,
+   "angle": 179.90736389160156,
+   "inliers": 1443,
+   "n": 1663,
+   "res_med": 1.424204707145691
+  },
+  "note": "Dim indoor exposure",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "buzzz-09-warm-light",
+  "file": "/home/claude/fitlab/cases/buzzz-09-warm-light.jpg",
+  "width": 1536,
+  "height": 2048,
+  "truth": {
+   "cx": 806.151611328125,
+   "cy": 1081.57177734375,
+   "rx": 674.60205078125,
+   "ry": 653.5609741210938,
+   "angle": 179.90736389160156,
+   "inliers": 1443,
+   "n": 1663,
+   "res_med": 1.424204707145691
+  },
+  "note": "Warm lamp white balance",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "buzzz-10-tilted",
+  "file": "/home/claude/fitlab/cases/buzzz-10-tilted.jpg",
+  "width": 1536,
+  "height": 2048,
+  "truth": {
+   "cx": 802.2959594726562,
+   "cy": 1076.3443603515625,
+   "rx": 617.6732788085938,
+   "ry": 604.8472900390625,
+   "angle": 84.58450317382812
+  },
+  "note": "Phone tilted (perspective)",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "buzzz-11-heavy-jpeg",
+  "file": "/home/claude/fitlab/cases/buzzz-11-heavy-jpeg.jpg",
+  "width": 1536,
+  "height": 2048,
+  "truth": {
+   "cx": 806.151611328125,
+   "cy": 1081.57177734375,
+   "rx": 674.60205078125,
+   "ry": 653.5609741210938,
+   "angle": 179.90736389160156,
+   "inliers": 1443,
+   "n": 1663,
+   "res_med": 1.424204707145691
+  },
+  "note": "Heavy JPEG compression",
+  "rim_in_frame": 1.0
+ },
+ {
+  "name": "buzzz-12-motion-blur",
+  "file": "/home/claude/fitlab/cases/buzzz-12-motion-blur.jpg",
+  "width": 1536,
+  "height": 2048,
+  "truth": {
+   "cx": 806.151611328125,
+   "cy": 1081.57177734375,
+   "rx": 674.60205078125,
+   "ry": 653.5609741210938,
+   "angle": 179.90736389160156,
+   "inliers": 1443,
+   "n": 1663,
+   "res_med": 1.424204707145691
+  },
+  "note": "Motion blur",
+  "rim_in_frame": 1.0
+ }
+]
