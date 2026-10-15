@@ -1,0 +1,15 @@
+✔ the table of flags above is what each CLI source actually reads (1.947558ms)
+✔ flick.mjs, match.mjs and tournament.mjs build flag from flagReader and define no reader of their own (1.144434ms)
+✔ answers on concrete argv arrays (0.363004ms)
+✔ the fallback comes back untouched: same object, undefined stays undefined (0.281508ms)
+✔ the array is read on every call, not copied when the reader is made (0.169766ms)
+✔ agrees with node:util parseArgs on `--key value`, each key at most once (46.627584ms)
+✔ where it differs from parseArgs, both sides pinned (0.630979ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 176.433524

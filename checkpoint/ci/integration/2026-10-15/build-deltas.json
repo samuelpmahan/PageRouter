@@ -1,0 +1,848 @@
+{
+  "stages": {
+    "main": {
+      "sourceDigest": "a223abfbfc05f6cee89aa4bea7a65092763b17526b310bf443e139e80169cfe3",
+      "siteDigest": "396d807b5ee713daea6732f37e58f640cd8dbea0fb86c8bf1b299f062910de37",
+      "siteBuildId": "8e67e1a04e520e68f8a21f1a40b454d829882ccb1c71f198cab9a53b00b89383",
+      "sourceDateEpoch": null,
+      "pxcube": {
+        "rebuilt": true,
+        "packages": 14,
+        "relocated": false
+      },
+      "siteFiles": 829,
+      "siteBytes": 88173252,
+      "receiptSha256": "75b9b596b309a01037967d298a06486eb6ae894b52c4582f8ff1601085536352"
+    },
+    "pr3": {
+      "sourceDigest": "31055fe1616a695da8457de280b778d30acc80e662708ec4439272a817c8c964",
+      "siteDigest": "1d349f7e977f9bcda0b1bc6964c1e030c8506e88213ae0fe773c330dec530754",
+      "siteBuildId": "8b278a8e5b89f887ffc096f27663ac8f95d60708dee594fe80a58fe042c66d9d",
+      "sourceDateEpoch": 1791787301,
+      "pxcube": {
+        "rebuilt": true,
+        "packages": 14,
+        "relocated": false
+      },
+      "siteFiles": 829,
+      "siteBytes": 88169200,
+      "receiptSha256": "9a6fd45cd8c4f599aa6260a4ad755708aa8ab3f1d9fcbc7399c45215f265dba2"
+    },
+    "pr4": {
+      "sourceDigest": "31055fe1616a695da8457de280b778d30acc80e662708ec4439272a817c8c964",
+      "siteDigest": "1d349f7e977f9bcda0b1bc6964c1e030c8506e88213ae0fe773c330dec530754",
+      "siteBuildId": "8b278a8e5b89f887ffc096f27663ac8f95d60708dee594fe80a58fe042c66d9d",
+      "sourceDateEpoch": 1791787301,
+      "pxcube": {
+        "rebuilt": true,
+        "packages": 14,
+        "relocated": false
+      },
+      "siteFiles": 829,
+      "siteBytes": 88169200,
+      "receiptSha256": "9a6fd45cd8c4f599aa6260a4ad755708aa8ab3f1d9fcbc7399c45215f265dba2"
+    },
+    "pr5": {
+      "sourceDigest": "84b1a3534ad96129110f81216bf792130947675cbb5eb9cd282117d37b1c1d06",
+      "siteDigest": "2fcf168f948223f444cfa37d5001dde3f6a948219b2821a87166d2e2b42e4916",
+      "siteBuildId": "b39f577589ac2bcd33a06d1d72ce1bf10771747c6cf8f57c32474c0e4fb4244e",
+      "sourceDateEpoch": 1791787301,
+      "pxcube": {
+        "rebuilt": true,
+        "packages": 14,
+        "relocated": false
+      },
+      "siteFiles": 839,
+      "siteBytes": 88201639,
+      "receiptSha256": "94466dce45075c77bac91c064066345a7142041ac73779451adffa97383cea4d"
+    }
+  },
+  "deltas": {
+    "main..pr3": {
+      "modified": [
+        {
+          "path": "compiled/pxcube/experiences/build-bag/pxcube-receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/build-bag/pxcube-receipt.json",
+            "bytes": 21088,
+            "sha256": "76c436ca6973bea3f036cfd0321d25d918a331ffb498e34064dfbd2954dbc959"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/build-bag/pxcube-receipt.json",
+            "bytes": 21089,
+            "sha256": "a511e2b7cb5d5c827ae2d8e4236626c7d6782353ad843ed1448f79dfe550f68c"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/build-bag/receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/build-bag/receipt.json",
+            "bytes": 12363,
+            "sha256": "8f778f4ab87428a5b4d8e846d350ea71a8cb43822dad608d584572f4a23c88d9"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/build-bag/receipt.json",
+            "bytes": 12364,
+            "sha256": "2fb36d4bcfadaa6f9ad7a6c437df14e144f8e1ce1730f0ed367ac537887511b8"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/connect4-pxc/pxcube-receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/connect4-pxc/pxcube-receipt.json",
+            "bytes": 3466,
+            "sha256": "368fb461334844a3ea443391d2bd2162f15f4986a3bdeeadedf16603f19aace9"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/connect4-pxc/pxcube-receipt.json",
+            "bytes": 3468,
+            "sha256": "d2ddacc5c9b1a301683c488ce29c5a0216c75e5d83ed7814ab59b24636e235a9"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/connect4-pxc/receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/connect4-pxc/receipt.json",
+            "bytes": 2544,
+            "sha256": "48265fb821715a7f7ed0e457e08b288c132bf2bbb8b42db9eb4034b545105df7"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/connect4-pxc/receipt.json",
+            "bytes": 2546,
+            "sha256": "9191c3f2f22be3b43e15ae3e8571c4528f0a60f7ca5aa531b4272e76f0d80b77"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/connect4/pxcube-receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/connect4/pxcube-receipt.json",
+            "bytes": 3255,
+            "sha256": "a811dcd4a1841e3f96a3109d5f61b4745781b2ca93c714a8dfd2ef0aafd8003f"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/connect4/pxcube-receipt.json",
+            "bytes": 3257,
+            "sha256": "7027cac763e0d29ee23b6018dea305c319543eab578fe2a03a8f9c99308ca5cb"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/connect4/receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/connect4/receipt.json",
+            "bytes": 2416,
+            "sha256": "9c5e6aa5d547865a96d6a0dc320880e6dc9bab9d0fcd4539bc33fa305de236a2"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/connect4/receipt.json",
+            "bytes": 2418,
+            "sha256": "7ed3288c5b6f667a554ddcd96b8ef18bb9aa2f5b46e8199068adcaa94fabab5e"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/create-graphics/pxcube-receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/create-graphics/pxcube-receipt.json",
+            "bytes": 21100,
+            "sha256": "a428ec2f9a7e2ed60439b35a28a63e4ca94ecc00cd99e5228ea5a6c398e3dae8"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/create-graphics/pxcube-receipt.json",
+            "bytes": 21101,
+            "sha256": "3657a24827fb6ac87d482e5eb82e0c3b149abde95d8cb052d88ee265416a00cf"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/create-graphics/receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/create-graphics/receipt.json",
+            "bytes": 12375,
+            "sha256": "2d99e21f1612ae2879a61d383211635817dc08640f5e50a14c0c30a08cd9dfbf"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/create-graphics/receipt.json",
+            "bytes": 12376,
+            "sha256": "b6b18e4c87a4d96c20a04e37642b5a59b1282e988a9051a1d19d203be25cd1d4"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/explore-shelf/pxcube-receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/explore-shelf/pxcube-receipt.json",
+            "bytes": 13597,
+            "sha256": "c9908f8bc56d249b8d312b05649095aa235efa29a0ca185dfea0fdc09b4b56b1"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/explore-shelf/pxcube-receipt.json",
+            "bytes": 13598,
+            "sha256": "2e512f87ed72be0e0c5f6594193f7e995105f66d238a3606630d505f33d1660a"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/explore-shelf/receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/explore-shelf/receipt.json",
+            "bytes": 7981,
+            "sha256": "26c13977b2d43b0a1b2202c8bbc4ba2664d35a579105fe3235ae18ecfbb1d062"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/explore-shelf/receipt.json",
+            "bytes": 7982,
+            "sha256": "3c13cbdecdec2a09809a4d9958b467f5a5e6b1f7f4e18800cde4cc642fa9b232"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/export-graphics/pxcube-receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/export-graphics/pxcube-receipt.json",
+            "bytes": 21100,
+            "sha256": "f9a57d7c1e22a786ed388a265212b60295872a0ba5cba7019ee9051d270ff535"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/export-graphics/pxcube-receipt.json",
+            "bytes": 21101,
+            "sha256": "af390067a119580594d1d3b572a0a36cb3d637bdb31d0087c15a1c2af37a3a58"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/export-graphics/receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/export-graphics/receipt.json",
+            "bytes": 12375,
+            "sha256": "1f2bb1e3ede072d60a809a57e6b7cea0ffa2a09b099c9dd3c8771d821f869223"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/export-graphics/receipt.json",
+            "bytes": 12376,
+            "sha256": "1a9adc4c031119fdc6c1aff3491d9174a50fcdf714389f081fbd79cb1039fb7c"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/gameboy/pxcube-receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/gameboy/pxcube-receipt.json",
+            "bytes": 2060,
+            "sha256": "b449edfc6536af9da0eb60507d6eeef9a940856ddc722c085916bb87e44d5b8b"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/gameboy/pxcube-receipt.json",
+            "bytes": 2062,
+            "sha256": "9f6b246d595295a320d4026e98bc7319dab085ad61b3406456c640ec4fcd0e00"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/gameboy/receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/gameboy/receipt.json",
+            "bytes": 1391,
+            "sha256": "b81effd4bd7beac2bbfe121681f0ffcfadeadfa393865375e8daa4cd94050445"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/gameboy/receipt.json",
+            "bytes": 1393,
+            "sha256": "c09f97dba4dc7e2200257a9e2b8c458bcfd3601b3e5511928556b07b638ae53f"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/hello/pxcube-receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/hello/pxcube-receipt.json",
+            "bytes": 1226,
+            "sha256": "010ade9a65e9931f4876bb99fe508db006a80bb43a774bc9a3ee40620f9ddc03"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/hello/pxcube-receipt.json",
+            "bytes": 1229,
+            "sha256": "bb86e73fc02979b35467d57a52ea3dab90189904fd7d0c39b3ed7d70efdc0e53"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/hello/receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/hello/receipt.json",
+            "bytes": 905,
+            "sha256": "387c5135ddd754034ec0de98012183f7c09ecce6b59cae8979140d2d5a52f1fa"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/hello/receipt.json",
+            "bytes": 908,
+            "sha256": "b435ecaa661b0acc11d9697fc1d02cab1737dd72099f76640524882b270edaed"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/mock-smoke/pxcube-receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/mock-smoke/pxcube-receipt.json",
+            "bytes": 7311,
+            "sha256": "5ba6e550e20d4afa11f6b2cd7bcf74b7728f996a476e75e18308ebb1b1254648"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/mock-smoke/pxcube-receipt.json",
+            "bytes": 7313,
+            "sha256": "35489a57b8567fc1eb5b11e5e92278f12637383b0ed23e4a5cb6659bcac54252"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/mock-smoke/receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/mock-smoke/receipt.json",
+            "bytes": 4442,
+            "sha256": "5767c4f68d09e1786b35fe92ca4181c292c44ab2b7743fa829dc775698d3f341"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/mock-smoke/receipt.json",
+            "bytes": 4444,
+            "sha256": "fa63592947a107254b6447ee1df25a1d94d43272e74d623e3d0a221879a6251b"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/on-course/pxcube-receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/on-course/pxcube-receipt.json",
+            "bytes": 20196,
+            "sha256": "f6dc734d998433bae409a59a6560d9788661c90d93d78046aa7b3e7c5fb3ef3b"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/on-course/pxcube-receipt.json",
+            "bytes": 20197,
+            "sha256": "f229171930d517888ffdbbe33ec0e3280fd1c0da5641acca5f4a7f33ca4416e6"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/on-course/receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/on-course/receipt.json",
+            "bytes": 11773,
+            "sha256": "fefa7877a735148646a7c5d0189ba5ff77bf032dbfaef8eb220439a64bd2d433"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/on-course/receipt.json",
+            "bytes": 11774,
+            "sha256": "dc06c64813718b2ff70ed5e6f12b3d8d9865e8297d733b255495fcac0f687af9"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/snake/pxcube-receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/snake/pxcube-receipt.json",
+            "bytes": 2838,
+            "sha256": "e4213e188991cc0409ffeb326f826432a03d7d96d4ab7287b49b2336b964de55"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/snake/pxcube-receipt.json",
+            "bytes": 2841,
+            "sha256": "cb0f63386e4500b8cd86f594c1eebb84380fa7e2c03469a208c9d2cb33842c82"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/snake/receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/snake/receipt.json",
+            "bytes": 2169,
+            "sha256": "1d22a80e3ec91c2860ad3e61484783d38295d641fb41a8744c4aaecb68a687a6"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/snake/receipt.json",
+            "bytes": 2172,
+            "sha256": "a1f085a2b77fd210b6fdee29b28153d9138d619adaa667e6aa08b6a63de97e0c"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/upload-disc-to-shelf-delta/pxcube-receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/upload-disc-to-shelf-delta/pxcube-receipt.json",
+            "bytes": 21964,
+            "sha256": "885f991b07330ad89a6322f0392c5e19b2eadf3c6327e1c33397c568a9540e30"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/upload-disc-to-shelf-delta/pxcube-receipt.json",
+            "bytes": 21966,
+            "sha256": "ce9b81727613694c777624c80a3f3e06e2e059b0085b38e819cbeec0f8850095"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/upload-disc-to-shelf-delta/receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/upload-disc-to-shelf-delta/receipt.json",
+            "bytes": 16348,
+            "sha256": "434f3b1b58fb11b6314d98cd39b71df7539067cf6b760a4faa19da0dce8ddd3d"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/upload-disc-to-shelf-delta/receipt.json",
+            "bytes": 16350,
+            "sha256": "18dbd5ae0b279a6a3da768dfca4900b17fbeda370906234b7c1e62ea93106163"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/upload-disc-to-shelf/pxcube-receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/upload-disc-to-shelf/pxcube-receipt.json",
+            "bytes": 13788,
+            "sha256": "ad62b499eac01a9b14ca6f87be947d4cc8b95a97dc5b0528a2039485f086ca36"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/upload-disc-to-shelf/pxcube-receipt.json",
+            "bytes": 13789,
+            "sha256": "9ea592d61ce717463bb4341bacdf81ab26e42e1316ca086af24db6e08f09ba30"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/upload-disc-to-shelf/receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/upload-disc-to-shelf/receipt.json",
+            "bytes": 8172,
+            "sha256": "f9d94a544de5a6acdaab92f72796771140379f637c9e5b7aea198ef510811a58"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/upload-disc-to-shelf/receipt.json",
+            "bytes": 8173,
+            "sha256": "93fc3f487cfb19d66031ef362d96c34751912a8e5f26be2ec01e9832d1e01ffb"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/your-shelf/pxcube-receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/your-shelf/pxcube-receipt.json",
+            "bytes": 13595,
+            "sha256": "4f666de11b38bf0e6a586478cf686e500f862bdbbba6947f505d6ecfd074ee6a"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/your-shelf/pxcube-receipt.json",
+            "bytes": 13596,
+            "sha256": "6d431149f64764c9c86f4baeeb87f5a1cfafc0599c4c4006333aef4c1a1633d6"
+          }
+        },
+        {
+          "path": "compiled/pxcube/experiences/your-shelf/receipt.json",
+          "before": {
+            "path": "compiled/pxcube/experiences/your-shelf/receipt.json",
+            "bytes": 7979,
+            "sha256": "d3e446553a6475a581c0e69a12bd29dcfe5e0368c80006d7d7b994306699bddf"
+          },
+          "after": {
+            "path": "compiled/pxcube/experiences/your-shelf/receipt.json",
+            "bytes": 7980,
+            "sha256": "8b08b50399e0001bdd5bde968526c0cfdb271401cc32c3fd180286539b9bc6ba"
+          }
+        },
+        {
+          "path": "compiled/pxcube/index.html",
+          "before": {
+            "path": "compiled/pxcube/index.html",
+            "bytes": 198634,
+            "sha256": "adc3952a34a536f4d5b4f5dc04de577dd6912096bc09767cd3fad919e368686b"
+          },
+          "after": {
+            "path": "compiled/pxcube/index.html",
+            "bytes": 198657,
+            "sha256": "739908e9ea16bb568bd74db58182ff8dfefbeb8feebb6fa2463d7115cb26e989"
+          }
+        },
+        {
+          "path": "compiled/pxcube/pxcube-run.json",
+          "before": {
+            "path": "compiled/pxcube/pxcube-run.json",
+            "bytes": 104071,
+            "sha256": "e42379acb586ada87c25ef7712448deb91e15d2436693cc3cfb5b08a0878faf9"
+          },
+          "after": {
+            "path": "compiled/pxcube/pxcube-run.json",
+            "bytes": 104094,
+            "sha256": "fd64d4d2436f499d30528de6574af788441ad839bce1bdeb0f6e9d5085260e0a"
+          }
+        },
+        {
+          "path": "compiled/pxcube/shell.mjs",
+          "before": {
+            "path": "compiled/pxcube/shell.mjs",
+            "bytes": 25406,
+            "sha256": "a7992beea5365c23c376c9a3f38e839ff34ed38c26688e77a4751d7f41fb584c"
+          },
+          "after": {
+            "path": "compiled/pxcube/shell.mjs",
+            "bytes": 25435,
+            "sha256": "f846ba2102d0766d17a5d27f8e8785c5c976628296ffef8346d2d15e5865ec1f"
+          }
+        },
+        {
+          "path": "compiled/pxcube/sw.js",
+          "before": {
+            "path": "compiled/pxcube/sw.js",
+            "bytes": 38950,
+            "sha256": "9c75352f339747bd7b55dcaa0ed87badbbb8193a73e0ac7387b7f51d6b328e24"
+          },
+          "after": {
+            "path": "compiled/pxcube/sw.js",
+            "bytes": 38950,
+            "sha256": "4a4cc0f34d4b9490e9642e0248bc01fb171cf45293eb10e79733721288a853b2"
+          }
+        },
+        {
+          "path": "data/catalog.json",
+          "before": {
+            "path": "data/catalog.json",
+            "bytes": 16503,
+            "sha256": "bce5100bc34c4adecb97dfd6d5f100704f8c389bb2897ded42254c6bda327b46"
+          },
+          "after": {
+            "path": "data/catalog.json",
+            "bytes": 16526,
+            "sha256": "a8c352103ca3bc56dd73cd4943937d4173b4d40cdc93a63cb7cdfa4a9e029aa7"
+          }
+        },
+        {
+          "path": "data/crisp-delta-proof.json",
+          "before": {
+            "path": "data/crisp-delta-proof.json",
+            "bytes": 1491,
+            "sha256": "036846823bdeb1fff5fe553db13b85e1cab291d5af7d96b6182bbd76b5a9dc26"
+          },
+          "after": {
+            "path": "data/crisp-delta-proof.json",
+            "bytes": 1491,
+            "sha256": "06e2cf536bcbe98fd154b92766946d306d55efa6ec285161506beccce87b0e1a"
+          }
+        },
+        {
+          "path": "data/pxcube-experiences.delta.json",
+          "before": {
+            "path": "data/pxcube-experiences.delta.json",
+            "bytes": 114180,
+            "sha256": "233488d56981ad55fde1880a81fcf9b505ed8301f2d240a60a45960e1b614ac5"
+          },
+          "after": {
+            "path": "data/pxcube-experiences.delta.json",
+            "bytes": 114180,
+            "sha256": "56373692b898329b66b51a3aa63727b12f8506c9b1970eba4d950989fdf93491"
+          }
+        },
+        {
+          "path": "data/pxcube-experiences.snapshot.json.gz",
+          "before": {
+            "path": "data/pxcube-experiences.snapshot.json.gz",
+            "bytes": 3690916,
+            "sha256": "2e19829a93876d3c0565c8e45ec600771582cd9a6fba8030fb14b20ca7d48614"
+          },
+          "after": {
+            "path": "data/pxcube-experiences.snapshot.json.gz",
+            "bytes": 3690917,
+            "sha256": "3b4f9f0f4542c67c93e292b0a1598c3e35f6aba6d0d1d09f94a74f1ace3acbcd"
+          }
+        },
+        {
+          "path": "data/pxcube.snapshot.json.gz",
+          "before": {
+            "path": "data/pxcube.snapshot.json.gz",
+            "bytes": 3912470,
+            "sha256": "e75196a874e8c52948d86790ecacc868e4d863907337ec5153f2f2780c405f3e"
+          },
+          "after": {
+            "path": "data/pxcube.snapshot.json.gz",
+            "bytes": 3908273,
+            "sha256": "83dbb4361c1e5fbe5d872a5939653e06ed3544544b9fa5d5870af1bdeab62f7e"
+          }
+        }
+      ],
+      "added": [],
+      "removed": [],
+      "byteIdentical": false
+    },
+    "pr3..pr4": {
+      "modified": [],
+      "added": [],
+      "removed": [],
+      "byteIdentical": true
+    },
+    "pr4..pr5": {
+      "modified": [
+        {
+          "path": "app.mjs",
+          "before": {
+            "path": "app.mjs",
+            "bytes": 32011,
+            "sha256": "a61d8c044d1bc893fcf633964ba99afc8e3750b61e98fe02415bcfa7ce3b5b25"
+          },
+          "after": {
+            "path": "app.mjs",
+            "bytes": 31944,
+            "sha256": "2134f7e4f243e4d74a2425ed8ebb75f470ff97b619ad776cde83afcef502aa30"
+          }
+        },
+        {
+          "path": "atlas-view.mjs",
+          "before": {
+            "path": "atlas-view.mjs",
+            "bytes": 23292,
+            "sha256": "602b899b46dd820771a503e357bf4549f18cf9a963c6c95b5d9996aef58352db"
+          },
+          "after": {
+            "path": "atlas-view.mjs",
+            "bytes": 23201,
+            "sha256": "04615a29f889ab8a89678442e2ff2e3d7ccfd9ed0f577aa7c06de81828c125ef"
+          }
+        },
+        {
+          "path": "block5-view.mjs",
+          "before": {
+            "path": "block5-view.mjs",
+            "bytes": 26139,
+            "sha256": "a83d7564cf02f6ad022f77ee49b3f6203193e797773f5f8576e107a006ad1af2"
+          },
+          "after": {
+            "path": "block5-view.mjs",
+            "bytes": 26042,
+            "sha256": "f70a24142ffce30ccb39a31518ea9460331f4a125d024d91570bcab97947fcb6"
+          }
+        },
+        {
+          "path": "compiled-patch.mjs",
+          "before": {
+            "path": "compiled-patch.mjs",
+            "bytes": 12039,
+            "sha256": "a25bb1e267dabc00dc21ee975694840e62b89f624bec8adf1dfd580f2040b7d5"
+          },
+          "after": {
+            "path": "compiled-patch.mjs",
+            "bytes": 11830,
+            "sha256": "af19c7721cd2506bfb6ef9c8bfb21ebad70bc7693a96994221303c0609fde9ea"
+          }
+        },
+        {
+          "path": "data/catalog.json",
+          "before": {
+            "path": "data/catalog.json",
+            "bytes": 16526,
+            "sha256": "a8c352103ca3bc56dd73cd4943937d4173b4d40cdc93a63cb7cdfa4a9e029aa7"
+          },
+          "after": {
+            "path": "data/catalog.json",
+            "bytes": 16641,
+            "sha256": "0f980714c2d7f2e88611903e3c7124821301d1dd636162e7e49d7c6f195ce298"
+          }
+        },
+        {
+          "path": "exp/atlas/capability-protocol.mjs",
+          "before": {
+            "path": "exp/atlas/capability-protocol.mjs",
+            "bytes": 16292,
+            "sha256": "63a25cf4aa1610a509ce22ad44b4a6996036f647dae357f1d08dc130c9015088"
+          },
+          "after": {
+            "path": "exp/atlas/capability-protocol.mjs",
+            "bytes": 16205,
+            "sha256": "6055b9abc7c08e9ba19ee8e86ba8a5d066d46aa07b40f19cef9d21e40b7e75b3"
+          }
+        },
+        {
+          "path": "exp/atlas/runtime-adapter.mjs",
+          "before": {
+            "path": "exp/atlas/runtime-adapter.mjs",
+            "bytes": 16226,
+            "sha256": "ea24b4c8b810ff8ae483b92a87235df74c6df194fbc493e5dd06d5bbc122ffa8"
+          },
+          "after": {
+            "path": "exp/atlas/runtime-adapter.mjs",
+            "bytes": 16139,
+            "sha256": "9a2a6c5eb19d9115af0c898878b02ea86551e13371c74de219b9433b4b9e8754"
+          }
+        },
+        {
+          "path": "exp/block5/core/canonical.mjs",
+          "before": {
+            "path": "exp/block5/core/canonical.mjs",
+            "bytes": 1896,
+            "sha256": "d38f842c1d56cce1dd2cb1fd65d9a727b04009cc546b896d818b068aae7f1ae5"
+          },
+          "after": {
+            "path": "exp/block5/core/canonical.mjs",
+            "bytes": 604,
+            "sha256": "c71a5f5fd9738c61e95489467151f287cb50838b8806562425cb41118d21057e"
+          }
+        },
+        {
+          "path": "exp/block5/core/composed.mjs",
+          "before": {
+            "path": "exp/block5/core/composed.mjs",
+            "bytes": 12604,
+            "sha256": "6243e2ee09c0a06c4225ddc3047f404f8095775f0e93272202ece8e54d2026ff"
+          },
+          "after": {
+            "path": "exp/block5/core/composed.mjs",
+            "bytes": 11924,
+            "sha256": "6c7f311b26bd4be07a467454a12ba73eee363d4b7c42d6bb84e42153b7b6581d"
+          }
+        },
+        {
+          "path": "exp/block5/core/core.test.mjs",
+          "before": {
+            "path": "exp/block5/core/core.test.mjs",
+            "bytes": 13775,
+            "sha256": "a05f5d734a332d9d8ad812ce09b4e2bd65841422f3fbdb21ef148fba8f141455"
+          },
+          "after": {
+            "path": "exp/block5/core/core.test.mjs",
+            "bytes": 14895,
+            "sha256": "fa3d4fdabe41551915d184e36d91b0a68237b6ef90c5bed81cfb3fa304602479"
+          }
+        },
+        {
+          "path": "exp/block5/core/pixel-cache.mjs",
+          "before": {
+            "path": "exp/block5/core/pixel-cache.mjs",
+            "bytes": 3237,
+            "sha256": "f6539b2e674c19ce3e70c1e43775a1bfa1e08e825a2f38409b1f2f1342bbb245"
+          },
+          "after": {
+            "path": "exp/block5/core/pixel-cache.mjs",
+            "bytes": 3091,
+            "sha256": "31723debd2c6e52b611c3f00f53dfb6f7873827e9bb4b436a0b3a39e206645b1"
+          }
+        },
+        {
+          "path": "exp/block5/core/runtime.mjs",
+          "before": {
+            "path": "exp/block5/core/runtime.mjs",
+            "bytes": 16045,
+            "sha256": "0ffc30e408d4fee51ae1ae3a75771de94277294eac0ee4504d8e88f5af2618f7"
+          },
+          "after": {
+            "path": "exp/block5/core/runtime.mjs",
+            "bytes": 15511,
+            "sha256": "839e8fbe2310dfaff7d350a4b9305c8d4192383554322e7a3d64b3f3e87eabe0"
+          }
+        },
+        {
+          "path": "exp/compression/feedback.mjs",
+          "before": {
+            "path": "exp/compression/feedback.mjs",
+            "bytes": 8589,
+            "sha256": "e22c927b5996f698408fc60b4923ed217685cc4b950d4399c36e246731657536"
+          },
+          "after": {
+            "path": "exp/compression/feedback.mjs",
+            "bytes": 8424,
+            "sha256": "ac1b27b5f08fbe904205bb8c96b91d5ad3301c8c413595f67c2cf282571e9020"
+          }
+        },
+        {
+          "path": "exp/compression/graph.mjs",
+          "before": {
+            "path": "exp/compression/graph.mjs",
+            "bytes": 4236,
+            "sha256": "39f608117634980823693f52c97d0c39532846a5744923298c355ba9880bf555"
+          },
+          "after": {
+            "path": "exp/compression/graph.mjs",
+            "bytes": 4071,
+            "sha256": "d26c1c9b60c8a14b9e778b55753aeebc27076094e51183a956cca86a95e32ba2"
+          }
+        },
+        {
+          "path": "exp/cooperative/annotation-fg.mjs",
+          "before": {
+            "path": "exp/cooperative/annotation-fg.mjs",
+            "bytes": 23147,
+            "sha256": "bdad53539c809b0b75f64778454da66d51d81ff747086a236ee41f88ff25a451"
+          },
+          "after": {
+            "path": "exp/cooperative/annotation-fg.mjs",
+            "bytes": 23003,
+            "sha256": "3bf4cfc83ee0ac9c2bd0cf82c7cc699fab2e1136e635d0c785812fdafbc1c666"
+          }
+        },
+        {
+          "path": "exp/cooperative/fg-association.mjs",
+          "before": {
+            "path": "exp/cooperative/fg-association.mjs",
+            "bytes": 3815,
+            "sha256": "c1a3c0c7f2ec2a2f29caa32292cee38ecd6c8c89bc5030f70aa4defcca608aab"
+          },
+          "after": {
+            "path": "exp/cooperative/fg-association.mjs",
+            "bytes": 3676,
+            "sha256": "d40be140178d36f7ceb65e09e968c572f842319d0b70eeb4b4d6e95df1413ebe"
+          }
+        },
+        {
+          "path": "justin-site-ide.mjs",
+          "before": {
+            "path": "justin-site-ide.mjs",
+            "bytes": 13091,
+            "sha256": "722760dafe865f4e547797f60906d96b2b3f204b7e9867a16dd38d5919d8957e"
+          },
+          "after": {
+            "path": "justin-site-ide.mjs",
+            "bytes": 13017,
+            "sha256": "5ffe487194a617f064812aef20dbfba0628fdb953d0d5192d3e0d53a82ee4a6c"
+          }
+        }
+      ],
+      "added": [
+        {
+          "path": "exp/kernel/README.md",
+          "bytes": 4806,
+          "sha256": "4db06f44eaaf13e8303a46fd85a1dc0c46e20a591ea47d6cafb439a794208828"
+        },
+        {
+          "path": "exp/kernel/canonical.mjs",
+          "bytes": 3333,
+          "sha256": "26d2774b2d16abc0a4f84b54c37977bd2d95242e0e9c1c3d8bb05d57fc342fea"
+        },
+        {
+          "path": "exp/kernel/canonical.test.mjs",
+          "bytes": 5920,
+          "sha256": "b9244eb166d4eca3bf572b1fdb8d799a1fd8fc7e4e2d4ba44e1569507760df06"
+        },
+        {
+          "path": "exp/kernel/equal-json.mjs",
+          "bytes": 1234,
+          "sha256": "fcba1f8cdb6ae31ed0167c63ed63f60d5de73ac49a70d356847174e92069d39f"
+        },
+        {
+          "path": "exp/kernel/equal-json.test.mjs",
+          "bytes": 10097,
+          "sha256": "fca689ed4b3df8e20aff3edefaa137049600ee830fac6019885fcfb4c82445ef"
+        },
+        {
+          "path": "exp/kernel/freeze.mjs",
+          "bytes": 1783,
+          "sha256": "a259cb4dc54da94a38dfb77d051d40e99cde2cf47d66d104643627e843fa14a5"
+        },
+        {
+          "path": "exp/kernel/freeze.test.mjs",
+          "bytes": 4047,
+          "sha256": "31d8e35d3e0ba7a0506402995e42aa7222d200383613d1e4901c01b54e41a4fe"
+        },
+        {
+          "path": "exp/kernel/html.mjs",
+          "bytes": 880,
+          "sha256": "0ac013b8ac6e3cc4804ec96d09c502336f2f3b358990f1ea721f013efbff18c3"
+        },
+        {
+          "path": "exp/kernel/html.test.mjs",
+          "bytes": 2143,
+          "sha256": "cb008727da782e5eb8138b1cee21b5cbdb7079b04d10cd2676d4f3f5ba1d0d97"
+        },
+        {
+          "path": "exp/kernel/layout.test.mjs",
+          "bytes": 938,
+          "sha256": "9d3f513596dc47d9cc6b78616f944cb8cbe739828a390a4f958b186dde69db8d"
+        }
+      ],
+      "removed": [],
+      "byteIdentical": false
+    }
+  },
+  "coldReproducibility": {
+    "independentBazelOutputRoots": true,
+    "fullReceiptBytesEqual": true,
+    "receiptSha256": "94466dce45075c77bac91c064066345a7142041ac73779451adffa97383cea4d",
+    "sourceInputsEqual": true,
+    "all839SiteManifestEntriesEqual": true,
+    "siteDigestEqual": true,
+    "siteBuildIdEqual": true,
+    "sourceDateEpoch": 1791787301,
+    "toolchainEqual": true,
+    "recipeEqual": true,
+    "canonicalColdBuildSeconds": 125.951
+  }
+}

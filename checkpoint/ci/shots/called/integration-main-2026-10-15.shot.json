@@ -1,0 +1,94 @@
+{
+  "schema": "called-shot@0",
+  "id": "integration-main-2026-10-15",
+  "sourceRoot": ".",
+  "baseline": {
+    "commit": "78d9cafe170e61318914dad1a7d2d3aad158577a",
+    "siteBuildId": "b39f577589ac2bcd33a06d1d72ce1bf10771747c6cf8f57c32474c0e4fb4244e"
+  },
+  "call": [
+    {
+      "id": "S1",
+      "text": "Add only the enumerated integration receipts, this new shot, and one appended shot.called event; historical shot bytes and previous event bytes stay unchanged."
+    },
+    {
+      "id": "S2",
+      "text": "The evidence-only checkpoint preserves every built site byte from the modern PR5 baseline."
+    },
+    {
+      "id": "S3",
+      "text": "The modern siteBuildId remains b39f577589ac2bcd33a06d1d72ce1bf10771747c6cf8f57c32474c0e4fb4244e."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "checkpoint/ci/shots/called/events.jsonl"
+      ],
+      "added": [
+        "checkpoint/ci/integration/2026-10-15/README.md",
+        "checkpoint/ci/integration/2026-10-15/build-deltas.json",
+        "checkpoint/ci/integration/2026-10-15/cli-guard-negative.txt",
+        "checkpoint/ci/integration/2026-10-15/cli-guard-positive.txt",
+        "checkpoint/ci/integration/2026-10-15/final-shot-grade.json",
+        "checkpoint/ci/integration/2026-10-15/historical-pr4-regrade.txt",
+        "checkpoint/ci/integration/2026-10-15/historical-pr5-regrade.txt",
+        "checkpoint/ci/integration/2026-10-15/kernel-cli-tests.txt",
+        "checkpoint/ci/integration/2026-10-15/kernel-main.txt",
+        "checkpoint/ci/integration/2026-10-15/kernel-pr5.txt",
+        "checkpoint/ci/integration/2026-10-15/main-build.txt",
+        "checkpoint/ci/integration/2026-10-15/main.receipt.json",
+        "checkpoint/ci/integration/2026-10-15/original-ci-and-source-discovery.json",
+        "checkpoint/ci/integration/2026-10-15/portable-action-modern-head.json",
+        "checkpoint/ci/integration/2026-10-15/portable-action-modern-initial.json",
+        "checkpoint/ci/integration/2026-10-15/pr3-build.txt",
+        "checkpoint/ci/integration/2026-10-15/pr3-grader-tests.txt",
+        "checkpoint/ci/integration/2026-10-15/pr3.receipt.json",
+        "checkpoint/ci/integration/2026-10-15/pr4-action-tests.txt",
+        "checkpoint/ci/integration/2026-10-15/pr4-build.txt",
+        "checkpoint/ci/integration/2026-10-15/pr4.receipt.json",
+        "checkpoint/ci/integration/2026-10-15/pr5-action-tests.txt",
+        "checkpoint/ci/integration/2026-10-15/pr5-build.txt",
+        "checkpoint/ci/integration/2026-10-15/pr5-cold-build.txt",
+        "checkpoint/ci/integration/2026-10-15/pr5-cold.receipt.json",
+        "checkpoint/ci/integration/2026-10-15/pr5.receipt.json",
+        "checkpoint/ci/integration/2026-10-15/preservation.json",
+        "checkpoint/ci/integration/2026-10-15/run.json",
+        "checkpoint/ci/integration/2026-10-15/selection-before.json",
+        "checkpoint/ci/integration/2026-10-15/selection-final.json",
+        "checkpoint/ci/integration/2026-10-15/source-authority.md",
+        "checkpoint/ci/integration/2026-10-15/trusted-controls-results.json",
+        "checkpoint/ci/integration/2026-10-15/trusted-controls.txt",
+        "checkpoint/ci/integration/2026-10-15/trusted-provenance.txt",
+        "checkpoint/ci/shots/called/integration-main-2026-10-15.shot.json"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S2"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [],
+      "added": [],
+      "removed": []
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S3"
+      ],
+      "kind": "json.valueEquals",
+      "in": "output",
+      "file": "data/catalog.json",
+      "path": "$.release.siteBuildId",
+      "value": "b39f577589ac2bcd33a06d1d72ce1bf10771747c6cf8f57c32474c0e4fb4244e"
+    }
+  ]
+}

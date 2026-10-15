@@ -1,0 +1,22 @@
+Snapshot:
+  repository: PageRouter
+  commit: 67bf579e89f5e0223c756fed2590c5cfebbf1de8
+  tree: 985afa3d6a5c93e5f8e0f79605e0f9b132888ab9
+  parents: 4b50b39e60d304f4d95cef6c46f097109c8d76e8 2a934496f5c78a246509c9337435d4e825fe0d74
+  git archive SHA-256: ce391f60607dd7aa736ef0052a73a24d41d2f9c464c437d0c612d102c403f44b
+  extracted snapshot: /tmp/pagerouter-review-modern5
+
+Exact original PR5-to-modern diff over checkpoint/exp/kernel/, checkpoint/ci/controls/, checkpoint/exp/policybench/cli/args.mjs, checkpoint/exp/policybench/cli-args.test.mjs, checkpoint/exp/kernel/README.md is empty.
+
+Commands:
+  cd /tmp/pagerouter-review-modern5/checkpoint
+  node --test exp/kernel/*.test.mjs exp/policybench/cli-args.test.mjs
+  node ci/controls/harness.mjs /tmp/pagerouter-review-trusted /tmp/pagerouter-review-modern5-results.json
+  targeted log: /tmp/pagerouter-review-modern5-targeted.log
+  controls log: /tmp/pagerouter-review-modern5-controls.log
+  generated control JSON: /tmp/pagerouter-review-modern5-results.json
+  original evidence/provenance: /tmp/pagerouter-review-pr5-provenance.txt
+
+The modern candidate is based on current main 3723599bb3e1b6c6c44cc5e3385ed2d8fa57e34b (ancestor check passed). PR6 (#6) first-parent files (4 under checkpoint/sources/pxcube/vendor/studio) are unchanged from main to candidate. PR7 (#7) first-parent files (140) are unchanged from its merge commit dcc1bee84551f5c7a533b80f921d0a21519e8a11 to candidate (zero path overlap).
+
+Trusted source pins/checksums and harness-dependency provenance are in /tmp/pagerouter-review-pr5-provenance.txt; same exact artifacts were used here. Modern targeted tests: 43/43 pass; controls exited 0. Per-family behavior-class partitions and all per-subject signatures match original PR5 exactly.

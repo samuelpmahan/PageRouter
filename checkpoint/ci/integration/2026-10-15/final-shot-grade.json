@@ -1,0 +1,52 @@
+{
+  "shot": "integration-main-2026-10-15",
+  "shotSha256": "2ad33ef112e3cd367fa6963d5169dd64d2d25d05e830eab6ff0f6a261866afc0",
+  "sourceRoot": ".",
+  "problems": [],
+  "called": {
+    "at": "2026-10-15T23:06:50Z"
+  },
+  "precheck": {
+    "pass": true,
+    "clausesTrueOnBaseline": [
+      "C2",
+      "C3"
+    ]
+  },
+  "results": [
+    {
+      "id": "C1",
+      "kind": "source.changedExactly",
+      "covers": [
+        "S1"
+      ],
+      "pass": true,
+      "evidence": [
+        "source: modified [checkpoint/ci/shots/called/events.jsonl] added [checkpoint/ci/integration/2026-10-15/README.md, checkpoint/ci/integration/2026-10-15/build-deltas.json, checkpoint/ci/integration/2026-10-15/cli-guard-negative.txt, checkpoint/ci/integration/2026-10-15/cli-guard-positive.txt, checkpoint/ci/integration/2026-10-15/final-shot-grade.json, checkpoint/ci/integration/2026-10-15/historical-pr4-regrade.txt, checkpoint/ci/integration/2026-10-15/historical-pr5-regrade.txt, checkpoint/ci/integration/2026-10-15/kernel-cli-tests.txt, checkpoint/ci/integration/2026-10-15/kernel-main.txt, checkpoint/ci/integration/2026-10-15/kernel-pr5.txt, checkpoint/ci/integration/2026-10-15/main-build.txt, checkpoint/ci/integration/2026-10-15/main.receipt.json, checkpoint/ci/integration/2026-10-15/original-ci-and-source-discovery.json, checkpoint/ci/integration/2026-10-15/portable-action-modern-head.json, checkpoint/ci/integration/2026-10-15/portable-action-modern-initial.json, checkpoint/ci/integration/2026-10-15/pr3-build.txt, checkpoint/ci/integration/2026-10-15/pr3-grader-tests.txt, checkpoint/ci/integration/2026-10-15/pr3.receipt.json, checkpoint/ci/integration/2026-10-15/pr4-action-tests.txt, checkpoint/ci/integration/2026-10-15/pr4-build.txt, checkpoint/ci/integration/2026-10-15/pr4.receipt.json, checkpoint/ci/integration/2026-10-15/pr5-action-tests.txt, checkpoint/ci/integration/2026-10-15/pr5-build.txt, checkpoint/ci/integration/2026-10-15/pr5-cold-build.txt, checkpoint/ci/integration/2026-10-15/pr5-cold.receipt.json, checkpoint/ci/integration/2026-10-15/pr5.receipt.json, checkpoint/ci/integration/2026-10-15/preservation.json, checkpoint/ci/integration/2026-10-15/run.json, checkpoint/ci/integration/2026-10-15/selection-before.json, checkpoint/ci/integration/2026-10-15/selection-final.json, checkpoint/ci/integration/2026-10-15/source-authority.md, checkpoint/ci/integration/2026-10-15/trusted-controls-results.json, checkpoint/ci/integration/2026-10-15/trusted-controls.txt, checkpoint/ci/integration/2026-10-15/trusted-provenance.txt, checkpoint/ci/shots/called/integration-main-2026-10-15.shot.json] removed [none]"
+      ]
+    },
+    {
+      "id": "C2",
+      "kind": "output.changedExactly",
+      "covers": [
+        "S2"
+      ],
+      "pass": true,
+      "evidence": [
+        "output: modified [none] added [none] removed [none]"
+      ]
+    },
+    {
+      "id": "C3",
+      "kind": "json.valueEquals",
+      "covers": [
+        "S3"
+      ],
+      "pass": true,
+      "evidence": [
+        "data/catalog.json $.release.siteBuildId is \"b39f577589ac2bcd33a06d1d72ce1bf10771747c6cf8f57c32474c0e4fb4244e\""
+      ]
+    }
+  ],
+  "made": true
+}

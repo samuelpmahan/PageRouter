@@ -1,0 +1,1309 @@
+{
+  "schema": "pagerouter-integration-run@1",
+  "date": "2026-10-15",
+  "mode": "verify-only with authorized local dependency-order merges",
+  "authorization": "Lead delegated user-authorized testing of PR3/4/5 against current main, isolated local merges, bounded corrections, builds/tests and evidence preservation. Remote publication remains lead-owned; no main merge performed by implementation owner.",
+  "source": {
+    "main": "3723599bb3e1b6c6c44cc5e3385ed2d8fa57e34b",
+    "originalPr3": "3a492fa02f6caa0eb6ccd7b6e0eb9aab840445d6",
+    "originalPr4": "37fbece3db61195cebde8b7786496d82d825b529",
+    "originalPr5": "2a934496f5c78a246509c9337435d4e825fe0d74",
+    "testedModernPr3": "54b8410a1ac8006f2a3bf49b3a2b269d6ddf35db",
+    "testedModernPr4": "4b50b39e60d304f4d95cef6c46f097109c8d76e8",
+    "testedModernPr5": "67bf579e89f5e0223c756fed2590c5cfebbf1de8",
+    "publishedEquivalentPr3": "15869c063e0c2c6f824984cdc426cec0095dc424",
+    "publishedEquivalentPr4": "8a327a13fd02a6ae7702cf8103f8cbc6779ab544",
+    "evidenceBaseline": "78d9cafe170e61318914dad1a7d2d3aad158577a",
+    "evidenceBaselineTree": "985afa3d6a5c93e5f8e0f79605e0f9b132888ab9",
+    "equivalence": "Published connector commits have different commit IDs but identical stage trees and preserved dependency parents. Build receipt sourceInputs independently identify actual compiled bytes.",
+    "generatedAuthority": "See source-authority.md; upstream TypeScript/emitter unavailable; regeneration NOT completed.",
+    "correctedPr4Local": {
+      "commit": "e737a8e2558be57345c2e077abe055425ee2fc4b",
+      "tree": "2f1eb6435995b790bf3e2a4f640f0361c9129e19",
+      "parents": [
+        "8a327a13fd02a6ae7702cf8103f8cbc6779ab544",
+        "f550ec1af864f8470bb51c9b20765813b8593abc"
+      ]
+    },
+    "correctedPr4Remote": {
+      "commit": "d42e364dc5ff43384894442113edb69e47ad3b69",
+      "tree": "2f1eb6435995b790bf3e2a4f640f0361c9129e19",
+      "parents": [
+        "8a327a13fd02a6ae7702cf8103f8cbc6779ab544",
+        "f550ec1af864f8470bb51c9b20765813b8593abc"
+      ]
+    },
+    "correctedPr5FanInLocal": {
+      "commit": "2b6c6a547564ebef41d7092a0b514063e6b6230e",
+      "tree": "985afa3d6a5c93e5f8e0f79605e0f9b132888ab9",
+      "parents": [
+        "78d9cafe170e61318914dad1a7d2d3aad158577a",
+        "d42e364dc5ff43384894442113edb69e47ad3b69"
+      ],
+      "treeEqualOriginalModern5": true
+    },
+    "evidenceParent": {
+      "commit": "37eb41f90d4400959bc6789b5d2c2031ff797d1c",
+      "tree": "985afa3d6a5c93e5f8e0f79605e0f9b132888ab9",
+      "parents": [
+        "78d9cafe170e61318914dad1a7d2d3aad158577a",
+        "d42e364dc5ff43384894442113edb69e47ad3b69"
+      ],
+      "reason": "Separate tree-neutral fan-in merge; subsequent evidence commit is non-merge so addedShots discovers the new call."
+    }
+  },
+  "environment": {
+    "node": "v24.19.0",
+    "bazel": "7.4.1",
+    "bazelBinarySha256": "c97f02133adce63f0c28678ac1f21d65fa8255c80429b588aeeba8a1fac6202b",
+    "npmLockSha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534",
+    "linuxHostTools": "Node/sh/cp/mkdir copied and hash-recorded; Linux shared libraries remain host requirements. Not a fully hermetic platform claim.",
+    "taskOnlyBrowserPrerequisites": {
+      "python": "3.12",
+      "playwright": "1.56.0",
+      "chromium": "141.0.7390.37 build1194",
+      "Pillow": "12.3.0"
+    },
+    "canonicalActionNetwork": "Bazel action declares sandbox_default_allow_network=false; bootstrap npm/download preparation uses network."
+  },
+  "commands": [
+    {
+      "cwd": "<stage>/checkpoint",
+      "command": "BAZEL=<verified-bazel> PAGEROUTER_BAZEL_OUTPUT_ROOT=<isolated-root> bash ci/bazel/run.sh",
+      "result": "main,PR3,PR4,PR5 pass; full logs and receipts adjacent"
+    },
+    {
+      "cwd": "<stage>/actions/called-shot",
+      "command": "npm ci --no-audit --no-fund && npm test",
+      "result": "PR4 25/25; PR5 30/30"
+    },
+    {
+      "cwd": "<PR3>/checkpoint/ci/shots",
+      "command": "npm ci --no-audit --no-fund && npm test",
+      "result": "17/17"
+    },
+    {
+      "cwd": "<main or PR5>/work/pxc-kernel",
+      "command": "PATH=<task-python-env>/bin:$PATH node --test --test-concurrency=2 test/*.test.mjs",
+      "result": "Both 302/305; same three existing BAD_FILL failures"
+    },
+    {
+      "cwd": "<original PR4>",
+      "command": "BAZEL=<verified-bazel> node actions/called-shot/bin/called-shots.mjs pr --base 3a492fa02f6caa0eb6ccd7b6e0eb9aab840445d6",
+      "result": "See historical-pr4-regrade.txt"
+    },
+    {
+      "cwd": "<original PR5>",
+      "command": "BAZEL=<verified-bazel> node actions/called-shot/bin/called-shots.mjs pr --base 37fbece3db61195cebde8b7786496d82d825b529",
+      "result": "See historical-pr5-regrade.txt"
+    },
+    {
+      "cwd": "<modern5 evidence tree>",
+      "command": "node actions/called-shot/bin/called-shots.mjs grade checkpoint/ci/shots/called/extract-safePath.shot.json --candidate-output <modern5-site>",
+      "result": "exit2: no --base given and the shot records no baseline.commit; deliberate imported fixture limitation, not actual stacked gate"
+    }
+  ],
+  "gates": {
+    "upstreamRegeneration": "BLOCKED: authoritative source/emitter unavailable",
+    "allKernelTestsGreen": false,
+    "newProductionCorrections": [
+      {
+        "stage": "PR4",
+        "implementation": "Existing f550ec1 lane-aware selector promoted by normal merge with its immutable shot/tests/history",
+        "rootCause": "Original PR4 selector always graded last shot at modern HEAD, so current-main additions broke its historical per-shot-candidate C1/C3.",
+        "newlyAuthoredProductionCode": false,
+        "regressionTests": "26/26; exact old/new selector reproduction; full corrected four-shot local replay exit0 at modern base15869c; corrected cloud four-shot replay success at original event base3a492fa",
+        "compilerInputsAndRecipes": "All1513 source input hashes and both recipe hashes exactly equal successful PR3/4 build."
+      }
+    ],
+    "history": "Historical shot files preserved; one new evidence shot/event appended. Source legacy sample without baseline.commit remains intact.",
+    "aggregateMainDiagnostic": "The actual addedShots function evaluated against main selects legacy imported PR3 records. extract-safePath is a fixture demonstration without baseline.commit and direct grade exits2. This is not the actual dependency-order PR4/PR5 gate; no migration or skip rule was added.",
+    "evidenceShotCoverageGap": "C1 proves exact changed file set only. Its S1 byte-preservation and one-event promises are independently checked in preservation.json, not proven by a dedicated grader clause. Original new-shot bytes were not changed after being called.",
+    "targetBranchAncestry": {
+      "PR4": "modern PR3 15869c063e0c2c6f824984cdc426cec0095dc424",
+      "PR5": "corrected modern PR4 d42e364dc5ff43384894442113edb69e47ad3b69"
+    },
+    "observedWorkflowAndLocalBases": {
+      "PR4CloudFailedRun38821630814": "3a492fa02f6caa0eb6ccd7b6e0eb9aab840445d6",
+      "PR4CloudCorrectedRun38822637740": "3a492fa02f6caa0eb6ccd7b6e0eb9aab840445d6",
+      "PR4LocalCorrectedReplay": "15869c063e0c2c6f824984cdc426cec0095dc424",
+      "PR5FinalWorkflowEventBase": "not yet observed; final selector is checked against both original37fbece and modern corrected d42e364"
+    }
+  },
+  "coverage": {
+    "main": {
+      "npm": 218,
+      "HH": 78,
+      "Atlas": 1,
+      "buildHelpers": 2
+    },
+    "PR3": {
+      "npm": 219,
+      "HH": 78,
+      "Atlas": 1,
+      "buildHelpers": 2
+    },
+    "PR4": {
+      "sameSourceBuildInputsAsPR3": true,
+      "actionTests": 25,
+      "correctedActionTests": 26
+    },
+    "PR5": {
+      "npm": 267,
+      "HH": 78,
+      "Atlas": 1,
+      "buildHelpers": 2,
+      "actionTests": 30,
+      "targetedKernelCli": 43
+    },
+    "trustedControls": "Fresh independent modern5 snapshot, source identity and pinned control identities in trusted-provenance.txt; raw results preserved.",
+    "preservation": "PR6 four files; PR7 140 files;35 immutable historical record files; original3879-byte events prefix preserved.",
+    "coldReproducibility": {
+      "result": "PASS",
+      "fullReceiptSha256": "94466dce45075c77bac91c064066345a7142041ac73779451adffa97383cea4d",
+      "fullReceiptByteEquality": true,
+      "siteFiles": 839,
+      "siteBytes": 88201639,
+      "sourceDateEpoch": 1791787301
+    },
+    "generatedCliGuardMutation": {
+      "snapshot": "originalPR5 2a934496f5c78a246509c9337435d4e825fe0d74, disposable extraction",
+      "positive": "node --test <snapshot>/checkpoint/exp/policybench/cli-args.test.mjs:7/7 exit0",
+      "mutation": "In each of cli/flick.mjs,match.mjs,tournament.mjs remove the shared args.mjs import and replace const flag = flagReader(args); with its pre-extraction inline reader. No repo source changed.",
+      "negative": "Same authored test:6/7 exit1, AssertionError flick.mjs imports flagReader",
+      "actualEmitterInvoked": false
+    }
+  },
+  "cloudChecks": {
+    "PR3": {
+      "head": "15869c063e0c2c6f824984cdc426cec0095dc424",
+      "runId": "38821619032",
+      "jobId": "116719277702",
+      "status": "success",
+      "reportedBy": "lead connector readback",
+      "siteFiles": 829,
+      "pxcubePackages": 14,
+      "siteBuildId": "8b278a8e5b89f887ffc096f27663ac8f95d60708dee594fe80a58fe042c66d9d",
+      "graderTests": 17,
+      "buildHelperTests": 2,
+      "crossCloudProof": {
+        "artifactId": "12013875742",
+        "downloadedArchiveSha256": "26bbf9053b9d97ef31f48b2c9bbfb6cd4a4e77e08b6bc1725bf24288539bf874",
+        "cloudReceiptSha256": "9e7436d650cf7775fa23cf883d5bbd03813898385171262b919e03083c1eac1e",
+        "equalFields": {
+          "siteBuildId": true,
+          "siteDigest": true,
+          "siteFiles": true,
+          "sourceInputs": true,
+          "sourceDigest": true,
+          "sourceDateEpoch": true,
+          "recipe": true
+        },
+        "siteFiles": 829,
+        "hostToolchainEqual": false,
+        "fullReceiptByteEqualityClaimed": false,
+        "explanation": "Cloud/local site bytes and source/recipe identities match; host executable hashes differ, so full cross-cloud receipt bytes are not claimed equal."
+      }
+    },
+    "PR4": {
+      "head": "8a327a13fd02a6ae7702cf8103f8cbc6779ab544",
+      "status": "failure: per-shot-candidate C1/C3 falsely included modern HEAD changes",
+      "jobId": "116719317204",
+      "evidence": "pr4-action-tests.txt includes complete failed cloud job log plus passing old/new unit suites",
+      "runId": "38821630814",
+      "workflowEventBase": "3a492fa02f6caa0eb6ccd7b6e0eb9aab840445d6"
+    },
+    "PR4Corrected": {
+      "head": "d42e364dc5ff43384894442113edb69e47ad3b69",
+      "status": "success",
+      "runId": "38822637740",
+      "jobId": "116722590941",
+      "tree": "2f1eb6435995b790bf3e2a4f640f0361c9129e19",
+      "siteFiles": 829,
+      "siteBuildId": "8b278a8e5b89f887ffc096f27663ac8f95d60708dee594fe80a58fe042c66d9d",
+      "actionTests": 26,
+      "all4HistoricalShotsMade": true,
+      "perShotCandidateAt": "37fbece3db61195cebde8b7786496d82d825b529",
+      "laneMergesAt": "f550ec1af864f8470bb51c9b20765813b8593abc",
+      "rawEvidence": "pr4-action-tests.txt (complete corrected cloud job log)",
+      "workflowEventBase": "3a492fa02f6caa0eb6ccd7b6e0eb9aab840445d6"
+    }
+  },
+  "modernReassessments": {
+    "portableActionInitialChange": {
+      "baseline": "54b8410a1ac8006f2a3bf49b3a2b269d6ddf35db",
+      "candidate": "e6e017548d85b265f3d85b97fc1034def6d516bd",
+      "originalChange": "939909da6e258e03788491431a5963b6a5c51519",
+      "outputReuse": "All1513 declared source hashes match modern PR4 passing receipt; outputs checked byte-identical.",
+      "verdicts": {
+        "C1": true,
+        "C2": true,
+        "C3": false
+      }
+    },
+    "portableActionInitialModernPr4Head": {
+      "baseline": "54b8410a1ac8006f2a3bf49b3a2b269d6ddf35db",
+      "candidate": "4b50b39e60d304f4d95cef6c46f097109c8d76e8",
+      "verdicts": {
+        "C1": false,
+        "C2": true,
+        "C3": false
+      },
+      "context": "C1 additionally sees two later original shot records. This is the initial modern PR4 tree before lane-aware selector promotion."
+    }
+  },
+  "historicalReplay": {
+    "originalPR4": {
+      "head": "37fbece3db61195cebde8b7786496d82d825b529",
+      "base": "3a492fa02f6caa0eb6ccd7b6e0eb9aab840445d6",
+      "exitCode": 0,
+      "made": 3,
+      "missed": 0
+    },
+    "originalPR5": {
+      "head": "2a934496f5c78a246509c9337435d4e825fe0d74",
+      "base": "37fbece3db61195cebde8b7786496d82d825b529",
+      "exitCode": 0,
+      "made": 14,
+      "missed": [
+        "extract-flag"
+      ],
+      "supersededBy": {
+        "extract-flag": "extract-flag-v2"
+      },
+      "all15Evaluated": true
+    },
+    "prewarm": {
+      "schema": "pagerouter-historical-prewarm@1",
+      "purpose": "Bounded two-worker canonical immutable-commit prewarming. The unmodified action still grades every shot; last detached original2a build is an extra cold proof because the action uses its working-tree path for that final HEAD.",
+      "maxParallelBuilds": 2,
+      "results": [
+        {
+          "commit": "250c3d84d41b4e6a9d1e3c99799ce24fdd081077",
+          "side": "candidate-250c3d84d41b",
+          "exitCode": 0,
+          "seconds": 127.043,
+          "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-250c3d84d41b.txt",
+          "reusedByAction": true
+        },
+        {
+          "commit": "e6e1c0bcf914b3e0baa0d05b3ec94cf86e074254",
+          "side": "candidate-e6e1c0bcf914",
+          "exitCode": 0,
+          "seconds": 125.352,
+          "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-e6e1c0bcf914.txt",
+          "reusedByAction": true
+        },
+        {
+          "commit": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9",
+          "side": "candidate-9e52a0c7cf09",
+          "exitCode": 0,
+          "seconds": 118.392,
+          "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-9e52a0c7cf09.txt",
+          "reusedByAction": true
+        },
+        {
+          "commit": "f868426df049993d8b7d41faf9b094f5872ee443",
+          "side": "candidate-f868426df049",
+          "exitCode": 0,
+          "seconds": 123.873,
+          "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-f868426df049.txt",
+          "reusedByAction": true
+        },
+        {
+          "commit": "f4b0db4c183d9ad4ebb1a3a09ad48c42a1025901",
+          "side": "base-f4b0db4c183d",
+          "exitCode": 0,
+          "seconds": 132.25,
+          "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-base-f4b0db4c183d.txt",
+          "reusedByAction": true
+        },
+        {
+          "commit": "0aa56a04632d2076c43ab53688bffc167bdb38ec",
+          "side": "candidate-0aa56a04632d",
+          "exitCode": 0,
+          "seconds": 134.241,
+          "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-0aa56a04632d.txt",
+          "reusedByAction": true
+        },
+        {
+          "commit": "c8b1b021a8e2485c695dda1ad4bb95ca120dfbc3",
+          "side": "candidate-c8b1b021a8e2",
+          "exitCode": 0,
+          "seconds": 133.899,
+          "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-c8b1b021a8e2.txt",
+          "reusedByAction": true
+        },
+        {
+          "commit": "57a98400706e0046b12a025cec6db9b764efd2ce",
+          "side": "candidate-57a98400706e",
+          "exitCode": 0,
+          "seconds": 136.248,
+          "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-57a98400706e.txt",
+          "reusedByAction": true
+        },
+        {
+          "commit": "3469ff5766c8d58a2d9a50adb6c0a75d102e0efc",
+          "side": "candidate-3469ff5766c8",
+          "exitCode": 0,
+          "seconds": 136.62,
+          "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-3469ff5766c8.txt",
+          "reusedByAction": true
+        },
+        {
+          "commit": "28a7adbf08b7e428900764e739d967826546b056",
+          "side": "candidate-28a7adbf08b7",
+          "exitCode": 0,
+          "seconds": 119.036,
+          "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-28a7adbf08b7.txt",
+          "reusedByAction": true
+        },
+        {
+          "commit": "6a0d88e5f645399834cff7cb82e49aed6707b213",
+          "side": "base-6a0d88e5f645",
+          "exitCode": 0,
+          "seconds": 138.125,
+          "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-base-6a0d88e5f645.txt",
+          "reusedByAction": true
+        },
+        {
+          "commit": "71c2032b9e1724e917c0b997e772863c1d013641",
+          "side": "candidate-71c2032b9e17",
+          "exitCode": 0,
+          "seconds": 135.984,
+          "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-71c2032b9e17.txt",
+          "reusedByAction": true
+        },
+        {
+          "commit": "2a934496f5c78a246509c9337435d4e825fe0d74",
+          "side": "candidate-2a934496f5c7",
+          "exitCode": 0,
+          "seconds": 146.411,
+          "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-2a934496f5c7.txt",
+          "reusedByAction": false
+        }
+      ]
+    },
+    "correctedPR4Local": {
+      "head": "e737a8e2558be57345c2e077abe055425ee2fc4b",
+      "tree": "2f1eb6435995b790bf3e2a4f640f0361c9129e19",
+      "base": "15869c063e0c2c6f824984cdc426cec0095dc424",
+      "exitCode": 0,
+      "made": 4,
+      "missed": 0
+    }
+  },
+  "historicalCanonicalBuildReceipts": [
+    {
+      "family": "originalPR4",
+      "commit": "3a492fa02f6caa0eb6ccd7b6e0eb9aab840445d6",
+      "side": "base-3a492fa02f6c",
+      "receiptSha256": "7a7eb9cbd5a7e42dcf7007f79e0ef9902e2dde6a22b9dd0371eb125d93c81b3e",
+      "sourceDigest": "29a9e570ddd78c96eb1c2a988cefca72c1184cf571fa08db2562716a75a0c200",
+      "siteDigest": "b0ddff3edfd63e708fc4e4e8da78cfd4d38d4e151b000a5f66cb62a5db14d07a",
+      "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 829,
+      "siteBytes": 88064876,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        219,
+        1
+      ],
+      "passGroups": [
+        78,
+        219,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "c93c09035ddc4a73c44207b75d68ce88b19a8e09d91255bcdc525c9c422a6dc6"
+    },
+    {
+      "family": "originalPR4",
+      "commit": "939909da6e258e03788491431a5963b6a5c51519",
+      "side": "candidate-939909da6e25",
+      "receiptSha256": "7a7eb9cbd5a7e42dcf7007f79e0ef9902e2dde6a22b9dd0371eb125d93c81b3e",
+      "sourceDigest": "29a9e570ddd78c96eb1c2a988cefca72c1184cf571fa08db2562716a75a0c200",
+      "siteDigest": "b0ddff3edfd63e708fc4e4e8da78cfd4d38d4e151b000a5f66cb62a5db14d07a",
+      "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 829,
+      "siteBytes": 88064876,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        219,
+        1
+      ],
+      "passGroups": [
+        78,
+        219,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "9b072774e099361b7c13cf0a507925a934d4650ad50ffcd67d8d95c27cbabe95"
+    },
+    {
+      "family": "originalPR4",
+      "commit": "a0cd8690bdf35d63bfa84a0e059ba95420bfa60a",
+      "side": "candidate-a0cd8690bdf3",
+      "receiptSha256": "7a7eb9cbd5a7e42dcf7007f79e0ef9902e2dde6a22b9dd0371eb125d93c81b3e",
+      "sourceDigest": "29a9e570ddd78c96eb1c2a988cefca72c1184cf571fa08db2562716a75a0c200",
+      "siteDigest": "b0ddff3edfd63e708fc4e4e8da78cfd4d38d4e151b000a5f66cb62a5db14d07a",
+      "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 829,
+      "siteBytes": 88064876,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        219,
+        1
+      ],
+      "passGroups": [
+        78,
+        219,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "b5ac9b4061e8c9970ce5a811ac75dcc22444548266aa9f8d1b94abecc96f4658"
+    },
+    {
+      "family": "originalPR4",
+      "commit": "37fbece3db61195cebde8b7786496d82d825b529",
+      "side": "candidate-working-tree",
+      "receiptSha256": "7a7eb9cbd5a7e42dcf7007f79e0ef9902e2dde6a22b9dd0371eb125d93c81b3e",
+      "sourceDigest": "29a9e570ddd78c96eb1c2a988cefca72c1184cf571fa08db2562716a75a0c200",
+      "siteDigest": "b0ddff3edfd63e708fc4e4e8da78cfd4d38d4e151b000a5f66cb62a5db14d07a",
+      "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 829,
+      "siteBytes": 88064876,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        219,
+        1
+      ],
+      "passGroups": [
+        78,
+        219,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "d54c411dfbebbafea4f7e129acb192baddc47ebdea8edc3895988a7db023ce5c",
+      "commitProvenance": "Corrected receipt-collector label: candidate-working-tree was incorrectly assigned originalPR5 HEAD 2a934496f5c78a246509c9337435d4e825fe0d74 for every family. This entry belongs to originalPR4 replay HEAD 37fbece3db61195cebde8b7786496d82d825b529. Original replay repository HEAD, raw replay log, receipt SHA-256, all1513 declared source input hashes, and829-file/7f45 output agree; receipt bytes and all measured fields are unchanged."
+    },
+    {
+      "family": "originalPR5",
+      "commit": "37fbece3db61195cebde8b7786496d82d825b529",
+      "side": "base-37fbece3db61",
+      "receiptSha256": "7a7eb9cbd5a7e42dcf7007f79e0ef9902e2dde6a22b9dd0371eb125d93c81b3e",
+      "sourceDigest": "29a9e570ddd78c96eb1c2a988cefca72c1184cf571fa08db2562716a75a0c200",
+      "siteDigest": "b0ddff3edfd63e708fc4e4e8da78cfd4d38d4e151b000a5f66cb62a5db14d07a",
+      "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 829,
+      "siteBytes": 88064876,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        219,
+        1
+      ],
+      "passGroups": [
+        78,
+        219,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "3504eb9f07e1fa5166d0f25509e54926f6fd4419bf65f178985a26a6cbebd65f"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "6a0d88e5f645399834cff7cb82e49aed6707b213",
+      "side": "base-6a0d88e5f645",
+      "receiptSha256": "230be899199dfdc3267b7920cdcdc6d992711eed66ae20f45f2e0a6c6e0dcadd",
+      "sourceDigest": "fd3423c06cff5caeb741adc37fb4ab43240ae999b789cab8f281353c3aa42ff2",
+      "siteDigest": "ad3ebb12d5d22aaa0342ceb2300476d00de32916ae8dbbccaf451907b66a7b9c",
+      "siteBuildId": "77d460a9ff1195dee17d9e8ab8029ffe2b2b2cedbef5f3abddf3116989c46124",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 839,
+      "siteBytes": 88093352,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        267,
+        1
+      ],
+      "passGroups": [
+        78,
+        267,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "9c47a0f182d315f5f7e4a232c0cb70bc44a8abb2b0bb058fc0e4066aed2d464b"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "f4b0db4c183d9ad4ebb1a3a09ad48c42a1025901",
+      "side": "base-f4b0db4c183d",
+      "receiptSha256": "eb8f1b454d0f5eb5d025f668f6b32c65f2999452158dc6653cdfa32917d00789",
+      "sourceDigest": "95789b56f322918df1dd51dc6c40597049a85f273fb8d04e4d40c4daeee3c961",
+      "siteDigest": "034848a836abbcc3460dafd0ecaca12bcff4de1d0d9e10103a56ff751ed84ee9",
+      "siteBuildId": "4aec53f86fa213ecaedc7243ea46b576461839dfdf60df0f3dc71834bcfb9467",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 839,
+      "siteBytes": 88089124,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        259,
+        1
+      ],
+      "passGroups": [
+        78,
+        259,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "83960625df49503d6624c23a2c51aa50c68a1d5a8259707431089e1c90e2e251"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "0aa56a04632d2076c43ab53688bffc167bdb38ec",
+      "side": "candidate-0aa56a04632d",
+      "receiptSha256": "eb8f1b454d0f5eb5d025f668f6b32c65f2999452158dc6653cdfa32917d00789",
+      "sourceDigest": "95789b56f322918df1dd51dc6c40597049a85f273fb8d04e4d40c4daeee3c961",
+      "siteDigest": "034848a836abbcc3460dafd0ecaca12bcff4de1d0d9e10103a56ff751ed84ee9",
+      "siteBuildId": "4aec53f86fa213ecaedc7243ea46b576461839dfdf60df0f3dc71834bcfb9467",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 839,
+      "siteBytes": 88089124,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        259,
+        1
+      ],
+      "passGroups": [
+        78,
+        259,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "96dd7fb654b248fc2b8b6be4778ce2a1a40d8ba440dfc67e56137c1461aeec7e"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "250c3d84d41b4e6a9d1e3c99799ce24fdd081077",
+      "side": "candidate-250c3d84d41b",
+      "receiptSha256": "0ecc395cb9878a8db30c309aa8c0e41d40e7c4985c1123bfd1f085bda2d3f8f4",
+      "sourceDigest": "c772ead6b028fcf477714fdb2982ce6ab5a5f40a1a6d9ea16bbb71050ddd240f",
+      "siteDigest": "7420a6754e01243518a10d5b93281938fd1714a06da97601d2c942f7df3d69ca",
+      "siteBuildId": "b7aeab1b834deb1b0446e8974dff7a9c97c8b5ad877f4c1a63e22f2fab8eb0f1",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 833,
+      "siteBytes": 88071815,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        237,
+        1
+      ],
+      "passGroups": [
+        78,
+        237,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "85860f2bf7bb4face57a3c81858eaa3d92333b04a446bbe30b30f7ef3838da9b"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "28a7adbf08b7e428900764e739d967826546b056",
+      "side": "candidate-28a7adbf08b7",
+      "receiptSha256": "cf4e6b8ae5df9f0a8458ff4bc7361c0711e24a84f2248a1da43733078b9db07a",
+      "sourceDigest": "c9b951c3173e046d31a618a05bbb12f24d223b0d7caca5e3245f2264c0727c6d",
+      "siteDigest": "32909e3024214b32a43f4510f5e2d92730694a5822b972c16a4e1ef7b50b3fa8",
+      "siteBuildId": "bea7cbf254c56bc9585c16d7d0f0e5eb04878b3721ecd140d3b6418fa0a483d1",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 839,
+      "siteBytes": 88093352,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        262,
+        1
+      ],
+      "passGroups": [
+        78,
+        262,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "122839f71b3a84ed21cd95b1861f720c526f52b1409caccd4cf66f6614addd4b"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "2a934496f5c78a246509c9337435d4e825fe0d74",
+      "side": "candidate-2a934496f5c7",
+      "receiptSha256": "0b96f0d60fc2aeeae7d9c22a84f45f0a2a30272c2523d3e086caa04e295ee4bd",
+      "sourceDigest": "138b927e1f381e16f06966e42d8464cdd8dd036c20cde1e827b6da04ba69bbb3",
+      "siteDigest": "e0b9c97a6ba59b79137a2982f7886d5c054e1a0e92871b915c9516c781cb4069",
+      "siteBuildId": "3e49053f58be918be95b037931797190c1a368061fe4ddbcd2f763efd1af863d",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 839,
+      "siteBytes": 88097315,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        267,
+        1
+      ],
+      "passGroups": [
+        78,
+        267,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "83a3d60a95b749ecafbac35eb09aba1644251e4bbfbda2692ccf438c3f153cff"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "3469ff5766c8d58a2d9a50adb6c0a75d102e0efc",
+      "side": "candidate-3469ff5766c8",
+      "receiptSha256": "241afc629d479205e48f69a07bf94c4f455f8194bdd0647926d4555421780d1e",
+      "sourceDigest": "1476b1c66e4af15871e1b557090eaa0129ab728ef5655911bf902b90ce772b1f",
+      "siteDigest": "da312deb03d9626649d30809162fe5f3937cbd6bcf0caaf5c4ed56cbc2694380",
+      "siteBuildId": "566150dbbb20a759e23f9dd4d0a1d4a62faaa3d1944438e2aed3f3d9841e2224",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 839,
+      "siteBytes": 88093644,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        262,
+        1
+      ],
+      "passGroups": [
+        78,
+        262,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "97d11e58c06fdb0702eae4572a144aa086e10d3515af25b74ed22eb845cc509e"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "57a98400706e0046b12a025cec6db9b764efd2ce",
+      "side": "candidate-57a98400706e",
+      "receiptSha256": "49b95ca61be7c6d730498f8e73e57763214962206f94544b46b7b24adb52860d",
+      "sourceDigest": "d90df21fc4a5e8a5f1cc6063efdc430d63dded13b2db1ac7a56e0e250f8ebc9f",
+      "siteDigest": "eff269225a2aa4e4c67694f5e36028b57ab8b07e33ab0afa32b3c63c55d8d251",
+      "siteBuildId": "662378f0baa8e5de742431db28dee1be150ccd8d0d0ef119e267eee9856bc16b",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 839,
+      "siteBytes": 88089124,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        264,
+        1
+      ],
+      "passGroups": [
+        78,
+        264,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "0e0c1710eaffd38c34665c911241e8ecb29aaead8ec7eafe82a49fd63b73b8aa"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "59fdaa22644d4774c7def08390887ee2f77f62f2",
+      "side": "candidate-59fdaa22644d",
+      "receiptSha256": "21bf8588a85e1b0323b0f154402f228eff4d773fbf182ded319ccef95debf753",
+      "sourceDigest": "d2731705dc61d9457a8d27519ea9b0b6362ee9d4ed9da4bdec15d0307e1bd07f",
+      "siteDigest": "f490c147ef45146901e2bce16f10f48ade8a84d5855f6ef5d3cfe668c59b4451",
+      "siteBuildId": "40cc7412ae882f33e1a71e999433c9ab050e2545af579cd9e595d8bc759c64b0",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 833,
+      "siteBytes": 88076920,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        228,
+        1
+      ],
+      "passGroups": [
+        78,
+        228,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "b78997bf91033e2c08d53f5f236dd5e60cc1400d31691b4e98bfb4eaa7153e58"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "71c2032b9e1724e917c0b997e772863c1d013641",
+      "side": "candidate-71c2032b9e17",
+      "receiptSha256": "0b96f0d60fc2aeeae7d9c22a84f45f0a2a30272c2523d3e086caa04e295ee4bd",
+      "sourceDigest": "138b927e1f381e16f06966e42d8464cdd8dd036c20cde1e827b6da04ba69bbb3",
+      "siteDigest": "e0b9c97a6ba59b79137a2982f7886d5c054e1a0e92871b915c9516c781cb4069",
+      "siteBuildId": "3e49053f58be918be95b037931797190c1a368061fe4ddbcd2f763efd1af863d",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 839,
+      "siteBytes": 88097315,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        267,
+        1
+      ],
+      "passGroups": [
+        78,
+        267,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "661cab6e4931eee2b9bca66711c6bb8d5900761073d2c2c060aa15f3d84b2682"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9",
+      "side": "candidate-9e52a0c7cf09",
+      "receiptSha256": "581a5311b57d694e82c77b5573fa4995e4dc0afc846cf67d28038da3de7b00d4",
+      "sourceDigest": "ec62d404d851eee98674ff65ea9d62ab8a04d35368be7e9dcbbfd6850e5445c6",
+      "siteDigest": "db06d024f83169e6520410556c7336385573a0441e95bc2444c2fe53e9e21617",
+      "siteBuildId": "117749fa614b7cda9b7443da0afe449220f0baadce74b10eff9aacf6074ed9ea",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 831,
+      "siteBytes": 88066657,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        228,
+        1
+      ],
+      "passGroups": [
+        78,
+        228,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "d47a7c2cd1fbac5d2f6fba8da380f70b631afb155e62bdd0da6d6a2191e70147"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "c8b1b021a8e2485c695dda1ad4bb95ca120dfbc3",
+      "side": "candidate-c8b1b021a8e2",
+      "receiptSha256": "eb8f1b454d0f5eb5d025f668f6b32c65f2999452158dc6653cdfa32917d00789",
+      "sourceDigest": "95789b56f322918df1dd51dc6c40597049a85f273fb8d04e4d40c4daeee3c961",
+      "siteDigest": "034848a836abbcc3460dafd0ecaca12bcff4de1d0d9e10103a56ff751ed84ee9",
+      "siteBuildId": "4aec53f86fa213ecaedc7243ea46b576461839dfdf60df0f3dc71834bcfb9467",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 839,
+      "siteBytes": 88089124,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        259,
+        1
+      ],
+      "passGroups": [
+        78,
+        259,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "1710d978e17f11f3d94ce2326bc1205ae8f9ef6ad7f85f17efb370c51ede7011"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "e6e1c0bcf914b3e0baa0d05b3ec94cf86e074254",
+      "side": "candidate-e6e1c0bcf914",
+      "receiptSha256": "22f5bc4d13e1ae4c3c47df0e27ea94f7533db735da189bc09001d73b1efabfec",
+      "sourceDigest": "ee4467591854b3baa81d42b40ebed66c840084014c42fee327f167c99ef7ada0",
+      "siteDigest": "c9ab4fd7c5d6abe1d822b8cad54a57a4106cdd3e38c6eb544c0e2b87ccbb4ce1",
+      "siteBuildId": "67f21723168a9d329fcf5a1c3bd1d0248982f6a87c03b192c888a1a7f895a27b",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 833,
+      "siteBytes": 88069351,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        226,
+        1
+      ],
+      "passGroups": [
+        78,
+        226,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "3004066482cda1d82dd9858b7c34b86b133658d57e66906e0403dd0401ff2d12"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "ee4b496f51b26c5932498e5c5edb3c605cdac1f4",
+      "side": "candidate-ee4b496f51b2",
+      "receiptSha256": "e8e5eb8a1f34d78f4e6ec2447eeb8ca192f5194f88f08268cef662f24ffb8ab8",
+      "sourceDigest": "abbdf560db6cac78dc6050eb28031a3fc147e90fe08d774b98b20feb5618be6e",
+      "siteDigest": "db06d024f83169e6520410556c7336385573a0441e95bc2444c2fe53e9e21617",
+      "siteBuildId": "117749fa614b7cda9b7443da0afe449220f0baadce74b10eff9aacf6074ed9ea",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 831,
+      "siteBytes": 88066657,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        221,
+        1
+      ],
+      "passGroups": [
+        78,
+        221,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "ce66cf673a383069cfa2a506a8c342d58b024abcdc7907a44aa4b02570586571"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "f550ec1af864f8470bb51c9b20765813b8593abc",
+      "side": "candidate-f550ec1af864",
+      "receiptSha256": "7a7eb9cbd5a7e42dcf7007f79e0ef9902e2dde6a22b9dd0371eb125d93c81b3e",
+      "sourceDigest": "29a9e570ddd78c96eb1c2a988cefca72c1184cf571fa08db2562716a75a0c200",
+      "siteDigest": "b0ddff3edfd63e708fc4e4e8da78cfd4d38d4e151b000a5f66cb62a5db14d07a",
+      "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 829,
+      "siteBytes": 88064876,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        219,
+        1
+      ],
+      "passGroups": [
+        78,
+        219,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "933315cc16a7fba5d483692971616cf32688e2c0aef8ac9ccd328ba302717e69"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "f868426df049993d8b7d41faf9b094f5872ee443",
+      "side": "candidate-f868426df049",
+      "receiptSha256": "d1083d73e8a40cbf6602940fa21f1f7a8409c61777d52f37f35fd4363ff2837f",
+      "sourceDigest": "8af0edcf2cb2aaadb3d611f8706b1c2a057b3807b0724c84206c2d8346f653ce",
+      "siteDigest": "72d17a2201b089c5410029d09ad328188a1491960e64c9a685a4fa9da546d8dc",
+      "siteBuildId": "5e459a68d9271220c0a4776c255e18a5054e233a10cb9b76164812043b97bc3d",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 833,
+      "siteBytes": 88071009,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        224,
+        1
+      ],
+      "passGroups": [
+        78,
+        224,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "ca50dd81854b4c7bcb711122b3308bbf02b6921c3f13227aac05e90861bd7ba3"
+    },
+    {
+      "family": "originalPR5",
+      "commit": "2a934496f5c78a246509c9337435d4e825fe0d74",
+      "side": "candidate-working-tree",
+      "receiptSha256": "0b96f0d60fc2aeeae7d9c22a84f45f0a2a30272c2523d3e086caa04e295ee4bd",
+      "sourceDigest": "138b927e1f381e16f06966e42d8464cdd8dd036c20cde1e827b6da04ba69bbb3",
+      "siteDigest": "e0b9c97a6ba59b79137a2982f7886d5c054e1a0e92871b915c9516c781cb4069",
+      "siteBuildId": "3e49053f58be918be95b037931797190c1a368061fe4ddbcd2f763efd1af863d",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 839,
+      "siteBytes": 88097315,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        267,
+        1
+      ],
+      "passGroups": [
+        78,
+        267,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "f7b5df4f285a1c0e1d24d290823d3bccb1bdc7885316817caa5dee8b986cfb86"
+    },
+    {
+      "family": "correctedPR4Local",
+      "commit": "3a492fa02f6caa0eb6ccd7b6e0eb9aab840445d6",
+      "side": "base-3a492fa02f6c",
+      "receiptSha256": "7a7eb9cbd5a7e42dcf7007f79e0ef9902e2dde6a22b9dd0371eb125d93c81b3e",
+      "sourceDigest": "29a9e570ddd78c96eb1c2a988cefca72c1184cf571fa08db2562716a75a0c200",
+      "siteDigest": "b0ddff3edfd63e708fc4e4e8da78cfd4d38d4e151b000a5f66cb62a5db14d07a",
+      "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 829,
+      "siteBytes": 88064876,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        219,
+        1
+      ],
+      "passGroups": [
+        78,
+        219,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "72e149b1dcbf208612c96ea75341e45dd1227d860aea5a3dc331fd3656f5826c"
+    },
+    {
+      "family": "correctedPR4Local",
+      "commit": "37fbece3db61195cebde8b7786496d82d825b529",
+      "side": "candidate-37fbece3db61",
+      "receiptSha256": "7a7eb9cbd5a7e42dcf7007f79e0ef9902e2dde6a22b9dd0371eb125d93c81b3e",
+      "sourceDigest": "29a9e570ddd78c96eb1c2a988cefca72c1184cf571fa08db2562716a75a0c200",
+      "siteDigest": "b0ddff3edfd63e708fc4e4e8da78cfd4d38d4e151b000a5f66cb62a5db14d07a",
+      "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 829,
+      "siteBytes": 88064876,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        219,
+        1
+      ],
+      "passGroups": [
+        78,
+        219,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "724ba8699277c50ec97322c12e9ab593119ce8a00ffd83398621aeddbcf47c2a"
+    },
+    {
+      "family": "correctedPR4Local",
+      "commit": "939909da6e258e03788491431a5963b6a5c51519",
+      "side": "candidate-939909da6e25",
+      "receiptSha256": "7a7eb9cbd5a7e42dcf7007f79e0ef9902e2dde6a22b9dd0371eb125d93c81b3e",
+      "sourceDigest": "29a9e570ddd78c96eb1c2a988cefca72c1184cf571fa08db2562716a75a0c200",
+      "siteDigest": "b0ddff3edfd63e708fc4e4e8da78cfd4d38d4e151b000a5f66cb62a5db14d07a",
+      "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 829,
+      "siteBytes": 88064876,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        219,
+        1
+      ],
+      "passGroups": [
+        78,
+        219,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "6175cede8a3eef95a97c22f77a443566359b39b70214c245c217a2b40568cef5"
+    },
+    {
+      "family": "correctedPR4Local",
+      "commit": "a0cd8690bdf35d63bfa84a0e059ba95420bfa60a",
+      "side": "candidate-a0cd8690bdf3",
+      "receiptSha256": "7a7eb9cbd5a7e42dcf7007f79e0ef9902e2dde6a22b9dd0371eb125d93c81b3e",
+      "sourceDigest": "29a9e570ddd78c96eb1c2a988cefca72c1184cf571fa08db2562716a75a0c200",
+      "siteDigest": "b0ddff3edfd63e708fc4e4e8da78cfd4d38d4e151b000a5f66cb62a5db14d07a",
+      "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 829,
+      "siteBytes": 88064876,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        219,
+        1
+      ],
+      "passGroups": [
+        78,
+        219,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "2801631fe86a2a47f2c723cf74e214ff19761ad19249a96d7540e7121de1a836"
+    },
+    {
+      "family": "correctedPR4Local",
+      "commit": "f550ec1af864f8470bb51c9b20765813b8593abc",
+      "side": "candidate-f550ec1af864",
+      "receiptSha256": "7a7eb9cbd5a7e42dcf7007f79e0ef9902e2dde6a22b9dd0371eb125d93c81b3e",
+      "sourceDigest": "29a9e570ddd78c96eb1c2a988cefca72c1184cf571fa08db2562716a75a0c200",
+      "siteDigest": "b0ddff3edfd63e708fc4e4e8da78cfd4d38d4e151b000a5f66cb62a5db14d07a",
+      "siteBuildId": "7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1",
+      "sourceDateEpoch": 1791787301,
+      "siteFiles": 829,
+      "siteBytes": 88064876,
+      "sameToolchainAsModern5": true,
+      "recipe": {
+        "driverSha256": "dbf6ff73846b9b84ce3e59d425f9f20bbdb9984856168b4ab0427e861793c23e",
+        "helpersSha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c"
+      },
+      "testGroups": [
+        78,
+        219,
+        1
+      ],
+      "passGroups": [
+        78,
+        219,
+        1
+      ],
+      "failGroups": [
+        0,
+        0,
+        0
+      ],
+      "siteLogSha256": "ca072f205003b4566cf7d977cad6a537827f808484fb96eb45c13671b57b58cd"
+    }
+  ],
+  "evidenceOutputReuse": {
+    "baseline": "78d9cafe170e61318914dad1a7d2d3aad158577a",
+    "candidateCompiledTree": "985afa3d6a5c93e5f8e0f79605e0f9b132888ab9",
+    "declaredInputsChecked": 1527,
+    "recipeModulesChecked": 2,
+    "receiptSha256": "94466dce45075c77bac91c064066345a7142041ac73779451adffa97383cea4d",
+    "reason": "Evidence-only paths are outside declared compiler closure. Both baseline/candidate source and recipe bytes matched the successful cold receipt before grading."
+  },
+  "finalEvidenceVerification": {
+    "canonicalCommand": "BAZEL=<verified-bazel7.4.1> PAGEROUTER_BAZEL_OUTPUT_ROOT=/tmp/pagerouter-integration-pr5-cold bash checkpoint/ci/bazel/run.sh",
+    "exitCode": 0,
+    "elapsedSeconds": 5.075,
+    "mode": "Bazel cache revalidated unchanged source build; helpers2/2 and output manifest verifier reran. Complete source suites were already run on these exact source inputs.",
+    "siteFiles": 839,
+    "fullReceiptSha256": "94466dce45075c77bac91c064066345a7142041ac73779451adffa97383cea4d",
+    "sameFullReceiptAsBothModern5Builds": true,
+    "evidenceShotClausesMade": 3,
+    "eventPrefixAndOneSuffixEvent": "Separately asserted in preservation.json; not implied by C1 file-set predicate."
+  }
+}

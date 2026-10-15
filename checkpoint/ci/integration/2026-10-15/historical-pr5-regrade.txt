@@ -1,0 +1,1764 @@
+UNMODIFIED FULL ORIGINAL PR5 ACTION REPLAY
+Commit2a934496f5c78a246509c9337435d4e825fe0d74; base37fbece3db61195cebde8b7786496d82d825b529; terminal exit0.
+14 MADE; extract-flag MISSED and superseded by MADE extract-flag-v2.
+
+[called-shots] checkpoint/ci/shots/called/lane-merges.shot.json: graded at f550ec1af864, the last commit with this shot and no other shot's change
+[called-shots] building base-37fbece3db61: (cd ../../../../tmp/called-shots-Ow43Ar/tree-37fbece3db61/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 671ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.318977ms)
+✔ a source build requires successful results for every declared target and a live site (0.805479ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 147.577315
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1609 targets configured).
+[1 / 2] Building and verifying PageRouter from source; 0s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 11s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 41s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 101s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 829 files; all 14 PxCube packages succeeded; fresh output siteBuildId 7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1
+[2 / 2] no actions running
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 139.349s, Critical Path: 134.03s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":829,"siteBuildId":"7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1","pxcubePackages":14}
+[called-shots] building candidate-f550ec1af864: (cd ../../../../tmp/called-shots-Ow43Ar/tree-f550ec1af864/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 430ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.264972ms)
+✔ a source build requires successful results for every declared target and a live site (1.827055ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 127.584662
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1609 targets configured).
+[1 / 2] Building and verifying PageRouter from source; 1s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 11s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 41s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 101s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 829 files; all 14 PxCube packages succeeded; fresh output siteBuildId 7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 123.310s, Critical Path: 119.89s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":829,"siteBuildId":"7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1","pxcubePackages":14}
+MADE  lane-merges  (shot sha256 938c6c9ce36f, called 2026-10-12T08:35:00Z)
+  S1  Source changes are exactly: actions/called-shot/README.md, actions/called-shot/bin/called-shots.mjs, actions/called-shot/test/cli.test.mjs and checkpoint/ci/shots/called/events.jsonl modified; checkpoint/ci/shots/called/lane-merges.shot.json added; nothing removed.
+  S2  In actions/called-shot/bin/called-shots.mjs, no top-level statement other than imports changes, except the function addedShots.
+  S3  The built site is byte-identical to the baseline.
+  made   C1 source.changedExactly (covers S1)
+         source: modified [actions/called-shot/README.md, actions/called-shot/bin/called-shots.mjs, actions/called-shot/test/cli.test.mjs, checkpoint/ci/shots/called/events.jsonl] added [checkpoint/ci/shots/called/lane-merges.shot.json] removed [none]
+  made   C2 ast.onlyImportsChanged (covers S2)
+         actions/called-shot/bin/called-shots.mjs: 14 other statements identical; imports unchanged
+  made   C3 output.changedExactly (covers S3)
+         output: modified [none] added [none] removed [none]
+  precheck: the baseline misses at least one clause (true on baseline: C2, C3)
+
+[called-shots] checkpoint/ci/shots/called/kernel-dir.shot.json: graded at ee4b496f51b2, the last commit with this shot and no other shot's change
+[called-shots] building candidate-ee4b496f51b2: (cd ../../../../tmp/called-shots-Ow43Ar/tree-ee4b496f51b2/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 502ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.659195ms)
+✔ a source build requires successful results for every declared target and a live site (0.949402ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 121.067993
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1611 targets configured).
+[1 / 2] Building and verifying PageRouter from source; 0s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 11s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 41s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 101s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 831 files; all 14 PxCube packages succeeded; fresh output siteBuildId 117749fa614b7cda9b7443da0afe449220f0baadce74b10eff9aacf6074ed9ea
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 119.459s, Critical Path: 114.82s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":831,"siteBuildId":"117749fa614b7cda9b7443da0afe449220f0baadce74b10eff9aacf6074ed9ea","pxcubePackages":14}
+MADE  kernel-dir  (shot sha256 be7824574ca2, called 2026-10-12T08:36:24Z)
+  S1  Source changes are exactly: .gitattributes, checkpoint/package.json, checkpoint/scripts/assemble.mjs and checkpoint/ci/shots/called/events.jsonl modified; checkpoint/exp/kernel/README.md, checkpoint/exp/kernel/layout.test.mjs and checkpoint/ci/shots/called/kernel-dir.shot.json added; nothing removed.
+  S2  .gitattributes gains exactly one line and no existing line changes.
+  S3  The built site adds exactly exp/kernel/README.md and exp/kernel/layout.test.mjs, modifies only data/catalog.json, and removes nothing.
+  S4  In the built site's data/catalog.json, only $.release.siteBuildId changes.
+  made   C1 source.changedExactly (covers S1)
+         source: modified [.gitattributes, checkpoint/ci/shots/called/events.jsonl, checkpoint/package.json, checkpoint/scripts/assemble.mjs] added [checkpoint/ci/shots/called/kernel-dir.shot.json, checkpoint/exp/kernel/README.md, checkpoint/exp/kernel/layout.test.mjs] removed [none]
+  made   C2 text.onlyLinesAdded (covers S2)
+         .gitattributes: 1 lines added (candidate lines 3-3), called 1; no baseline line changed
+  made   C3 output.changedExactly (covers S3)
+         output: modified [data/catalog.json] added [exp/kernel/README.md, exp/kernel/layout.test.mjs] removed [none]
+  made   C4 json.changedPathsExactly (covers S4)
+         data/catalog.json changed at: $.release.siteBuildId
+  precheck: the baseline misses at least one clause (true on baseline: none)
+
+[called-shots] checkpoint/ci/shots/called/extract-equalJson.shot.json: graded at 59fdaa22644d, the last commit with this shot and no other shot's change
+[called-shots] building candidate-59fdaa22644d: (cd ../../../../tmp/called-shots-Ow43Ar/tree-59fdaa22644d/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 486ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.070699ms)
+✔ a source build requires successful results for every declared target and a live site (0.97043ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 110.076296
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1613 targets configured).
+[1 / 2] Building and verifying PageRouter from source; 0s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 11s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 41s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 101s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 833 files; all 14 PxCube packages succeeded; fresh output siteBuildId 40cc7412ae882f33e1a71e999433c9ab050e2545af579cd9e595d8bc759c64b0
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+[2 / 2] no actions running
+INFO: Elapsed time: 124.446s, Critical Path: 120.64s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":833,"siteBuildId":"40cc7412ae882f33e1a71e999433c9ab050e2545af579cd9e595d8bc759c64b0","pxcubePackages":14}
+MADE  extract-equalJson  (shot sha256 a96fc71d8f67, called 2026-10-12T08:47:40Z)
+  S1  Source changes are exactly: exp/block5/core/composed.mjs, exp/block5/core/runtime.mjs and ci/shots/called/events.jsonl modified; exp/kernel/equal-json.mjs, exp/kernel/equal-json.test.mjs and ci/shots/called/extract-equalJson.shot.json added; nothing removed.
+  S2  The top-level function equalJson moves from exp/block5/core/composed.mjs to exp/kernel/equal-json.mjs with its declaration text unchanged.
+  S3  The top-level function equalJson moves from exp/block5/core/runtime.mjs to exp/kernel/equal-json.mjs with its declaration text unchanged.
+  S4  In exp/block5/core/composed.mjs and exp/block5/core/runtime.mjs, every top-level statement other than imports, comments and the equalJson declaration is unchanged.
+  S5  The built site modifies exactly data/catalog.json, exp/block5/core/composed.mjs and exp/block5/core/runtime.mjs, adds exactly exp/kernel/equal-json.mjs and exp/kernel/equal-json.test.mjs, and removes nothing.
+  S6  In the built site's data/catalog.json, only $.release.siteBuildId changes.
+  made   C1 source.changedExactly (covers S1)
+         source: modified [ci/shots/called/events.jsonl, exp/block5/core/composed.mjs, exp/block5/core/runtime.mjs] added [ci/shots/called/extract-equalJson.shot.json, exp/kernel/equal-json.mjs, exp/kernel/equal-json.test.mjs] removed [none]
+  made   C2 ast.moved (covers S2)
+         equalJson: exp/block5/core/composed.mjs lines 22-31 → exp/kernel/equal-json.mjs lines 9-18, text identical (sha256 2c3cbcf98c7c)
+  made   C3 ast.moved (covers S3)
+         equalJson: exp/block5/core/runtime.mjs lines 24-33 → exp/kernel/equal-json.mjs lines 9-18, text identical (sha256 2c3cbcf98c7c)
+  made   C4 ast.onlyImportsChanged (covers S4)
+         exp/block5/core/composed.mjs: 11 other statements identical; imports +[import { equalJson } from '../../kernel/equal-json.mjs';]
+         exp/block5/core/runtime.mjs: 15 other statements identical; imports +[import { equalJson } from '../../kernel/equal-json.mjs';]
+  made   C5 output.changedExactly (covers S5)
+         output: modified [data/catalog.json, exp/block5/core/composed.mjs, exp/block5/core/runtime.mjs] added [exp/kernel/equal-json.mjs, exp/kernel/equal-json.test.mjs] removed [none]
+  made   C6 json.changedPathsExactly (covers S6)
+         data/catalog.json changed at: $.release.siteBuildId
+  precheck: the baseline misses at least one clause (true on baseline: C4)
+
+[called-shots] checkpoint/ci/shots/called/kernel-freeze.shot.json: graded at 250c3d84d41b, the last commit with this shot and no other shot's change
+[called-shots] building candidate-250c3d84d41b: (cd ../../../../tmp/called-shots-Ow43Ar/tree-250c3d84d41b/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.40622ms)
+✔ a source build requires successful results for every declared target and a live site (1.051195ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 134.21757
+Another command holds the client lock: 
+pid=139
+owner=client
+cwd=/tmp/called-shots-Ow43Ar/tree-250c3d84d41b/checkpoint
+
+Waiting for it to complete...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1613 targets configured).
+[2 / 2] no actions running
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 53.434s, Critical Path: 0.14s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+{"verifiedFiles":833,"siteBuildId":"b7aeab1b834deb1b0446e8974dff7a9c97c8b5ad877f4c1a63e22f2fab8eb0f1","pxcubePackages":14}
+MADE  kernel-freeze  (shot sha256 b46ecf0762f3, called 2026-10-12T08:55:58Z)
+  S1  The function declaration freezeTree leaves exp/compression/feedback.mjs and exp/compression/graph.mjs and is declared in exp/kernel/freeze.mjs, its text identical to each removed copy.
+  S2  The function declaration freeze leaves exp/atlas/capability-protocol.mjs and exp/atlas/runtime-adapter.mjs and is declared in exp/kernel/freeze.mjs, its text identical to each removed copy.
+  S3  In exp/compression/feedback.mjs and exp/compression/graph.mjs every top-level statement other than imports, comments and freezeTree is unchanged.
+  S4  In exp/atlas/capability-protocol.mjs and exp/atlas/runtime-adapter.mjs every top-level statement other than imports, comments and freeze is unchanged.
+  S5  In exp/cooperative/annotation-fg.mjs every top-level statement other than imports, comments and freezeTree is unchanged.
+  S6  Source changes are exactly: exp/atlas/capability-protocol.mjs, exp/atlas/runtime-adapter.mjs, exp/compression/feedback.mjs, exp/compression/graph.mjs, exp/cooperative/annotation-fg.mjs, exp/cooperative/fg-association.mjs and ci/shots/called/events.jsonl modified; exp/kernel/freeze.mjs, exp/kernel/freeze.test.mjs and ci/shots/called/kernel-freeze.shot.json added; nothing removed.
+  S7  The built site modifies exactly exp/atlas/capability-protocol.mjs, exp/atlas/runtime-adapter.mjs, exp/compression/feedback.mjs, exp/compression/graph.mjs, exp/cooperative/annotation-fg.mjs, exp/cooperative/fg-association.mjs and data/catalog.json, adds exactly exp/kernel/freeze.mjs and exp/kernel/freeze.test.mjs, and removes nothing.
+  S8  In the built data/catalog.json exactly eleven JSON paths change: $.release.siteBuildId, $.release.atlasIdentity.digest, the sha256 and bytes entries of exp/atlas/capability-protocol.mjs, exp/atlas/runtime-adapter.mjs, exp/cooperative/annotation-fg.mjs and exp/cooperative/fg-association.mjs under $.release.atlasIdentity.files, and the new key $.release.atlasIdentity.files.exp/kernel/freeze.mjs.
+  S9  In the built data/catalog.json, $.release.atlasIdentity.digest is 73d7fe69ca43a07abeaaf4003758c9080e60ed0d167549583830852b3c9a3fe3.
+  made   C1 ast.moved (covers S1)
+         freezeTree: exp/compression/feedback.mjs lines 9-15 → exp/kernel/freeze.mjs lines 20-26, text identical (sha256 ae7099abfc51)
+  made   C2 ast.moved (covers S1)
+         freezeTree: exp/compression/graph.mjs lines 3-9 → exp/kernel/freeze.mjs lines 20-26, text identical (sha256 ae7099abfc51)
+  made   C3 ast.moved (covers S2)
+         freeze: exp/atlas/capability-protocol.mjs line 10 → exp/kernel/freeze.mjs line 35, text identical (sha256 918cd79727be)
+  made   C4 ast.moved (covers S2)
+         freeze: exp/atlas/runtime-adapter.mjs line 10 → exp/kernel/freeze.mjs line 35, text identical (sha256 918cd79727be)
+  made   C5 ast.onlyImportsChanged (covers S3)
+         exp/compression/feedback.mjs: 7 other statements identical; imports +[import {freezeTree} from '../kernel/freeze.mjs';]
+         exp/compression/graph.mjs: 2 other statements identical; imports +[import {freezeTree} from '../kernel/freeze.mjs';]
+  made   C6 ast.onlyImportsChanged (covers S4)
+         exp/atlas/capability-protocol.mjs: 11 other statements identical; imports +[import {freeze} from '../kernel/freeze.mjs';]
+         exp/atlas/runtime-adapter.mjs: 6 other statements identical; imports +[import {freeze} from '../kernel/freeze.mjs';]
+  made   C7 ast.onlyImportsChanged (covers S5)
+         exp/cooperative/annotation-fg.mjs: 20 other statements identical; imports +[import {freezeTreeParentFirst as freezeTree} from '../kernel/freeze.mjs';]
+  made   C8 source.changedExactly (covers S6)
+         source: modified [ci/shots/called/events.jsonl, exp/atlas/capability-protocol.mjs, exp/atlas/runtime-adapter.mjs, exp/compression/feedback.mjs, exp/compression/graph.mjs, exp/cooperative/annotation-fg.mjs, exp/cooperative/fg-association.mjs] added [ci/shots/called/kernel-freeze.shot.json, exp/kernel/freeze.mjs, exp/kernel/freeze.test.mjs] removed [none]
+  made   C9 output.changedExactly (covers S7)
+         output: modified [data/catalog.json, exp/atlas/capability-protocol.mjs, exp/atlas/runtime-adapter.mjs, exp/compression/feedback.mjs, exp/compression/graph.mjs, exp/cooperative/annotation-fg.mjs, exp/cooperative/fg-association.mjs] added [exp/kernel/freeze.mjs, exp/kernel/freeze.test.mjs] removed [none]
+  made   C10 json.changedPathsExactly (covers S8)
+         data/catalog.json changed at: $.release.atlasIdentity.digest, $.release.atlasIdentity.files.exp/atlas/capability-protocol.mjs.bytes, $.release.atlasIdentity.files.exp/atlas/capability-protocol.mjs.sha256, $.release.atlasIdentity.files.exp/atlas/runtime-adapter.mjs.bytes, $.release.atlasIdentity.files.exp/atlas/runtime-adapter.mjs.sha256, $.release.atlasIdentity.files.exp/cooperative/annotation-fg.mjs.bytes, $.release.atlasIdentity.files.exp/cooperative/annotation-fg.mjs.sha256, $.release.atlasIdentity.files.exp/cooperative/fg-association.mjs.bytes, $.release.atlasIdentity.files.exp/cooperative/fg-association.mjs.sha256, $.release.atlasIdentity.files.exp/kernel/freeze.mjs, $.release.siteBuildId
+  made   C11 json.valueEquals (covers S9)
+         data/catalog.json $.release.atlasIdentity.digest is "73d7fe69ca43a07abeaaf4003758c9080e60ed0d167549583830852b3c9a3fe3"
+  precheck: the baseline misses at least one clause (true on baseline: C5, C6, C7)
+
+[called-shots] checkpoint/ci/shots/called/kernel-html-esc.shot.json: graded at e6e1c0bcf914, the last commit with this shot and no other shot's change
+[called-shots] building candidate-e6e1c0bcf914: (cd ../../../../tmp/called-shots-Ow43Ar/tree-e6e1c0bcf914/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.830262ms)
+✔ a source build requires successful results for every declared target and a live site (1.157333ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 135.263873
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1613 targets configured).
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 3.169s, Critical Path: 0.13s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+{"verifiedFiles":833,"siteBuildId":"67f21723168a9d329fcf5a1c3bd1d0248982f6a87c03b192c888a1a7f895a27b","pxcubePackages":14}
+MADE  kernel-html-esc  (shot sha256 bbdc2ea9eb15, called 2026-10-12T08:55:26Z)
+  S1  Source changes under checkpoint/ are exactly: scripts/assemble.mjs, src/app.mjs, src/atlas-view.mjs, src/block5-view.mjs, src/justin-site-ide.mjs and ci/shots/called/events.jsonl modified; exp/kernel/html.mjs, exp/kernel/html.test.mjs and ci/shots/called/kernel-html-esc.shot.json added; nothing removed.
+  S2  The built site modifies exactly app.mjs, atlas-view.mjs, block5-view.mjs, justin-site-ide.mjs and data/catalog.json, adds exactly exp/kernel/html.mjs and exp/kernel/html.test.mjs, and removes nothing.
+  S3  In the built data/catalog.json exactly one JSON path changes: $.release.siteBuildId. $.release.buildId, $.release.evaluatorIdentity and $.release.atlasIdentity do not change.
+  made   C1 source.changedExactly (covers S1)
+         source: modified [ci/shots/called/events.jsonl, scripts/assemble.mjs, src/app.mjs, src/atlas-view.mjs, src/block5-view.mjs, src/justin-site-ide.mjs] added [ci/shots/called/kernel-html-esc.shot.json, exp/kernel/html.mjs, exp/kernel/html.test.mjs] removed [none]
+  made   C2 output.changedExactly (covers S2)
+         output: modified [app.mjs, atlas-view.mjs, block5-view.mjs, data/catalog.json, justin-site-ide.mjs] added [exp/kernel/html.mjs, exp/kernel/html.test.mjs] removed [none]
+  made   C3 json.changedPathsExactly (covers S3)
+         data/catalog.json changed at: $.release.siteBuildId
+  precheck: the baseline misses at least one clause (true on baseline: none)
+
+[called-shots] checkpoint/ci/shots/called/extract-flag-v2.shot.json: graded at 9e52a0c7cf09, the last commit with this shot and no other shot's change
+[called-shots] building candidate-9e52a0c7cf09: (cd ../../../../tmp/called-shots-Ow43Ar/tree-9e52a0c7cf09/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.3721ms)
+✔ a source build requires successful results for every declared target and a live site (1.271808ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 126.240575
+Another command holds the client lock: 
+pid=2849
+owner=client
+cwd=/tmp/called-shots-Ow43Ar/tree-9e52a0c7cf09/checkpoint
+
+Waiting for it to complete...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1613 targets configured).
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 101.009s, Critical Path: 0.09s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+{"verifiedFiles":831,"siteBuildId":"117749fa614b7cda9b7443da0afe449220f0baadce74b10eff9aacf6074ed9ea","pxcubePackages":14}
+MADE  extract-flag-v2  (shot sha256 d674c41488a4, called 2026-10-12T09:12:08Z)
+  S1  Source changes are exactly: exp/policybench/cli/flick.mjs, exp/policybench/cli/match.mjs, exp/policybench/cli/tournament.mjs and ci/shots/called/events.jsonl modified; exp/policybench/cli/args.mjs, exp/policybench/cli-args.test.mjs, ci/shots/called/extract-flag.shot.json and ci/shots/called/extract-flag-v2.shot.json added; nothing removed.
+  S2  The built site is byte-identical to the baseline site: no file in it is modified, added or removed.
+  S3  The built site's data/catalog.json reports release.siteBuildId 117749fa614b7cda9b7443da0afe449220f0baadce74b10eff9aacf6074ed9ea.
+  made   C1 source.changedExactly (covers S1)
+         source: modified [ci/shots/called/events.jsonl, exp/policybench/cli/flick.mjs, exp/policybench/cli/match.mjs, exp/policybench/cli/tournament.mjs] added [ci/shots/called/extract-flag-v2.shot.json, ci/shots/called/extract-flag.shot.json, exp/policybench/cli-args.test.mjs, exp/policybench/cli/args.mjs] removed [none]
+  made   C2 output.changedExactly (covers S2)
+         output: modified [none] added [none] removed [none]
+  made   C3 json.valueEquals (covers S3)
+         data/catalog.json $.release.siteBuildId is "117749fa614b7cda9b7443da0afe449220f0baadce74b10eff9aacf6074ed9ea"
+  precheck: the baseline misses at least one clause (true on baseline: C2, C3)
+
+[called-shots] checkpoint/ci/shots/called/extract-flag.shot.json: graded at 9e52a0c7cf09, the last commit with this shot and no other shot's change
+MISSED  extract-flag  (shot sha256 4b49130da33a, called 2026-10-12T08:49:51Z)
+  S1  Source changes are exactly: exp/policybench/cli/flick.mjs, exp/policybench/cli/match.mjs, exp/policybench/cli/tournament.mjs and ci/shots/called/events.jsonl modified; exp/policybench/cli/args.mjs, exp/policybench/cli-args.test.mjs and ci/shots/called/extract-flag.shot.json added; nothing removed.
+  S2  In exp/policybench/cli/flick.mjs, exp/policybench/cli/match.mjs and exp/policybench/cli/tournament.mjs, every top-level statement other than imports, comments and the flag declaration is unchanged.
+  S3  The built site is byte-identical to the baseline site: no file in it is modified, added or removed.
+  S4  The built site's data/catalog.json reports release.siteBuildId 117749fa614b7cda9b7443da0afe449220f0baadce74b10eff9aacf6074ed9ea.
+  missed C1 source.changedExactly (covers S1)
+         source added: happened but was not called: ci/shots/called/extract-flag-v2.shot.json
+  made   C2 ast.onlyImportsChanged (covers S2)
+         exp/policybench/cli/flick.mjs: 10 other statements identical; imports +[import { flagReader } from './args.mjs';]
+         exp/policybench/cli/match.mjs: 26 other statements identical; imports +[import { flagReader } from './args.mjs';]
+         exp/policybench/cli/tournament.mjs: 38 other statements identical; imports +[import { flagReader } from './args.mjs';]
+  made   C3 output.changedExactly (covers S3)
+         output: modified [none] added [none] removed [none]
+  made   C4 json.valueEquals (covers S4)
+         data/catalog.json $.release.siteBuildId is "117749fa614b7cda9b7443da0afe449220f0baadce74b10eff9aacf6074ed9ea"
+  precheck: the baseline misses at least one clause (true on baseline: C2, C3, C4)
+
+[called-shots] checkpoint/ci/shots/called/kernel-canonical-lax.shot.json: graded at f868426df049, the last commit with this shot and no other shot's change
+[called-shots] building candidate-f868426df049: (cd ../../../../tmp/called-shots-Ow43Ar/tree-f868426df049/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.86602ms)
+✔ a source build requires successful results for every declared target and a live site (0.848259ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 195.060328
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1613 targets configured).
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 4.164s, Critical Path: 0.12s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+{"verifiedFiles":833,"siteBuildId":"5e459a68d9271220c0a4776c255e18a5054e233a10cb9b76164812043b97bc3d","pxcubePackages":14}
+MADE  kernel-canonical-lax  (shot sha256 4ba957456699, called 2026-10-12T08:55:50Z)
+  S1  Source changes are exactly: src/compiled-patch.mjs and ci/shots/called/events.jsonl modified; exp/kernel/canonical.mjs, exp/kernel/canonical.test.mjs and ci/shots/called/kernel-canonical-lax.shot.json added; nothing removed.
+  S2  The built site modifies exactly compiled-patch.mjs and data/catalog.json, adds exactly exp/kernel/canonical.mjs and exp/kernel/canonical.test.mjs, and removes nothing; every snapshot, delta and target file under data/ other than catalog.json is byte-identical.
+  S3  In the built site's data/catalog.json only $.release.siteBuildId changes; every project snapshot digest and the HH known target digest stay the same.
+  made   C1 source.changedExactly (covers S1)
+         source: modified [ci/shots/called/events.jsonl, src/compiled-patch.mjs] added [ci/shots/called/kernel-canonical-lax.shot.json, exp/kernel/canonical.mjs, exp/kernel/canonical.test.mjs] removed [none]
+  made   C2 output.changedExactly (covers S2)
+         output: modified [compiled-patch.mjs, data/catalog.json] added [exp/kernel/canonical.mjs, exp/kernel/canonical.test.mjs] removed [none]
+  made   C3 json.changedPathsExactly (covers S3)
+         data/catalog.json changed at: $.release.siteBuildId
+  precheck: the baseline misses at least one clause (true on baseline: none)
+
+[called-shots] checkpoint/ci/shots/called/grader-const-declarations.shot.json: graded at 0aa56a04632d, the last commit with this shot and no other shot's change
+[called-shots] building base-f4b0db4c183d: (cd ../../../../tmp/called-shots-Ow43Ar/tree-f4b0db4c183d/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (2.261823ms)
+✔ a source build requires successful results for every declared target and a live site (1.318323ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 128.279533
+Another command holds the client lock: 
+pid=5518
+owner=client
+cwd=/tmp/called-shots-Ow43Ar/tree-f4b0db4c183d/checkpoint
+
+Waiting for it to complete...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1621 targets configured).
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 112.810s, Critical Path: 0.12s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+{"verifiedFiles":839,"siteBuildId":"4aec53f86fa213ecaedc7243ea46b576461839dfdf60df0f3dc71834bcfb9467","pxcubePackages":14}
+[called-shots] building candidate-0aa56a04632d: (cd ../../../../tmp/called-shots-Ow43Ar/tree-0aa56a04632d/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.435002ms)
+✔ a source build requires successful results for every declared target and a live site (2.705927ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 171.933737
+Another command holds the client lock: 
+pid=6018
+owner=client
+cwd=/tmp/called-shots-Ow43Ar/tree-0aa56a04632d/checkpoint
+
+Waiting for it to complete...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1621 targets configured).
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 7.830s, Critical Path: 0.13s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+{"verifiedFiles":839,"siteBuildId":"4aec53f86fa213ecaedc7243ea46b576461839dfdf60df0f3dc71834bcfb9467","pxcubePackages":14}
+MADE  grader-const-declarations  (shot sha256 fa39b3fbfb49, called 2026-10-12T09:20:25Z)
+  S1  Source changes are exactly: actions/called-shot/README.md, actions/called-shot/lib/grade.mjs, actions/called-shot/test/grade.test.mjs and checkpoint/ci/shots/called/events.jsonl modified; checkpoint/ci/shots/called/grader-const-declarations.shot.json added; nothing removed.
+  S2  In actions/called-shot/lib/grade.mjs, no top-level statement other than imports changes, except the declarations of declaredName, findFunction and CLAUSES, and the function grade is unchanged.
+  S3  The built site is byte-identical to the baseline.
+  made   C1 source.changedExactly (covers S1)
+         source: modified [actions/called-shot/README.md, actions/called-shot/lib/grade.mjs, actions/called-shot/test/grade.test.mjs, checkpoint/ci/shots/called/events.jsonl] added [checkpoint/ci/shots/called/grader-const-declarations.shot.json] removed [none]
+  made   C2 ast.onlyImportsChanged (covers S2)
+         actions/called-shot/lib/grade.mjs: 19 other statements identical; imports unchanged
+  made   C3 output.changedExactly (covers S3)
+         output: modified [none] added [none] removed [none]
+  precheck: the baseline misses at least one clause (true on baseline: C2, C3)
+
+[called-shots] checkpoint/ci/shots/called/superseded-shots.shot.json: graded at c8b1b021a8e2, the last commit with this shot and no other shot's change
+[called-shots] building candidate-c8b1b021a8e2: (cd ../../../../tmp/called-shots-Ow43Ar/tree-c8b1b021a8e2/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.713445ms)
+✔ a source build requires successful results for every declared target and a live site (1.454629ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 227.761039
+Another command holds the client lock: 
+pid=8286
+owner=client
+cwd=/tmp/called-shots-Ow43Ar/tree-c8b1b021a8e2/checkpoint
+
+Waiting for it to complete...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1621 targets configured).
+[1 / 2] checking cached actions
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 118.760s, Critical Path: 0.16s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+{"verifiedFiles":839,"siteBuildId":"4aec53f86fa213ecaedc7243ea46b576461839dfdf60df0f3dc71834bcfb9467","pxcubePackages":14}
+MADE  superseded-shots  (shot sha256 dbbda3f8031e, called 2026-10-12T09:22:57Z)
+  S1  Source changes are exactly: actions/called-shot/README.md, actions/called-shot/bin/called-shots.mjs, actions/called-shot/test/cli.test.mjs and checkpoint/ci/shots/called/events.jsonl modified; checkpoint/ci/shots/called/superseded-shots.shot.json added; nothing removed.
+  S2  In actions/called-shot/bin/called-shots.mjs, no top-level statement other than imports changes, except the functions main and githubOutputs.
+  S3  The built site is byte-identical to the baseline.
+  made   C1 source.changedExactly (covers S1)
+         source: modified [actions/called-shot/README.md, actions/called-shot/bin/called-shots.mjs, actions/called-shot/test/cli.test.mjs, checkpoint/ci/shots/called/events.jsonl] added [checkpoint/ci/shots/called/superseded-shots.shot.json] removed [none]
+  made   C2 ast.onlyImportsChanged (covers S2)
+         actions/called-shot/bin/called-shots.mjs: 13 other statements identical; imports unchanged
+  made   C3 output.changedExactly (covers S3)
+         output: modified [none] added [none] removed [none]
+  precheck: the baseline misses at least one clause (true on baseline: C2, C3)
+
+[called-shots] checkpoint/ci/shots/called/extract-import-closure.shot.json: graded at 57a98400706e, the last commit with this shot and no other shot's change
+[called-shots] building candidate-57a98400706e: (cd ../../../../tmp/called-shots-Ow43Ar/tree-57a98400706e/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.169041ms)
+✔ a source build requires successful results for every declared target and a live site (0.978684ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 138.060713
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1623 targets configured).
+[1 / 2] checking cached actions
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 4.864s, Critical Path: 0.13s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+{"verifiedFiles":839,"siteBuildId":"662378f0baa8e5de742431db28dee1be150ccd8d0d0ef119e267eee9856bc16b","pxcubePackages":14}
+MADE  extract-import-closure  (shot sha256 31d0a7c667d5, called 2026-10-12T09:40:40Z)
+  S1  Source changes are exactly: package.json, scripts/atlas-identity.mjs, scripts/evaluator-identity.mjs and ci/shots/called/events.jsonl modified; scripts/import-closure.mjs, scripts/import-closure.test.mjs and ci/shots/called/extract-import-closure.shot.json added; nothing removed.
+  S2  In package.json only $.scripts.test changes, and its new value is exactly: node --test --test-concurrency=2 exp/cooperative/*.test.mjs exp/adversarial/*.test.mjs scripts/evaluator-identity.test.mjs scripts/import-closure.test.mjs scripts/hh-built-imports.test.mjs scripts/capability-lab-built.test.mjs exp/policybench/*.test.mjs exp/atlas/*.test.mjs scripts/capability-ladder-view.test.mjs scripts/site-imports.test.mjs exp/block5/*.test.mjs exp/block5/core/*.test.mjs exp/compression/*.test.mjs exp/kernel/*.test.mjs vendor/hh/src/*.test.mjs
+  S3  In scripts/atlas-identity.mjs every top-level statement other than imports, comments and the declarations of sha and atlasImplementationIdentity is identical.
+  S4  In scripts/evaluator-identity.mjs every top-level statement other than imports, comments and the declarations of sha, canonical and evaluatorClosure is identical.
+  S5  The built site modifies exactly data/catalog.json, adds nothing and removes nothing.
+  S6  In the built site's data/catalog.json only $.release.siteBuildId changes, to 662378f0baa8e5de742431db28dee1be150ccd8d0d0ef119e267eee9856bc16b.
+  S7  In the built site's data/catalog.json, $.release.evaluatorIdentity.digest is 572f02f674ac1cdf8b27664a803d4d06ac32ac16833a527f14718a33b249cdff, $.release.buildId is af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492 and $.release.atlasIdentity.digest is 73d7fe69ca43a07abeaaf4003758c9080e60ed0d167549583830852b3c9a3fe3.
+  made   C1 source.changedExactly (covers S1)
+         source: modified [ci/shots/called/events.jsonl, package.json, scripts/atlas-identity.mjs, scripts/evaluator-identity.mjs] added [ci/shots/called/extract-import-closure.shot.json, scripts/import-closure.mjs, scripts/import-closure.test.mjs] removed [none]
+  made   C2 json.changedPathsExactly (covers S2)
+         package.json changed at: $.scripts.test
+  made   C3 json.valueEquals (covers S2)
+         package.json $.scripts.test is "node --test --test-concurrency=2 exp/cooperative/*.test.mjs exp/adversarial/*.test.mjs scripts/evaluator-identity.test.mjs scripts/import-closure.test.mjs scripts/hh-built-imports.test.mjs scripts/capability-lab-built.test.mjs exp/policybench/*.test.mjs exp/atlas/*.test.mjs scripts/capability-ladder-view.test.mjs scripts/site-imports.test.mjs exp/block5/*.test.mjs exp/block5/core/*.test.mjs exp/compression/*.test.mjs exp/kernel/*.test.mjs vendor/hh/src/*.test.mjs"
+  made   C4 ast.onlyImportsChanged (covers S3)
+         scripts/atlas-identity.mjs: 0 other statements identical; imports −[import fs from 'node:fs';] −[import path from 'node:path';] −[import {createHash} from 'node:crypto';] +[import {hashImportClosure,sha256Hex} from './import-closure.mjs';]
+  made   C5 ast.onlyImportsChanged (covers S4)
+         scripts/evaluator-identity.mjs: 1 other statements identical; imports −[import {createHash} from 'node:crypto';] +[import {canonicalLax} from '../exp/kernel/canonical.mjs';] +[import {hashImportClosure,sha256Hex} from './import-closure.mjs';]
+  made   C6 output.changedExactly (covers S5)
+         output: modified [data/catalog.json] added [none] removed [none]
+  made   C7 json.changedPathsExactly (covers S6)
+         data/catalog.json changed at: $.release.siteBuildId
+  made   C8 json.valueEquals (covers S6)
+         data/catalog.json $.release.siteBuildId is "662378f0baa8e5de742431db28dee1be150ccd8d0d0ef119e267eee9856bc16b"
+  made   C9 json.valueEquals (covers S7)
+         data/catalog.json $.release.evaluatorIdentity.digest is "572f02f674ac1cdf8b27664a803d4d06ac32ac16833a527f14718a33b249cdff"
+  made   C10 json.valueEquals (covers S7)
+         data/catalog.json $.release.buildId is "af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492"
+  made   C11 json.valueEquals (covers S7)
+         data/catalog.json $.release.atlasIdentity.digest is "73d7fe69ca43a07abeaaf4003758c9080e60ed0d167549583830852b3c9a3fe3"
+  precheck: the baseline misses at least one clause (true on baseline: C4, C5, C9, C10, C11)
+
+[called-shots] checkpoint/ci/shots/called/kernel-canonical-json.shot.json: graded at 3469ff5766c8, the last commit with this shot and no other shot's change
+[called-shots] building candidate-3469ff5766c8: (cd ../../../../tmp/called-shots-Ow43Ar/tree-3469ff5766c8/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (2.793517ms)
+✔ a source build requires successful results for every declared target and a live site (2.141604ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 159.889138
+Another command holds the client lock: 
+pid=11052
+owner=client
+cwd=/tmp/called-shots-Ow43Ar/tree-3469ff5766c8/checkpoint
+
+Waiting for it to complete...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1621 targets configured).
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+[2 / 2] no actions running
+INFO: Elapsed time: 116.611s, Critical Path: 0.18s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+{"verifiedFiles":839,"siteBuildId":"566150dbbb20a759e23f9dd4d0a1d4a62faaa3d1944438e2aed3f3d9841e2224","pxcubePackages":14}
+MADE  kernel-canonical-json  (shot sha256 35f9109d41fc, called 2026-10-12T09:42:34Z)
+  S1  The top-level const plainObject and the function declarations validateJson and canonicalJson leave exp/block5/core/canonical.mjs and are declared in exp/kernel/canonical.mjs, the text of each identical to the declaration it replaces, not counting an export prefix.
+  S2  In exp/kernel/canonical.mjs every top-level statement other than imports, comments and the declarations of plainObject, validateJson and canonicalJson is unchanged.
+  S3  Source changes are exactly: exp/block5/core/canonical.mjs, exp/block5/core/core.test.mjs, exp/kernel/canonical.mjs, exp/kernel/canonical.test.mjs and ci/shots/called/events.jsonl modified; ci/shots/called/kernel-canonical-json.shot.json added; nothing removed.
+  S4  The built site modifies exactly exp/block5/core/canonical.mjs, exp/block5/core/core.test.mjs, exp/kernel/canonical.mjs, exp/kernel/canonical.test.mjs and data/catalog.json, adds nothing and removes nothing.
+  S5  In the built data/catalog.json exactly one JSON path changes: $.release.siteBuildId.
+  S6  In the built data/catalog.json, $.release.siteBuildId is 566150dbbb20a759e23f9dd4d0a1d4a62faaa3d1944438e2aed3f3d9841e2224.
+  made   C1 ast.moved (covers S1)
+         plainObject: exp/block5/core/canonical.mjs lines 1-5 → exp/kernel/canonical.mjs lines 32-36, text identical (sha256 994976e4fe5b)
+  made   C2 ast.moved (covers S1)
+         validateJson: exp/block5/core/canonical.mjs lines 7-27 → exp/kernel/canonical.mjs lines 38-58, text identical (sha256 9d1928fbacc0)
+  made   C3 ast.moved (covers S1)
+         canonicalJson: exp/block5/core/canonical.mjs lines 29-34 → exp/kernel/canonical.mjs lines 60-65, text identical (sha256 2315a8479de0)
+  made   C4 ast.onlyImportsChanged (covers S2)
+         exp/kernel/canonical.mjs: 1 other statements identical; imports unchanged
+  made   C5 source.changedExactly (covers S3)
+         source: modified [ci/shots/called/events.jsonl, exp/block5/core/canonical.mjs, exp/block5/core/core.test.mjs, exp/kernel/canonical.mjs, exp/kernel/canonical.test.mjs] added [ci/shots/called/kernel-canonical-json.shot.json] removed [none]
+  made   C6 output.changedExactly (covers S4)
+         output: modified [data/catalog.json, exp/block5/core/canonical.mjs, exp/block5/core/core.test.mjs, exp/kernel/canonical.mjs, exp/kernel/canonical.test.mjs] added [none] removed [none]
+  made   C7 json.changedPathsExactly (covers S5)
+         data/catalog.json changed at: $.release.siteBuildId
+  made   C8 json.valueEquals (covers S6)
+         data/catalog.json $.release.siteBuildId is "566150dbbb20a759e23f9dd4d0a1d4a62faaa3d1944438e2aed3f3d9841e2224"
+  precheck: the baseline misses at least one clause (true on baseline: C4)
+
+[called-shots] checkpoint/ci/shots/called/block5-freeze-tree.shot.json: graded at 28a7adbf08b7, the last commit with this shot and no other shot's change
+[called-shots] building candidate-28a7adbf08b7: (cd ../../../../tmp/called-shots-Ow43Ar/tree-28a7adbf08b7/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.196984ms)
+✔ a source build requires successful results for every declared target and a live site (2.187499ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 143.651896
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1621 targets configured).
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 4.182s, Critical Path: 0.14s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+{"verifiedFiles":839,"siteBuildId":"bea7cbf254c56bc9585c16d7d0f0e5eb04878b3721ecd140d3b6418fa0a483d1","pxcubePackages":14}
+MADE  block5-freeze-tree  (shot sha256 1aa2697c1122, called 2026-10-12T09:48:57Z)
+  S1  In exp/block5/core/composed.mjs every top-level statement other than imports, comments and the declaration of deepFreeze is unchanged.
+  S2  In exp/block5/core/pixel-cache.mjs every top-level statement other than imports, comments and the declaration of freezeJson is unchanged.
+  S3  Source changes are exactly: exp/block5/core/composed.mjs, exp/block5/core/pixel-cache.mjs and ci/shots/called/events.jsonl modified; ci/shots/called/block5-freeze-tree.shot.json added; nothing removed.
+  S4  The built site modifies exactly exp/block5/core/composed.mjs, exp/block5/core/pixel-cache.mjs and data/catalog.json, adds nothing and removes nothing.
+  S5  In the built data/catalog.json exactly one JSON path changes: $.release.siteBuildId.
+  S6  In the built data/catalog.json, $.release.siteBuildId is bea7cbf254c56bc9585c16d7d0f0e5eb04878b3721ecd140d3b6418fa0a483d1.
+  made   C1 ast.onlyImportsChanged (covers S1)
+         exp/block5/core/composed.mjs: 10 other statements identical; imports +[import { freezeTree as deepFreeze } from '../../kernel/freeze.mjs';]
+  made   C2 ast.onlyImportsChanged (covers S2)
+         exp/block5/core/pixel-cache.mjs: 1 other statements identical; imports +[import { freezeTree as freezeJson } from '../../kernel/freeze.mjs';]
+  made   C3 source.changedExactly (covers S3)
+         source: modified [ci/shots/called/events.jsonl, exp/block5/core/composed.mjs, exp/block5/core/pixel-cache.mjs] added [ci/shots/called/block5-freeze-tree.shot.json] removed [none]
+  made   C4 output.changedExactly (covers S4)
+         output: modified [data/catalog.json, exp/block5/core/composed.mjs, exp/block5/core/pixel-cache.mjs] added [none] removed [none]
+  made   C5 json.changedPathsExactly (covers S5)
+         data/catalog.json changed at: $.release.siteBuildId
+  made   C6 json.valueEquals (covers S6)
+         data/catalog.json $.release.siteBuildId is "bea7cbf254c56bc9585c16d7d0f0e5eb04878b3721ecd140d3b6418fa0a483d1"
+  precheck: the baseline misses at least one clause (true on baseline: C1, C2)
+
+[called-shots] checkpoint/ci/shots/called/kernel-ledger.shot.json: graded at 71c2032b9e17, the last commit with this shot and no other shot's change
+[called-shots] building base-6a0d88e5f645: (cd ../../../../tmp/called-shots-Ow43Ar/tree-6a0d88e5f645/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.577966ms)
+✔ a source build requires successful results for every declared target and a live site (1.687457ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 169.681523
+Another command holds the client lock: 
+pid=13841
+owner=client
+cwd=/tmp/called-shots-Ow43Ar/tree-6a0d88e5f645/checkpoint
+
+Waiting for it to complete...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1623 targets configured).
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 116.272s, Critical Path: 0.11s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+{"verifiedFiles":839,"siteBuildId":"77d460a9ff1195dee17d9e8ab8029ffe2b2b2cedbef5f3abddf3116989c46124","pxcubePackages":14}
+[called-shots] building candidate-71c2032b9e17: (cd ../../../../tmp/called-shots-Ow43Ar/tree-71c2032b9e17/checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.822657ms)
+✔ a source build requires successful results for every declared target and a live site (2.229772ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 175.19768
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1623 targets configured).
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 3.431s, Critical Path: 0.10s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+{"verifiedFiles":839,"siteBuildId":"3e49053f58be918be95b037931797190c1a368061fe4ddbcd2f763efd1af863d","pxcubePackages":14}
+MADE  kernel-ledger  (shot sha256 5c03e45d4606, called 2026-10-12T10:57:55Z)
+  S1  Source changes are exactly: exp/kernel/README.md and ci/shots/called/events.jsonl modified; ci/controls/README.md, ci/controls/fetch-trusted.sh, ci/controls/harness.mjs, ci/controls/results.json and ci/shots/called/kernel-ledger.shot.json added; nothing removed.
+  S2  The built site changes exactly exp/kernel/README.md and data/catalog.json, and adds or removes nothing.
+  S3  In the built site's data/catalog.json, only $.release.siteBuildId changes, and it is 3e49053f58be918be95b037931797190c1a368061fe4ddbcd2f763efd1af863d.
+  made   C1 source.changedExactly (covers S1)
+         source: modified [ci/shots/called/events.jsonl, exp/kernel/README.md] added [ci/controls/README.md, ci/controls/fetch-trusted.sh, ci/controls/harness.mjs, ci/controls/results.json, ci/shots/called/kernel-ledger.shot.json] removed [none]
+  made   C2 output.changedExactly (covers S2)
+         output: modified [data/catalog.json, exp/kernel/README.md] added [none] removed [none]
+  made   C3 json.changedPathsExactly (covers S3)
+         data/catalog.json changed at: $.release.siteBuildId
+  made   C4 json.valueEquals (covers S3)
+         data/catalog.json $.release.siteBuildId is "3e49053f58be918be95b037931797190c1a368061fe4ddbcd2f763efd1af863d"
+  precheck: the baseline misses at least one clause (true on baseline: none)
+
+[called-shots] building candidate-working-tree: (cd checkpoint && PAGEROUTER_BAZEL_OUTPUT_ROOT="$CALLED_SHOTS_SCRATCH/bazel" bash ci/bazel/run.sh)
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 533ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.991589ms)
+✔ a source build requires successful results for every declared target and a live site (1.698388ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 161.973111
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1623 targets configured).
+[1 / 2] Building and verifying PageRouter from source; 0s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 11s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 41s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 101s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 839 files; all 14 PxCube packages succeeded; fresh output siteBuildId 3e49053f58be918be95b037931797190c1a368061fe4ddbcd2f763efd1af863d
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 128.760s, Critical Path: 123.38s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":839,"siteBuildId":"3e49053f58be918be95b037931797190c1a368061fe4ddbcd2f763efd1af863d","pxcubePackages":14}
+MADE  annotation-limits  (shot sha256 9478a8667dd1, called 2026-10-12T11:33:05Z)
+  S1  Source changes are exactly: actions/called-shot/README.md, actions/called-shot/bin/called-shots.mjs, actions/called-shot/test/cli.test.mjs and checkpoint/ci/shots/called/events.jsonl modified; checkpoint/ci/shots/called/annotation-limits.shot.json added; nothing removed.
+  S2  In actions/called-shot/bin/called-shots.mjs, no top-level statement other than imports changes, except the function githubOutputs.
+  S3  The built site is byte-identical to the baseline.
+  made   C1 source.changedExactly (covers S1)
+         source: modified [actions/called-shot/README.md, actions/called-shot/bin/called-shots.mjs, actions/called-shot/test/cli.test.mjs, checkpoint/ci/shots/called/events.jsonl] added [checkpoint/ci/shots/called/annotation-limits.shot.json] removed [none]
+  made   C2 ast.onlyImportsChanged (covers S2)
+         actions/called-shot/bin/called-shots.mjs: 14 other statements identical; imports unchanged
+  made   C3 output.changedExactly (covers S3)
+         output: modified [none] added [none] removed [none]
+  precheck: the baseline misses at least one clause (true on baseline: C2, C3)
+
+
+FRESH CANONICAL PREWARM PROVENANCE
+{
+  "schema": "pagerouter-historical-prewarm@1",
+  "purpose": "Bounded two-worker canonical immutable-commit prewarming. The unmodified action still grades every shot; last detached original2a build is an extra cold proof because the action uses its working-tree path for that final HEAD.",
+  "maxParallelBuilds": 2,
+  "results": [
+    {
+      "commit": "250c3d84d41b4e6a9d1e3c99799ce24fdd081077",
+      "side": "candidate-250c3d84d41b",
+      "exitCode": 0,
+      "seconds": 127.043,
+      "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-250c3d84d41b.txt",
+      "reusedByAction": true
+    },
+    {
+      "commit": "e6e1c0bcf914b3e0baa0d05b3ec94cf86e074254",
+      "side": "candidate-e6e1c0bcf914",
+      "exitCode": 0,
+      "seconds": 125.352,
+      "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-e6e1c0bcf914.txt",
+      "reusedByAction": true
+    },
+    {
+      "commit": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9",
+      "side": "candidate-9e52a0c7cf09",
+      "exitCode": 0,
+      "seconds": 118.392,
+      "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-9e52a0c7cf09.txt",
+      "reusedByAction": true
+    },
+    {
+      "commit": "f868426df049993d8b7d41faf9b094f5872ee443",
+      "side": "candidate-f868426df049",
+      "exitCode": 0,
+      "seconds": 123.873,
+      "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-f868426df049.txt",
+      "reusedByAction": true
+    },
+    {
+      "commit": "f4b0db4c183d9ad4ebb1a3a09ad48c42a1025901",
+      "side": "base-f4b0db4c183d",
+      "exitCode": 0,
+      "seconds": 132.25,
+      "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-base-f4b0db4c183d.txt",
+      "reusedByAction": true
+    },
+    {
+      "commit": "0aa56a04632d2076c43ab53688bffc167bdb38ec",
+      "side": "candidate-0aa56a04632d",
+      "exitCode": 0,
+      "seconds": 134.241,
+      "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-0aa56a04632d.txt",
+      "reusedByAction": true
+    },
+    {
+      "commit": "c8b1b021a8e2485c695dda1ad4bb95ca120dfbc3",
+      "side": "candidate-c8b1b021a8e2",
+      "exitCode": 0,
+      "seconds": 133.899,
+      "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-c8b1b021a8e2.txt",
+      "reusedByAction": true
+    },
+    {
+      "commit": "57a98400706e0046b12a025cec6db9b764efd2ce",
+      "side": "candidate-57a98400706e",
+      "exitCode": 0,
+      "seconds": 136.248,
+      "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-57a98400706e.txt",
+      "reusedByAction": true
+    },
+    {
+      "commit": "3469ff5766c8d58a2d9a50adb6c0a75d102e0efc",
+      "side": "candidate-3469ff5766c8",
+      "exitCode": 0,
+      "seconds": 136.62,
+      "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-3469ff5766c8.txt",
+      "reusedByAction": true
+    },
+    {
+      "commit": "28a7adbf08b7e428900764e739d967826546b056",
+      "side": "candidate-28a7adbf08b7",
+      "exitCode": 0,
+      "seconds": 119.036,
+      "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-28a7adbf08b7.txt",
+      "reusedByAction": true
+    },
+    {
+      "commit": "6a0d88e5f645399834cff7cb82e49aed6707b213",
+      "side": "base-6a0d88e5f645",
+      "exitCode": 0,
+      "seconds": 138.125,
+      "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-base-6a0d88e5f645.txt",
+      "reusedByAction": true
+    },
+    {
+      "commit": "71c2032b9e1724e917c0b997e772863c1d013641",
+      "side": "candidate-71c2032b9e17",
+      "exitCode": 0,
+      "seconds": 135.984,
+      "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-71c2032b9e17.txt",
+      "reusedByAction": true
+    },
+    {
+      "commit": "2a934496f5c78a246509c9337435d4e825fe0d74",
+      "side": "candidate-2a934496f5c7",
+      "exitCode": 0,
+      "seconds": 146.411,
+      "log": "/workspace/scratch/ad1424973ce5/integration-logs/historical-prewarm-candidate-2a934496f5c7.txt",
+      "reusedByAction": false
+    }
+  ]
+}
+
+CANONICAL LOG 250c3d84d41b4e6a9d1e3c99799ce24fdd081077 candidate-250c3d84d41b
+Exact commit: 250c3d84d41b4e6a9d1e3c99799ce24fdd081077
+Working directory: /tmp/called-shots-Ow43Ar/tree-250c3d84d41b/checkpoint
+Command: BAZEL=/workspace/scratch/ad1424973ce5/integration-logs/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/tmp/called-shots-Ow43Ar/build-candidate-250c3d84d41b/bazel bash ci/bazel/run.sh
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 644ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.163339ms)
+✔ a source build requires successful results for every declared target and a live site (1.610204ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 558.5855
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1613 targets configured).
+[1 / 2] checking cached actions
+[1 / 2] Building and verifying PageRouter from source; 1s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 10s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 40s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 100s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 833 files; all 14 PxCube packages succeeded; fresh output siteBuildId b7aeab1b834deb1b0446e8974dff7a9c97c8b5ad877f4c1a63e22f2fab8eb0f1
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 122.328s, Critical Path: 115.07s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":833,"siteBuildId":"b7aeab1b834deb1b0446e8974dff7a9c97c8b5ad877f4c1a63e22f2fab8eb0f1","pxcubePackages":14}
+
+Exit code: 0
+
+CANONICAL LOG e6e1c0bcf914b3e0baa0d05b3ec94cf86e074254 candidate-e6e1c0bcf914
+Exact commit: e6e1c0bcf914b3e0baa0d05b3ec94cf86e074254
+Working directory: /tmp/called-shots-Ow43Ar/tree-e6e1c0bcf914/checkpoint
+Command: BAZEL=/workspace/scratch/ad1424973ce5/integration-logs/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/tmp/called-shots-Ow43Ar/build-candidate-e6e1c0bcf914/bazel bash ci/bazel/run.sh
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 736ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.605853ms)
+✔ a source build requires successful results for every declared target and a live site (0.898467ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 717.857771
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1613 targets configured).
+[1 / 2] [Prepa] Building and verifying PageRouter from source
+[1 / 2] Building and verifying PageRouter from source; 1s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 10s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 40s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 100s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 833 files; all 14 PxCube packages succeeded; fresh output siteBuildId 67f21723168a9d329fcf5a1c3bd1d0248982f6a87c03b192c888a1a7f895a27b
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 119.653s, Critical Path: 112.06s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":833,"siteBuildId":"67f21723168a9d329fcf5a1c3bd1d0248982f6a87c03b192c888a1a7f895a27b","pxcubePackages":14}
+
+Exit code: 0
+
+CANONICAL LOG 9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9 candidate-9e52a0c7cf09
+Exact commit: 9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9
+Working directory: /tmp/called-shots-Ow43Ar/tree-9e52a0c7cf09/checkpoint
+Command: BAZEL=/workspace/scratch/ad1424973ce5/integration-logs/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/tmp/called-shots-Ow43Ar/build-candidate-9e52a0c7cf09/bazel bash ci/bazel/run.sh
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 363ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.077455ms)
+✔ a source build requires successful results for every declared target and a live site (1.648739ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 134.264735
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1613 targets configured).
+[1 / 2] [Prepa] Building and verifying PageRouter from source
+[1 / 2] Building and verifying PageRouter from source; 1s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 10s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 40s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 100s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 831 files; all 14 PxCube packages succeeded; fresh output siteBuildId 117749fa614b7cda9b7443da0afe449220f0baadce74b10eff9aacf6074ed9ea
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 115.303s, Critical Path: 109.88s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":831,"siteBuildId":"117749fa614b7cda9b7443da0afe449220f0baadce74b10eff9aacf6074ed9ea","pxcubePackages":14}
+
+Exit code: 0
+
+CANONICAL LOG f868426df049993d8b7d41faf9b094f5872ee443 candidate-f868426df049
+Exact commit: f868426df049993d8b7d41faf9b094f5872ee443
+Working directory: /tmp/called-shots-Ow43Ar/tree-f868426df049/checkpoint
+Command: BAZEL=/workspace/scratch/ad1424973ce5/integration-logs/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/tmp/called-shots-Ow43Ar/build-candidate-f868426df049/bazel bash ci/bazel/run.sh
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 1s
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.434012ms)
+✔ a source build requires successful results for every declared target and a live site (2.405259ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 257.121458
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1613 targets configured).
+[1 / 2] Building and verifying PageRouter from source; 0s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 11s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 41s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 101s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 833 files; all 14 PxCube packages succeeded; fresh output siteBuildId 5e459a68d9271220c0a4776c255e18a5054e233a10cb9b76164812043b97bc3d
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+[2 / 2] no actions running
+INFO: Elapsed time: 118.503s, Critical Path: 113.08s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":833,"siteBuildId":"5e459a68d9271220c0a4776c255e18a5054e233a10cb9b76164812043b97bc3d","pxcubePackages":14}
+
+Exit code: 0
+
+CANONICAL LOG f4b0db4c183d9ad4ebb1a3a09ad48c42a1025901 base-f4b0db4c183d
+Exact commit: f4b0db4c183d9ad4ebb1a3a09ad48c42a1025901
+Working directory: /tmp/called-shots-Ow43Ar/tree-f4b0db4c183d/checkpoint
+Command: BAZEL=/workspace/scratch/ad1424973ce5/integration-logs/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/tmp/called-shots-Ow43Ar/build-base-f4b0db4c183d/bazel bash ci/bazel/run.sh
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 676ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.135966ms)
+✔ a source build requires successful results for every declared target and a live site (1.623793ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 146.209643
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1621 targets configured).
+[1 / 1] no actions running
+[1 / 2] Building and verifying PageRouter from source; 0s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 10s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 40s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 100s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 839 files; all 14 PxCube packages succeeded; fresh output siteBuildId 4aec53f86fa213ecaedc7243ea46b576461839dfdf60df0f3dc71834bcfb9467
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 128.592s, Critical Path: 123.04s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":839,"siteBuildId":"4aec53f86fa213ecaedc7243ea46b576461839dfdf60df0f3dc71834bcfb9467","pxcubePackages":14}
+
+Exit code: 0
+
+CANONICAL LOG 0aa56a04632d2076c43ab53688bffc167bdb38ec candidate-0aa56a04632d
+Exact commit: 0aa56a04632d2076c43ab53688bffc167bdb38ec
+Working directory: /tmp/called-shots-Ow43Ar/tree-0aa56a04632d/checkpoint
+Command: BAZEL=/workspace/scratch/ad1424973ce5/integration-logs/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/tmp/called-shots-Ow43Ar/build-candidate-0aa56a04632d/bazel bash ci/bazel/run.sh
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 1s
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.383617ms)
+✔ a source build requires successful results for every declared target and a live site (1.213242ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 152.794187
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1621 targets configured).
+[1 / 2] [Prepa] Building and verifying PageRouter from source
+[1 / 2] Building and verifying PageRouter from source; 1s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 10s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 40s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 100s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 839 files; all 14 PxCube packages succeeded; fresh output siteBuildId 4aec53f86fa213ecaedc7243ea46b576461839dfdf60df0f3dc71834bcfb9467
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 130.336s, Critical Path: 124.55s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":839,"siteBuildId":"4aec53f86fa213ecaedc7243ea46b576461839dfdf60df0f3dc71834bcfb9467","pxcubePackages":14}
+
+Exit code: 0
+
+CANONICAL LOG c8b1b021a8e2485c695dda1ad4bb95ca120dfbc3 candidate-c8b1b021a8e2
+Exact commit: c8b1b021a8e2485c695dda1ad4bb95ca120dfbc3
+Working directory: /tmp/called-shots-Ow43Ar/tree-c8b1b021a8e2/checkpoint
+Command: BAZEL=/workspace/scratch/ad1424973ce5/integration-logs/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/tmp/called-shots-Ow43Ar/build-candidate-c8b1b021a8e2/bazel bash ci/bazel/run.sh
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 677ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.140105ms)
+✔ a source build requires successful results for every declared target and a live site (0.997993ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 154.666913
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1621 targets configured).
+[1 / 2] Building and verifying PageRouter from source; 1s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 11s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 41s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 101s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 839 files; all 14 PxCube packages succeeded; fresh output siteBuildId 4aec53f86fa213ecaedc7243ea46b576461839dfdf60df0f3dc71834bcfb9467
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 130.903s, Critical Path: 125.50s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":839,"siteBuildId":"4aec53f86fa213ecaedc7243ea46b576461839dfdf60df0f3dc71834bcfb9467","pxcubePackages":14}
+
+Exit code: 0
+
+CANONICAL LOG 57a98400706e0046b12a025cec6db9b764efd2ce candidate-57a98400706e
+Exact commit: 57a98400706e0046b12a025cec6db9b764efd2ce
+Working directory: /tmp/called-shots-Ow43Ar/tree-57a98400706e/checkpoint
+Command: BAZEL=/workspace/scratch/ad1424973ce5/integration-logs/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/tmp/called-shots-Ow43Ar/build-candidate-57a98400706e/bazel bash ci/bazel/run.sh
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 844ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.577023ms)
+✔ a source build requires successful results for every declared target and a live site (1.583676ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 233.604309
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1623 targets configured).
+[1 / 2] [Prepa] Building and verifying PageRouter from source
+[1 / 2] Building and verifying PageRouter from source; 1s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 10s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 40s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 100s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 839 files; all 14 PxCube packages succeeded; fresh output siteBuildId 662378f0baa8e5de742431db28dee1be150ccd8d0d0ef119e267eee9856bc16b
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 132.082s, Critical Path: 126.25s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":839,"siteBuildId":"662378f0baa8e5de742431db28dee1be150ccd8d0d0ef119e267eee9856bc16b","pxcubePackages":14}
+
+Exit code: 0
+
+CANONICAL LOG 3469ff5766c8d58a2d9a50adb6c0a75d102e0efc candidate-3469ff5766c8
+Exact commit: 3469ff5766c8d58a2d9a50adb6c0a75d102e0efc
+Working directory: /tmp/called-shots-Ow43Ar/tree-3469ff5766c8/checkpoint
+Command: BAZEL=/workspace/scratch/ad1424973ce5/integration-logs/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/tmp/called-shots-Ow43Ar/build-candidate-3469ff5766c8/bazel bash ci/bazel/run.sh
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 503ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.486632ms)
+✔ a source build requires successful results for every declared target and a live site (0.946047ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 183.886996
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1621 targets configured).
+[1 / 2] Building and verifying PageRouter from source; 0s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 11s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 41s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 101s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 839 files; all 14 PxCube packages succeeded; fresh output siteBuildId 566150dbbb20a759e23f9dd4d0a1d4a62faaa3d1944438e2aed3f3d9841e2224
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 132.389s, Critical Path: 126.49s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":839,"siteBuildId":"566150dbbb20a759e23f9dd4d0a1d4a62faaa3d1944438e2aed3f3d9841e2224","pxcubePackages":14}
+
+Exit code: 0
+
+CANONICAL LOG 28a7adbf08b7e428900764e739d967826546b056 candidate-28a7adbf08b7
+Exact commit: 28a7adbf08b7e428900764e739d967826546b056
+Working directory: /tmp/called-shots-Ow43Ar/tree-28a7adbf08b7/checkpoint
+Command: BAZEL=/workspace/scratch/ad1424973ce5/integration-logs/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/tmp/called-shots-Ow43Ar/build-candidate-28a7adbf08b7/bazel bash ci/bazel/run.sh
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 746ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.26567ms)
+✔ a source build requires successful results for every declared target and a live site (1.133573ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 167.718538
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1621 targets configured).
+[1 / 2] Building and verifying PageRouter from source; 0s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 11s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 41s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 101s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 839 files; all 14 PxCube packages succeeded; fresh output siteBuildId bea7cbf254c56bc9585c16d7d0f0e5eb04878b3721ecd140d3b6418fa0a483d1
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 114.952s, Critical Path: 108.77s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":839,"siteBuildId":"bea7cbf254c56bc9585c16d7d0f0e5eb04878b3721ecd140d3b6418fa0a483d1","pxcubePackages":14}
+
+Exit code: 0
+
+CANONICAL LOG 6a0d88e5f645399834cff7cb82e49aed6707b213 base-6a0d88e5f645
+Exact commit: 6a0d88e5f645399834cff7cb82e49aed6707b213
+Working directory: /tmp/called-shots-Ow43Ar/tree-6a0d88e5f645/checkpoint
+Command: BAZEL=/workspace/scratch/ad1424973ce5/integration-logs/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/tmp/called-shots-Ow43Ar/build-base-6a0d88e5f645/bazel bash ci/bazel/run.sh
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 502ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.564058ms)
+✔ a source build requires successful results for every declared target and a live site (1.03889ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 123.359613
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1623 targets configured).
+[1 / 2] [Prepa] Building and verifying PageRouter from source
+[1 / 2] Building and verifying PageRouter from source; 1s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 10s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 40s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 101s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 839 files; all 14 PxCube packages succeeded; fresh output siteBuildId 77d460a9ff1195dee17d9e8ab8029ffe2b2b2cedbef5f3abddf3116989c46124
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 135.156s, Critical Path: 130.40s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":839,"siteBuildId":"77d460a9ff1195dee17d9e8ab8029ffe2b2b2cedbef5f3abddf3116989c46124","pxcubePackages":14}
+
+Exit code: 0
+
+CANONICAL LOG 71c2032b9e1724e917c0b997e772863c1d013641 candidate-71c2032b9e17
+Exact commit: 71c2032b9e1724e917c0b997e772863c1d013641
+Working directory: /tmp/called-shots-Ow43Ar/tree-71c2032b9e17/checkpoint
+Command: BAZEL=/workspace/scratch/ad1424973ce5/integration-logs/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/tmp/called-shots-Ow43Ar/build-candidate-71c2032b9e17/bazel bash ci/bazel/run.sh
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 857ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.745411ms)
+✔ a source build requires successful results for every declared target and a live site (1.223453ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 155.941168
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1623 targets configured).
+[1 / 2] [Prepa] Building and verifying PageRouter from source
+[1 / 2] Building and verifying PageRouter from source; 1s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 10s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 40s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 100s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 839 files; all 14 PxCube packages succeeded; fresh output siteBuildId 3e49053f58be918be95b037931797190c1a368061fe4ddbcd2f763efd1af863d
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 131.454s, Critical Path: 124.97s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":839,"siteBuildId":"3e49053f58be918be95b037931797190c1a368061fe4ddbcd2f763efd1af863d","pxcubePackages":14}
+
+Exit code: 0
+
+CANONICAL LOG 2a934496f5c78a246509c9337435d4e825fe0d74 candidate-2a934496f5c7
+Exact commit: 2a934496f5c78a246509c9337435d4e825fe0d74
+Working directory: /tmp/called-shots-Ow43Ar/tree-2a934496f5c7/checkpoint
+Command: BAZEL=/workspace/scratch/ad1424973ce5/integration-logs/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/tmp/called-shots-Ow43Ar/build-candidate-2a934496f5c7/bazel bash ci/bazel/run.sh
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 503ms
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.55868ms)
+✔ a source build requires successful results for every declared target and a live site (1.219841ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 162.092313
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1623 targets configured).
+[1 / 2] Building and verifying PageRouter from source; 0s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 11s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 41s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 101s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 839 files; all 14 PxCube packages succeeded; fresh output siteBuildId 3e49053f58be918be95b037931797190c1a368061fe4ddbcd2f763efd1af863d
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 142.646s, Critical Path: 136.45s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":839,"siteBuildId":"3e49053f58be918be95b037931797190c1a368061fe4ddbcd2f763efd1af863d","pxcubePackages":14}
+
+Exit code: 0

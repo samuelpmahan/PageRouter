@@ -1,0 +1,51 @@
+{
+  "shot": "portable-action",
+  "shotSha256": "09aedaafd10e4a49c56e508e5beccbe8ad32415eb00d9a90e30cadd728082c71",
+  "sourceRoot": ".",
+  "problems": [],
+  "called": {
+    "at": "2026-10-12T07:59:43Z"
+  },
+  "precheck": {
+    "pass": true,
+    "clausesTrueOnBaseline": [
+      "C2"
+    ]
+  },
+  "results": [
+    {
+      "id": "C1",
+      "kind": "source.changedExactly",
+      "covers": [
+        "S1"
+      ],
+      "pass": true,
+      "evidence": [
+        "source: modified [.github/workflows/deploy-pages.yml, checkpoint/.github/workflows/deploy-pages.yml, checkpoint/ci/shots/README.md, checkpoint/ci/shots/called/events.jsonl] added [actions/called-shot/README.md, actions/called-shot/action.yml, actions/called-shot/bin/called-shots.mjs, actions/called-shot/crosscheck/prompt.md, actions/called-shot/lib/build.mjs, actions/called-shot/lib/canonical.mjs, actions/called-shot/lib/config.mjs, actions/called-shot/lib/crosscheck.mjs, actions/called-shot/lib/crudlint.mjs, actions/called-shot/lib/grade.mjs, actions/called-shot/package-lock.json, actions/called-shot/package.json, actions/called-shot/templates/called-shots.yml, actions/called-shot/test/cli.test.mjs, actions/called-shot/test/crosscheck.test.mjs, actions/called-shot/test/grade.test.mjs, actions/called-shot/vendor/pxc.mjs, called-shots.json, checkpoint/ci/shots/called/portable-action.shot.json] removed [checkpoint/ci/shots/crosscheck.mjs, checkpoint/ci/shots/crosscheck/prompt.md, checkpoint/ci/shots/crudlint.mjs, checkpoint/ci/shots/grade.mjs, checkpoint/ci/shots/package-lock.json, checkpoint/ci/shots/package.json, checkpoint/ci/shots/shoot.sh, checkpoint/ci/shots/test/crosscheck.test.mjs, checkpoint/ci/shots/test/grade.test.mjs]"
+      ]
+    },
+    {
+      "id": "C2",
+      "kind": "output.changedExactly",
+      "covers": [
+        "S2"
+      ],
+      "pass": true,
+      "evidence": [
+        "output: modified [none] added [none] removed [none]"
+      ]
+    },
+    {
+      "id": "C3",
+      "kind": "json.valueEquals",
+      "covers": [
+        "S3"
+      ],
+      "pass": false,
+      "evidence": [
+        "data/catalog.json $.release.siteBuildId is \"8b278a8e5b89f887ffc096f27663ac8f95d60708dee594fe80a58fe042c66d9d\", called \"7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1\""
+      ]
+    }
+  ],
+  "made": false
+}

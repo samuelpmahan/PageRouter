@@ -1,0 +1,27 @@
+
+canonical JSON: control canonicalize 5.1.0 passes its own tests (suite 86/86, rfc8785 6/6)
+  exp/kernel/canonical.mjs canonicalLax                            suite 50/86, rfc8785 6/6
+  exp/kernel/canonical.mjs canonicalJson                           suite 46/86, rfc8785 6/6
+  exp/atlas/calculations.mjs canonical (kept)                      suite 46/86, rfc8785 6/6
+  exp/block5/core/grid-engine.mjs canonical (kept, external copy)  suite 50/86, rfc8785 6/6
+  exp/compression/canonical.mjs canonical (kept)                   suite 43/86, rfc8785 6/6
+  behavior classes: 4
+
+HTML escaping: control escape-html 1.0.3 passes its own tests (suite 30/30)
+  exp/kernel/html.mjs esc                                          suite 28/30
+  src/session-repl.mjs escape (frozen)                             suite 28/30
+  behavior classes: 1
+
+deep equality: control fast-deep-equal 3.1.3 passes its own tests (suite 110/110)
+  exp/kernel/equal-json.mjs equalJson                              suite 96/110
+  behavior classes: 1
+
+deep freeze: control deep-freeze 0.0.1 passes its own tests (suite 2/2)
+  exp/kernel/freeze.mjs freezeTree                                 suite 0/2
+  exp/kernel/freeze.mjs freeze                                     suite 0/2
+  exp/kernel/freeze.mjs freezeTreeParentFirst                      suite 0/2
+  behavior classes: 1
+
+SHA-256: control node:crypto passes its own tests (suite 4/4)
+  scripts/import-closure.mjs sha256Hex                             suite 4/4
+  behavior classes: 1
