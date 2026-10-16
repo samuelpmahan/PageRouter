@@ -1,12 +1,9 @@
 // Same exact-byte compiled snapshot contract in Node and browser. No executable input.
+import {canonicalLax as canonical} from '../exp/kernel/canonical.mjs';
+export {canonical};
 const enc = new TextEncoder();
 const DIGEST = /^[a-f0-9]{64}$/;
 const own = (o,k) => Object.prototype.hasOwnProperty.call(o,k);
-export function canonical(value) {
-  if (value === null || typeof value !== 'object') return JSON.stringify(value);
-  if (Array.isArray(value)) return `[${value.map(canonical).join(',')}]`;
-  return `{${Object.keys(value).sort().map(k=>`${JSON.stringify(k)}:${canonical(value[k])}`).join(',')}}`;
-}
 export async function hash(value) {
   const bytes = typeof value === 'string' ? enc.encode(value) : value;
   return [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(b=>b.toString(16).padStart(2,'0')).join('');

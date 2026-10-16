@@ -1,12 +1,5 @@
 import { canonicalJson, validateJson } from './canonical.mjs';
-
-function freezeJson(value) {
-  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
-    for (const child of Object.values(value)) freezeJson(child);
-    Object.freeze(value);
-  }
-  return value;
-}
+import { freezeTree as freezeJson } from '../../kernel/freeze.mjs';
 
 export function createPixelCache() {
   const scopes = new Map();

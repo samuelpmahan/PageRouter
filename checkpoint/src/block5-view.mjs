@@ -12,8 +12,8 @@ import {
   selectComposedCalculation,
 } from '../exp/block5/core/index.mjs';
 import {buildEventGraph, compressStream, decompress, discoverCalculations, canonical as canonicalCompression} from '../exp/compression/index.mjs';
+import {esc} from '../exp/kernel/html.mjs';
 
-const esc = value => String(value ?? '').replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
 const json = value => JSON.stringify(value, null, 2);
 const clone = value => structuredClone(value);
 const directions = ['U','D','L','R'];

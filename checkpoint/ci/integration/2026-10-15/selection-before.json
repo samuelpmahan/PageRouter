@@ -1,0 +1,217 @@
+{
+  "method": "Execute the exact selector source from each named stage commit. HEAD references are resolved to that immutable commit; no production mutation.",
+  "cases": {
+    "aggregateMainDiagnostic": {
+      "base": "3723599bb3e1b6c6c44cc5e3385ed2d8fa57e34b",
+      "head": "78d9cafe170e61318914dad1a7d2d3aad158577a",
+      "shots": [
+        {
+          "file": "checkpoint/ci/shots/called/derive-site-copy-list.shot.json",
+          "at": "d291a64433a2fb77b2e415a1b240edfb25ad5aea"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-safePath.shot.json",
+          "at": "d291a64433a2fb77b2e415a1b240edfb25ad5aea"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/grader-in-ci.shot.json",
+          "at": "d291a64433a2fb77b2e415a1b240edfb25ad5aea"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/crosscheck-pool.shot.json",
+          "at": "4fe57d24abd4b7672403b9197a6f3aeed026e4e7"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/baseline-records.shot.json",
+          "at": "3a492fa02f6caa0eb6ccd7b6e0eb9aab840445d6"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/portable-action.shot.json",
+          "at": "939909da6e258e03788491431a5963b6a5c51519"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/verdict-annotations.shot.json",
+          "at": "a0cd8690bdf35d63bfa84a0e059ba95420bfa60a"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/per-shot-candidate.shot.json",
+          "at": "37fbece3db61195cebde8b7786496d82d825b529"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/lane-merges.shot.json",
+          "at": "f550ec1af864f8470bb51c9b20765813b8593abc"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-dir.shot.json",
+          "at": "ee4b496f51b26c5932498e5c5edb3c605cdac1f4"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-equalJson.shot.json",
+          "at": "59fdaa22644d4774c7def08390887ee2f77f62f2"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-freeze.shot.json",
+          "at": "250c3d84d41b4e6a9d1e3c99799ce24fdd081077"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-html-esc.shot.json",
+          "at": "e6e1c0bcf914b3e0baa0d05b3ec94cf86e074254"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-flag-v2.shot.json",
+          "at": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-flag.shot.json",
+          "at": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-canonical-lax.shot.json",
+          "at": "f868426df049993d8b7d41faf9b094f5872ee443"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/grader-const-declarations.shot.json",
+          "at": "0aa56a04632d2076c43ab53688bffc167bdb38ec"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/superseded-shots.shot.json",
+          "at": "c8b1b021a8e2485c695dda1ad4bb95ca120dfbc3"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-import-closure.shot.json",
+          "at": "57a98400706e0046b12a025cec6db9b764efd2ce"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-canonical-json.shot.json",
+          "at": "3469ff5766c8d58a2d9a50adb6c0a75d102e0efc"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/block5-freeze-tree.shot.json",
+          "at": "28a7adbf08b7e428900764e739d967826546b056"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-ledger.shot.json",
+          "at": "71c2032b9e1724e917c0b997e772863c1d013641"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/annotation-limits.shot.json",
+          "at": "2a934496f5c78a246509c9337435d4e825fe0d74"
+        }
+      ],
+      "selectorSha256": "125d1caae7daaa4fc258847f3ddc08d4be63e84c36bdbcc1fd07e7e3b59f9fd5"
+    },
+    "actualStackPR4": {
+      "base": "15869c063e0c2c6f824984cdc426cec0095dc424",
+      "head": "8a327a13fd02a6ae7702cf8103f8cbc6779ab544",
+      "selectorSha256": "e4f0acbb80775f1c04f91b8910d3860521d9fb6d69e971ebfcf45504399ec3c0",
+      "shots": [
+        {
+          "file": "checkpoint/ci/shots/called/portable-action.shot.json",
+          "at": "939909da6e258e03788491431a5963b6a5c51519"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/verdict-annotations.shot.json",
+          "at": "a0cd8690bdf35d63bfa84a0e059ba95420bfa60a"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/per-shot-candidate.shot.json",
+          "at": null
+        }
+      ]
+    },
+    "actualStackPR5": {
+      "base": "8a327a13fd02a6ae7702cf8103f8cbc6779ab544",
+      "head": "78d9cafe170e61318914dad1a7d2d3aad158577a",
+      "shots": [
+        {
+          "file": "checkpoint/ci/shots/called/lane-merges.shot.json",
+          "at": "f550ec1af864f8470bb51c9b20765813b8593abc"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-dir.shot.json",
+          "at": "ee4b496f51b26c5932498e5c5edb3c605cdac1f4"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-equalJson.shot.json",
+          "at": "59fdaa22644d4774c7def08390887ee2f77f62f2"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-freeze.shot.json",
+          "at": "250c3d84d41b4e6a9d1e3c99799ce24fdd081077"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-html-esc.shot.json",
+          "at": "e6e1c0bcf914b3e0baa0d05b3ec94cf86e074254"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-flag-v2.shot.json",
+          "at": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-flag.shot.json",
+          "at": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-canonical-lax.shot.json",
+          "at": "f868426df049993d8b7d41faf9b094f5872ee443"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/grader-const-declarations.shot.json",
+          "at": "0aa56a04632d2076c43ab53688bffc167bdb38ec"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/superseded-shots.shot.json",
+          "at": "c8b1b021a8e2485c695dda1ad4bb95ca120dfbc3"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-import-closure.shot.json",
+          "at": "57a98400706e0046b12a025cec6db9b764efd2ce"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-canonical-json.shot.json",
+          "at": "3469ff5766c8d58a2d9a50adb6c0a75d102e0efc"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/block5-freeze-tree.shot.json",
+          "at": "28a7adbf08b7e428900764e739d967826546b056"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-ledger.shot.json",
+          "at": "71c2032b9e1724e917c0b997e772863c1d013641"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/annotation-limits.shot.json",
+          "at": "2a934496f5c78a246509c9337435d4e825fe0d74"
+        }
+      ],
+      "selectorSha256": "125d1caae7daaa4fc258847f3ddc08d4be63e84c36bdbcc1fd07e7e3b59f9fd5"
+    },
+    "correctedStackPR4": {
+      "base": "15869c063e0c2c6f824984cdc426cec0095dc424",
+      "head": "e737a8e2558be57345c2e077abe055425ee2fc4b",
+      "selectorSha256": "125d1caae7daaa4fc258847f3ddc08d4be63e84c36bdbcc1fd07e7e3b59f9fd5",
+      "shots": [
+        {
+          "file": "checkpoint/ci/shots/called/portable-action.shot.json",
+          "at": "939909da6e258e03788491431a5963b6a5c51519"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/verdict-annotations.shot.json",
+          "at": "a0cd8690bdf35d63bfa84a0e059ba95420bfa60a"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/per-shot-candidate.shot.json",
+          "at": "37fbece3db61195cebde8b7786496d82d825b529"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/lane-merges.shot.json",
+          "at": "f550ec1af864f8470bb51c9b20765813b8593abc"
+        }
+      ]
+    }
+  },
+  "correction": {
+    "rootCause": "PR4 selector always chose HEAD for the last shot, so an ancestry-only merge of current main made it see unrelated PR6/7 changes.",
+    "resolution": "Normal merge of existing f550ec1 preserves its original called lane-merges shot, implementation and tests; selects each historical own-lane head."
+  }
+}

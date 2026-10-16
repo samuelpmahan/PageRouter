@@ -1,0 +1,51 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+added 4 packages in 3s
+npm notice
+npm notice New major version of npm available! 11.9.0 -> 12.2.0
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.0
+npm notice To update run: npm install -g npm@12.2.0
+npm notice
+{"host_requirement": "Linux shared libraries for the declared host executables", "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534", "node": "v24.19.0", "tools": {"cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090", "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb", "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12", "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42"}}
+✔ a failed crisp package blocks publication (1.141298ms)
+✔ a source build requires successful results for every declared target and a live site (0.931481ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 117.635982
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1606 targets configured).
+[1 / 2] Building and verifying PageRouter from source; 0s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 11s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 41s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 101s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+Self-host fast-check
+Compile PxCube/neat and crisp-package every experience
+Assemble PageRouter
+Verify crisp changed-source/cache/clean equality
+Targeted HH controller/community regressions
+npm test suite against freshly assembled site
+Built Atlas import closure
+Built 829 files; all 14 PxCube packages succeeded; fresh output siteBuildId 8e67e1a04e520e68f8a21f1a40b454d829882ccb1c71f198cab9a53b00b89383
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 117.423s, Critical Path: 113.48s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions
+{"verifiedFiles":829,"siteBuildId":"8e67e1a04e520e68f8a21f1a40b454d829882ccb1c71f198cab9a53b00b89383","pxcubePackages":14}

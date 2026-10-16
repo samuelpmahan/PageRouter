@@ -46,6 +46,13 @@ node <package>/bin/called-shots.mjs grade called-shots/my-change.shot.json
 node <package>/bin/called-shots.mjs pr    --base origin/main             # every shot added since main
 ```
 
+A shot that missed because the call itself was wrong stays in the record.
+Call a corrected shot with a new id, then
+`called-shots supersede <old> --by <new> --reason "<why>"` appends a
+`shot.superseded` event to the call log. `pr` still grades and reports the old
+shot, as a warning, and does not fail on it once the new shot is made in the
+same run. Only a later call can supersede.
+
 `call` records the baseline commit (HEAD unless the shot names one), copies
 the shot into `calledDir` and logs its sha256 and the time. `grade` builds the
 baseline in a detached git worktree and the working tree in place, then grades.
@@ -68,8 +75,10 @@ baseline in a detached git worktree and the working tree in place, then grades.
 ```
 
 The action grades every shot the change adds under `calledDir`, writes each
-report to the job summary, annotates each verdict on the pull request, sets
-outputs `made` and `shots`, and fails when any shot is missed. Inputs:
+report to the job summary, annotates the pull request (one notice listing
+every made shot, and an error or warning for each missed or superseded shot;
+GitHub keeps at most 10 annotations of each level per step), sets outputs
+`made` and `shots`, and fails when any shot is missed. Inputs:
 `config`, `base`, `candidate-output`, `require-shot`.
 
 When a change adds several shots, each is graded at the last commit that
@@ -109,8 +118,8 @@ untracked ones that are not ignored.
 
 | kind | checks |
 |---|---|
-| `ast.moved` | top-level function `symbol` is declared in `from` and not `to` on the baseline, and in `to` and not `from` on the candidate; with `body: identical`, its text is unchanged |
-| `ast.onlyImportsChanged` | in each of `files`, every top-level statement other than imports, comments and `except` declarations is identical. It does not check which imports. |
+| `ast.moved` | top-level function `symbol` (a function declaration, or a `const`/`let`/`var` bound to a function or arrow) is declared in `from` and not `to` on the baseline, and in `to` and not `from` on the candidate; with `body: identical`, its text is unchanged, not counting an `export` prefix |
+| `ast.onlyImportsChanged` | in each of `files`, every top-level statement other than imports, comments and the declarations of `except` names is identical. In a `const`/`let`/`var` declaration only the excepted declarators drop out, so a change to a neighbor declared in the same statement still misses. It does not check which imports. |
 | `source.changedExactly` | the source files `modified`, `added` and `removed` are exactly these |
 | `output.changedExactly` | the output files `modified`, `added` and `removed` are exactly these (`site.changedExactly` is the older name) |
 | `json.changedPathsExactly` | in `file` (output, or source with `in: source`), exactly these JSON paths differ |

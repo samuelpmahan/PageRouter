@@ -1,0 +1,43 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> pagerouter-called-shots@0.0.0 test
+> node --test test/*.test.mjs
+
+✔ init writes the configuration, call log, empty predicate set and workflow, and never overwrites (379.626771ms)
+✔ a shot called before the change is made when the change does exactly what it says (784.889544ms)
+✔ in a pull request, every added shot is graded; one miss fails the run and is named (744.393941ms)
+✔ a pull request that adds no shot passes, unless a shot is required (263.049219ms)
+✔ each shot is graded at its own commits, also under a pull request merge commit (2042.907294ms)
+✔ lanes merged as branches: each shot is graded at the head of its own lane (1589.463445ms)
+✔ a missed shot superseded by a made one is reported, warned, and does not fail the run (1804.388163ms)
+✔ the batch is content-addressed, holds every real sentence, gold mutants and controls, and no answers (4.061216ms)
+✔ an answer must be covered, or a gap quoting the sentence verbatim (0.552733ms)
+✔ three agreeing checkers compose an accepted agreement through the PxC FunctionalGuarantee (2.383868ms)
+✔ two of three decide; a lone dissent is the first difference, by path (0.735202ms)
+✔ no two valid answers agreeing is not accepted; a non-verbatim quote counts as no answer (3.65957ms)
+✔ an observation for another case is refused (1.196875ms)
+✔ a gold quote on the same earlier gap the checker found in the unmutated sentence earns credit (0.948888ms)
+✔ canonical JSON matches the recorded crosscheck case id (1.912916ms)
+✔ the pinned PxC kernel is byte-identical to PageRouter's, when run inside PageRouter (0.588432ms)
+✔ the naive extraction misses on the shipped site and names the missing file (104.558449ms)
+✔ the same move shipped as called is made (48.057686ms)
+✔ a moved function whose body changed is a miss (38.6495ms)
+✔ a shot already true on the baseline fails the precheck (31.132181ms)
+✔ a sentence without a clause, or a clause of unknown kind, is rejected before grading (0.287173ms)
+✔ a shot whose hash was never logged as called is not made (34.331733ms)
+✔ text.onlyLinesAdded counts added lines and rejects a changed line (1.939023ms)
+✔ json.changedPathsExactly names a path that changed without being called (1.113953ms)
+✔ with no predicate set configured, crudlint finds nothing (0.93339ms)
+✔ json.valueEquals checks a value in the candidate output, and site is an older name for output (120.934239ms)
+✔ a findings clause names the exact finding that appeared (247.867393ms)
+✔ except can name a const: removing a const copy and importing it is made (29.158855ms)
+✔ except drops only the named declarator: a change to its neighbor still misses (2.900249ms)
+✔ ast.moved follows a const arrow function, ignoring an export prefix, and still checks the body (2.308357ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7879.152274

@@ -1,0 +1,251 @@
+{
+  "observedLocalCheckpoint": "2cc630d51f49c69239bdaf044bc424070b1f5336",
+  "method": "Execute the exact current addedShots function against immutable local checkpoint history for both possible final workflow bases. A following receipt-only commit preserves the same decision projection and is checked again.",
+  "selectorSha256": "9eb1d79ee912a433583a586841c170d4106e935f43ef3e3079bebbeaae5dc435",
+  "cases": {
+    "originalWorkflowBase": {
+      "base": "37fbece3db61195cebde8b7786496d82d825b529",
+      "shots": [
+        {
+          "file": "checkpoint/ci/shots/called/lane-merges.shot.json",
+          "at": "f550ec1af864f8470bb51c9b20765813b8593abc"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-dir.shot.json",
+          "at": "ee4b496f51b26c5932498e5c5edb3c605cdac1f4"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-equalJson.shot.json",
+          "at": "59fdaa22644d4774c7def08390887ee2f77f62f2"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-freeze.shot.json",
+          "at": "250c3d84d41b4e6a9d1e3c99799ce24fdd081077"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-html-esc.shot.json",
+          "at": "e6e1c0bcf914b3e0baa0d05b3ec94cf86e074254"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-flag-v2.shot.json",
+          "at": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-flag.shot.json",
+          "at": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-canonical-lax.shot.json",
+          "at": "f868426df049993d8b7d41faf9b094f5872ee443"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/grader-const-declarations.shot.json",
+          "at": "0aa56a04632d2076c43ab53688bffc167bdb38ec"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/superseded-shots.shot.json",
+          "at": "c8b1b021a8e2485c695dda1ad4bb95ca120dfbc3"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-import-closure.shot.json",
+          "at": "57a98400706e0046b12a025cec6db9b764efd2ce"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-canonical-json.shot.json",
+          "at": "3469ff5766c8d58a2d9a50adb6c0a75d102e0efc"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/block5-freeze-tree.shot.json",
+          "at": "28a7adbf08b7e428900764e739d967826546b056"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-ledger.shot.json",
+          "at": "71c2032b9e1724e917c0b997e772863c1d013641"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/annotation-limits.shot.json",
+          "at": "2a934496f5c78a246509c9337435d4e825fe0d74"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/integration-main-2026-10-15.shot.json",
+          "at": null
+        }
+      ],
+      "expectedCount": 16,
+      "allHistoricalCandidatesUnchanged": true,
+      "newEvidenceShotAtHead": true
+    },
+    "correctedModernBase": {
+      "base": "d42e364dc5ff43384894442113edb69e47ad3b69",
+      "shots": [
+        {
+          "file": "checkpoint/ci/shots/called/kernel-dir.shot.json",
+          "at": "ee4b496f51b26c5932498e5c5edb3c605cdac1f4"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-equalJson.shot.json",
+          "at": "59fdaa22644d4774c7def08390887ee2f77f62f2"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-freeze.shot.json",
+          "at": "250c3d84d41b4e6a9d1e3c99799ce24fdd081077"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-html-esc.shot.json",
+          "at": "e6e1c0bcf914b3e0baa0d05b3ec94cf86e074254"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-flag-v2.shot.json",
+          "at": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-flag.shot.json",
+          "at": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-canonical-lax.shot.json",
+          "at": "f868426df049993d8b7d41faf9b094f5872ee443"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/grader-const-declarations.shot.json",
+          "at": "0aa56a04632d2076c43ab53688bffc167bdb38ec"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/superseded-shots.shot.json",
+          "at": "c8b1b021a8e2485c695dda1ad4bb95ca120dfbc3"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-import-closure.shot.json",
+          "at": "57a98400706e0046b12a025cec6db9b764efd2ce"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-canonical-json.shot.json",
+          "at": "3469ff5766c8d58a2d9a50adb6c0a75d102e0efc"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/block5-freeze-tree.shot.json",
+          "at": "28a7adbf08b7e428900764e739d967826546b056"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-ledger.shot.json",
+          "at": "71c2032b9e1724e917c0b997e772863c1d013641"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/annotation-limits.shot.json",
+          "at": "2a934496f5c78a246509c9337435d4e825fe0d74"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/integration-main-2026-10-15.shot.json",
+          "at": null
+        }
+      ],
+      "expectedCount": 15,
+      "allHistoricalCandidatesUnchanged": true,
+      "newEvidenceShotAtHead": true
+    },
+    "aggregateMainDiagnostic": {
+      "base": "3723599bb3e1b6c6c44cc5e3385ed2d8fa57e34b",
+      "shots": [
+        {
+          "file": "checkpoint/ci/shots/called/derive-site-copy-list.shot.json",
+          "at": "d291a64433a2fb77b2e415a1b240edfb25ad5aea"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-safePath.shot.json",
+          "at": "d291a64433a2fb77b2e415a1b240edfb25ad5aea"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/grader-in-ci.shot.json",
+          "at": "d291a64433a2fb77b2e415a1b240edfb25ad5aea"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/crosscheck-pool.shot.json",
+          "at": "4fe57d24abd4b7672403b9197a6f3aeed026e4e7"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/baseline-records.shot.json",
+          "at": "3a492fa02f6caa0eb6ccd7b6e0eb9aab840445d6"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/portable-action.shot.json",
+          "at": "939909da6e258e03788491431a5963b6a5c51519"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/verdict-annotations.shot.json",
+          "at": "a0cd8690bdf35d63bfa84a0e059ba95420bfa60a"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/per-shot-candidate.shot.json",
+          "at": "37fbece3db61195cebde8b7786496d82d825b529"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/lane-merges.shot.json",
+          "at": "f550ec1af864f8470bb51c9b20765813b8593abc"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-dir.shot.json",
+          "at": "ee4b496f51b26c5932498e5c5edb3c605cdac1f4"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-equalJson.shot.json",
+          "at": "59fdaa22644d4774c7def08390887ee2f77f62f2"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-freeze.shot.json",
+          "at": "250c3d84d41b4e6a9d1e3c99799ce24fdd081077"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-html-esc.shot.json",
+          "at": "e6e1c0bcf914b3e0baa0d05b3ec94cf86e074254"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-flag-v2.shot.json",
+          "at": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-flag.shot.json",
+          "at": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-canonical-lax.shot.json",
+          "at": "f868426df049993d8b7d41faf9b094f5872ee443"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/grader-const-declarations.shot.json",
+          "at": "0aa56a04632d2076c43ab53688bffc167bdb38ec"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/superseded-shots.shot.json",
+          "at": "c8b1b021a8e2485c695dda1ad4bb95ca120dfbc3"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/extract-import-closure.shot.json",
+          "at": "57a98400706e0046b12a025cec6db9b764efd2ce"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-canonical-json.shot.json",
+          "at": "3469ff5766c8d58a2d9a50adb6c0a75d102e0efc"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/block5-freeze-tree.shot.json",
+          "at": "28a7adbf08b7e428900764e739d967826546b056"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/kernel-ledger.shot.json",
+          "at": "71c2032b9e1724e917c0b997e772863c1d013641"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/annotation-limits.shot.json",
+          "at": "2a934496f5c78a246509c9337435d4e825fe0d74"
+        },
+        {
+          "file": "checkpoint/ci/shots/called/integration-main-2026-10-15.shot.json",
+          "at": null
+        }
+      ],
+      "expectedCount": 24,
+      "allHistoricalCandidatesUnchanged": true,
+      "newEvidenceShotAtHead": true
+    }
+  }
+}

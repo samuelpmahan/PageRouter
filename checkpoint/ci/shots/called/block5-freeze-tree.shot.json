@@ -1,0 +1,112 @@
+{
+  "schema": "called-shot@0",
+  "id": "block5-freeze-tree",
+  "call": [
+    {
+      "id": "S1",
+      "text": "In exp/block5/core/composed.mjs every top-level statement other than imports, comments and the declaration of deepFreeze is unchanged."
+    },
+    {
+      "id": "S2",
+      "text": "In exp/block5/core/pixel-cache.mjs every top-level statement other than imports, comments and the declaration of freezeJson is unchanged."
+    },
+    {
+      "id": "S3",
+      "text": "Source changes are exactly: exp/block5/core/composed.mjs, exp/block5/core/pixel-cache.mjs and ci/shots/called/events.jsonl modified; ci/shots/called/block5-freeze-tree.shot.json added; nothing removed."
+    },
+    {
+      "id": "S4",
+      "text": "The built site modifies exactly exp/block5/core/composed.mjs, exp/block5/core/pixel-cache.mjs and data/catalog.json, adds nothing and removes nothing."
+    },
+    {
+      "id": "S5",
+      "text": "In the built data/catalog.json exactly one JSON path changes: $.release.siteBuildId."
+    },
+    {
+      "id": "S6",
+      "text": "In the built data/catalog.json, $.release.siteBuildId is bea7cbf254c56bc9585c16d7d0f0e5eb04878b3721ecd140d3b6418fa0a483d1."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "ast.onlyImportsChanged",
+      "files": [
+        "exp/block5/core/composed.mjs"
+      ],
+      "except": [
+        "deepFreeze"
+      ]
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S2"
+      ],
+      "kind": "ast.onlyImportsChanged",
+      "files": [
+        "exp/block5/core/pixel-cache.mjs"
+      ],
+      "except": [
+        "freezeJson"
+      ]
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S3"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "ci/shots/called/events.jsonl",
+        "exp/block5/core/composed.mjs",
+        "exp/block5/core/pixel-cache.mjs"
+      ],
+      "added": [
+        "ci/shots/called/block5-freeze-tree.shot.json"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C4",
+      "covers": [
+        "S4"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [
+        "data/catalog.json",
+        "exp/block5/core/composed.mjs",
+        "exp/block5/core/pixel-cache.mjs"
+      ],
+      "added": [],
+      "removed": []
+    },
+    {
+      "id": "C5",
+      "covers": [
+        "S5"
+      ],
+      "kind": "json.changedPathsExactly",
+      "file": "data/catalog.json",
+      "paths": [
+        "$.release.siteBuildId"
+      ]
+    },
+    {
+      "id": "C6",
+      "covers": [
+        "S6"
+      ],
+      "kind": "json.valueEquals",
+      "file": "data/catalog.json",
+      "path": "$.release.siteBuildId",
+      "value": "bea7cbf254c56bc9585c16d7d0f0e5eb04878b3721ecd140d3b6418fa0a483d1"
+    }
+  ],
+  "baseline": {
+    "commit": "3469ff5766c8d58a2d9a50adb6c0a75d102e0efc"
+  }
+}

@@ -1,5 +1,6 @@
 import {Part,PxC} from '../../vendor/hh/services/pxc.mjs';
 import {canonical,clone,calculationRegistry} from './calculations.mjs';
+import {freeze} from '../kernel/freeze.mjs';
 
 const KERNEL={file:'vendor/hh/services/pxc.mjs',export:'PxC.compose'};
 const ADAPTER={file:'exp/atlas/runtime-adapter.mjs',export:'AtlasRuntime.execute',revision:1};
@@ -7,7 +8,6 @@ function address(value){
   if(typeof value!=='string'||!value.startsWith('/')||value==='/'||value.endsWith('/')||value.split('/').slice(1).some(item=>!item||item==='.'||item==='..')||/[\u0000-\u001f\\]/.test(value))throw new TypeError(`noncanonical Part address ${String(value)}`);
   return value;
 }
-function freeze(value){if(value&&typeof value==='object'){Object.values(value).forEach(freeze);Object.freeze(value);}return value;}
 export function compileRecipe(recipe,registry,seedAddresses=[]){
   if(!recipe||!Array.isArray(recipe.nodes)||!recipe.outputs||typeof recipe.outputs!=='object'||Array.isArray(recipe.outputs))throw new TypeError('recipe requires nodes[] and outputs{}');
   const seeds=new Set(seedAddresses.map(address)),ids=new Map(),owners=new Map();

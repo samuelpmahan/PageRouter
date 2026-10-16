@@ -1,0 +1,66 @@
+{
+  "schema": "called-shot@0",
+  "id": "grader-const-declarations",
+  "sourceRoot": ".",
+  "baseline": {
+    "commit": "f4b0db4c183d9ad4ebb1a3a09ad48c42a1025901"
+  },
+  "call": [
+    {
+      "id": "S1",
+      "text": "Source changes are exactly: actions/called-shot/README.md, actions/called-shot/lib/grade.mjs, actions/called-shot/test/grade.test.mjs and checkpoint/ci/shots/called/events.jsonl modified; checkpoint/ci/shots/called/grader-const-declarations.shot.json added; nothing removed."
+    },
+    {
+      "id": "S2",
+      "text": "In actions/called-shot/lib/grade.mjs, no top-level statement other than imports changes, except the declarations of declaredName, findFunction and CLAUSES, and the function grade is unchanged."
+    },
+    {
+      "id": "S3",
+      "text": "The built site is byte-identical to the baseline."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "actions/called-shot/README.md",
+        "actions/called-shot/lib/grade.mjs",
+        "actions/called-shot/test/grade.test.mjs",
+        "checkpoint/ci/shots/called/events.jsonl"
+      ],
+      "added": [
+        "checkpoint/ci/shots/called/grader-const-declarations.shot.json"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S2"
+      ],
+      "kind": "ast.onlyImportsChanged",
+      "files": [
+        "actions/called-shot/lib/grade.mjs"
+      ],
+      "except": [
+        "declaredName",
+        "findFunction",
+        "CLAUSES"
+      ]
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S3"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [],
+      "added": [],
+      "removed": []
+    }
+  ]
+}

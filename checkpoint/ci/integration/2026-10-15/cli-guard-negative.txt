@@ -1,0 +1,35 @@
+✔ the table of flags above is what each CLI source actually reads (2.979427ms)
+✖ flick.mjs, match.mjs and tournament.mjs build flag from flagReader and define no reader of their own (1.707806ms)
+✔ answers on concrete argv arrays (0.479759ms)
+✔ the fallback comes back untouched: same object, undefined stays undefined (0.367148ms)
+✔ the array is read on every call, not copied when the reader is made (0.240564ms)
+✔ agrees with node:util parseArgs on `--key value`, each key at most once (31.179108ms)
+✔ where it differs from parseArgs, both sides pinned (1.392927ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 6
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 207.690965
+
+✖ failing tests:
+
+test at ../integration-logs/policybench-drift/checkpoint/exp/policybench/cli-args.test.mjs:35:1
+✖ flick.mjs, match.mjs and tournament.mjs build flag from flagReader and define no reader of their own (1.707806ms)
+  AssertionError [ERR_ASSERTION]: flick.mjs imports flagReader
+      at TestContext.<anonymous> (file:///workspace/scratch/ad1424973ce5/integration-logs/policybench-drift/checkpoint/exp/policybench/cli-args.test.mjs:38:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

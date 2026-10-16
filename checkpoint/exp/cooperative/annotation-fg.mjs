@@ -1,5 +1,6 @@
 import {Part, PxC} from '../../vendor/hh/services/pxc.mjs';
 import {node} from '../../vendor/hh/src/teacher-journey.mjs';
+import {freezeTreeParentFirst as freezeTree} from '../kernel/freeze.mjs';
 
 const ID = /^[A-Za-z][A-Za-z0-9_-]{0,63}$/;
 const EVENT_TAGS = Object.freeze(['enable', 'disable']);
@@ -7,13 +8,6 @@ const STATE_TAGS = Object.freeze(['hidden', 'visible']);
 const clone = (value) => structuredClone(value);
 const own = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
 const getPath = (value, path) => String(path || '').split('.').reduce((current, key) => current != null && own(Object(current), key) ? current[key] : undefined, value);
-
-function freezeTree(value) {
-  if (!value || typeof value !== 'object' || Object.isFrozen(value)) return value;
-  Object.freeze(value);
-  for (const child of Object.values(value)) freezeTree(child);
-  return value;
-}
 
 function isPlainData(value, seen = new Set()) {
   if (value === null || ['string', 'boolean'].includes(typeof value)) return true;

@@ -1,0 +1,871 @@
+{
+  "schema": "policybench-authority-verification@1",
+  "baselineCommit": "d354d225b89b85abc5b414878c69619e2395b799",
+  "status": "SOURCE_UPDATE_AND_BOUNDED_REGEN_VERIFIED_IN_WORKER_DESKTOP_APPLY_PENDING",
+  "toolchain": {
+    "node": "24.19.0",
+    "npm": "11.9.0",
+    "typescript": "5.9.3",
+    "typesNode": "22.20.5",
+    "bazel": "7.4.1",
+    "bazelSha256": "c97f02133adce63f0c28678ac1f21d65fa8255c80429b588aeeba8a1fac6202b",
+    "setupCommand": "npm install --prefix /workspace/scratch/ad1424973ce5/policybench-authority/toolchain --ignore-scripts --no-audit --no-fund --package-lock=false typescript@5.9.3 @types/node@22.20.5",
+    "dependencyPlacement": "Task-local toolchain; source node_modules symlink; incoming package manifests, lock and tsconfig byte-preserved."
+  },
+  "incomingSource": {
+    "zipSha256": "6bacad8dc48ebe838145259461f5cddac4e40bd45a73bf4d86db14d6f5af9c77",
+    "manifestSha256": "47f591dc2ae01a165a2be9472f8aebeb9d17c81f7eb6da3417885a8899475540",
+    "filesVerified": 48,
+    "bytesVerified": 267377,
+    "independentlyResolvedFirstPartyStaticImportEdges": 87,
+    "unresolvedStaticImports": 0,
+    "gitRevision": null,
+    "originalSnapshotStillUnchanged": true
+  },
+  "privateSourceBundle": {
+    "file": "policybench-source-update-20261016.zip",
+    "bytes": 135126,
+    "sha256": "0d82cbb019c6fc27834dbadbdf511d863b36dc550270561390cbbfd44fcde7da",
+    "sourceFilesAfter": 50,
+    "changedExistingSourceFiles": 4,
+    "newSourceFiles": 2,
+    "unrelatedIncomingSourceFilesPreserved": 44,
+    "desktopWritten": false
+  },
+  "tests": {
+    "upstreamNodeChecks": {
+      "command": "node --test tools/check-pagerouter-emission.mjs",
+      "passed": 10,
+      "failed": 0
+    },
+    "actionUnits": {
+      "command": "node --test actions/called-shot/test/*.test.mjs",
+      "passed": 30,
+      "failed": 0
+    },
+    "canonicalNpmTests": {
+      "passed": 267,
+      "failed": 0
+    },
+    "canonicalHHTests": {
+      "passed": 78,
+      "failed": 0
+    },
+    "canonicalAtlasTests": {
+      "passed": 1,
+      "failed": 0
+    },
+    "canonicalBuildHelperTests": {
+      "passed": 2,
+      "failed": 0
+    },
+    "sourceApplyChecks": {
+      "apply": {
+        "exit": 0,
+        "sourceFileCountAfter": 50,
+        "beforeAfterEqual": false
+      },
+      "idempotent": {
+        "exit": 0,
+        "sourceFileCountAfter": 50,
+        "beforeAfterEqual": true
+      },
+      "wrongBeforeHash": {
+        "exit": 1,
+        "sourceFileCountAfter": 48,
+        "beforeAfterEqual": true
+      },
+      "newFileExists": {
+        "exit": 1,
+        "sourceFileCountAfter": 49,
+        "beforeAfterEqual": true
+      },
+      "readablePatch": {
+        "exit": 0,
+        "sourceFileCountAfter": 50,
+        "beforeAfterEqual": null
+      }
+    },
+    "priorKernelBaseline": "Existing 302/305 with three BAD_FILL failures is retained in 2026-10-15 evidence; no work/pxc-kernel bytes change and no new full-kernel-run claim."
+  },
+  "baselineRegeneration": {
+    "command": [
+      "node",
+      "tools/emit-pagerouter.mjs",
+      "/workspace/scratch/ad1424973ce5/policybench-authority/owner-baseline-target"
+    ],
+    "exit": 0,
+    "before": {
+      "exp/policybench/README.md": "d092f74e7c1dd8635c6f2d302bc5de3d5469fbc71969e6f3bab31e76bde024b7",
+      "exp/policybench/cli/args.mjs": "f340cf1a33897e9321b5ef07c8afca5ee1c395adc9581945192a948c8815a59c",
+      "exp/policybench/cli/flick.mjs": "9a0848067b59cea766cbdd86c4de070698448cb3095c05dada4ba5d2072dc435",
+      "exp/policybench/cli/ledger.mjs": "6b3ad89eb202815a2b3dc1bb9b619213694b285ebccd1793fd5a7689e7e3a0b5",
+      "exp/policybench/cli/match.mjs": "86cb20f8e8b7bfc2c702d150556e8a40d344e85dac1afb8a9e4ed36b06f70a1b",
+      "exp/policybench/cli/tournament.mjs": "9781fcb50d3715afa40798556df40e97752acbcdc033b36d408fe6fad8747a4e",
+      "exp/policybench/cli-args.test.mjs": "2ff3890d623a774a24b1ca548700a8db1340d5468446c86d29d50ab059898da7",
+      "exp/policybench/core/agent.mjs": "c211f3e7d7ffd1fd0497e49bfc9d997371e0e2d2aa36acca8f84851cba039338",
+      "exp/policybench/core/events.mjs": "ac1888638921bebff0beb8fea9a41dfe76369369daef74e4234615ff22c84736",
+      "exp/policybench/core/game.mjs": "06bb0bb4017778390657fd0a56211d821a8a071ef82614f8138ecc3ac25de4ed",
+      "exp/policybench/core/hash.mjs": "7145bd6a7d5ee60daaf5b5f577309b09353a28307114872333fbe377b30366bd",
+      "exp/policybench/core/index.mjs": "1d70718342e1d7cad4524662bbcbc1b181b84cfeb6f2807321851e14723c1ead",
+      "exp/policybench/core/policy.mjs": "37b07149e969461f71676960412a49f6e13dccacc83169fe94547dad718641fd",
+      "exp/policybench/core/registry.mjs": "0f7ba20bc122fb2e5052a02b1a4916551cb20ac9f48432d37da145cd21366531",
+      "exp/policybench/core/rng.mjs": "2c158509715937efd108cbe3aac7b8462ddce70a0b799ddb1c9159d0f7b8334a",
+      "exp/policybench/engine/index.mjs": "225cdafe3cf668d1b9ae5bb739100ab0b23aad2e3f7006d9617c659b198ef0b8",
+      "exp/policybench/engine/match.mjs": "5c3f685454637f8a96ec312a14b0f4b68c1e4c0f64654d4211c6a443f0f59ccf",
+      "exp/policybench/engine/replay.mjs": "08fff2cb7943126e4ba103686fd3f11d3d0db4e33e13ead2e5a8d851d4c5ef76",
+      "exp/policybench/engine/simulate.mjs": "25f7459612f10bb97edfc0202e0abe942734830ee09fbeea38267d2d6845937d",
+      "exp/policybench/flick-puck/game.mjs": "f949e4853c1ada238304512ec23c3f57b7aa8ed0c53a4baea9e03ebdaf616f20",
+      "exp/policybench/flick-puck/index.mjs": "fda1744188b8ccaca023861e9296e9115556d75c6daaf8c114327c3f942f7544",
+      "exp/policybench/flick-puck/policies.mjs": "d5145d569cf29888f5ef6d97a7050c2a1c046f85cb93e3ea5b82ea7f640a2d1f",
+      "exp/policybench/flick-puck.test.mjs": "832e57938965fb882d505afd0a60786770c2b93581b1724876a24619c3495f57",
+      "exp/policybench/policies/index.mjs": "d493b565c512e5f6d6e7a83d4a61b8f17928b8c8db41d37d0f7e39e1aca77e16",
+      "exp/policybench/policies/random.mjs": "dc90c006d929cf8bb08343302e7dfedafc92914a792c790d007db6da5ff94ab9",
+      "exp/policybench/policybench.test.mjs": "1d9bd00b889d756f195c88e9a0530989a0f872c7c3d574cd2d1e6c5583d359b9",
+      "exp/policybench/pxc/capabilities.mjs": "c31020694f110b10845939c780dfc2cf4817dfccde1f1c20116fc1c7798a3379",
+      "exp/policybench/pxc/index.mjs": "4502b50b54484832f2fb660134f31b66ed10628446b2b013ab4d0098d9e059a4",
+      "exp/policybench/pxc/match.mjs": "bb77f6cba8c4b26e2ffd3099c1c3f5cb6edaa782fd7210f8b2ab9cbe0b9b1caf",
+      "exp/policybench/tac-x-tic/capabilities.mjs": "b1df81c6f2b950a85d6179dcf448b71d47300cbb88eb0765db480b7015ae423a",
+      "exp/policybench/tac-x-tic/contrib/allocator.mjs": "c45797fb029dd8fdd82006e3bb778d21ab0e6e1b5a7602168e8fcebe72f6e158",
+      "exp/policybench/tac-x-tic/contrib/cartographer.mjs": "0ee9f4f42545df47b1ff72e928f4a8ae1163e9e8d3fa97240a03e5f78b6d534a",
+      "exp/policybench/tac-x-tic/contrib/classifier.mjs": "51182b762f0eba3c551812d53d22b97e32aa9053f14ef1fc8c1ba40a4821b802",
+      "exp/policybench/tac-x-tic/contrib/index.mjs": "ea96ee09ca642df2e6bf4cdfe09036ba8602a362e4d81d2f7fefcc3b0a77ff20",
+      "exp/policybench/tac-x-tic/contrib/simulator.mjs": "2c24da08170bb32c21d8648a0e6d9242032dc8d70b9067e566e02ac011c320bb",
+      "exp/policybench/tac-x-tic/game.mjs": "ce5367720b8df8203a99160a2b7b18b16d33b626949994f8df9cf989dc79cd4f",
+      "exp/policybench/tac-x-tic/index.mjs": "fc757b12034fab1f98e97832f274a1f1aca10e0c7450838a891c91c9219a81e3",
+      "exp/policybench/tac-x-tic/policies.mjs": "94abc4ccc86293104b854db9b6706bba3163d4591ebf529ceb21269b717afef1",
+      "sources/pxcube/vendor/studio/part-first-kernel/src/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9"
+    },
+    "after": {
+      "exp/policybench/README.md": "d092f74e7c1dd8635c6f2d302bc5de3d5469fbc71969e6f3bab31e76bde024b7",
+      "exp/policybench/cli/burstsweep.mjs": "f6453c9f9a1f7210960d9df8bc51a4d46db2a75162a4a3d550ba18d5aea39611",
+      "exp/policybench/cli/flick.mjs": "11eff6cf9812c422649ba48d2ef416c49beab15f8beac1db08addacb5c3bdc56",
+      "exp/policybench/cli/ledger.mjs": "6b3ad89eb202815a2b3dc1bb9b619213694b285ebccd1793fd5a7689e7e3a0b5",
+      "exp/policybench/cli/match.mjs": "03f4548a973a1df4212c4990641c3a32cc2849efac4c0d5feeb4aad34b7b326d",
+      "exp/policybench/cli/numerics.mjs": "414921ae42578fbc9f850f2dd132b80fc2c30d4c6ce0da556de88ec5585c375c",
+      "exp/policybench/cli/tournament.mjs": "8f72fab9bf55af3a0bbc49d273491fefffaa5d4d93fdbb6dc98df02ed972541f",
+      "exp/policybench/cli-args.test.mjs": "2ff3890d623a774a24b1ca548700a8db1340d5468446c86d29d50ab059898da7",
+      "exp/policybench/core/agent.mjs": "c211f3e7d7ffd1fd0497e49bfc9d997371e0e2d2aa36acca8f84851cba039338",
+      "exp/policybench/core/events.mjs": "ac1888638921bebff0beb8fea9a41dfe76369369daef74e4234615ff22c84736",
+      "exp/policybench/core/game.mjs": "06bb0bb4017778390657fd0a56211d821a8a071ef82614f8138ecc3ac25de4ed",
+      "exp/policybench/core/hash.mjs": "7145bd6a7d5ee60daaf5b5f577309b09353a28307114872333fbe377b30366bd",
+      "exp/policybench/core/index.mjs": "1d70718342e1d7cad4524662bbcbc1b181b84cfeb6f2807321851e14723c1ead",
+      "exp/policybench/core/policy.mjs": "37b07149e969461f71676960412a49f6e13dccacc83169fe94547dad718641fd",
+      "exp/policybench/core/registry.mjs": "0f7ba20bc122fb2e5052a02b1a4916551cb20ac9f48432d37da145cd21366531",
+      "exp/policybench/core/rng.mjs": "2c158509715937efd108cbe3aac7b8462ddce70a0b799ddb1c9159d0f7b8334a",
+      "exp/policybench/engine/index.mjs": "225cdafe3cf668d1b9ae5bb739100ab0b23aad2e3f7006d9617c659b198ef0b8",
+      "exp/policybench/engine/match.mjs": "5c3f685454637f8a96ec312a14b0f4b68c1e4c0f64654d4211c6a443f0f59ccf",
+      "exp/policybench/engine/replay.mjs": "08fff2cb7943126e4ba103686fd3f11d3d0db4e33e13ead2e5a8d851d4c5ef76",
+      "exp/policybench/engine/simulate.mjs": "25f7459612f10bb97edfc0202e0abe942734830ee09fbeea38267d2d6845937d",
+      "exp/policybench/flick-puck/game.mjs": "ec81df89b8a30ff70715144f371b40453c72c507dd6e5aa588fcae1cc9e7d3cb",
+      "exp/policybench/flick-puck/index.mjs": "fda1744188b8ccaca023861e9296e9115556d75c6daaf8c114327c3f942f7544",
+      "exp/policybench/flick-puck/policies.mjs": "d5145d569cf29888f5ef6d97a7050c2a1c046f85cb93e3ea5b82ea7f640a2d1f",
+      "exp/policybench/flick-puck.test.mjs": "832e57938965fb882d505afd0a60786770c2b93581b1724876a24619c3495f57",
+      "exp/policybench/policies/index.mjs": "d493b565c512e5f6d6e7a83d4a61b8f17928b8c8db41d37d0f7e39e1aca77e16",
+      "exp/policybench/policies/random.mjs": "dc90c006d929cf8bb08343302e7dfedafc92914a792c790d007db6da5ff94ab9",
+      "exp/policybench/policybench.test.mjs": "1d9bd00b889d756f195c88e9a0530989a0f872c7c3d574cd2d1e6c5583d359b9",
+      "exp/policybench/pxc/capabilities.mjs": "c31020694f110b10845939c780dfc2cf4817dfccde1f1c20116fc1c7798a3379",
+      "exp/policybench/pxc/index.mjs": "4502b50b54484832f2fb660134f31b66ed10628446b2b013ab4d0098d9e059a4",
+      "exp/policybench/pxc/match.mjs": "bb77f6cba8c4b26e2ffd3099c1c3f5cb6edaa782fd7210f8b2ab9cbe0b9b1caf",
+      "exp/policybench/tac-x-tic/capabilities.mjs": "b1df81c6f2b950a85d6179dcf448b71d47300cbb88eb0765db480b7015ae423a",
+      "exp/policybench/tac-x-tic/contrib/allocator.mjs": "c45797fb029dd8fdd82006e3bb778d21ab0e6e1b5a7602168e8fcebe72f6e158",
+      "exp/policybench/tac-x-tic/contrib/cartographer.mjs": "0ee9f4f42545df47b1ff72e928f4a8ae1163e9e8d3fa97240a03e5f78b6d534a",
+      "exp/policybench/tac-x-tic/contrib/classifier.mjs": "51182b762f0eba3c551812d53d22b97e32aa9053f14ef1fc8c1ba40a4821b802",
+      "exp/policybench/tac-x-tic/contrib/index.mjs": "ea96ee09ca642df2e6bf4cdfe09036ba8602a362e4d81d2f7fefcc3b0a77ff20",
+      "exp/policybench/tac-x-tic/contrib/simulator.mjs": "2c24da08170bb32c21d8648a0e6d9242032dc8d70b9067e566e02ac011c320bb",
+      "exp/policybench/tac-x-tic/game.mjs": "ce5367720b8df8203a99160a2b7b18b16d33b626949994f8df9cf989dc79cd4f",
+      "exp/policybench/tac-x-tic/index.mjs": "fc757b12034fab1f98e97832f274a1f1aca10e0c7450838a891c91c9219a81e3",
+      "exp/policybench/tac-x-tic/policies.mjs": "94abc4ccc86293104b854db9b6706bba3163d4591ebf529ceb21269b717afef1",
+      "sources/pxcube/vendor/studio/part-first-kernel/src/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9"
+    },
+    "added": [
+      "exp/policybench/cli/burstsweep.mjs",
+      "exp/policybench/cli/numerics.mjs"
+    ],
+    "removed": [
+      "exp/policybench/cli/args.mjs"
+    ],
+    "modified": [
+      "exp/policybench/cli/flick.mjs",
+      "exp/policybench/cli/match.mjs",
+      "exp/policybench/cli/tournament.mjs",
+      "exp/policybench/flick-puck/game.mjs"
+    ],
+    "cliTestExit": 1
+  },
+  "patchedRegeneration": {
+    "full": {
+      "command": [
+        "node",
+        "tools/emit-pagerouter.mjs",
+        "/workspace/scratch/ad1424973ce5/policybench-authority/owner-final-full-target"
+      ],
+      "exit": 0,
+      "before": {
+        "exp/policybench/README.md": "d092f74e7c1dd8635c6f2d302bc5de3d5469fbc71969e6f3bab31e76bde024b7",
+        "exp/policybench/cli/args.mjs": "f340cf1a33897e9321b5ef07c8afca5ee1c395adc9581945192a948c8815a59c",
+        "exp/policybench/cli/flick.mjs": "9a0848067b59cea766cbdd86c4de070698448cb3095c05dada4ba5d2072dc435",
+        "exp/policybench/cli/ledger.mjs": "6b3ad89eb202815a2b3dc1bb9b619213694b285ebccd1793fd5a7689e7e3a0b5",
+        "exp/policybench/cli/match.mjs": "86cb20f8e8b7bfc2c702d150556e8a40d344e85dac1afb8a9e4ed36b06f70a1b",
+        "exp/policybench/cli/tournament.mjs": "9781fcb50d3715afa40798556df40e97752acbcdc033b36d408fe6fad8747a4e",
+        "exp/policybench/cli-args.test.mjs": "2ff3890d623a774a24b1ca548700a8db1340d5468446c86d29d50ab059898da7",
+        "exp/policybench/core/agent.mjs": "c211f3e7d7ffd1fd0497e49bfc9d997371e0e2d2aa36acca8f84851cba039338",
+        "exp/policybench/core/events.mjs": "ac1888638921bebff0beb8fea9a41dfe76369369daef74e4234615ff22c84736",
+        "exp/policybench/core/game.mjs": "06bb0bb4017778390657fd0a56211d821a8a071ef82614f8138ecc3ac25de4ed",
+        "exp/policybench/core/hash.mjs": "7145bd6a7d5ee60daaf5b5f577309b09353a28307114872333fbe377b30366bd",
+        "exp/policybench/core/index.mjs": "1d70718342e1d7cad4524662bbcbc1b181b84cfeb6f2807321851e14723c1ead",
+        "exp/policybench/core/policy.mjs": "37b07149e969461f71676960412a49f6e13dccacc83169fe94547dad718641fd",
+        "exp/policybench/core/registry.mjs": "0f7ba20bc122fb2e5052a02b1a4916551cb20ac9f48432d37da145cd21366531",
+        "exp/policybench/core/rng.mjs": "2c158509715937efd108cbe3aac7b8462ddce70a0b799ddb1c9159d0f7b8334a",
+        "exp/policybench/engine/index.mjs": "225cdafe3cf668d1b9ae5bb739100ab0b23aad2e3f7006d9617c659b198ef0b8",
+        "exp/policybench/engine/match.mjs": "5c3f685454637f8a96ec312a14b0f4b68c1e4c0f64654d4211c6a443f0f59ccf",
+        "exp/policybench/engine/replay.mjs": "08fff2cb7943126e4ba103686fd3f11d3d0db4e33e13ead2e5a8d851d4c5ef76",
+        "exp/policybench/engine/simulate.mjs": "25f7459612f10bb97edfc0202e0abe942734830ee09fbeea38267d2d6845937d",
+        "exp/policybench/flick-puck/game.mjs": "f949e4853c1ada238304512ec23c3f57b7aa8ed0c53a4baea9e03ebdaf616f20",
+        "exp/policybench/flick-puck/index.mjs": "fda1744188b8ccaca023861e9296e9115556d75c6daaf8c114327c3f942f7544",
+        "exp/policybench/flick-puck/policies.mjs": "d5145d569cf29888f5ef6d97a7050c2a1c046f85cb93e3ea5b82ea7f640a2d1f",
+        "exp/policybench/flick-puck.test.mjs": "832e57938965fb882d505afd0a60786770c2b93581b1724876a24619c3495f57",
+        "exp/policybench/policies/index.mjs": "d493b565c512e5f6d6e7a83d4a61b8f17928b8c8db41d37d0f7e39e1aca77e16",
+        "exp/policybench/policies/random.mjs": "dc90c006d929cf8bb08343302e7dfedafc92914a792c790d007db6da5ff94ab9",
+        "exp/policybench/policybench.test.mjs": "1d9bd00b889d756f195c88e9a0530989a0f872c7c3d574cd2d1e6c5583d359b9",
+        "exp/policybench/pxc/capabilities.mjs": "c31020694f110b10845939c780dfc2cf4817dfccde1f1c20116fc1c7798a3379",
+        "exp/policybench/pxc/index.mjs": "4502b50b54484832f2fb660134f31b66ed10628446b2b013ab4d0098d9e059a4",
+        "exp/policybench/pxc/match.mjs": "bb77f6cba8c4b26e2ffd3099c1c3f5cb6edaa782fd7210f8b2ab9cbe0b9b1caf",
+        "exp/policybench/tac-x-tic/capabilities.mjs": "b1df81c6f2b950a85d6179dcf448b71d47300cbb88eb0765db480b7015ae423a",
+        "exp/policybench/tac-x-tic/contrib/allocator.mjs": "c45797fb029dd8fdd82006e3bb778d21ab0e6e1b5a7602168e8fcebe72f6e158",
+        "exp/policybench/tac-x-tic/contrib/cartographer.mjs": "0ee9f4f42545df47b1ff72e928f4a8ae1163e9e8d3fa97240a03e5f78b6d534a",
+        "exp/policybench/tac-x-tic/contrib/classifier.mjs": "51182b762f0eba3c551812d53d22b97e32aa9053f14ef1fc8c1ba40a4821b802",
+        "exp/policybench/tac-x-tic/contrib/index.mjs": "ea96ee09ca642df2e6bf4cdfe09036ba8602a362e4d81d2f7fefcc3b0a77ff20",
+        "exp/policybench/tac-x-tic/contrib/simulator.mjs": "2c24da08170bb32c21d8648a0e6d9242032dc8d70b9067e566e02ac011c320bb",
+        "exp/policybench/tac-x-tic/game.mjs": "ce5367720b8df8203a99160a2b7b18b16d33b626949994f8df9cf989dc79cd4f",
+        "exp/policybench/tac-x-tic/index.mjs": "fc757b12034fab1f98e97832f274a1f1aca10e0c7450838a891c91c9219a81e3",
+        "exp/policybench/tac-x-tic/policies.mjs": "94abc4ccc86293104b854db9b6706bba3163d4591ebf529ceb21269b717afef1",
+        "sources/pxcube/vendor/studio/part-first-kernel/src/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9"
+      },
+      "after": {
+        "exp/policybench/README.md": "d092f74e7c1dd8635c6f2d302bc5de3d5469fbc71969e6f3bab31e76bde024b7",
+        "exp/policybench/cli/args.mjs": "f34a813413121c88a357e54439695ddb71e31774806d2fa85c5dbbd3f16fb868",
+        "exp/policybench/cli/burstsweep.mjs": "f6453c9f9a1f7210960d9df8bc51a4d46db2a75162a4a3d550ba18d5aea39611",
+        "exp/policybench/cli/flick.mjs": "9a0848067b59cea766cbdd86c4de070698448cb3095c05dada4ba5d2072dc435",
+        "exp/policybench/cli/ledger.mjs": "6b3ad89eb202815a2b3dc1bb9b619213694b285ebccd1793fd5a7689e7e3a0b5",
+        "exp/policybench/cli/match.mjs": "86cb20f8e8b7bfc2c702d150556e8a40d344e85dac1afb8a9e4ed36b06f70a1b",
+        "exp/policybench/cli/numerics.mjs": "414921ae42578fbc9f850f2dd132b80fc2c30d4c6ce0da556de88ec5585c375c",
+        "exp/policybench/cli/tournament.mjs": "9781fcb50d3715afa40798556df40e97752acbcdc033b36d408fe6fad8747a4e",
+        "exp/policybench/cli-args.test.mjs": "2ff3890d623a774a24b1ca548700a8db1340d5468446c86d29d50ab059898da7",
+        "exp/policybench/core/agent.mjs": "c211f3e7d7ffd1fd0497e49bfc9d997371e0e2d2aa36acca8f84851cba039338",
+        "exp/policybench/core/events.mjs": "ac1888638921bebff0beb8fea9a41dfe76369369daef74e4234615ff22c84736",
+        "exp/policybench/core/game.mjs": "06bb0bb4017778390657fd0a56211d821a8a071ef82614f8138ecc3ac25de4ed",
+        "exp/policybench/core/hash.mjs": "7145bd6a7d5ee60daaf5b5f577309b09353a28307114872333fbe377b30366bd",
+        "exp/policybench/core/index.mjs": "1d70718342e1d7cad4524662bbcbc1b181b84cfeb6f2807321851e14723c1ead",
+        "exp/policybench/core/policy.mjs": "37b07149e969461f71676960412a49f6e13dccacc83169fe94547dad718641fd",
+        "exp/policybench/core/registry.mjs": "0f7ba20bc122fb2e5052a02b1a4916551cb20ac9f48432d37da145cd21366531",
+        "exp/policybench/core/rng.mjs": "2c158509715937efd108cbe3aac7b8462ddce70a0b799ddb1c9159d0f7b8334a",
+        "exp/policybench/engine/index.mjs": "225cdafe3cf668d1b9ae5bb739100ab0b23aad2e3f7006d9617c659b198ef0b8",
+        "exp/policybench/engine/match.mjs": "5c3f685454637f8a96ec312a14b0f4b68c1e4c0f64654d4211c6a443f0f59ccf",
+        "exp/policybench/engine/replay.mjs": "08fff2cb7943126e4ba103686fd3f11d3d0db4e33e13ead2e5a8d851d4c5ef76",
+        "exp/policybench/engine/simulate.mjs": "25f7459612f10bb97edfc0202e0abe942734830ee09fbeea38267d2d6845937d",
+        "exp/policybench/flick-puck/game.mjs": "ec81df89b8a30ff70715144f371b40453c72c507dd6e5aa588fcae1cc9e7d3cb",
+        "exp/policybench/flick-puck/index.mjs": "fda1744188b8ccaca023861e9296e9115556d75c6daaf8c114327c3f942f7544",
+        "exp/policybench/flick-puck/policies.mjs": "d5145d569cf29888f5ef6d97a7050c2a1c046f85cb93e3ea5b82ea7f640a2d1f",
+        "exp/policybench/flick-puck.test.mjs": "832e57938965fb882d505afd0a60786770c2b93581b1724876a24619c3495f57",
+        "exp/policybench/policies/index.mjs": "d493b565c512e5f6d6e7a83d4a61b8f17928b8c8db41d37d0f7e39e1aca77e16",
+        "exp/policybench/policies/random.mjs": "dc90c006d929cf8bb08343302e7dfedafc92914a792c790d007db6da5ff94ab9",
+        "exp/policybench/policybench.test.mjs": "1d9bd00b889d756f195c88e9a0530989a0f872c7c3d574cd2d1e6c5583d359b9",
+        "exp/policybench/pxc/capabilities.mjs": "c31020694f110b10845939c780dfc2cf4817dfccde1f1c20116fc1c7798a3379",
+        "exp/policybench/pxc/index.mjs": "4502b50b54484832f2fb660134f31b66ed10628446b2b013ab4d0098d9e059a4",
+        "exp/policybench/pxc/match.mjs": "bb77f6cba8c4b26e2ffd3099c1c3f5cb6edaa782fd7210f8b2ab9cbe0b9b1caf",
+        "exp/policybench/tac-x-tic/capabilities.mjs": "b1df81c6f2b950a85d6179dcf448b71d47300cbb88eb0765db480b7015ae423a",
+        "exp/policybench/tac-x-tic/contrib/allocator.mjs": "c45797fb029dd8fdd82006e3bb778d21ab0e6e1b5a7602168e8fcebe72f6e158",
+        "exp/policybench/tac-x-tic/contrib/cartographer.mjs": "0ee9f4f42545df47b1ff72e928f4a8ae1163e9e8d3fa97240a03e5f78b6d534a",
+        "exp/policybench/tac-x-tic/contrib/classifier.mjs": "51182b762f0eba3c551812d53d22b97e32aa9053f14ef1fc8c1ba40a4821b802",
+        "exp/policybench/tac-x-tic/contrib/index.mjs": "ea96ee09ca642df2e6bf4cdfe09036ba8602a362e4d81d2f7fefcc3b0a77ff20",
+        "exp/policybench/tac-x-tic/contrib/simulator.mjs": "2c24da08170bb32c21d8648a0e6d9242032dc8d70b9067e566e02ac011c320bb",
+        "exp/policybench/tac-x-tic/game.mjs": "ce5367720b8df8203a99160a2b7b18b16d33b626949994f8df9cf989dc79cd4f",
+        "exp/policybench/tac-x-tic/index.mjs": "fc757b12034fab1f98e97832f274a1f1aca10e0c7450838a891c91c9219a81e3",
+        "exp/policybench/tac-x-tic/policies.mjs": "94abc4ccc86293104b854db9b6706bba3163d4591ebf529ceb21269b717afef1",
+        "sources/pxcube/vendor/studio/part-first-kernel/src/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9"
+      },
+      "added": [
+        "exp/policybench/cli/burstsweep.mjs",
+        "exp/policybench/cli/numerics.mjs"
+      ],
+      "removed": [],
+      "modified": [
+        "exp/policybench/cli/args.mjs",
+        "exp/policybench/flick-puck/game.mjs"
+      ]
+    },
+    "bounded": {
+      "command": [
+        "node",
+        "tools/emit-pagerouter.mjs",
+        "/workspace/scratch/ad1424973ce5/policybench-authority/owner-final-bounded-target",
+        "--cli-args-only"
+      ],
+      "exit": 0,
+      "before": {
+        "exp/policybench/README.md": "d092f74e7c1dd8635c6f2d302bc5de3d5469fbc71969e6f3bab31e76bde024b7",
+        "exp/policybench/cli/args.mjs": "f340cf1a33897e9321b5ef07c8afca5ee1c395adc9581945192a948c8815a59c",
+        "exp/policybench/cli/flick.mjs": "9a0848067b59cea766cbdd86c4de070698448cb3095c05dada4ba5d2072dc435",
+        "exp/policybench/cli/ledger.mjs": "6b3ad89eb202815a2b3dc1bb9b619213694b285ebccd1793fd5a7689e7e3a0b5",
+        "exp/policybench/cli/match.mjs": "86cb20f8e8b7bfc2c702d150556e8a40d344e85dac1afb8a9e4ed36b06f70a1b",
+        "exp/policybench/cli/tournament.mjs": "9781fcb50d3715afa40798556df40e97752acbcdc033b36d408fe6fad8747a4e",
+        "exp/policybench/cli-args.test.mjs": "2ff3890d623a774a24b1ca548700a8db1340d5468446c86d29d50ab059898da7",
+        "exp/policybench/core/agent.mjs": "c211f3e7d7ffd1fd0497e49bfc9d997371e0e2d2aa36acca8f84851cba039338",
+        "exp/policybench/core/events.mjs": "ac1888638921bebff0beb8fea9a41dfe76369369daef74e4234615ff22c84736",
+        "exp/policybench/core/game.mjs": "06bb0bb4017778390657fd0a56211d821a8a071ef82614f8138ecc3ac25de4ed",
+        "exp/policybench/core/hash.mjs": "7145bd6a7d5ee60daaf5b5f577309b09353a28307114872333fbe377b30366bd",
+        "exp/policybench/core/index.mjs": "1d70718342e1d7cad4524662bbcbc1b181b84cfeb6f2807321851e14723c1ead",
+        "exp/policybench/core/policy.mjs": "37b07149e969461f71676960412a49f6e13dccacc83169fe94547dad718641fd",
+        "exp/policybench/core/registry.mjs": "0f7ba20bc122fb2e5052a02b1a4916551cb20ac9f48432d37da145cd21366531",
+        "exp/policybench/core/rng.mjs": "2c158509715937efd108cbe3aac7b8462ddce70a0b799ddb1c9159d0f7b8334a",
+        "exp/policybench/engine/index.mjs": "225cdafe3cf668d1b9ae5bb739100ab0b23aad2e3f7006d9617c659b198ef0b8",
+        "exp/policybench/engine/match.mjs": "5c3f685454637f8a96ec312a14b0f4b68c1e4c0f64654d4211c6a443f0f59ccf",
+        "exp/policybench/engine/replay.mjs": "08fff2cb7943126e4ba103686fd3f11d3d0db4e33e13ead2e5a8d851d4c5ef76",
+        "exp/policybench/engine/simulate.mjs": "25f7459612f10bb97edfc0202e0abe942734830ee09fbeea38267d2d6845937d",
+        "exp/policybench/flick-puck/game.mjs": "f949e4853c1ada238304512ec23c3f57b7aa8ed0c53a4baea9e03ebdaf616f20",
+        "exp/policybench/flick-puck/index.mjs": "fda1744188b8ccaca023861e9296e9115556d75c6daaf8c114327c3f942f7544",
+        "exp/policybench/flick-puck/policies.mjs": "d5145d569cf29888f5ef6d97a7050c2a1c046f85cb93e3ea5b82ea7f640a2d1f",
+        "exp/policybench/flick-puck.test.mjs": "832e57938965fb882d505afd0a60786770c2b93581b1724876a24619c3495f57",
+        "exp/policybench/policies/index.mjs": "d493b565c512e5f6d6e7a83d4a61b8f17928b8c8db41d37d0f7e39e1aca77e16",
+        "exp/policybench/policies/random.mjs": "dc90c006d929cf8bb08343302e7dfedafc92914a792c790d007db6da5ff94ab9",
+        "exp/policybench/policybench.test.mjs": "1d9bd00b889d756f195c88e9a0530989a0f872c7c3d574cd2d1e6c5583d359b9",
+        "exp/policybench/pxc/capabilities.mjs": "c31020694f110b10845939c780dfc2cf4817dfccde1f1c20116fc1c7798a3379",
+        "exp/policybench/pxc/index.mjs": "4502b50b54484832f2fb660134f31b66ed10628446b2b013ab4d0098d9e059a4",
+        "exp/policybench/pxc/match.mjs": "bb77f6cba8c4b26e2ffd3099c1c3f5cb6edaa782fd7210f8b2ab9cbe0b9b1caf",
+        "exp/policybench/tac-x-tic/capabilities.mjs": "b1df81c6f2b950a85d6179dcf448b71d47300cbb88eb0765db480b7015ae423a",
+        "exp/policybench/tac-x-tic/contrib/allocator.mjs": "c45797fb029dd8fdd82006e3bb778d21ab0e6e1b5a7602168e8fcebe72f6e158",
+        "exp/policybench/tac-x-tic/contrib/cartographer.mjs": "0ee9f4f42545df47b1ff72e928f4a8ae1163e9e8d3fa97240a03e5f78b6d534a",
+        "exp/policybench/tac-x-tic/contrib/classifier.mjs": "51182b762f0eba3c551812d53d22b97e32aa9053f14ef1fc8c1ba40a4821b802",
+        "exp/policybench/tac-x-tic/contrib/index.mjs": "ea96ee09ca642df2e6bf4cdfe09036ba8602a362e4d81d2f7fefcc3b0a77ff20",
+        "exp/policybench/tac-x-tic/contrib/simulator.mjs": "2c24da08170bb32c21d8648a0e6d9242032dc8d70b9067e566e02ac011c320bb",
+        "exp/policybench/tac-x-tic/game.mjs": "ce5367720b8df8203a99160a2b7b18b16d33b626949994f8df9cf989dc79cd4f",
+        "exp/policybench/tac-x-tic/index.mjs": "fc757b12034fab1f98e97832f274a1f1aca10e0c7450838a891c91c9219a81e3",
+        "exp/policybench/tac-x-tic/policies.mjs": "94abc4ccc86293104b854db9b6706bba3163d4591ebf529ceb21269b717afef1",
+        "sources/pxcube/vendor/studio/part-first-kernel/src/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9"
+      },
+      "after": {
+        "exp/policybench/README.md": "d092f74e7c1dd8635c6f2d302bc5de3d5469fbc71969e6f3bab31e76bde024b7",
+        "exp/policybench/cli/args.mjs": "f34a813413121c88a357e54439695ddb71e31774806d2fa85c5dbbd3f16fb868",
+        "exp/policybench/cli/flick.mjs": "9a0848067b59cea766cbdd86c4de070698448cb3095c05dada4ba5d2072dc435",
+        "exp/policybench/cli/ledger.mjs": "6b3ad89eb202815a2b3dc1bb9b619213694b285ebccd1793fd5a7689e7e3a0b5",
+        "exp/policybench/cli/match.mjs": "86cb20f8e8b7bfc2c702d150556e8a40d344e85dac1afb8a9e4ed36b06f70a1b",
+        "exp/policybench/cli/tournament.mjs": "9781fcb50d3715afa40798556df40e97752acbcdc033b36d408fe6fad8747a4e",
+        "exp/policybench/cli-args.test.mjs": "2ff3890d623a774a24b1ca548700a8db1340d5468446c86d29d50ab059898da7",
+        "exp/policybench/core/agent.mjs": "c211f3e7d7ffd1fd0497e49bfc9d997371e0e2d2aa36acca8f84851cba039338",
+        "exp/policybench/core/events.mjs": "ac1888638921bebff0beb8fea9a41dfe76369369daef74e4234615ff22c84736",
+        "exp/policybench/core/game.mjs": "06bb0bb4017778390657fd0a56211d821a8a071ef82614f8138ecc3ac25de4ed",
+        "exp/policybench/core/hash.mjs": "7145bd6a7d5ee60daaf5b5f577309b09353a28307114872333fbe377b30366bd",
+        "exp/policybench/core/index.mjs": "1d70718342e1d7cad4524662bbcbc1b181b84cfeb6f2807321851e14723c1ead",
+        "exp/policybench/core/policy.mjs": "37b07149e969461f71676960412a49f6e13dccacc83169fe94547dad718641fd",
+        "exp/policybench/core/registry.mjs": "0f7ba20bc122fb2e5052a02b1a4916551cb20ac9f48432d37da145cd21366531",
+        "exp/policybench/core/rng.mjs": "2c158509715937efd108cbe3aac7b8462ddce70a0b799ddb1c9159d0f7b8334a",
+        "exp/policybench/engine/index.mjs": "225cdafe3cf668d1b9ae5bb739100ab0b23aad2e3f7006d9617c659b198ef0b8",
+        "exp/policybench/engine/match.mjs": "5c3f685454637f8a96ec312a14b0f4b68c1e4c0f64654d4211c6a443f0f59ccf",
+        "exp/policybench/engine/replay.mjs": "08fff2cb7943126e4ba103686fd3f11d3d0db4e33e13ead2e5a8d851d4c5ef76",
+        "exp/policybench/engine/simulate.mjs": "25f7459612f10bb97edfc0202e0abe942734830ee09fbeea38267d2d6845937d",
+        "exp/policybench/flick-puck/game.mjs": "f949e4853c1ada238304512ec23c3f57b7aa8ed0c53a4baea9e03ebdaf616f20",
+        "exp/policybench/flick-puck/index.mjs": "fda1744188b8ccaca023861e9296e9115556d75c6daaf8c114327c3f942f7544",
+        "exp/policybench/flick-puck/policies.mjs": "d5145d569cf29888f5ef6d97a7050c2a1c046f85cb93e3ea5b82ea7f640a2d1f",
+        "exp/policybench/flick-puck.test.mjs": "832e57938965fb882d505afd0a60786770c2b93581b1724876a24619c3495f57",
+        "exp/policybench/policies/index.mjs": "d493b565c512e5f6d6e7a83d4a61b8f17928b8c8db41d37d0f7e39e1aca77e16",
+        "exp/policybench/policies/random.mjs": "dc90c006d929cf8bb08343302e7dfedafc92914a792c790d007db6da5ff94ab9",
+        "exp/policybench/policybench.test.mjs": "1d9bd00b889d756f195c88e9a0530989a0f872c7c3d574cd2d1e6c5583d359b9",
+        "exp/policybench/pxc/capabilities.mjs": "c31020694f110b10845939c780dfc2cf4817dfccde1f1c20116fc1c7798a3379",
+        "exp/policybench/pxc/index.mjs": "4502b50b54484832f2fb660134f31b66ed10628446b2b013ab4d0098d9e059a4",
+        "exp/policybench/pxc/match.mjs": "bb77f6cba8c4b26e2ffd3099c1c3f5cb6edaa782fd7210f8b2ab9cbe0b9b1caf",
+        "exp/policybench/tac-x-tic/capabilities.mjs": "b1df81c6f2b950a85d6179dcf448b71d47300cbb88eb0765db480b7015ae423a",
+        "exp/policybench/tac-x-tic/contrib/allocator.mjs": "c45797fb029dd8fdd82006e3bb778d21ab0e6e1b5a7602168e8fcebe72f6e158",
+        "exp/policybench/tac-x-tic/contrib/cartographer.mjs": "0ee9f4f42545df47b1ff72e928f4a8ae1163e9e8d3fa97240a03e5f78b6d534a",
+        "exp/policybench/tac-x-tic/contrib/classifier.mjs": "51182b762f0eba3c551812d53d22b97e32aa9053f14ef1fc8c1ba40a4821b802",
+        "exp/policybench/tac-x-tic/contrib/index.mjs": "ea96ee09ca642df2e6bf4cdfe09036ba8602a362e4d81d2f7fefcc3b0a77ff20",
+        "exp/policybench/tac-x-tic/contrib/simulator.mjs": "2c24da08170bb32c21d8648a0e6d9242032dc8d70b9067e566e02ac011c320bb",
+        "exp/policybench/tac-x-tic/game.mjs": "ce5367720b8df8203a99160a2b7b18b16d33b626949994f8df9cf989dc79cd4f",
+        "exp/policybench/tac-x-tic/index.mjs": "fc757b12034fab1f98e97832f274a1f1aca10e0c7450838a891c91c9219a81e3",
+        "exp/policybench/tac-x-tic/policies.mjs": "94abc4ccc86293104b854db9b6706bba3163d4591ebf529ceb21269b717afef1",
+        "sources/pxcube/vendor/studio/part-first-kernel/src/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9"
+      },
+      "added": [],
+      "removed": [],
+      "modified": [
+        "exp/policybench/cli/args.mjs"
+      ]
+    },
+    "boundedRepeat": {
+      "command": [
+        "node",
+        "tools/emit-pagerouter.mjs",
+        "/workspace/scratch/ad1424973ce5/policybench-authority/owner-final-bounded-target",
+        "--cli-args-only"
+      ],
+      "exit": 0,
+      "before": {
+        "exp/policybench/README.md": "d092f74e7c1dd8635c6f2d302bc5de3d5469fbc71969e6f3bab31e76bde024b7",
+        "exp/policybench/cli/args.mjs": "f34a813413121c88a357e54439695ddb71e31774806d2fa85c5dbbd3f16fb868",
+        "exp/policybench/cli/flick.mjs": "9a0848067b59cea766cbdd86c4de070698448cb3095c05dada4ba5d2072dc435",
+        "exp/policybench/cli/ledger.mjs": "6b3ad89eb202815a2b3dc1bb9b619213694b285ebccd1793fd5a7689e7e3a0b5",
+        "exp/policybench/cli/match.mjs": "86cb20f8e8b7bfc2c702d150556e8a40d344e85dac1afb8a9e4ed36b06f70a1b",
+        "exp/policybench/cli/tournament.mjs": "9781fcb50d3715afa40798556df40e97752acbcdc033b36d408fe6fad8747a4e",
+        "exp/policybench/cli-args.test.mjs": "2ff3890d623a774a24b1ca548700a8db1340d5468446c86d29d50ab059898da7",
+        "exp/policybench/core/agent.mjs": "c211f3e7d7ffd1fd0497e49bfc9d997371e0e2d2aa36acca8f84851cba039338",
+        "exp/policybench/core/events.mjs": "ac1888638921bebff0beb8fea9a41dfe76369369daef74e4234615ff22c84736",
+        "exp/policybench/core/game.mjs": "06bb0bb4017778390657fd0a56211d821a8a071ef82614f8138ecc3ac25de4ed",
+        "exp/policybench/core/hash.mjs": "7145bd6a7d5ee60daaf5b5f577309b09353a28307114872333fbe377b30366bd",
+        "exp/policybench/core/index.mjs": "1d70718342e1d7cad4524662bbcbc1b181b84cfeb6f2807321851e14723c1ead",
+        "exp/policybench/core/policy.mjs": "37b07149e969461f71676960412a49f6e13dccacc83169fe94547dad718641fd",
+        "exp/policybench/core/registry.mjs": "0f7ba20bc122fb2e5052a02b1a4916551cb20ac9f48432d37da145cd21366531",
+        "exp/policybench/core/rng.mjs": "2c158509715937efd108cbe3aac7b8462ddce70a0b799ddb1c9159d0f7b8334a",
+        "exp/policybench/engine/index.mjs": "225cdafe3cf668d1b9ae5bb739100ab0b23aad2e3f7006d9617c659b198ef0b8",
+        "exp/policybench/engine/match.mjs": "5c3f685454637f8a96ec312a14b0f4b68c1e4c0f64654d4211c6a443f0f59ccf",
+        "exp/policybench/engine/replay.mjs": "08fff2cb7943126e4ba103686fd3f11d3d0db4e33e13ead2e5a8d851d4c5ef76",
+        "exp/policybench/engine/simulate.mjs": "25f7459612f10bb97edfc0202e0abe942734830ee09fbeea38267d2d6845937d",
+        "exp/policybench/flick-puck/game.mjs": "f949e4853c1ada238304512ec23c3f57b7aa8ed0c53a4baea9e03ebdaf616f20",
+        "exp/policybench/flick-puck/index.mjs": "fda1744188b8ccaca023861e9296e9115556d75c6daaf8c114327c3f942f7544",
+        "exp/policybench/flick-puck/policies.mjs": "d5145d569cf29888f5ef6d97a7050c2a1c046f85cb93e3ea5b82ea7f640a2d1f",
+        "exp/policybench/flick-puck.test.mjs": "832e57938965fb882d505afd0a60786770c2b93581b1724876a24619c3495f57",
+        "exp/policybench/policies/index.mjs": "d493b565c512e5f6d6e7a83d4a61b8f17928b8c8db41d37d0f7e39e1aca77e16",
+        "exp/policybench/policies/random.mjs": "dc90c006d929cf8bb08343302e7dfedafc92914a792c790d007db6da5ff94ab9",
+        "exp/policybench/policybench.test.mjs": "1d9bd00b889d756f195c88e9a0530989a0f872c7c3d574cd2d1e6c5583d359b9",
+        "exp/policybench/pxc/capabilities.mjs": "c31020694f110b10845939c780dfc2cf4817dfccde1f1c20116fc1c7798a3379",
+        "exp/policybench/pxc/index.mjs": "4502b50b54484832f2fb660134f31b66ed10628446b2b013ab4d0098d9e059a4",
+        "exp/policybench/pxc/match.mjs": "bb77f6cba8c4b26e2ffd3099c1c3f5cb6edaa782fd7210f8b2ab9cbe0b9b1caf",
+        "exp/policybench/tac-x-tic/capabilities.mjs": "b1df81c6f2b950a85d6179dcf448b71d47300cbb88eb0765db480b7015ae423a",
+        "exp/policybench/tac-x-tic/contrib/allocator.mjs": "c45797fb029dd8fdd82006e3bb778d21ab0e6e1b5a7602168e8fcebe72f6e158",
+        "exp/policybench/tac-x-tic/contrib/cartographer.mjs": "0ee9f4f42545df47b1ff72e928f4a8ae1163e9e8d3fa97240a03e5f78b6d534a",
+        "exp/policybench/tac-x-tic/contrib/classifier.mjs": "51182b762f0eba3c551812d53d22b97e32aa9053f14ef1fc8c1ba40a4821b802",
+        "exp/policybench/tac-x-tic/contrib/index.mjs": "ea96ee09ca642df2e6bf4cdfe09036ba8602a362e4d81d2f7fefcc3b0a77ff20",
+        "exp/policybench/tac-x-tic/contrib/simulator.mjs": "2c24da08170bb32c21d8648a0e6d9242032dc8d70b9067e566e02ac011c320bb",
+        "exp/policybench/tac-x-tic/game.mjs": "ce5367720b8df8203a99160a2b7b18b16d33b626949994f8df9cf989dc79cd4f",
+        "exp/policybench/tac-x-tic/index.mjs": "fc757b12034fab1f98e97832f274a1f1aca10e0c7450838a891c91c9219a81e3",
+        "exp/policybench/tac-x-tic/policies.mjs": "94abc4ccc86293104b854db9b6706bba3163d4591ebf529ceb21269b717afef1",
+        "sources/pxcube/vendor/studio/part-first-kernel/src/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9"
+      },
+      "after": {
+        "exp/policybench/README.md": "d092f74e7c1dd8635c6f2d302bc5de3d5469fbc71969e6f3bab31e76bde024b7",
+        "exp/policybench/cli/args.mjs": "f34a813413121c88a357e54439695ddb71e31774806d2fa85c5dbbd3f16fb868",
+        "exp/policybench/cli/flick.mjs": "9a0848067b59cea766cbdd86c4de070698448cb3095c05dada4ba5d2072dc435",
+        "exp/policybench/cli/ledger.mjs": "6b3ad89eb202815a2b3dc1bb9b619213694b285ebccd1793fd5a7689e7e3a0b5",
+        "exp/policybench/cli/match.mjs": "86cb20f8e8b7bfc2c702d150556e8a40d344e85dac1afb8a9e4ed36b06f70a1b",
+        "exp/policybench/cli/tournament.mjs": "9781fcb50d3715afa40798556df40e97752acbcdc033b36d408fe6fad8747a4e",
+        "exp/policybench/cli-args.test.mjs": "2ff3890d623a774a24b1ca548700a8db1340d5468446c86d29d50ab059898da7",
+        "exp/policybench/core/agent.mjs": "c211f3e7d7ffd1fd0497e49bfc9d997371e0e2d2aa36acca8f84851cba039338",
+        "exp/policybench/core/events.mjs": "ac1888638921bebff0beb8fea9a41dfe76369369daef74e4234615ff22c84736",
+        "exp/policybench/core/game.mjs": "06bb0bb4017778390657fd0a56211d821a8a071ef82614f8138ecc3ac25de4ed",
+        "exp/policybench/core/hash.mjs": "7145bd6a7d5ee60daaf5b5f577309b09353a28307114872333fbe377b30366bd",
+        "exp/policybench/core/index.mjs": "1d70718342e1d7cad4524662bbcbc1b181b84cfeb6f2807321851e14723c1ead",
+        "exp/policybench/core/policy.mjs": "37b07149e969461f71676960412a49f6e13dccacc83169fe94547dad718641fd",
+        "exp/policybench/core/registry.mjs": "0f7ba20bc122fb2e5052a02b1a4916551cb20ac9f48432d37da145cd21366531",
+        "exp/policybench/core/rng.mjs": "2c158509715937efd108cbe3aac7b8462ddce70a0b799ddb1c9159d0f7b8334a",
+        "exp/policybench/engine/index.mjs": "225cdafe3cf668d1b9ae5bb739100ab0b23aad2e3f7006d9617c659b198ef0b8",
+        "exp/policybench/engine/match.mjs": "5c3f685454637f8a96ec312a14b0f4b68c1e4c0f64654d4211c6a443f0f59ccf",
+        "exp/policybench/engine/replay.mjs": "08fff2cb7943126e4ba103686fd3f11d3d0db4e33e13ead2e5a8d851d4c5ef76",
+        "exp/policybench/engine/simulate.mjs": "25f7459612f10bb97edfc0202e0abe942734830ee09fbeea38267d2d6845937d",
+        "exp/policybench/flick-puck/game.mjs": "f949e4853c1ada238304512ec23c3f57b7aa8ed0c53a4baea9e03ebdaf616f20",
+        "exp/policybench/flick-puck/index.mjs": "fda1744188b8ccaca023861e9296e9115556d75c6daaf8c114327c3f942f7544",
+        "exp/policybench/flick-puck/policies.mjs": "d5145d569cf29888f5ef6d97a7050c2a1c046f85cb93e3ea5b82ea7f640a2d1f",
+        "exp/policybench/flick-puck.test.mjs": "832e57938965fb882d505afd0a60786770c2b93581b1724876a24619c3495f57",
+        "exp/policybench/policies/index.mjs": "d493b565c512e5f6d6e7a83d4a61b8f17928b8c8db41d37d0f7e39e1aca77e16",
+        "exp/policybench/policies/random.mjs": "dc90c006d929cf8bb08343302e7dfedafc92914a792c790d007db6da5ff94ab9",
+        "exp/policybench/policybench.test.mjs": "1d9bd00b889d756f195c88e9a0530989a0f872c7c3d574cd2d1e6c5583d359b9",
+        "exp/policybench/pxc/capabilities.mjs": "c31020694f110b10845939c780dfc2cf4817dfccde1f1c20116fc1c7798a3379",
+        "exp/policybench/pxc/index.mjs": "4502b50b54484832f2fb660134f31b66ed10628446b2b013ab4d0098d9e059a4",
+        "exp/policybench/pxc/match.mjs": "bb77f6cba8c4b26e2ffd3099c1c3f5cb6edaa782fd7210f8b2ab9cbe0b9b1caf",
+        "exp/policybench/tac-x-tic/capabilities.mjs": "b1df81c6f2b950a85d6179dcf448b71d47300cbb88eb0765db480b7015ae423a",
+        "exp/policybench/tac-x-tic/contrib/allocator.mjs": "c45797fb029dd8fdd82006e3bb778d21ab0e6e1b5a7602168e8fcebe72f6e158",
+        "exp/policybench/tac-x-tic/contrib/cartographer.mjs": "0ee9f4f42545df47b1ff72e928f4a8ae1163e9e8d3fa97240a03e5f78b6d534a",
+        "exp/policybench/tac-x-tic/contrib/classifier.mjs": "51182b762f0eba3c551812d53d22b97e32aa9053f14ef1fc8c1ba40a4821b802",
+        "exp/policybench/tac-x-tic/contrib/index.mjs": "ea96ee09ca642df2e6bf4cdfe09036ba8602a362e4d81d2f7fefcc3b0a77ff20",
+        "exp/policybench/tac-x-tic/contrib/simulator.mjs": "2c24da08170bb32c21d8648a0e6d9242032dc8d70b9067e566e02ac011c320bb",
+        "exp/policybench/tac-x-tic/game.mjs": "ce5367720b8df8203a99160a2b7b18b16d33b626949994f8df9cf989dc79cd4f",
+        "exp/policybench/tac-x-tic/index.mjs": "fc757b12034fab1f98e97832f274a1f1aca10e0c7450838a891c91c9219a81e3",
+        "exp/policybench/tac-x-tic/policies.mjs": "94abc4ccc86293104b854db9b6706bba3163d4591ebf529ceb21269b717afef1",
+        "sources/pxcube/vendor/studio/part-first-kernel/src/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9"
+      },
+      "added": [],
+      "removed": [],
+      "modified": []
+    },
+    "staleThree": {
+      "command": [
+        "node",
+        "tools/emit-pagerouter.mjs",
+        "/workspace/scratch/ad1424973ce5/policybench-authority/owner-final-negative-target",
+        "--cli-args-only"
+      ],
+      "exit": 1,
+      "before": {
+        "exp/policybench/README.md": "d092f74e7c1dd8635c6f2d302bc5de3d5469fbc71969e6f3bab31e76bde024b7",
+        "exp/policybench/cli/args.mjs": "f340cf1a33897e9321b5ef07c8afca5ee1c395adc9581945192a948c8815a59c",
+        "exp/policybench/cli/flick.mjs": "9a0848067b59cea766cbdd86c4de070698448cb3095c05dada4ba5d2072dc435",
+        "exp/policybench/cli/ledger.mjs": "6b3ad89eb202815a2b3dc1bb9b619213694b285ebccd1793fd5a7689e7e3a0b5",
+        "exp/policybench/cli/match.mjs": "86cb20f8e8b7bfc2c702d150556e8a40d344e85dac1afb8a9e4ed36b06f70a1b",
+        "exp/policybench/cli/tournament.mjs": "9781fcb50d3715afa40798556df40e97752acbcdc033b36d408fe6fad8747a4e",
+        "exp/policybench/cli-args.test.mjs": "2ff3890d623a774a24b1ca548700a8db1340d5468446c86d29d50ab059898da7",
+        "exp/policybench/core/agent.mjs": "c211f3e7d7ffd1fd0497e49bfc9d997371e0e2d2aa36acca8f84851cba039338",
+        "exp/policybench/core/events.mjs": "ac1888638921bebff0beb8fea9a41dfe76369369daef74e4234615ff22c84736",
+        "exp/policybench/core/game.mjs": "06bb0bb4017778390657fd0a56211d821a8a071ef82614f8138ecc3ac25de4ed",
+        "exp/policybench/core/hash.mjs": "7145bd6a7d5ee60daaf5b5f577309b09353a28307114872333fbe377b30366bd",
+        "exp/policybench/core/index.mjs": "1d70718342e1d7cad4524662bbcbc1b181b84cfeb6f2807321851e14723c1ead",
+        "exp/policybench/core/policy.mjs": "37b07149e969461f71676960412a49f6e13dccacc83169fe94547dad718641fd",
+        "exp/policybench/core/registry.mjs": "0f7ba20bc122fb2e5052a02b1a4916551cb20ac9f48432d37da145cd21366531",
+        "exp/policybench/core/rng.mjs": "2c158509715937efd108cbe3aac7b8462ddce70a0b799ddb1c9159d0f7b8334a",
+        "exp/policybench/engine/index.mjs": "225cdafe3cf668d1b9ae5bb739100ab0b23aad2e3f7006d9617c659b198ef0b8",
+        "exp/policybench/engine/match.mjs": "5c3f685454637f8a96ec312a14b0f4b68c1e4c0f64654d4211c6a443f0f59ccf",
+        "exp/policybench/engine/replay.mjs": "08fff2cb7943126e4ba103686fd3f11d3d0db4e33e13ead2e5a8d851d4c5ef76",
+        "exp/policybench/engine/simulate.mjs": "25f7459612f10bb97edfc0202e0abe942734830ee09fbeea38267d2d6845937d",
+        "exp/policybench/flick-puck/game.mjs": "f949e4853c1ada238304512ec23c3f57b7aa8ed0c53a4baea9e03ebdaf616f20",
+        "exp/policybench/flick-puck/index.mjs": "fda1744188b8ccaca023861e9296e9115556d75c6daaf8c114327c3f942f7544",
+        "exp/policybench/flick-puck/policies.mjs": "d5145d569cf29888f5ef6d97a7050c2a1c046f85cb93e3ea5b82ea7f640a2d1f",
+        "exp/policybench/flick-puck.test.mjs": "832e57938965fb882d505afd0a60786770c2b93581b1724876a24619c3495f57",
+        "exp/policybench/policies/index.mjs": "d493b565c512e5f6d6e7a83d4a61b8f17928b8c8db41d37d0f7e39e1aca77e16",
+        "exp/policybench/policies/random.mjs": "dc90c006d929cf8bb08343302e7dfedafc92914a792c790d007db6da5ff94ab9",
+        "exp/policybench/policybench.test.mjs": "1d9bd00b889d756f195c88e9a0530989a0f872c7c3d574cd2d1e6c5583d359b9",
+        "exp/policybench/pxc/capabilities.mjs": "c31020694f110b10845939c780dfc2cf4817dfccde1f1c20116fc1c7798a3379",
+        "exp/policybench/pxc/index.mjs": "4502b50b54484832f2fb660134f31b66ed10628446b2b013ab4d0098d9e059a4",
+        "exp/policybench/pxc/match.mjs": "bb77f6cba8c4b26e2ffd3099c1c3f5cb6edaa782fd7210f8b2ab9cbe0b9b1caf",
+        "exp/policybench/tac-x-tic/capabilities.mjs": "b1df81c6f2b950a85d6179dcf448b71d47300cbb88eb0765db480b7015ae423a",
+        "exp/policybench/tac-x-tic/contrib/allocator.mjs": "c45797fb029dd8fdd82006e3bb778d21ab0e6e1b5a7602168e8fcebe72f6e158",
+        "exp/policybench/tac-x-tic/contrib/cartographer.mjs": "0ee9f4f42545df47b1ff72e928f4a8ae1163e9e8d3fa97240a03e5f78b6d534a",
+        "exp/policybench/tac-x-tic/contrib/classifier.mjs": "51182b762f0eba3c551812d53d22b97e32aa9053f14ef1fc8c1ba40a4821b802",
+        "exp/policybench/tac-x-tic/contrib/index.mjs": "ea96ee09ca642df2e6bf4cdfe09036ba8602a362e4d81d2f7fefcc3b0a77ff20",
+        "exp/policybench/tac-x-tic/contrib/simulator.mjs": "2c24da08170bb32c21d8648a0e6d9242032dc8d70b9067e566e02ac011c320bb",
+        "exp/policybench/tac-x-tic/game.mjs": "ce5367720b8df8203a99160a2b7b18b16d33b626949994f8df9cf989dc79cd4f",
+        "exp/policybench/tac-x-tic/index.mjs": "fc757b12034fab1f98e97832f274a1f1aca10e0c7450838a891c91c9219a81e3",
+        "exp/policybench/tac-x-tic/policies.mjs": "94abc4ccc86293104b854db9b6706bba3163d4591ebf529ceb21269b717afef1",
+        "sources/pxcube/vendor/studio/part-first-kernel/src/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9"
+      },
+      "after": {
+        "exp/policybench/README.md": "d092f74e7c1dd8635c6f2d302bc5de3d5469fbc71969e6f3bab31e76bde024b7",
+        "exp/policybench/cli/args.mjs": "f340cf1a33897e9321b5ef07c8afca5ee1c395adc9581945192a948c8815a59c",
+        "exp/policybench/cli/flick.mjs": "9a0848067b59cea766cbdd86c4de070698448cb3095c05dada4ba5d2072dc435",
+        "exp/policybench/cli/ledger.mjs": "6b3ad89eb202815a2b3dc1bb9b619213694b285ebccd1793fd5a7689e7e3a0b5",
+        "exp/policybench/cli/match.mjs": "86cb20f8e8b7bfc2c702d150556e8a40d344e85dac1afb8a9e4ed36b06f70a1b",
+        "exp/policybench/cli/tournament.mjs": "9781fcb50d3715afa40798556df40e97752acbcdc033b36d408fe6fad8747a4e",
+        "exp/policybench/cli-args.test.mjs": "2ff3890d623a774a24b1ca548700a8db1340d5468446c86d29d50ab059898da7",
+        "exp/policybench/core/agent.mjs": "c211f3e7d7ffd1fd0497e49bfc9d997371e0e2d2aa36acca8f84851cba039338",
+        "exp/policybench/core/events.mjs": "ac1888638921bebff0beb8fea9a41dfe76369369daef74e4234615ff22c84736",
+        "exp/policybench/core/game.mjs": "06bb0bb4017778390657fd0a56211d821a8a071ef82614f8138ecc3ac25de4ed",
+        "exp/policybench/core/hash.mjs": "7145bd6a7d5ee60daaf5b5f577309b09353a28307114872333fbe377b30366bd",
+        "exp/policybench/core/index.mjs": "1d70718342e1d7cad4524662bbcbc1b181b84cfeb6f2807321851e14723c1ead",
+        "exp/policybench/core/policy.mjs": "37b07149e969461f71676960412a49f6e13dccacc83169fe94547dad718641fd",
+        "exp/policybench/core/registry.mjs": "0f7ba20bc122fb2e5052a02b1a4916551cb20ac9f48432d37da145cd21366531",
+        "exp/policybench/core/rng.mjs": "2c158509715937efd108cbe3aac7b8462ddce70a0b799ddb1c9159d0f7b8334a",
+        "exp/policybench/engine/index.mjs": "225cdafe3cf668d1b9ae5bb739100ab0b23aad2e3f7006d9617c659b198ef0b8",
+        "exp/policybench/engine/match.mjs": "5c3f685454637f8a96ec312a14b0f4b68c1e4c0f64654d4211c6a443f0f59ccf",
+        "exp/policybench/engine/replay.mjs": "08fff2cb7943126e4ba103686fd3f11d3d0db4e33e13ead2e5a8d851d4c5ef76",
+        "exp/policybench/engine/simulate.mjs": "25f7459612f10bb97edfc0202e0abe942734830ee09fbeea38267d2d6845937d",
+        "exp/policybench/flick-puck/game.mjs": "f949e4853c1ada238304512ec23c3f57b7aa8ed0c53a4baea9e03ebdaf616f20",
+        "exp/policybench/flick-puck/index.mjs": "fda1744188b8ccaca023861e9296e9115556d75c6daaf8c114327c3f942f7544",
+        "exp/policybench/flick-puck/policies.mjs": "d5145d569cf29888f5ef6d97a7050c2a1c046f85cb93e3ea5b82ea7f640a2d1f",
+        "exp/policybench/flick-puck.test.mjs": "832e57938965fb882d505afd0a60786770c2b93581b1724876a24619c3495f57",
+        "exp/policybench/policies/index.mjs": "d493b565c512e5f6d6e7a83d4a61b8f17928b8c8db41d37d0f7e39e1aca77e16",
+        "exp/policybench/policies/random.mjs": "dc90c006d929cf8bb08343302e7dfedafc92914a792c790d007db6da5ff94ab9",
+        "exp/policybench/policybench.test.mjs": "1d9bd00b889d756f195c88e9a0530989a0f872c7c3d574cd2d1e6c5583d359b9",
+        "exp/policybench/pxc/capabilities.mjs": "c31020694f110b10845939c780dfc2cf4817dfccde1f1c20116fc1c7798a3379",
+        "exp/policybench/pxc/index.mjs": "4502b50b54484832f2fb660134f31b66ed10628446b2b013ab4d0098d9e059a4",
+        "exp/policybench/pxc/match.mjs": "bb77f6cba8c4b26e2ffd3099c1c3f5cb6edaa782fd7210f8b2ab9cbe0b9b1caf",
+        "exp/policybench/tac-x-tic/capabilities.mjs": "b1df81c6f2b950a85d6179dcf448b71d47300cbb88eb0765db480b7015ae423a",
+        "exp/policybench/tac-x-tic/contrib/allocator.mjs": "c45797fb029dd8fdd82006e3bb778d21ab0e6e1b5a7602168e8fcebe72f6e158",
+        "exp/policybench/tac-x-tic/contrib/cartographer.mjs": "0ee9f4f42545df47b1ff72e928f4a8ae1163e9e8d3fa97240a03e5f78b6d534a",
+        "exp/policybench/tac-x-tic/contrib/classifier.mjs": "51182b762f0eba3c551812d53d22b97e32aa9053f14ef1fc8c1ba40a4821b802",
+        "exp/policybench/tac-x-tic/contrib/index.mjs": "ea96ee09ca642df2e6bf4cdfe09036ba8602a362e4d81d2f7fefcc3b0a77ff20",
+        "exp/policybench/tac-x-tic/contrib/simulator.mjs": "2c24da08170bb32c21d8648a0e6d9242032dc8d70b9067e566e02ac011c320bb",
+        "exp/policybench/tac-x-tic/game.mjs": "ce5367720b8df8203a99160a2b7b18b16d33b626949994f8df9cf989dc79cd4f",
+        "exp/policybench/tac-x-tic/index.mjs": "fc757b12034fab1f98e97832f274a1f1aca10e0c7450838a891c91c9219a81e3",
+        "exp/policybench/tac-x-tic/policies.mjs": "94abc4ccc86293104b854db9b6706bba3163d4591ebf529ceb21269b717afef1",
+        "sources/pxcube/vendor/studio/part-first-kernel/src/pxc.mjs": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9"
+      },
+      "added": [],
+      "removed": [],
+      "modified": []
+    },
+    "fullVsBaseline": {
+      "added": [
+        "exp/policybench/cli/args.mjs"
+      ],
+      "removed": [],
+      "modified": [
+        "exp/policybench/cli/flick.mjs",
+        "exp/policybench/cli/match.mjs",
+        "exp/policybench/cli/tournament.mjs"
+      ]
+    }
+  },
+  "build": {
+    "siteFiles": 839,
+    "allSiteBytesEqual": true,
+    "siteBuildId": "b39f577589ac2bcd33a06d1d72ce1bf10771747c6cf8f57c32474c0e4fb4244e",
+    "siteDigestEqual": true,
+    "siteFilesManifestEqual": true,
+    "receiptChangedPaths": [
+      "$.sourceDigest",
+      "$.sourceInputs[146].bytes",
+      "$.sourceInputs[146].sha256"
+    ],
+    "sourceInputsVerified": 1527,
+    "sourceDateEpoch": 1791787301,
+    "recipeEqual": true,
+    "receiptSha256": "69b1b170b201f0bf725ea5336a40cd57403c979bfb61820128618cd13a0cb9c3",
+    "siteDirectory": "/tmp/pagerouter-source-authority-20261016/4f341369301fe6faf6ded59d25b541de/execroot/pagerouter/bazel-out/k8-fastbuild/bin/site.site",
+    "firstRunWrapperSymlinkIssue": {
+      "oldConvenienceLink": "/tmp/pagerouter-integration-pr5-cold/4f341369301fe6faf6ded59d25b541de/execroot/pagerouter/bazel-out/k8-fastbuild/bin",
+      "actualOutputVerifiedAbsolutely": "/tmp/pagerouter-source-authority-20261016/4f341369301fe6faf6ded59d25b541de/execroot/pagerouter/bazel-out/k8-fastbuild/bin"
+    },
+    "sourceInputDelta": {
+      "path": "exp/policybench/cli/args.mjs",
+      "beforeBytes": 2048,
+      "afterBytes": 2056,
+      "afterSha256": "f34a813413121c88a357e54439695ddb71e31774806d2fa85c5dbbd3f16fb868"
+    }
+  },
+  "preservation": {
+    "PR6": {
+      "reference": "3723599bb3e1b6c6c44cc5e3385ed2d8fa57e34b",
+      "files": 4,
+      "allBytesPreserved": true
+    },
+    "PR7": {
+      "reference": "3723599bb3e1b6c6c44cc5e3385ed2d8fa57e34b",
+      "files": 140,
+      "allBytesPreserved": true
+    },
+    "existingCalledRecords": {
+      "reference": "d354d225b89b85abc5b414878c69619e2395b799",
+      "files": 36,
+      "allBytesPreserved": true,
+      "previousIntegrationShotSha256": "2ad33ef112e3cd367fa6963d5169dd64d2d25d05e830eab6ff0f6a261866afc0"
+    },
+    "events": {
+      "baselineBytes": 4044,
+      "baselineSha256": "b03e4a073365ee765297cd67a04cbedf1e444d72620ebff5789ff3cb9ed90bb4",
+      "bytePrefixPreserved": true,
+      "appendedEvents": 1,
+      "suffix": {
+        "event": "shot.called",
+        "shot": "source-authority-2026-10-16",
+        "sha256": "81a46a2072abe5136c6ade2375cb40f7bd2a822674d3a448710552bd60065348",
+        "at": "2026-10-16T01:15:11Z"
+      }
+    }
+  },
+  "calledShot": {
+    "id": "source-authority-2026-10-16",
+    "sha256": "81a46a2072abe5136c6ade2375cb40f7bd2a822674d3a448710552bd60065348",
+    "coverage": "The three clauses prove exact repository file-set, one added event line, and unchanged executable top-level args statements. Source application, emitter guards and regeneration are separately demonstrated by these receipts; they are not additional grader predicates.",
+    "grade": {
+      "shot": "source-authority-2026-10-16",
+      "shotSha256": "81a46a2072abe5136c6ade2375cb40f7bd2a822674d3a448710552bd60065348",
+      "sourceRoot": ".",
+      "problems": [],
+      "called": {
+        "at": "2026-10-16T01:15:11Z"
+      },
+      "precheck": {
+        "pass": true,
+        "clausesTrueOnBaseline": [
+          "C3"
+        ]
+      },
+      "results": [
+        {
+          "id": "C1",
+          "kind": "source.changedExactly",
+          "covers": [
+            "S1"
+          ],
+          "pass": true,
+          "evidence": [
+            "source: modified [checkpoint/ci/shots/called/events.jsonl, checkpoint/exp/policybench/cli/args.mjs] added [checkpoint/ci/integration/2026-10-16/README.md, checkpoint/ci/integration/2026-10-16/apply-source-update.mjs, checkpoint/ci/integration/2026-10-16/build.txt, checkpoint/ci/integration/2026-10-16/regeneration.txt, checkpoint/ci/integration/2026-10-16/site.receipt.json, checkpoint/ci/integration/2026-10-16/source-manifest.json, checkpoint/ci/integration/2026-10-16/source.patch, checkpoint/ci/integration/2026-10-16/tests.txt, checkpoint/ci/integration/2026-10-16/verification.json, checkpoint/ci/shots/called/source-authority-2026-10-16.shot.json] removed [none]"
+          ]
+        },
+        {
+          "id": "C2",
+          "kind": "text.onlyLinesAdded",
+          "covers": [
+            "S2"
+          ],
+          "pass": true,
+          "evidence": [
+            "checkpoint/ci/shots/called/events.jsonl: 1 lines added (candidate lines 26-26), called 1; no baseline line changed"
+          ]
+        },
+        {
+          "id": "C3",
+          "kind": "ast.onlyImportsChanged",
+          "covers": [
+            "S3"
+          ],
+          "pass": true,
+          "evidence": [
+            "checkpoint/exp/policybench/cli/args.mjs: 1 other statements identical; imports unchanged"
+          ]
+        }
+      ],
+      "made": true
+    }
+  },
+  "limitations": [
+    "Desktop D:/t-t-1 has not been written; apply the guarded private-bundle script to get a desktop receipt.",
+    "Full incoming upstream emission contains independent numerics/physics work; only the four shared-reader CLI modules are regenerated into PageRouter.",
+    "The incoming root lock has incomplete workspace records and unrelated apps/tests were excluded; no full upstream workspace npm ci/test certification.",
+    "The new canonical run is fresh. Its cached repeat checks the repaired local convenience symlink; no new cold-receipt-equality claim is made."
+  ],
+  "selection": {
+    "observedLocalCheckpoint": "0724f6eb42405653a422e144e28a0e04ea9a0df2",
+    "selectorSha256": "ed7e0f611f3061dfe92b093ec9fb900258d1c3205b9972e0c2b65d79b8707e92",
+    "method": "Execute the exact unchanged addedShots function against actual nonmerge checkpoint ancestry. A following receipt-only commit is rechecked for the identical projection.",
+    "cases": {
+      "originalWorkflowBase": {
+        "base": "37fbece3db61195cebde8b7786496d82d825b529",
+        "shots": [
+          {
+            "file": "checkpoint/ci/shots/called/lane-merges.shot.json",
+            "at": "f550ec1af864f8470bb51c9b20765813b8593abc"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/kernel-dir.shot.json",
+            "at": "ee4b496f51b26c5932498e5c5edb3c605cdac1f4"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/extract-equalJson.shot.json",
+            "at": "59fdaa22644d4774c7def08390887ee2f77f62f2"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/kernel-freeze.shot.json",
+            "at": "250c3d84d41b4e6a9d1e3c99799ce24fdd081077"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/kernel-html-esc.shot.json",
+            "at": "e6e1c0bcf914b3e0baa0d05b3ec94cf86e074254"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/extract-flag-v2.shot.json",
+            "at": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/extract-flag.shot.json",
+            "at": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/kernel-canonical-lax.shot.json",
+            "at": "f868426df049993d8b7d41faf9b094f5872ee443"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/grader-const-declarations.shot.json",
+            "at": "0aa56a04632d2076c43ab53688bffc167bdb38ec"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/superseded-shots.shot.json",
+            "at": "c8b1b021a8e2485c695dda1ad4bb95ca120dfbc3"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/extract-import-closure.shot.json",
+            "at": "57a98400706e0046b12a025cec6db9b764efd2ce"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/kernel-canonical-json.shot.json",
+            "at": "3469ff5766c8d58a2d9a50adb6c0a75d102e0efc"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/block5-freeze-tree.shot.json",
+            "at": "28a7adbf08b7e428900764e739d967826546b056"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/kernel-ledger.shot.json",
+            "at": "71c2032b9e1724e917c0b997e772863c1d013641"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/annotation-limits.shot.json",
+            "at": "2a934496f5c78a246509c9337435d4e825fe0d74"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/integration-main-2026-10-15.shot.json",
+            "at": "d354d225b89b85abc5b414878c69619e2395b799"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/source-authority-2026-10-16.shot.json",
+            "at": null
+          }
+        ]
+      },
+      "currentTargetBase": {
+        "base": "d42e364dc5ff43384894442113edb69e47ad3b69",
+        "shots": [
+          {
+            "file": "checkpoint/ci/shots/called/kernel-dir.shot.json",
+            "at": "ee4b496f51b26c5932498e5c5edb3c605cdac1f4"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/extract-equalJson.shot.json",
+            "at": "59fdaa22644d4774c7def08390887ee2f77f62f2"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/kernel-freeze.shot.json",
+            "at": "250c3d84d41b4e6a9d1e3c99799ce24fdd081077"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/kernel-html-esc.shot.json",
+            "at": "e6e1c0bcf914b3e0baa0d05b3ec94cf86e074254"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/extract-flag-v2.shot.json",
+            "at": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/extract-flag.shot.json",
+            "at": "9e52a0c7cf0912974abbbdb3fe7b9446f8f547d9"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/kernel-canonical-lax.shot.json",
+            "at": "f868426df049993d8b7d41faf9b094f5872ee443"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/grader-const-declarations.shot.json",
+            "at": "0aa56a04632d2076c43ab53688bffc167bdb38ec"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/superseded-shots.shot.json",
+            "at": "c8b1b021a8e2485c695dda1ad4bb95ca120dfbc3"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/extract-import-closure.shot.json",
+            "at": "57a98400706e0046b12a025cec6db9b764efd2ce"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/kernel-canonical-json.shot.json",
+            "at": "3469ff5766c8d58a2d9a50adb6c0a75d102e0efc"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/block5-freeze-tree.shot.json",
+            "at": "28a7adbf08b7e428900764e739d967826546b056"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/kernel-ledger.shot.json",
+            "at": "71c2032b9e1724e917c0b997e772863c1d013641"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/annotation-limits.shot.json",
+            "at": "2a934496f5c78a246509c9337435d4e825fe0d74"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/integration-main-2026-10-15.shot.json",
+            "at": "d354d225b89b85abc5b414878c69619e2395b799"
+          },
+          {
+            "file": "checkpoint/ci/shots/called/source-authority-2026-10-16.shot.json",
+            "at": null
+          }
+        ]
+      },
+      "followupOnly": {
+        "base": "d354d225b89b85abc5b414878c69619e2395b799",
+        "shots": [
+          {
+            "file": "checkpoint/ci/shots/called/source-authority-2026-10-16.shot.json",
+            "at": null
+          }
+        ]
+      }
+    }
+  }
+}

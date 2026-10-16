@@ -1,0 +1,70 @@
+{
+  "schema": "called-shot@0",
+  "id": "source-authority-2026-10-16",
+  "sourceRoot": ".",
+  "baseline": {
+    "commit": "d354d225b89b85abc5b414878c69619e2395b799"
+  },
+  "call": [
+    {
+      "id": "S1",
+      "text": "Modify only the generated CLI args module and call log, and add only this shot plus the enumerated source handoff and verification evidence files."
+    },
+    {
+      "id": "S2",
+      "text": "The call log retains every baseline line in order and adds exactly one line."
+    },
+    {
+      "id": "S3",
+      "text": "The regenerated args module retains every executable top-level statement; only comments and imports may differ."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "checkpoint/exp/policybench/cli/args.mjs",
+        "checkpoint/ci/shots/called/events.jsonl"
+      ],
+      "added": [
+        "checkpoint/ci/integration/2026-10-16/README.md",
+        "checkpoint/ci/integration/2026-10-16/source.patch",
+        "checkpoint/ci/integration/2026-10-16/source-manifest.json",
+        "checkpoint/ci/integration/2026-10-16/apply-source-update.mjs",
+        "checkpoint/ci/integration/2026-10-16/verification.json",
+        "checkpoint/ci/integration/2026-10-16/tests.txt",
+        "checkpoint/ci/integration/2026-10-16/regeneration.txt",
+        "checkpoint/ci/integration/2026-10-16/build.txt",
+        "checkpoint/ci/integration/2026-10-16/site.receipt.json",
+        "checkpoint/ci/shots/called/source-authority-2026-10-16.shot.json"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S2"
+      ],
+      "kind": "text.onlyLinesAdded",
+      "files": [
+        "checkpoint/ci/shots/called/events.jsonl"
+      ],
+      "lines": 1
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S3"
+      ],
+      "kind": "ast.onlyImportsChanged",
+      "files": [
+        "checkpoint/exp/policybench/cli/args.mjs"
+      ],
+      "except": []
+    }
+  ]
+}

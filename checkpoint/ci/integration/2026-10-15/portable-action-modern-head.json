@@ -1,0 +1,52 @@
+{
+  "shot": "portable-action",
+  "shotSha256": "09aedaafd10e4a49c56e508e5beccbe8ad32415eb00d9a90e30cadd728082c71",
+  "sourceRoot": ".",
+  "problems": [],
+  "called": {
+    "at": "2026-10-12T07:59:43Z"
+  },
+  "precheck": {
+    "pass": true,
+    "clausesTrueOnBaseline": [
+      "C2"
+    ]
+  },
+  "results": [
+    {
+      "id": "C1",
+      "kind": "source.changedExactly",
+      "covers": [
+        "S1"
+      ],
+      "pass": false,
+      "evidence": [
+        "source added: happened but was not called: checkpoint/ci/shots/called/per-shot-candidate.shot.json",
+        "source added: happened but was not called: checkpoint/ci/shots/called/verdict-annotations.shot.json"
+      ]
+    },
+    {
+      "id": "C2",
+      "kind": "output.changedExactly",
+      "covers": [
+        "S2"
+      ],
+      "pass": true,
+      "evidence": [
+        "output: modified [none] added [none] removed [none]"
+      ]
+    },
+    {
+      "id": "C3",
+      "kind": "json.valueEquals",
+      "covers": [
+        "S3"
+      ],
+      "pass": false,
+      "evidence": [
+        "data/catalog.json $.release.siteBuildId is \"8b278a8e5b89f887ffc096f27663ac8f95d60708dee594fe80a58fe042c66d9d\", called \"7f45fbf0c95ff7cae759ffe05b2d93d92f652fa0f5b3010fd55e13944dd6d4e1\""
+      ]
+    }
+  ],
+  "made": false
+}

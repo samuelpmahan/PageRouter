@@ -1,0 +1,64 @@
+{
+  "schema": "called-shot@0",
+  "id": "annotation-limits",
+  "sourceRoot": ".",
+  "baseline": {
+    "commit": "71c2032b9e1724e917c0b997e772863c1d013641"
+  },
+  "call": [
+    {
+      "id": "S1",
+      "text": "Source changes are exactly: actions/called-shot/README.md, actions/called-shot/bin/called-shots.mjs, actions/called-shot/test/cli.test.mjs and checkpoint/ci/shots/called/events.jsonl modified; checkpoint/ci/shots/called/annotation-limits.shot.json added; nothing removed."
+    },
+    {
+      "id": "S2",
+      "text": "In actions/called-shot/bin/called-shots.mjs, no top-level statement other than imports changes, except the function githubOutputs."
+    },
+    {
+      "id": "S3",
+      "text": "The built site is byte-identical to the baseline."
+    }
+  ],
+  "clauses": [
+    {
+      "id": "C1",
+      "covers": [
+        "S1"
+      ],
+      "kind": "source.changedExactly",
+      "modified": [
+        "actions/called-shot/README.md",
+        "actions/called-shot/bin/called-shots.mjs",
+        "actions/called-shot/test/cli.test.mjs",
+        "checkpoint/ci/shots/called/events.jsonl"
+      ],
+      "added": [
+        "checkpoint/ci/shots/called/annotation-limits.shot.json"
+      ],
+      "removed": []
+    },
+    {
+      "id": "C2",
+      "covers": [
+        "S2"
+      ],
+      "kind": "ast.onlyImportsChanged",
+      "files": [
+        "actions/called-shot/bin/called-shots.mjs"
+      ],
+      "except": [
+        "githubOutputs"
+      ]
+    },
+    {
+      "id": "C3",
+      "covers": [
+        "S3"
+      ],
+      "kind": "output.changedExactly",
+      "modified": [],
+      "added": [],
+      "removed": []
+    }
+  ]
+}

@@ -36,14 +36,32 @@ function parse(file) {
 }
 const where = node => node.startPosition.row === node.endPosition.row ? `line ${node.startPosition.row + 1}` : `lines ${node.startPosition.row + 1}-${node.endPosition.row + 1}`;
 const declarationOf = statement => statement.type === 'export_statement' ? statement.childForFieldName('declaration') : statement;
+// A top-level function by name: a function declaration, or a const/let/var
+// declarator bound to a function or arrow expression. Returns the declaration
+// (or declarator) node, so an `export` prefix is not part of its text.
 function findFunction(root, name) {
   for (const statement of root.namedChildren) {
     const decl = declarationOf(statement);
-    if (decl?.type === 'function_declaration' && decl.childForFieldName('name')?.text === name) return statement;
+    if (decl?.type === 'function_declaration' && decl.childForFieldName('name')?.text === name) return decl;
+    if (decl?.type === 'lexical_declaration' || decl?.type === 'variable_declaration') {
+      for (const declarator of decl.namedChildren) {
+        const value = declarator.childForFieldName?.('value');
+        if (declarator.childForFieldName?.('name')?.text === name && ['arrow_function', 'function_expression', 'function'].includes(value?.type)) return declarator;
+      }
+    }
   }
   return null;
 }
-const declaredName = statement => declarationOf(statement)?.childForFieldName?.('name')?.text ?? null;
+// The names a top-level statement declares: a function or class name, or every
+// identifier-named declarator of a const/let/var declaration.
+const declaredName = statement => {
+  const decl = declarationOf(statement);
+  if (decl?.type === 'lexical_declaration' || decl?.type === 'variable_declaration') {
+    return decl.namedChildren.map(d => d.childForFieldName?.('name')).filter(n => n?.type === 'identifier').map(n => n.text);
+  }
+  const name = decl?.childForFieldName?.('name')?.text;
+  return name ? [name] : [];
+};
 
 // ------------------------------------------------------------ files
 // Source files are what git counts as the repository: tracked files plus
@@ -136,7 +154,21 @@ export const CLAUSES = {
     let pass = true;
     for (const file of c.files) {
       const roots = [s.base, s.cand].map(side => parse(path.join(side, file)));
-      const rest = root => root.namedChildren.filter(n => n.type !== 'import_statement' && n.type !== 'comment' && !(c.except ?? []).includes(declaredName(n)));
+      // A statement declaring only excepted names drops out. A declaration that
+      // also declares other names keeps them: its excepted declarators drop out
+      // and the rest still compare, so `const a = 1, esc = f` -> `const a = 1`
+      // passes with except [esc] while any change to `a` does not.
+      const except = new Set(c.except ?? []);
+      // Every const/let/var declaration compares as its kind and its kept
+      // declarators, so a removed neighbor leaves the rest comparable.
+      const rest = root => root.namedChildren.filter(n => n.type !== 'import_statement' && n.type !== 'comment').flatMap(n => {
+        const decl = declarationOf(n);
+        if (decl?.type !== 'lexical_declaration' && decl?.type !== 'variable_declaration') return declaredName(n).some(name => except.has(name)) ? [] : [n];
+        const kept = decl.namedChildren.filter(d => d.type === 'variable_declarator' && !except.has(d.childForFieldName?.('name')?.text));
+        if (!kept.length) return [];
+        const exported = n.type === 'export_statement' ? 'export ' : '';
+        return [{ text: `${exported}${decl.child(0).text} ${kept.map(d => d.text).join(', ')}`, startPosition: n.startPosition, endPosition: n.endPosition }];
+      });
       const imports = root => root.namedChildren.filter(n => n.type === 'import_statement').map(n => n.text);
       const [a, b] = roots.map(rest);
       const i = a.findIndex((n, k) => n.text !== b[k]?.text);
