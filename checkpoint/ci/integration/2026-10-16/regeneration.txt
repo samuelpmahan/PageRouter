@@ -1,0 +1,65 @@
+
+===== Unmodified authoritative source full emission =====
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+emitted 35 modules into /workspace/scratch/ad1424973ce5/policybench-authority/owner-baseline-target/exp/policybench
+
+===== Unmodified source loses helper (expected failure) =====
+node:internal/modules/esm/resolve:271
+    throw new ERR_MODULE_NOT_FOUND(
+          ^
+
+Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/workspace/scratch/ad1424973ce5/policybench-authority/owner-baseline-target/exp/policybench/cli/args.mjs' imported from /workspace/scratch/ad1424973ce5/policybench-authority/owner-baseline-target/exp/policybench/cli-args.test.mjs
+    at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+    at moduleResolve (node:internal/modules/esm/resolve:865:10)
+    at defaultResolve (node:internal/modules/esm/resolve:992:11)
+    at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+    at ModuleLoader.resolveSync (node:internal/modules/esm/loader:759:56)
+    at #resolve (node:internal/modules/esm/loader:683:17)
+    at ModuleLoader.getOrCreateModuleJob (node:internal/modules/esm/loader:603:35)
+    at ModuleJob.syncLink (node:internal/modules/esm/module_job:163:33)
+    at ModuleJob.link (node:internal/modules/esm/module_job:253:17) {
+  code: 'ERR_MODULE_NOT_FOUND',
+  url: 'file:///workspace/scratch/ad1424973ce5/policybench-authority/owner-baseline-target/exp/policybench/cli/args.mjs'
+}
+
+Node.js v24.19.0
+✖ /workspace/scratch/ad1424973ce5/policybench-authority/owner-baseline-target/exp/policybench/cli-args.test.mjs (104.606396ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 121.444721
+
+✖ failing tests:
+
+test at policybench-authority/owner-baseline-target/exp/policybench/cli-args.test.mjs:1:1
+✖ /workspace/scratch/ad1424973ce5/policybench-authority/owner-baseline-target/exp/policybench/cli-args.test.mjs (104.606396ms)
+  'test failed'
+
+===== Patched full/bounded/repeat/stale-three emissions =====
+$ node tools/emit-pagerouter.mjs /workspace/scratch/ad1424973ce5/policybench-authority/owner-final-full-target
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+emitted 36 modules into /workspace/scratch/ad1424973ce5/policybench-authority/owner-final-full-target/exp/policybench
+$ node tools/emit-pagerouter.mjs /workspace/scratch/ad1424973ce5/policybench-authority/owner-final-bounded-target --cli-args-only
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+emitted 4 modules into /workspace/scratch/ad1424973ce5/policybench-authority/owner-final-bounded-target/exp/policybench
+$ node tools/emit-pagerouter.mjs /workspace/scratch/ad1424973ce5/policybench-authority/owner-final-bounded-target --cli-args-only
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+emitted 4 modules into /workspace/scratch/ad1424973ce5/policybench-authority/owner-final-bounded-target/exp/policybench
+$ node tools/emit-pagerouter.mjs /workspace/scratch/ad1424973ce5/policybench-authority/owner-final-negative-target --cli-args-only
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+file:///workspace/scratch/ad1424973ce5/policybench-authority/owner-final-negative-source/tools/emit-pagerouter.mjs:67
+    throw new Error(`Shared CLI extraction stale in ${name}.js; target unchanged`);
+          ^
+
+Error: Shared CLI extraction stale in flick.js; target unchanged
+    at file:///workspace/scratch/ad1424973ce5/policybench-authority/owner-final-negative-source/tools/emit-pagerouter.mjs:67:11
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0

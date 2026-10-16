@@ -1,0 +1,75 @@
+{
+  "schema": "policybench-source-update@1",
+  "sourceRoot": "D:/t-t-1",
+  "gitRevision": null,
+  "incomingZipSha256": "6bacad8dc48ebe838145259461f5cddac4e40bd45a73bf4d86db14d6f5af9c77",
+  "incomingManifestSha256": "47f591dc2ae01a165a2be9472f8aebeb9d17c81f7eb6da3417885a8899475540",
+  "incomingSourceFileCount": 48,
+  "incomingSourceBytes": 267377,
+  "updatedSourceFileCount": 50,
+  "updatedSourceBytes": 279548,
+  "scope": "Port the shared CLI reader upstream; preflight compiled consumers before emission; add bounded four-module emission and native Node regression checks. Preserve every unrelated incoming source byte.",
+  "privateApplyManifestSha256": "fb644ebd2f45ebf87a143e8410a714ea5709a47f21547e0a33e4f8a0f898d7e7",
+  "changes": [
+    {
+      "path": "packages/cli/src/args.ts",
+      "before": null,
+      "after": {
+        "size": 2166,
+        "sha256": "339161ce0cc806363a8e6faf7cc86b5c29a10ea7dfbbcbe1b0aae857628471e8"
+      }
+    },
+    {
+      "path": "packages/cli/src/flick.ts",
+      "before": {
+        "size": 5309,
+        "sha256": "e35308ac796b25e2d550434a16b824eaff3b29dfb090a38ca9d7cbf73c2aee0a"
+      },
+      "after": {
+        "size": 5262,
+        "sha256": "abc521e090d56ac32e01ebcdc8db00caab10eb23f5f5302a4c3a4b2a74fe4f97"
+      }
+    },
+    {
+      "path": "packages/cli/src/match.ts",
+      "before": {
+        "size": 5508,
+        "sha256": "3983ec97310c3c81e7187df281fbb327aed1e531d7f2b1ddf90c5547ec301f6a"
+      },
+      "after": {
+        "size": 5461,
+        "sha256": "ffbeb27a4a72d960597b3f86ba2ffd1a63f5322d1c05ff83fc794674bdb9ec30"
+      }
+    },
+    {
+      "path": "packages/cli/src/tournament.ts",
+      "before": {
+        "size": 11562,
+        "sha256": "c7a81422150601fb933ebfcccf9a1c72fd3477a4376e2fdc1c802c269e4bbbe0"
+      },
+      "after": {
+        "size": 11515,
+        "sha256": "6dd1ead3562d893a674d2559e140f5be0ec5b94d9b85931653e786a0d1cba0c2"
+      }
+    },
+    {
+      "path": "tools/check-pagerouter-emission.mjs",
+      "before": null,
+      "after": {
+        "size": 7605,
+        "sha256": "6e74759900a35f39e9007af7479e4840a46f3e560c243afab13f38fbc8fb2971"
+      }
+    },
+    {
+      "path": "tools/emit-pagerouter.mjs",
+      "before": {
+        "size": 4717,
+        "sha256": "9c5cfa1cf8df136edd566abaface2e5c6f885d053da9a87d213806ab02bd5ab5"
+      },
+      "after": {
+        "size": 7258,
+        "sha256": "a79af5b04468c8178d59a6f856717f2a2434180188ef35ca6c429776496e01b8"
+      }
+    }
+  ]
+}

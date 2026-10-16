@@ -1,5 +1,5 @@
-// Authored in PageRouter, not emitted from the TypeScript source: the one `--key value` reader that
-// flick.mjs, match.mjs and tournament.mjs each defined as an identical line.
+// Generated from D:/t-t-1/packages/cli/src/args.ts by tools/emit-pagerouter.mjs. Edit the TypeScript source.
+// The shared `--key value` reader for flick.ts, match.ts and tournament.ts.
 //
 // Command-line tools, not browser code, so this sits beside them and not in exp/kernel.
 //

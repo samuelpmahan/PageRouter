@@ -1,0 +1,320 @@
+--- /dev/null
++++ b/packages/cli/src/args.ts
+@@ -0,0 +1,37 @@
++export type FlagReader = {
++    (key: string): string | undefined;
++    <T>(key: string, fallback: T): string | T;
++};
++
++export function flagReader(args: readonly string[]): FlagReader;
++
++// The shared `--key value` reader for flick.ts, match.ts and tournament.ts.
++//
++// Command-line tools, not browser code, so this sits beside them and not in exp/kernel.
++//
++//   const flag = flagReader(process.argv.slice(2));
++//   flag('seed', 'demo')
++//
++// flag(key, fallback) answers from the argv array flagReader was given:
++//
++//   argv                             flag('seed', 'demo')   why
++//   ['--seed', '7']                  '7'                    the token after the first exact '--seed'
++//   []                               'demo'                 '--seed' is absent
++//   ['--seed']                       'demo'                 '--seed' is the last token: nothing follows it
++//   ['--seed', '']                   ''                     an empty string is a value, not a missing one
++//   ['--seed', '--rules', 'a=1']     '--rules'              the next token is taken whatever it looks like
++//   ['--seed', '-5']                 '-5'                   likewise a value that starts with '-'
++//   ['--seed=7']                     'demo'                 '--key=value' is not recognised
++//   ['--seed', '1', '--seed', '2']   '1'                    the first '--seed' wins
++//   ['--seeds', '9']                 'demo'                 the token must equal '--seed' exactly
++//   ['--', '--seed', '7']            '7'                    '--' does not end option parsing
++//
++// node:util parseArgs differs from this in four ways: it reads '--seed=7'; the last repeat wins; '--'
++// ends options; and it throws on a missing value or a value that looks like an option. On `--key value`
++// with each key at most once the two agree. exp/policybench/cli-args.test.mjs pins the agreement and
++// each difference.
++//
++// flagReader keeps the array it is given and reads it on every call, so tokens pushed later are seen.
++export function flagReader(args: readonly string[]) {
++    return (k: string, d?: unknown) => { const i = args.indexOf(`--${k}`); return i >= 0 ? (args[i + 1] ?? d) : d; };
++}
+--- a/packages/cli/src/flick.ts
++++ b/packages/cli/src/flick.ts
+@@ -8,11 +8,12 @@
+ import { runPxcMatch } from '@pb/pxc';
+ import { resolveConfig, type Policy } from '@pb/core';
+ import { flickPuck, sniper, spray, patient, planner, sideOf, type FpState } from '@pb/game-flick-puck';
++import { flagReader } from './args.js';
+ 
+ const LIB: Record<string, () => Policy> = { 'fp-sniper': sniper as () => Policy, 'fp-spray': spray as () => Policy, 'fp-patient': patient as () => Policy, 'fp-planner': planner as () => Policy };
+ const SHORT: Record<string, string> = { sniper: 'fp-sniper', spray: 'fp-spray', patient: 'fp-patient', planner: 'fp-planner' };
+ const args = process.argv.slice(2);
+-const flag = (k: string, d: string) => { const i = args.indexOf(`--${k}`); return i >= 0 ? (args[i + 1] ?? d) : d; };
++const flag = flagReader(args);
+ const rules: Record<string, unknown> = {};
+ for (const kv of flag('rules', '').split(',').filter(Boolean)) { const [k, v] = kv.split('='); rules[k!] = /^\d+$/.test(v!) ? Number(v) : v; }
+ const { config, errors } = resolveConfig(flickPuck, rules, 2);
+--- a/packages/cli/src/match.ts
++++ b/packages/cli/src/match.ts
+@@ -12,6 +12,7 @@
+ import { seededRandom } from '@pb/policies';
+ import { tacXTic, stayer, scout, planner, type TxtState } from '@pb/game-tac-x-tic';
+ import { AUTHORED } from '../../../games/tac-x-tic/src/contrib/index.js';
++import { flagReader } from './args.js';
+ 
+ export const LIBRARY: Record<string, () => Policy> = {
+   'txt-stayer': stayer as () => Policy, 'txt-scout': scout as () => Policy, 'txt-planner': planner as () => Policy, 'seeded-random': seededRandom,
+@@ -19,7 +20,7 @@
+ const SHORT: Record<string, string> = { stayer: 'txt-stayer', scout: 'txt-scout', planner: 'txt-planner', random: 'seeded-random' };
+ 
+ const args = process.argv.slice(2);
+-const flag = (k: string, d: string) => { const i = args.indexOf(`--${k}`); return i >= 0 ? (args[i + 1] ?? d) : d; };
++const flag = flagReader(args);
+ const pos = args.filter((a, i) => !a.startsWith('--') && !(i > 0 && (args[i - 1] ?? '').startsWith('--')));
+ const [pa = 'planner', pb = 'scout'] = pos;
+ const seed = flag('seed', 'demo');
+--- a/packages/cli/src/tournament.ts
++++ b/packages/cli/src/tournament.ts
+@@ -14,9 +14,10 @@
+ import { resolveConfig, type Policy } from '@pb/core';
+ import { seededRandom } from '@pb/policies';
+ import { tacXTic, stayer, scout, planner, type TxtState, type GoEffect } from '@pb/game-tac-x-tic';
++import { flagReader } from './args.js';
+ 
+ const args = process.argv.slice(2);
+-const flag = (k: string, d: string) => { const i = args.indexOf(`--${k}`); return i >= 0 ? (args[i + 1] ?? d) : d; };
++const flag = flagReader(args);
+ 
+ const library: Record<string, () => Policy> = { 'txt-stayer': stayer as () => Policy, 'txt-scout': scout as () => Policy, 'txt-planner': planner as () => Policy, 'seeded-random': seededRandom };
+ const factories: Record<string, () => Policy> = { 'base:stayer': library['txt-stayer']!, 'base:scout': library['txt-scout']!, 'base:planner': library['txt-planner']!, 'base:random': seededRandom };
+--- /dev/null
++++ b/tools/check-pagerouter-emission.mjs
+@@ -0,0 +1,114 @@
++// Verified with Node 24.19.0 and the handoff's pinned TypeScript compiler installed.
++import test from 'node:test';
++import assert from 'node:assert/strict';
++import fs from 'node:fs';
++import os from 'node:os';
++import path from 'node:path';
++import { spawnSync } from 'node:child_process';
++import { pathToFileURL } from 'node:url';
++
++const ROOT = path.resolve(import.meta.dirname, '..');
++const CONSUMERS = ['flick', 'match', 'tournament'];
++const snapshot = dir => Object.fromEntries(fs.readdirSync(dir, { recursive: true, withFileTypes: true })
++  .filter(e => e.isFile()).map(e => { const p = path.join(e.parentPath, e.name); return [path.relative(dir, p), fs.readFileSync(p).toString('base64')]; }).sort(([a], [b]) => a.localeCompare(b)));
++function fixture(t) {
++  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pb-emitter-test-'));
++  t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
++  const source = path.join(dir, 'source'), target = path.join(dir, 'checkpoint');
++  fs.cpSync(ROOT, source, { recursive: true, filter: p => !['node_modules', '.emit-tmp', 'tsconfig.emit.json'].includes(path.basename(p)) && !path.basename(p).startsWith('.emit-') });
++  fs.symlinkSync(path.join(ROOT, 'node_modules'), path.join(source, 'node_modules'), 'dir');
++  fs.mkdirSync(path.join(source, '.emit-tmp'));
++  fs.writeFileSync(path.join(source, '.emit-tmp/sentinel'), 'preexisting compiler work');
++  fs.writeFileSync(path.join(source, 'tsconfig.emit.json'), 'preexisting config');
++  const seed = (file, data) => { const p = path.join(target, file); fs.mkdirSync(path.dirname(p), { recursive: true }); fs.writeFileSync(p, data); };
++  seed('sources/pxcube/vendor/studio/part-first-kernel/src/pxc.mjs', fs.readFileSync(path.join(ROOT, 'packages/pxc/src/pxc.mjs')));
++  seed('exp/policybench/cli/args.mjs', 'old helper\n');
++  seed('exp/policybench/cli/unrelated.mjs', 'keep unrelated CLI\n');
++  seed('exp/policybench/core/keep.mjs', 'keep unrelated generated output\n');
++  seed('exp/policybench/README.md', 'keep native README\n');
++  seed('exp/policybench/native.test.mjs', 'keep native tests\n');
++  const emit = (...args) => spawnSync(process.execPath, ['tools/emit-pagerouter.mjs', target, ...args], { cwd: source, encoding: 'utf8' });
++  return { source, target, emit };
++}
++
++test('shared reader retains legacy argv answers, fallback identity, and live reads', async () => {
++  const file = path.join(ROOT, 'packages/cli/src/args.ts');
++  assert.ok(fs.existsSync(file), 'the shared source reader must exist');
++  const { flagReader } = await import(pathToFileURL(file));
++  const rows = [
++    [[], 'seed', 'demo', 'demo'], [['--seed'], 'seed', 'demo', 'demo'],
++    [['--seed', ''], 'seed', 'demo', ''], [['--seed', '-5'], 'seed', 'demo', '-5'],
++    [['--seed', '--rules'], 'seed', 'demo', '--rules'], [['--seed=7'], 'seed', 'demo', 'demo'],
++    [['--seed', '1', '--seed', '2'], 'seed', 'demo', '1'], [['--', '--seed', '7'], 'seed', 'demo', '7'],
++    [['--seeds', '9'], 'seed', 'demo', 'demo'], [['--Seed', '9'], 'seed', 'demo', 'demo'],
++  ];
++  for (const [argv, key, fallback, answer] of rows) assert.equal(flagReader(argv)(key, fallback), answer);
++  const fallback = { budget: 1 };
++  assert.equal(flagReader([])('seed', fallback), fallback);
++  assert.equal(flagReader([])('seed'), undefined);
++  assert.equal(flagReader(['--seed'])('seed', null), null);
++  const argv = [], flag = flagReader(argv);
++  assert.equal(flag('seed', 'demo'), 'demo'); argv.push('--seed', '7');
++  assert.equal(flag('seed', 'demo'), '7'); argv.length = 0;
++  assert.equal(flag('seed', 'demo'), 'demo');
++});
++
++for (const name of CONSUMERS) for (const options of [[], ['--cli-args-only']]) {
++  test(`stale ${name} is rejected before any target file changes (${options[0] ?? 'full'})`, t => {
++    const { source, target, emit } = fixture(t);
++    const p = path.join(source, 'packages/cli/src', `${name}.ts`);
++    let code = fs.readFileSync(p, 'utf8').replace(/^import \{ flagReader \} from '\.\/args\.js';\r?\n/m, '');
++    code = code.replace('const flag = flagReader(args);', 'const flag = (k: string, d: string) => { const i = args.indexOf(`--${k}`); return i >= 0 ? (args[i + 1] ?? d) : d; };');
++    fs.writeFileSync(p, code);
++    const before = snapshot(target), result = emit(...options);
++    assert.notEqual(result.status, 0, result.stdout + result.stderr);
++    assert.match(result.stderr, new RegExp(`Shared CLI extraction stale in ${name}\\.js`));
++    assert.deepEqual(snapshot(target), before, 'failed validation must leave all target bytes intact');
++    assert.ok(fs.existsSync(path.join(source, '.emit-tmp/sentinel')), 'preexisting compiler sentinel survives');
++    assert.equal(fs.readFileSync(path.join(source, '.emit-tmp/sentinel'), 'utf8'), 'preexisting compiler work');
++    assert.equal(fs.readFileSync(path.join(source, 'tsconfig.emit.json'), 'utf8'), 'preexisting config');
++    assert.deepEqual(fs.readdirSync(source).filter(n => n.startsWith('.emit-')), ['.emit-tmp']);
++  });
++}
++
++test('bounded emission writes four CLI modules and preserves every other target byte', async t => {
++  const { target, emit } = fixture(t), before = snapshot(target), result = emit('--cli-args-only');
++  assert.equal(result.status, 0, result.stdout + result.stderr);
++  const after = snapshot(target), allowed = CONSUMERS.map(n => `exp/policybench/cli/${n}.mjs`).concat('exp/policybench/cli/args.mjs');
++  for (const [file, bytes] of Object.entries(before)) if (!allowed.includes(file)) assert.equal(after[file], bytes, file);
++  assert.deepEqual(Object.keys(after).filter(f => !(f in before)).sort(), allowed.filter(f => !(f in before)).sort());
++  for (const name of CONSUMERS) assert.ok(after[`exp/policybench/cli/${name}.mjs`]);
++  assert.notEqual(after['exp/policybench/cli/args.mjs'], before['exp/policybench/cli/args.mjs'], 'replace the old helper');
++  const { flagReader } = await import(pathToFileURL(path.join(target, 'exp/policybench/cli/args.mjs')));
++  assert.equal(flagReader(['--seed', '7'])('seed', 'demo'), '7');
++  assert.equal(flagReader(['--seed'])('seed', 'demo'), 'demo');
++  const full = emit();
++  assert.equal(full.status, 0, full.stdout + full.stderr);
++  const fullFiles = snapshot(target);
++  for (const file of allowed) assert.equal(after[file], fullFiles[file], `${file}: bounded and full payloads match`);
++});
++
++test('unknown and repeated options fail without target writes', t => {
++  const { target, emit } = fixture(t), before = snapshot(target);
++  for (const options of [['--cli-args-onyl'], ['--cli-args-only', '--cli-args-only']]) {
++    const result = emit(...options);
++    assert.notEqual(result.status, 0, result.stdout + result.stderr);
++    assert.deepEqual(snapshot(target), before);
++  }
++});
++
++
++test('reader overloads preserve string, generic fallback, omitted fallback, and readonly argv types', t => {
++  const { source } = fixture(t);
++  fs.writeFileSync(path.join(source, 'reader-types.ts'), `import { flagReader } from './packages/cli/src/args.js';
++const read = flagReader(['--seed', '7'] as const);
++const text: string = read('seed', 'demo'); text.split(',');
++const absent: string | undefined = read('seed');
++const fallback = { budget: 1 };
++const object: string | typeof fallback = read('seed', fallback);
++const nullable: string | null = read('seed', null);
++void [absent, object, nullable];
++`);
++  const result = spawnSync(process.execPath, ['node_modules/typescript/bin/tsc', '--noEmit', '--strict', '--skipLibCheck', '--target', 'ES2022', '--module', 'ESNext', '--moduleResolution', 'bundler', 'reader-types.ts'], { cwd: source, encoding: 'utf8' });
++  assert.equal(result.status, 0, result.stdout + result.stderr);
++});
+--- a/tools/emit-pagerouter.mjs
++++ b/tools/emit-pagerouter.mjs
+@@ -3,17 +3,23 @@
+ // - '@pb/<pkg>' imports become relative paths; '.js' specifiers become '.mjs'
+ // - the vendored PxC kernel is NOT copied: imports point at PageRouter's existing kernel source
+ //   (sources/pxcube/vendor/studio/part-first-kernel/src/pxc.mjs, byte-identical to ours: sha1 e74975761f86...)
+-// Usage: node tools/emit-pagerouter.mjs D:/PageRouter/checkpoint
++// Usage: node tools/emit-pagerouter.mjs D:/PageRouter/checkpoint [--cli-args-only]
++// --cli-args-only compiles the full input closure, then writes only the four shared-reader CLI modules.
+ import { execSync } from 'node:child_process';
+-import { mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync, existsSync } from 'node:fs';
++import ts from 'typescript';
++import { mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync, existsSync } from 'node:fs';
+ import { dirname, join, relative, resolve, sep } from 'node:path';
+ import { createHash } from 'node:crypto';
+ 
+ const ROOT = resolve(import.meta.dirname, '..');
+-const CHECKPOINT = resolve(process.argv[2] ?? 'D:/PageRouter/checkpoint');
++const [target, ...options] = process.argv.slice(2);
++if (target?.startsWith('--') || options.length > 1 || options.some(o => o !== '--cli-args-only'))
++  throw new Error('Usage: node tools/emit-pagerouter.mjs <checkpoint> [--cli-args-only]');
++const CLI_ONLY = options.includes('--cli-args-only');
++const CLI_MODULES = ['args', 'flick', 'match', 'tournament'];
++const CHECKPOINT = resolve(target ?? 'D:/PageRouter/checkpoint');
+ const OUT = join(CHECKPOINT, 'exp', 'policybench');
+ const KERNEL = join(CHECKPOINT, 'sources', 'pxcube', 'vendor', 'studio', 'part-first-kernel', 'src', 'pxc.mjs');
+-const TMP = join(ROOT, '.emit-tmp');
+ 
+ const sha1 = (p) => createHash('sha1').update(readFileSync(p)).digest('hex');
+ if (sha1(KERNEL) !== sha1(join(ROOT, 'packages/pxc/src/pxc.mjs'))) throw new Error('PageRouter kernel differs from the vendored one; refusing to emit');
+@@ -26,23 +32,50 @@
+ // Tests are authored natively for PageRouter (node:test) in exp/policybench/policybench.test.mjs, not emitted.
+ const ALIAS = { '@pb/core': 'core/index.mjs', '@pb/engine': 'engine/index.mjs', '@pb/policies': 'policies/index.mjs', '@pb/pxc': 'pxc/index.mjs', '@pb/game-tac-x-tic': 'tac-x-tic/index.mjs', '@pb/game-flick-puck': 'flick-puck/index.mjs' };
+ 
+-rmSync(TMP, { recursive: true, force: true });
+-writeFileSync(join(ROOT, 'tsconfig.emit.json'), JSON.stringify({
+-  extends: './tsconfig.json',
+-  compilerOptions: { noEmit: false, outDir: '.emit-tmp', rootDir: '.', declaration: false, sourceMap: false, removeComments: false, allowJs: false },
+-  include: Object.keys(MAP).map((d) => `${d}/**/*.ts`), exclude: ['games/tac-x-tic/src/contrib/v1-raid', '**/*.d.ts', 'packages/cli/src/seatprobe.ts'],
++const JOB = mkdtempSync(join(ROOT, '.emit-'));
++const TMP = join(JOB, 'js');
++try {
++writeFileSync(join(JOB, 'tsconfig.json'), JSON.stringify({
++  extends: '../tsconfig.json',
++  compilerOptions: { noEmit: false, outDir: './js', rootDir: '..', declaration: false, sourceMap: false, removeComments: false, allowJs: false },
++  include: Object.keys(MAP).map((d) => `../${d}/**/*.ts`), exclude: ['../games/tac-x-tic/src/contrib/v1-raid', '../**/*.d.ts', '../packages/cli/src/seatprobe.ts'],
+ }, null, 1));
+-execSync('npx tsc -p tsconfig.emit.json', { cwd: ROOT, stdio: 'inherit' });
++execSync(`npx tsc -p ${relative(ROOT, join(JOB, 'tsconfig.json'))}`, { cwd: ROOT, stdio: 'inherit' });
++
++// Validate the compiled extraction before deleting or writing any target file.
++// Reverting a source consumer must not silently erase the shared reader.
++const compiledCli = name => {
++  const file = join(TMP, 'packages/cli/src', `${name}.js`);
++  if (!existsSync(file)) throw new Error(`Shared CLI extraction missing compiled ${name}.js; target unchanged`);
++  return ts.createSourceFile(file, readFileSync(file, 'utf8'), ts.ScriptTarget.ES2022, true, ts.ScriptKind.JS);
++};
++const helper = compiledCli('args');
++if (!helper.statements.some(s => ts.isFunctionDeclaration(s) && s.name?.text === 'flagReader'
++  && s.modifiers?.some(m => m.kind === ts.SyntaxKind.ExportKeyword)))
++  throw new Error('Shared CLI extraction missing exported flagReader; target unchanged');
++for (const name of CLI_MODULES.slice(1)) {
++  const source = compiledCli(name);
++  const imported = source.statements.some(s => ts.isImportDeclaration(s) && s.moduleSpecifier.text === './args.js'
++    && s.importClause?.namedBindings && ts.isNamedImports(s.importClause.namedBindings)
++    && s.importClause.namedBindings.elements.some(e => e.name.text === 'flagReader' && (e.propertyName?.text ?? e.name.text) === 'flagReader'));
++  const flags = source.statements.filter(ts.isVariableStatement).flatMap(s => [...s.declarationList.declarations])
++    .filter(d => ts.isIdentifier(d.name) && d.name.text === 'flag');
++  const init = flags[0]?.initializer;
++  if (!imported || flags.length !== 1 || !init || !ts.isCallExpression(init)
++    || !ts.isIdentifier(init.expression) || init.expression.text !== 'flagReader' || init.arguments.length !== 1
++    || !ts.isIdentifier(init.arguments[0]) || init.arguments[0].text !== 'args')
++    throw new Error(`Shared CLI extraction stale in ${name}.js; target unchanged`);
++}
+ 
+ const walk = (d) => readdirSync(d).flatMap((f) => { const p = join(d, f); return statSync(p).isDirectory() ? walk(p) : [p]; });
+-// Replace generated modules only; keep files authored in PageRouter (the node:test suite, README).
+-for (const d of new Set(Object.values(MAP))) rmSync(join(OUT, d), { recursive: true, force: true });
+-let n = 0;
++// Prepare every final payload before touching the target.
++const emitted = [];
+ for (const file of walk(TMP).filter((f) => f.endsWith('.js'))) {
+   const rel = relative(TMP, file).split(sep).join('/');
+   const src = Object.keys(MAP).find((k) => rel.startsWith(k + '/'));
+   if (!src) continue;
+   const outRel = MAP[src] + rel.slice(src.length).replace(/\.js$/, '.mjs');
++  if (CLI_ONLY && !CLI_MODULES.some(name => outRel === `cli/${name}.mjs`)) continue;
+   const outPath = join(OUT, outRel);
+   let code = readFileSync(file, 'utf8');
+   const fromDir = dirname(outPath);
+@@ -60,11 +93,17 @@
+     }
+     return m;
+   });
++  emitted.push({ outPath, code: `// Generated from D:/t-t-1/${rel.replace(/\.js$/, '.ts')} by tools/emit-pagerouter.mjs. Edit the TypeScript source.\n` + code });
++}
++// Replace generated modules only; keep files authored in PageRouter (the node:test suite, README).
++if (!CLI_ONLY) for (const d of new Set(Object.values(MAP))) rmSync(join(OUT, d), { recursive: true, force: true });
++for (const { outPath, code } of emitted) {
+   mkdirSync(dirname(outPath), { recursive: true });
+-  writeFileSync(outPath, `// Generated from D:/t-t-1/${rel.replace(/\.js$/, '.ts')} by tools/emit-pagerouter.mjs. Edit the TypeScript source.\n` + code);
+-  n++;
++  writeFileSync(outPath, code);
+ }
+-rmSync(TMP, { recursive: true, force: true });
+-rmSync(join(ROOT, 'tsconfig.emit.json'), { force: true });
+-console.log(`emitted ${n} modules into ${OUT}`);
+-if (!existsSync(join(OUT, 'tac-x-tic', 'game.mjs'))) throw new Error('game.mjs missing after emit');
++console.log(`emitted ${emitted.length} modules into ${OUT}`);
++if (!CLI_ONLY && !existsSync(join(OUT, 'tac-x-tic', 'game.mjs'))) throw new Error('game.mjs missing after emit');
++
++} finally {
++  rmSync(JOB, { recursive: true, force: true });
++}
