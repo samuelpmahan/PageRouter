@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://pagerouter.invalid/schemas/capability-competition-report.v1.schema.json",
+  "title": "Capability competition runner report v1",
+  "type": "object",
+  "properties": {
+    "schema": { "const": "capability-competition-report.v1" },
+    "experiment": { "enum": ["name-that-llm", "nfl-wr-cut-recovery"] },
+    "sourceKind": { "enum": ["synthetic-fixture", "competition-csv"] },
+    "status": { "enum": ["completed", "blocked", "inconclusive"] },
+    "provenance": { "type": "object", "properties": { "sourceKind": { "enum": ["synthetic-fixture", "competition-csv"] } }, "additionalProperties": true },
+    "evaluation": {
+      "type": "object",
+      "properties": {
+        "labels": { "type": "array", "minItems": 18, "maxItems": 18, "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "actual": { "type": "array", "minItems": 1, "maxItems": 10000, "items": { "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "number" }] } },
+        "baselinePredicted": { "type": "array", "minItems": 1, "maxItems": 10000, "items": { "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "number" }] } },
+        "candidatePredicted": { "type": "array", "minItems": 1, "maxItems": 10000, "items": { "oneOf": [{ "type": "string", "minLength": 1 }, { "type": "number" }] } },
+        "groupIds": { "type": "array", "minItems": 1, "maxItems": 10000, "items": { "type": "string", "minLength": 1 } }
+      },
+      "required": ["actual", "baselinePredicted", "candidatePredicted", "groupIds"],
+      "additionalProperties": false
+    },
+    "details": { "type": "object", "additionalProperties": true },
+    "reason": { "type": "string", "minLength": 1, "pattern": ".*\\S.*" }
+  },
+  "required": ["schema", "experiment", "sourceKind", "status", "provenance"],
+  "allOf": [
+    {
+      "if": { "properties": { "experiment": { "const": "name-that-llm" } } },
+      "then": { "properties": { "evaluation": { "properties": { "labels": { "minItems": 18, "maxItems": 18 }, "actual": { "items": { "type": "string", "minLength": 1 } }, "baselinePredicted": { "items": { "type": "string", "minLength": 1 } }, "candidatePredicted": { "items": { "type": "string", "minLength": 1 } } }, "required": ["labels", "actual", "baselinePredicted", "candidatePredicted", "groupIds"] } } }
+    },
+    {
+      "if": { "properties": { "experiment": { "const": "nfl-wr-cut-recovery" } } },
+      "then": { "properties": { "evaluation": { "properties": { "actual": { "items": { "type": "number" } }, "baselinePredicted": { "items": { "type": "number" } }, "candidatePredicted": { "items": { "type": "number" } } }, "not": { "required": ["labels"] } } } }
+    },
+    {
+      "if": { "properties": { "sourceKind": { "const": "synthetic-fixture" } }, "required": ["sourceKind"] },
+      "then": { "properties": { "provenance": { "properties": { "sourceKind": { "const": "synthetic-fixture" } } } } }
+    },
+    {
+      "if": { "properties": { "sourceKind": { "const": "competition-csv" } }, "required": ["sourceKind"] },
+      "then": { "properties": { "provenance": { "properties": { "sourceKind": { "const": "competition-csv" } } } } }
+    },
+    {
+      "if": { "properties": { "status": { "const": "completed" } }, "required": ["status"] },
+      "then": { "required": ["evaluation"] }
+    },
+    {
+      "if": { "properties": { "status": { "const": "blocked" } }, "required": ["status"] },
+      "then": { "not": { "required": ["evaluation"] }, "anyOf": [{ "required": ["reason"] }, { "required": ["details"], "properties": { "details": { "type": "object", "required": ["reason"], "properties": { "reason": { "type": "string", "minLength": 1, "pattern": ".*\\S.*" } } } } }] }
+    },
+    {
+      "if": { "properties": { "status": { "const": "inconclusive" } }, "required": ["status"], "not": { "required": ["evaluation"] } },
+      "then": { "anyOf": [{ "required": ["reason"] }, { "required": ["details"], "properties": { "details": { "type": "object", "required": ["reason"], "properties": { "reason": { "type": "string", "minLength": 1, "pattern": ".*\\S.*" } } } } }] }
+    }
+  ],
+  "additionalProperties": false
+}

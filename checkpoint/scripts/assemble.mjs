@@ -45,7 +45,46 @@ const capabilityLab=path.join(root,'vendor/capability-lab');
 for(const f of fs.readdirSync(justin).filter(f=>f.endsWith('.html'))){let html=fs.readFileSync(path.join(justin,f),'utf8');html=html.replace('https://cdn.tailwindcss.com','./dependencies/tailwind.js');html=html.replace('static/pictures/hero.jpg','static/pictures/jbrundage.jpg');fs.writeFileSync(path.join(justin,f),html);}
 const projectDefs=[{id:'pxcube',title:'PxCube',subtitle:'14 actual crisp-packaged experiences including Connect Four baseline and PxC migration',dir:pxcRelocation.directory,pin:'Connect Four baseline → PxC + seek-tree migration',source:'https://drive.google.com/drive/folders/1kalwzut63qJEQLiy0OC9aVuDbrEdcXKb',entry:'index.html',trusted:true},{id:'hh',title:'Homeroom Heroes',subtitle:'C6 browser PxC + synthetic fixture DI',dir:hh,pin:'C6 • 7462b8a200a6',source:'https://drive.google.com/file/d/1U1YBFvEOmJG-ZHVZnBr7TogjsLmWXoNz/view',entry:'index.html',trusted:true},{id:'justin',title:'Justin’s standalone site',subtitle:'Pinned leaf • technical portability fixes only',dir:justin,pin:'9fccd18d3077 • local technical patch',source:'https://github.com/EngSmallz/BrundageForCommunity/tree/9fccd18d3077a30f70c26824981fd11718bd761b',entry:'index.html',trusted:true},{id:'capability-lab',title:'Capability Lab',subtitle:'Statistics, linear algebra, watches, ML and explanations · browser-local candidate',dir:capabilityLab,pin:'2026-10-08 independent candidate · 271/271',source:'https://github.com/samuelpmahan/PageRouter/tree/c9214c9db53b6d8c550df516ef6553bc7f7bfa70/outputs/capability-lab',entry:'index.html',trusted:true}];
 const catalog=[];
-for(const p of projectDefs){const snapshot=await buildSnapshot(staticSpec(p.id,files(p.dir)));if(p.id==='hh')fs.writeFileSync(path.join(dist,'data',`${p.id}.snapshot.json`),JSON.stringify(snapshot));else fs.writeFileSync(path.join(dist,'data',`${p.id}.snapshot.json.gz`),gzipSync(JSON.stringify(packSnapshot(snapshot)),{level:9}));fs.cpSync(p.dir,path.join(dist,'compiled',p.id),{recursive:true});catalog.push({...p,dir:undefined,digest:snapshot.digest,fileCount:Object.keys(snapshot.files).length,bytes:Object.values(snapshot.files).reduce((n,x)=>n+x.bytes,0)});}
+for(const p of projectDefs){
+  const compiledDir=path.join(dist,'compiled',p.id);
+  fs.rmSync(compiledDir,{recursive:true,force:true});
+  fs.cpSync(p.dir,compiledDir,{recursive:true});
+  if(p.id==='capability-lab'){
+    const competitionRoot=path.join(root,'exp/capability-competitions');
+    const references=path.join(compiledDir,'references');
+    fs.mkdirSync(references,{recursive:true});
+    fs.copyFileSync(path.join(competitionRoot,'capabilities.mjs'),path.join(references,'capabilities.mjs'));
+    let capabilitySource=fs.readFileSync(path.join(references,'capabilities.mjs'),'utf8');
+    const vendorPrefix='../../vendor/capability-lab/src/';
+    if(!capabilitySource.includes(vendorPrefix))throw Error('Capability competition vendor import prefix not found');
+    capabilitySource=capabilitySource.replaceAll(vendorPrefix,'../src/');
+    fs.writeFileSync(path.join(references,'capabilities.mjs'),capabilitySource);
+    const browserSource=path.join(competitionRoot,'browser');
+    if(!fs.existsSync(path.join(browserSource,'entry.mjs')))throw Error('Capability competition browser entry is missing');
+    fs.cpSync(browserSource,path.join(references,'browser'),{recursive:true,filter:source=>!source.endsWith('.test.mjs')});
+    const entryPath=path.join(references,'browser/entry.mjs');
+    let entrySource=fs.readFileSync(entryPath,'utf8');
+    const entryVendorPrefix='../../../vendor/capability-lab/';
+    if(!entrySource.includes(entryVendorPrefix))throw Error('Capability competition browser entry vendor prefix not found');
+    entrySource=entrySource.replaceAll(entryVendorPrefix,'../../');
+    fs.writeFileSync(entryPath,entrySource);
+    const indexPath=path.join(compiledDir,'index.html');
+    let html=fs.readFileSync(indexPath,'utf8');
+    if(html.includes('./references/browser/entry.mjs'))throw Error('Capability competition browser entry was already injected');
+    if(!html.includes('</body>'))throw Error('Capability Lab HTML has no body insertion point');
+    html=html.replace('</body>','    <script type="module" src="./references/browser/entry.mjs"></script>\n  </body>');
+    fs.writeFileSync(indexPath,html);
+    const stylesheet=path.join(references,'browser/panel.css');
+    if(!fs.existsSync(stylesheet))throw Error('Capability competition browser stylesheet is missing');
+    if(html.includes('./references/browser/panel.css'))throw Error('Capability competition stylesheet was already injected');
+    if(!html.includes('</head>'))throw Error('Capability Lab HTML has no stylesheet insertion point');
+    html=html.replace('</head>','    <link rel="stylesheet" href="./references/browser/panel.css">\n  </head>');
+    fs.writeFileSync(indexPath,html);
+  }
+  const snapshot=await buildSnapshot(staticSpec(p.id,files(compiledDir)));
+  if(p.id==='hh')fs.writeFileSync(path.join(dist,'data',`${p.id}.snapshot.json`),JSON.stringify(snapshot));else fs.writeFileSync(path.join(dist,'data',`${p.id}.snapshot.json.gz`),gzipSync(JSON.stringify(packSnapshot(snapshot)),{level:9}));
+  catalog.push({...p,dir:undefined,digest:snapshot.digest,fileCount:Object.keys(snapshot.files).length,bytes:Object.values(snapshot.files).reduce((n,x)=>n+x.bytes,0)});
+}
 // Preserve the captured source-site URLs on static hosts that do not provide
 // server-side rewrites. The compiled HH app normalizes these hash routes.
 const hhPageAliases=['homepage.html','index.html','find_teachers.html','forum.html','create_post.html',
