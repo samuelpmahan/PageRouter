@@ -1,0 +1,176 @@
+{
+  "schema": "hh-geography-review@1",
+  "reviewRoute": "#/hh/scope",
+  "mountedRoute": "#/hh/run",
+  "productionDeployment": false,
+  "backend": {
+    "repository": "EngSmallz/hithero",
+    "baseCommit": "cc195c20696314d36fd02a3888419002624c2274",
+    "tests": {
+      "passed": 31,
+      "failed": 0,
+      "cases": [
+        {
+          "name": "test_approved_teacher_cannot_create_profile_in_another_district",
+          "status": "passed"
+        },
+        {
+          "name": "test_same_district_approval_retains_registration_scope",
+          "status": "passed"
+        },
+        {
+          "name": "test_cross_scope_approval_leaves_queue_intact[changes0]",
+          "status": "passed"
+        },
+        {
+          "name": "test_cross_scope_approval_leaves_queue_intact[changes1]",
+          "status": "passed"
+        },
+        {
+          "name": "test_cross_scope_approval_leaves_queue_intact[changes2]",
+          "status": "passed"
+        },
+        {
+          "name": "test_profile_edit_cannot_change_approval_scope[changes0]",
+          "status": "passed"
+        },
+        {
+          "name": "test_profile_edit_cannot_change_approval_scope[changes1]",
+          "status": "passed"
+        },
+        {
+          "name": "test_profile_edit_cannot_change_approval_scope[changes2]",
+          "status": "passed"
+        },
+        {
+          "name": "test_same_district_school_transfer_is_allowed",
+          "status": "passed"
+        },
+        {
+          "name": "test_profile_creation_allows_another_school_within_approved_district",
+          "status": "passed"
+        },
+        {
+          "name": "test_legitimate_transfer_requires_admin_review_and_keeps_history",
+          "status": "passed"
+        },
+        {
+          "name": "test_validation_list_uses_approval_scope_instead_of_browsing_session",
+          "status": "passed"
+        },
+        {
+          "name": "test_legacy_user_can_login_and_edit_profile_without_receiving_authority",
+          "status": "passed"
+        },
+        {
+          "name": "test_legacy_user_without_profile_needs_review_before_profile_creation",
+          "status": "passed"
+        },
+        {
+          "name": "test_reviewed_legacy_user_regains_district_validation",
+          "status": "passed"
+        },
+        {
+          "name": "test_edited_profile_is_never_used_as_validation_authority",
+          "status": "passed"
+        },
+        {
+          "name": "test_admin_can_approve_other_district_and_create_multiple_profiles",
+          "status": "passed"
+        },
+        {
+          "name": "test_missing_or_stale_actor_cannot_approve",
+          "status": "passed"
+        },
+        {
+          "name": "test_blank_scope_is_not_approved[state]",
+          "status": "passed"
+        },
+        {
+          "name": "test_blank_scope_is_not_approved[county]",
+          "status": "passed"
+        },
+        {
+          "name": "test_blank_scope_is_not_approved[district]",
+          "status": "passed"
+        },
+        {
+          "name": "test_blank_scope_is_not_approved[school]",
+          "status": "passed"
+        },
+        {
+          "name": "test_approval_failure_rolls_back_account_and_queue",
+          "status": "passed"
+        },
+        {
+          "name": "test_wednesday_notifications_only_reach_recorded_validators",
+          "status": "passed"
+        },
+        {
+          "name": "test_admin_geography_review_rejects_missing_or_non_teacher_account[99999]",
+          "status": "passed"
+        },
+        {
+          "name": "test_admin_geography_review_rejects_missing_or_non_teacher_account[1]",
+          "status": "passed"
+        },
+        {
+          "name": "test_anonymous_geography_review_is_forbidden",
+          "status": "passed"
+        },
+        {
+          "name": "test_geography_api_denials_tell_current_frontend_how_to_get_review",
+          "status": "passed"
+        },
+        {
+          "name": "test_transfer_failure_preserves_prior_scope_and_profile",
+          "status": "passed"
+        },
+        {
+          "name": "test_admin_review_repairs_legacy_null_profile_count",
+          "status": "passed"
+        },
+        {
+          "name": "test_scope_storage_and_account_lock_compile_for_sql_server",
+          "status": "passed"
+        }
+      ]
+    },
+    "crossDistrict": {
+      "beforeStatus": 200,
+      "afterStatus": 403
+    }
+  },
+  "artifacts": [
+    {
+      "file": "OWNER-REVIEW.md",
+      "sha256": "8ee8e051b2d8374e83b0476e8e30bd50f38722cf4fa14c6116de3f86936feb67",
+      "bytes": 8058
+    },
+    {
+      "file": "baseline-reproduction.txt",
+      "sha256": "0cc91aceb347c1c9efe90ef10d56d4bc899619595d567bb7b0d0e5087372534f",
+      "bytes": 3326
+    },
+    {
+      "file": "hithero-teacher-geography.patch",
+      "sha256": "ceecd165f1b5d70aa12194d0f22ea7d173d6aa8efc5edbee5a438b511978da7c",
+      "bytes": 45785
+    },
+    {
+      "file": "http-regression.json",
+      "sha256": "9b245d146dc091a1dd59d056040fcff2fff28b0e0076bf3b8f3d13b3af257f59",
+      "bytes": 1382
+    },
+    {
+      "file": "tests.xml",
+      "sha256": "525d00e9e70debd13a726eb07e57cf4dfa2b84830ccad0c0f412b22cc255c0a3",
+      "bytes": 4283
+    },
+    {
+      "file": "verification.txt",
+      "sha256": "18e692429db9367469fdf29f4707f05a0d496de15ab906f7b8aae1c9bba45d3c",
+      "bytes": 1205
+    }
+  ]
+}

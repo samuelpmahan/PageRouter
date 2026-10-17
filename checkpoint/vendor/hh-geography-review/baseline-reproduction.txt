@@ -1,0 +1,47 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_approved_teacher_cannot_create_profile_in_another_district ________
+
+site = (<module 'hithero_test_app' from '/workspace/scratch/c547465fc7a0/baseline-reproduction/app.py'>, <starlette.testclien...ce, please do not hesitate to contact us.\n\nBest regards,\nHomeroom Heroes Team\nhomeroom.heroes.contact@gmail.com')])
+
+    def test_approved_teacher_cannot_create_profile_in_another_district(site):
+        module, client, _ = site
+        register(client)
+        login(client)
+        assert approve(client).status_code == 200
+        # Model the live schema's possible createCount=0 default explicitly; the
+        # baseline ORM does not declare it. This isolates the authorization defect.
+        with module.SessionLocal() as db:
+            user = db.execute(select(module.RegisteredUsers).where(
+                module.RegisteredUsers.email == "teacher@example.test")).scalar_one()
+            user.createCount = 0
+            db.commit()
+        login(client, "teacher@example.test")
+        response = profile(client, district="District B", school="School B")
+>       assert response.status_code == 403, response.text
+E       AssertionError: {"message":"Teacher created successfully","role":"teacher"}
+E       assert 200 == 403
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests/test_teacher_geography.py:21: AssertionError
+=============================== warnings summary ===============================
+../../../../root/.local/lib/python3.12/site-packages/fastapi/testclient.py:1
+  /root/.local/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/test_teacher_geography.py::test_approved_teacher_cannot_create_profile_in_another_district
+  /root/.local/lib/python3.12/site-packages/passlib/utils/__init__.py:854: DeprecationWarning: 'crypt' is deprecated and slated for removal in Python 3.13
+    from crypt import crypt as _crypt
+
+tests/test_teacher_geography.py::test_approved_teacher_cannot_create_profile_in_another_district
+  /workspace/scratch/c547465fc7a0/baseline-reproduction/app.py:103: MovedIn20Warning: The ``declarative_base()`` function is now available as sqlalchemy.orm.declarative_base(). (deprecated since: 2.0) (Background on SQLAlchemy 2.0 at: https://sqlalche.me/e/b8d9)
+    Base = declarative_base()
+
+tests/test_teacher_geography.py::test_approved_teacher_cannot_create_profile_in_another_district
+  /workspace/scratch/c547465fc7a0/baseline-reproduction/app.py:212: PydanticDeprecatedSince20: Support for class-based `config` is deprecated, use ConfigDict instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.14/migration/
+    class PostDisplay(BaseModel):
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_teacher_geography.py::test_approved_teacher_cannot_create_profile_in_another_district
+1 failed, 4 warnings in 1.55s

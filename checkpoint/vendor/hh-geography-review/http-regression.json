@@ -1,0 +1,54 @@
+{
+  "kind": "recorded-python-http-regression",
+  "synthetic": true,
+  "productionRequests": 0,
+  "database": "isolated SQLite",
+  "baselineCommit": "cc195c20696314d36fd02a3888419002624c2274",
+  "precondition": "createCount set to zero in both variants to isolate geography authorization; production default uninspected",
+  "approvedGeography": {
+    "state": "Test State",
+    "county": "Test County",
+    "district": "District A",
+    "school": "School A"
+  },
+  "attemptedProfileGeography": {
+    "state": "Test State",
+    "county": "Test County",
+    "district": "District B",
+    "school": "School B"
+  },
+  "before": {
+    "approval": {
+      "status": 200,
+      "body": {
+        "message": "User validated."
+      }
+    },
+    "createProfile": {
+      "status": 200,
+      "body": {
+        "message": "Teacher created successfully",
+        "role": "teacher"
+      }
+    },
+    "storedProfileDistricts": [
+      "District B"
+    ]
+  },
+  "after": {
+    "approval": {
+      "status": 200,
+      "body": {
+        "message": "User validated."
+      }
+    },
+    "createProfile": {
+      "status": 403,
+      "body": {
+        "detail": "A district change requires administrator approval before updating your profile.",
+        "message": "A district change requires administrator approval before updating your profile."
+      }
+    },
+    "storedProfileDistricts": []
+  }
+}
