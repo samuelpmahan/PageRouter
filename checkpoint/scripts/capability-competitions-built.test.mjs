@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
@@ -23,7 +24,11 @@ test('CapabilityLab competition overlay is assembled into its digest-covered sta
   assert.ok(project.fileCount > 40);
   const html = fs.readFileSync(path.join(leaf, 'index.html'), 'utf8');
   assert.match(html, /references\/browser\/entry\.mjs/);
-  assert.match(html, /references\/browser\/panel\.css/);
+  const stylesheet = fs.readFileSync(path.join(references, 'browser/panel.css'));
+  const expectedVersion = createHash('sha256').update(stylesheet).digest('hex').slice(0, 12);
+  const stylesheetLink = html.match(/<link rel="stylesheet" href="\.\/references\/browser\/panel\.css\?v=([a-f0-9]{12})">/);
+  assert.ok(stylesheetLink, 'assembled CSS link must include a content version');
+  assert.equal(stylesheetLink[1], expectedVersion, 'assembled CSS URL version must match its built bytes');
   const pin = JSON.parse(fs.readFileSync(path.join(root, 'vendor/capability-lab/SOURCE-PIN.json'), 'utf8'));
   assert.equal(Object.keys(pin.files).length, 40);
 });

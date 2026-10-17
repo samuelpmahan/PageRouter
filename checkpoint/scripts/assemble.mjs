@@ -78,7 +78,8 @@ for(const p of projectDefs){
     if(!fs.existsSync(stylesheet))throw Error('Capability competition browser stylesheet is missing');
     if(html.includes('./references/browser/panel.css'))throw Error('Capability competition stylesheet was already injected');
     if(!html.includes('</head>'))throw Error('Capability Lab HTML has no stylesheet insertion point');
-    html=html.replace('</head>','    <link rel="stylesheet" href="./references/browser/panel.css">\n  </head>');
+    const stylesheetVersion=(await hash(fs.readFileSync(stylesheet))).slice(0,12);
+    html=html.replace('</head>',`    <link rel="stylesheet" href="./references/browser/panel.css?v=${stylesheetVersion}">\n  </head>`);
     fs.writeFileSync(indexPath,html);
   }
   const snapshot=await buildSnapshot(staticSpec(p.id,files(compiledDir)));
