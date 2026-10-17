@@ -10,7 +10,7 @@ import {createHHWorkbench} from './exp/cooperative/hh-workbench.mjs';
 import {mountGeographyReview} from './exp/cooperative/hh-geography-review.mjs';
 const $=s=>document.querySelector(s),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pretty=v=>JSON.stringify(v,(k,x)=>typeof x==='function'?'[Calculation]':x,2);
-const fetchJSON=async u=>{const compressed=u.endsWith('.snapshot.json')&&!u.endsWith('/hh.snapshot.json');const actual=compressed?u+'.gz':u;const r=await fetch(actual);if(!r.ok)throw Error(`Could not load ${actual}: ${r.status}`);if(compressed&&r.headers.get('Content-Encoding')!=='gzip')return unpackSnapshot(await new Response(r.body.pipeThrough(new DecompressionStream('gzip'))).json());return unpackSnapshot(await r.json());};
+const fetchJSON=async u=>{const compressed=u.endsWith('.snapshot.json')&&!u.endsWith('/hh.snapshot.json');const actual=compressed?u+'.gz':u;const r=await fetch(actual,{cache:'no-store'});if(!r.ok)throw Error(`Could not load ${actual}: ${r.status}`);if(compressed&&r.headers.get('Content-Encoding')!=='gzip')return unpackSnapshot(await new Response(r.body.pipeThrough(new DecompressionStream('gzip'))).json());return unpackSnapshot(await r.json());};
 const baseURL=new URL('./',location.href),catalog=await fetchJSON('data/catalog.json'),proof=await fetchJSON('data/delta-proof.json');
 const atlasView=createAtlasView({implementationIdentity:catalog.release?.atlasIdentity});
 const block5View=createBlock5View();

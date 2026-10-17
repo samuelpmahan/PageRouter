@@ -1,4 +1,5 @@
 import {test} from 'node:test';
+import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import {existsSync, readFileSync} from 'node:fs';
 import {resolve, dirname, relative} from 'node:path';
@@ -21,4 +22,12 @@ test('built HH entry resolves its local module imports', () => {
     }
   }
   assert.ok(visited.has(resolve(hhRoot, 'style-playground.mjs')), 'HH entry must reach the style adapter');
+});
+
+test('PageRouter entry URL selects its exact module bytes instead of a cached older app', () => {
+  const root = resolve(hhRoot, '../..');
+  const moduleDigest = createHash('sha256').update(readFileSync(resolve(root, 'app.mjs'))).digest('hex');
+  const html = readFileSync(resolve(root, 'index.html'), 'utf8');
+  assert.ok(html.includes(`src="app.mjs?v=${moduleDigest}"`),
+    'The root module URL must change with its exact bytes, independent of build clocks');
 });
