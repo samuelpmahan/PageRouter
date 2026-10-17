@@ -10,6 +10,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { flowCandidateKey } from '../../../checkpoint/exp/operation-index/adapters.mjs';
+import { normalizeKernelWindow } from '../../../checkpoint/exp/operation-index/kernel-window.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const outDir = path.resolve(process.argv[2] ?? path.join(here, 'out'));
@@ -85,11 +87,15 @@ for (const { entry, world, receipt, implementations } of seen) {
         if (!closed) continue;
         const contracts = win.map((n) => n.contract + (n.slot ? `#${n.slot}` : ''));
         const sig = `${contracts.join(' → ')} | ${internal.sort().join(' ')} | ${ext.sort().join(' ')}`;
+        const normalized = normalizeKernelWindow(win);
+        const nameIndependentCandidateKey = flowCandidateKey(normalized);
         const concrete = win.map((n) => Object.values(n.in).map((p) => p.hash).join(',')).join(';');
         const parentImpl = implsById.get(parent.impl);
         const composed = Boolean(parentImpl?.assembly) && parentImpl.assembly.steps.map((s) => s.call).join(',').includes(win.map((n) => n.contract).join(','));
-        if (!shapes.has(sig)) shapes.set(sig, { sig, contracts, internal: internal.sort(), ext: ext.sort(), length: L, occurrences: new Set(), entries: new Set(), worlds: new Set(), parents: new Set(), composed: 0, examples: [] });
+        if (!shapes.has(sig)) shapes.set(sig, { sig, contracts, internal: internal.sort(), ext: ext.sort(), nameIndependentCandidateKeys: new Set(), nameIndependentModes: new Set(), length: L, occurrences: new Set(), entries: new Set(), worlds: new Set(), parents: new Set(), composed: 0, examples: [] });
         const s = shapes.get(sig);
+        s.nameIndependentCandidateKeys.add(nameIndependentCandidateKey);
+        s.nameIndependentModes.add(nameIndependentCandidateKey.startsWith('semantic-candidate:') ? 'semantic-candidate' : 'structural-only');
         if (!s.occurrences.has(concrete)) {
           s.occurrences.add(concrete);
           if (composed) s.composed += 1;
@@ -109,7 +115,7 @@ for (const s of all) s.subsumedBy = all.find((t) => t.length > s.length && t.cou
 const ranked = all.filter((s) => !s.subsumedBy && s.count >= 2)
   .map((s) => ({ ...s, domainEntries: [...s.entries].filter((e) => DOMAIN.has(e)), score: s.count * (s.length - 1) * (1 + [...s.entries].filter((e) => DOMAIN.has(e)).length) }))
   .sort((a, b) => b.score - a.score);
-const plain = (s) => ({ contracts: s.contracts, length: s.length, count: s.count, internal: s.internal, ext: s.ext, entries: [...s.entries], domainEntries: s.domainEntries,
+const plain = (s) => ({ contracts: s.contracts, length: s.length, count: s.count, internal: s.internal, ext: s.ext, nameIndependentCandidateKeys: [...s.nameIndependentCandidateKeys].sort(), nameIndependentModes: [...s.nameIndependentModes].sort(), entries: [...s.entries], domainEntries: s.domainEntries,
   parents: [...s.parents].slice(0, 6), alreadyComposed: s.composed, composedShare: Number((s.composed / s.count).toFixed(2)), score: s.score, examples: s.examples });
 const discovered = ranked.filter((s) => s.composed === 0);
 const confirmed = ranked.filter((s) => s.composed > 0);

@@ -51,8 +51,8 @@ export function createAtlasCompositionDefinition(options={}){
 }
 export const createSampleDefinition=createAtlasCompositionDefinition;
 
-export function createAtlasSession({implementationIdentity=null}={}){
-  const runtime=new AtlasRuntime(undefined,{implementationIdentity});let lastGraph=null,busy=false;
+export function createAtlasSession({implementationIdentity=null,onObservation=null,now}={}){
+  const runtime=new AtlasRuntime(undefined,{implementationIdentity,onObservation,...(now?{now}:{})});let lastGraph=null,busy=false,lastObservationId=null;
   const exclusive=async body=>{if(busy)throw new Error('atlas session is already running');busy=true;try{return await body();}finally{busy=false;}};
   return {
     run(options={}){return exclusive(async()=>{
@@ -62,13 +62,13 @@ export function createAtlasSession({implementationIdentity=null}={}){
         '/parts/training':trainingFixture(gain,bias),'/parts/config':{},'/parts/queries':queries,
         '/parts/grid':{...queries,tolerance},'/parts/initial_constraints':{counterexamples:[]}
       };
-      const recipe=bootstrap(),initial=await runtime.execute(recipe,sources);
+      const recipe=bootstrap(),initial=await runtime.execute(recipe,sources,{action:'atlas-search-bootstrap'});lastObservationId=runtime.lastObservationId;
       const crosscheck=initial.outputs.crosscheck.value;
       if(crosscheck.failed)throw new Error('reference expression disagrees with native predict_motion');
       const reference=initial.outputs.reference.value,history=[],counterexample_addresses=[];
       let constraints='/parts/initial_constraints',result=initial;
       for(let index=0;index<100;index++){
-        const base=appendRound(recipe,index,constraints);result=await runtime.execute(recipe,sources);
+        const base=appendRound(recipe,index,constraints);result=await runtime.execute(recipe,sources,{action:'atlas-search-round'});lastObservationId=runtime.lastObservationId;
         const value=suffix=>result.parts[base+'/'+suffix].value,generation=value('generation'),program=value('program');
         const row={round:index,program,program_id:program_id(program),size_bytes:program_size(program),program_address:base+'/program',prediction_address:base+'/predictions',predictions:value('predictions'),probe_inputs:{predictions_address:base+'/predictions',reference_address:'/reference/context'},full_check:value('probe'),acceptance:value('acceptance'),counterexample_address:value('counterexample')===null?null:base+'/counterexample',counterexample:value('counterexample'),constraint_input_address:constraints,constraint_count:generation.constraint_count,considered_count:generation.considered.length,pruned_count:generation.pruned.length,receipt:result.receipt};
         history.push(row);if(row.counterexample_address)counterexample_addresses.push(row.counterexample_address);
@@ -87,15 +87,15 @@ export function createAtlasSession({implementationIdentity=null}={}){
     runComposition(options={}){return exclusive(async()=>{
       const definition=createAtlasCompositionDefinition({...options,implementationIdentity:runtime.implementationIdentity}),{recipe,sources}=definition;
       const gain=options.gain??2,bias=options.bias??1;
-      const result=await runtime.execute(recipe,sources);lastGraph={recipe:clone(recipe),sources:clone(sources)};
+      const result=await runtime.execute(recipe,sources,{action:'atlas-composition'});lastObservationId=runtime.lastObservationId;lastGraph={recipe:clone(recipe),sources:clone(sources)};
       return clone({format:'kompozed.atlas.composition.v1',outputs:result.outputs,recipe,receipt:result.receipt,final_composition:finalComposition(result),scope:{gain,bias,reference_gain:2,reference_bias:1,case_count:10,tolerance:1e-9,claim:'Synthetic motion fixture; Beta mean assumes conditionally independent Bernoulli cases sharing one pass probability. Boolean policy is not an equivalence proof.'}});
     });},
-    replay(){return exclusive(async()=>{if(!lastGraph)throw new Error('run the atlas before replay');const result=await runtime.execute(lastGraph.recipe,lastGraph.sources);return {receipt:result.receipt,final_composition:finalComposition(result),inspection:runtime.inspect()};});},
+    replay(){return exclusive(async()=>{if(!lastGraph)throw new Error('run the atlas before replay');const result=await runtime.execute(lastGraph.recipe,lastGraph.sources,{action:'atlas-replay',replayOf:lastObservationId??runtime.lastObservationId});lastObservationId=runtime.lastObservationId;return {receipt:result.receipt,final_composition:finalComposition(result),inspection:runtime.inspect()};});},
     exportRecipe(){
       if(!lastGraph)throw new Error('run the atlas before exporting a recipe');
       return clone({format:'kompozed.atlas.recipe.v1',recipe:lastGraph.recipe,sources:lastGraph.sources,implementationIdentity:runtime.implementationIdentity});
     },
     inspect(){return runtime.inspect();},
-    reset(){if(busy)throw new Error('cannot reset while atlas is running');runtime.reset();lastGraph=null;}
+    reset(){if(busy)throw new Error('cannot reset while atlas is running');runtime.reset();lastGraph=null;lastObservationId=null;}
   };
 }

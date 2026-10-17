@@ -1,5 +1,8 @@
 import {createAtlasSession,createCapabilityProtocol,createAtlasCompositionDefinition} from '../exp/atlas/atlas-session.mjs';
 import {captureAtlasCase,runAtlasJs,compareAtlasObservations} from '../exp/atlas/cross-language.mjs';
+import {normalizeAtlasObservation} from '../exp/operation-index/adapters.mjs';
+import {runCvCounterexample} from '../exp/operation-index/cv-demo.mjs';
+import {createOperationTimelineView} from './operation-timeline-view.mjs';
 
 const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const pretty = value => JSON.stringify(value, null, 2);
@@ -12,9 +15,12 @@ function download(name, value) {
 
 // This controller belongs to the app, rather than any particular mounted DOM.
 // Navigation detaches its view; pending work, errors, and the owning session survive.
-export function createAtlasView({session, protocol, sampleDefinition, implementationIdentity, crossLanguage={captureAtlasCase,runAtlasJs,compareAtlasObservations}} = {}) {
-  session ??= createAtlasSession({implementationIdentity});
-  const ladder = createCapabilityLadderView({protocol, sampleDefinition, implementationIdentity});
+export function createAtlasView({session, protocol, sampleDefinition, implementationIdentity, operationIndex, onObservation, now, crossLanguage={captureAtlasCase,runAtlasJs,compareAtlasObservations}} = {}) {
+  const observe = onObservation ?? (operationIndex ? observation => {const normalized=normalizeAtlasObservation(observation);return operationIndex.record({runtime:'atlas',action:observation.action,source:observation.source,startedAt:observation.startedAt,finishedAt:observation.finishedAt,status:normalized.status,operations:normalized.operations,edges:normalized.edges,evidence:normalized.evidence,...(observation.replayOf?{replayOf:observation.replayOf}:{})});} : null);
+  session ??= createAtlasSession({implementationIdentity,onObservation:observe,now});
+  const ladder = createCapabilityLadderView({protocol, sampleDefinition, implementationIdentity,onObservation:observe,now});
+  const cvSource={implementation:{path:'checkpoint/exp/operation-index/cv-demo.mjs',identityStatus:implementationIdentity?.files?.['exp/operation-index/cv-demo.mjs']?.sha256?'pinned-current-build':'unbound-local',sourceDigest:implementationIdentity?.files?.['exp/operation-index/cv-demo.mjs']?.sha256??null},currentBuildIdentity:implementationIdentity??{status:'unbound-local'},historicalReference:{repository:'samuelpmahan/ChainSpot',commit:'4da01fba601a250e2fd4e7b8683c9fdd6bf0401b',file:'src/lib/cv/localSnap.ts',url:'https://github.com/samuelpmahan/ChainSpot/blob/4da01fba601a250e2fd4e7b8683c9fdd6bf0401b/src/lib/cv/localSnap.ts'}};
+  const timeline = operationIndex ? createOperationTimelineView({index:operationIndex,onExport:()=>download('operation-index.json',JSON.parse(operationIndex.exportJSON())),onRunCv:()=>runCvCounterexample({index:operationIndex,source:cvSource,...(now?{now}:{})})}) : null;
   let root = null, busy = false, report = null, composition = null, receipt = null, error = '', message = '';
   let draft = {gain:2, bias:1};
   let crossCase=null,jsObservation=null,pythonObservation=null,comparison=null,crossBusy=false,crossError='',crossMessage='';
@@ -65,7 +71,8 @@ export function createAtlasView({session, protocol, sampleDefinition, implementa
     if (!current()) return;
     const accepted = report?.accepted, result = report ?? composition;
     const outcome = composition ? `Original composition · ${composition.outputs.decision.value.accepted?'fixture policy passed':'fixture policy rejected'}` : accepted ? `Accepted ${accepted.size_bytes} B program · reference ${report.reference.size_bytes} B` : 'Run a live search to compare executable programs';
-    root.innerHTML = `<div id="atlas-view"><div id="atlas-ladder-mount"></div><div class="panel"><div class="row spread"><div><div class="kicker">Executable atlas · candidate 0.0.0</div><h2 id="atlas-outcome">${esc(outcome)}</h2></div><span class="badge">BROWSER LOCAL</span></div><p>Fit a five-transition linear motion model, search a bounded program family, and keep concrete failures to prune later candidates. Acceptance applies only to the declared grid and tolerance.</p><div class="atlas-controls"><label class="field">Gain<input id="atlas-gain" type="number" min="-10" max="10" step="0.25" value="${esc(draft.gain)}" ${busy?'disabled':''}></label><label class="field">Bias<input id="atlas-bias" type="number" min="-10" max="10" step="0.25" value="${esc(draft.bias)}" ${busy?'disabled':''}></label></div><div class="row"><button class="primary" id="atlas-run" ${busy?'disabled':''}>Run search</button><button id="atlas-composition" ${busy?'disabled':''}>Run original composition</button><button id="atlas-replay" ${busy||!result?'disabled':''}>Replay / cache check</button><button id="atlas-reset" ${busy?'disabled':''}>Reset Atlas</button></div><div id="atlas-status" role="status" aria-live="polite" class="notice ${error?'error':''}">${esc(error || message || 'Ready. Nothing runs until you choose Run search.')}</div>${receipt?`<p id="atlas-cache">${esc(receipt.executed_count)} calculation bodies executed · ${esc(receipt.cache_hit_count)} cache hits</p><p>Kernel receipts may also be produced on cache reads; they are separate from calculation execution.</p>`:''}</div>${report ? renderReport(report) : composition ? renderComposition(composition) : ''}${crossPanel()}<div class="panel atlas-inspect-panel"><details id="atlas-inspect"><summary>Inspect Parts, input references, producers and cache</summary><pre id="atlas-inspection">Open to inspect current Atlas state.</pre></details><div class="row atlas-downloads"><button id="atlas-download-recipe" ${!result?'disabled':''}>Download recipe</button><button id="atlas-download-result" ${!result?'disabled':''}>Download result</button><button id="atlas-download-inspection">Download inspection</button></div></div></div>`;
+    root.innerHTML = `<div id="atlas-view">${timeline?'<div id="atlas-operation-timeline-mount"></div>':''}<div id="atlas-ladder-mount"></div><div class="panel"><div class="row spread"><div><div class="kicker">Executable atlas · candidate 0.0.0</div><h2 id="atlas-outcome">${esc(outcome)}</h2></div><span class="badge">BROWSER LOCAL</span></div><p>Fit a five-transition linear motion model, search a bounded program family, and keep concrete failures to prune later candidates. Acceptance applies only to the declared grid and tolerance.</p><div class="atlas-controls"><label class="field">Gain<input id="atlas-gain" type="number" min="-10" max="10" step="0.25" value="${esc(draft.gain)}" ${busy?'disabled':''}></label><label class="field">Bias<input id="atlas-bias" type="number" min="-10" max="10" step="0.25" value="${esc(draft.bias)}" ${busy?'disabled':''}></label></div><div class="row"><button class="primary" id="atlas-run" ${busy?'disabled':''}>Run search</button><button id="atlas-composition" ${busy?'disabled':''}>Run original composition</button><button id="atlas-replay" ${busy||!result?'disabled':''}>Replay / cache check</button><button id="atlas-reset" ${busy?'disabled':''}>Reset Atlas</button></div><div id="atlas-status" role="status" aria-live="polite" class="notice ${error?'error':''}">${esc(error || message || 'Ready. Nothing runs until you choose Run search.')}</div>${receipt?`<p id="atlas-cache">${esc(receipt.executed_count)} calculation bodies executed · ${esc(receipt.cache_hit_count)} cache hits</p><p>Kernel receipts may also be produced on cache reads; they are separate from calculation execution.</p>`:''}</div>${report ? renderReport(report) : composition ? renderComposition(composition) : ''}${crossPanel()}<div class="panel atlas-inspect-panel"><details id="atlas-inspect"><summary>Inspect Parts, input references, producers and cache</summary><pre id="atlas-inspection">Open to inspect current Atlas state.</pre></details><div class="row atlas-downloads"><button id="atlas-download-recipe" ${!result?'disabled':''}>Download recipe</button><button id="atlas-download-result" ${!result?'disabled':''}>Download result</button><button id="atlas-download-inspection">Download inspection</button></div></div></div>`;
+    if(timeline) timeline.mount(root.querySelector('#atlas-operation-timeline-mount'));
     ladder.mount(root.querySelector('#atlas-ladder-mount'));
     const $ = selector => root.querySelector(selector);
     $('#atlas-run').onclick = () => {
@@ -92,7 +99,7 @@ export function createAtlasView({session, protocol, sampleDefinition, implementa
   }
   return {
     mount(element) {root = element; paint();},
-    unmount() {root = null; ladder.unmount();},
+    unmount() {root = null; ladder.unmount();timeline?.unmount();},
   };
 }
 
@@ -116,33 +123,35 @@ const rungDescription = {
 };
 
 // Owning protocol and draft live beyond a DOM mount, just like the original Atlas.
-export function createCapabilityLadderView({protocol, sampleDefinition, implementationIdentity} = {}) {
-  protocol ??= createCapabilityProtocol({implementationIdentity});
+export function createCapabilityLadderView({protocol, sampleDefinition, implementationIdentity,onObservation,now} = {}) {
+  protocol ??= createCapabilityProtocol({implementationIdentity,onObservation,now});
   const sample = () => sampleDefinition ?? createAtlasCompositionDefinition({implementationIdentity});
   let root = null, draft = pretty(sample()), revision = 0, busy = false, active = '';
-  let stages = {}, composed = null, latest = null, message = '', error = '', inspectionOpen = false;
+  let stages = {}, composed = null, latest = null, message = '', error = '', inspectionOpen = false, executionObservationId = null;
   const current = () => root?.isConnected;
   const success = rung => stages[rung]?.value?.ok === true;
   const receipt = () => latest?.value?.execution?.receipt;
   function invalidate(from = 0) {
     for(const rung of rungs.slice(from)) delete stages[rung];
+    if(from >= 0 && from <= rungs.indexOf('execute')) executionObservationId = null;
     composed = null; latest = null;
   }
   async function perform(kind) {
     if(busy) return;
     const index = rungs.indexOf(kind);
     if(index > 0 && !success(rungs[index-1])) return;
-    if(kind === 'replay' && !success('interpret')) return;
+    if(kind === 'replay' && !success('execute')) return;
     const started = revision, predecessor = index > 0 ? stages[rungs[index-1]] : stages.interpret;
     if(kind === 'run') invalidate();
     else if(index >= 0) invalidate(index);
     busy = true; active = kind; error = ''; message = kind === 'run' ? 'Running Parse → Validate → Interpret → Execute…' : kind === 'replay' ? 'Replaying the retained interpreted Part…' : `${kind[0].toUpperCase()+kind.slice(1)} is running…`;
     paint();
     try {
-      const result = kind === 'run' ? await protocol.run(draft) : kind === 'parse' ? await protocol.parse(draft) : kind === 'replay' ? await protocol.execute(predecessor) : await protocol[kind](predecessor);
+      const result = kind === 'run' ? await protocol.run(draft) : kind === 'parse' ? await protocol.parse(draft) : kind === 'replay' ? await protocol.execute(predecessor,{action:'atlas-capability-replay',replayOf:executionObservationId}) : await protocol[kind](predecessor);
       if(started !== revision) {message = 'Definition changed; run Parse again for this draft.';return;}
       if(kind === 'run') {stages = {...result.value.stages};composed = result;}
       else stages[kind === 'replay' ? 'execute' : kind] = result;
+      if((kind === 'execute' || kind === 'run') && result.value.ok) executionObservationId = protocol.lastObservationId?.() ?? null;
       latest = result;
       if(result.value.ok) message = kind === 'run' ? 'Ladder complete. All four capability Parts and their composed Part are inspectable.' : kind === 'replay' ? 'Replay complete. Last execution counts are shown below.' : `${kind[0].toUpperCase()+kind.slice(1)} complete. Its Part is retained for the next rung.`;
       else {const failure = result.value.error;error = `${failure?.code ?? 'CAPABILITY_FAILED'}: ${failure?.message ?? 'Capability failed'}`;message = '';}
@@ -152,7 +161,7 @@ export function createCapabilityLadderView({protocol, sampleDefinition, implemen
   function paint(focus) {
     if(!current()) return;
     const lastReceipt = receipt(), inspection = inspectionOpen ? pretty(protocol.inspect()) : 'Open to inspect capability Parts, kernel receipts and domain cache.';
-    root.innerHTML = `<div class="panel atlas-ladder-panel" id="atlas-capability-ladder"><div class="row spread"><div><div class="kicker">Discrete executable capabilities</div><h2>Capability ladder</h2></div><span class="badge">EXPLICIT ACTIONS</span></div><p>Edit a JSON recipe with literal seed Parts. Each rung is independently callable and yields its own Part; Run ladder composes the same four capabilities. Edit the sample’s named Calculations, wiring and seed values.</p><label class="field" for="atlas-ladder-definition">Definition JSON</label><textarea id="atlas-ladder-definition" spellcheck="false" ${busy?'disabled':''}>${esc(draft)}</textarea><div class="row atlas-ladder-actions"><button class="primary" id="atlas-ladder-run" ${busy?'disabled':''}>Run ladder</button><button id="atlas-ladder-replay" ${busy||!success('interpret')?'disabled':''}>Replay execution / cache</button><button id="atlas-ladder-sample" ${busy?'disabled':''}>Load six-node sample</button><button id="atlas-ladder-reset" ${busy?'disabled':''}>Reset ladder</button></div><div id="atlas-ladder-status" role="status" aria-live="polite" class="notice ${error?'error':''}">${esc(error || message || 'Ready. No capability runs until you choose a rung or Run ladder.')}</div>${lastReceipt?`<p id="atlas-ladder-cache">${esc(lastReceipt.executed_count)} calculation bodies executed · ${esc(lastReceipt.cache_hit_count)} cache hits</p>`:''}<div class="atlas-capability-rungs">${rungs.map((rung,index)=>{
+    root.innerHTML = `<div class="panel atlas-ladder-panel" id="atlas-capability-ladder"><div class="row spread"><div><div class="kicker">Discrete executable capabilities</div><h2>Capability ladder</h2></div><span class="badge">EXPLICIT ACTIONS</span></div><p>Edit a JSON recipe with literal seed Parts. Each rung is independently callable and yields its own Part; Run ladder composes the same four capabilities. Edit the sample’s named Calculations, wiring and seed values.</p><label class="field" for="atlas-ladder-definition">Definition JSON</label><textarea id="atlas-ladder-definition" spellcheck="false" ${busy?'disabled':''}>${esc(draft)}</textarea><div class="row atlas-ladder-actions"><button class="primary" id="atlas-ladder-run" ${busy?'disabled':''}>Run ladder</button><button id="atlas-ladder-replay" ${busy||!success('execute')?'disabled':''}>Replay execution / cache</button><button id="atlas-ladder-sample" ${busy?'disabled':''}>Load six-node sample</button><button id="atlas-ladder-reset" ${busy?'disabled':''}>Reset ladder</button></div><div id="atlas-ladder-status" role="status" aria-live="polite" class="notice ${error?'error':''}">${esc(error || message || 'Ready. No capability runs until you choose a rung or Run ladder.')}</div>${lastReceipt?`<p id="atlas-ladder-cache">${esc(lastReceipt.executed_count)} calculation bodies executed · ${esc(lastReceipt.cache_hit_count)} cache hits</p>`:''}<div class="atlas-capability-rungs">${rungs.map((rung,index)=>{
       const record=stages[rung],state=record ? record.value.ok?'ok':'failed' : 'waiting';
       return `<section class="atlas-capability-rung" id="atlas-ladder-rung-${rung}" data-state="${state}"><div class="row spread"><h3>${index+1}. ${rung[0].toUpperCase()+rung.slice(1)}</h3><span class="badge ${state==='failed'?'amber':''}">${active===rung?'RUNNING':state.toUpperCase()}</span></div><p>${esc(rungDescription[rung])}</p><button id="atlas-ladder-${rung}" ${busy||(index>0&&!success(rungs[index-1]))?'disabled':''}>${rung[0].toUpperCase()+rung.slice(1)}</button>${record?`<p class="mono atlas-part-address">${esc(record.address)}</p>${record.value.error?`<p class="atlas-rung-failure">${esc(record.value.error.code)}: ${esc(record.value.error.message)}</p>`:''}<details><summary>Inspect ${esc(rung)} Part, inputs and producer</summary><pre>${esc(pretty(record))}</pre></details>`:'<p class="atlas-rung-waiting">No Part for the current definition.</p>'}</section>`;
     }).join('')}</div>${composed?`<details id="atlas-ladder-composed-part" class="details"><summary>Inspect composed ladder Part and reached stage Parts</summary><pre>${esc(pretty(composed))}</pre></details>`:''}${latest?.value.execution?`<details id="atlas-ladder-outputs" class="details"><summary>Execution outputs and domain composition</summary><pre>${esc(pretty({outputs:latest.value.execution.outputs,composition_part:latest.value.execution.composition_part,receipt:lastReceipt}))}</pre></details>`:''}<details id="atlas-ladder-inspect" class="details" ${inspectionOpen?'open':''}><summary>Inspect protocol Parts, receipts and execution/cache counts</summary><pre id="atlas-ladder-inspection">${esc(inspection)}</pre></details><div class="row atlas-downloads"><button id="atlas-ladder-download-definition" ${busy?'disabled':''}>Download definition</button><button id="atlas-ladder-download-result" ${busy||!latest?'disabled':''}>Download result Part</button><button id="atlas-ladder-download-inspection" ${busy?'disabled':''}>Download ladder inspection</button></div></div>`;

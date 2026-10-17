@@ -108,6 +108,23 @@ test('execute replay invokes real runtime receipts while reusing all six domain 
   const counts=p.inspect().counts;assert.equal(counts.domain_body_executions,6);assert.equal(counts.domain_cache_hits,6);assert.equal(counts.domain_invocations,2);assert.equal(counts.domain_kernel_receipts,14);
 });
 
+test('capability replay metadata joins only the prior execution of the same retained interpreted handle',async()=>{
+  const events=[],p=(await import('./capability-protocol.mjs')).createCapabilityProtocol({onObservation:event=>{events.push(event);return {id:`observed-${events.length}`};}});
+  const def=await sample(),run=await p.run(def),interpreted=run.value.stages.interpret;
+  assert.equal(events.at(-1).action,'atlas-capability-run');
+  const prior=p.lastObservationId();
+  assert.equal(prior,'observed-1');
+  await p.execute(interpreted,{action:'atlas-capability-replay',replayOf:prior});
+  assert.equal(events.at(-1).action,'atlas-capability-replay');
+  assert.equal(events.at(-1).replayOf,prior);
+  const changed=await p.run({...def,sources:{...def.sources,'/parts/config':{revision:2}}});
+  assert.ok(changed.value.ok);
+  const changedId=p.lastObservationId();
+  assert.notEqual(changedId,prior);
+  await p.execute(changed.value.stages.interpret,{action:'atlas-capability-replay',replayOf:changedId});
+  assert.equal(events.at(-1).replayOf,changedId);
+});
+
 // Break caught: imported identity relabels the authoritative local calculation implementation.
 test('imported identity must exactly match the authoritative current identity',async()=>{
   const implementationIdentity=currentIdentity(),p=await protocol({implementationIdentity}),def=await sample({implementationIdentity});

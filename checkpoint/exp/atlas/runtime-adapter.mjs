@@ -45,8 +45,9 @@ export function preflightRecipe(recipe,sourceValues,registry){
 // HH's immutable occupied addresses require a new namespace when a recipe grows or seeds change.
 // Every graph output is nevertheless produced by HH PxC.compose with actual Part references.
 export class AtlasRuntime {
-  constructor(registry=calculationRegistry(),{implementationIdentity=null}={}){
+  constructor(registry=calculationRegistry(),{implementationIdentity=null,onObservation=null,now=()=>new Date().toISOString()}={}){
     this.implementationIdentity=implementationIdentity===null?null:freeze(clone(implementationIdentity));
+    this.onObservation=typeof onObservation==='function'?onObservation:null;this.now=now;this.observationWarning=null;this.lastObservationId=null;
     this.registry={...registry};this.cache=new Map();this.compositionCache=new Map();this.functionIds=new WeakMap();this.nextFunctionId=1;this.last=null;this.kernelParts=[];this.running=false;
     this.stats={body_executions:0,cache_hits:0,composition_body_executions:0,composition_cache_hits:0};
   }
@@ -60,12 +61,31 @@ export class AtlasRuntime {
     const {sources,compiled}=preflightRecipe(recipe,sourceValues,this.registry);
     return clone({order:compiled.order,bindings:compiled.order.map(node=>({node_id:node.id,calculation:node.calculation,calculation_address:'/calculations/'+node.calculation,input_bindings:{left:node.inputs[0],right:node.inputs[1]},output_address:node.output,implementation:this.reference('exp/atlas/calculations.mjs',node.calculation)})),outputs:compiled.outputs,source_addresses:Object.keys(sources).sort()});
   }
-  async execute(recipe,sourceValues,{plan=null}={}){
+  async execute(recipe,sourceValues,{plan=null,action='execute',replayOf=null}={}){
     if(this.running)throw new Error('AtlasRuntime executes one graph at a time');
     this.running=true;
-    try{return await this.evaluate(recipe,sourceValues,plan);}finally{this.running=false;}
+    let startedAt=null,result=null,status='failed',failure=null;this.observationWarning=null;
+    if(this.onObservation)try{startedAt=this.now();}catch(error){this.observationWarning=String(error?.message??error);}
+    try{result=await this.evaluate(recipe,sourceValues,plan);status='succeeded';return result;}
+    catch(error){failure={name:error?.name??'Error',message:String(error?.message??error)};throw error;}
+    finally{
+      this.running=false;
+      if(this.onObservation){
+        let finishedAt=null;try{finishedAt=this.now();}catch(error){this.observationWarning=String(error?.message??error);}
+        const inspection=this.inspect();
+        const observation={runtime:'atlas',action,source:this.implementationIdentity??{status:'unbound-local'},startedAt,finishedAt,status,result,inspection,receipt:inspection.receipt,parts:inspection.parts,...(replayOf?{replayOf}:{}),...(failure?{error:failure}:{})};
+        try{
+          const recorded=this.onObservation(observation);
+          if(recorded&&typeof recorded.then==='function')recorded.then(value=>{if(value?.id)this.lastObservationId=value.id;}).catch(error=>{this.observationWarning=String(error?.message??error);});
+          else if(recorded?.id)this.lastObservationId=recorded.id;
+        }catch(error){this.observationWarning=String(error?.message??error);}
+      }
+    }
   }
   async evaluate(recipe,sourceValues,plan=null){
+    // A preflight failure belongs to this invocation; do not leave a previous
+    // successful receipt visible as if it described the rejected graph.
+    this.last=null;this.kernelParts=[];
     // Full graph and finite JSON validation occurs before any Calculation body executes.
     const {sources,recipe:safeRecipe,compiled}=preflightRecipe(recipe,sourceValues,this.registry);
     const authoritativePlan=this.plan(safeRecipe,sources),selectedPlan=plan===null?authoritativePlan:clone(plan);
@@ -152,7 +172,7 @@ export class AtlasRuntime {
   // Borrow the immutable, actual HH Parts for a containing composition; no new execution.
   borrowKernelParts(){return Object.freeze(this.kernelParts.map(entry=>Object.freeze([...entry])));}
   inspect(){
-    return clone({format:'kompozed.atlas.inspection.v1',parts:this.last?.parts??{},receipt:this.last?.receipt??null,kernel_receipts:this.last?.kernel_receipts??[],cache:{entries:this.cache.size,composition_entries:this.compositionCache.size,...this.stats},boundaries:{kernel:'Real vendor/hh/services/pxc.mjs Part and PxC.compose',adapter:'Canonical addresses, DAG preflight, fixed registry, provenance metadata and deterministic memoization are atlas-local additions. A fresh HH namespace is rebuilt per evaluation; the adapter runtime/cache persist.',identity:'Existing HH evaluator identity is unchanged. Registry memo keys also include actual in-session function identity.',producer_map:'One producer per Part; predictions/retained failures carry actual prediction producers. No duplicated per-leaf map is emitted.'}});
+    return clone({format:'kompozed.atlas.inspection.v1',parts:this.last?.parts??{},receipt:this.last?.receipt??null,kernel_receipts:this.last?.kernel_receipts??[],cache:{entries:this.cache.size,composition_entries:this.compositionCache.size,...this.stats},...(this.observationWarning?{operation_index_warning:this.observationWarning}:{}),boundaries:{kernel:'Real vendor/hh/services/pxc.mjs Part and PxC.compose',adapter:'Canonical addresses, DAG preflight, fixed registry, provenance metadata and deterministic memoization are atlas-local additions. A fresh HH namespace is rebuilt per evaluation; the adapter runtime/cache persist.',identity:'Existing HH evaluator identity is unchanged. Registry memo keys also include actual in-session function identity.',producer_map:'One producer per Part; predictions/retained failures carry actual prediction producers. No duplicated per-leaf map is emitted.'}});
   }
-  reset(){if(this.running)throw new Error('cannot reset while executing');this.cache.clear();this.compositionCache.clear();this.last=null;this.kernelParts=[];this.stats={body_executions:0,cache_hits:0,composition_body_executions:0,composition_cache_hits:0};}
+  reset(){if(this.running)throw new Error('cannot reset while executing');this.cache.clear();this.compositionCache.clear();this.last=null;this.kernelParts=[];this.observationWarning=null;this.lastObservationId=null;this.stats={body_executions:0,cache_hits:0,composition_body_executions:0,composition_cache_hits:0};}
 }

@@ -39,10 +39,10 @@ function success(rung,value){return {rung,status:'ok',ok:true,...value};}
 
 // Four concrete, fixed capabilities over the existing Atlas recipe envelope.
 // No universal semantic meanings, imported code, registry selection, or arbitrary evaluator.
-export function createCapabilityProtocol({implementationIdentity=null}={}){
+export function createCapabilityProtocol({implementationIdentity=null,onObservation=null,now}={}){
   const identity=freeze(finiteCopy(implementationIdentity));
-  const runtime=new AtlasRuntime(undefined,{implementationIdentity:identity});
-  const handles=new WeakMap();let epoch=0,busy=false,kernel,parts,partAddresses,sequence,counts,last;
+  const runtime=new AtlasRuntime(undefined,{implementationIdentity:identity,onObservation,...(now?{now}:{})});
+  const handles=new WeakMap();let epoch=0,busy=false,kernel,parts,partAddresses,sequence,counts,last,domainObservation=null;
   const reference=(file,exportName)=>({...runtime.reference(file,exportName),identity_address:IMPLEMENTATION_INPUTS.source});
   const capabilityReference=name=>({...reference(IMPLEMENTATION,'createCapabilityProtocol'),capability:name});
   const implementation=reference(IMPLEMENTATION,'createCapabilityProtocol');
@@ -84,7 +84,7 @@ export function createCapabilityProtocol({implementationIdentity=null}={}){
       const failed=priorFailure('execute',prior,gate);if(failed)return failed;
       counts.domain_invocations++;
       try{
-        const execution=await runtime.execute(prior.envelope.recipe,prior.envelope.sources,{plan:prior.plan});
+        const execution=await runtime.execute(prior.envelope.recipe,prior.envelope.sources,{plan:prior.plan,action:domainObservation?.action??'atlas-capability-execute',...(domainObservation?.replayOf?{replayOf:domainObservation.replayOf}:{})});
         counts.domain_kernel_receipts+=execution.receipt.kernel_receipt_count;
         return success('execute',{execution});
       }catch(error){
@@ -151,7 +151,7 @@ export function createCapabilityProtocol({implementationIdentity=null}={}){
     bindings.receipt_metadata=ingest('failed_domain_receipt',{receipt,domain_namespace,domain_provenance:inspection});
     const evidence=await compose('execution_failure_evidence',bindings);return evidence.address;
   };
-  const stage=async(name,input)=>{
+  const stage=async(name,input,observation={})=>{
     if(name==='parse'){
       let snapshot;try{snapshot={kind:typeof input==='string'?'text':'envelope',value:finiteCopy(input)};}catch(error){snapshot={error:errorRecord(error,'PARSE_FAILED')};}
       return compose(name,{input:ingest('syntax',snapshot)});
@@ -164,7 +164,9 @@ export function createCapabilityProtocol({implementationIdentity=null}={}){
     const prior=handle&&handle.epoch===epoch?handle.address:ingest('unavailable_prior',{rung:handle?.rung??null,ok:false});
     const bindings={prior,gate:ingest('handle_gate',{error})};
     if(name!=='execute')return compose(name,bindings);
-    const invocation=await compose('execute_domain',bindings);
+    domainObservation={action:observation.action??'atlas-capability-execute',...(observation.replayOf?{replayOf:observation.replayOf}:{})};
+    let invocation;
+    try{invocation=await compose('execute_domain',bindings);}finally{domainObservation=null;}
     const evidence=invocation.value.skipped?null:await importDomainEvidence();
     return compose('execute',{...bindings,invocation:invocation.address,execution_metadata:ingest('execution_evidence',{domain_evidence_address:evidence}),...(evidence?{domain_evidence:evidence}:{})});
   };
@@ -175,10 +177,11 @@ export function createCapabilityProtocol({implementationIdentity=null}={}){
     parse(input){return exclusive(()=>stage('parse',input));},
     validate(part){return exclusive(()=>stage('validate',part));},
     interpret(part){return exclusive(()=>stage('interpret',part));},
-    execute(part){return exclusive(()=>stage('execute',part));},
+    execute(part,observation){return exclusive(()=>stage('execute',part,observation));},
+    lastObservationId(){return runtime.lastObservationId;},
     run(input){return exclusive(async()=>{
       const stages={};let prior=input;
-      for(const name of RUNGS){const part=await stage(name,prior);stages[name]=part;prior=part;if(!part.value.ok)break;}
+      for(const name of RUNGS){const part=await stage(name,prior,name==='execute'?{action:'atlas-capability-run'}:{});stages[name]=part;prior=part;if(!part.value.ok)break;}
       const bindings=Object.fromEntries(Object.entries(stages).map(([name,part])=>[name,part.address]));
       const evidence=stages.execute?.value.domain_evidence_address??null;if(evidence)bindings.domain_evidence=evidence;
       bindings.stage_records=ingest('stage_records',{stages,domain_evidence_address:evidence});

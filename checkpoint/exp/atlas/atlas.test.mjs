@@ -66,6 +66,25 @@ test('DAG preflight permits multiple roots and rejects cycles, reference and nam
   assert.equal(bodies,1,'identical deterministic calls at multiple roots share one real execution');
 });
 
+test('Atlas observation records boundary timing and failures without changing execution or retaining stale receipts', async () => {
+  const {AtlasRuntime}=await adapter();
+  const events=[],times=['2026-10-17T00:00:00.000Z','2026-10-17T00:00:00.005Z','2026-10-17T00:00:01.000Z','2026-10-17T00:00:01.002Z'];
+  const runtime=new AtlasRuntime({add:(a,b)=>a+b},{onObservation:event=>{events.push(event);return {id:`run-${events.length}`};},now:()=>times.shift()});
+  const recipe={nodes:[{id:'sum',calculation:'add',inputs:['/a','/b'],output:'/sum'}],outputs:{sum:'/sum'}},sources={'/a':2,'/b':3};
+  const result=await runtime.execute(recipe,sources,{action:'atlas-test'});
+  assert.equal(result.outputs.sum.value,5);
+  assert.equal(events[0].status,'succeeded');assert.equal(events[0].action,'atlas-test');
+  assert.equal(events[0].startedAt,'2026-10-17T00:00:00.000Z');assert.equal(events[0].finishedAt,'2026-10-17T00:00:00.005Z');
+  assert.equal(runtime.lastObservationId,'run-1');
+  await assert.rejects(runtime.execute({nodes:[{id:'bad',calculation:'add',inputs:['/missing','/b'],output:'/bad'}],outputs:{bad:'/bad'}},sources,{action:'atlas-invalid'}));
+  assert.equal(events[1].status,'failed');assert.equal(events[1].action,'atlas-invalid');
+  assert.equal(events[1].inspection.receipt,null);assert.deepEqual(events[1].inspection.parts,{});
+  assert.equal(runtime.inspect().receipt,null);
+  const independent=new AtlasRuntime({add:(a,b)=>a+b},{onObservation:()=>{throw new Error('index unavailable');}});
+  assert.equal((await independent.execute(recipe,sources)).outputs.sum.value,5);
+  assert.match(independent.inspect().operation_index_warning,/index unavailable/);
+});
+
 test('live bounded search matches Python fixture behavior and genuinely prunes retained failures', async () => {
   const {createAtlasSession}=await load();
   const report=await createAtlasSession().run();

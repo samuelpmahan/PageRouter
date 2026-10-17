@@ -3,7 +3,7 @@ import path from 'node:path';
 import {createHash} from 'node:crypto';
 const sha = value => createHash('sha256').update(value).digest('hex');
 export function atlasImplementationIdentity(root) {
-  const roots=['exp/atlas/atlas-session.mjs','exp/atlas/cross-language.mjs'];
+  const roots=['exp/atlas/atlas-session.mjs','exp/atlas/cross-language.mjs','exp/operation-index/core.mjs','exp/operation-index/adapters.mjs','exp/operation-index/cv-demo.mjs','exp/operation-index/lab-bridge.mjs'];
   const files = {}, seen = new Set(), pending = [...roots];
   while (pending.length) {
     const relative = pending.pop();

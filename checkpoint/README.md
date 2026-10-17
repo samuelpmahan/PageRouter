@@ -224,3 +224,48 @@ replay, failures, exports, navigation, and 320/390-pixel layouts.
 The source-derived Atlas identity follows the runtime's actual relative import
 closure, including capability modules, while the existing evaluator pin and
 compiled project digests remain separately verified.
+
+## Shared operation index
+
+The Atlas page now starts with a bounded operation timeline shared by Atlas,
+CapabilityLab registry execution, and the synthetic CV ordering fixture. It
+keeps up to 100 browser-local runtime-boundary records in `localStorage`, offers
+runtime/status filters and JSON export, and survives route navigation and page
+reload. Each event has a host-assigned run ID, sequence, observation time, actual
+start/finish times where the runtime exposes them, status, source identity,
+normalized operation rows, edges and native receipt evidence. Atlas rows include
+the implementation closure digest and actual input/output Part addresses;
+cache hits are shown as cached operations, and failures remain failed records.
+A boundary-level duration is retained; per-operation wall-clock times are not
+invented.
+
+CapabilityLab observation wraps the compiled candidate's existing Execute and
+Replay actions. Its parent bridge accepts messages only from that exact iframe
+and origin, and attaches the candidate's base source commit/file hashes,
+compiled digest and instrumentation overlay digest. This currently covers the
+registry-based runtime reached by those two UI actions. Watches, Machine
+learning and Explain use separate paths and are not represented as registry
+traces. A Lab call-tree edge means invocation only; equal hashes or values do
+not establish dataflow. Atlas data edges are emitted only when an actual input
+Part address matches an operation's actual produced output address. Source
+identities distinguish pinned source files, the compiled artifact and the
+additional Lab instrumentation overlay.
+
+Flow candidate keys ignore incidental operation and capability IDs. They keep
+execution kind/status, declared semantic signatures, input/output arity and
+observed wiring. A candidate without explicit semantic annotations is marked
+`structural-only`; neither key mode proves behavioral equivalence. The existing
+kernel miner now adds a sorted `nameIndependentCandidateKeys` array beside
+its legacy contract-based grouping. One legacy group may contain multiple
+distinct wiring or semantic candidates; the array preserves each observed
+key without changing legacy counts or ranking.
+
+The CV button runs a synthetic eligibility-before-rank example through the
+CapabilityLab registry and records both executions and replays. The displayed
+ChainSpot commit/file is a historical reference only; the fixture does not
+execute that historical TypeScript or a complete CV pipeline. Radius and score
+floor remain explicit per-run semantics, while incidental fixture names are
+excluded from the candidate key. Focused coverage is in the operation-index,
+Atlas and timeline tests. Browser visual verification requires a local or CI
+Playwright Chromium installation; the Node and DOM-controller checks do not
+claim to replace that renderer.

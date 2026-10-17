@@ -51,6 +51,26 @@ test('staged actions retain authentic predecessor handles and invalidate downstr
   assert.equal(ladder.querySelector('#atlas-ladder-definition').value,'{"draft":"human edit"}');
 });
 
+test('ladder replay requires the current draft execution and links to that execution run',async()=>{
+  const p=runtime(),calls=[];let observationId=null,sequence=0;
+  p.lastObservationId=()=>observationId;
+  p.execute=async(value,metadata)=>{calls.push(metadata??{});observationId=`execution-${++sequence}`;return p.executed;};
+  const {ladder}=setup(p);
+  for(const rung of ['parse','validate','interpret']) await ladder.querySelector('#atlas-ladder-'+rung).onclick();
+  assert.match(ladder.innerHTML,/id="atlas-ladder-replay" disabled/);
+  await ladder.querySelector('#atlas-ladder-replay').onclick();
+  assert.equal(calls.length,0,'an interpreted Part alone does not authorize a replay');
+  await ladder.querySelector('#atlas-ladder-execute').onclick();
+  assert.doesNotMatch(ladder.innerHTML,/id="atlas-ladder-replay" disabled/);
+  const input=ladder.querySelector('#atlas-ladder-definition');input.value='{"new":"definition"}';input.oninput({target:input});
+  assert.match(ladder.innerHTML,/id="atlas-ladder-replay" disabled/);
+  await ladder.querySelector('#atlas-ladder-replay').onclick();
+  assert.equal(calls.length,1,'editing the recipe invalidates replay eligibility');
+  for(const rung of ['parse','validate','interpret','execute']) await ladder.querySelector('#atlas-ladder-'+rung).onclick();
+  await ladder.querySelector('#atlas-ladder-replay').onclick();
+  assert.deepEqual(calls.at(-1),{action:'atlas-capability-replay',replayOf:'execution-2'});
+});
+
 test('composed run reveals its reached stages and replay reuses the authentic interpreted Part',async()=>{
   const p=runtime(),{ladder}=setup(p);await ladder.querySelector('#atlas-ladder-run').onclick();
   assert.match(ladder.innerHTML,/id="atlas-ladder-composed-part"/);
