@@ -1,0 +1,62 @@
+{
+  "schema": "hh-cycle05-worker-result/v1",
+  "job_id": "E701",
+  "worker": "H1",
+  "summary": "Confirmed the profile-create completion replaces another teacher's current public-profile projection with the signed-in teacher's own profile, and the edit action then succeeds on that mismatched route.",
+  "outcome": "confirmed_reuse",
+  "scope": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head_before": "bf27246beebd03d673c92c7152fd26124a58b40b",
+    "head_after": "bf27246beebd03d673c92c7152fd26124a58b40b",
+    "baseline_tree": "4daf69ad6017206eb9e95646ca2403e17841a078",
+    "baseline_source_sha256": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "908c4fa0aa1c0d809c804b83d680f45c2775cf1919e5244a58af769d2bb8d70f",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "d84876bb26e846bbb5a482c637a324c9a808d223b668e164204e9191abfeed9d",
+      "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+      "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+    },
+    "source_mutation": false,
+    "commit_or_push": false,
+    "provider_boundary": "volatile in-memory synthetic fixture only; no backend/network call and no real teacher data",
+    "browser_visual_qa": "not performed; controller state/projection and dispatch authority were inspected"
+  },
+  "execution": {
+    "command": "node /workspace/scratch/8528bb251845/hh-cycle05/H1/E701/probe.mjs",
+    "working_directory": "/workspace/scratch/8528bb251845",
+    "node": "v24.19.0",
+    "result": "completed all probe assertions and controls",
+    "setup_operations": [
+      "Initialize controller on /register; choose Demo Washington / Demo King / Demo District / Demo Academy.",
+      "Register Cycle Five Synthetic using volatile-only credentials and the synthetic example.invalid alias.",
+      "Invoke Demo.simulateApproval, then Session.login, then initialize the own-profile route."
+    ],
+    "interleaving": [
+      "Hold the fixture provider's TeacherProfile.createProfile operation behind a promise gate.",
+      "While it is pending, navigate to /public-profile/demo-avery; TeacherProfile.openPublicProfile completes and projects seed teacher demo-seed-avery.",
+      "Resolve the held create operation and inspect route/profile projection plus public:edit-profile dispatch."
+    ],
+    "provider_state_vs_displayed_route": {
+      "before_create_resolution": "Current route /public-profile/demo-avery displayed profile demo-avery, teacher demo-seed-avery, name Demo Avery.",
+      "after_create_resolution": "Provider snapshot correctly records authenticated teacher demo-teacher-1 and own profile profile-demo-teacher-1, but the unchanged route /public-profile/demo-avery displays profile-demo-teacher-1 / Cycle Five Own Profile.",
+      "edit_authority": "public:edit-profile returns ok:true on /public-profile/demo-avery because the overwritten projection's teacherId matches the signed-in teacher."
+    },
+    "controls": {
+      "own_profile_route": "Navigating to /public-profile/profile-demo-teacher-1 displays the created profile and edit succeeds as expected.",
+      "captured_read_only_reference": "Navigating to /public-profile/reference-sarah displays readOnly:true and edit is denied with read_only_reference."
+    }
+  },
+  "finding": {
+    "demonstrated": true,
+    "minimal_root_cause": "service() unconditionally calls syncRuntime() after the delayed provider operation; syncRuntime() unconditionally replaces journey.profile with raw.ownProfile when present. The public:profile-create success branch then applies the new own-profile overlay without checking whether routeEpoch/current profile route still belongs to that operation.",
+    "bounded_correction_candidate": "Preserve the active public-profile projection during runtime sync when the current route profileId is not the newly-created own profile ID; only project the own profile on the own-profile route (or when there is no profileId). Add a promise-controlled regression asserting route/profile coherence and that edit authority cannot switch to the signed-in teacher on another teacher's route. Preserve the captured read-only reference guard and the own-profile positive control.",
+    "evidence_limit": "This is controller/service-fixture evidence, not screenshot/browser QA or production/backend behavior."
+  },
+  "evidence": {
+    "probe": "/workspace/scratch/8528bb251845/hh-cycle05/H1/E701/probe.mjs",
+    "probe_sha256": "9be0faa950660a4e74f0218a6ad40549fceb9529f2fe95aaeae179a7da6d3b5c",
+    "output": "/workspace/scratch/8528bb251845/hh-cycle05/H1/E701/output.json",
+    "output_sha256": "a5ed0f90069e635eda58e9fffbb98e0915ed166f737b42e177b0c9a21ad8f193",
+    "post_probe_repo_status": "No tracked source changes; the status showed a concurrent untracked PageRouter/work/hh-continuous-improvement/cycle-05/ directory that was root-owned and not touched by H1."
+  }
+}

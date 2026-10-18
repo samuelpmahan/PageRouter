@@ -1,0 +1,81 @@
+{
+  "schema": "hh-cycle05-worker-result/v1",
+  "job_id": "R705",
+  "worker": "H2",
+  "actual_epoch": 5,
+  "native_assignment_readback": "running",
+  "decision": "accepted",
+  "summary": "Accepted the exact E705 package. The manifest hash is e2201ce25c291e8a98f131de6841d71586d52c56d6d2eba158ecbd9be1a68237; all 43 listed files match, with exactly 44 files and 706008 total bytes including the manifest. Source freeze hashes and canonical E704 receipt match; preserved evidence and provenance are consistent and appropriately bounded.",
+  "package": {
+    "path": "PageRouter/work/hh-continuous-improvement/cycle-05/",
+    "manifest_sha256": "e2201ce25c291e8a98f131de6841d71586d52c56d6d2eba158ecbd9be1a68237",
+    "manifest_listed_files": 43,
+    "directory_files_including_manifest": 44,
+    "total_bytes_including_manifest": 706008,
+    "manifest_mismatches": 0,
+    "unlisted_files": 0,
+    "missing_listed_files": 0,
+    "manifest_self_hash_policy": "self-hash explicitly excluded; manifest SHA reported separately"
+  },
+  "source_and_build_binding": {
+    "branch": "codex/hh-continuous-improvement",
+    "head": "bf27246beebd03d673c92c7152fd26124a58b40b",
+    "head_tree": "4daf69ad6017206eb9e95646ca2403e17841a078",
+    "controller_sha256_actual_and_manifest": "a5deede267691459429f8bc404ba9cbc8e07d18f8120047281cf773d5cdaf558",
+    "controller_test_sha256_actual_and_manifest": "8716ff6cd19f8ca56312ba143062d59f5a18dc0677b020d4aa75a356b985025f",
+    "receipt_sha256": "7d8f3a18497f79d6935da393f61f9cb5ccae93b80a9ccb7e0f31f9e363025b5d",
+    "receipt_path": "evidence/E704/site.receipt.json",
+    "receipt_matches_controller_and_test": true,
+    "site_build_id": "14f8afa0adde85fdefad575487d4992c9c373c5244663fd64f5b3b4a0d8c84b0",
+    "site_digest": "d89776561978a5c35e5c2c9609f9d96cc998892f9c14f05e1678647fceb426e0",
+    "verified_site_files": 843,
+    "build_validation_reported": {"targeted_hh": "111/111", "full_suite": "266/266", "atlas_import": "1/1", "helpers": "2/2", "pxcube_packages": "14/14"}
+  },
+  "checks": [
+    {
+      "command": "Node SHA-256 comparison of every evidence/manifest.json files[] entry against bytes under the exact package root; recursively inventory files and sum sizes.",
+      "result": "43 checked, 0 mismatched; 44 files including manifest; 706008 bytes; no extra or missing paths."
+    },
+    {
+      "command": "sha256sum PageRouter/work/hh-continuous-improvement/cycle-05/evidence/manifest.json hh-cycle05/H1/E705/result.json",
+      "result": "Manifest e2201ce25c291e8a98f131de6841d71586d52c56d6d2eba158ecbd9be1a68237; E705 result 693c2050b4db2728d06cbe23db50303d9557445f6d9922fa11a0fd049a358c8b."
+    },
+    {
+      "command": "sha256sum PageRouter/checkpoint/vendor/hh/src/public-controller.mjs PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs; compare to manifest sourceFreeze and E704 site.receipt.json sourceInputs.",
+      "result": "Both actual source hashes match the accepted R703 freeze, package manifest and canonical receipt exactly."
+    },
+    {
+      "command": "Compare originals under hh-cycle05/H1 and hh-cycle05/H2 to corresponding packaged E701/E702/E703/E704/R703 evidence files using SHA-256.",
+      "result": "14/14 compared probe, stdout/result, red/green, diff, and build evidence copies are byte-identical. Packaged E704 site.log and site.receipt.json also match checkpoint/bazel-bin outputs exactly."
+    },
+    {
+      "command": "for i in 00 01 02 03 04; do zstd -q -t PageRouter/work/hh-continuous-improvement/cycle-05/evidence/native/solves/epoch-$i.bundle || exit 1; done; parse epoch-00..04 JSON assignment/dispatch records.",
+      "result": "All five compressed bundles pass integrity checks. JSON records identify the staged dispatches: epoch 0 E701/H1 and E702/H2; epoch 1 E703/H1; epoch 2 R703/H2; epoch 3 E704/H1; epoch 4 E705/H1."
+    },
+    {
+      "command": "Parse evidence/native/state.json and inspect README.md, NEXT.md, continuation.json, coordinator-notes.json, source-check.json, and root-verification.json.",
+      "result": "Captured state identifies itself as epoch 5, with E705/H1 running, R705/H2 blocked and E706 blocked at the snapshot point; docs correctly state this is historical, not current dispatch authority or proof of background work. Ownership, E702 erratum, geography/backend distinction, browser QA limits and unexecuted logout hypothesis are accurately qualified."
+    }
+  ],
+  "provenance_findings": {
+    "original_red": "The retained original E703 red log is the exact H1 raw log (hash 5d062148ed2829acafcf95c0fd2b7b31cf05093752b5e5b548120ff7438eece0): exactly four regression failures, each at the expected projection deep-equality assertion; 0 passed/4 failed. It was not reconstructed.",
+    "raw_copy_policy": "Packaged E701, E702, E703, E704 and R703 probe/review/build artifacts were compared to their available scratch or build-output originals and matched byte-for-byte. Native coordinator receipt duplicates are not copied into the package; worker results are retained once under job evidence paths.",
+    "h2_relocation": "README and native coordinator notes record that H2's three original E702 artifacts were relocated to the assigned hh-cycle05/H2/E702 scratch path; the E702 package copy matches the final raw H2 artifacts. No repository source was changed by that relocation.",
+    "e702_wording_erratum": "Raw E702 wording remains unmodified. README/continuation/R703 clarify that synthetic fixture-provider operations did execute (registration, approval, login, create and public reads where used); no production/backend provider operation, network call or real teacher data operation occurred.",
+    "geography": "Existing Python/backend geography evidence is explicitly described as recorded historical evidence, distinct from current volatile fixture-provider execution; the docs state no new Python/backend execution occurred in this cycle.",
+    "next_hypothesis": "Delayed synthetic Session.logout across navigation is expressly source-inspected and not executed; documentation treats the unguarded branch only as a candidate and requires reachability proof/fresh assignment before source work."
+  },
+  "repository_boundary": {
+    "observed_tracked_changes": ["checkpoint/vendor/hh/src/public-controller.mjs", "checkpoint/vendor/hh/src/public-controller.test.mjs"],
+    "observed_untracked_package": "work/hh-continuous-improvement/cycle-05/",
+    "reviewer_repository_edits": false,
+    "tests_or_build_rerun": false,
+    "commit_push_merge_deploy": false
+  },
+  "limits": [
+    "Audit covered package integrity, source/build binding, provenance, and continuation honesty; no source behavior retest or build rerun was performed because the package's acceptance/build evidence is already exact and byte-verified.",
+    "Native solve JSON was inspected and all five compressed bundles passed zstd integrity checks; bundle payload semantics beyond compressed integrity were not independently decoded.",
+    "Browser visual QA and human acceptance remain unverified/not claimed.",
+    "The package's native state is a historical capture; the actual R705 epoch-5 start/readback is supplied by the current root coordinator, not inferred from that stale snapshot."
+  ]
+}

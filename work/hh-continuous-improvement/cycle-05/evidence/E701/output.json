@@ -1,0 +1,57 @@
+{
+  "schema": "hh-cycle05-E701-probe-output/v1",
+  "baseline": {
+    "mode": "fixture",
+    "fixture": true,
+    "persistence": "volatile-memory",
+    "teacherId": "demo-teacher-1",
+    "route": "/profile",
+    "ownProfile": "absent"
+  },
+  "duringCreate": {
+    "mutationGuardStatus": "busy",
+    "route": "/profile",
+    "profileStatus": "absent"
+  },
+  "whileCreatePending": {
+    "navigationOk": true,
+    "route": "/public-profile/demo-avery",
+    "routeProfileId": "demo-avery",
+    "displayedProfileId": "demo-avery",
+    "displayedTeacherId": "demo-seed-avery",
+    "displayedName": "Demo Avery",
+    "displayedReadOnly": false
+  },
+  "afterCreate": {
+    "createOk": true,
+    "providerSessionTeacherId": "demo-teacher-1",
+    "providerOwnProfileId": "profile-demo-teacher-1",
+    "route": "/public-profile/demo-avery",
+    "routeProfileId": "demo-avery",
+    "profileStatus": "present",
+    "displayedProfileId": "profile-demo-teacher-1",
+    "displayedTeacherId": "demo-teacher-1",
+    "displayedName": "Cycle Five Own Profile",
+    "displayedReadOnly": false,
+    "profileSource": "local-overlay"
+  },
+  "afterWrongRouteEdit": {
+    "editOk": true,
+    "editError": null,
+    "editOpen": true
+  },
+  "ownRouteControl": {
+    "route": "/public-profile/profile-demo-teacher-1",
+    "routeProfileId": "profile-demo-teacher-1",
+    "displayedProfileId": "profile-demo-teacher-1",
+    "displayedTeacherId": "demo-teacher-1",
+    "editResult": true
+  },
+  "capturedReferenceControl": {
+    "route": "/public-profile/reference-sarah",
+    "profileId": "reference-sarah",
+    "readOnly": true,
+    "editOk": false,
+    "editError": "read_only_reference"
+  }
+}

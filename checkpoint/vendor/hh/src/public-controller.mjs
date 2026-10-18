@@ -137,16 +137,18 @@ export function createPublicController({runtime, storage = null, onChange = () =
     state.journey.session = {...clone(raw.session), email: selectedEmail};
     const own = raw.ownProfile?.profile;
     if (raw.ownProfile?.status === 'present' && own) {
-      const overlay = profileOverlays.get(own.teacherId);
-      state.journey.profile = {
-        status: 'present',
-        value: {...clone(own), name: overlay?.name || own.displayName, bio: overlay?.bio ?? own.bio,
-          wishlistUrl: overlay?.wishlistUrl ?? own.wishlistUrl},
-        editOpen: state.journey.profile.editOpen === true,
-        editDraft: state.journey.profile.editDraft || {name: '', bio: '', wishlistUrl: ''},
-        createDraft: state.journey.profile.createDraft || {name: '', bio: '', wishlistUrl: ''},
-        source: overlay ? 'local-overlay' : 'runtime',
-      };
+      if (!state.route.profileId || state.route.profileId === own.id) {
+        const overlay = profileOverlays.get(own.teacherId);
+        state.journey.profile = {
+          status: 'present',
+          value: {...clone(own), name: overlay?.name || own.displayName, bio: overlay?.bio ?? own.bio,
+            wishlistUrl: overlay?.wishlistUrl ?? own.wishlistUrl},
+          editOpen: state.journey.profile.editOpen === true,
+          editDraft: state.journey.profile.editDraft || {name: '', bio: '', wishlistUrl: ''},
+          createDraft: state.journey.profile.createDraft || {name: '', bio: '', wishlistUrl: ''},
+          source: overlay ? 'local-overlay' : 'runtime',
+        };
+      }
     } else if (!state.route.profileId) {
       state.journey.profile = {status: raw.session.status === 'authenticated' ? 'absent' : 'unknown', value: null,
         editOpen: false, editDraft: {name: '', bio: '', wishlistUrl: ''},
@@ -744,12 +746,15 @@ export function createPublicController({runtime, storage = null, onChange = () =
         profileOverlays.set(profile.teacherId, {name, bio: bio || profile.bio,
           wishlistUrl: safeWishlist(wishlistUrl) ? wishlistUrl : profile.wishlistUrl});
         syncRuntime({email: identity?.email || state.journey.session.email});
-        state.journey.profile.editOpen = false;
-        state.journey.profile.createDraft = {name: '', bio: '', wishlistUrl: ''};
-        state.journey.profile.source = 'local-overlay';
-        state.journey.profile.value.name = name;
-        state.journey.profile.value.bio = bio || profile.bio;
-        state.journey.profile.value.wishlistUrl = safeWishlist(wishlistUrl) ? wishlistUrl : profile.wishlistUrl;
+        if (state.route.page === 'profile' && (!state.route.profileId || state.route.profileId === profile.id) &&
+            state.journey.profile.status === 'present' && state.journey.profile.value?.id === profile.id) {
+          state.journey.profile.editOpen = false;
+          state.journey.profile.createDraft = {name: '', bio: '', wishlistUrl: ''};
+          state.journey.profile.source = 'local-overlay';
+          state.journey.profile.value.name = name;
+          state.journey.profile.value.bio = bio || profile.bio;
+          state.journey.profile.value.wishlistUrl = safeWishlist(wishlistUrl) ? wishlistUrl : profile.wishlistUrl;
+        }
         notify();
       }
       return result;

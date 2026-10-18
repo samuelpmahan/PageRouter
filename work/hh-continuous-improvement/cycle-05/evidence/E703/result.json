@@ -1,0 +1,72 @@
+{
+  "schema": "hh-cycle05-worker-result/v1",
+  "job_id": "E703",
+  "worker": "H1",
+  "summary": "Bounded the runtime profile projection to the active own-profile route and added create-completion guards, preserving foreign, captured, loading, not-found, and error route projections while retaining the own-profile overlay for later navigation.",
+  "outcome": "mixed_change",
+  "native_assignment": {
+    "epoch": 1,
+    "start_readback": "running",
+    "completion": "source freeze and validation complete; awaiting independent R703 review"
+  },
+  "scope": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head_before": "bf27246beebd03d673c92c7152fd26124a58b40b",
+    "head_after": "bf27246beebd03d673c92c7152fd26124a58b40b",
+    "changed_files": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "source_freeze": true,
+    "commit_or_push": false,
+    "canonical_build": "not run; reserved for E704 after independent R703",
+    "provider_boundary": "volatile in-memory synthetic fixture and real local fixture runtime; no backend/network call or real teacher data",
+    "browser_visual_qa": "not performed; controller projection and dispatch behavior tested"
+  },
+  "implementation_flow": [
+    "service() may still synchronize runtime/session/registration after any provider result, including a failure.",
+    "syncRuntime() updates those runtime projections but replaces journey.profile only when there is no active profileId or the route profileId exactly matches raw ownProfile.profile.id; it does not compare against teacherId.",
+    "A successful create always stores its local display overlay for future own-profile reads, then updates the visible profile/draft/source only on the generic own-profile route or exact own public alias when the current projection is present and has the created profile ID.",
+    "Foreign, captured read-only, pending, not-found, and error public-profile projections remain owned by their route; the current projection is never dereferenced when null."
+  ],
+  "tdd": {
+    "red_command": "node --test --test-name-pattern='delayed profile creation|failed profile creation' PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "red_exit_code": 1,
+    "red_result": "0 passed, 4 failed; each failed at the expected route/projection equality because the original source replaced the current public projection with the signed-in teacher's own profile.",
+    "red_log": "/workspace/scratch/8528bb251845/hh-cycle05/H1/E703/red.log",
+    "green_focused_command": "node --test --test-name-pattern='delayed profile creation|failed profile creation' PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "green_focused_exit_code": 0,
+    "green_focused_result": "4 passed, 0 failed",
+    "green_controller_command": "node --test --test-concurrency=2 PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "green_controller_exit_code": 0,
+    "green_controller_result": "37 passed, 0 failed",
+    "green_all_hh_command": "node --test --test-concurrency=2 vendor/hh/src/*.test.mjs (working directory: PageRouter/checkpoint)",
+    "green_all_hh_exit_code": 0,
+    "green_all_hh_result": "64 passed, 0 failed",
+    "diff_check": "git -C PageRouter diff --check passed"
+  },
+  "regressions": {
+    "create_over_foreign_profile": "A held TeacherProfile.createProfile completes while /public-profile/demo-avery is active. The route continues displaying demo-avery / demo-seed-avery; edit is denied with profile_owner_mismatch. Navigating afterward to the new own public alias displays the local overlay and edit succeeds.",
+    "create_over_captured_reference": "A held create completes while /public-profile/reference-sarah is active. The exact captured-readonly projection remains unchanged; edit is denied with read_only_reference.",
+    "create_during_public_read": "A held create resolves while TeacherProfile.openPublicProfile for demo-jordan is pending. The loading/null projection remains unchanged without a null dereference; releasing the read then displays demo-jordan / demo-seed-jordan.",
+    "failed_create_with_existing_own_profile": "A duplicate create returns profile_exists while the captured Sarah reference is active. Generic service() synchronization does not replace the captured projection on failure."
+  },
+  "source_freeze": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "a5deede267691459429f8bc404ba9cbc8e07d18f8120047281cf773d5cdaf558",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "8716ff6cd19f8ca56312ba143062d59f5a18dc0677b020d4aa75a356b985025f",
+    "base_controller_sha256": "908c4fa0aa1c0d809c804b83d680f45c2775cf1919e5244a58af769d2bb8d70f",
+    "base_test_sha256": "d84876bb26e846bbb5a482c637a324c9a808d223b668e164204e9191abfeed9d"
+  },
+  "evidence": {
+    "source_diff": "/workspace/scratch/8528bb251845/hh-cycle05/H1/E703/source.diff",
+    "source_diff_sha256": "f622efac526263af0c70f64bfb19e1c27412cfb03272432ae871f3f8eb368b3f",
+    "green_focused_log": "/workspace/scratch/8528bb251845/hh-cycle05/H1/E703/green-focused.log",
+    "green_focused_log_sha256": "99de21bec7ab36371d923db3ab83a6c0d174de07ef6658a3965fec74674c8097",
+    "green_controller_log": "/workspace/scratch/8528bb251845/hh-cycle05/H1/E703/green-controller.log",
+    "green_controller_log_sha256": "37e160c33c13bcc0fb71eb12726a8316d07148e6e4d7322cded239d10f8dd4c1",
+    "green_all_hh_log": "/workspace/scratch/8528bb251845/hh-cycle05/H1/E703/green-all-hh.log",
+    "green_all_hh_log_sha256": "645f4cbee0ce911fafcc4c2fba6d41fb5ead6bd5868240f24f839cca683c4be2",
+    "post_freeze_git_status": "Exactly the two listed controller/test files are modified; no commit, push, or build."
+  }
+}

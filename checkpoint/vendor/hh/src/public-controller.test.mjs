@@ -35,6 +35,137 @@ async function registeredProfileSetup() {
   return env;
 }
 
+function controlledFixtureRuntime(delayedPorts = []) {
+  const base = createFixtureProvider({fixture: true});
+  const gates = new Map(delayedPorts.map(port => {
+    let announceStart, release;
+    const started = new Promise(resolve => { announceStart = resolve; });
+    const pending = new Promise(resolve => { release = resolve; });
+    return [port, {started, announceStart, pending, release}];
+  }));
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    const gate = gates.get(port);
+    if (gate) {
+      gate.announceStart();
+      await gate.pending;
+    }
+    return invoke(input);
+  }]));
+  const provider = {...base, services: Object.freeze(services)};
+  return {
+    runtime: createServiceRuntime(provider),
+    waitFor(port) { return gates.get(port)?.started || Promise.reject(new Error(`No gate for ${port}`)); },
+    release(port) { gates.get(port)?.release(); },
+  };
+}
+
+async function createControlledSyntheticTeacher(controller, suffix = 'controlled') {
+  await controller.initialize('#/register');
+  for (const [key, value] of Object.entries({state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'})) {
+    await controller.selectSchool(key, value);
+  }
+  await controller.dispatch('public:terms-consent', {accepted: true});
+  const email = `${suffix}@example.invalid`;
+  assert.equal((await controller.dispatch('public:register', {
+    name: 'Synthetic Controlled', email, password: 'Volatile-Only-31', confirm_password: 'Volatile-Only-31',
+  })).ok, true);
+  assert.equal((await controller.dispatch('public:approve')).ok, true);
+  assert.equal((await controller.dispatch('public:login', {email, password: 'Volatile-Only-31'})).ok, true);
+  await controller.navigate('#/profile');
+  return controller.state.journey.session.teacherId;
+}
+
+function controlledController(runtime) {
+  return createPublicController({runtime, community: createCommunity()});
+}
+
+test('delayed profile creation preserves the current other-teacher route and edit authority', async () => {
+  const controlled = controlledFixtureRuntime(['TeacherProfile.createProfile']);
+  const {runtime} = controlled, controller = controlledController(runtime);
+  const teacherId = await createControlledSyntheticTeacher(controller, 'other-profile-route');
+  const creating = controller.dispatch('public:profile-create', {name: 'Synthetic Owner Profile'});
+  await controlled.waitFor('TeacherProfile.createProfile');
+  await controller.navigate('#/public-profile/demo-avery');
+  const displayedOtherTeacher = structuredClone(controller.state.journey.profile);
+  assert.equal(displayedOtherTeacher.value.id, 'demo-avery');
+  assert.equal(displayedOtherTeacher.value.teacherId, 'demo-seed-avery');
+  assert.equal(displayedOtherTeacher.value.name, 'Demo Avery');
+
+  controlled.release('TeacherProfile.createProfile');
+  assert.equal((await creating).ok, true);
+  assert.equal(runtime.snapshot().ownProfile.profile.id, `profile-${teacherId}`);
+  assert.equal(controller.route.profileId, 'demo-avery');
+  assert.deepEqual(controller.state.journey.profile, displayedOtherTeacher);
+  const edit = await controller.dispatch('public:edit-profile');
+  assert.equal(edit.ok, false);
+  assert.equal(edit.error.code, 'profile_owner_mismatch');
+
+  await controller.navigate(`#/public-profile/profile-${teacherId}`);
+  assert.equal(controller.state.journey.profile.value.id, `profile-${teacherId}`);
+  assert.equal(controller.state.journey.profile.value.name, 'Synthetic Owner Profile');
+  assert.equal((await controller.dispatch('public:edit-profile')).ok, true, 'the own-profile public alias remains editable');
+});
+
+test('delayed profile creation preserves a captured read-only reference projection', async () => {
+  const controlled = controlledFixtureRuntime(['TeacherProfile.createProfile']);
+  const controller = controlledController(controlled.runtime);
+  await createControlledSyntheticTeacher(controller, 'captured-reference-route');
+  const creating = controller.dispatch('public:profile-create', {name: 'Synthetic Reference Control'});
+  await controlled.waitFor('TeacherProfile.createProfile');
+  await controller.navigate('#/public-profile/reference-sarah');
+  const capturedReference = structuredClone(controller.state.journey.profile);
+  assert.equal(capturedReference.source, 'captured-readonly');
+  assert.equal(capturedReference.readOnly, true);
+
+  controlled.release('TeacherProfile.createProfile');
+  assert.equal((await creating).ok, true);
+  assert.equal(controller.route.profileId, 'reference-sarah');
+  assert.deepEqual(controller.state.journey.profile, capturedReference);
+  const edit = await controller.dispatch('public:edit-profile');
+  assert.equal(edit.ok, false);
+  assert.equal(edit.error.code, 'read_only_reference');
+});
+
+test('delayed profile creation leaves an in-flight public-profile read projection intact', async () => {
+  const controlled = controlledFixtureRuntime(['TeacherProfile.createProfile', 'TeacherProfile.openPublicProfile']);
+  const controller = controlledController(controlled.runtime);
+  await createControlledSyntheticTeacher(controller, 'pending-public-read');
+  const creating = controller.dispatch('public:profile-create', {name: 'Synthetic Pending Read Control'});
+  await controlled.waitFor('TeacherProfile.createProfile');
+  const reading = controller.navigate('#/public-profile/demo-jordan');
+  await controlled.waitFor('TeacherProfile.openPublicProfile');
+  const pendingRead = structuredClone(controller.state.journey.profile);
+  assert.equal(controller.route.profileId, 'demo-jordan');
+  assert.equal(pendingRead.status, 'loading');
+  assert.equal(pendingRead.value, null);
+
+  controlled.release('TeacherProfile.createProfile');
+  assert.equal((await creating).ok, true);
+  assert.equal(controller.route.profileId, 'demo-jordan');
+  assert.deepEqual(controller.state.journey.profile, pendingRead);
+
+  controlled.release('TeacherProfile.openPublicProfile');
+  await reading;
+  assert.equal(controller.route.profileId, 'demo-jordan');
+  assert.equal(controller.state.journey.profile.value.id, 'demo-jordan');
+  assert.equal(controller.state.journey.profile.value.teacherId, 'demo-seed-jordan');
+});
+
+test('failed profile creation service sync preserves a captured reference when an own profile exists', async () => {
+  const {controller, runtime} = await registeredProfileSetup();
+  const profileCreated = await controller.dispatch('public:profile-create', {name: 'Existing Synthetic Owner'});
+  assert.equal(profileCreated.ok, true);
+  await controller.navigate('#/public-profile/reference-sarah');
+  const capturedReference = structuredClone(controller.state.journey.profile);
+
+  const failedCreate = await controller.dispatch('public:profile-create', {name: 'Duplicate Synthetic Owner'});
+  assert.equal(failedCreate.ok, false);
+  assert.equal(failedCreate.error.code, 'profile_exists');
+  assert.equal(runtime.snapshot().ownProfile.status, 'present');
+  assert.equal(controller.route.profileId, 'reference-sarah');
+  assert.deepEqual(controller.state.journey.profile, capturedReference);
+});
+
 for (const action of ['create', 'edit']) {
   for (const [label, invalidUrl] of [['unsupported', 'https://example.invalid/wishlist'], ['overlength', 'https://www.amazon.com/hz/wishlist/ls/DEMO-' + 'A'.repeat(513)]]) test(`profile ${action} rejects ${label} wishlist before mutation and retains draft`, async () => {
     const {controller, runtime} = await registeredProfileSetup();

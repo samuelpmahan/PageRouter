@@ -1,0 +1,83 @@
+{
+  "schema": "hh-cycle05-worker-result/v1",
+  "job_id": "R703",
+  "worker": "H2",
+  "actual_epoch": 2,
+  "native_assignment_readback": "running",
+  "decision": "accepted",
+  "outcome": "accepted",
+  "summary": "Independent review accepts the frozen E703 correction. The two controller guards preserve foreign, captured-readonly, loading, not-found, and failed-read projections while retaining the overlay on the owner's own route and public alias. Four original-source red cases fail at the intended projection assertions; focused 4-test and full 37-test controller runs pass. Eight additional synthetic fixture adversarial cases pass.",
+  "source_freeze": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "bf27246beebd03d673c92c7152fd26124a58b40b",
+    "head_tree": "4daf69ad6017206eb9e95646ca2403e17841a078",
+    "controller_sha256": "a5deede267691459429f8bc404ba9cbc8e07d18f8120047281cf773d5cdaf558",
+    "controller_test_sha256": "8716ff6cd19f8ca56312ba143062d59f5a18dc0677b020d4aa75a356b985025f",
+    "working_tree_changes_observed": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "reviewer_source_changes": false,
+    "commit_or_push": false
+  },
+  "review_findings": {
+    "syncRuntime_guard": "Runtime/session/registration synchronization still runs after service completion; journey.profile is updated only with no active profileId or when active profileId equals raw ownProfile.profile.id. It does not authorize by teacherId alone.",
+    "create_completion_guard": "Successful create always records the local overlay for future own-profile reads, but mutates the visible projection only on page=profile, for the generic own-profile route or exact created public alias, and only when the present projection id matches the created profile id.",
+    "authority": "Foreign teacher edit remains profile_owner_mismatch; captured reference remains read_only_reference. The synthetic owner alias remains editable after completion.",
+    "E702_scope_clarification": "The E702 phrase 'no ... provider operation' was too broad: synthetic fixture-provider operations DID execute (registration, approval, login, profile creation and public reads where used). No production/backend provider operation, real teacher data, or network call occurred. E702 raw evidence is unchanged."
+  },
+  "commands": [
+    {
+      "command": "node hh-cycle05/H2/R703/adversarial-probe.mjs",
+      "exit_code": 0,
+      "stdout": "stdout.json",
+      "checks": [
+        "foreign public teacher projection and profile_owner_mismatch preserved across delayed create success",
+        "captured reference projection and read_only_reference preserved across delayed create success",
+        "pending other-profile read remains loading/null across create completion, then resolves to Jordan",
+        "pending prospective own alias becomes the correct overlay after create and remains correct after public read",
+        "duplicate create/profile_exists preserves captured reference when an own profile already exists",
+        "not-found route error and injected transport-failure route error preserved across create completion",
+        "normal own profile to public alias preserves name, bio, and synthetic wishlist"
+      ]
+    },
+    {
+      "command": "node --test --test-name-pattern='delayed profile creation|failed profile creation' checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "working_directory": "PageRouter",
+      "exit_code": 0,
+      "result": "4 passed, 0 failed"
+    },
+    {
+      "command": "node --test --test-concurrency=2 vendor/hh/src/public-controller.test.mjs",
+      "working_directory": "PageRouter/checkpoint",
+      "exit_code": 0,
+      "result": "37 passed, 0 failed"
+    },
+    {
+      "command": "git diff --check -- checkpoint/vendor/hh/src/public-controller.mjs checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "working_directory": "PageRouter",
+      "exit_code": 0
+    },
+    {
+      "command": "node hh-cycle05/H2/R703/adversarial-probe.mjs | diff -u hh-cycle05/H2/R703/stdout.json -",
+      "exit_code": 0,
+      "result": "Saved stdout exactly matches a fresh run."
+    }
+  ],
+  "provenance": {
+    "implementation_source_diff": {"path": "hh-cycle05/H1/E703/source.diff", "sha256": "f622efac526263af0c70f64bfb19e1c27412cfb03272432ae871f3f8eb368b3f"},
+    "red_original_source": {"path": "hh-cycle05/H1/E703/red.log", "sha256": "5d062148ed2829acafcf95c0fd2b7b31cf05093752b5e5b548120ff7438eece0", "result": "4 expected failures; each hit the intended projection deep-equality assertion on original source."},
+    "green_focused": {"path": "hh-cycle05/H1/E703/green-focused.log", "sha256": "99de21bec7ab36371d923db3ab83a6c0d174de07ef6658a3965fec74674c8097", "result": "4 passed; reviewed from H1 packet."},
+    "green_controller": {"path": "hh-cycle05/H1/E703/green-controller.log", "sha256": "37e160c33c13bcc0fb71eb12726a8316d07148e6e4d7322cded239d10f8dd4c1", "result": "37 passed; independently rerun in R703."},
+    "green_all_hh": {"path": "hh-cycle05/H1/E703/green-all-hh.log", "sha256": "645f4cbee0ce911fafcc4c2fba6d41fb5ead6bd5868240f24f839cca683c4be2", "result": "64 passed per H1 packet; evidence file/hash checked, not rerun in R703."},
+    "review_probe_script_sha256": "ccc4454548dfed14e482384642e69fa561b40509afbf52dd1f5c02c1fff2a7f8",
+    "review_probe_stdout_sha256": "ed519e216b1ef7fd8ee33ef1c0e234f1d8422c4c343ad6fb99c71a3c53141a5a"
+  },
+  "limits": [
+    "Volatile in-memory synthetic fixture only; synthetic provider operations did execute, but no production/backend provider operation or network call occurred.",
+    "Controller projection, runtime state, dispatch authority and rendered DOM-tree text were checked; no browser visual QA or human acceptance is claimed.",
+    "Full 64-test HH result is recorded from the H1 evidence packet, not independently rerun in R703.",
+    "No source/test edit, commit, push, canonical build, or deployment was performed by H2."
+  ]
+}
