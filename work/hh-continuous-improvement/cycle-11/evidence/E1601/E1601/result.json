@@ -1,0 +1,64 @@
+{
+  "job_id": "E1601",
+  "worker": "H1",
+  "outcome": "insufficient_evidence",
+  "summary": "In four isolated volatile-fixture cases, a known transport failure and unknown outcome released after /login became current rendered feedback on the current login form. A same-route known failure also remained visible after navigation to login, and a late-success control displayed success feedback there as well. This supports route-global outcome feedback, but does not establish that it is a defect; no auth lockout or context overwrite was shown. Login local validation worked, registrationCalls stayed at one per case, and generated passwords were absent from retained state/runtime/Parts/storage. No product changes or browser claims.",
+  "source": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "b9eff6a0c4385ed2648e97b30d15366910b7b58b",
+    "tree": "a5c871c0e8b8373bb7010ffce57249f245443846",
+    "controller": {
+      "path": "checkpoint/vendor/hh/src/public-controller.mjs",
+      "sha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2"
+    },
+    "renderer": {
+      "path": "checkpoint/vendor/hh/src/public-site.mjs",
+      "sha256": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4"
+    },
+    "existing_test_file": {
+      "path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "sha256": "dfe05ff98c859f926c839d8b0e5bffbd17c96e58444400d6e108744e8111e389"
+    },
+    "git_changes": false
+  },
+  "execution": {
+    "scope": "local fixture provider + actual createServiceRuntime/createPublicController/renderPublicSite tree; no browser, mounted-browser reachability unverified",
+    "script": {
+      "path": "hh-cycle11/H1/E1601/probe.mjs",
+      "sha256": "3d86f0b55fe774eee310ee6b98f9855ec0323195e86daeb7605c347a25096dbd"
+    },
+    "command_record": {
+      "path": "hh-cycle11/H1/E1601/first-run.sh",
+      "command": "bash /workspace/scratch/8528bb251845/hh-cycle11/H1/E1601/first-run.sh",
+      "sha256": "ee3d760b35776034296d2c44c86e878af04b7ccca21f7fe6a5d52fc820894bf1"
+    },
+    "raw_stdout": {
+      "path": "hh-cycle11/H1/E1601/first.stdout.raw",
+      "bytes": 6822,
+      "sha256": "e62effa743fe67f3bbe285edaa1d3f1d9eca6f6362289144e784a5aafba6d3d7"
+    },
+    "raw_stderr": {
+      "path": "hh-cycle11/H1/E1601/first.stderr.raw",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "exit": {
+      "path": "hh-cycle11/H1/E1601/first.exit",
+      "value": 0,
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "retained_credentials": "generated password absent from retained controller state, runtime inspection, serialized PxC Parts and volatile storage; synthetic email is nonsecret identity"
+  },
+  "phase_qualification": {
+    "note": "The script's requestStatus and outcomeKind fields are sampled after the separate invalid-login local-validation control, so they describe that control (failed/validation-error), not registration completion.",
+    "registration_completion_evidence": "result and completedRoute.feedback in each observation",
+    "pre_validation_login_feedback": "after in each observation",
+    "automatic_registration_replay": "none observed; registrationCalls remained exactly 1 after login validation in every case"
+  },
+  "limits": [
+    "Feedback appearing on login is an observation, not proof of a product defect; success feedback appears there too, consistent with global outcome projection.",
+    "No real provider, backend, account, network write, browser, production authority, auth lockout, or context overwrite was exercised or established.",
+    "No PageRouter source/test change, commit, push, or publication."
+  ]
+}

@@ -914,6 +914,126 @@ test('registration retains the current draft after navigation away and back on f
   }
 });
 
+test('held registration completion on login preserves transaction classification without replay', async () => {
+  const cases = [
+    {name: 'known transport failure', failWith: 'transport_failure', requestStatus: 'failed'},
+    {name: 'unknown outcome', failWith: 'outcome_unknown', requestStatus: 'outcome_unknown'},
+    {name: 'successful pending registration', failWith: null, requestStatus: 'completed'},
+  ];
+
+  for (const scenario of cases) {
+    const env = registrationFailureSetup({
+      failCalls: scenario.failWith ? {1: scenario.failWith} : {},
+      pauseCall: 1,
+    });
+    const identity = {
+      name: 'HH11 Volatile Teacher',
+      email: `hh11-${randomUUID()}@example.test`,
+      phone: '555-0101',
+    };
+    const password = randomUUID();
+    await prepareRegistrationDraft(env, identity);
+    await env.controller.dispatch('public:terms-consent', {accepted: true});
+
+    const attempt = env.controller.dispatch('public:register', {
+      ...identity,
+      password,
+      confirmPassword: password,
+      termsAccepted: true,
+      state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy',
+    });
+    await env.started;
+    assert.equal(env.registrationCalls, 1, `${scenario.name}: one registration call is held`);
+    assert.equal(env.controller.route.page, 'register');
+
+    await env.controller.navigate('#/login');
+    const loginFormWhileHeld = nodeById(env.tree, 'hh-login-form');
+    const loginSubmitWhileHeld = nodeById(env.tree, 'hh-login-submit');
+    assert.equal(env.tree.attrs['data-public-page'], 'login');
+    assert.ok(loginFormWhileHeld, `${scenario.name}: login form is rendered before release`);
+    assert.ok(loginSubmitWhileHeld, `${scenario.name}: login submit is rendered before release`);
+    assert.notEqual(loginSubmitWhileHeld.attrs.disabled, true, `${scenario.name}: login submit is enabled before release`);
+
+    env.release();
+    const result = await attempt;
+    const loginFormAfterCompletion = nodeById(env.tree, 'hh-login-form');
+    const loginSubmitAfterCompletion = nodeById(env.tree, 'hh-login-submit');
+    const completion = {
+      route: env.controller.route.page,
+      renderedPage: env.tree.attrs['data-public-page'],
+      loginFormPresent: !!loginFormAfterCompletion,
+      loginSubmitEnabled: !!loginSubmitAfterCompletion && loginSubmitAfterCompletion.attrs.disabled !== true,
+      requestStatus: env.controller.state.request.status,
+      resultOk: result.ok,
+      resultCode: result.error?.code || null,
+      outcomeKnown: result.error?.outcomeKnown ?? null,
+      providerRegistrationStatus: env.runtime.snapshot().registration.status,
+      registrationCalls: env.registrationCalls,
+      retryAvailable: env.controller.canRetry,
+    };
+
+    assert.equal(completion.route, 'login', `${scenario.name}: route remains on login`);
+    assert.equal(completion.renderedPage, 'login', `${scenario.name}: rendered page remains login`);
+    assert.equal(completion.loginFormPresent, true, `${scenario.name}: login form remains rendered`);
+    assert.equal(completion.loginSubmitEnabled, true, `${scenario.name}: login submit remains enabled`);
+    assert.equal(completion.requestStatus, scenario.requestStatus);
+    assert.equal(completion.registrationCalls, 1, `${scenario.name}: completion caused no second registration call`);
+
+    if (scenario.failWith === 'transport_failure') {
+      assert.equal(completion.resultOk, false);
+      assert.equal(completion.resultCode, 'transport_failure');
+      assert.equal(completion.outcomeKnown, true);
+      assert.equal(completion.providerRegistrationStatus, 'none');
+      assert.equal(completion.retryAvailable, false);
+      assert.equal((await env.controller.dispatch('public:retry')).error?.code, 'nothing_to_retry');
+      assert.equal(env.registrationCalls, 1, 'known registration failure is not safely retried');
+    } else if (scenario.failWith === 'outcome_unknown') {
+      assert.equal(completion.resultOk, false);
+      assert.equal(completion.resultCode, 'outcome_unknown');
+      assert.equal(completion.outcomeKnown, false);
+      assert.equal(completion.providerRegistrationStatus, 'none');
+      assert.equal(completion.retryAvailable, false);
+      assert.equal((await env.controller.dispatch('public:retry')).error?.code, 'nothing_to_retry');
+      assert.equal(env.registrationCalls, 1, 'unknown registration outcome is not retried');
+    } else {
+      assert.equal(completion.resultOk, true);
+      assert.equal(result.outcome, 'pending_saved');
+      assert.equal(completion.providerRegistrationStatus, 'pending');
+      assert.equal(completion.retryAvailable, false);
+    }
+
+    const retained = [
+      JSON.stringify(env.controller.state),
+      JSON.stringify(env.runtime.snapshot()),
+      JSON.stringify(env.runtime.inspect()),
+      JSON.stringify(env.runtime.pxc.entries().map(([address, part]) => ({address, value: part.value}))),
+      [...env.storage.values.values()].join('\n'),
+      JSON.stringify(env.tree),
+    ].join('\n');
+    assert.equal(retained.includes(password), false, `${scenario.name}: password is absent from retained surfaces`);
+
+    // Preserve the completion-phase snapshot above before exercising the independent login validation path.
+    const registrationCallsBeforeLoginValidation = env.registrationCalls;
+    const invalidLogin = await env.controller.dispatch('public:login', {email: 'invalid', password: ''});
+    assert.equal(invalidLogin.error?.code, 'validation_failed');
+    assert.equal(env.controller.route.page, 'login');
+    assert.ok(nodeById(env.tree, 'hh-login-form'), 'login form remains available after local validation');
+    assert.notEqual(nodeById(env.tree, 'hh-login-submit')?.attrs.disabled, true);
+    assert.equal(env.registrationCalls, registrationCallsBeforeLoginValidation, 'login validation caused no registration write');
+    assert.equal(env.registrationCalls, 1);
+
+    const retainedAfterLoginValidation = [
+      JSON.stringify(env.controller.state),
+      JSON.stringify(env.runtime.snapshot()),
+      JSON.stringify(env.runtime.inspect()),
+      JSON.stringify(env.runtime.pxc.entries().map(([address, part]) => ({address, value: part.value}))),
+      [...env.storage.values.values()].join('\n'),
+      JSON.stringify(env.tree),
+    ].join('\n');
+    assert.equal(retainedAfterLoginValidation.includes(password), false, `${scenario.name}: password remains absent after login validation`);
+  }
+});
+
 test('failed re-registration preserves the approved synthetic alias for login', async () => {
   const env = registrationFailureSetup({failCalls: {2: 'transport_failure'}});
   const identity = {name: 'E1403 Approved Alias', email: 'e1403.alias@example.test', phone: '312-555-0143'};

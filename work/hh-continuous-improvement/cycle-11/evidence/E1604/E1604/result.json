@@ -1,0 +1,76 @@
+{
+  "job_id": "E1604",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Ran the one authorized canonical PageRouter source build against the E1603 test-only candidate. The Bazel build action executed in processwrapper-sandbox (not a cache hit), bound the exact accepted controller and new test hashes, rebuilt all 14 PxCube packages, ran targeted HH tests 130/130, the full source test suite 285/285, and Atlas import 1/1, then verified 843 emitted site files. The build passed with siteBuildId d492bba4…; no controller/source policy change, commit, or deployment. This is test-only compatibility evidence plus a fresh source build, not a defect fix or browser acceptance claim.",
+  "source": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "b9eff6a0c4385ed2648e97b30d15366910b7b58b",
+    "changed_product_file": {
+      "path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "sha256": "e11885f0f55e56094bed3e865d9acfcb57fc995097d5be627f9ebed3631d89a3"
+    },
+    "unchanged_controller": {
+      "path": "checkpoint/vendor/hh/src/public-controller.mjs",
+      "sha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2"
+    },
+    "unchanged_renderer": {
+      "path": "checkpoint/vendor/hh/src/public-site.mjs",
+      "sha256": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4"
+    },
+    "commit": null,
+    "publication": "none"
+  },
+  "build": {
+    "command_record": {
+      "path": "hh-cycle11/H1/E1604/run-build.sh",
+      "sha256": "6c9c94c1173451b6c801581ac423aec7309933529b0df9ecb949548b25721f71"
+    },
+    "exact_command": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "working_directory": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "bazel_cache": "build action executed; not a cache hit",
+    "bazel_action": "1 processwrapper-sandbox action; 2 total Bazel actions; elapsed 71.370s; critical path 69.42s",
+    "toolchain": {"node": "v24.19.0", "bazel_version_guard": "passed against checkpoint/.bazelversion"},
+    "sourceInputs": {
+      "sourceDigest": "c7f2947f7ce36b1f4e51d3ad195915f8dadfa2ed7ac37f2eb01e6c33b606a565",
+      "controller": {"path": "vendor/hh/src/public-controller.mjs", "bytes": 53212, "sha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2"},
+      "test": {"path": "vendor/hh/src/public-controller.test.mjs", "bytes": 83022, "sha256": "e11885f0f55e56094bed3e865d9acfcb57fc995097d5be627f9ebed3631d89a3"}
+    },
+    "result": {
+      "siteBuildId": "d492bba4e7d38e22b73950358dd4a432b4a47848b2c1ba9eeaf614fa506e81d1",
+      "siteDigest": "439c3dea926aa4cf6f7b1f9a40b68f416a0e98233c8649adf9762826b00195bd",
+      "verifiedSiteFiles": 843,
+      "pxcubePackages": 14,
+      "pxcubeRebuilt": true,
+      "historicalRelocation": false,
+      "crispExactCompiledEquality": true
+    },
+    "counts": {
+      "buildHelpers": {"passed": 2, "failed": 0},
+      "targetedHHControllerCommunity": {"passed": 130, "failed": 0},
+      "fullNpmSuite": {"passed": 285, "failed": 0},
+      "builtAtlasImport": {"passed": 1, "failed": 0},
+      "note": "Suites overlap; counts are separate, not distinct-test arithmetic."
+    },
+    "startUtc": "2026-10-18T17:39:24Z",
+    "endUtc": "2026-10-18T17:40:37Z",
+    "processExit": 0,
+    "wrapperExit": 0,
+    "rawStdout": {"path": "hh-cycle11/H1/E1604/build.stdout.raw", "bytes": 1298, "sha256": "6c811d38d6907078e95125ca6b8bda74d800b19c4b8130c40cbd8ccd90da57f3"},
+    "rawStderr": {"path": "hh-cycle11/H1/E1604/build.stderr.raw", "bytes": 1037, "sha256": "1da8ac89c98c6873728b7b909ef5cdd4c2237f0235fb0bd9b219a3de1d6b7915"},
+    "startTimestampSha256": "53cc73ec8d3049699c0e7c2aebacd41d3d5fb3aba52b370710a012f7dbac1a29",
+    "endTimestampSha256": "e2f0e759c4b8a3f6973e540eb83931935e36291cb943c22c4cff1830f90f795e",
+    "exitFileSha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "copiedBuildOutputs": {
+    "receipt": {"path": "hh-cycle11/H1/E1604/site.receipt.json", "sha256": "2259bac91520afae521a4ede11b110942139ead50c30f7e87540bc2508764404"},
+    "log": {"path": "hh-cycle11/H1/E1604/site.log", "sha256": "bf5637eb203d00c7fca9bfd6caab730b778e19666481f017b7a24c74c17b860a"},
+    "note": "Only current receipt/log copied; site.evidence tree not copied. Both copies were byte-compared with bazel-bin outputs."
+  },
+  "limits": [
+    "Canonical local source-build evidence only; no browser, deployment, production backend, or human acceptance.",
+    "No source edit during build, no controller change, no Git commit/push, and no product-policy change.",
+    "E1603 test change is behavior-only compatibility coverage; no defect, red-before-fix, or browser-visual claim."
+  ]
+}

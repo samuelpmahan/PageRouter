@@ -1,0 +1,25 @@
+{
+  "schema": "hh-cycle11-post-audit-index/v1",
+  "frozenPayloadManifestSha256": "37913417c6ea344c76e08d769609c948025299a43bb679181397e660a96784bc",
+  "note": "Append-only administration; original 82-entry payload and its manifest are unchanged. This index excludes itself.",
+  "files": [
+    {"path":"POST-REVIEW.md","bytes":1848,"sha256":"e3238d57fce98b5778746da44bfdf8686dcdb74e381c8425f2462a7c3b5b7ecc","source":"authored post-review entrypoint"},
+    {"path":"review/R1605.json","bytes":1212,"sha256":"39a5364fdb92673f92d82ca80c4eece6e3cfb6834aa974461a6ead43f0acba2b","source":"hh-cycle11/receipts/R1605.json"},
+    {"path":"review/corrected-native-receipt.json","bytes":1212,"sha256":"39a5364fdb92673f92d82ca80c4eece6e3cfb6834aa974461a6ead43f0acba2b","source":"hh-cycle11/H2/R1605/corrected-native-receipt.json"},
+    {"path":"review/erratum.json","bytes":829,"sha256":"4700401bda9289b2e1a92470c54c067fbdca8f5ab7004978e03890d9ba5a0169","source":"hh-cycle11/H2/R1605/erratum.json"},
+    {"path":"review/result.json","bytes":7219,"sha256":"a7e5bf513f40ad4b24de03843dd87c470857f1a044bb63b27422bfc63f32e745","source":"hh-cycle11/H2/R1605/result.json; original preserved"},
+    {"path":"result.json","bytes":3650,"sha256":"b410727aa59bd371af37494591957c59dbc84fe79d263f8118a54d3b160439d9","source":"hh-cycle11/H1/E1605/result.json"},
+    {"path":"recovery/E1605.json","bytes":3650,"sha256":"b410727aa59bd371af37494591957c59dbc84fe79d263f8118a54d3b160439d9","source":"hh-cycle11/receipts/E1605.json"},
+    {"path":"recovery/epoch-08.bundle","bytes":1726,"sha256":"70870638fc0656db572fd8b07db56fab798774a6b30b804fa632c6f7ae3b0832","source":"hh-cycle11/solves/epoch-08.bundle"},
+    {"path":"recovery/epoch-08.json","bytes":1326,"sha256":"7f6daee4b2fb87c948ee940fff46158aeb77f47fa738e3d8898e2c327d0ce0c6","source":"hh-cycle11/solves/epoch-08.json"},
+    {"path":"recovery/epoch-08.root-command.json","bytes":8846,"sha256":"d70bf046b0ea1445cd63b2e766fa8d4d60755d3e8d4335fdba58363aca02485d","source":"hh-cycle11/solves/epoch-08.root-command.json"},
+    {"path":"recovery/epoch-09.bundle","bytes":1467,"sha256":"da956cab9797b23b59e232bf1b9003c979a96093e6f9a8b5852009638299575c","source":"hh-cycle11/solves/epoch-09.bundle"},
+    {"path":"recovery/epoch-09.json","bytes":1180,"sha256":"8c1e1da70a6b05b63bbd65aabd9e194dd3eeb9ea02d0bfb0d95b5646e735842d","source":"hh-cycle11/solves/epoch-09.json"},
+    {"path":"recovery/epoch-09.root-command.json","bytes":8644,"sha256":"a2771c5a241b463f9111b4f26cd38716bcb9e4c74c6def74215aa2b6a8ebdbbe","source":"hh-cycle11/solves/epoch-09.root-command.json"},
+    {"path":"recovery/recover-workers.mjs","bytes":2031,"sha256":"5cd848b275b13cf5f533e86f6e8fd752b615993d5cbde0f2079ffb9e172565cc","source":"hh-cycle11/recover-workers.mjs"},
+    {"path":"recovery/registry-recovery-18Z.json","bytes":547,"sha256":"0697da7b610b723760f26f68994e20f53b69976a3947647952987f80aaf1b74c","source":"hh-cycle11/registry-recovery-18Z.json"},
+    {"path":"recovery/registry.json","bytes":493,"sha256":"970f36eae0962645b55cbc877159cf0d495bc0993a6f41259b41d9fc75a81d7d","source":"hh-cycle11/registry.json"},
+    {"path":"recovery/state.before-recovery-18Z.json","bytes":20335,"sha256":"69c81dd30878e4b02093ab438e5637ff5c576e924e2be9b748d0d35c38c93eb7","source":"hh-cycle11/state.before-recovery-18Z.json"},
+    {"path":"recovery/state.json","bytes":26317,"sha256":"8d50fbef0212b7403c7bafe4783bb5b71ccffe1ed2d4e35b7357be33f44a88d1","source":"hh-cycle11/state.json, current native state at epoch 9"}
+  ]
+}

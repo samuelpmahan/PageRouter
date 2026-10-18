@@ -1,0 +1,80 @@
+{
+  "job_id": "R1603",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Independent read-only review accepts H1's exact one-test-only public-controller.test.mjs change for the bounded E1603 compatibility scope. The diff adds one table-driven test with isolated held fixture branches for known transport_failure, outcome_unknown, and successful pending registration. Assertions cover login route/rendered form/enabled submit before and after release, distinct underlying request/result/provider transaction states, no automatic or safe failed/unknown retry, one-call bounds, and ephemeral credential absence in controller/runtime snapshot+inspection/actual PxC Part values/storage/tree before and after separate login validation. The test does not assert global feedback text/style/visibility policy and does not alter controller, app, provider, renderer, or runtime. H1's original focused, full controller, and bounded public-site outputs record 1/1, 56/56, and 14/14. H2 independently reran only the focused table once and observed 1/1 passing. This is compatibility coverage, not a defect fix, global-feedback policy decision, or mounted-browser acceptance.",
+  "source": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "parent_provided_local_commit": "b9eff6a0c4385ed2648e97b30d15366910b7b58b",
+    "parent_provided_tree_before_test_edit": "a5c871c0e8b8373bb7010ffce57249f245443846",
+    "changed_file": {
+      "path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "sha256_before_review_run": "e11885f0f55e56094bed3e865d9acfcb57fc995097d5be627f9ebed3631d89a3",
+      "sha256_after_review_run": "e11885f0f55e56094bed3e865d9acfcb57fc995097d5be627f9ebed3631d89a3",
+      "diff_scope": "one added table-driven test; no other diff in the reviewed path"
+    },
+    "unchanged_controller_sha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "unchanged_renderer_sha256": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "git_state": "Not written or asserted by H2."
+  },
+  "review": {
+    "requirements_read": [
+      "hh-cycle11/regression-brief.md",
+      "hh-cycle11/spec.json",
+      "hh-cycle11/run-contract.json",
+      "hh-cycle11/H1/E1603/FLOW-CHECKPOINT.md"
+    ],
+    "assertion_strength": "The shared registrationFailureSetup gate calls the actual fixture service after release; scenario-specific provider result and request-status checks distinguish known, unknown, and success. Each scenario verifies the current login form/submit enabled before and after completion, and registrationCalls remains one. Failed/unknown scenarios execute public:retry and assert nothing_to_retry with no second call. Completion transaction observations are captured before the separate invalid-login control. Secret scan covers controller state, runtime snapshot, safe inspection, actual PxC Part values, volatile storage, and render tree before and after validation; no credential values are emitted.",
+    "policy_guard": "No assertion freezes global feedback wording, status kind, visibility, or CSS. No defect or UI reachability is claimed.",
+    "disposition_basis": "Matches behavior-only regression brief; meaningful future regression coverage with known/unknown/success controls; no implementation defect, unsafe assumption, or scope expansion found."
+  },
+  "independent_run": {
+    "command": "node --test --test-concurrency=2 --test-name-pattern='held registration completion on login preserves transaction classification without replay' checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "wrapper": "hh-cycle11/H2/R1603/run-once.sh",
+    "wrapper_sha256": "6ab641e649f3209c7d9747cd0a2d17082f530e2b85e613b6e0e0af450f56e6d4",
+    "command_record_sha256": "30eaf2d73e951ec37d1ae0f45042e1e1ac9bd6dd50e22fb5c767b658d6b8c9ca",
+    "exit_code": 0,
+    "counts": {"passed": 1, "failed": 0},
+    "stdout": {"path": "focused.stdout.raw", "sha256": "d5371f6a4a888d6fea2e2a0e9fba4165600a555dacdfa5874bc0b1952cfbd269"},
+    "stderr": {"path": "focused.stderr.raw", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "exit_file": {"path": "focused.exit", "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"}
+  },
+  "author_first_pass_evidence": {
+    "focused": {
+      "command": "node --test --test-concurrency=2 --test-name-pattern='held registration completion on login preserves transaction classification without replay' checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "command_sha256": "37beee18665dc0695ee8bcf845a12d6c8a1e3500dd8c20657c1431f5c60a5003",
+      "counts": "1 passed, 0 failed",
+      "stdout_sha256": "8dd5773a2b4b02e4f1339661351e2e6ef979382e2b194a8890d0df9b1f17249c",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0
+    },
+    "controller": {
+      "command": "node --test --test-concurrency=2 checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "command_sha256": "12002e43d1e7e6d54da818c50c508b5f436b00211ea5d036669b353674b0d06c",
+      "counts": "56 passed, 0 failed",
+      "stdout_sha256": "4a194f7f3a4c7c7366ccc239486b91575d52923dc344855e96435db9a111aa62",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0
+    },
+    "public_site": {
+      "command": "node --test --test-concurrency=2 checkpoint/vendor/hh/src/public-site.test.mjs",
+      "command_sha256": "65a487ed9ce24b4080a8709559e177a8e9736c3c84aa8dfa5577f67bd3ea1e04",
+      "counts": "14 passed, 0 failed",
+      "stdout_sha256": "6b27719517fdfffc1416c47bee22edcf2b79b85c786bdd5fe8917987cbb278da",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit": 0
+    }
+  },
+  "limits": [
+    "H2 independently executed only the focused new table test; the 56 controller and 14 renderer counts are H1 first-pass raw evidence, not reruns by H2.",
+    "No canonical build was run by H2; parent reserved that step after review.",
+    "Controller/render-tree/runtime/fixture evidence only; no mounted browser, production backend, Python runtime, network, real account, source edit, Git write, native write, commit, push, or publication.",
+    "The regression preserves observed shared-feedback compatibility; global feedback intent remains undecided, and cross-route visibility is not asserted as a defect.",
+    "Reviewer H2 is independent from extractor/author H1. No helper or subagent was used."
+  ],
+  "review_checkpoint": {
+    "path": "hh-cycle11/H2/R1603/review-checkpoint.md",
+    "sha256": "8e3043f4ef50b619a2e3d23610bad4f1f9d37d7d55cfc1ccb86ea66ab463d0de"
+  }
+}

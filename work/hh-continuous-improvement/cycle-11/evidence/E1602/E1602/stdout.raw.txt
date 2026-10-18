@@ -1,0 +1,152 @@
+{
+  "probe": "HH11 E1602 H2 late-registration-feedback",
+  "scope": "volatile fixture/controller/render-tree only",
+  "results": [
+    {
+      "tag": "known-same-register-route-control",
+      "providerFailure": "transport_failure",
+      "observation": {
+        "currentRoute": "/register",
+        "page": "register",
+        "loginFormPresent": false,
+        "registerFormPresent": true,
+        "visibleFeedback": {
+          "class": "hh-status local-error",
+          "text": "Simulated transport failure; no change was made."
+        },
+        "request": {
+          "status": "failed",
+          "message": "Simulated transport failure; no change was made."
+        },
+        "outcome": {
+          "kind": "local-error",
+          "message": "Simulated transport failure; no change was made.",
+          "remote": false,
+          "code": "transport_failure"
+        },
+        "fixtureAuthority": {
+          "mode": "fixture",
+          "fixture": true,
+          "productionAuthority": false,
+          "authorityBeyondSupportedFixtureCapability": "UNKNOWN (not exercised)",
+          "snapshotMode": "fixture",
+          "snapshotFixture": true,
+          "registrationStatus": "none",
+          "sessionStatus": "anonymous"
+        },
+        "registrationCalls": 1,
+        "canRetry": false,
+        "credentialsAbsentFromRetainedSurfaces": true
+      }
+    },
+    {
+      "tag": "known-late-on-login",
+      "providerFailure": "transport_failure",
+      "observation": {
+        "currentRoute": "/login",
+        "page": "login",
+        "loginFormPresent": true,
+        "registerFormPresent": false,
+        "visibleFeedback": {
+          "class": "hh-status local-error",
+          "text": "Simulated transport failure; no change was made."
+        },
+        "request": {
+          "status": "failed",
+          "message": "Simulated transport failure; no change was made."
+        },
+        "outcome": {
+          "kind": "local-error",
+          "message": "Simulated transport failure; no change was made.",
+          "remote": false,
+          "code": "transport_failure"
+        },
+        "fixtureAuthority": {
+          "mode": "fixture",
+          "fixture": true,
+          "productionAuthority": false,
+          "authorityBeyondSupportedFixtureCapability": "UNKNOWN (not exercised)",
+          "snapshotMode": "fixture",
+          "snapshotFixture": true,
+          "registrationStatus": "none",
+          "sessionStatus": "anonymous"
+        },
+        "registrationCalls": 1,
+        "canRetry": false,
+        "credentialsAbsentFromRetainedSurfaces": true
+      }
+    },
+    {
+      "tag": "unknown-late-on-login",
+      "providerFailure": "outcome_unknown",
+      "observation": {
+        "currentRoute": "/login",
+        "page": "login",
+        "loginFormPresent": true,
+        "registerFormPresent": false,
+        "visibleFeedback": {
+          "class": "hh-status local-error",
+          "text": "Simulated unknown outcome. Check state before trying again."
+        },
+        "request": {
+          "status": "outcome_unknown",
+          "message": "Simulated unknown outcome. Check state before trying again."
+        },
+        "outcome": {
+          "kind": "local-error",
+          "message": "Simulated unknown outcome. Check state before trying again.",
+          "remote": false,
+          "code": "outcome_unknown"
+        },
+        "fixtureAuthority": {
+          "mode": "fixture",
+          "fixture": true,
+          "productionAuthority": false,
+          "authorityBeyondSupportedFixtureCapability": "UNKNOWN (not exercised)",
+          "snapshotMode": "fixture",
+          "snapshotFixture": true,
+          "registrationStatus": "none",
+          "sessionStatus": "anonymous"
+        },
+        "registrationCalls": 1,
+        "canRetry": false,
+        "credentialsAbsentFromRetainedSurfaces": true
+      }
+    },
+    {
+      "tag": "login-local-validation-control",
+      "observation": {
+        "currentRoute": "/login",
+        "page": "login",
+        "loginFormPresent": true,
+        "registerFormPresent": false,
+        "visibleFeedback": {
+          "class": "hh-status validation-error",
+          "text": "Enter the demo email and password field to continue. The preview does not verify passwords."
+        },
+        "request": {
+          "status": "failed",
+          "message": "Enter the demo email and password field to continue. The preview does not verify passwords."
+        },
+        "outcome": {
+          "kind": "validation-error",
+          "message": "Enter the demo email and password field to continue. The preview does not verify passwords.",
+          "remote": false
+        },
+        "fixtureAuthority": {
+          "mode": "fixture",
+          "fixture": true,
+          "productionAuthority": false,
+          "authorityBeyondSupportedFixtureCapability": "UNKNOWN (not exercised)",
+          "snapshotMode": "fixture",
+          "snapshotFixture": true,
+          "registrationStatus": "none",
+          "sessionStatus": "anonymous"
+        },
+        "registrationCalls": 0,
+        "canRetry": false,
+        "credentialsAbsentFromRetainedSurfaces": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+node --test --test-concurrency=2 --test-name-pattern='held registration completion on login preserves transaction classification without replay' checkpoint/vendor/hh/src/public-controller.test.mjs
