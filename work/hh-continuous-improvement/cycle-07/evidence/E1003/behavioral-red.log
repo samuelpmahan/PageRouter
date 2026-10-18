@@ -1,0 +1,82 @@
+✖ wishlist handoff is invalidated before a foreign profile read and must be freshly prepared for that profile (7.135703ms)
+✖ wishlist handoff remains on same-profile aliases and captured reference keeps its static link (2.668893ms)
+✖ failed profile navigation clears prior wishlist handoff and stale confirmation is rejected (1.194261ms)
+✖ confirmed wishlist destination is not rendered on a foreign profile (1.932258ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 104.740543
+
+✖ failing tests:
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:715:1
+✖ wishlist handoff is invalidated before a foreign profile read and must be freshly prepared for that profile (7.135703ms)
+  AssertionError [ERR_ASSERTION]: foreign route invalidates old prepared destination before provider completion
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:739:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:751:1
+✖ wishlist handoff remains on same-profile aliases and captured reference keeps its static link (2.668893ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:762:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:774:1
+✖ failed profile navigation clears prior wishlist handoff and stale confirmation is rejected (1.194261ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:782:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:791:1
+✖ confirmed wishlist destination is not rendered on a foreign profile (1.932258ms)
+  AssertionError [ERR_ASSERTION]: an already confirmed handoff must not project an old profile URL onto a foreign teacher
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:803:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

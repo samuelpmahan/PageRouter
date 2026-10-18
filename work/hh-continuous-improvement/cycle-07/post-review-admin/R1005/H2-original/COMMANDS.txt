@@ -1,0 +1,18 @@
+R1005 read-only package audit (all results in scratch)
+
+Repository: /workspace/scratch/8528bb251845/PageRouter
+Frozen package: work/hh-continuous-improvement/cycle-07
+Audit scratch: /workspace/scratch/8528bb251845/hh-cycle07/H2/R1005
+
+Audit script command (captures stdout/stderr):
+  node /workspace/scratch/8528bb251845/hh-cycle07/H2/R1005/audit.mjs > /workspace/scratch/8528bb251845/hh-cycle07/H2/R1005/stdout.log 2>&1
+
+The first attempt is preserved in stdout.log; it encountered an audit-script path-join error before checking evidence. After correcting the audit script's repository-relative source path, the rerun is captured separately:
+  node /workspace/scratch/8528bb251845/hh-cycle07/H2/R1005/audit.mjs > /workspace/scratch/8528bb251845/hh-cycle07/H2/R1005/rerun.stdout.log 2>&1
+
+Portable R1003 replay uses a scratch path-only companion copied from the packaged probe. The original SHA-256 is a678aea5613ed98cb99220fb9f8f24f746d13e83abd986939578233040a254ef; the companion SHA-256 is 108d8f764bb24c90af9f90c6534cfd7f53720515d7985f213bf4cfac1f5bcabc. `portable-probe.diff` records the single changed `out` directory line; package/source bytes remain untouched:
+  node /workspace/scratch/8528bb251845/hh-cycle07/H2/R1005/portable-probe.mjs > /workspace/scratch/8528bb251845/hh-cycle07/H2/R1005/portable-replay.stdout.log 2>&1
+  diff -u work/hh-continuous-improvement/cycle-07/evidence/R1003/probe.mjs /workspace/scratch/8528bb251845/hh-cycle07/H2/R1005/portable-probe.mjs > /workspace/scratch/8528bb251845/hh-cycle07/H2/R1005/portable-probe.diff
+
+Final audit after incorporating the portable replay and provenance fields:
+  node /workspace/scratch/8528bb251845/hh-cycle07/H2/R1005/audit.mjs > /workspace/scratch/8528bb251845/hh-cycle07/H2/R1005/final.stdout.log 2>&1

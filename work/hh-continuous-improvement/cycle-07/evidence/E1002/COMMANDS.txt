@@ -1,0 +1,17 @@
+E1002 H2 read-only wishlist identity probe
+
+Repository: /workspace/scratch/8528bb251845/PageRouter
+Scratch output: /workspace/scratch/8528bb251845/hh-cycle07/H2/E1002
+
+Pre-run identity checks:
+  git status --short
+  git rev-parse HEAD
+  sha256sum checkpoint/vendor/hh/src/public-controller.mjs checkpoint/vendor/hh/src/public-controller.test.mjs checkpoint/vendor/hh/src/public-site.mjs checkpoint/vendor/hh/services/fixture-provider.mjs
+
+Probe command (stdout and stderr captured to stdout.log):
+  node /workspace/scratch/8528bb251845/hh-cycle07/H2/E1002/probe.mjs > /workspace/scratch/8528bb251845/hh-cycle07/H2/E1002/stdout.log 2>&1
+
+Post-run checks:
+  git status --short
+  git rev-parse HEAD
+  sha256sum checkpoint/vendor/hh/src/public-controller.mjs checkpoint/vendor/hh/src/public-controller.test.mjs checkpoint/vendor/hh/src/public-site.mjs checkpoint/vendor/hh/services/fixture-provider.mjs

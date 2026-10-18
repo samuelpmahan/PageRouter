@@ -1,0 +1,4 @@
+Working directory: /workspace/scratch/8528bb251845/PageRouter
+Command: node /workspace/scratch/8528bb251845/hh-cycle07/H1/E1001/probe.mjs
+Capture command: set -o pipefail; node /workspace/scratch/8528bb251845/hh-cycle07/H1/E1001/probe.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle07/H1/E1001/stdout.log
+This is a read-only runtime probe against the mounted PageRouter controller, fixture provider, and renderer. The script only writes its JSON evidence output to its own E1001 scratch directory. It does not open/render external URLs in a browser, call HTTP, or modify product source/tests.

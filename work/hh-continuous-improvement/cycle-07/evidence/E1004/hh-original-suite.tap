@@ -1,0 +1,45 @@
+✔ recovered kernel is unchanged and binding outputs actual function Parts (16.682578ms)
+✔ complete journey: pending denial, explicit approval, same-identity login, one profile, public view, logout (4.517148ms)
+✔ school lookup chain is deterministic, filters parents, and invalid tuples cannot register (1.322944ms)
+✔ duplicate registration is case-insensitive and does not replace account or profile (1.267347ms)
+✔ mail failure is still pending_saved with no real email and later approval/login works (0.921713ms)
+✔ registration, approved session and new profile survive only same-tab storage reload (6.046461ms)
+✔ reset clears created identities/profiles and authentication while seed links remain reproducible (1.82952ms)
+✔ credentials are ephemeral, confirmation failure denies, unsafe regular input creates no Parts (1.641579ms)
+✔ synthetic-only validation and explicit demo login reject ordinary personal identities (1.098762ms)
+✔ all injected failure modes are typed and preserve previous state (1.866223ms)
+✔ real storage write failure preserves pending state on denied approval/logout/reset (2.715692ms)
+✔ invalid saved state cannot grant session and requires explicit reset before writes (1.983595ms)
+✔ read-denied storage is visible and cannot silently claim successful persistence (0.509654ms)
+✔ snapshot and receipt inspection are pure immutable projections (0.635025ms)
+✔ public directory includes exactly existing profiles with stable IDs, privacy, reload/logout/reset and unchanged approval flow (4.852002ms)
+✔ directory and public read share immutable seed precedence over duplicate stored seed IDs (1.319181ms)
+✔ wishlistUrl is a shape-validated synthetic link, has no items model, and causes no fetching (2.38356ms)
+✔ interim stored wishlist item-array profiles are explicitly unsupported and never converted to links (2.191728ms)
+✔ every HTTP port is declared unsupported, sends no request, and never falls back (2.314724ms)
+✔ provider exceptions are sanitized before PxC records receipts and unknown port is typed (0.461506ms)
+✔ DevTools facade exposes actual safe Parts and service receipts while omitting all provider/binder links (4.858129ms)
+✔ DevTools open/read/refresh traversal performs no calculation, receipt or state/storage mutation and cannot reach provider (39.306691ms)
+✔ DevTools facade rejects mutation/calculation methods and is absent for HTTP mode (0.768709ms)
+✔ DevTools facade excludes internal objects, secret data and accessor-bearing material without evaluating getters (4.262976ms)
+✔ reused DevTools browsing follows actual Part references without calculation calls (3.137535ms)
+✔ reused object browsing and printable do not evaluate accessors (0.294391ms)
+✔ activity labels expose real operation/outcome and prefer meaningful latest result (0.842185ms)
+✔ a produced receipt label preserves a rejected business outcome (0.383542ms)
+✔ project/seek are deterministic pure trees with node event descriptors (9.560402ms)
+✔ repeated mutation is guarded and route changes suppress obsolete auto-navigation (1.428366ms)
+✔ stale public route responses do not replace the latest profile (0.503257ms)
+✔ known failed mutation can retry, unknown outcome never auto-retries (0.397407ms)
+✔ provider exception with unknown outcome stays outcome_unknown (0.347761ms)
+✔ reset invalidates an outstanding pre-reset public read (0.396481ms)
+✔ Teachers renders the loaded public directory with existing IDs and tab-only labels (1.729008ms)
+✔ Teachers navigation refreshes the loaded snapshot without invoking a service effect (0.886723ms)
+✔ WebMCP registry harness validates names, schema, state read, approval and invalid input (3.458445ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 256.062553

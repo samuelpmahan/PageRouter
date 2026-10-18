@@ -1,0 +1,771 @@
+{
+  "schema": "hh-cycle07-H2-E1002/wishlist-identity-probe/v1",
+  "job_id": "E1002",
+  "worker": "H2",
+  "repository": "PageRouter",
+  "head": "7feded8819db87026a8f35f6aa515bda513ab541",
+  "tree": "1cdcf9bfb34b680ed198eb7e750486ecfd1887cc",
+  "sourceHashes": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "84205881dd991d4be5ddf08a7b014530cb240e065aa0cc4180b362c02a345bff",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "19b9068c250d414ad62818778f376570db7480bd73cd918fd73b825344d1561a",
+    "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  },
+  "commands": [
+    "node /workspace/scratch/8528bb251845/hh-cycle07/H2/E1002/probe.mjs"
+  ],
+  "environment": {
+    "runtime": "actual createFixtureProvider volatile-memory + createServiceRuntime + createPublicController + renderPublicSite tree",
+    "identity": "synthetic seeded Demo Avery and Demo Jordan only",
+    "fixture": true,
+    "productionAuthority": false,
+    "networkOrProduction": false,
+    "backendExecution": false,
+    "externalOpenOrPayment": false,
+    "browserVisualQA": false
+  },
+  "hypothesis": "A handoff prepared for the active profile may survive route navigation without binding destination to the newly displayed teacher; confirmation may continue to expose the stale destination.",
+  "cases": [
+    {
+      "case": "prepared_avery_then_confirmed_on_jordan",
+      "prepared": {
+        "route": {
+          "path": "/profile",
+          "page": "profile",
+          "profileId": null
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "name": "Demo Avery",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": true,
+          "confirmed": false,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [
+            {
+              "tag": "button",
+              "id": "hh-profile-wishlist-confirm"
+            }
+          ],
+          "wishlistAnchors": [],
+          "textHasAvery": true,
+          "textHasJordan": false,
+          "textHasSarah": false,
+          "textHasProfileUnavailable": false,
+          "textHasLoadingProfile": false
+        }
+      },
+      "beforeConfirm": {
+        "route": {
+          "path": "/public-profile/demo-jordan",
+          "page": "profile",
+          "profileId": "demo-jordan"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "name": "Demo Jordan",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": true,
+          "confirmed": false,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [
+            {
+              "tag": "button",
+              "id": "hh-profile-wishlist-confirm"
+            }
+          ],
+          "wishlistAnchors": [],
+          "textHasAvery": false,
+          "textHasJordan": true,
+          "textHasSarah": false,
+          "textHasProfileUnavailable": false,
+          "textHasLoadingProfile": false
+        }
+      },
+      "confirmation": {
+        "ok": true,
+        "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+        "confirmed": true,
+        "opened": false,
+        "remote": false
+      },
+      "afterConfirm": {
+        "route": {
+          "path": "/public-profile/demo-jordan",
+          "page": "profile",
+          "profileId": "demo-jordan"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "name": "Demo Jordan",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": false,
+          "confirmed": true,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [],
+          "wishlistAnchors": [
+            {
+              "id": "hh-profile-wishlist-open",
+              "href": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+              "text": "synthetic continuation"
+            }
+          ],
+          "textHasAvery": false,
+          "textHasJordan": true,
+          "textHasSarah": false,
+          "textHasProfileUnavailable": false,
+          "textHasLoadingProfile": false
+        }
+      },
+      "providerCalls": {
+        "beforeNavigation": 2,
+        "afterNavigation": 2,
+        "confirmAddedCall": false
+      },
+      "profileRecordsUnchanged": true,
+      "outcome": "confirmed_stale_identity"
+    },
+    {
+      "case": "prepared_and_confirmed_same_avery_identity",
+      "prepared": {
+        "route": {
+          "path": "/profile",
+          "page": "profile",
+          "profileId": null
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "name": "Demo Avery",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": true,
+          "confirmed": false,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [
+            {
+              "tag": "button",
+              "id": "hh-profile-wishlist-confirm"
+            }
+          ],
+          "wishlistAnchors": [],
+          "textHasAvery": true,
+          "textHasJordan": false,
+          "textHasSarah": false,
+          "textHasProfileUnavailable": false,
+          "textHasLoadingProfile": false
+        }
+      },
+      "beforeConfirm": {
+        "route": {
+          "path": "/public-profile/demo-avery",
+          "page": "profile",
+          "profileId": "demo-avery"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "name": "Demo Avery",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": true,
+          "confirmed": false,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [
+            {
+              "tag": "button",
+              "id": "hh-profile-wishlist-confirm"
+            }
+          ],
+          "wishlistAnchors": [],
+          "textHasAvery": true,
+          "textHasJordan": false,
+          "textHasSarah": false,
+          "textHasProfileUnavailable": false,
+          "textHasLoadingProfile": false
+        }
+      },
+      "confirmation": {
+        "ok": true,
+        "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY"
+      },
+      "after": {
+        "route": {
+          "path": "/public-profile/demo-avery",
+          "page": "profile",
+          "profileId": "demo-avery"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "name": "Demo Avery",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": false,
+          "confirmed": true,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [],
+          "wishlistAnchors": [
+            {
+              "id": "hh-profile-wishlist-open",
+              "href": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+              "text": "synthetic continuation"
+            }
+          ],
+          "textHasAvery": true,
+          "textHasJordan": false,
+          "textHasSarah": false,
+          "textHasProfileUnavailable": false,
+          "textHasLoadingProfile": false
+        }
+      },
+      "continuationHref": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+      "outcome": "current_identity_control"
+    },
+    {
+      "case": "captured_readonly_priority",
+      "prepared": {
+        "route": {
+          "path": "/profile",
+          "page": "profile",
+          "profileId": null
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "name": "Demo Avery",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": true,
+          "confirmed": false,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [
+            {
+              "tag": "button",
+              "id": "hh-profile-wishlist-confirm"
+            }
+          ],
+          "wishlistAnchors": [],
+          "textHasAvery": true,
+          "textHasJordan": false,
+          "textHasSarah": false,
+          "textHasProfileUnavailable": false,
+          "textHasLoadingProfile": false
+        }
+      },
+      "beforeDirectConfirm": {
+        "route": {
+          "path": "/public-profile/reference-sarah",
+          "page": "profile",
+          "profileId": "reference-sarah"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "present",
+          "id": "reference-sarah",
+          "teacherId": null,
+          "name": "Sarah Endsley",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20",
+          "source": "captured-readonly",
+          "readOnly": true
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": true,
+          "confirmed": false,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [],
+          "wishlistAnchors": [
+            {
+              "id": "hh-reference-wishlist",
+              "href": "https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20",
+              "text": "captured reference"
+            }
+          ],
+          "textHasAvery": false,
+          "textHasJordan": false,
+          "textHasSarah": true,
+          "textHasProfileUnavailable": false,
+          "textHasLoadingProfile": false
+        }
+      },
+      "staticReferenceHref": "https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20",
+      "directConfirm": {
+        "ok": true,
+        "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY"
+      },
+      "after": {
+        "route": {
+          "path": "/public-profile/reference-sarah",
+          "page": "profile",
+          "profileId": "reference-sarah"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "present",
+          "id": "reference-sarah",
+          "teacherId": null,
+          "name": "Sarah Endsley",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20",
+          "source": "captured-readonly",
+          "readOnly": true
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": false,
+          "confirmed": true,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [],
+          "wishlistAnchors": [
+            {
+              "id": "hh-reference-wishlist",
+              "href": "https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20",
+              "text": "captured reference"
+            }
+          ],
+          "textHasAvery": false,
+          "textHasJordan": false,
+          "textHasSarah": true,
+          "textHasProfileUnavailable": false,
+          "textHasLoadingProfile": false
+        }
+      },
+      "outcome": "captured_static_link_remains_distinct"
+    },
+    {
+      "case": "pending_jordan_read_after_avery_handoff",
+      "prepared": {
+        "route": {
+          "path": "/profile",
+          "page": "profile",
+          "profileId": null
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "name": "Demo Avery",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": true,
+          "confirmed": false,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [
+            {
+              "tag": "button",
+              "id": "hh-profile-wishlist-confirm"
+            }
+          ],
+          "wishlistAnchors": [],
+          "textHasAvery": true,
+          "textHasJordan": false,
+          "textHasSarah": false,
+          "textHasProfileUnavailable": false,
+          "textHasLoadingProfile": false
+        }
+      },
+      "loading": {
+        "route": {
+          "path": "/public-profile/demo-jordan",
+          "page": "profile",
+          "profileId": "demo-jordan"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "loading",
+          "id": null,
+          "teacherId": null,
+          "name": null,
+          "wishlistUrl": null,
+          "source": "runtime",
+          "readOnly": false
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": true,
+          "confirmed": false,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [],
+          "wishlistAnchors": [],
+          "textHasAvery": false,
+          "textHasJordan": false,
+          "textHasSarah": false,
+          "textHasProfileUnavailable": false,
+          "textHasLoadingProfile": true
+        }
+      },
+      "loaded": {
+        "route": {
+          "path": "/public-profile/demo-jordan",
+          "page": "profile",
+          "profileId": "demo-jordan"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "name": "Demo Jordan",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": true,
+          "confirmed": false,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [
+            {
+              "tag": "button",
+              "id": "hh-profile-wishlist-confirm"
+            }
+          ],
+          "wishlistAnchors": [],
+          "textHasAvery": false,
+          "textHasJordan": true,
+          "textHasSarah": false,
+          "textHasProfileUnavailable": false,
+          "textHasLoadingProfile": false
+        }
+      },
+      "confirmation": {
+        "ok": true,
+        "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY"
+      },
+      "after": {
+        "route": {
+          "path": "/public-profile/demo-jordan",
+          "page": "profile",
+          "profileId": "demo-jordan"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "name": "Demo Jordan",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": false,
+          "confirmed": true,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [],
+          "wishlistAnchors": [
+            {
+              "id": "hh-profile-wishlist-open",
+              "href": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+              "text": "synthetic continuation"
+            }
+          ],
+          "textHasAvery": false,
+          "textHasJordan": true,
+          "textHasSarah": false,
+          "textHasProfileUnavailable": false,
+          "textHasLoadingProfile": false
+        }
+      },
+      "outcome": "stale_identity_after_pending_read"
+    },
+    {
+      "case": "not_found_profile_control",
+      "prepared": {
+        "route": {
+          "path": "/profile",
+          "page": "profile",
+          "profileId": null
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "name": "Demo Avery",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": true,
+          "confirmed": false,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [
+            {
+              "tag": "button",
+              "id": "hh-profile-wishlist-confirm"
+            }
+          ],
+          "wishlistAnchors": [],
+          "textHasAvery": true,
+          "textHasJordan": false,
+          "textHasSarah": false,
+          "textHasProfileUnavailable": false,
+          "textHasLoadingProfile": false
+        }
+      },
+      "beforeDirectConfirm": {
+        "route": {
+          "path": "/public-profile/not-a-fixture-profile",
+          "page": "profile",
+          "profileId": "not-a-fixture-profile"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "error",
+          "id": null,
+          "teacherId": null,
+          "name": null,
+          "wishlistUrl": null,
+          "source": "runtime",
+          "readOnly": false
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": true,
+          "confirmed": false,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [],
+          "wishlistAnchors": [],
+          "textHasAvery": false,
+          "textHasJordan": false,
+          "textHasSarah": false,
+          "textHasProfileUnavailable": true,
+          "textHasLoadingProfile": false
+        }
+      },
+      "directDispatchResult": {
+        "ok": true,
+        "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY"
+      },
+      "after": {
+        "route": {
+          "path": "/public-profile/not-a-fixture-profile",
+          "page": "profile",
+          "profileId": "not-a-fixture-profile"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery",
+          "communityRole": "teacher"
+        },
+        "profile": {
+          "status": "error",
+          "id": null,
+          "teacherId": null,
+          "name": null,
+          "wishlistUrl": null,
+          "source": "runtime",
+          "readOnly": false
+        },
+        "handoff": {
+          "intent": true,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": false,
+          "confirmed": true,
+          "opened": false
+        },
+        "rendered": {
+          "confirmButtons": [],
+          "wishlistAnchors": [],
+          "textHasAvery": false,
+          "textHasJordan": false,
+          "textHasSarah": false,
+          "textHasProfileUnavailable": true,
+          "textHasLoadingProfile": false
+        }
+      },
+      "outcome": "handoff_handler_accepts_direct_confirm_but_no_confirmation_control_is_rendered"
+    }
+  ],
+  "assertions": {
+    "actualVolatileFixtureUsed": true,
+    "AveryHandoffWasUserPrepared": true,
+    "JordanIdentityWasActuallyLoaded": true,
+    "oldDestinationSurvivesNavigation": true,
+    "JordanShowsConfirmationForOldHandoff": true,
+    "directConfirmReturnsAveryDestinationUnderJordan": true,
+    "renderedContinuationHrefIsStale": true,
+    "noExternalOpenOrProviderWriteOnConfirm": true,
+    "sameProfileControlMatchesIdentity": true,
+    "capturedReferenceKeepsStaticSarahLink": true,
+    "pendingReadDoesNotResetOldHandoff": true,
+    "notFoundRendersNoConfirmControl": true
+  },
+  "allAssertionsPassed": true,
+  "outcome": "confirmed_reuse",
+  "summary": "The real volatile fixture/controller/renderPublicSite path confirms a prepared Avery handoff remains active after Jordan loads. The visible confirmation button remains on Jordan; direct confirmation succeeds without a provider call and the rendered continuation href still targets Avery. Same-identity control uses Avery, captured reference keeps its separate static Sarah URL, pending navigation preserves the stale handoff until Jordan loads, and not-found renders no confirmation button. No external link was opened.",
+  "limits": {
+    "syntheticOnly": true,
+    "noProductionOrBackendOrNetwork": true,
+    "noRealTeacherData": true,
+    "noExternalOpenSharePayment": true,
+    "renderedTreeNotBrowserQA": true,
+    "noProductSourceOrGitMutation": true,
+    "profileRecordWrites": "None from wishlist preparation/confirmation; only fixture login and public-profile reads were performed."
+  },
+  "next": "Preserve this reproduction as baseline evidence. No source correction is authorized by E1002; a separate fresh native assignment is required before implementation and independent review."
+}

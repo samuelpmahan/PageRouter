@@ -1,0 +1,35 @@
+{
+  "schema": "hh-cycle07-E1004-clarification/v1",
+  "applies_to": "This separate note clarifies the preserved worker narrative H1/E1004/result.json and native finish envelope receipts/E1004.json. It is not a replacement for either file.",
+  "worker_and_native_records": {
+    "worker_narrative": "H1/E1004/result.json (SHA-256 270621f678b4a3568817177a7792ee158d4b84ba80ce714f42c8b715585f46a1); this is the clarified worker narrative retained as submitted after root preflight, not a relabeled native receipt.",
+    "native_finish_envelope": "receipts/E1004.json (SHA-256 3d92c2da01eaa4b2ffa3f301d83069d7188749d34d00c47c8c4d9dc0505aeea4); this is the root native-finished receipt and is kept byte-for-byte separate from the worker narrative."
+  },
+  "canonical_build_timing": {
+    "native_assignment_started_at": "2026-10-18T13:23:44.576354Z",
+    "worker_report_started_at_approx": "2026-10-18T13:23:00Z",
+    "interpretation": "The worker-report timestamp is an approximate narrative value, not a captured command-start timestamp. The root's native assignment timestamp is the authoritative recorded start. Root follow-up arrived after that assignment; no command start time is backdated or inferred here.",
+    "bazel_reported_elapsed_seconds": 72.491,
+    "interpretation_of_elapsed": "Bazel's reported elapsed time is preserved from actual build output; no independent wall-clock/performance claim is made."
+  },
+  "historical_embedded_verification": {
+    "artifact": "VERIFICATION.json",
+    "sha256": "7f952108063118fcb3b304da03a61ce90a5af1e5830f8e809c2a0054f0dfb75d",
+    "statement": "The copied VERIFICATION.json contains embedded historical browser/import checks from its source evidence set. Those checks are not current-cycle executed tests, current-cycle browser acceptance, or visual QA. Preserve them as historical artifact only."
+  },
+  "current_cycle_actual_counts": {
+    "source": "Actual canonical E1004 build output in site.log and build.log, both captured for this run.",
+    "targeted_hh_controller_community": {"passed": 121, "failed": 0},
+    "full_npm_suite": {"passed": 276, "failed": 0},
+    "atlas_import_closure": {"passed": 1, "failed": 0},
+    "canonical_preflight_helpers": {"passed": 2, "failed": 0},
+    "pxcube_packages": {"succeeded": 14},
+    "verified_site_files": 843
+  },
+  "limits": {
+    "browser_visual_qa": "not executed or claimed",
+    "human_acceptance": "not claimed",
+    "backend_or_production": "not used",
+    "external_publication_or_deployment": "not performed"
+  }
+}

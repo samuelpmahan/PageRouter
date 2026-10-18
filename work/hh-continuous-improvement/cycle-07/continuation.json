@@ -1,0 +1,60 @@
+{
+  "schema": "hh-continuous-improvement-continuation/v1",
+  "cycle": "cycle-07",
+  "repository": "PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "base": {
+    "publishedCommit": "0c52462a0a97050be87fc7e7ba38d42d41298381",
+    "localSourceCommit": "7feded8819db87026a8f35f6aa515bda513ab541",
+    "localSourceTree": "1cdcf9bfb34b680ed198eb7e750486ecfd1887cc",
+    "main": "7adf7e74a85c4310a5704a4c42808e85a1a82d71",
+    "draftPullRequest": 8,
+    "publishedCommitTreeAndParent": "Not locally available/independently derived in this packet; published base SHA is coordinator-reported."
+  },
+  "ownership": {
+    "sourceAndGit": "H1 sole owner",
+    "independentReview": "H2 read-only package/source reviewer",
+    "nativeCoordinationAndConnectedPublication": "root"
+  },
+  "status": {
+    "finding": "confirmed by independent volatile fixture probes: an Avery wishlist handoff and direct confirmation could project the Avery URL on Demo Jordan",
+    "boundedCorrection": "profile-bound wishlist handoff; invalidate on foreign navigation, gate confirmation on a present matching profile, preserve same-profile alias and captured-readonly static link",
+    "independentSourceReview": "R1003 accepted the exact two-file freeze with 13 additional identity/authority/compatibility assertions",
+    "canonicalBuild": "E1004 passed; exact receipt binds the controller and controller-test source hashes",
+    "package": "E1005 package frozen for independent H2 audit; do not edit during audit",
+    "localCommit": "not created",
+    "publication": "not pushed, merged, or deployed",
+    "browserVisualQA": "not executed or claimed",
+    "humanAcceptance": "not claimed"
+  },
+  "sourceFreeze": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "df2765c4b8eee83236d90e9c4380222561956252a0c2cc9a3d63a8a870be046c",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "9732658d1e0eaca0d7344d4ba3626540b72e954b55424ec5f1a01572e1028f04",
+    "changedProductFiles": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ]
+  },
+  "canonicalBuild": {
+    "command": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "workingDirectory": "PageRouter/checkpoint",
+    "exitCode": 0,
+    "targetedHHTests": {"passed": 121, "failed": 0},
+    "fullTests": {"passed": 276, "failed": 0},
+    "atlasImport": {"passed": 1, "failed": 0},
+    "preflightHelpers": {"passed": 2, "failed": 0},
+    "pxcubePackages": 14,
+    "verifiedSiteFiles": 843,
+    "siteBuildId": "b7d30601db9f5e774f55016bf5359cdd7aedb9620cfc3f92c8a3e8a668022bd0",
+    "siteDigest": "f0cf4e8d50e30cd39f72dd2b3951a0d60cd38346c69a699614fc16e3fcd1d737",
+    "sourceDigest": "5dad652773d03bbcba82e253c11de1b8e09d9d3237a66798695cbf4cbb8109d8",
+    "receipt": "evidence/E1004/site.receipt.json"
+  },
+  "next": {
+    "review": "Independent H2 package audit of the frozen manifest, evidence provenance, source/build bindings, and continuation; H1 makes no package edits during review.",
+    "unexecutedHypothesis": "On synthetic Demo Avery prepare public:share, navigate to Demo Jordan without re-preparation, inspect actual rendered share-route field and direct public:share dispatch for stale Avery route projection. Include same-profile alias and captured Sarah priority controls. This is source-derived, not reproduced; do not externally copy/share/open. A fresh native assignment is required before source correction.",
+    "publication": "No commit/push/PR update/merge/deploy is included. Root retains connected publication authority."
+  },
+  "nativeSnapshot": "evidence/native/state-at-freeze.json (historical point-in-time copy)",
+  "evidenceManifest": "evidence/manifest.json"
+}

@@ -1,0 +1,25 @@
+{
+  "job_id": "E1007",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Added one separately labeled post-review administrative erratum for the truncated E1005 narrative hash. The raw E1005 result, frozen 68-entry manifest, product source, and build evidence remain unchanged. No build, tests, commit, or export performed; ready for R1007 small independent review.",
+  "completed_at_utc": "2026-10-18T13:37:51Z",
+  "erratum": {
+    "path": "work/hh-continuous-improvement/cycle-07/post-review-admin/E1005-hash-erratum.json",
+    "sha256": "ac22e4ffbedfddc0b55f0dc146be4bdd5b2887165bfcca6608de44a4d5fc3d5f",
+    "raw_E1005_result_sha256": "fb238b10bcc27bdb664b1c065df02237fe6565c7655bef1c556cc246f9aa907a",
+    "incorrect_field": "provenance_notes[0] narrative SHA-256 ended in `...585f46a`; exact string is preserved in the erratum.",
+    "actual_computed_narrative_sha256": "270621f678b4a3568817177a7792ee158d4b84ba80ce714f42c8b715585f46a1",
+    "native_E1004_receipt_sha256": "3d92c2da01eaa4b2ffa3f301d83069d7188749d34d00c47c8c4d9dc0505aeea4",
+    "R1005_final_amendment_sha256": "a7eebd8b8af92d26eecbb4e262f7cf18ed4753c842da02f46b2806b4d83b8e78"
+  },
+  "unchanged": {
+    "manifest_sha256": "b32ad5849211a5fda61b1f74f9df96298b1a834703271a7559149807dc75109f",
+    "manifest_entry_count": 68,
+    "raw_E1005_result_sha256": "fb238b10bcc27bdb664b1c065df02237fe6565c7655bef1c556cc246f9aa907a",
+    "controller_sha256": "df2765c4b8eee83236d90e9c4380222561956252a0c2cc9a3d63a8a870be046c",
+    "controller_test_sha256": "9732658d1e0eaca0d7344d4ba3626540b72e954b55424ec5f1a01572e1028f04"
+  },
+  "verification": "SHA-256 recomputed from the packaged E1004 worker narrative, native E1004 receipt, E1005 result, and frozen manifest. The calculated values match the bindings recorded above; manifest remains untouched.",
+  "next_gate": "R1007 independent review of this single erratum. No other package additions until that review is accepted."
+}

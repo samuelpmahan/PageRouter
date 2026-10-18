@@ -1,0 +1,11 @@
+{
+  "schema": "hh-cycle07-H2-R1003/wishlist-identity-review/v1",
+  "job_id": "R1003",
+  "worker": "H2",
+  "decision": "rejected",
+  "error": {
+    "name": "AssertionError",
+    "message": "Expected values to be strictly equal:\n+ actual - expected\n\n+ 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW'\n- 'https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM'\n",
+    "stack": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n+ actual - expected\n\n+ 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW'\n- 'https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM'\n\n    at genericCompatibility (file:///workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/probe.mjs:81:381)\n    at async main (file:///workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/probe.mjs:84:206)\n    at async file:///workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/probe.mjs:96:18"
+  }
+}

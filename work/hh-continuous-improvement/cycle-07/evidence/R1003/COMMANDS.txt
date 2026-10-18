@@ -1,0 +1,32 @@
+R1003 H2 independent review
+
+Repository: /workspace/scratch/8528bb251845/PageRouter
+Output: /workspace/scratch/8528bb251845/hh-cycle07/H2/R1003
+
+Initial checks:
+  git status --short
+  git rev-parse HEAD
+  sha256sum checkpoint/vendor/hh/src/public-controller.mjs checkpoint/vendor/hh/src/public-controller.test.mjs checkpoint/vendor/hh/src/public-site.mjs checkpoint/vendor/hh/services/fixture-provider.mjs checkpoint/vendor/hh/services/runtime.mjs
+
+Independent runtime probe (stdout/stderr captured):
+  node /workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/probe.mjs > /workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/stdout.log 2>&1
+
+Post-probe checks:
+  git status --short
+  git rev-parse HEAD
+  sha256sum checkpoint/vendor/hh/src/public-controller.mjs checkpoint/vendor/hh/src/public-controller.test.mjs checkpoint/vendor/hh/src/public-site.mjs checkpoint/vendor/hh/services/fixture-provider.mjs checkpoint/vendor/hh/services/runtime.mjs
+
+Source test execution (stdout/stderr captured):
+  node --test --test-name-pattern='wishlist handoff|failed profile navigation clears|confirmed wishlist destination|same-profile wishlist handoff' checkpoint/vendor/hh/src/public-controller.test.mjs > /workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/focused-test.stdout.log 2>&1
+
+Probe rerun after correcting the probe's generic-fixture expected URL from DEMO-CLASSROOM to the observed fixture default DEMO-PREVIEW; first attempt is preserved in stdout.log:
+  node /workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/probe.mjs > /workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/rerun.stdout.log 2>&1
+
+Final probe run with evidence-log hashes added to result.json:
+  node /workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/probe.mjs > /workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/verified-rerun.stdout.log 2>&1
+
+Final probe run after excluding the self-referential stdout hash from result.json:
+  node /workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/probe.mjs > /workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/final.stdout.log 2>&1
+
+Full controller test execution:
+  node --test checkpoint/vendor/hh/src/public-controller.test.mjs > /workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/controller-test.stdout.log 2>&1

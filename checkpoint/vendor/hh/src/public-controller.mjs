@@ -95,7 +95,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
       profile: {status: runtime.snapshot().ownProfile.status === 'present' ? 'present' : 'absent', value: null,
         editOpen: false, editDraft: {name: '', bio: '', wishlistUrl: ''},
         createDraft: {name: '', bio: '', wishlistUrl: ''}, source: 'runtime'},
-      wishlist: {intent: false, remote: false, destination: null},
+      wishlist: {intent: false, remote: false, destination: null, profileId: null},
       share: {intent: false, url: ''},
       contact: {name: '', email: '', subject: '', message: ''},
       outcome: null,
@@ -168,6 +168,17 @@ export function createPublicController({runtime, storage = null, onChange = () =
       editingReplyId: state.community.editingReplyId || null, editingThreadId: state.community.editingThreadId || null};
   }
   function clearMutationStatus() { setRequest('idle', ''); state.journey.error = ''; }
+  function activeWishlistProfileId(route = state.route, projection = state.journey.profile) {
+    if (route.page !== 'profile' || projection.status !== 'present') return null;
+    const profile = projection.value;
+    if (!profile || projection.readOnly || profile.readOnly || projection.source === 'captured-readonly') return null;
+    if (route.profileId) return profile.id === route.profileId ? profile.id : null;
+    return state.journey.session.status === 'authenticated' && profile.teacherId === state.journey.session.teacherId
+      ? profile.id : null;
+  }
+  function clearWishlistHandoff() {
+    state.journey.wishlist = {intent: false, remote: false, destination: null, profileId: null};
+  }
 
   async function service(port, input = {}, boundary = {}, {retry = false, after = null} = {}) {
     if (mutation) return {ok: false, ignored: true, error: {code: 'request_in_flight', message: 'A preview request is already running.'}};
@@ -285,6 +296,8 @@ export function createPublicController({runtime, storage = null, onChange = () =
     const epoch = routeEpoch;
     state.journey.loading = false;
     state.route = normalizePublicRoute(hash);
+    const targetWishlistProfileId = activeWishlistProfileId();
+    if (state.journey.wishlist.intent && state.journey.wishlist.profileId !== targetWishlistProfileId) clearWishlistHandoff();
     state.journey.navOpen = false;
     state.journey.error = '';
     state.journey.terms = {...state.journey.terms, open: state.route.termsOpen === true};
@@ -595,14 +608,28 @@ export function createPublicController({runtime, storage = null, onChange = () =
     }
     if (event === 'public:wishlist') {
       const profile = state.journey.profile.value;
+      if (state.route.page === 'profile' && (state.journey.profile.readOnly || profile?.readOnly || state.journey.profile.source === 'captured-readonly')) {
+        return {ok: false, error: {code: 'read_only_reference', message: 'Captured public reference profiles do not use the synthetic wishlist handoff.'}};
+      }
+      const profileId = activeWishlistProfileId();
+      if (state.route.page === 'profile' && !profileId) {
+        return {ok: false, error: {code: 'profile_unavailable', message: 'Load the current profile before preparing its wishlist handoff.'}};
+      }
       const destination = profile?.wishlistUrl || FIXTURE_WISHLIST_URL;
-      state.journey.wishlist = {intent: true, remote: false, destination, choiceRequired: true, opened: false};
+      state.journey.wishlist = {intent: true, remote: false, destination, profileId, choiceRequired: true, opened: false};
       setOutcome('handoff-ready', 'This synthetic wishlist is an external handoff. Choose whether to open the displayed fixture destination; this preview has not opened it.');
       notify();
       return {ok: true, handoff: clone(state.journey.wishlist)};
     }
     if (event === 'public:confirm-wishlist') {
       if (!state.journey.wishlist.intent) return {ok: false, error: {code: 'no_wishlist_handoff'}};
+      if (state.route.page === 'profile' && (state.journey.profile.readOnly || state.journey.profile.value?.readOnly || state.journey.profile.source === 'captured-readonly')) {
+        return {ok: false, error: {code: 'read_only_reference'}};
+      }
+      const activeProfileId = activeWishlistProfileId();
+      if ((state.route.page === 'profile' && !activeProfileId) || state.journey.wishlist.profileId !== activeProfileId) {
+        return {ok: false, error: {code: 'wishlist_profile_changed', message: 'Prepare a new handoff from the profile currently shown.'}};
+      }
       state.journey.wishlist = {...state.journey.wishlist, choiceRequired: false, confirmed: true};
       setOutcome('handoff-confirmed', 'Wishlist handoff confirmed. Open the displayed link only if you choose to leave this local preview.');
       notify();
@@ -792,7 +819,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
         state.journey.registration.identity = {name: '', email: '', phone: ''};
         state.journey.terms = {open: false, accepted: false};
         state.journey.contact = {name: '', email: '', subject: '', message: ''};
-        state.journey.wishlist = {intent: false, remote: false, destination: null};
+        clearWishlistHandoff();
         state.journey.share = {intent: false, url: ''};
         state.journey.communityRole = 'anonymous';
         state.journey.profile = {status: 'absent', value: null, editOpen: false, source: 'runtime'};

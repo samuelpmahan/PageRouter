@@ -1,0 +1,25 @@
+{
+  "schema": "hh-cycle07-coordinator-notes/v1",
+  "notes": [
+    {
+      "topic": "worker-path finish rejections",
+      "provenance": "Root coordinator transcript testimony; not independently observed by H1 as native worker evidence.",
+      "statement": "Root reports earlier E1001/E1002 worker-path native finish attempts were rejected. These are retained as coordinator-reported administrative events only. They are not normalized or described as worker errors, and no original stdout is reconstructed. The accepted native receipts and original worker files are preserved separately."
+    },
+    {
+      "topic": "R1003 initial harness failure",
+      "provenance": "Root coordinator report plus preserved R1003 logs/results.",
+      "statement": "Root reports the initial R1003 harness used a wrong fixture URL constant and failed before the valid rerun. The failure output is retained. The probe.mjs path contains the final successful harness; its bytes are not claimed as the original first-run script because that version was overwritten."
+    },
+    {
+      "topic": "E1004 worker narrative versus native finish envelope",
+      "provenance": "Both preserved records and root's native readback.",
+      "statement": "H1/E1004/result.json (SHA-256 270621f678b4a3568817177a7792ee158d4b84ba80ce714f42c8b715585f46a1) is the clarified worker narrative. evidence/native/receipts/E1004.json (SHA-256 3d92c2da01eaa4b2ffa3f301d83069d7188749d34d00c47c8c4d9dc0505aeea4) is the native-finished receipt. They are distinct records and are both preserved byte-for-byte."
+    },
+    {
+      "topic": "E1004 historical VERIFICATION.json",
+      "provenance": "Separate H1/E1004/clarification.json and copied artifact hash.",
+      "statement": "The embedded browser/import checks are historical artifact content, not current-cycle executed browser acceptance. Fresh E1004 run counts are derived from its captured site.log and build.log only."
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+R1007 independent append-only erratum review
+
+Repository: /workspace/scratch/8528bb251845/PageRouter
+Scratch result: /workspace/scratch/8528bb251845/hh-cycle07/H2/R1007/result.json
+
+Read-only verification command:
+  node /workspace/scratch/8528bb251845/hh-cycle07/H2/R1007/audit.mjs > /workspace/scratch/8528bb251845/hh-cycle07/H2/R1007/stdout.log 2>&1
+
+No tests, build, replay, source/package writes, or Git changes were performed.
+
+The first captured run exposed an audit-script field-path mistake (`corrected_narrative_sha256` is bound under `binding`, while the correction object stores the independently recomputed digest). That raw run is preserved in stdout.log; corrected script rerun:
+  node /workspace/scratch/8528bb251845/hh-cycle07/H2/R1007/audit.mjs > /workspace/scratch/8528bb251845/hh-cycle07/H2/R1007/rerun.stdout.log 2>&1

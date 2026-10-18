@@ -1,0 +1,88 @@
+{
+  "job_id": "E1003",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Implemented and tested profile-bound synthetic wishlist handoffs. Foreign navigation invalidates prior choices before pending reads, same-profile aliases retain choices, direct confirmation fails closed while the same profile is loading/failed, and captured Sarah remains read-only with her static reference link. A supporter must explicitly prepare a fresh handoff on the newly displayed synthetic profile. Focused 5/5, controller 47/47, and all HH source tests 74/74 passed. No canonical build, commit, publication, browser, HTTP, or external actions.",
+  "source": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "base_head": "7feded8819db87026a8f35f6aa515bda513ab541",
+    "base_tree": "1cdcf9bfb34b680ed198eb7e750486ecfd1887cc",
+    "changed_product_paths": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "sha256": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "df2765c4b8eee83236d90e9c4380222561956252a0c2cc9a3d63a8a870be046c",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "9732658d1e0eaca0d7344d4ba3626540b72e954b55424ec5f1a01572e1028f04"
+    },
+    "diff_stat": "2 files changed, 168 insertions(+), 3 deletions(-)",
+    "standard_git_diff_check": "passed (git diff --check; exit 0)",
+    "scope": "Only the two listed product paths are modified; canonical build and rendering screenshot deferred until independent review."
+  },
+  "checkpoint": {
+    "root_go_received_before_green": true,
+    "flow_summary": "The handoff now stores the current profileId. Navigation clears an intent immediately when its ID no longer matches the newly current profile context. Active identity is recognized only for a loaded regular profile matching its route, or its authenticated own-profile alias. Confirmation rejects captured references and changed/unavailable profile context. The existing generic event path outside profile routes remains for compatibility; captured Sarah’s renderer and static URL are unchanged.",
+    "review_scope": [
+      "Foreign Avery-to-Jordan navigation while Jordan provider read is held",
+      "Fresh Jordan preparation and rendered Jordan destination",
+      "Same-profile /teachers/demo-avery alias preservation",
+      "Captured Sarah read-only/static link priority",
+      "Missing profile invalidation and no continue anchor",
+      "Already-confirmed Avery handoff not rendered on Jordan",
+      "Same-profile reload pending and read-failure confirmation guards",
+      "Existing generic anonymous/home public:wishlist compatibility test preserved"
+    ]
+  },
+  "red_runs": [
+    {
+      "description": "Original test-first run, preserved unchanged; the initial assertions also exposed the absent binding metadata before reaching the stale behavior.",
+      "command": "set -o pipefail; node --test --test-name-pattern='wishlist handoff|failed profile navigation clears' checkpoint/vendor/hh/src/public-controller.test.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle07/H1/E1003/original-first-red.log",
+      "exit_code": 1,
+      "counts": "3 tests; 0 pass, 3 fail",
+      "log": "original-first-red.log",
+      "sha256": "821f84e94a12b200332b94cce89d0bf8c03b50b1dd13db18629e658a9aaefee2"
+    },
+    {
+      "description": "Behavioral red after strengthening assertions so the stale intent/confirmation/render behavior is reached before metadata checks.",
+      "command": "set -o pipefail; node --test --test-name-pattern='wishlist handoff|failed profile navigation clears|confirmed wishlist destination' checkpoint/vendor/hh/src/public-controller.test.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle07/H1/E1003/behavioral-red.log",
+      "exit_code": 1,
+      "counts": "4 tests; 0 pass, 4 fail",
+      "log": "behavioral-red.log",
+      "sha256": "3f5689d4ac4b5c2922aa1636d6b0f3a54d799e0cfa63ba9b5e65874f33fa00af"
+    }
+  ],
+  "green_runs": [
+    {
+      "command": "set -o pipefail; node --test --test-name-pattern='wishlist handoff|failed profile navigation clears|confirmed wishlist destination|same-profile wishlist handoff' checkpoint/vendor/hh/src/public-controller.test.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle07/H1/E1003/focused-green.log",
+      "exit_code": 0,
+      "counts": "5 tests; 5 pass, 0 fail",
+      "log": "focused-green.log",
+      "sha256": "0c87ad54675d25e8f9f0db6bc7cb2f4fa18c24e0e96f7b512c1810d83246fa45"
+    },
+    {
+      "command": "set -o pipefail; node --test checkpoint/vendor/hh/src/public-controller.test.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle07/H1/E1003/controller-green.log",
+      "exit_code": 0,
+      "counts": "47 tests; 47 pass, 0 fail",
+      "log": "controller-green.log",
+      "sha256": "75c4fe84f3002e9d58670b7bfa3868a1d391ee5636d5ede3244f55ce85121aa0"
+    },
+    {
+      "command": "set -o pipefail; node --test checkpoint/vendor/hh/src/community.test.mjs checkpoint/vendor/hh/src/public-site.test.mjs checkpoint/vendor/hh/src/public-controller.test.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle07/H1/E1003/hh-source-green.log",
+      "exit_code": 0,
+      "counts": "74 tests; 74 pass, 0 fail",
+      "log": "hh-source-green.log",
+      "sha256": "192ce9086b284c0dee3b53c0660a92ef9537d497ada8aaf3eab8947a50be47fe"
+    }
+  ],
+  "boundaries": {
+    "provider": "Synthetic fixture only for tests; no real provider or data.",
+    "http_calls": 0,
+    "browser_opened": false,
+    "external_anchor_opened": false,
+    "rendering": "Controller tests called renderPublicSite() and inspected returned nodes/anchors; no browser screenshot or visual QA is claimed.",
+    "canonical_build": "Not run; held for independent source review.",
+    "commit_or_publish": "Not performed."
+  },
+  "coordinator_note": "Root reported a cycle receipt-path erratum: earlier E1001/E1002 job-named receipt finish attempts were rejected before correction. This is coordinator testimony, not a claim by H1 that it observed those finish calls or captured their original stdout; E1001/E1002 evidence files retain their own stated provenance."
+}

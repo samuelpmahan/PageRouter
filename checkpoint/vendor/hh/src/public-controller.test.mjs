@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {createFixtureProvider, createServiceRuntime} from '../services/index.mjs';
 import {createCommunity} from './community.mjs';
 import {createPublicController, normalizePublicRoute} from './public-controller.mjs';
+import {renderPublicSite} from './public-site.mjs';
 
 function memoryStorage(seed = {}) {
   const values = new Map(Object.entries(seed));
@@ -709,6 +710,143 @@ test('wishlist and community actions are explicit local preview handoffs', async
   assert.equal(controller.state.journey.runtime.session.status, 'anonymous', 'forum role does not create an HH login');
   await controller.navigate(`#/posts/${created.value.id}`);
   assert.deepEqual(controller.state.route.communityRoute, {page: 'post', threadId: created.value.id});
+});
+
+test('wishlist handoff is invalidated before a foreign profile read and must be freshly prepared for that profile', async () => {
+  const base = createFixtureProvider({fixture: true});
+  let announceJordan, releaseJordan;
+  const jordanStarted = new Promise(resolve => { announceJordan = resolve; });
+  const jordanGate = new Promise(resolve => { releaseJordan = resolve; });
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    if (port === 'TeacherProfile.openPublicProfile' && input?.profileId === 'demo-jordan') {
+      announceJordan();
+      await jordanGate;
+    }
+    return invoke(input);
+  }]));
+  const runtime = createServiceRuntime({...base, services});
+  const controller = createPublicController({runtime});
+  await controller.initialize('#/');
+  assert.equal((await controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'})).ok, true);
+  await controller.navigate('#/public-profile/demo-avery');
+  assert.equal((await controller.dispatch('public:wishlist')).handoff.destination,
+    'https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY');
+
+  const readingJordan = controller.navigate('#/public-profile/demo-jordan');
+  await jordanStarted;
+  assert.equal(controller.route.profileId, 'demo-jordan');
+  assert.equal(controller.state.journey.profile.status, 'loading');
+  assert.equal(controller.state.journey.wishlist.intent, false, 'foreign route invalidates old prepared destination before provider completion');
+  assert.equal((await controller.dispatch('public:confirm-wishlist')).error.code, 'no_wishlist_handoff');
+  releaseJordan();
+  await readingJordan;
+  assert.equal(controller.state.journey.profile.value?.id, 'demo-jordan');
+  const preparedJordan = await controller.dispatch('public:wishlist');
+  assert.equal(preparedJordan.ok, true);
+  assert.equal(preparedJordan.handoff.profileId, 'demo-jordan');
+  assert.equal(preparedJordan.handoff.destination, 'https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN');
+  assert.equal((await controller.dispatch('public:confirm-wishlist')).ok, true);
+  const currentTree = renderPublicSite({route: controller.route, state: controller.state});
+  const currentAnchors = [];
+  const visitCurrent = node => { if (!node || typeof node !== 'object') return; if (node.tag === 'a') currentAnchors.push(node); for (const child of node.children || []) visitCurrent(child); };
+  visitCurrent(currentTree);
+  assert.equal(currentAnchors.find(node => node.attrs?.id === 'hh-profile-wishlist-open')?.attrs?.href,
+    'https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN');
+});
+
+test('wishlist handoff remains on same-profile aliases and captured reference keeps its static link', async () => {
+  const {controller, runtime} = setup();
+  await controller.initialize('#/');
+  await controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'});
+  await controller.navigate('#/public-profile/demo-avery');
+  await controller.dispatch('public:wishlist');
+  await controller.navigate('#/teachers/demo-avery');
+  assert.equal(controller.state.journey.wishlist.intent, true);
+  assert.equal((await controller.dispatch('public:confirm-wishlist')).ok, true);
+  await controller.navigate('#/public-profile/reference-sarah');
+  assert.equal(controller.state.journey.profile.source, 'captured-readonly');
+  assert.equal(controller.state.journey.wishlist.intent, false);
+  const tree = renderPublicSite({route: controller.route, state: controller.state});
+  const anchors = [];
+  const visit = node => { if (!node || typeof node !== 'object') return; if (node.tag === 'a') anchors.push(node); for (const child of node.children || []) visit(child); };
+  visit(tree);
+  const capturedLink = anchors.find(node => node.attrs?.id === 'hh-reference-wishlist');
+  assert.ok(capturedLink?.attrs?.href);
+  assert.equal(anchors.some(node => node.attrs?.id === 'hh-profile-wishlist-open'), false);
+  assert.equal((await controller.dispatch('public:wishlist')).error.code, 'read_only_reference');
+  assert.equal(runtime.snapshot().session.status, 'authenticated');
+});
+
+test('failed profile navigation clears prior wishlist handoff and stale confirmation is rejected', async () => {
+  const {controller} = setup();
+  await controller.initialize('#/');
+  await controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'});
+  await controller.navigate('#/public-profile/demo-avery');
+  await controller.dispatch('public:wishlist');
+  await controller.navigate('#/public-profile/demo-profile-missing');
+  assert.equal(controller.state.journey.profile.status, 'error');
+  assert.equal(controller.state.journey.wishlist.intent, false);
+  assert.equal((await controller.dispatch('public:confirm-wishlist')).error.code, 'no_wishlist_handoff');
+  const tree = renderPublicSite({route: controller.route, state: controller.state});
+  const anchors = [];
+  const visit = node => { if (!node || typeof node !== 'object') return; if (node.tag === 'a') anchors.push(node); for (const child of node.children || []) visit(child); };
+  visit(tree);
+  assert.equal(anchors.some(node => node.attrs?.id === 'hh-profile-wishlist-open'), false);
+});
+
+test('confirmed wishlist destination is not rendered on a foreign profile', async () => {
+  const {controller} = setup();
+  await controller.initialize('#/');
+  await controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'});
+  await controller.navigate('#/public-profile/demo-avery');
+  await controller.dispatch('public:wishlist');
+  assert.equal((await controller.dispatch('public:confirm-wishlist')).ok, true);
+  await controller.navigate('#/public-profile/demo-jordan');
+  const tree = renderPublicSite({route: controller.route, state: controller.state});
+  const anchors = [];
+  const visit = node => { if (!node || typeof node !== 'object') return; if (node.tag === 'a') anchors.push(node); for (const child of node.children || []) visit(child); };
+  visit(tree);
+  assert.equal(anchors.some(node => node.attrs?.id === 'hh-profile-wishlist-open'), false,
+    'an already confirmed handoff must not project an old profile URL onto a foreign teacher');
+});
+
+test('same-profile wishlist handoff cannot be confirmed while its profile reload is pending or failed', async () => {
+  const base = createFixtureProvider({fixture: true});
+  let holdAvery = false, failAvery = false, announceAvery, releaseAvery;
+  const averyStarted = new Promise(resolve => { announceAvery = resolve; });
+  const averyGate = new Promise(resolve => { releaseAvery = resolve; });
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    if (port === 'TeacherProfile.openPublicProfile' && input?.profileId === 'demo-avery') {
+      if (holdAvery) { announceAvery(); await averyGate; }
+      if (failAvery) return {ok: false, message: 'Synthetic profile read failed.', error: {code: 'transport_failure', retryable: false}};
+    }
+    return invoke(input);
+  }]));
+  const runtime = createServiceRuntime({...base, services});
+  const controller = createPublicController({runtime});
+  await controller.initialize('#/');
+  await controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'});
+  await controller.navigate('#/public-profile/demo-avery');
+  await controller.dispatch('public:wishlist');
+
+  holdAvery = true;
+  const reading = controller.navigate('#/public-profile/demo-avery');
+  await averyStarted;
+  assert.equal(controller.state.journey.profile.status, 'loading');
+  assert.equal(controller.state.journey.wishlist.intent, true, 'same-profile identity may retain the explicit choice while loading');
+  assert.equal((await controller.dispatch('public:confirm-wishlist')).error.code, 'wishlist_profile_changed');
+  releaseAvery();
+  await reading;
+  holdAvery = false;
+  failAvery = true;
+  await controller.navigate('#/public-profile/demo-avery');
+  assert.equal(controller.state.journey.profile.status, 'error');
+  assert.equal((await controller.dispatch('public:confirm-wishlist')).error.code, 'wishlist_profile_changed');
+  const tree = renderPublicSite({route: controller.route, state: controller.state});
+  const anchors = [];
+  const visit = node => { if (!node || typeof node !== 'object') return; if (node.tag === 'a') anchors.push(node); for (const child of node.children || []) visit(child); };
+  visit(tree);
+  assert.equal(anchors.some(node => node.attrs?.id === 'hh-profile-wishlist-open'), false);
 });
 
 test('late login, approval and logout results never redirect away from the current route', async () => {

@@ -1,0 +1,67 @@
+{
+  "job_id": "E1005",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Packaged Cycle 07 evidence and provenance clarifications, corrected the continuation's visual-QA wording, regenerated and verified the 68-entry evidence manifest. Product source remains unchanged during packaging. Frozen for independent H2 package audit; no commit or publication performed.",
+  "completed_at_utc": "2026-10-18T13:30:29Z",
+  "package": {
+    "path": "PageRouter/work/hh-continuous-improvement/cycle-07",
+    "manifest": "evidence/manifest.json",
+    "manifest_sha256": "b32ad5849211a5fda61b1f74f9df96298b1a834703271a7559149807dc75109f",
+    "manifest_entry_count": 68,
+    "manifest_scope": "All package files other than evidence/manifest.json itself",
+    "validation": "Recomputed every listed SHA-256 against the corresponding file; 68 entries matched, zero mismatches. Parsed continuation and clarification JSON successfully. Standard git diff --check passed for the frozen source and authored package/docs/manifest paths."
+  },
+  "source_freeze": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "local_head": "7feded8819db87026a8f35f6aa515bda513ab541",
+    "local_tree_before_package_docs": "1cdcf9bfb34b680ed198eb7e750486ecfd1887cc",
+    "controller_sha256": "df2765c4b8eee83236d90e9c4380222561956252a0c2cc9a3d63a8a870be046c",
+    "controller_test_sha256": "9732658d1e0eaca0d7344d4ba3626540b72e954b55424ec5f1a01572e1028f04",
+    "published_base_coordinator_reported": "0c52462a0a97050be87fc7e7ba38d42d41298381",
+    "main": "7adf7e74a85c4310a5704a4c42808e85a1a82d71",
+    "published_base_tree_parent": "not independently derived; published commit object unavailable locally"
+  },
+  "canonical_build": {
+    "evidence": "evidence/E1004/site.receipt.json",
+    "receipt_sha256": "1beb8ba7974dd28d92a99c53c18bdb2c54dddd3baec50de15a9da8b7acb5c2d2",
+    "source_input_binding": "receipt exact-matches the two product hashes above; see evidence/E1004/source-input-bindings.json",
+    "site_build_id": "b7d30601db9f5e774f55016bf5359cdd7aedb9620cfc3f92c8a3e8a668022bd0",
+    "site_digest": "f0cf4e8d50e30cd39f72dd2b3951a0d60cd38346c69a699614fc16e3fcd1d737",
+    "fresh_counts_from_actual_site_log_and_build_log": {
+      "targeted_hh": "121/121",
+      "full_suite": "276/276",
+      "atlas_import_closure": "1/1",
+      "preflight_helpers": "2/2",
+      "pxcube_packages": 14,
+      "verified_site_files": 843
+    },
+    "historical_artifact_note": "VERIFICATION.json embeds historical checks; it is not current-cycle browser acceptance. Browser visual QA was not performed."
+  },
+  "provenance_notes": [
+    "H1 E1004 worker narrative and native receipt are separate preserved files: narrative SHA-256 270621f678b4a3568817177a7792ee158d4b84ba80ce714f42c8b715585f46a; native receipt SHA-256 3d92c2da01eaa4b2ffa3f301d83069d7188749d34d00c47c8c4d9dc0505aeea4.",
+    "E1004's worker-reported approximate start is not a captured command-start time; native assignment time is recorded in evidence/E1004/clarification.json. No start time was backdated.",
+    "Root-reported early E1001/E1002 worker-path finish rejections are coordinator testimony only, not native worker errors; no stdout was reconstructed.",
+    "The first R1003 harness used a wrong fixture URL constant per root report; its failure output is retained, but the overwritten initial script bytes are not claimed preserved. The packaged probe is the final successful version.",
+    "No backend/production data, external HTTP/open/copy/share/payment, browser workaround, visual QA, deployment, human acceptance, commit, or publication is claimed."
+  ],
+  "commands_and_provenance": [
+    {
+      "command": "node -e '<recursive SHA-256 manifest generation over work/hh-continuous-improvement/cycle-07, excluding evidence/manifest.json>'",
+      "purpose": "Mechanically generate exact package file hashes.",
+      "output_capture": "Command output was observed in the native worker transcript; no separate stdout file was created."
+    },
+    {
+      "command": "node -e '<recompute each manifest SHA-256; hash the two product files and manifest>'",
+      "purpose": "Verify all 68 manifest entries and source identities.",
+      "result": "68 entries matched; zero mismatches; product hashes match source-freeze.json."
+    },
+    {
+      "command": "git diff --check -- checkpoint/vendor/hh/src/public-controller.mjs checkpoint/vendor/hh/src/public-controller.test.mjs work/hh-continuous-improvement/cycle-07/README.md work/hh-continuous-improvement/cycle-07/NEXT.md work/hh-continuous-improvement/cycle-07/continuation.json work/hh-continuous-improvement/cycle-07/evidence/manifest.json",
+      "purpose": "Check the two frozen product files and authored package/docs paths for whitespace errors.",
+      "result": "Passed."
+    }
+  ],
+  "next_gate": "Hold package and product files unchanged for independent H2 package audit. No commit, export payload, push, PR update, merge, or deployment in E1005."
+}
