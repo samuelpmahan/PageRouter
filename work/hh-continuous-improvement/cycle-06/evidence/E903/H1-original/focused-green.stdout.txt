@@ -1,0 +1,13 @@
+✔ successful logout clears the own projection and anonymizes the community on its original route (6.921337ms)
+✔ successful logout preserves a foreign public-profile projection after navigation (3.955622ms)
+✔ successful logout preserves a captured readonly projection and its readonly guard (1.966856ms)
+✔ successful logout does not clear a public-profile projection while its read is pending (1.133954ms)
+✔ failed logout after navigation leaves foreign projection and authenticated authority unchanged (1.50429ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 108.976292

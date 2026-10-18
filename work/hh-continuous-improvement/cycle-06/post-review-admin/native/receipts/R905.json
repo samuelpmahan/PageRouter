@@ -1,0 +1,135 @@
+{
+  "schema": "hh-cycle06-H2-R905/package-review/v1",
+  "job_id": "R905",
+  "worker": "H2",
+  "decision": "accepted",
+  "repository": "PageRouter",
+  "head": "a5b141816ffb871110e541ef00ecf9527674137e",
+  "tree": "5eb00395e85afeb357be11b6add395ef5fbb6b68",
+  "package": {
+    "path": "work/hh-continuous-improvement/cycle-06",
+    "manifest_sha256": "8b86d74d9b0f71883c53253b31b775b24b99fb6ef98a20b6000033064ce8cb93",
+    "manifest_entries": 58,
+    "mismatches": 0,
+    "all_23_package_json_files_parse": true,
+    "native_zstandard_bundles_valid": 4,
+    "diff_check": "passed",
+    "manifest_validation_log": "manifest-check.stdout.log",
+    "json_validation_log": "json-parse.stdout.log",
+    "bundle_validation_log": "bundle-check.stdout.log"
+  },
+  "source_freeze": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "84205881dd991d4be5ddf08a7b014530cb240e065aa0cc4180b362c02a345bff",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "19b9068c250d414ad62818778f376570db7480bd73cd918fd73b825344d1561a",
+    "diff_product_files": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "unchanged_during_review": true
+  },
+  "build_binding": {
+    "E905_result_sha256": "89b715f6ea6b281dd3cb985d81882e401421f6c28dff183e4028b7a7bc003634",
+    "E904_receipt_sha256": "c6ff6e2a3a6dbd80d690ed65ac73a9d1667b8ae6fee7f6e44c98b47e3985ef2b",
+    "site_build_id": "f9a27ef436bb7218dadf7cec4071618b65eb51b938369058a06ffe12269a0ef8",
+    "site_digest": "6a6ea2ad331a4070bfecfb972dc5e82cd05cd3fe4c8c8ce5b3a070ea660176a2",
+    "source_digest": "4240d5fdde0dd0c49ef65c3de97a99dcd04b3a5ff067882c2f7681cc062d3af0",
+    "receipt_controller_input": "84205881dd991d4be5ddf08a7b014530cb240e065aa0cc4180b362c02a345bff",
+    "receipt_controller_test_input": "19b9068c250d414ad62818778f376570db7480bd73cd918fd73b825344d1561a",
+    "receipt_and_E904_result_agree": true,
+    "counts": {
+      "targeted_hh": 116,
+      "full_suite": 271,
+      "atlas_import": 1,
+      "helpers": 2,
+      "pxcube_packages": 14,
+      "verified_site_files": 843
+    },
+    "logs": {
+      "canonical_site_log_sha256": "52c8dfb1e6389801bdbbf7ae3f0575cda49bbd4500f945e45d62e5226cc7cdab",
+      "receipt_sha256_verified": true
+    }
+  },
+  "provenance": {
+    "originalEvidenceCopies": {
+      "E901_H1": "byte-identical to /workspace/scratch/8528bb251845/hh-cycle06/H1/E901",
+      "E902_H2": "probe.mjs, result.json, and stdout.log byte-identical to assigned H2 artifacts",
+      "E903_H1": "byte-identical to /workspace/scratch/8528bb251845/hh-cycle06/H1/E903",
+      "E904_H1": "byte-identical to /workspace/scratch/8528bb251845/hh-cycle06/H1/E904",
+      "R903_H2": "byte-identical to /workspace/scratch/8528bb251845/hh-cycle06/H2/R903"
+    },
+    "comparison_logs": [
+      "provenance-E901.log",
+      "provenance-E902.log",
+      "provenance-E903.log",
+      "provenance-E904.log",
+      "provenance-R903.log"
+    ],
+    "E901_stdout_qualification": "README/NEXT correctly state stdout.json is a byte-for-byte copy of final successful tool stdout by worker testimony, not a shell-redirected original capture; raw result is preserved unchanged.",
+    "native_envelopes": {
+      "E901": "Raw result uses allowed_outcome; normalized receipt copies the same verdict into outcome, preserves original hash, and records no native rejection.",
+      "R903": "Raw result uses outcome=accepted; receipt copies it into required decision=accepted, preserves raw hash, and records one actual finish rejection for missing decision.",
+      "administrative_errors": "Initial solve-directory redirection and two premature start acknowledgements are retained in coordinator notes; no solver assignment or worker dispatch is falsely claimed. The rejected patch attempt is documented as pre-dispatch and no-change."
+    },
+    "native_bundles": "All four .bundle files passed zstd integrity checks; each solve JSON matches its stdout JSON byte-for-byte."
+  },
+  "base_and_state": {
+    "continuation_shared_tree": "5eb00395e85afeb357be11b6add395ef5fbb6b68",
+    "local_head_tree": "5eb00395e85afeb357be11b6add395ef5fbb6b68",
+    "published_base_metadata": {
+      "commit": "79e48fb8c91c51147f4598ea223da431f413a6a1",
+      "tree": "5eb00395e85afeb357be11b6add395ef5fbb6b68",
+      "parent": "77ef66c5fd9c4050c4f474253cff19ad9e535193"
+    },
+    "metadata_agrees": true,
+    "qualification": "The published commit object is not present in this local Git object database; this review verified the preserved remote-base metadata against continuation and the actual local HEAD tree, without fetching or claiming a fresh remote verification.",
+    "state_snapshot": "Historical capture says E905 running and R905 pending when saved; it is not current dispatch authority or evidence of live background work."
+  },
+  "portable_companion_replays": {
+    "scope": "Package companions remain labeled unexecuted in the frozen package. Scratch copies under this R905 folder changed only import/root/output paths and were run without package/source writes.",
+    "E901": {
+      "exit_code": 1,
+      "interpretation": "Expected baseline-only assertion failure: the portable E901 probe expects the pre-correction foreign profile status to be unknown; current frozen source returns present. This is consistent with the correction, not a package/source failure.",
+      "stdout": "E901-portable.stdout.log"
+    },
+    "E902": {
+      "exit_code": 0,
+      "outcome": "not_reuse",
+      "interpretation": "The old defect is not reproduced against the corrected frozen source; synthetic failure and normal logout controls pass.",
+      "stdout": "E902-portable.stdout.log",
+      "generated_result": "replay-output/E902/result.json"
+    },
+    "R903": {
+      "exit_code": 0,
+      "outcome": "accepted",
+      "interpretation": "All eight adversarial post-correction cases pass on replay.",
+      "stdout": "R903-portable.stdout.log",
+      "generated_result": "replay-output/R903/result.json"
+    }
+  },
+  "continuation_and_limits": {
+    "next_wishlist_hypothesis": "Explicitly unexecuted; no wishlist probe was run.",
+    "preserved_invariants": "Captured-reference readonly, synthetic-only provider, geography/backend distinction, privacy, session/community anonymity, and owner edit authority remain qualified.",
+    "browser_visual_qa": false,
+    "backend_or_python_execution": false,
+    "production_or_external_actions": false,
+    "main_merge_or_deployment": false,
+    "human_acceptance": false,
+    "PageRouter_source_or_package_written_by_H2": false
+  },
+  "commands": [
+    "node --input-type=module -e '<recompute SHA-256 for all manifest.files entries>'",
+    "diff -qr /workspace/scratch/8528bb251845/hh-cycle06/H1/E901 work/hh-continuous-improvement/cycle-06/evidence/E901/H1-original",
+    "cmp assigned E902 probe.mjs/result.json/stdout.log against package originals",
+    "diff -qr assigned H1 E903 and E904 folders against package originals",
+    "diff -qr /workspace/scratch/8528bb251845/hh-cycle06/H2/R903 work/hh-continuous-improvement/cycle-06/evidence/R903/H2-original",
+    "zstd -t work/hh-continuous-improvement/cycle-06/evidence/native/solves/*.bundle",
+    "node <parse all JSON evidence in cycle-06 package>",
+    "node /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/replay/E901-portable.mjs (scratch path-only copy; expected baseline-only assertion exit 1)",
+    "node /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/replay/E902-portable.mjs (scratch path-only copy)",
+    "node /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/replay/R903-portable.mjs (scratch path-only copy)",
+    "git diff --check"
+  ],
+  "commands_file": "commands.txt",
+  "summary": "Accepted: all 58 manifest hashes match, originals and provenance are accurately qualified, E904 receipt binds the exact frozen controller/test hashes and reported canonical counts, native normalization/rejections and historical state are documented, and the selected wishlist hypothesis remains unexecuted. Portable scratch replays behave as expected on corrected source. No package or product source files were changed during this audit.",
+  "next": "Root may proceed with the next explicitly authorized package/publication step; this audit alone authorizes no commit, push, merge, deployment, or human-acceptance claim."
+}

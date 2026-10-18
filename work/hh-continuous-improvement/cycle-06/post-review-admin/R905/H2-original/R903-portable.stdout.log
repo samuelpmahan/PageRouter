@@ -1,0 +1,163 @@
+{
+  "schema": "hh-cycle06-H2-R903/independent-review/v1",
+  "job_id": "R903",
+  "worker": "H2",
+  "repository": "PageRouter",
+  "head": "a5b141816ffb871110e541ef00ecf9527674137e",
+  "tree": "5eb00395e85afeb357be11b6add395ef5fbb6b68",
+  "sourceHashes": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "84205881dd991d4be5ddf08a7b014530cb240e065aa0cc4180b362c02a345bff",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "19b9068c250d414ad62818778f376570db7480bd73cd918fd73b825344d1561a",
+    "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  },
+  "commands": [
+    "node /workspace/scratch/8528bb251845/hh-cycle06/H2/R903/probe.mjs",
+    "node --test --test-name-pattern='successful logout|failed logout after navigation' checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "node --test checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "node --test --test-concurrency=2 exp/cooperative/hh-geography-review.test.mjs exp/cooperative/hh-parity-community.test.mjs exp/cooperative/hh-parity-public.test.mjs exp/cooperative/hh-workbench.test.mjs vendor/hh/src/*.test.mjs (cwd: PageRouter/checkpoint)"
+  ],
+  "validation": {
+    "focusedController": {
+      "passed": 5,
+      "failed": 0,
+      "log": "focused.stdout.log"
+    },
+    "fullController": {
+      "passed": 42,
+      "failed": 0,
+      "log": "controller.stdout.log"
+    },
+    "relevantHHWithoutStyle": {
+      "passed": 109,
+      "failed": 0,
+      "log": "hh-relevant.stdout.log"
+    },
+    "styleDependency": "Not run directly; no success claim for dependency-dependent style suite."
+  },
+  "environment": {
+    "runtime": "actual createFixtureProvider volatile-memory + createServiceRuntime + createPublicController + renderPublicSite tree",
+    "identities": "synthetic seeded Demo Avery / synthetic H2-only demo identity",
+    "productionAuthority": false,
+    "network": false,
+    "backendExecution": false,
+    "browserVisualQA": false,
+    "humanAcceptance": false
+  },
+  "cases": [
+    {
+      "case": "success_foreign_jordan",
+      "route": "/public-profile/demo-jordan",
+      "session": "anonymous",
+      "communityRole": "anonymous",
+      "profileId": "demo-jordan",
+      "renderedJordanBefore": true,
+      "renderedJordanAfter": true,
+      "ownerEdit": "authentication_required",
+      "assertion": "route, foreign profile projection and tree retained; session/community anonymous; edit denied"
+    },
+    {
+      "case": "success_captured_readonly",
+      "route": "/pages/teacher.html",
+      "session": "anonymous",
+      "projectionSource": "captured-readonly",
+      "readOnly": true,
+      "renderedSarah": true,
+      "edit": "read_only_reference",
+      "assertion": "captured projection/tree retained; readonly guard retains precedence after anonymous logout"
+    },
+    {
+      "case": "pending_read_success",
+      "route": "/public-profile/demo-jordan",
+      "logoutSession": "anonymous",
+      "projectionWhileReadHeldAfterLogout": "loading",
+      "read": {
+        "routeOk": true,
+        "serviceOk": true,
+        "code": null
+      },
+      "finalProjection": {
+        "status": "present",
+        "id": "demo-jordan"
+      },
+      "renderedJordan": true,
+      "assertion": "pending projection preserved across logout; read completes with its own success/failure/not-found result"
+    },
+    {
+      "case": "pending_read_failure",
+      "route": "/public-profile/demo-jordan",
+      "logoutSession": "anonymous",
+      "projectionWhileReadHeldAfterLogout": "loading",
+      "read": {
+        "routeOk": true,
+        "serviceOk": false,
+        "code": "transport_failure"
+      },
+      "finalProjection": {
+        "status": "error",
+        "id": null
+      },
+      "renderedJordan": false,
+      "assertion": "pending projection preserved across logout; read completes with its own success/failure/not-found result"
+    },
+    {
+      "case": "pending_read_not_found",
+      "route": "/public-profile/does-not-exist",
+      "logoutSession": "anonymous",
+      "projectionWhileReadHeldAfterLogout": "loading",
+      "read": {
+        "routeOk": true,
+        "serviceOk": false,
+        "code": "not_found"
+      },
+      "finalProjection": {
+        "status": "error",
+        "id": null
+      },
+      "renderedJordan": false,
+      "assertion": "pending projection preserved across logout; read completes with its own success/failure/not-found result"
+    },
+    {
+      "case": "success_own_public_alias_privacy",
+      "ownProfileId": "profile-demo-teacher-1",
+      "route": "/public-profile/profile-demo-teacher-1",
+      "beforeRenderedOverlay": true,
+      "afterRenderedOverlay": false,
+      "profileStatus": "unknown",
+      "session": "anonymous",
+      "providerRecordStillPresent": true,
+      "edit": "profile_unavailable",
+      "assertion": "same-id own public alias clears transient projection on logout; renderer no longer exposes the local overlay; provider record is not deleted"
+    },
+    {
+      "case": "same_route_normal_logout",
+      "route": "/login",
+      "session": "anonymous",
+      "communityRole": "anonymous",
+      "profileStatus": "unknown",
+      "loginPageRendered": true,
+      "assertion": "original route redirect and privacy clear preserved"
+    },
+    {
+      "case": "failed_logout_control",
+      "result": "denied",
+      "route": "/public-profile/demo-jordan",
+      "session": "authenticated",
+      "communityRole": "teacher",
+      "projectionPreserved": true,
+      "jordanRenderedBefore": true,
+      "jordanRenderedAfter": true,
+      "edit": "profile_owner_mismatch",
+      "providerProfiles": [
+        "demo-avery",
+        "demo-jordan"
+      ],
+      "assertion": "failed logout preserves auth/community/projection/render and foreign-owner edit rejection"
+    }
+  ],
+  "assertionsPassed": true,
+  "outcome": "accepted",
+  "summary": "The frozen correction preserves foreign, captured-readonly, and pending public-profile projections across successful delayed logout while runtime session and community authority become anonymous. Pending reads independently complete success, transport failure, and not-found outcomes after logout. Same-id own public alias and normal own-page logout clear the transient owner projection; same-route logout still redirects. Failure leaves auth, community role, foreign projection/tree, and owner mismatch guard intact. No profile record deletion or edit authority expansion occurred.",
+  "next": "Accept the exact two-file source freeze subject to H1 canonical build/evidence binding; no browser visual QA, backend execution, or human acceptance is established by this review."
+}

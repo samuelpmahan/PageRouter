@@ -1,0 +1,40 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "hh-continuous-improvement-cycle06",
+    "source": "79e48fb8c91c51147f4598ea223da431f413a6a1",
+    "scope": "Delayed synthetic logout across navigation; demonstrate actual runtime behavior before correction",
+    "actualCapacity": "Two fresh cheap HH workers plus coordinator, separate Lab pool4 uses remaining actual slots",
+    "streams": [
+      "registration/approval/profile integration",
+      "independent runtime/authority review",
+      "canonical build/evidence via same integration owner when dependencies ready"
+    ],
+    "floatingReserve": "No extra worker invented; functions sequence across H1/H2"
+  },
+  "workers": [
+    "H1",
+    "H2"
+  ],
+  "review_policy": {
+    "enabled": false
+  },
+  "jobs": [
+    {
+      "id": "E901",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Sole PageRouter source/Gitowner: read-only first, controlled delayed Session.logout success/failure across own/foreign/captured public navigation; inspect actual projection/session/UI/authority, no source edit yet"
+    },
+    {
+      "id": "E902",
+      "kind": "extract",
+      "allow_workers": [
+        "H2"
+      ],
+      "subject": "Independent read-only volatile fixture runtime reproduction of delayed logout across public/captured navigation and failure/normal controls; synthetic only, no repo edits"
+    }
+  ]
+}

@@ -720,10 +720,13 @@ export function createPublicController({runtime, storage = null, onChange = () =
     }
     if (event === 'public:logout') {
       const startRouteEpoch = routeEpoch;
+      const ownProfileId = runtime.snapshot().ownProfile?.profile?.id || null;
       const result = await service('Session.logout');
       if (result.ok) {
         setCommunityRole('anonymous');
-        state.journey.profile = {status: 'unknown', value: null, editOpen: false, source: 'runtime'};
+        if (!state.route.profileId || state.route.profileId === ownProfileId) {
+          state.journey.profile = {status: 'unknown', value: null, editOpen: false, source: 'runtime'};
+        }
         if (routeEpoch === startRouteEpoch) requestNavigation('/login');
       }
       return result;

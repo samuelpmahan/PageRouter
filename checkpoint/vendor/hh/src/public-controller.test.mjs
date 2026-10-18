@@ -35,7 +35,7 @@ async function registeredProfileSetup() {
   return env;
 }
 
-function controlledFixtureRuntime(delayedPorts = []) {
+function controlledFixtureRuntime(delayedPorts = [], {failPorts = []} = {}) {
   const base = createFixtureProvider({fixture: true});
   const gates = new Map(delayedPorts.map(port => {
     let announceStart, release;
@@ -49,7 +49,7 @@ function controlledFixtureRuntime(delayedPorts = []) {
       gate.announceStart();
       await gate.pending;
     }
-    return invoke(input);
+    return invoke(failPorts.includes(port) ? {...input, failWith: 'denied'} : input);
   }]));
   const provider = {...base, services: Object.freeze(services)};
   return {
@@ -748,4 +748,131 @@ test('late login, approval and logout results never redirect away from the curre
     assert.equal((await pending).ok, true);
     assert.equal(controller.route.page, 'contact');
   }
+});
+
+test('successful logout clears the own projection and anonymizes the community on its original route', async () => {
+  const controlled = controlledFixtureRuntime(['Session.logout']);
+  const controller = controlledController(controlled.runtime);
+  await controller.initialize('#/login');
+  assert.equal((await controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'})).ok, true);
+  assert.equal(controller.route.page, 'profile');
+  assert.equal(controller.state.journey.session.status, 'authenticated');
+
+  const logout = controller.dispatch('public:logout');
+  await controlled.waitFor('Session.logout');
+  assert.equal(controller.state.journey.profile.value.id, 'demo-avery');
+  controlled.release('Session.logout');
+
+  assert.equal((await logout).ok, true);
+  assert.equal(controlled.runtime.snapshot().session.status, 'anonymous');
+  assert.equal(controller.state.journey.session.status, 'anonymous');
+  assert.equal(controller.state.journey.communityRole, 'anonymous');
+  assert.equal(controller.route.page, 'login');
+  assert.equal(controller.state.journey.profile.status, 'unknown');
+  assert.equal(controller.state.journey.profile.value, null);
+});
+
+test('successful logout preserves a foreign public-profile projection after navigation', async () => {
+  const controlled = controlledFixtureRuntime(['Session.logout']);
+  const controller = controlledController(controlled.runtime);
+  await controller.initialize('#/login');
+  assert.equal((await controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'})).ok, true);
+
+  const logout = controller.dispatch('public:logout');
+  await controlled.waitFor('Session.logout');
+  await controller.navigate('#/public-profile/demo-jordan');
+  const foreignProjection = structuredClone(controller.state.journey.profile);
+  assert.equal(foreignProjection.value.id, 'demo-jordan');
+  assert.equal(foreignProjection.value.teacherId, 'demo-seed-jordan');
+  assert.equal(controlled.runtime.snapshot().session.status, 'authenticated', 'the held service has not logged out yet');
+
+  controlled.release('Session.logout');
+  assert.equal((await logout).ok, true);
+  assert.equal(controller.route.profileId, 'demo-jordan');
+  assert.equal(controlled.runtime.snapshot().session.status, 'anonymous');
+  assert.equal(controller.state.journey.session.status, 'anonymous');
+  assert.equal(controller.state.journey.communityRole, 'anonymous');
+  assert.deepEqual(controller.state.journey.profile, foreignProjection);
+  const edit = await controller.dispatch('public:edit-profile');
+  assert.equal(edit.ok, false);
+  assert.equal(edit.error.code, 'authentication_required');
+  assert.deepEqual(controller.state.journey.profile, foreignProjection);
+});
+
+test('successful logout preserves a captured readonly projection and its readonly guard', async () => {
+  const controlled = controlledFixtureRuntime(['Session.logout']);
+  const controller = controlledController(controlled.runtime);
+  await controller.initialize('#/login');
+  assert.equal((await controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'})).ok, true);
+
+  const logout = controller.dispatch('public:logout');
+  await controlled.waitFor('Session.logout');
+  await controller.navigate('#/pages/teacher.html');
+  const capturedProjection = structuredClone(controller.state.journey.profile);
+  assert.equal(capturedProjection.source, 'captured-readonly');
+  assert.equal(capturedProjection.readOnly, true);
+
+  controlled.release('Session.logout');
+  assert.equal((await logout).ok, true);
+  assert.equal(controller.route.profileId, 'reference-sarah');
+  assert.equal(controlled.runtime.snapshot().session.status, 'anonymous');
+  assert.equal(controller.state.journey.communityRole, 'anonymous');
+  assert.deepEqual(controller.state.journey.profile, capturedProjection);
+  const edit = await controller.dispatch('public:edit-profile');
+  assert.equal(edit.ok, false);
+  assert.equal(edit.error.code, 'read_only_reference');
+  assert.deepEqual(controller.state.journey.profile, capturedProjection);
+});
+
+test('successful logout does not clear a public-profile projection while its read is pending', async () => {
+  const controlled = controlledFixtureRuntime(['Session.logout', 'TeacherProfile.openPublicProfile']);
+  const controller = controlledController(controlled.runtime);
+  await controller.initialize('#/login');
+  assert.equal((await controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'})).ok, true);
+
+  const logout = controller.dispatch('public:logout');
+  await controlled.waitFor('Session.logout');
+  const publicRead = controller.navigate('#/public-profile/demo-jordan');
+  await controlled.waitFor('TeacherProfile.openPublicProfile');
+  const pendingProjection = structuredClone(controller.state.journey.profile);
+  assert.equal(pendingProjection.status, 'loading');
+  assert.equal(controller.route.profileId, 'demo-jordan');
+
+  controlled.release('Session.logout');
+  assert.equal((await logout).ok, true);
+  assert.equal(controller.state.journey.session.status, 'anonymous');
+  assert.equal(controller.state.journey.communityRole, 'anonymous');
+  assert.deepEqual(controller.state.journey.profile, pendingProjection);
+
+  controlled.release('TeacherProfile.openPublicProfile');
+  await publicRead;
+  assert.equal(controller.state.journey.profile.status, 'present');
+  assert.equal(controller.state.journey.profile.value.id, 'demo-jordan');
+  assert.equal(controller.state.journey.profile.value.teacherId, 'demo-seed-jordan');
+});
+
+test('failed logout after navigation leaves foreign projection and authenticated authority unchanged', async () => {
+  const controlled = controlledFixtureRuntime(['Session.logout'], {failPorts: ['Session.logout']});
+  const controller = controlledController(controlled.runtime);
+  await controller.initialize('#/login');
+  assert.equal((await controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'})).ok, true);
+
+  const logout = controller.dispatch('public:logout');
+  await controlled.waitFor('Session.logout');
+  await controller.navigate('#/public-profile/demo-jordan');
+  const foreignProjection = structuredClone(controller.state.journey.profile);
+  controlled.release('Session.logout');
+
+  const result = await logout;
+  assert.equal(result.ok, false);
+  assert.equal(result.error.code, 'denied');
+  assert.equal(controlled.runtime.snapshot().session.status, 'authenticated');
+  assert.equal(controller.state.journey.session.status, 'authenticated');
+  assert.equal(controller.state.journey.communityRole, 'teacher');
+  assert.equal(controller.route.profileId, 'demo-jordan');
+  assert.deepEqual(controller.state.journey.profile, foreignProjection);
+  const edit = await controller.dispatch('public:edit-profile');
+  assert.equal(edit.ok, false);
+  assert.equal(edit.error.code, 'profile_owner_mismatch');
+  assert.deepEqual(controller.state.journey.profile, foreignProjection);
 });

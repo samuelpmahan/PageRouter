@@ -1,0 +1,270 @@
+{
+  "schema": "hh-cycle06-H2-E902/logout-navigation-probe/v1",
+  "job_id": "E902",
+  "worker": "H2",
+  "source": {
+    "repository": "PageRouter",
+    "commit": "a5b141816ffb871110e541ef00ecf9527674137e",
+    "tree": "5eb00395e85afeb357be11b6add395ef5fbb6b68",
+    "hashes": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "a5deede267691459429f8bc404ba9cbc8e07d18f8120047281cf773d5cdaf558",
+      "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+      "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+      "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+    }
+  },
+  "commands": [
+    "node /workspace/scratch/8528bb251845/hh-cycle06/H2/probe.mjs"
+  ],
+  "limits": {
+    "environment": "actual createFixtureProvider volatile-memory + createServiceRuntime + createPublicController + renderPublicSite",
+    "identity": "synthetic seeded fixture Demo Avery only; no real teacher data",
+    "networkOrProduction": false,
+    "browserVisualQA": false,
+    "backendExecution": false,
+    "sourceMutation": false
+  },
+  "cases": [
+    {
+      "outcome": "success",
+      "destination": "/public-profile/demo-jordan",
+      "logout": {
+        "ok": true,
+        "code": null,
+        "message": "Demo account logged out."
+      },
+      "session": {
+        "before": "authenticated",
+        "after": "anonymous",
+        "provider": "anonymous"
+      },
+      "profileProjection": {
+        "before": {
+          "status": "present",
+          "id": "demo-jordan",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "after": {
+          "status": "unknown",
+          "id": null,
+          "source": "runtime",
+          "readOnly": false
+        },
+        "preserved": false
+      },
+      "renderedTree": {
+        "beforeHasExpectedProfile": true,
+        "afterHasExpectedProfile": false,
+        "afterShowsLoginLink": true
+      },
+      "editAuthority": {
+        "ok": false,
+        "code": "profile_unavailable",
+        "ownerEditGranted": false
+      },
+      "providerData": {
+        "publicProfileIdsBefore": [
+          "demo-avery",
+          "demo-jordan"
+        ],
+        "publicProfileIdsAfter": [
+          "demo-avery",
+          "demo-jordan"
+        ],
+        "profileRecordsUnchanged": true,
+        "persistence": "volatile-memory",
+        "fixture": true,
+        "mode": "fixture"
+      }
+    },
+    {
+      "outcome": "success",
+      "destination": "/public-profile/reference-sarah",
+      "logout": {
+        "ok": true,
+        "code": null,
+        "message": "Demo account logged out."
+      },
+      "session": {
+        "before": "authenticated",
+        "after": "anonymous",
+        "provider": "anonymous"
+      },
+      "profileProjection": {
+        "before": {
+          "status": "present",
+          "id": "reference-sarah",
+          "source": "captured-readonly",
+          "readOnly": true
+        },
+        "after": {
+          "status": "unknown",
+          "id": null,
+          "source": "runtime",
+          "readOnly": false
+        },
+        "preserved": false
+      },
+      "renderedTree": {
+        "beforeHasExpectedProfile": true,
+        "afterHasExpectedProfile": true,
+        "afterShowsLoginLink": true
+      },
+      "editAuthority": {
+        "ok": false,
+        "code": "profile_unavailable",
+        "ownerEditGranted": false
+      },
+      "providerData": {
+        "publicProfileIdsBefore": [
+          "demo-avery",
+          "demo-jordan"
+        ],
+        "publicProfileIdsAfter": [
+          "demo-avery",
+          "demo-jordan"
+        ],
+        "profileRecordsUnchanged": true,
+        "persistence": "volatile-memory",
+        "fixture": true,
+        "mode": "fixture"
+      }
+    },
+    {
+      "outcome": "failure",
+      "destination": "/public-profile/demo-jordan",
+      "logout": {
+        "ok": false,
+        "code": "transport_failure",
+        "message": "Simulated transport failure; no change was made."
+      },
+      "session": {
+        "before": "authenticated",
+        "after": "authenticated",
+        "provider": "authenticated"
+      },
+      "profileProjection": {
+        "before": {
+          "status": "present",
+          "id": "demo-jordan",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "after": {
+          "status": "present",
+          "id": "demo-jordan",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "preserved": true
+      },
+      "renderedTree": {
+        "beforeHasExpectedProfile": true,
+        "afterHasExpectedProfile": true,
+        "afterShowsLoginLink": false
+      },
+      "editAuthority": {
+        "ok": false,
+        "code": "profile_owner_mismatch",
+        "ownerEditGranted": false
+      },
+      "providerData": {
+        "publicProfileIdsBefore": [
+          "demo-avery",
+          "demo-jordan"
+        ],
+        "publicProfileIdsAfter": [
+          "demo-avery",
+          "demo-jordan"
+        ],
+        "profileRecordsUnchanged": true,
+        "persistence": "volatile-memory",
+        "fixture": true,
+        "mode": "fixture"
+      }
+    },
+    {
+      "outcome": "failure",
+      "destination": "/public-profile/reference-sarah",
+      "logout": {
+        "ok": false,
+        "code": "transport_failure",
+        "message": "Simulated transport failure; no change was made."
+      },
+      "session": {
+        "before": "authenticated",
+        "after": "authenticated",
+        "provider": "authenticated"
+      },
+      "profileProjection": {
+        "before": {
+          "status": "present",
+          "id": "reference-sarah",
+          "source": "captured-readonly",
+          "readOnly": true
+        },
+        "after": {
+          "status": "present",
+          "id": "reference-sarah",
+          "source": "captured-readonly",
+          "readOnly": true
+        },
+        "preserved": true
+      },
+      "renderedTree": {
+        "beforeHasExpectedProfile": true,
+        "afterHasExpectedProfile": true,
+        "afterShowsLoginLink": false
+      },
+      "editAuthority": {
+        "ok": false,
+        "code": "read_only_reference",
+        "ownerEditGranted": false
+      },
+      "providerData": {
+        "publicProfileIdsBefore": [
+          "demo-avery",
+          "demo-jordan"
+        ],
+        "publicProfileIdsAfter": [
+          "demo-avery",
+          "demo-jordan"
+        ],
+        "profileRecordsUnchanged": true,
+        "persistence": "volatile-memory",
+        "fixture": true,
+        "mode": "fixture"
+      }
+    }
+  ],
+  "normalOwnLogout": {
+    "route": "/login",
+    "ownProfileIdBeforeLogout": "demo-avery",
+    "logoutOk": true,
+    "session": "anonymous",
+    "profileStatus": "unknown",
+    "loginPageRendered": true,
+    "providerPublicIdsAfter": [
+      "demo-avery",
+      "demo-jordan"
+    ],
+    "persistence": "volatile-memory",
+    "fixture": true,
+    "mode": "fixture"
+  },
+  "assertions": {
+    "delayedRequestsWereActuallyReached": true,
+    "successfulLogoutAnonymizedSession": true,
+    "successfulForeignRouteRetainedRouteButLostProjection": true,
+    "successfulCapturedRouteProjectionCleared": true,
+    "capturedRenderedReferenceStillReadOnly": true,
+    "failedLogoutPreservedAuthenticatedProjection": true,
+    "noLogoutGrantedOwnerEdit": true,
+    "providerProfileRecordsUnchanged": true,
+    "normalOwnLogoutRedirectsAndAnonymizes": true
+  },
+  "outcome": "confirmed_reuse",
+  "summary": "A successful delayed synthetic logout preserves the navigated profile URL but clears its active controller projection; foreign-profile rendered content disappears. Captured-reference rendered content remains static/read-only, though its controller projection is also cleared. Failure preserves authenticated projections; normal own-profile logout anonymizes and redirects as before.",
+  "next": "Keep this read-only reproduction as baseline evidence. Any correction requires a fresh native assignment, a focused regression that fails against this exact source, and independent review; preserve successful logout anonymity, captured-reference readonly behavior, foreign-owner rejection, and normal own-profile redirect."
+}
