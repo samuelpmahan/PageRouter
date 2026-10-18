@@ -1,0 +1,28 @@
+{
+  "schema": "pagerouter-e1804-command@1",
+  "wrapper": {
+    "cwd": "/workspace/scratch/8528bb251845",
+    "executable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "argv": [
+      "/workspace/scratch/8528bb251845/hh-cycle13/H1/E1804/run-captured.mjs"
+    ]
+  },
+  "child": {
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "executable": "/usr/bin/env",
+    "argv": [
+      "BAZEL=/workspace/scratch/8528bb251845/tools/bazel",
+      "bash",
+      "ci/bazel/run.sh"
+    ],
+    "display": "env BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh"
+  },
+  "capture": {
+    "stdout": "stdout.raw",
+    "stderr": "stderr.raw",
+    "processResult": "exit.json",
+    "startUtc": "start.utc",
+    "endUtc": "end.utc",
+    "mode": "direct-child-file-descriptors; no tee or output transformation; exclusive-create; no retry"
+  }
+}

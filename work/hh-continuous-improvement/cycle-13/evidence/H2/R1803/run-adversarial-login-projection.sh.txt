@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -euo pipefail
+root=/workspace/scratch/8528bb251845/hh-cycle13/H2/R1803
+for path in \
+  "$root/adversarial-login-projection.stdout.raw" \
+  "$root/adversarial-login-projection.stderr.raw" \
+  "$root/adversarial-login-projection.exit" \
+  "$root/adversarial-login-projection.start.utc" \
+  "$root/adversarial-login-projection.end.utc"; do
+  if [[ -e "$path" || -L "$path" ]]; then
+    printf 'Refusing to overwrite existing capture: %s\n' "$path" >&2
+    exit 73
+  fi
+done
+date -u +%Y-%m-%dT%H:%M:%SZ > "$root/adversarial-login-projection.start.utc"
+set +e
+node --unhandled-rejections=strict "$root/adversarial-login-projection.mjs" \
+  > "$root/adversarial-login-projection.stdout.raw" \
+  2> "$root/adversarial-login-projection.stderr.raw"
+status=$?
+set -e
+printf '%s\n' "$status" > "$root/adversarial-login-projection.exit"
+date -u +%Y-%m-%dT%H:%M:%SZ > "$root/adversarial-login-projection.end.utc"
+exit "$status"

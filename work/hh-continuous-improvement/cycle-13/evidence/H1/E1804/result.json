@@ -1,0 +1,106 @@
+{
+  "schema": "hh-cycle13-build-result@1",
+  "job_id": "E1804",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "The one admitted E1804 Bazel source build completed successfully from the R1803-accepted three-source identity. The freshly emitted receipt binds 1,538 source inputs to sourceDigest f28be39fc1cd2acbd8e2433bb349b6086ead8f26b3a6f660049e0a69f18dcfee, verifies all 843 site files at siteDigest 9df3572f7ef26044872aa89612a5bfc3929902a03cb1671c428001e6b26464bd, and reports siteBuildId 3b0d0b8ca23975b945f9294432ee7fa0c6da893cbf636438e365a0bfe801c877. All 14 PxCube packages were rebuilt; the receipt reports no relocated historical output and exact crisp compiled equality. This is a local source build and verification only, not browser QA, a production deployment, or human release acceptance.",
+  "command": {
+    "wrapper": "/workspace/scratch/8528bb251845/hh-cycle13/H1/E1804/run-captured.mjs",
+    "wrapper_sha256": "3e962043fa5ef3475b3248b0ea434e62ef7ccacd35d8787c8958e4c6cdfb8dc3",
+    "command_record": "prospective-command.json",
+    "command_sha256": "9c33014c808acb86ebd44bc6524c2705ae4519d4c4ddc5d92178ae83f78b90df",
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "child_executable": "/usr/bin/env",
+    "child_argv": [
+      "BAZEL=/workspace/scratch/8528bb251845/tools/bazel",
+      "bash",
+      "ci/bazel/run.sh"
+    ],
+    "start_utc": "2026-10-18T20:41:32.118Z",
+    "end_utc": "2026-10-18T20:42:47.715Z",
+    "process_exit": 0,
+    "signal": null,
+    "captures": {
+      "stdout": {
+        "path": "stdout.raw",
+        "bytes": 1298,
+        "sha256": "544aac8d101b05489f01a31b98503adfa6f5cb81c67302653182d9147bbf2bda"
+      },
+      "stderr": {
+        "path": "stderr.raw",
+        "bytes": 1037,
+        "sha256": "9be5ed56ec6e6d3d347057dd10bea6fc8a46e3cdadf5e56f56339dacfde27b23",
+        "note": "Contains the OpenJDK deprecation warning and Bazel progress/success output; process exit was 0."
+      },
+      "process_result": {
+        "path": "exit.json",
+        "bytes": 189,
+        "sha256": "f1c269944f528870c8e9d8aff0adabf4ea9c03906039dbaacf7951943ef81536"
+      },
+      "start_utc": {
+        "path": "start.utc",
+        "bytes": 25,
+        "sha256": "201e10faf61bc6de470d7e8c0492f5fe4872c8668c55472295327b302c594c2f"
+      },
+      "end_utc": {
+        "path": "end.utc",
+        "bytes": 25,
+        "sha256": "55fe9a72435f9ed1368529ae235e1893b5a9cf8d0c195172de0f0e3c65959009"
+      }
+    }
+  },
+  "source_binding": {
+    "accepted_source_sha256": {
+      "vendor/hh/src/public-controller.mjs": "308c876e8bbfeb20a3e8ee92a4065549f5ca815bec0aa6979bf39c61fa4dc07c",
+      "vendor/hh/src/public-site.mjs": "5f1135c95fdb3baefb64e49d755e45a87b9eb1b17ff363ed91eb5b516812031b",
+      "vendor/hh/src/public-controller.test.mjs": "f426710f6ae9c3012f5eba2aa0d50b3aaca8b4e76a4119dd3ffca58d08e13d4f"
+    },
+    "receipt_schema": "pagerouter-source-build@1",
+    "node": "v24.19.0",
+    "source_input_count": 1538,
+    "source_digest": "f28be39fc1cd2acbd8e2433bb349b6086ead8f26b3a6f660049e0a69f18dcfee",
+    "site_file_count": 843,
+    "site_digest": "9df3572f7ef26044872aa89612a5bfc3929902a03cb1671c428001e6b26464bd",
+    "site_build_id": "3b0d0b8ca23975b945f9294432ee7fa0c6da893cbf636438e365a0bfe801c877",
+    "build_driver_sha256": "e3088879bd49ef401b66e2e9fa0083d25433416468ea5f7f0611f4c618e23acf",
+    "build_helpers_sha256": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c",
+    "runner_sha256": "2a1a6fc5bc919f67b424d6fed92e4e888bf3767b634b1ad9544604067fbe072c",
+    "deploy_workflow_sha256": "ab5577ab3f50647ff3d52589b85592ef9611915155c13fbab38d8a2be8d3a9d7"
+  },
+  "build": {
+    "receipt": {
+      "path": "site.receipt.json",
+      "bytes": 467222,
+      "sha256": "cdcdd6cb71f1e051cf62f948c9f6b59dedab12337ba300acdd3af279db1207d0"
+    },
+    "log": {
+      "path": "site.log",
+      "bytes": 50872,
+      "sha256": "ea7be5b191992e4b79dcea19ff9288c72217f887392e582202df733606f142ce"
+    },
+    "receipt_and_log_copy": "Exclusive byte-for-byte copies made after process exit; source mtimes were inside the captured run window. No site.evidence, PNG, or dist output copied.",
+    "pxcube_packages": 14,
+    "pxcube_rebuilt": true,
+    "historical_output_relocated": false,
+    "crisp_exact_compiled_equality": true
+  },
+  "tests": {
+    "build_helper_tests": {"pass": 2, "fail": 0, "capture": "stdout.raw"},
+    "targeted_hh_controller_community_tests": {
+      "pass": 133,
+      "fail": 0,
+      "capture": "site.log",
+      "overlap": "These same test files are included in the 288-test npm suite; do not add this count to the distinct total."
+    },
+    "npm_test_suite": {"pass": 288, "fail": 0, "capture": "site.log"},
+    "built_atlas_import_closure": {"pass": 1, "fail": 0, "capture": "site.log"},
+    "distinct_pass_count": 291,
+    "distinct_count_note": "2 build-helper tests + 288 npm-suite tests + 1 separately invoked Atlas built-import test; the 133 targeted HH tests are overlapping coverage, excluded from the sum."
+  },
+  "limits": [
+    "The build compiles and verifies a fresh local source site; it does not run the Pages deployment job or deploy production.",
+    "No browser QA, mounted DOM, production service, real account, external email, or human release acceptance is claimed.",
+    "No source files, Git state, packages, or deployment state were changed by this task beyond normal generated local Bazel output and the two copied build evidence files.",
+    "The shell/bazel environment is the canonical configured build environment; the build documentation notes Linux shared libraries are a host requirement rather than claiming a fully hermetic OS toolchain."
+  ]
+}

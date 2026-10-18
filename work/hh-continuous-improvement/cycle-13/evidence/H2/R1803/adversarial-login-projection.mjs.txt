@@ -1,0 +1,105 @@
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {createFixtureProvider, createServiceRuntime} from '../../../PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createCommunity} from '../../../PageRouter/checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '../../../PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '../../../PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+function memoryStorage() {
+  const values = new Map();
+  return {values, getItem(key) { return values.get(key) ?? null; },
+    setItem(key, value) { values.set(key, String(value)); }, removeItem(key) { values.delete(key); }};
+}
+function nodeById(tree, id) {
+  if (!tree || typeof tree !== 'object') return null;
+  if (tree.attrs?.id === id) return tree;
+  for (const child of tree.children || []) {
+    const found = nodeById(child, id);
+    if (found) return found;
+  }
+  return null;
+}
+
+const storage = memoryStorage();
+const provider = createFixtureProvider({fixture: true, storage});
+const started = [];
+const pending = [];
+const release = [];
+let loginCalls = 0;
+const services = Object.fromEntries(Object.entries(provider.services).map(([port, invoke]) => [port, async input => {
+  if (port !== 'Session.login') return invoke(input);
+  const index = loginCalls++;
+  let announce;
+  let resume;
+  started[index] = new Promise(resolve => { announce = resolve; });
+  pending[index] = new Promise(resolve => { resume = resolve; });
+  release[index] = resume;
+  announce();
+  await pending[index];
+  return index === 0 ? invoke({...input, failWith: 'outcome_unknown'}) : invoke(input);
+}]));
+const runtime = createServiceRuntime({...provider, services: Object.freeze(services)});
+let tree = null;
+const controller = createPublicController({runtime, storage, community: createCommunity({storage}),
+  onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); }});
+const projections = [];
+const delegatedInput = (name, value) => controller.updateDraft(name, value);
+const submitPayload = (email, password) => {
+  const data = new FormData();
+  data.set('email', email);
+  data.set('password', password);
+  return Object.fromEntries(data.entries());
+};
+
+await controller.initialize('#/login');
+
+const firstSecret = randomUUID();
+assert.equal(delegatedInput('email', 'initial@example.test'), true);
+const unknownAttempt = controller.dispatch('public:login', submitPayload('initial@example.test', firstSecret));
+await started[0];
+assert.equal(delegatedInput('email', 'newer@example.test'), true);
+await controller.navigate('#/about');
+await controller.navigate('#/login');
+const awayBackEmail = nodeById(tree, 'hh-login-email')?.attrs?.value;
+release[0]();
+const unknownResult = await unknownAttempt;
+const retryResult = await controller.dispatch('public:retry');
+projections.push({case: 'unknown-outcome-after-newer-edit-and-route-away-back',
+  result: unknownResult.error?.code || null, requestStatus: controller.state.request.status,
+  draft: controller.state.journey.loginDraft.email, renderedEmailAfterAwayBack: awayBackEmail,
+  renderedEmailAfterFailure: nodeById(tree, 'hh-login-email')?.attrs?.value,
+  retry: retryResult.error?.code || null, providerLoginCalls: loginCalls});
+
+assert.equal(delegatedInput('email', ''), true);
+const localValidation = await controller.dispatch('public:login', submitPayload('', ''));
+projections.push({case: 'explicit-blank-local-validation', result: localValidation.error?.code || null,
+  draft: controller.state.journey.loginDraft.email,
+  renderedEmail: nodeById(tree, 'hh-login-email')?.attrs?.value, providerLoginCalls: loginCalls});
+
+const secondSecret = randomUUID();
+assert.equal(delegatedInput('email', 'avery@fixture.test'), true);
+const successAttempt = controller.dispatch('public:login', submitPayload('avery@fixture.test', secondSecret));
+await started[1];
+await controller.navigate('#/about');
+await controller.navigate('#/login');
+const successRenderBeforeRelease = nodeById(tree, 'hh-login-email')?.attrs?.value;
+release[1]();
+const successResult = await successAttempt;
+const successRenderAfterCompletion = nodeById(tree, 'hh-login-email')?.attrs?.value;
+const surfaces = [JSON.stringify(controller.state), JSON.stringify(runtime.snapshot()),
+  JSON.stringify(runtime.inspect()), JSON.stringify(runtime.pxc.entries().map(([, part]) => part.value)),
+  [...storage.values.values()].join('\n'), JSON.stringify(tree)].join('\n');
+projections.push({case: 'success-after-route-away-back', result: successResult.ok ? 'ok' : successResult.error?.code,
+  route: controller.route.page, sessionStatus: controller.state.journey.session.status,
+  stateDraft: controller.state.journey.loginDraft.email, renderedEmailBeforeRelease: successRenderBeforeRelease,
+  renderedEmailAfterCompletion: successRenderAfterCompletion,
+  renderedStateMismatch: successRenderAfterCompletion !== (controller.state.journey.session.email ||
+    controller.state.journey.registration.identity.email || ''), providerLoginCalls: loginCalls,
+  secretsAbsentFromObservedState: !surfaces.includes(firstSecret) && !surfaces.includes(secondSecret),
+  mountedBrowserObserved: false, backendOrRealAccountUsed: false});
+
+assert.equal(loginCalls, 2, 'retry and local validation must not initiate an extra provider login');
+assert.equal(controller.state.journey.session.status, 'authenticated');
+assert.equal(controller.state.journey.loginDraft.email, null);
+assert.equal(!surfaces.includes(firstSecret) && !surfaces.includes(secondSecret), true);
+process.stdout.write(`${JSON.stringify({probe: 'H2-R1803-login-projection', observations: projections})}\n`);

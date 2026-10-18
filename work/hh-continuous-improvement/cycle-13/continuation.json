@@ -1,0 +1,37 @@
+{
+  "schema": "hh-continuous-improvement-continuation@1",
+  "cycle": "cycle-13",
+  "current_job": "E1805",
+  "current_worker": "H1",
+  "worker_state": "native-assigned-running-until-handoff",
+  "entrypoint": "ENTRYPOINT.md",
+  "readme": "README.md",
+  "next": "NEXT.md",
+  "manifest": "evidence/manifest.json",
+  "native_result": "evidence/E1805/result.json",
+  "next_gate": "independent H2 package audit, then root GO",
+  "source_freeze": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "308c876e8bbfeb20a3e8ee92a4065549f5ca815bec0aa6979bf39c61fa4dc07c",
+    "checkpoint/vendor/hh/src/public-site.mjs": "5f1135c95fdb3baefb64e49d755e45a87b9eb1b17ff363ed91eb5b516812031b",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "f426710f6ae9c3012f5eba2aa0d50b3aaca8b4e76a4119dd3ffca58d08e13d4f"
+  },
+  "build": {
+    "job": "E1804",
+    "source_digest": "f28be39fc1cd2acbd8e2433bb349b6086ead8f26b3a6f660049e0a69f18dcfee",
+    "site_digest": "9df3572f7ef26044872aa89612a5bfc3929902a03cb1671c428001e6b26464bd",
+    "site_build_id": "3b0d0b8ca23975b945f9294432ee7fa0c6da893cbf636438e365a0bfe801c877",
+    "receipt": "evidence/H1/E1804/site.receipt.json",
+    "log": "evidence/H1/E1804/site.log"
+  },
+  "unexecuted_followup": {
+    "proposal": "different newer email during held-success login and route reentry",
+    "status": "unexecuted; only investigate if an actual useful defect is established",
+    "qualification": "evidence/qualifications/R1803-root-scope-qualification.txt"
+  },
+  "limits": [
+    "No browser verification or screenshots; no production/backend/account/email activity.",
+    "No Git staging/commit, export, publication, deploy, or post-E1804 source/build action.",
+    "Workspace-bound relative imports are not a portability claim; archived scripts are inert text.",
+    "Recorded Python-geography work remains separate."
+  ]
+}

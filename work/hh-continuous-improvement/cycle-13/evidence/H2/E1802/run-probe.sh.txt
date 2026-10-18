@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set +e
+set -o noclobber
+cd /workspace/scratch/8528bb251845 || exit 125
+out=/workspace/scratch/8528bb251845/hh-cycle13/H2/E1802
+for file in "$out/probe.start.utc" "$out/probe.end.utc" "$out/probe.stdout.raw" \
+  "$out/probe.stderr.raw" "$out/probe.exit" "$out/result.json"; do
+  if [[ -e "$file" ]]; then
+    printf 'Refusing to overwrite existing capture: %s\n' "$file" >&2
+    exit 125
+  fi
+done
+date -u +'%Y-%m-%dT%H:%M:%SZ' > "$out/probe.start.utc"
+node --unhandled-rejections=strict "$out/probe.mjs" > "$out/probe.stdout.raw" 2> "$out/probe.stderr.raw"
+status=$?
+printf '%s\n' "$status" > "$out/probe.exit"
+date -u +'%Y-%m-%dT%H:%M:%SZ' > "$out/probe.end.utc"
+exit "$status"

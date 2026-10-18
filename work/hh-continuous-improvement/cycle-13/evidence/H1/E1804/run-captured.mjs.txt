@@ -1,0 +1,42 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+
+const packetDir = path.dirname(fileURLToPath(import.meta.url));
+const commandPath = path.join(packetDir, 'prospective-command.json');
+const commandBytes = fs.readFileSync(commandPath);
+const commandSha256 = createHash('sha256').update(commandBytes).digest('hex');
+const command = JSON.parse(commandBytes.toString('utf8'));
+if (command.schema !== 'pagerouter-e1804-command@1') throw new Error('Unexpected command record schema.');
+
+const names = ['stdout.raw', 'stderr.raw', 'exit.json', 'start.utc', 'end.utc'];
+const outputs = Object.fromEntries(names.map(name => [name, path.join(packetDir, name)]));
+for (const file of Object.values(outputs)) {
+  if (fs.existsSync(file)) throw new Error(`Refusing to overwrite existing capture: ${file}`);
+}
+
+const start = new Date().toISOString();
+const stdoutFd = fs.openSync(outputs['stdout.raw'], 'wx', 0o600);
+const stderrFd = fs.openSync(outputs['stderr.raw'], 'wx', 0o600);
+fs.writeFileSync(outputs['start.utc'], `${start}\n`, {flag: 'wx', mode: 0o600});
+const result = spawnSync(command.child.executable, command.child.argv, {
+  cwd: command.child.cwd,
+  env: process.env,
+  stdio: ['ignore', stdoutFd, stderrFd],
+});
+fs.closeSync(stdoutFd);
+fs.closeSync(stderrFd);
+const end = new Date().toISOString();
+fs.writeFileSync(outputs['end.utc'], `${end}\n`, {flag: 'wx', mode: 0o600});
+
+const exitRecord = {
+  schema: 'pagerouter-e1804-process-result@1',
+  commandSha256,
+  status: result.status,
+  signal: result.signal,
+  error: result.error ? {code: result.error.code || null, message: result.error.message} : null,
+};
+fs.writeFileSync(outputs['exit.json'], `${JSON.stringify(exitRecord, null, 2)}\n`, {flag: 'wx', mode: 0o600});
+if (result.status !== 0) process.exitCode = result.status ?? (result.error ? 127 : 128);

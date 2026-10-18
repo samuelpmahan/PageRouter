@@ -1,0 +1,95 @@
+{
+  "schema": "hh-cycle13-package-result@1",
+  "job_id": "E1805",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Prepared the lean current-cycle-13 H1 package for independent H2 audit. It preserves actual H1/H2 probes, original raw captures and first failures, the one-assertion green-01 correction chronology, R1803 review, E1804's current source-build receipt/log, native assignment records, root qualifications, and exact inert source snapshots. The package contains 118 hash-and-length-listed payload files plus the manifest and this native result (120 regular files total). It does not include old-cycle evidence, historical site.evidence, screenshots, .dist output, or the accidental PageRouter/hh-cycle13 scratch tree.",
+  "native_assignment": {
+    "epoch": 4,
+    "job": "E1805",
+    "worker": "H1",
+    "owner_state": "H1 owns E1805 until handoff; not a claim of continuously live native ownership",
+    "assignment_record": "evidence/native/solves/epoch-04.json",
+    "assignment_record_sha256": "aeb84445716628795d4bab8bd5895f8afb8a9f61ac68e4060d679372d048634c",
+    "native_command_record": "evidence/native/solves/epoch-04.root-command.json",
+    "native_bundle": "evidence/native/solves/epoch-04.bundle"
+  },
+  "package": {
+    "root": "PageRouter/work/hh-continuous-improvement/cycle-13",
+    "entrypoint": "ENTRYPOINT.md",
+    "manifest": {
+      "path": "evidence/manifest.json",
+      "sha256": "6507726bb4c589543efeb8b5b3189a7dc49b0b401653d17766f46b3bcda16c9f",
+      "bytes": 24337,
+      "listed_file_count": 118,
+      "total_regular_file_count": 120,
+      "exclusions": [
+        "evidence/manifest.json (self-hash omitted to avoid a circular digest)",
+        "evidence/E1805/result.json (this native result records the manifest hash; result hash is separately reported at handoff)"
+      ]
+    },
+    "all_archived_scripts_inert_text": true,
+    "portable_import_claim": false,
+    "no_old_cycle_evidence": true,
+    "accidental_PageRouter_hh_cycle13_excluded_and_untouched": true
+  },
+  "accepted_source_binding": {
+    "independent_review": {
+      "job": "R1803",
+      "decision": "accepted",
+      "receipt": "evidence/native/receipts/R1803.json"
+    },
+    "three_product_files": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "308c876e8bbfeb20a3e8ee92a4065549f5ca815bec0aa6979bf39c61fa4dc07c",
+      "checkpoint/vendor/hh/src/public-site.mjs": "5f1135c95fdb3baefb64e49d755e45a87b9eb1b17ff363ed91eb5b516812031b",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "f426710f6ae9c3012f5eba2aa0d50b3aaca8b4e76a4119dd3ffca58d08e13d4f"
+    }
+  },
+  "current_build_scope": {
+    "job": "E1804",
+    "process_exit": 0,
+    "source_input_count": 1538,
+    "source_digest": "f28be39fc1cd2acbd8e2433bb349b6086ead8f26b3a6f660049e0a69f18dcfee",
+    "verified_site_file_count": 843,
+    "site_digest": "9df3572f7ef26044872aa89612a5bfc3929902a03cb1671c428001e6b26464bd",
+    "site_build_id": "3b0d0b8ca23975b945f9294432ee7fa0c6da893cbf636438e365a0bfe801c877",
+    "site_receipt": "evidence/H1/E1804/site.receipt.json",
+    "site_log": "evidence/H1/E1804/site.log",
+    "pxcube_packages_rebuilt": 14,
+    "historical_output_relocated": false,
+    "crisp_exact_compiled_equality": true,
+    "test_counts": {
+      "build_helper": {"passed": 2, "failed": 0},
+      "targeted_hh_controller_community": {"passed": 133, "failed": 0, "overlaps_full_npm_suite": true},
+      "full_npm_suite": {"passed": 288, "failed": 0},
+      "atlas_built_import": {"passed": 1, "failed": 0},
+      "distinct_case_count": 291,
+      "qualification": "The 133 targeted HH test cases are included in the 288 full-suite count; do not sum them again or claim 291 independent behaviors."
+    }
+  },
+  "evidence_qualifications": {
+    "h1_red": "Actual first RED command had two failing tests; original captures are retained.",
+    "h1_green01": "One fixture-fallback expectation failed and remains recorded as a failure.",
+    "h1_green02": "Only that assertion was corrected; focused tests passed 2/2.",
+    "green01_prior_source": "Reconstructed after green-02; 97,228 bytes; hash matches declared pre-run d3eb4fb4f8858f41ce5a5bae35ad28ce3aea9e2b65ba9de2b9564c71d1bb5e81, but it was not a contemporaneous snapshot.",
+    "bad_stderr_duplicates": "Four one-newline duplicate stderr files are retained under a disqualified path with exact hashes; genuine originals remain zero bytes. No normalization or overwrite occurred.",
+    "privacy": "Ephemeral random test passwords were not retained in observed state/runtime/Parts/storage; normal non-secret login-email request Parts were not claimed absent.",
+    "browser": "Unverified; zero screenshots; no repeated blocked-route attempt or exposure workaround.",
+    "python_geography": "Recorded Python-geography work is a separate scope."
+  },
+  "git_and_validation_boundary": {
+    "root_provided_base_readback": {
+      "local_branch_tip": "b91b0ab0d10bf0ddeed68144ff2654e880e0401f",
+      "remote_branch_tip": "b4bd028e5b907efe33c053dc26705d5710f96aec",
+      "shared_base_tree": "6b165318096ac0def49f178551603c5fdc988681"
+    },
+    "git_operations_performed": false,
+    "standard_whitespace_gate": "Predeclared over the three product files and new package docs; not run here. Preserve complete raw diagnostics if run later; no normalization, core.whitespace override, or full-clean claim.",
+    "next_gate": "Independent H2 package audit, then explicit root GO; no stage/commit/export/publication before both."
+  },
+  "unexecuted_followup": {
+    "proposal": "Different newer email edit during held successful login followed by route reentry.",
+    "status": "Not executed.",
+    "scope": "R1803's accepted same-email success control does not prove behavior for a different newer success draft. Investigate only if a useful defect is established; do not presume policy or add a speculative fix."
+  }
+}

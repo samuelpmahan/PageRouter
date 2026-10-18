@@ -90,6 +90,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
       searchPerformed: false,
       matches: {status: 'idle', items: [], error: ''},
       registration: {status: runtime.snapshot().registration.status, identity: {name: '', email: '', phone: ''}},
+      loginDraft: {email: null},
       terms: {open: false, accepted: false},
       session: {...clone(runtime.snapshot().session), email: ''},
       profile: {status: runtime.snapshot().ownProfile.status === 'present' ? 'present' : 'absent', value: null,
@@ -755,6 +756,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
       const result = await service('Session.login', {email: fixtureEmail, demoAccount: true}, {credentials: {password, confirmPassword: password}});
       if (result.ok) {
         const identity = identityByFixtureEmail.get(emailKey(fixtureEmail));
+        state.journey.loginDraft = {email: null};
         state.journey.session.email = identity?.email || clean(payload.email, 254);
         setCommunityRole('teacher');
         if (routeEpoch === startRouteEpoch) requestNavigation('/profile');
@@ -766,6 +768,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
       const ownProfileId = runtime.snapshot().ownProfile?.profile?.id || null;
       const result = await service('Session.logout');
       if (result.ok) {
+        state.journey.loginDraft = {email: null};
         setCommunityRole('anonymous');
         if (!state.route.profileId || state.route.profileId === ownProfileId) {
           state.journey.profile = {status: 'unknown', value: null, editOpen: false, source: 'runtime'};
@@ -833,6 +836,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
         state.journey.searchPerformed = false;
         state.journey.matches = {status: 'idle', items: [], error: ''};
         state.journey.registration.identity = {name: '', email: '', phone: ''};
+        state.journey.loginDraft = {email: null};
         state.journey.terms = {open: false, accepted: false};
         state.journey.contact = {name: '', email: '', subject: '', message: ''};
         clearWishlistHandoff();
@@ -882,6 +886,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
     if (typeof name !== 'string' || /password|confirmPassword/i.test(name)) return false;
     if (name === 'query' && state.route.page === 'community') state.community.query = boundedDraft(value, 250);
     else if (name === 'query') state.journey.filters.query = boundedDraft(value, 100);
+    else if (name === 'email' && state.route.page === 'login') state.journey.loginDraft = {email: boundedDraft(value, 254)};
     else if (name === 'name' && state.route.page === 'register') state.journey.registration.identity.name = boundedDraft(value, 80);
     else if (name === 'email' && state.route.page === 'register') state.journey.registration.identity.email = boundedDraft(value, 254);
     else if ((name === 'phone' || name === 'phone_number') && state.route.page === 'register') state.journey.registration.identity.phone = boundedDraft(value, 32);

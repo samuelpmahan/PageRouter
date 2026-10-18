@@ -1,0 +1,5 @@
+The native files in native/ are exact copies from the task scratch locations, captured after R1805 acceptance. The independent R1805 audit itself checked native assignment/start/dispatch evidence through epoch 04 and did not claim to audit the later epochs. The separate epoch-05, epoch-06, and epoch-07 records are preserved as later post-review administration.
+
+Epoch 07 was solved at 2026-10-18T20:53:32.169888+00:00. It had no dispatch; H1 remained assigned/pinned to E1806. The snapshot does not mean E1806 was finished, accepted, or continuously live afterward. E1806's later native result/receipt is required for closure. The copies preserve original bytes; no native state or assignment was changed by copying.
+
+The package's original 118-file inventory still excludes all post-review files. The current closure manifest lists these admin files separately and excludes itself. Native snapshot paths may contain workspace-specific absolute references; no portability claim is made.

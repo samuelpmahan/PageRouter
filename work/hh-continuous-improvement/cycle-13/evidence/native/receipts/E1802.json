@@ -1,0 +1,91 @@
+{
+  "job_id": "E1802",
+  "worker": "H2",
+  "outcome": "not_reuse",
+  "summary": "The controller/runtime fixture probe records the login email rendered after held transport and natural pending-auth failures, plus explicit-resubmission and approved-success controls.",
+  "evidence": {
+    "mode": "fixture",
+    "fixture": true,
+    "persistence": "volatile-memory",
+    "sourceEquivalentDelegatedInput": true,
+    "mountedBrowserObserved": false,
+    "formDataFromMountedDom": false,
+    "controllerDispatchExecuted": true,
+    "transport": {
+      "submittedEmailClass": "synthetic-unregistered-fixture-email",
+      "updateDraftAccepted": false,
+      "renderedWhileHeld": {
+        "route": "login",
+        "page": "login",
+        "formPresent": true,
+        "email": "h2-prior-c6ff07c0-0541-4f5f-b5c6-54bc5566664e@example.test",
+        "submitEnabled": true,
+        "requestStatus": "busy"
+      },
+      "newerSameRouteEditAccepted": false,
+      "passwordInputClearedBeforeDispatch": true,
+      "renderCountAroundNewerEdit": [
+        32,
+        32
+      ],
+      "resultCode": "transport_failure",
+      "renderedAfterFailure": {
+        "route": "login",
+        "page": "login",
+        "formPresent": true,
+        "email": "h2-prior-c6ff07c0-0541-4f5f-b5c6-54bc5566664e@example.test",
+        "submitEnabled": true,
+        "requestStatus": "failed"
+      },
+      "publicRetryResult": "nothing_to_retry",
+      "providerLoginCallsBeforeAndAfterPublicRetry": [
+        1,
+        1
+      ]
+    },
+    "explicitResubmission": {
+      "resultCode": "not_found",
+      "providerLoginCallCount": 2,
+      "renderedEmail": "h2-prior-c6ff07c0-0541-4f5f-b5c6-54bc5566664e@example.test"
+    },
+    "successControl": {
+      "route": "profile",
+      "sessionStatus": "authenticated",
+      "sessionEmail": "h2-prior-c6ff07c0-0541-4f5f-b5c6-54bc5566664e@example.test",
+      "passwordAuthentication": false
+    },
+    "naturalPendingDenial": {
+      "updateDraftAccepted": false,
+      "renderedWhileHeld": {
+        "route": "login",
+        "page": "login",
+        "formPresent": true,
+        "email": "h2-prior-c6ff07c0-0541-4f5f-b5c6-54bc5566664e@example.test",
+        "submitEnabled": true,
+        "requestStatus": "busy"
+      },
+      "resultCode": "pending_denied",
+      "renderedAfterFailure": {
+        "route": "login",
+        "page": "login",
+        "formPresent": true,
+        "email": "h2-prior-c6ff07c0-0541-4f5f-b5c6-54bc5566664e@example.test",
+        "submitEnabled": true,
+        "requestStatus": "failed"
+      }
+    },
+    "provider": {
+      "loginCallCount": 4,
+      "submittedEmailReachedProvider": [
+        true,
+        true,
+        true
+      ],
+      "inputsContainPassword": false,
+      "passwordAuthenticationClaimed": false
+    },
+    "retention": {
+      "secretAbsentFromRetainedStateTreeRuntimeParts": true
+    }
+  }
+}

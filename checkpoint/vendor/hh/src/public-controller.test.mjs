@@ -37,6 +37,33 @@ function registrationDraftSetup() {
   return {controller, runtime, storage, get tree() { return tree; }};
 }
 
+function loginDraftFailureSetup() {
+  const storage = memoryStorage();
+  const base = createFixtureProvider({fixture: true, storage});
+  const started = [];
+  const pending = [];
+  const releases = [];
+  let loginCalls = 0;
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    if (port !== 'Session.login') return invoke(input);
+    const index = loginCalls++;
+    let announceStart, release;
+    started[index] = new Promise(resolve => { announceStart = resolve; });
+    pending[index] = new Promise(resolve => { release = resolve; });
+    releases[index] = release;
+    announceStart();
+    await pending[index];
+    return invoke(index === 0 ? {...input, failWith: 'transport_failure'} : input);
+  }]));
+  const runtime = createServiceRuntime({...base, services: Object.freeze(services)});
+  let tree = null;
+  const controller = createPublicController({runtime, storage, community: createCommunity({storage}),
+    onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+  });
+  return {controller, runtime, storage, started, release(index) { releases[index](); },
+    get loginCalls() { return loginCalls; }, get tree() { return tree; }};
+}
+
 function registrationFailureSetup({failCalls = {}, pauseCall = 0} = {}) {
   const storage = memoryStorage();
   const base = createFixtureProvider({fixture: true, storage});
@@ -118,6 +145,118 @@ function assertCredentialsNotPersisted(env, credentials) {
   ].join('\n');
   for (const credential of credentials) assert.equal(surfaces.includes(credential), false);
 }
+
+function loginFormPayload(email, password) {
+  const data = new FormData();
+  data.set('email', email);
+  data.set('password', password);
+  return Object.fromEntries(data.entries());
+}
+
+function assertLoginCredentialsNotPersisted(env, credentials) {
+  const surfaces = [
+    JSON.stringify(env.controller.state),
+    JSON.stringify(env.runtime.snapshot()),
+    JSON.stringify(env.runtime.inspect()),
+    JSON.stringify(env.runtime.pxc.entries().map(([, part]) => part.value)),
+    [...env.storage.values.values()].join('\n'),
+    JSON.stringify(env.tree),
+  ].join('\n');
+  for (const credential of credentials) assert.equal(surfaces.includes(credential), false);
+}
+
+async function preparePendingLoginIdentity(env) {
+  const email = `pending-${randomUUID()}@fixture.test`;
+  const result = await env.runtime.invoke('Registration.registerTeacher', {
+    teacher: {name: 'Demo Pending Login', email, phoneNumber: 'DEMO'},
+    school: {state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'},
+    termsAccepted: true, demoAccount: true,
+  });
+  assert.equal(result.ok, true);
+  await env.controller.initialize('#/login');
+  return email;
+}
+
+test('login draft retains typed, newer, and explicit blank email through held failures', async () => {
+  const env = loginDraftFailureSetup();
+  const pendingEmail = await preparePendingLoginIdentity(env);
+  const credentials = [randomUUID(), randomUUID()];
+  const initialEmail = 'typed-initial@example.test';
+  const newerEmail = 'typed-newer@example.test';
+
+  assert.equal(env.controller.updateDraft('email', initialEmail), true);
+  assert.equal(nodeById(env.tree, 'hh-login-email')?.attrs?.value, initialEmail);
+  const firstLogin = env.controller.dispatch('public:login', loginFormPayload(initialEmail, credentials[0]));
+  await env.started[0];
+  assert.equal(env.controller.state.request.status, 'busy');
+  assert.equal(nodeById(env.tree, 'hh-login-email')?.attrs?.value, initialEmail);
+  assert.equal(env.controller.updateDraft('email', newerEmail), true);
+  assert.equal(nodeById(env.tree, 'hh-login-email')?.attrs?.value, newerEmail);
+  env.release(0);
+  const transportFailure = await firstLogin;
+  assert.equal(transportFailure.error?.code, 'transport_failure');
+  assert.equal(nodeById(env.tree, 'hh-login-email')?.attrs?.value, newerEmail);
+  assert.equal(env.controller.state.journey.session.status, 'anonymous');
+  assert.equal(env.runtime.snapshot().session.status, 'anonymous');
+  assert.equal(env.runtime.snapshot().registration.status, 'pending');
+  assert.equal(env.controller.state.journey.registration.identity.email, '');
+
+  assert.equal((await env.controller.dispatch('public:retry')).error?.code, 'nothing_to_retry');
+  assert.equal(env.loginCalls, 1, 'public retry does not repeat login');
+
+  assert.equal(env.controller.updateDraft('email', pendingEmail), true);
+  const deniedLogin = env.controller.dispatch('public:login', loginFormPayload(pendingEmail, credentials[1]));
+  await env.started[1];
+  assert.equal(nodeById(env.tree, 'hh-login-email')?.attrs?.value, pendingEmail);
+  assert.equal(env.controller.updateDraft('email', ''), true);
+  assert.equal(nodeById(env.tree, 'hh-login-email')?.attrs?.value, '');
+  env.release(1);
+  const pendingDenied = await deniedLogin;
+  assert.equal(pendingDenied.error?.code, 'pending_denied');
+  assert.equal(nodeById(env.tree, 'hh-login-email')?.attrs?.value, '');
+  assert.equal(env.controller.state.journey.loginDraft.email, '');
+  assert.equal(env.controller.state.journey.session.status, 'anonymous');
+  assert.equal(env.controller.state.journey.session.email, '');
+  assert.equal(env.runtime.snapshot().session.status, 'anonymous');
+  assert.equal(env.runtime.snapshot().registration.status, 'pending');
+  assert.equal(env.controller.state.journey.registration.identity.email, '');
+  assert.equal(env.loginCalls, 2);
+  assertLoginCredentialsNotPersisted(env, credentials);
+});
+
+test('login draft keeps existing fallback order and clears only after authority changes', async () => {
+  const renderEmail = journey => nodeById(renderPublicSite({route: {page: 'login'}, journey}), 'hh-login-email')?.attrs?.value;
+  assert.equal(renderEmail({loginDraft: {email: null}, session: {email: 'session@example.test'}, registration: {identity: {email: 'registered@example.test'}}}), 'session@example.test');
+  assert.equal(renderEmail({loginDraft: {email: null}, session: {email: ''}, registration: {identity: {email: 'registered@example.test'}}}), 'registered@example.test');
+  assert.equal(renderEmail({loginDraft: {email: ''}, session: {email: 'session@example.test'}, registration: {identity: {email: 'registered@example.test'}}}), '');
+
+  const env = registrationDraftSetup();
+  await env.controller.initialize('#/login');
+  assert.equal(env.controller.updateDraft('email', 'avery@fixture.test'), true);
+  const password = randomUUID();
+  const login = await env.controller.dispatch('public:login', loginFormPayload('avery@fixture.test', password));
+  assert.equal(login.ok, true);
+  assert.equal(env.controller.state.journey.session.status, 'authenticated');
+  assert.equal(env.controller.state.journey.loginDraft.email, null);
+  assert.equal(env.controller.route.page, 'profile');
+  assertLoginCredentialsNotPersisted(env, [password]);
+
+  await env.controller.navigate('#/login');
+  assert.equal(nodeById(env.tree, 'hh-login-email')?.attrs?.value,
+    env.controller.state.journey.session.email || env.controller.state.journey.registration.identity.email || '');
+  assert.equal(env.controller.updateDraft('email', 'stale-draft@example.test'), true);
+  const logout = await env.controller.dispatch('public:logout');
+  assert.equal(logout.ok, true);
+  assert.equal(env.controller.state.journey.session.status, 'anonymous');
+  assert.equal(env.controller.state.journey.loginDraft.email, null);
+  assert.notEqual(nodeById(env.tree, 'hh-login-email')?.attrs?.value, 'stale-draft@example.test');
+
+  assert.equal(env.controller.updateDraft('email', 'pre-reset@example.test'), true);
+  assert.equal((await env.controller.dispatch('public:reset')).ok, true);
+  assert.equal(env.controller.state.journey.loginDraft.email, null);
+  await env.controller.navigate('#/login');
+  assert.notEqual(nodeById(env.tree, 'hh-login-email')?.attrs?.value, 'pre-reset@example.test');
+});
 
 async function registeredProfileSetup() {
   const env = setup(), {controller} = env;

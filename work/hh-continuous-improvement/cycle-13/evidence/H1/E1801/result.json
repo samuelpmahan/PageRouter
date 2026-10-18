@@ -1,0 +1,89 @@
+{
+  "schema": "hh-cycle13-probe-result@1",
+  "job_id": "E1801",
+  "worker": "H1",
+  "outcome": "not_reuse",
+  "classification": "demonstrated",
+  "summary": "The bounded volatile fixture probe demonstrated that a synthetic login email submitted through the controller is not retained in the login render projection after the held known transport failure: the busy and completion rerenders show the previous fallback identity (blank in this fresh fixture). `public:retry` did not repeat Session.login; explicit resubmission succeeded for the approved fixture identity. Natural not_found auth rejection and a success control also ran. This is host-simulated controller/runtime/render-tree evidence, not mounted-browser or backend evidence.",
+  "command": {
+    "cwd": "/workspace/scratch/8528bb251845/hh-cycle13/H1/E1801",
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "./probe-v2.mjs"
+    ],
+    "start_utc": "2026-10-18T20:13:45Z",
+    "end_utc": "2026-10-18T20:13:45Z",
+    "process_exit": 0,
+    "captures": {
+      "stdout": {
+        "path": "stdout-v2.raw",
+        "sha256": "fe13b827df121796be0369da24dfb97d5c3b4f6b9072e048319150eb175104d9",
+        "bytes": 1118
+      },
+      "stderr": {
+        "path": "stderr-v2.raw",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      "exit": "exit-v2.txt",
+      "start_utc": "run-v2.start.utc",
+      "end_utc": "run-v2.end.utc"
+    }
+  },
+  "source_binding": {
+    "probe_path": "probe-v2.mjs",
+    "probe_sha256": "27686af3136c0bd4983d0b67553aed5dd268fa2254c8fe76b5cdec10e9f7fbe4",
+    "controller_sha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "test_sha256": "f0304a33a0526dd94ba8e031986963d0c5f18e09fd101c7878194d2860c8f604",
+    "app_sha256": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "renderer_sha256": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "runtime_sha256_current_readback": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+    "fixture_provider_sha256_current_readback": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "community_sha256_current_readback": "243b747fbdf059993a7ee9f0dc3c604bbfb1635204b098fbecc6cf841fa95ee2"
+  },
+  "observations": {
+    "transport_failure": {
+      "result": "transport_failure",
+      "login_attempts": 2,
+      "fixture_provider_calls": 2,
+      "provider_state_changed_on_known_failure": false,
+      "login_request_parts_after_failure": 1,
+      "all_runtime_receipt_delta_after_failure": 1,
+      "automatic_retry": false,
+      "public_retry_result": "nothing_to_retry",
+      "explicit_resubmission": "success",
+      "login_request_parts_after_explicit_resubmission": 2,
+      "all_runtime_receipt_delta_after_explicit_resubmission": 1,
+      "typed_email_in_busy_and_completion_tree": false,
+      "random_passwords_absent_from_controller_state_runtime_parts_and_storage": true
+    },
+    "natural_auth_rejection": {
+      "result": "not_found",
+      "login_attempts": 1,
+      "fixture_provider_calls": 1,
+      "provider_state_changed": false,
+      "login_request_parts": 1,
+      "all_runtime_receipt_delta": 1,
+      "random_password_absent_from_controller_state_runtime_parts_and_storage": true
+    },
+    "success_control": {
+      "result": "success",
+      "authentication_state": "authenticated",
+      "route": "profile",
+      "login_attempts": 1,
+      "fixture_provider_calls": 1,
+      "provider_state_changed": true,
+      "login_request_parts": 1,
+      "all_runtime_receipt_delta": 1,
+      "password_verification": "not provided by fixture",
+      "random_password_absent_from_controller_state_runtime_parts_and_storage": true
+    }
+  },
+  "limits": [
+    "The login input delegation, FormData semantics, password clearing, controller, fixture provider, and renderer were exercised by host simulation; no mounted DOM or browser was used.",
+    "Renderer loss was asserted for the held transport-failure busy and completion projections. The natural auth-rejection control asserted its provider result/state/Parts/receipt/password-retention bounds, not a separate email projection assertion.",
+    "The fixture uses volatile in-memory storage and synthetic .test identities only; no backend, production account, real email, publication, deployment, source edit, or Git operation occurred.",
+    "A successful fixture login is a route/session control only; fixture mode does not verify passwords.",
+    "No fix or test change is included; browser QA remains unverified."
+  ]
+}

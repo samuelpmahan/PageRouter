@@ -1,0 +1,9 @@
+{
+  "schema": "hh-cycle13-actual-registry@1",
+  "workers": {
+    "H1": {"agent": "/root/hh13_h1", "model": "gpt-6-luna", "reasoning": "high", "role": "sole eventual source/Git integration"},
+    "H2": {"agent": "/root/hh13_h2", "model": "gpt-6-luna", "reasoning": "high", "role": "independent scratch-only probes/review"}
+  },
+  "limits": {"globalWorkers": 6, "HHWorkers": 2, "currentLabRegisteredWorkers": 4},
+  "authority": "Availability confirmed through actual fresh agent READY replies; valid native assignment and persisted start must precede actual followup. No continuity or autonomous dispatcher claim."
+}

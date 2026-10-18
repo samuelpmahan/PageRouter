@@ -1,0 +1,84 @@
+{
+  "job_id": "R1803",
+  "worker": "H2",
+  "decision": "accepted",
+  "outcome": "accepted",
+  "summary": "Independent source-level review accepts the bounded in-memory login email draft change. The focused login-draft tests passed 2/2, and one actual volatile-fixture adversarial run confirmed retention through unknown failure/newer edit/route-away-back, explicit blank on local validation, no retry or validation-triggered provider call, and draft clearing on successful fixture login with the final rendered email matching the authenticated fallback. This is not mounted-browser verification.",
+  "source_bindings": {
+    "PageRouter/checkpoint/vendor/hh/src/public-controller.mjs": "308c876e8bbfeb20a3e8ee92a4065549f5ca815bec0aa6979bf39c61fa4dc07c",
+    "PageRouter/checkpoint/vendor/hh/src/public-site.mjs": "5f1135c95fdb3baefb64e49d755e45a87b9eb1b17ff363ed91eb5b516812031b",
+    "PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs": "f426710f6ae9c3012f5eba2aa0d50b3aaca8b4e76a4119dd3ffca58d08e13d4f"
+  },
+  "focused_test": {
+    "argv": ["node", "--test", "--test-name-pattern=login draft", "vendor/hh/src/public-controller.test.mjs"],
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "exit": 0,
+    "tests": 2,
+    "passed": 2,
+    "failed": 0,
+    "captures": {
+      "stdout": "hh-cycle13/H2/R1803/focused-login-draft.stdout.raw",
+      "stderr": "hh-cycle13/H2/R1803/focused-login-draft.stderr.raw",
+      "exit": "hh-cycle13/H2/R1803/focused-login-draft.exit",
+      "start_utc": "2026-10-18T20:36:28Z",
+      "end_utc": "2026-10-18T20:36:28Z"
+    }
+  },
+  "adversarial_probe": {
+    "script": "hh-cycle13/H2/R1803/adversarial-login-projection.mjs",
+    "script_sha256": "6de8fc8099c232db411406ad63716f772c6bcd168b8967510d0167ac141f2d75",
+    "wrapper": "hh-cycle13/H2/R1803/run-adversarial-login-projection.sh",
+    "wrapper_sha256": "4a3ffa6393e73b7985f8e50295572e92dbe41db9b19cfaa470398f9bb5996eed",
+    "outer_argv": ["bash", "/workspace/scratch/8528bb251845/hh-cycle13/H2/R1803/run-adversarial-login-projection.sh"],
+    "exit": 0,
+    "started_at_utc": "2026-10-18T20:37:55Z",
+    "ended_at_utc": "2026-10-18T20:37:55Z",
+    "captures": {
+      "stdout": "hh-cycle13/H2/R1803/adversarial-login-projection.stdout.raw",
+      "stderr": "hh-cycle13/H2/R1803/adversarial-login-projection.stderr.raw",
+      "exit": "hh-cycle13/H2/R1803/adversarial-login-projection.exit",
+      "start_utc": "hh-cycle13/H2/R1803/adversarial-login-projection.start.utc",
+      "end_utc": "hh-cycle13/H2/R1803/adversarial-login-projection.end.utc"
+    },
+    "observations": [
+      {
+        "case": "unknown-outcome-after-newer-edit-and-route-away-back",
+        "provider_result": "outcome_unknown",
+        "draft_after_failure": "newer@example.test",
+        "rendered_email_after_failure": "newer@example.test",
+        "retry_result": "nothing_to_retry",
+        "provider_login_calls": 1
+      },
+      {
+        "case": "explicit-blank-local-validation",
+        "validation_result": "validation_failed",
+        "draft_after_validation": "",
+        "rendered_email_after_validation": "",
+        "provider_login_calls": 1
+      },
+      {
+        "case": "success-after-route-away-back",
+        "provider_result": "ok",
+        "route_after_completion": "login",
+        "session_status": "authenticated",
+        "state_draft_after_completion": null,
+        "rendered_email_after_completion": "avery@fixture.test",
+        "rendered_state_mismatch": false,
+        "provider_login_calls": 2,
+        "ephemeral_passwords_absent_from_observed_state": true
+      }
+    ]
+  },
+  "h1_provenance_context": {
+    "red_originals": "hh-cycle13/H1/E1803-PROPOSAL/",
+    "green_originals": "PageRouter/hh-cycle13/H1/E1803-PROPOSAL/",
+    "verified_green_byte_copies": "hh-cycle13/H1/E1803-ORIGINAL-CAPTURES/",
+    "qualification": "H1 RED-01 had two failing tests; green-01 retained one test-expectation failure; green-02 corrected only that fixture-fallback expectation and passed 2/2. H1 full controller and site suites passed 59/59 and 14/14. These chronology records are not replaced by H2's review result."
+  },
+  "limits": [
+    "The render observation uses the real renderer tree, not a mounted DOM/browser; delegated input and form submission are modeled at controller boundaries.",
+    "The provider is the synthetic volatile fixture and failWith simulation; no real password authentication, production account, backend, or network behavior is claimed.",
+    "The probe covers one outcome_unknown and one successful fixture login; it does not establish behavior for every provider/runtime failure mode.",
+    "H2 made no product-source, product-test, Git, build, native, Lab, or browser changes/actions; this is independent source-level review, not release/deployment acceptance."
+  ]
+}
