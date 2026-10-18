@@ -96,7 +96,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
         editOpen: false, editDraft: {name: '', bio: '', wishlistUrl: ''},
         createDraft: {name: '', bio: '', wishlistUrl: ''}, source: 'runtime'},
       wishlist: {intent: false, remote: false, destination: null, profileId: null},
-      share: {intent: false, url: ''},
+      share: {intent: false, url: '', profileId: null, remote: false, copied: false},
       contact: {name: '', email: '', subject: '', message: ''},
       outcome: null,
       communityRole: 'anonymous',
@@ -178,6 +178,9 @@ export function createPublicController({runtime, storage = null, onChange = () =
   }
   function clearWishlistHandoff() {
     state.journey.wishlist = {intent: false, remote: false, destination: null, profileId: null};
+  }
+  function clearShareHandoff() {
+    state.journey.share = {intent: false, url: '', profileId: null, remote: false, copied: false};
   }
 
   async function service(port, input = {}, boundary = {}, {retry = false, after = null} = {}) {
@@ -298,6 +301,10 @@ export function createPublicController({runtime, storage = null, onChange = () =
     state.route = normalizePublicRoute(hash);
     const targetWishlistProfileId = activeWishlistProfileId();
     if (state.journey.wishlist.intent && state.journey.wishlist.profileId !== targetWishlistProfileId) clearWishlistHandoff();
+    const targetShareProfileId = state.route.page === 'profile'
+      ? state.route.profileId || state.journey.runtime?.ownProfile?.profile?.id || null
+      : null;
+    if (state.journey.share.intent && state.journey.share.profileId !== targetShareProfileId) clearShareHandoff();
     state.journey.navOpen = false;
     state.journey.error = '';
     state.journey.terms = {...state.journey.terms, open: state.route.termsOpen === true};
@@ -644,7 +651,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
     if (event === 'public:share') {
       const id = state.route.profileId || state.journey.profile.value?.id || 'demo-avery';
       const url = `#/public-profile/${encodeURIComponent(id)}`;
-      state.journey.share = {intent: true, url, remote: false, copied: false};
+      state.journey.share = {intent: true, url, profileId: id, remote: false, copied: false};
       setOutcome('local-handoff', 'A local preview route is ready to copy. No public sharing service was called.');
       notify();
       return {ok: true, share: clone(state.journey.share)};

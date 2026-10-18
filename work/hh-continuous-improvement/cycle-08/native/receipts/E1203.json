@@ -1,0 +1,62 @@
+{
+  "job_id": "E1203",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Confirmed stale prepared share-route reuse in E1201 and added an identity-owned share profileId plus synchronous invalidation at navigation before a foreign profile read starts. Same-profile aliases retain the handoff. Added two tests: one failing-before/passing-after reproduction covering the held Avery-to-Jordan read and rendered tree; one compatibility test covering anonymous direct share and direct dispatch while pending, missing, and captured Sarah. The targeted share run passed 3/3, full public-controller tests 49/49, and the relevant HH source subset excluding the style-package test 116/116. A broader grouped HH run was 116/117 because hh-style.test.mjs could not resolve the package fast-check from this checkout; no dependency install, build, source workaround, commit, push, or deployment was performed.",
+  "source": {
+    "changed_product_paths": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "before_sha256": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "df2765c4b8eee83236d90e9c4380222561956252a0c2cc9a3d63a8a870be046c",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "9732658d1e0eaca0d7344d4ba3626540b72e954b55424ec5f1a01572e1028f04"
+    },
+    "after_sha256": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "1150f43987bf79a5eb82936e0ee6100852f8f29388b239d14849ac08a0fbad62"
+    },
+    "source_before_copies": [
+      "public-controller.before.mjs",
+      "public-controller.test.before.mjs"
+    ],
+    "source_after_copies": [
+      "public-controller.after.mjs",
+      "public-controller.test.after.mjs"
+    ]
+  },
+  "red_green": {
+    "red_command": "set -o pipefail; node --test --test-name-pattern='prepared share handoff is invalidated before foreign profile read resolves' checkpoint/vendor/hh/src/public-controller.test.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H1/E1203/red.stdout.log",
+    "red_result": "1 expected failing test; Avery share intent remained true during pending Jordan read (asserted false, observed true)",
+    "red_stdout_sha256": "0be2529fd777e6d1f8685c337d3d886dd0b3f41c88dd428350b06b3cf1614936",
+    "compatibility_baseline_command": "set -o pipefail; node --test --test-name-pattern='route-derived share dispatch remains available to anonymous, pending, missing, and captured viewers' checkpoint/vendor/hh/src/public-controller.test.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H1/E1203/compatibility-baseline.stdout.log",
+    "compatibility_baseline": "1 passed, 0 failed",
+    "compatibility_baseline_stdout_sha256": "fcfe76888709b34442fefca06b376c45cc50e279fbf3e82622c1fc4f42d8d315",
+    "focused_green_command": "set -o pipefail; node --test --test-name-pattern='share' checkpoint/vendor/hh/src/public-controller.test.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H1/E1203/green-share.stdout.log",
+    "focused_green": "3 passed, 0 failed",
+    "focused_green_stdout_sha256": "1c3b036c6b728da5f7fe4d2f1cc6ff70314e0f0fc491101dc13cb280daa73a64"
+  },
+  "validation": {
+    "full_controller_command": "set -o pipefail; node --test checkpoint/vendor/hh/src/public-controller.test.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H1/E1203/full-controller.stdout.log",
+    "full_controller": "49 passed, 0 failed",
+    "full_controller_stdout_sha256": "fd6794093da6b7c5eebfd042274f4945c5c839cef8e613a31fe0b74dfd22d601",
+    "hh_source_command": "set -o pipefail; node --test --test-concurrency=2 checkpoint/vendor/hh/src/community.test.mjs checkpoint/vendor/hh/src/public-controller.test.mjs checkpoint/vendor/hh/src/public-site.test.mjs checkpoint/exp/cooperative/hh-geography-review.test.mjs checkpoint/exp/cooperative/hh-parity-community.test.mjs checkpoint/exp/cooperative/hh-parity-public.test.mjs checkpoint/exp/cooperative/hh-style.test.mjs checkpoint/exp/cooperative/hh-workbench.test.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H1/E1203/hh-source.stdout.log",
+    "hh_source_result": "116 passed, 1 failed at module load: ERR_MODULE_NOT_FOUND for package fast-check from hh-style.test.mjs",
+    "hh_source_stdout_sha256": "4b2dd9dd69cb6d5fc0f12b361ee7193b01cfed4d8436dc7855b8e6c8352a9547",
+    "hh_source_core_command": "set -o pipefail; node --test --test-concurrency=2 checkpoint/vendor/hh/src/community.test.mjs checkpoint/vendor/hh/src/public-controller.test.mjs checkpoint/vendor/hh/src/public-site.test.mjs checkpoint/exp/cooperative/hh-geography-review.test.mjs checkpoint/exp/cooperative/hh-parity-community.test.mjs checkpoint/exp/cooperative/hh-parity-public.test.mjs checkpoint/exp/cooperative/hh-workbench.test.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H1/E1203/hh-source-core.stdout.log",
+    "hh_source_core_result": "116 passed, 0 failed",
+    "hh_source_core_stdout_sha256": "40bd83354121501ab7a6120c13277c9c9e778c78536fbcb8f698e0bef5d907e4",
+    "all_commands": "COMMANDS.txt"
+  },
+  "scope": {
+    "synthetic_fixture_only": true,
+    "http_calls": 0,
+    "external_share_copy_open": false,
+    "browser_visual_qa": false,
+    "canonical_build": false,
+    "commit_push_merge_deployment": false,
+    "native_reviewer_acceptance": false,
+    "only_two_repository_paths_modified": true
+  },
+  "continuation": "Waiting for root to admit E1204 canonical build and H2 R1203 independent source/runtime review."
+}

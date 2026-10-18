@@ -1,0 +1,27 @@
+{
+  "job_id": "E1201",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "Confirmed on the actual volatile synthetic fixture runtime, controller and renderPublicSite tree: after preparing a share route on Demo Avery, navigating to Demo Jordan leaves share.url as #/public-profile/demo-avery and renders that stale Avery route in Jordan's readonly share-route field once Jordan's provider read resolves. While the read is held the loading renderer omits the profile action panel; the old field reappears after resolution. A fresh public:share dispatch on Jordan updates it to Jordan and ignores forged payload identity fields. Same-profile alias and anonymous supporter controls pass; captured Sarah remains in its separate static read-only renderer with zero provider calls; missing profile is unavailable and shows no share field. Smallest proposed correction, pending root admission: bind prepared share intent to the profile ID at creation and clear it synchronously at navigation to a different profile identity, preserving aliases and captured-reference priority. No source or Git changes were made.",
+  "evidence": {
+    "directory": "/workspace/scratch/8528bb251845/hh-cycle08/H1/E1201",
+    "command_record": "COMMANDS.txt",
+    "successful_probe": "probe.mjs",
+    "successful_stdout": "stdout-final.log",
+    "first_failure_script": "probe-first-failure.mjs",
+    "first_failure_stdout": "stdout-first-failure.log",
+    "second_failure_script": "probe-second-failure.mjs",
+    "second_failure_stdout": "stdout-second-failure.log",
+    "successful_probe_sha256": "dad9671b7ffd7f562da325573be75db948ca9ab454ed29193294910b58bdda40",
+    "successful_stdout_sha256": "e8d0ec75302a4541be3ab439333cd24a31e17b89f27325a7784b8b44ecfc1961"
+  },
+  "limits": {
+    "synthetic_fixture_only": true,
+    "volatile_memory": true,
+    "http_calls": 0,
+    "browser_opened": false,
+    "external_share_copy_open": false,
+    "source_changed": false,
+    "git_changed": false
+  }
+}

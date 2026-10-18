@@ -1,0 +1,58 @@
+{
+  "schema": "hh-continuous-improvement-continuation/v1",
+  "cycle": "cycle-08",
+  "repository": "PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "base": {
+    "publishedCommit": "c573511b3a53c2eb159c105d0815118c40ce9b2c",
+    "localSourceCommit": "65ea21f5a2ef3f3a7adb285b2285d2c6f8274fcd",
+    "localSourceTree": "0901b1816314ef3aa5d580867ac0cd3fc49d3637",
+    "main": "7adf7e74a85c4310a5704a4c42808e85a1a82d71",
+    "draftPullRequest": 8,
+    "publishedCommitProvenance": "Coordinator-reported; no fetch or independent published-tree derivation in this package."
+  },
+  "ownership": {
+    "sourceAndGit": "H1",
+    "independentPackageAndSourceReview": "H2 read-only",
+    "nativeCoordinationAndConnectedPublication": "root"
+  },
+  "status": {
+    "finding": "Confirmed actual stale synthetic public share route across Demo Avery to Demo Jordan navigation; independently reproduced by H2.",
+    "correction": "Prepared share route is bound to profile ID and invalidated before provider read on foreign identity navigation.",
+    "review": "H2 R1203 accepted the exact two-file freeze and adversarial compatibility/authority controls.",
+    "canonicalBuild": "E1204 passed; receipt binds the current two product source inputs.",
+    "package": "Frozen for independent H2 audit; E1205 package result is maintained separately from this manifest.",
+    "commit": "not created",
+    "publication": "not pushed, merged, or deployed",
+    "browserVisualQA": "not performed; unverified",
+    "humanAcceptance": "not claimed"
+  },
+  "sourceFreeze": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "1150f43987bf79a5eb82936e0ee6100852f8f29388b239d14849ac08a0fbad62",
+    "changedProductFiles": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ]
+  },
+  "canonicalBuild": {
+    "command": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "exitCode": 0,
+    "targetedHHTests": {"passed": 123, "failed": 0},
+    "fullTests": {"passed": 278, "failed": 0},
+    "atlasImport": {"passed": 1, "failed": 0},
+    "preflightHelpers": {"passed": 2, "failed": 0},
+    "pxcubePackages": 14,
+    "verifiedSiteFiles": 843,
+    "siteBuildId": "816d6c0b6c549819bab6098362146c47c8887d19fc7619397cccafd63ca2fbaa",
+    "siteDigest": "1d0e74dc968d1859df3513336f717416e18ae99d9105c857fef2cbab950b3c09",
+    "receipt": "evidence/E1204/site.receipt.json"
+  },
+  "next": {
+    "review": "H2 independently audits the frozen package bytes, source/build bindings, evidence provenance, and scope statements.",
+    "unexecutedHypothesis": "Synthetic registration submission with valid non-secret fields and mismatched nonempty password fields may rerender with non-secret draft values lost because local validation precedes registration.identity assignment. Confirm app dispatch/tree reachability with missing-terms and valid controls; never record passwords. No probe or correction executed; fresh native assignment required.",
+    "publication": "No commit or publication is included. Root owns continuation after publication and connected publication authority."
+  },
+  "nativeSnapshot": "native/state-historical-E1205-packaging-running.json (historical capture, not live authority)",
+  "evidenceManifest": "evidence/manifest.json"
+}

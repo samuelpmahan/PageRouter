@@ -1,0 +1,24 @@
+{
+  "outcome": "confirmed_reuse",
+  "cases": [
+    {
+      "case": "prepared_demo_avery_then_navigated_demo_jordan",
+      "outcome": "stale_prepared_identity_visible_until_reprepared"
+    },
+    {
+      "case": "prepared_and_navigated_to_same_avery_alias",
+      "outcome": "same_identity_control_matches_current_profile"
+    },
+    {
+      "case": "captured_sarah_static_reference_priority",
+      "outcome": "captured_static_wishlist_stays_separate_from_generic_share_route"
+    }
+  ],
+  "sourceHashes": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "df2765c4b8eee83236d90e9c4380222561956252a0c2cc9a3d63a8a870be046c",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "9732658d1e0eaca0d7344d4ba3626540b72e954b55424ec5f1a01572e1028f04",
+    "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  }
+}

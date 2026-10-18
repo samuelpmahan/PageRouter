@@ -1,0 +1,4 @@
+Working directory: /workspace/scratch/8528bb251845/PageRouter/checkpoint
+Canonical command: set -o pipefail; BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H1/E1204/stdout.log
+Preflight observed: Node v24.19.0; Bazel 7.4.1; .bazel-tools lock.sha256 matches package-lock.json SHA-256 23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534; pinned .bazel-tools/node_modules already exists, so bootstrap's npm ci condition is false.
+The build runner itself owns isolated staging, fresh site assembly, HH test inventory, full npm test suite, and Bazel output verification. No source/doc/Git edits or browser invocation are part of this job.

@@ -1,0 +1,56 @@
+{
+  "job_id": "E1204",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "Canonical Bazel source build completed successfully for the E1203 controller/test source freeze. The wrapper's actual isolated build ran targeted HH controller/community regressions 123/123, the full npm source suite on fresh assembly 278/278, and built Atlas import closure 1/1; all 14 PxCube packages succeeded and 843 output files verified. The byte-exact receipt binds the changed controller and test source hashes. No source/docs/Git edits occurred during this build. Browser visual QA was not performed. Separate E1203 direct-workspace HH run with hh-style.test.mjs remains recorded as 116/117 due missing fast-check package resolution; this canonical run's isolated bootstrap/build did not have that blocker.",
+  "execution": {
+    "command_invoked_at": "2026-10-18T14:20:58Z",
+    "working_directory": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "command": "set -o pipefail; BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H1/E1204/stdout.log",
+    "exit_code": 0,
+    "stdout": "stdout.log",
+    "stdout_sha256": "96d28bf99ee223a72e0374395d508cc74cff2d0603964a173b67deecd950e082",
+    "command_record": "COMMANDS.txt",
+    "command_record_sha256": "0e4a74ad14557aa7a2f1a9d7c1097e860a108c532fdee0d1b30f38a8ea27c049",
+    "toolchain": {"node": "v24.19.0", "bazel": "7.4.1", "npm_ci_triggered": false}
+  },
+  "build_receipt": {
+    "path": "site.receipt.json",
+    "sha256": "d44b1c9919141192737fec8cd8462d078d90c22dc4c332c3a5992cb354b8d440",
+    "build_log": "site.log",
+    "build_log_sha256": "62450bf2b37120dc2a45499f8928431008f68321a5723559f1d5afb10be8b41b",
+    "siteBuildId": "816d6c0b6c549819bab6098362146c47c8887d19fc7619397cccafd63ca2fbaa",
+    "siteDigest": "1d0e74dc968d1859df3513336f717416e18ae99d9105c857fef2cbab950b3c09",
+    "sourceDigest": "4ca72a9402eda6ec82a9b7e64b243119c58dfbed8bc2b1f191e6bfbc3585f33d",
+    "siteFiles": 843,
+    "pxcubePackages": {"succeeded": 14, "failed": 0},
+    "sourceInputs": {
+      "vendor/hh/src/public-controller.mjs": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+      "vendor/hh/src/public-controller.test.mjs": "1150f43987bf79a5eb82936e0ee6100852f8f29388b239d14849ac08a0fbad62"
+    }
+  },
+  "test_results": {
+    "build_helpers": {"passed": 2, "failed": 0},
+    "targeted_HH_controller_community": {"passed": 123, "failed": 0},
+    "full_npm_suite": {"passed": 278, "failed": 0},
+    "built_atlas_import": {"passed": 1, "failed": 0}
+  },
+  "separate_direct_workspace_evidence": {
+    "E1203_HH_grouped_run": "116 passed, 1 module-load failure in hh-style.test.mjs because direct checkout could not resolve package fast-check; see /workspace/scratch/8528bb251845/hh-cycle08/H1/E1203/hh-source.stdout.log",
+    "E1203_non_style_HH_source_run": "116 passed, 0 failed; see /workspace/scratch/8528bb251845/hh-cycle08/H1/E1203/hh-source-core.stdout.log"
+  },
+  "browser": {
+    "visual_qa": "NOT_EXECUTED",
+    "H1_browser_invocations": 0,
+    "separate_root_attempt_record": "/workspace/scratch/8528bb251845/hh-cycle08/browser-attempt.json",
+    "root_attempt_record_sha256": "3d364e6950b61805d4bef4797423592d812cadca21833d165f6f4bd4ac19cb38",
+    "description": "Current attempt record says browser access requires the originating browser context / connected extension. It is root-owned evidence, not H1 shell output, screenshot, historical embedded browser evidence, or visual QA."
+  },
+  "scope": {
+    "source_changed_by_E1204": false,
+    "git_commit_or_ref_change": false,
+    "deployment": false,
+    "H2_acceptance": false
+  },
+  "continuation": "Build receipt is ready for root and independent H2 review; no publication or human acceptance claimed."
+}

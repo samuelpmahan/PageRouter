@@ -80,6 +80,94 @@ function controlledController(runtime) {
   return createPublicController({runtime, community: createCommunity()});
 }
 
+test('prepared share handoff is invalidated before foreign profile read resolves', async () => {
+  const base = createFixtureProvider({fixture: true});
+  let announceJordan, releaseJordan;
+  const jordanStarted = new Promise(resolve => { announceJordan = resolve; });
+  const jordanGate = new Promise(resolve => { releaseJordan = resolve; });
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    if (port === 'TeacherProfile.openPublicProfile' && input?.profileId === 'demo-jordan') {
+      announceJordan();
+      await jordanGate;
+    }
+    return invoke(input);
+  }]));
+  const controller = controlledController(createServiceRuntime({...base, services}));
+  await controller.initialize('#/');
+  await controller.navigate('#/public-profile/demo-avery');
+  const prepared = await controller.dispatch('public:share');
+  assert.equal(prepared.share.url, '#/public-profile/demo-avery');
+
+  await controller.navigate('#/teachers/demo-avery');
+  assert.equal(controller.state.journey.share.intent, true, 'same-profile alias retains the prepared handoff');
+
+  const loadingJordan = controller.navigate('#/public-profile/demo-jordan');
+  await jordanStarted;
+  assert.equal(controller.state.journey.profile.status, 'loading');
+  assert.equal(controller.state.journey.share.intent, false, 'foreign route retires Avery handoff before provider completion');
+  assert.equal(controller.state.journey.share.profileId, null);
+  releaseJordan();
+  await loadingJordan;
+  assert.equal(controller.state.journey.profile.value.id, 'demo-jordan');
+  assert.equal(controller.state.journey.share.intent, false);
+
+  const rendered = renderPublicSite({route: controller.route, state: controller.state, journey: controller.state.journey});
+  const stack = [rendered], fields = [];
+  while (stack.length) {
+    const node = stack.pop();
+    if (!node || typeof node !== 'object') continue;
+    if (node.attrs?.id === 'hh-share-route') fields.push(node);
+    stack.push(...(node.children || []));
+  }
+  assert.equal(fields.length, 0, 'Jordan does not display the prepared Avery route');
+});
+
+test('route-derived share dispatch remains available to anonymous, pending, missing, and captured viewers', async () => {
+  const rendered = (controller) => {
+    const root = renderPublicSite({route: controller.route, state: controller.state, journey: controller.state.journey});
+    const stack = [root], nodes = [];
+    while (stack.length) {
+      const node = stack.pop();
+      if (!node || typeof node !== 'object') continue;
+      nodes.push(node); stack.push(...(node.children || []));
+    }
+    return {fields: nodes.filter(node => node.attrs?.id === 'hh-share-route'),
+      capturedNote: nodes.some(node => node.attrs?.['data-testid'] === 'hh-reference-share-note')};
+  };
+  const base = createFixtureProvider({fixture: true});
+  let announceJordan, releaseJordan;
+  const jordanStarted = new Promise(resolve => { announceJordan = resolve; });
+  const jordanGate = new Promise(resolve => { releaseJordan = resolve; });
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    if (port === 'TeacherProfile.openPublicProfile' && input?.profileId === 'demo-jordan') {
+      announceJordan(); await jordanGate;
+    }
+    return invoke(input);
+  }]));
+  const controller = controlledController(createServiceRuntime({...base, services}));
+  await controller.initialize('#/');
+  assert.equal(controller.state.journey.session.status, 'anonymous');
+  await controller.navigate('#/public-profile/demo-avery');
+  assert.equal((await controller.dispatch('public:share')).share.url, '#/public-profile/demo-avery');
+
+  const pendingJordan = controller.navigate('#/public-profile/demo-jordan');
+  await jordanStarted;
+  assert.equal(controller.state.journey.profile.status, 'loading');
+  assert.equal((await controller.dispatch('public:share')).share.url, '#/public-profile/demo-jordan');
+  releaseJordan(); await pendingJordan;
+
+  await controller.navigate('#/public-profile/demo-missing');
+  assert.equal(controller.state.journey.profile.status, 'error');
+  assert.equal((await controller.dispatch('public:share')).share.url, '#/public-profile/demo-missing');
+  assert.equal(rendered(controller).fields.length, 0, 'unavailable route does not project a share field');
+
+  await controller.navigate('#/public-profile/reference-sarah');
+  assert.equal(controller.state.journey.profile.source, 'captured-readonly');
+  assert.equal((await controller.dispatch('public:share')).share.url, '#/public-profile/reference-sarah');
+  assert.equal(rendered(controller).fields.length, 0, 'captured profile does not render a synthetic share field');
+  assert.equal(rendered(controller).capturedNote, true, 'captured Share Page affordance retains its local note');
+});
+
 test('delayed profile creation preserves the current other-teacher route and edit authority', async () => {
   const controlled = controlledFixtureRuntime(['TeacherProfile.createProfile']);
   const {runtime} = controlled, controller = controlledController(runtime);

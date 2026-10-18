@@ -1,0 +1,128 @@
+{
+  "job_id": "E1201",
+  "worker": "H1",
+  "scope": "Additional route-derived dispatch compatibility diagnostics; synthetic only",
+  "cases": {
+    "direct_share_during_pending_read": {
+      "before": {
+        "route": {
+          "page": "profile",
+          "profileId": "demo-jordan"
+        },
+        "profileStatus": "loading",
+        "visibleShareButton": false
+      },
+      "dispatch": {
+        "ok": true,
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-jordan",
+          "remote": false,
+          "copied": false
+        }
+      },
+      "after": {
+        "route": {
+          "page": "profile",
+          "path": "/public-profile/demo-jordan",
+          "profileId": "demo-jordan"
+        },
+        "profileStatus": "loading",
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-jordan",
+          "remote": false,
+          "copied": false
+        },
+        "page": "profile",
+        "h1": [
+          "Loading profile…"
+        ],
+        "routeField": null,
+        "shareNote": false
+      },
+      "resolved": {
+        "route": {
+          "page": "profile",
+          "path": "/public-profile/demo-jordan",
+          "profileId": "demo-jordan"
+        },
+        "profileStatus": "present",
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-jordan",
+          "remote": false,
+          "copied": false
+        },
+        "page": "profile",
+        "h1": [
+          "Demo Jordan"
+        ],
+        "routeField": "#/public-profile/demo-jordan",
+        "shareNote": false
+      }
+    },
+    "direct_share_missing_profile": {
+      "dispatch": {
+        "ok": true,
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-missing",
+          "remote": false,
+          "copied": false
+        }
+      },
+      "after": {
+        "route": {
+          "page": "profile",
+          "path": "/public-profile/demo-missing",
+          "profileId": "demo-missing"
+        },
+        "profileStatus": "error",
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-missing",
+          "remote": false,
+          "copied": false
+        },
+        "page": "profile",
+        "h1": [
+          "Profile unavailable"
+        ],
+        "routeField": null,
+        "shareNote": false
+      }
+    },
+    "captured_sarah_share_page_compatibility": {
+      "dispatch": {
+        "ok": true,
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/reference-sarah",
+          "remote": false,
+          "copied": false
+        }
+      },
+      "after": {
+        "route": {
+          "page": "profile",
+          "path": "/public-profile/reference-sarah",
+          "profileId": "reference-sarah"
+        },
+        "profileStatus": "present",
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/reference-sarah",
+          "remote": false,
+          "copied": false
+        },
+        "page": "profile",
+        "h1": [
+          "Sarah Endsley"
+        ],
+        "routeField": null,
+        "shareNote": true
+      }
+    }
+  }
+}

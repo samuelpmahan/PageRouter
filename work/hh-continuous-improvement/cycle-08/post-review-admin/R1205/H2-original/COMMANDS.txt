@@ -1,0 +1,13 @@
+Working directory: /workspace/scratch/8528bb251845
+
+Final independent package audit (read-only against PageRouter, writes only this scratch result):
+  set -o pipefail && node /workspace/scratch/8528bb251845/hh-cycle08/H2/R1205/audit.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H2/R1205/stdout-final-success.log
+
+Frozen manifest digest check:
+  sha256sum /workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-08/evidence/manifest.json
+
+The audit script checks every manifest entry against the package bytes and package file set; product/source/build bindings; recorded red/green and canonical counts; preserved native evidence; and browser/scope statements. It does not rerun the build or unchanged green suites.
+
+Earlier audit-script assertion/setup failures are retained in stdout.log, stdout-success.log, stdout-final.log, and stdout-pass.log. They were harness-check issues (overly strict archived-text matching, followed by a missing writeFile import), not package-byte mismatches. The final corrected audit.mjs run and stdout-final-success.log are the passing audit evidence.
+
+Other reviewed evidence remains unchanged in the frozen package: E1201 first/second harness failures plus explicitly post-finish diagnostic; E1203 actual red, compatibility, focused/full controller, and direct-workspace dependency-blocked logs; E1204 canonical output; H2 R1203 review; native epoch 00–03 bundles/JSON and receipts.

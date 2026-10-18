@@ -1,0 +1,20 @@
+Working directory: /workspace/scratch/8528bb251845/PageRouter
+
+Focused current-source tests:
+  set -o pipefail && node --test --test-name-pattern='share' checkpoint/vendor/hh/src/public-controller.test.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H2/R1203/focused-share.stdout.log
+
+Full current-source controller suite:
+  set -o pipefail && node --test checkpoint/vendor/hh/src/public-controller.test.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H2/R1203/full-controller.stdout.log
+
+Independent runtime/tree probe:
+  set -o pipefail && node /workspace/scratch/8528bb251845/hh-cycle08/H2/R1203/review-probe.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H2/R1203/stdout.log
+
+Read-only source/status verification:
+  git status --short
+  git rev-parse HEAD HEAD^{tree}
+  sha256sum checkpoint/vendor/hh/src/public-controller.mjs checkpoint/vendor/hh/src/public-controller.test.mjs checkpoint/vendor/hh/src/public-site.mjs checkpoint/vendor/hh/services/fixture-provider.mjs checkpoint/vendor/hh/services/runtime.mjs
+
+Reviewed prior evidence without modifying it:
+  /workspace/scratch/8528bb251845/hh-cycle08/H1/E1201/result.json and stdout-final.log
+  /workspace/scratch/8528bb251845/hh-cycle08/H1/E1203/red.stdout.log, compatibility-baseline.stdout.log, green-share.stdout.log, full-controller.stdout.log, and result.json
+  /workspace/scratch/8528bb251845/hh-cycle08/H2/E1202/result.json

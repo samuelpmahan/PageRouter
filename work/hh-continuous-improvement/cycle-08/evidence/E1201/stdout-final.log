@@ -1,0 +1,1048 @@
+{
+  "job_id": "E1201",
+  "worker": "H1",
+  "environment": {
+    "provider": "fixture",
+    "fixture": true,
+    "productionAuthority": false,
+    "persistence": "volatile-memory",
+    "httpCalls": 0,
+    "browserOpened": false,
+    "externalActions": 0
+  },
+  "assertions": [
+    "Actual synthetic route change leaves the prior Avery share route in both journey state and the rendered read-only share-route field while Jordan is loaded; explicit dispatch on Jordan refreshes to Jordan and ignores forged payload identity fields.",
+    "Same-profile alias retains the matching Avery route.",
+    "Captured Sarah route uses the separate read-only renderer and does not inherit the synthetic share-route field or invoke the provider.",
+    "Missing-profile result is unavailable and renders no share-route field on the error state.",
+    "The held loading state omits the profile action panel; after Jordan resolves, the old Avery route reappears in the rendered share field.",
+    "Anonymous supporter can prepare the local route for the viewed synthetic profile."
+  ],
+  "cases": {
+    "prepared_avery": {
+      "page": "profile",
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/demo-avery",
+        "profileId": "demo-avery"
+      },
+      "profile": {
+        "id": "demo-avery",
+        "name": "Demo Avery",
+        "readOnly": false
+      },
+      "profileStatus": "present",
+      "share": {
+        "intent": true,
+        "url": "#/public-profile/demo-avery",
+        "remote": false,
+        "copied": false
+      },
+      "shareRouteField": {
+        "tag": "input",
+        "value": "#/public-profile/demo-avery",
+        "readonly": true
+      },
+      "h1": [
+        "Demo Avery"
+      ],
+      "anchors": [
+        {
+          "id": null,
+          "href": "#hh-main"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/login"
+        }
+      ],
+      "buttons": [
+        {
+          "id": "hh-public-nav-toggle",
+          "event": "public:toggle-nav"
+        },
+        {
+          "id": "hh-profile-wishlist",
+          "event": "public:wishlist"
+        },
+        {
+          "id": "hh-profile-share",
+          "event": "public:share"
+        }
+      ]
+    },
+    "jordan_provider_read_held": {
+      "page": "profile",
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/demo-jordan",
+        "profileId": "demo-jordan"
+      },
+      "profile": null,
+      "profileStatus": "loading",
+      "share": {
+        "intent": true,
+        "url": "#/public-profile/demo-avery",
+        "remote": false,
+        "copied": false
+      },
+      "shareRouteField": null,
+      "h1": [
+        "Loading profile…"
+      ],
+      "anchors": [
+        {
+          "id": null,
+          "href": "#hh-main"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/login"
+        }
+      ],
+      "buttons": [
+        {
+          "id": "hh-public-nav-toggle",
+          "event": "public:toggle-nav"
+        }
+      ],
+      "providerReadHeld": true
+    },
+    "jordan_loaded_stale_share_route": {
+      "page": "profile",
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/demo-jordan",
+        "profileId": "demo-jordan"
+      },
+      "profile": {
+        "id": "demo-jordan",
+        "name": "Demo Jordan",
+        "readOnly": false
+      },
+      "profileStatus": "present",
+      "share": {
+        "intent": true,
+        "url": "#/public-profile/demo-avery",
+        "remote": false,
+        "copied": false
+      },
+      "shareRouteField": {
+        "tag": "input",
+        "value": "#/public-profile/demo-avery",
+        "readonly": true
+      },
+      "h1": [
+        "Demo Jordan"
+      ],
+      "anchors": [
+        {
+          "id": null,
+          "href": "#hh-main"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/login"
+        }
+      ],
+      "buttons": [
+        {
+          "id": "hh-public-nav-toggle",
+          "event": "public:toggle-nav"
+        },
+        {
+          "id": "hh-profile-wishlist",
+          "event": "public:wishlist"
+        },
+        {
+          "id": "hh-profile-share",
+          "event": "public:share"
+        }
+      ]
+    },
+    "fresh_jordan_dispatch_ignores_forged_payload": {
+      "dispatchedPayload": {
+        "profileId": "demo-avery",
+        "id": "demo-avery",
+        "url": "#/public-profile/demo-avery"
+      },
+      "dispatchResult": {
+        "ok": true,
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-jordan",
+          "remote": false,
+          "copied": false
+        }
+      },
+      "rendered": {
+        "page": "profile",
+        "route": {
+          "page": "profile",
+          "path": "/public-profile/demo-jordan",
+          "profileId": "demo-jordan"
+        },
+        "profile": {
+          "id": "demo-jordan",
+          "name": "Demo Jordan",
+          "readOnly": false
+        },
+        "profileStatus": "present",
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-jordan",
+          "remote": false,
+          "copied": false
+        },
+        "shareRouteField": {
+          "tag": "input",
+          "value": "#/public-profile/demo-jordan",
+          "readonly": true
+        },
+        "h1": [
+          "Demo Jordan"
+        ],
+        "anchors": [
+          {
+            "id": null,
+            "href": "#hh-main"
+          },
+          {
+            "id": null,
+            "href": "#/"
+          },
+          {
+            "id": null,
+            "href": "#/"
+          },
+          {
+            "id": null,
+            "href": "#/directory"
+          },
+          {
+            "id": null,
+            "href": "#/register"
+          },
+          {
+            "id": null,
+            "href": "#/about"
+          },
+          {
+            "id": null,
+            "href": "#/contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners"
+          },
+          {
+            "id": null,
+            "href": "#/"
+          },
+          {
+            "id": null,
+            "href": "#/directory"
+          },
+          {
+            "id": null,
+            "href": "#/register"
+          },
+          {
+            "id": null,
+            "href": "#/about"
+          },
+          {
+            "id": null,
+            "href": "#/contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners"
+          },
+          {
+            "id": null,
+            "href": "#/login"
+          }
+        ],
+        "buttons": [
+          {
+            "id": "hh-public-nav-toggle",
+            "event": "public:toggle-nav"
+          },
+          {
+            "id": "hh-profile-wishlist",
+            "event": "public:wishlist"
+          },
+          {
+            "id": "hh-profile-share",
+            "event": "public:share"
+          }
+        ]
+      }
+    },
+    "provider_calls": [
+      {
+        "port": "SchoolData.getStates",
+        "profileId": null
+      },
+      {
+        "port": "TeacherProfile.openPublicProfile",
+        "profileId": "demo-avery"
+      },
+      {
+        "port": "TeacherProfile.openPublicProfile",
+        "profileId": "demo-jordan"
+      }
+    ],
+    "same_profile_alias_positive_control": {
+      "page": "profile",
+      "route": {
+        "page": "profile",
+        "path": "/teachers/demo-avery",
+        "profileId": "demo-avery"
+      },
+      "profile": {
+        "id": "demo-avery",
+        "name": "Demo Avery",
+        "readOnly": false
+      },
+      "profileStatus": "present",
+      "share": {
+        "intent": true,
+        "url": "#/public-profile/demo-avery",
+        "remote": false,
+        "copied": false
+      },
+      "shareRouteField": {
+        "tag": "input",
+        "value": "#/public-profile/demo-avery",
+        "readonly": true
+      },
+      "h1": [
+        "Demo Avery"
+      ],
+      "anchors": [
+        {
+          "id": null,
+          "href": "#hh-main"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/login"
+        }
+      ],
+      "buttons": [
+        {
+          "id": "hh-public-nav-toggle",
+          "event": "public:toggle-nav"
+        },
+        {
+          "id": "hh-profile-wishlist",
+          "event": "public:wishlist"
+        },
+        {
+          "id": "hh-profile-share",
+          "event": "public:share"
+        }
+      ]
+    },
+    "captured_sarah_readonly_priority": {
+      "page": "profile",
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/reference-sarah",
+        "profileId": "reference-sarah"
+      },
+      "profile": {
+        "id": "reference-sarah",
+        "name": "Sarah Endsley",
+        "readOnly": true
+      },
+      "profileStatus": "present",
+      "share": {
+        "intent": true,
+        "url": "#/public-profile/demo-avery",
+        "remote": false,
+        "copied": false
+      },
+      "shareRouteField": null,
+      "h1": [
+        "Sarah Endsley"
+      ],
+      "anchors": [
+        {
+          "id": null,
+          "href": "#hh-main"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/login"
+        },
+        {
+          "id": "hh-reference-wishlist",
+          "href": "https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20"
+        }
+      ],
+      "buttons": [
+        {
+          "id": "hh-public-nav-toggle",
+          "event": "public:toggle-nav"
+        },
+        {
+          "id": "hh-reference-share",
+          "event": "public:share"
+        }
+      ],
+      "providerCallsDuringNavigation": 0
+    },
+    "missing_profile": {
+      "page": "profile",
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/demo-missing",
+        "profileId": "demo-missing"
+      },
+      "profile": null,
+      "profileStatus": "error",
+      "share": {
+        "intent": true,
+        "url": "#/public-profile/demo-avery",
+        "remote": false,
+        "copied": false
+      },
+      "shareRouteField": null,
+      "h1": [
+        "Profile unavailable"
+      ],
+      "anchors": [
+        {
+          "id": null,
+          "href": "#hh-main"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/login"
+        }
+      ],
+      "buttons": [
+        {
+          "id": "hh-public-nav-toggle",
+          "event": "public:toggle-nav"
+        },
+        {
+          "id": "hh-profile-retry",
+          "event": "public:retry"
+        }
+      ]
+    },
+    "pending_read_loading_panel_omits_share_field": {
+      "page": "profile",
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/demo-jordan",
+        "profileId": "demo-jordan"
+      },
+      "profile": null,
+      "profileStatus": "loading",
+      "share": {
+        "intent": true,
+        "url": "#/public-profile/demo-avery",
+        "remote": false,
+        "copied": false
+      },
+      "shareRouteField": null,
+      "h1": [
+        "Loading profile…"
+      ],
+      "anchors": [
+        {
+          "id": null,
+          "href": "#hh-main"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/login"
+        }
+      ],
+      "buttons": [
+        {
+          "id": "hh-public-nav-toggle",
+          "event": "public:toggle-nav"
+        }
+      ],
+      "providerReadHeld": true
+    },
+    "pending_read_resolved_jordan_still_stale": {
+      "page": "profile",
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/demo-jordan",
+        "profileId": "demo-jordan"
+      },
+      "profile": {
+        "id": "demo-jordan",
+        "name": "Demo Jordan",
+        "readOnly": false
+      },
+      "profileStatus": "present",
+      "share": {
+        "intent": true,
+        "url": "#/public-profile/demo-avery",
+        "remote": false,
+        "copied": false
+      },
+      "shareRouteField": {
+        "tag": "input",
+        "value": "#/public-profile/demo-avery",
+        "readonly": true
+      },
+      "h1": [
+        "Demo Jordan"
+      ],
+      "anchors": [
+        {
+          "id": null,
+          "href": "#hh-main"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/login"
+        }
+      ],
+      "buttons": [
+        {
+          "id": "hh-public-nav-toggle",
+          "event": "public:toggle-nav"
+        },
+        {
+          "id": "hh-profile-wishlist",
+          "event": "public:wishlist"
+        },
+        {
+          "id": "hh-profile-share",
+          "event": "public:share"
+        }
+      ]
+    },
+    "anonymous_supporter_share": {
+      "page": "profile",
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/demo-avery",
+        "profileId": "demo-avery"
+      },
+      "profile": {
+        "id": "demo-avery",
+        "name": "Demo Avery",
+        "readOnly": false
+      },
+      "profileStatus": "present",
+      "share": {
+        "intent": true,
+        "url": "#/public-profile/demo-avery",
+        "remote": false,
+        "copied": false
+      },
+      "shareRouteField": {
+        "tag": "input",
+        "value": "#/public-profile/demo-avery",
+        "readonly": true
+      },
+      "h1": [
+        "Demo Avery"
+      ],
+      "anchors": [
+        {
+          "id": null,
+          "href": "#hh-main"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/"
+        },
+        {
+          "id": null,
+          "href": "#/directory"
+        },
+        {
+          "id": null,
+          "href": "#/register"
+        },
+        {
+          "id": null,
+          "href": "#/about"
+        },
+        {
+          "id": null,
+          "href": "#/contact"
+        },
+        {
+          "id": null,
+          "href": "#/partners"
+        },
+        {
+          "id": null,
+          "href": "#/login"
+        }
+      ],
+      "buttons": [
+        {
+          "id": "hh-public-nav-toggle",
+          "event": "public:toggle-nav"
+        },
+        {
+          "id": "hh-profile-wishlist",
+          "event": "public:wishlist"
+        },
+        {
+          "id": "hh-profile-share",
+          "event": "public:share"
+        }
+      ]
+    }
+  }
+}

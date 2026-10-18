@@ -1,0 +1,8 @@
+Working directory: /workspace/scratch/8528bb251845/PageRouter
+Command: set -o pipefail; node /workspace/scratch/8528bb251845/hh-cycle08/H1/E1201/probe.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H1/E1201/stdout.log
+Scope: volatile synthetic fixture runtime + controller + renderPublicSite tree only; no browser, HTTP, external share/copy/open, or repository source edits.
+First run failed at probe.mjs:74 because field lookup used `share-route` instead of the actual rendered id `hh-share-route`. Original script and exact first-failure stdout are preserved as `probe-first-failure.mjs` and `stdout-first-failure.log`.
+Rerun command: set -o pipefail; node /workspace/scratch/8528bb251845/hh-cycle08/H1/E1201/probe.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H1/E1201/stdout-rerun.log
+Second run failed at probe.mjs:123 because the loading renderer intentionally omits the profile action panel; original script and stdout are preserved as `probe-second-failure.mjs` and `stdout-second-failure.log`.
+Adjusted rerun command: set -o pipefail; node /workspace/scratch/8528bb251845/hh-cycle08/H1/E1201/probe.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H1/E1201/stdout-final.log
+Additional route-derived dispatch diagnostic command: set -o pipefail; node /workspace/scratch/8528bb251845/hh-cycle08/H1/E1201/diagnostic.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H1/E1201/diagnostic-stdout.log
