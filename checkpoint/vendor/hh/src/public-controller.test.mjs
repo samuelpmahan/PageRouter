@@ -23,6 +23,54 @@ function setup() {
   return {controller, runtime, storage, community};
 }
 
+async function registeredProfileSetup() {
+  const env = setup(), {controller} = env;
+  await controller.initialize('#/register');
+  for (const [key, value] of Object.entries({state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'})) await controller.selectSchool(key, value);
+  await controller.dispatch('public:terms-consent', {accepted: true});
+  assert.equal((await controller.dispatch('public:register', {name: 'Synthetic Wishlist', email: 'wishlist@example.invalid', password: 'Volatile-Only-17', confirm_password: 'Volatile-Only-17'})).ok, true);
+  assert.equal((await controller.dispatch('public:approve')).ok, true);
+  assert.equal((await controller.dispatch('public:login', {email: 'wishlist@example.invalid', password: 'Volatile-Only-17'})).ok, true);
+  await controller.navigate('#/profile');
+  return env;
+}
+
+for (const action of ['create', 'edit']) {
+  for (const [label, invalidUrl] of [['unsupported', 'https://example.invalid/wishlist'], ['overlength', 'https://www.amazon.com/hz/wishlist/ls/DEMO-' + 'A'.repeat(513)]]) test(`profile ${action} rejects ${label} wishlist before mutation and retains draft`, async () => {
+    const {controller, runtime} = await registeredProfileSetup();
+    if (action === 'edit') {
+      assert.equal((await controller.dispatch('public:profile-create', {name: 'Saved name', wishlistUrl: ''})).ok, true);
+      await controller.dispatch('public:edit-profile');
+    }
+    const draftKey = action === 'create' ? 'createDraft' : 'editDraft';
+    controller.updateDraft('name', 'Typed name');
+    controller.updateDraft('bio', 'Typed introduction');
+    controller.updateDraft('wishlistUrl', invalidUrl);
+    const retainedWishlistDraft = controller.state.journey.profile[draftKey].wishlistUrl;
+    const beforeProfile = structuredClone(controller.state.journey.profile);
+    const beforeRuntime = runtime.snapshot(), beforeParts = runtime.pxc.entries().length;
+    const result = await controller.dispatch(`public:profile-${action}`, {wishlistUrl: invalidUrl});
+    assert.equal(result.ok, false);
+    assert.equal(result.error.code, 'validation_failed');
+    assert.match(result.error.message, /synthetic.*DEMO/i);
+    assert.deepEqual(runtime.snapshot(), beforeRuntime);
+    assert.equal(runtime.pxc.entries().length, beforeParts, 'invalid URL must not invoke a provider operation');
+    assert.deepEqual(controller.state.journey.profile, beforeProfile, 'profile, open form and draft remain intact');
+    assert.equal(controller.state.journey.profile[draftKey].wishlistUrl, retainedWishlistDraft);
+    assert.equal(controller.state.journey.outcome.kind, 'validation-error');
+  });
+  for (const wishlistUrl of ['', 'https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM']) {
+    test(`profile ${action} preserves ${wishlistUrl ? 'valid synthetic' : 'blank'} wishlist compatibility`, async () => {
+      const {controller, runtime} = await registeredProfileSetup();
+      if (action === 'edit') assert.equal((await controller.dispatch('public:profile-create', {name: 'Saved name', wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-SAVED'})).ok, true);
+      const existing = controller.state.journey.profile.value?.wishlistUrl;
+      assert.equal((await controller.dispatch(`public:profile-${action}`, {name: 'Typed name', wishlistUrl})).ok, true);
+      assert.equal(controller.state.journey.profile.value.wishlistUrl, wishlistUrl || existing || 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW');
+      assert.equal(runtime.snapshot().ownProfile.profile.wishlistUrl, 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW', 'provider retains synthetic fixture data');
+    });
+  }
+}
+
 function deferredRuntime(portToDelay) {
   const storage = memoryStorage();
   const base = createServiceRuntime(createFixtureProvider({fixture: true, storage}));

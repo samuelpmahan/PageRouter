@@ -1,0 +1,23 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "hh-continuous-improvement",
+    "scope": "cycle02-current-journey-evidence",
+    "repository": "samuelpmahan/PageRouter",
+    "source": "58bac45ff9096a1f1a3347eb89b6e87e1843416b",
+    "capacity": "Six Sol workers currently leased to discovery swarm. Only root coordinator available for bounded read-only HH hypothesis check; implementation/review packets admitted after actual workers free."
+  },
+  "workers": [
+    "COORD"
+  ],
+  "review_policy": {
+    "enabled": false
+  },
+  "jobs": [
+    {
+      "id": "E201",
+      "kind": "extract",
+      "subject": "Execute synthetic HH register -> approve -> login -> profile -> reload; distinguish fixture persistence from tab overlays; verify next profile form validation hypothesis without editing source."
+    }
+  ]
+}

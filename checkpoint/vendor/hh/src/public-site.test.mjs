@@ -6,6 +6,16 @@ function inspect(tree){const nodes=[];const visit=value=>{if(!value||typeof valu
 function byId(tree,id){return inspect(tree).find(node=>node.attrs?.id===id);}
 function text(tree){return inspect(tree).flatMap(node=>node.children||[]).filter(value=>typeof value==='string').join(' ');}
 
+test('profile create and edit wishlist fields explain supported synthetic links',()=>{
+  for(const status of ['absent','present']){
+    const tree=renderPublicSite({route:{page:'profile'},journey:{session:{status:'authenticated'},profile:{status,editOpen:status==='present',value:{name:'Synthetic teacher'}}}});
+    const field=byId(tree,'hh-profile-wishlist-url'),guidance=byId(tree,'hh-profile-wishlist-help');
+    assert.equal(field.attrs['aria-describedby'],'hh-profile-wishlist-help');
+    assert.match(text(guidance),/https:\/\/www\.amazon\.com\/hz\/wishlist\/ls\/DEMO-CLASSROOM/);
+    assert.match(text(guidance),status==='absent'?/blank.*default/i:/blank.*current/i);
+  }
+});
+
 test('public route tree binds nav state, exposes accessible stable controls, and avoids inline styling',()=>{
   const closed=renderPublicSite({route:{page:'home'},journey:{navOpen:false}});
   const open=renderPublicSite({route:{page:'home'},journey:{navOpen:true}});

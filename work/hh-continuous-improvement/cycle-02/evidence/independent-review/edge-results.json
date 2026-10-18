@@ -1,0 +1,474 @@
+{
+  "schema": "HH-E203-independent-edges@1",
+  "invalidCases": [
+    {
+      "action": "create",
+      "label": "malformed",
+      "inputLength": 9,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 9,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "other origin",
+      "inputLength": 32,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 32,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "ordinary real-style ID",
+      "inputLength": 49,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 49,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "username",
+      "inputLength": 57,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 57,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "password",
+      "inputLength": 62,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 62,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "query",
+      "inputLength": 56,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 56,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "fragment",
+      "inputLength": 60,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 60,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "http",
+      "inputLength": 51,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 51,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "javascript",
+      "inputLength": 19,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 19,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "protocol-relative",
+      "inputLength": 46,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 46,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "other host",
+      "inputLength": 48,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 48,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "host suffix",
+      "inputLength": 65,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 65,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "lowercase path id",
+      "inputLength": 52,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 52,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "trailing slash",
+      "inputLength": 53,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 53,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "raw 513 valid prefix",
+      "inputLength": 513,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 512,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "create",
+      "label": "long invalid suffix after valid 512",
+      "inputLength": 523,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 512,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "malformed",
+      "inputLength": 9,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 9,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "other origin",
+      "inputLength": 32,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 32,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "ordinary real-style ID",
+      "inputLength": 49,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 49,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "username",
+      "inputLength": 57,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 57,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "password",
+      "inputLength": 62,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 62,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "query",
+      "inputLength": 56,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 56,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "fragment",
+      "inputLength": 60,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 60,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "http",
+      "inputLength": 51,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 51,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "javascript",
+      "inputLength": 19,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 19,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "protocol-relative",
+      "inputLength": 46,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 46,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "other host",
+      "inputLength": 48,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 48,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "host suffix",
+      "inputLength": 65,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 65,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "lowercase path id",
+      "inputLength": 52,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 52,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "trailing slash",
+      "inputLength": 53,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 53,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "raw 513 valid prefix",
+      "inputLength": 513,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 512,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    },
+    {
+      "action": "edit",
+      "label": "long invalid suffix after valid 512",
+      "inputLength": 523,
+      "ok": false,
+      "errorCode": "validation_failed",
+      "providerCallsDelta": 0,
+      "partsDelta": 0,
+      "draftLength": 512,
+      "draftPreserved": true,
+      "profileAndStoragePreserved": true
+    }
+  ],
+  "positiveCases": [
+    {
+      "action": "create",
+      "label": "blank",
+      "inputLength": 0,
+      "ok": true,
+      "resultWishlistLength": 50,
+      "providerCallsDelta": 1
+    },
+    {
+      "action": "create",
+      "label": "whitespace blank",
+      "inputLength": 4,
+      "ok": true,
+      "resultWishlistLength": 50,
+      "providerCallsDelta": 1
+    },
+    {
+      "action": "create",
+      "label": "trimmed synthetic",
+      "inputLength": 56,
+      "ok": true,
+      "resultWishlistLength": 52,
+      "providerCallsDelta": 1
+    },
+    {
+      "action": "create",
+      "label": "exact512 synthetic",
+      "inputLength": 512,
+      "ok": true,
+      "resultWishlistLength": 512,
+      "providerCallsDelta": 1
+    },
+    {
+      "action": "edit",
+      "label": "blank",
+      "inputLength": 0,
+      "ok": true,
+      "resultWishlistLength": 48,
+      "providerCallsDelta": 0
+    },
+    {
+      "action": "edit",
+      "label": "whitespace blank",
+      "inputLength": 4,
+      "ok": true,
+      "resultWishlistLength": 48,
+      "providerCallsDelta": 0
+    },
+    {
+      "action": "edit",
+      "label": "trimmed synthetic",
+      "inputLength": 56,
+      "ok": true,
+      "resultWishlistLength": 52,
+      "providerCallsDelta": 0
+    },
+    {
+      "action": "edit",
+      "label": "exact512 synthetic",
+      "inputLength": 512,
+      "ok": true,
+      "resultWishlistLength": 512,
+      "providerCallsDelta": 0
+    }
+  ],
+  "draftOnly": [
+    {
+      "action": "create",
+      "ok": false,
+      "draftPreserved": true,
+      "providerCallsDelta": 0
+    },
+    {
+      "action": "edit",
+      "ok": false,
+      "draftPreserved": true,
+      "providerCallsDelta": 0
+    }
+  ],
+  "limits": [
+    "Synthetic fixture runtime only; no backend or browser DOM.",
+    "Draft values retain the preexisting 512-character bound; raw dispatched inputs are validated without truncation.",
+    "safeWishlist policy itself is unchanged."
+  ]
+}

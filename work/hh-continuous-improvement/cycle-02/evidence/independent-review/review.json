@@ -1,0 +1,159 @@
+{
+  "schema": "HH-cycle02-independent-review@1",
+  "job_id": "E203",
+  "worker": "W2",
+  "outcome": "mixed_change",
+  "decision": "accepted",
+  "summary": "Accepted frozen five-file wishlist-validation change. All 54 focused controller/render/parity tests and 42 independent edge cases pass. Unsupported nonempty string URLs reject before provider or overlay mutation and preserve the existing bounded drafts. Blank create retains the fixture default; blank edit retains the current link; valid synthetic links still work. Raw 513-character input is rejected without truncating it into a valid 512-character prefix. The preexisting safeWishlist policy is byte-identical. No unrelated geography, ownership, provider persistence, backend or real-URL policy changes appear in the five-file diff.",
+  "source": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "originalObservedHead": "58bac45ff9096a1f1a3347eb89b6e87e1843416b",
+    "currentRepositoryHead": "9e3e1f314de657b6e6272951b26c8d36fb3871bb",
+    "baselineNote": "The five baseline product/test files at current HEAD are byte-identical to those at the original observed head.",
+    "freeze": {
+      "path": "/workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-02/evidence/product-freeze.json",
+      "sha256": "2e2b2b57fae8c952fa620364b01838330f9f08e94d90eadd621f84c2206bedcb",
+      "matchedBefore": true,
+      "matchedAfter": true
+    },
+    "files": [
+      {
+        "path": "checkpoint/vendor/hh/src/public-controller.mjs",
+        "frozenSha256": "9e5b358f5c88147924fd60b3067a916104a84503510dbf1afd905350ac7cf82e",
+        "baselineHeadSha256": "4eb1ecc139a89a87777a827e9460b370813dd0f498a269ff0c47c2d0f4da94a4",
+        "observedOriginalHeadSha256": "4eb1ecc139a89a87777a827e9460b370813dd0f498a269ff0c47c2d0f4da94a4",
+        "baselineHeadAndOriginalSame": true,
+        "actualFrozenSha256": "9e5b358f5c88147924fd60b3067a916104a84503510dbf1afd905350ac7cf82e"
+      },
+      {
+        "path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+        "frozenSha256": "30eb315392bbc032ad8f5cb12a28f3276185ca5be566bb659e586996847d0f17",
+        "baselineHeadSha256": "7088a497f633718630cfde56a12111240887c41d3c7b50239345429237b292af",
+        "observedOriginalHeadSha256": "7088a497f633718630cfde56a12111240887c41d3c7b50239345429237b292af",
+        "baselineHeadAndOriginalSame": true,
+        "actualFrozenSha256": "30eb315392bbc032ad8f5cb12a28f3276185ca5be566bb659e586996847d0f17"
+      },
+      {
+        "path": "checkpoint/vendor/hh/src/public-site.mjs",
+        "frozenSha256": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+        "baselineHeadSha256": "d9c26625a9dc8bb29bad3959ae40e5c26cca7aa143e5246493663c34726c4dd5",
+        "observedOriginalHeadSha256": "d9c26625a9dc8bb29bad3959ae40e5c26cca7aa143e5246493663c34726c4dd5",
+        "baselineHeadAndOriginalSame": true,
+        "actualFrozenSha256": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4"
+      },
+      {
+        "path": "checkpoint/vendor/hh/src/public-site.test.mjs",
+        "frozenSha256": "87f74df3c31eca7388c701deb4ac1fd40ec874f9ce17c971582983124762b213",
+        "baselineHeadSha256": "dcdf6c706b613cc64484276672d27e9717768a6d216a1e30b8039ec41679e7cb",
+        "observedOriginalHeadSha256": "dcdf6c706b613cc64484276672d27e9717768a6d216a1e30b8039ec41679e7cb",
+        "baselineHeadAndOriginalSame": true,
+        "actualFrozenSha256": "87f74df3c31eca7388c701deb4ac1fd40ec874f9ce17c971582983124762b213"
+      },
+      {
+        "path": "checkpoint/exp/cooperative/hh-parity-public.test.mjs",
+        "frozenSha256": "7bd84be0d0ec62c4845a22fa9db9c4caeeceecb1eeb45844fdde540d1bb9f7d5",
+        "baselineHeadSha256": "e86127bf345c09930725cc52f1fecd49abaced8a7246b6c84203055648f754cc",
+        "observedOriginalHeadSha256": "e86127bf345c09930725cc52f1fecd49abaced8a7246b6c84203055648f754cc",
+        "baselineHeadAndOriginalSame": true,
+        "actualFrozenSha256": "7bd84be0d0ec62c4845a22fa9db9c4caeeceecb1eeb45844fdde540d1bb9f7d5"
+      }
+    ],
+    "diff": {
+      "path": "frozen-five-files.diff",
+      "sha256": "ad0abcacf2c5960fbbdff4b84ba5cf1e6b4bfc3d5e23d0e2c6ba430a1a072843"
+    }
+  },
+  "commands": [
+    {
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+      "command": "node --test vendor/hh/src/public-controller.test.mjs vendor/hh/src/public-site.test.mjs exp/cooperative/hh-parity-public.test.mjs",
+      "exitCode": 0,
+      "tests": 54,
+      "passed": 54,
+      "failed": 0,
+      "output": "focused-tests.log"
+    },
+    {
+      "cwd": "/workspace/scratch/8528bb251845/hh-cycle02/independent-review",
+      "command": "node edge-probes.mjs",
+      "exitCode": 0,
+      "invalidCases": 32,
+      "positiveCases": 8,
+      "draftOnlyCases": 2,
+      "output": "edge-results.json"
+    },
+    {
+      "command": "SHA-256 compare all five files against product-freeze.json before and after review",
+      "exitCode": 0,
+      "outputs": [
+        "freeze-before.json",
+        "freeze-after.json"
+      ]
+    },
+    {
+      "command": "Compare safeWishlist function bytes against HEAD and product baselines against original observed head",
+      "exitCode": 0,
+      "outputs": [
+        "policy-identity.json",
+        "baseline-identity.json"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "severity": "none",
+      "topic": "Mutation order",
+      "evidence": "All 32 invalid create/edit cases returned validation_failed; runtime snapshot, PXC entry count, provider call count, profile/open-form/draft and fixture storage stayed unchanged."
+    },
+    {
+      "severity": "none",
+      "topic": "Edge policy",
+      "evidence": "Rejected malformed URL, other origins, username/password credentials, query, fragment, http/javascript/protocol-relative input, host suffix confusion, ordinary INDEPENDENT wishlist ID, lowercase/trailing-slash IDs, raw 513-character valid-prefix input and longer invalid suffix."
+    },
+    {
+      "severity": "none",
+      "topic": "Compatibility",
+      "evidence": "Eight create/edit cases accepted blank, whitespace-only blank, trimmed synthetic URL and exact 512-character synthetic URL. Provider continues storing fixture DEMO-PREVIEW; overlays carry entered display links only."
+    },
+    {
+      "severity": "none",
+      "topic": "Existing drafting bound",
+      "evidence": "Invalid dispatch retains the draft as it stood immediately before dispatch. updateDraft still has the preexisting 512-character bound; this review does not claim an arbitrary-length draft is stored."
+    },
+    {
+      "severity": "none",
+      "topic": "Policy and parity",
+      "evidence": "safeWishlist is byte-identical, SHA cf12f0830f9369959bb0848513d67ce3ffe1edbfc565a98af9e031e2d4d3de19. The two parity happy-path URLs now use DEMO-INDEPENDENT; independent probes confirm old INDEPENDENT URLs reject."
+    },
+    {
+      "severity": "none",
+      "topic": "Rendered guidance",
+      "evidence": "Tree tests verify synthetic example, blank/default-versus-current guidance and aria-describedby linkage. No DOM/browser visual observation was possible or claimed."
+    }
+  ],
+  "limitations": [
+    "Synthetic fixture/service runtime and render-tree checks only; no Python backend tests.",
+    "No browser DOM execution or visual-layout verification; cloud browser candidate connection was unavailable per root context.",
+    "Canonical build/deployment verification belongs to root/W1 and is not claimed by this review.",
+    "Human acceptance is not established.",
+    "No source or Git mutations performed by W2."
+  ],
+  "authority": {
+    "soleImplementationOwner": "W1",
+    "sourceFreezePreserved": true,
+    "reviewerProductionEdits": false,
+    "reviewerGitEdits": false,
+    "humanAcceptance": "UNKNOWN"
+  },
+  "evidenceFiles": [
+    "review.json",
+    "edge-probes.mjs",
+    "edge-results.json",
+    "focused-tests.log",
+    "freeze-before.json",
+    "freeze-after.json",
+    "policy-identity.json",
+    "baseline-identity.json",
+    "frozen-five-files.diff"
+  ]
+}

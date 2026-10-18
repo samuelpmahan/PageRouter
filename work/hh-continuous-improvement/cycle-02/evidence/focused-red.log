@@ -1,0 +1,104 @@
+✖ profile create rejects unsupported wishlist before mutation and retains draft (11.63009ms)
+✔ profile create preserves blank wishlist compatibility (4.335691ms)
+✔ profile create preserves valid synthetic wishlist compatibility (2.057781ms)
+✖ profile edit rejects unsupported wishlist before mutation and retains draft (2.371612ms)
+✔ profile edit preserves blank wishlist compatibility (2.199333ms)
+✔ profile edit preserves valid synthetic wishlist compatibility (2.49053ms)
+✔ normalizes captured public route aliases and forum paths (0.903677ms)
+✔ captured Teacher of the Day opens as a read-only snapshot without invoking teacher services (1.592933ms)
+✔ cascades school filters, loads local directory matches and restores remembered filters (2.114425ms)
+✔ school lookup retry stays bound to the failed current selection (1.196346ms)
+✔ school lookup retry recovers the same current selection (1.030818ms)
+✔ navigating away invalidates a failed registration school lookup retry (0.687683ms)
+✔ initial school choices remain retryable when the states read fails (1.475836ms)
+✔ returning to registration reloads states after an invalidated initial lookup failure (0.376425ms)
+✔ successful initial school-data read does not erase a directory retry (0.617507ms)
+✔ returning to registration reloads a failed county cascade (0.487522ms)
+✔ school lookup retry remains available from directory when no directory retry owns it (0.637237ms)
+✔ distinguishes an explicit empty-filter search from the initial background directory load (0.811419ms)
+✔ bounded text drafts keep spaces while typing and normalize only on submit (1.179692ms)
+✔ rejects stored school selections whose individual values do not form one fixture row (0.485349ms)
+✔ registration keeps passwords ephemeral, approval and login stay separate, and edits remain local (3.216129ms)
+✔ Terms checkbox consent tracks both checking and unchecking without opening the modal (0.431939ms)
+✔ seeded UI login, local contact and reset never claim remote effects (1.658871ms)
+✔ wishlist and community actions are explicit local preview handoffs (1.347313ms)
+✔ late login, approval and logout results never redirect away from the current route (3.035999ms)
+✖ profile create and edit wishlist fields explain supported synthetic links (2.657502ms)
+✔ public route tree binds nav state, exposes accessible stable controls, and avoids inline styling (2.522519ms)
+✔ registration exposes the school cascade, password confirmation, Terms, and local approval (1.541355ms)
+✔ registration shows a contextual school lookup retry only while choices are unavailable (1.659092ms)
+✔ directory and contact reflect saved state, error/loading status, and remaining characters (0.663046ms)
+✔ profile error can retry and editable profile drafts survive renderer replacement (0.519971ms)
+✔ public profile formats structured school and scalar location fields without object coercion (0.891579ms)
+✔ Terms displays the complete captured section set and public profiles require an explicit wishlist choice (0.674773ms)
+✔ Teacher of the Day uses the captured Sarah profile and keeps it separate from runtime-owned demo profiles (0.708294ms)
+✔ Login and password-help content stays inside the single centered account card (0.73269ms)
+✔ partner and About renders expose source-shaped images and readable team text (2.008326ms)
+✔ Contact uses the captured local brand font glyphs and footer preview controls bind state (1.342106ms)
+✔ Logout is available in the authenticated account menu and absent anonymously (1.142325ms)
+✔ directory Results stays blank until an explicit search and then renders zero-result guidance (0.609214ms)
+ℹ tests 39
+ℹ suites 0
+ℹ pass 36
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 145.929975
+
+✖ failing tests:
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:39:3
+✖ profile create rejects unsupported wishlist before mutation and retains draft (11.63009ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:52:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:39:3
+✖ profile edit rejects unsupported wishlist before mutation and retains draft (2.371612ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:52:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at checkpoint/vendor/hh/src/public-site.test.mjs:9:1
+✖ profile create and edit wishlist fields explain supported synthetic links (2.657502ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'hh-profile-wishlist-help'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.test.mjs:13:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'hh-profile-wishlist-help',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

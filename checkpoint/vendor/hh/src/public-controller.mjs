@@ -640,8 +640,10 @@ export function createPublicController({runtime, storage = null, onChange = () =
       const draft = state.journey.profile.editDraft || {};
       const name = clean(payload.name ?? draft.name ?? profile.name, 100);
       const bio = clean(payload.bio ?? draft.bio ?? profile.bio, 500);
-      const wishlistUrl = clean(payload.wishlistUrl ?? draft.wishlistUrl ?? profile.wishlistUrl, 512);
+      const wishlistInput = payload.wishlistUrl ?? draft.wishlistUrl ?? profile.wishlistUrl;
+      const wishlistUrl = typeof wishlistInput === 'string' ? wishlistInput.trim() : '';
       if (!name) return localValidation('Enter a display name.');
+      if (wishlistUrl && !safeWishlist(wishlistUrl)) return localValidation('Use a synthetic preview wishlist URL such as https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM, or leave it blank to keep the current link.');
       const overlay = {name, bio, wishlistUrl: safeWishlist(wishlistUrl) ? wishlistUrl : profile.wishlistUrl};
       profileOverlays.set(profile.teacherId, overlay);
       state.journey.profile = {...state.journey.profile, value: {...profile, ...overlay}, editOpen: false,
@@ -724,7 +726,9 @@ export function createPublicController({runtime, storage = null, onChange = () =
       const createDraft = state.journey.profile.createDraft || {};
       const name = clean(payload.name ?? createDraft.name, 100) || identity?.name || 'Demo Teacher';
       const bio = clean(payload.bio ?? createDraft.bio, 500);
-      const wishlistUrl = clean(payload.wishlistUrl ?? createDraft.wishlistUrl, 512);
+      const wishlistInput = payload.wishlistUrl ?? createDraft.wishlistUrl;
+      const wishlistUrl = typeof wishlistInput === 'string' ? wishlistInput.trim() : '';
+      if (wishlistUrl && !safeWishlist(wishlistUrl)) return localValidation('Use a synthetic preview wishlist URL such as https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM, or leave it blank to use the default link.');
       const internalName = `Demo ${name.replace(/[^A-Za-z0-9 ]/g, ' ').trim().slice(0, 60) || 'Teacher'}`;
       const result = await service('TeacherProfile.createProfile', {
         displayName: internalName, bio: 'Synthetic local preview profile.', subjects: [], wishlistUrl: FIXTURE_WISHLIST_URL,
