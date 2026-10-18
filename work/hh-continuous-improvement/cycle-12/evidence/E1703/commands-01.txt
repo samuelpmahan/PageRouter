@@ -1,0 +1,19 @@
+Source hash admitted for execution: f0304a33a0526dd94ba8e031986963d0c5f18e09fd101c7878194d2860c8f604
+
+Focused regression:
+node --test --test-concurrency=2 --test-name-pattern='held profile creation keeps the live create draft through failure and explicit resubmission' checkpoint/vendor/hh/src/public-controller.test.mjs
+stdout: /workspace/scratch/8528bb251845/hh-cycle12/H1/E1703/focused-01.stdout.raw
+stderr: /workspace/scratch/8528bb251845/hh-cycle12/H1/E1703/focused-01.stderr.raw
+exit: /workspace/scratch/8528bb251845/hh-cycle12/H1/E1703/focused-01.exit
+
+Full controller suite:
+node --test --test-concurrency=2 checkpoint/vendor/hh/src/public-controller.test.mjs
+stdout: /workspace/scratch/8528bb251845/hh-cycle12/H1/E1703/controller-01.stdout.raw
+stderr: /workspace/scratch/8528bb251845/hh-cycle12/H1/E1703/controller-01.stderr.raw
+exit: /workspace/scratch/8528bb251845/hh-cycle12/H1/E1703/controller-01.exit
+
+Public-site suite:
+node --test --test-concurrency=2 checkpoint/vendor/hh/src/public-site.test.mjs
+stdout: /workspace/scratch/8528bb251845/hh-cycle12/H1/E1703/public-site-01.stdout.raw
+stderr: /workspace/scratch/8528bb251845/hh-cycle12/H1/E1703/public-site-01.stderr.raw
+exit: /workspace/scratch/8528bb251845/hh-cycle12/H1/E1703/public-site-01.exit

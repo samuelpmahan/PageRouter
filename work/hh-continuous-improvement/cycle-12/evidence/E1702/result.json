@@ -1,0 +1,43 @@
+{
+  "job_id": "E1702",
+  "worker": "H2",
+  "outcome": "not_reuse",
+  "status": "passed",
+  "scope": "volatile synthetic fixture provider only; PageRouter source read-only; no Git, browser, backend, or real accounts",
+  "hypothesis": "TeacherProfile.createProfile preserves the current nonsecret create draft across held known/unknown failures, enables no automatic retry, and consumes it on a fresh explicit submission.",
+  "observations": {
+    "known_transport_failure": {
+      "error_code": "transport_failure",
+      "rendered_form_and_live_name_bio_wishlist_retained": true,
+      "provider_own_profile_absent_and_storage_unchanged": true,
+      "one_write_receipt_and_two_new_parts": true,
+      "safe_retry_enabled": false,
+      "public_retry_returned_nothing_to_retry_without_provider_call": true,
+      "fresh_explicit_submission_used_retained_draft_and_created_one_profile": true,
+      "success_cleared_draft_and_closed_form": true
+    },
+    "unknown_outcome": {
+      "error_code": "outcome_unknown",
+      "rendered_form_and_live_name_bio_wishlist_retained": true,
+      "provider_own_profile_absent_and_storage_unchanged": true,
+      "one_write_receipt_and_two_new_parts": true,
+      "safe_retry_enabled": false,
+      "public_retry_returned_nothing_to_retry_without_provider_call": true,
+      "fresh_explicit_submission_used_retained_draft_and_created_one_profile": true,
+      "success_cleared_draft_and_closed_form": true
+    },
+    "independent_valid_success": {
+      "one_write_receipt_and_two_new_parts": true,
+      "exactly_one_fixture_storage_write": true,
+      "provider_profile_present": true,
+      "rendered_profile_overlay_matches_typed_values": true,
+      "create_draft_cleared_and_form_closed": true
+    }
+  },
+  "conclusion": "The proposed defect was falsified for the tested synthetic fixture flow. Existing behavior already preserves the live typed draft and makes createProfile non-retryable after both known and unknown outcomes; a deliberate new submission succeeds once and closes the form. No product change is indicated by this probe.",
+  "limitations": [
+    "Controlled in-process fixture behavior only; not a backend or mounted-browser claim.",
+    "No inspection of real account state, production storage, or deployment behavior."
+  ],
+  "artifacts": ["hypothesis.md", "probe.mjs", "execution-log.md"]
+}

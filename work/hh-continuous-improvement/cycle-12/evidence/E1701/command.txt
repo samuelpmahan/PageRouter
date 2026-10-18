@@ -1,0 +1,7 @@
+Working directory: /workspace/scratch/8528bb251845
+Command (first execution): node hh-cycle12/H1/E1701/probe.mjs
+Exit: 0
+
+Command (observation-timing correction rerun): node hh-cycle12/H1/E1701/probe.mjs
+Exit: 0
+The first run's assertions passed; its summary sampled request.status after explicit successful resubmission, so both completion rows printed the later "completed" state. The second run captured request.status immediately after the held failure completed. No product source or tests were modified.

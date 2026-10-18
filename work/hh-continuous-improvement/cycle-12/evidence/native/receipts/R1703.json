@@ -1,0 +1,68 @@
+{
+  "job_id": "R1703",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Independent review accepts the test-only E1703 change and the source-derived correction to its success-control expectation. The pre-correction candidate was preserved and never executed; the only diff from it changes the comment and expected success values to the original submitted draft. Current source confirms profile-create captures name/bio/wishlist before awaiting the provider, while app.mjs delegates input events to updateDraft. The prospectively captured independent focused rerun passed 1/1 with empty stderr and exit 0.",
+  "source": {
+    "test_path": "PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "test_sha256": "f0304a33a0526dd94ba8e031986963d0c5f18e09fd101c7878194d2860c8f604",
+    "controller_sha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "app_sha256": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "public_site_sha256": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "pre_correction_candidate_sha256": "fd36d5ac06919bbdb9b69b3e0fbbdb3219f9917f80ab682dd6d25deeccff6890",
+    "pre_correction_candidate_executed": false,
+    "candidate_to_current_diff": "one test expectation/comment hunk only; held-failure resubmit checks liveDraft; ordinary held success checks submittedDraft"
+  },
+  "review": {
+    "held_known_and_unknown_draft_retention": "asserted in controller state and rendered field values before and after the held failure",
+    "provider_write_and_retry": "own profile absent after failure; one create service call; canRetry false; public:retry returns nothing_to_retry without increasing create call count",
+    "fresh_explicit_resubmit": "failure path resubmits without payload and checks resulting profile against latest liveDraft",
+    "ordinary_success": "success control checks originally submittedDraft, consistent with captured local constants before await",
+    "credential_privacy": "random password generated in process; existing helper checks it is absent from controller state, runtime inspection, runtime Part values, and storage; captured test streams contain no credentials",
+    "delegation_claim": "app.mjs input listener invokes updateDraft; test calls updateDraft directly, not a mounted browser"
+  },
+  "runs": [
+    {
+      "name": "independent focused regression",
+      "command": "node --test --test-concurrency=2 --test-name-pattern='held profile creation keeps the live create draft through failure and explicit resubmission' checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "source_sha256_before_run": "f0304a33a0526dd94ba8e031986963d0c5f18e09fd101c7878194d2860c8f604",
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "exit": 0,
+      "stdout": "focused-01.stdout.raw",
+      "stderr": "focused-01.stderr.raw",
+      "exit_file": "focused-01.exit"
+    },
+    {
+      "name": "H1 full controller suite evidence reviewed",
+      "command": "node --test --test-concurrency=2 checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "tests": 57,
+      "pass": 57,
+      "fail": 0,
+      "exit": 0,
+      "stdout": "../H1/E1703/controller-01.stdout.raw",
+      "stderr": "../H1/E1703/controller-01.stderr.raw",
+      "exit_file": "../H1/E1703/controller-01.exit"
+    },
+    {
+      "name": "H1 public-site suite evidence reviewed",
+      "command": "node --test --test-concurrency=2 checkpoint/vendor/hh/src/public-site.test.mjs",
+      "tests": 14,
+      "pass": 14,
+      "fail": 0,
+      "exit": 0,
+      "stdout": "../H1/E1703/public-site-01.stdout.raw",
+      "stderr": "../H1/E1703/public-site-01.stderr.raw",
+      "exit_file": "../H1/E1703/public-site-01.exit"
+    }
+  ],
+  "limits": [
+    "Controller/render-tree fixture tests only; direct updateDraft invocation is not browser event-dispatch or mounted-browser evidence.",
+    "Synthetic fixture only; no backend, real account, production, human acceptance, build, publication, deployment, or Git claim.",
+    "The regression checks own-profile absence and service-call counts rather than asserting byte-identical provider storage or Part count on failure; independent E1702 volatile probe separately observed unchanged storage/provider state and one failed receipt (+2 Parts)."
+  ],
+  "git_actions": 0,
+  "source_edits": 0,
+  "builds": 0
+}

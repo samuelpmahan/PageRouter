@@ -1,0 +1,62 @@
+{
+  "job_id": "E1703",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "The new held profile-creation regression passes for known transport failure, unknown outcome, and ordinary success. Failure preserves the latest typed draft and rendered form, leaves the synthetic provider profile absent, makes no automatic write retry, and public:retry issues no write. Deliberate resubmission uses the latest draft and succeeds. The success control confirms a held successful request commits the values captured at submission, matching controller source semantics, then clears the create draft/form. Focused test 1/1; full controller suite 57/57 (56 existing plus this test); public-site suite 14/14.",
+  "source": {
+    "test_path": "PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "test_sha256": "f0304a33a0526dd94ba8e031986963d0c5f18e09fd101c7878194d2860c8f604",
+    "controller_path": "PageRouter/checkpoint/vendor/hh/src/public-controller.mjs",
+    "controller_sha256_unchanged": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "app_sha256_unchanged": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "public_site_sha256_unchanged": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "test_diff": "115 insertions, 0 deletions; only product-repository path changed is the test file"
+  },
+  "runs": [
+    {
+      "name": "focused regression",
+      "command": "node --test --test-concurrency=2 --test-name-pattern='held profile creation keeps the live create draft through failure and explicit resubmission' checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "exit": 0,
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "stdout": "hh-cycle12/H1/E1703/focused-01.stdout.raw",
+      "stderr": "hh-cycle12/H1/E1703/focused-01.stderr.raw",
+      "exit_file": "hh-cycle12/H1/E1703/focused-01.exit"
+    },
+    {
+      "name": "full controller suite",
+      "command": "node --test --test-concurrency=2 checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "exit": 0,
+      "tests": 57,
+      "pass": 57,
+      "fail": 0,
+      "stdout": "hh-cycle12/H1/E1703/controller-01.stdout.raw",
+      "stderr": "hh-cycle12/H1/E1703/controller-01.stderr.raw",
+      "exit_file": "hh-cycle12/H1/E1703/controller-01.exit"
+    },
+    {
+      "name": "public-site suite",
+      "command": "node --test --test-concurrency=2 checkpoint/vendor/hh/src/public-site.test.mjs",
+      "exit": 0,
+      "tests": 14,
+      "pass": 14,
+      "fail": 0,
+      "stdout": "hh-cycle12/H1/E1703/public-site-01.stdout.raw",
+      "stderr": "hh-cycle12/H1/E1703/public-site-01.stderr.raw",
+      "exit_file": "hh-cycle12/H1/E1703/public-site-01.exit"
+    }
+  ],
+  "limits": [
+    "Controller tests call updateDraft directly; app.mjs source inspection confirms delegated input calls updateDraft, but no mounted-browser input test or browser evidence is claimed.",
+    "Synthetic fixture only; no backend, production, account, browser, human acceptance, canonical build, publication, deployment, or Git action.",
+    "Test passwords are generated in process memory and the existing test helper verifies they are absent from controller state, runtime Parts, and storage."
+  ],
+  "pre_correction_candidate": {
+    "path": "hh-cycle12/H1/E1703/pre-expectation-correction.mjs.txt",
+    "sha256": "fd36d5ac06919bbdb9b69b3e0fbbdb3219f9917f80ab682dd6d25deeccff6890",
+    "note": "Preserved before correcting the success-control expectation based on source-only review; never executed."
+  },
+  "git_actions": 0,
+  "builds": 0
+}

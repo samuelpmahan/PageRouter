@@ -131,6 +131,50 @@ async function registeredProfileSetup() {
   return env;
 }
 
+function profileCreateFailureSetup({failWith = null} = {}) {
+  const storage = memoryStorage();
+  const base = createFixtureProvider({fixture: true, storage});
+  let announceStart, release;
+  const started = new Promise(resolve => { announceStart = resolve; });
+  const pending = new Promise(resolve => { release = resolve; });
+  let createCalls = 0;
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    if (port === 'TeacherProfile.createProfile') {
+      createCalls += 1;
+      if (createCalls === 1) {
+        announceStart();
+        await pending;
+      }
+      return invoke(failWith && createCalls === 1 ? {...input, failWith} : input);
+    }
+    return invoke(input);
+  }]));
+  const runtime = createServiceRuntime({...base, services: Object.freeze(services)});
+  const community = createCommunity({storage});
+  let tree = null;
+  const controller = createPublicController({runtime, storage, community,
+    onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+  });
+  return {controller, runtime, storage, started, release,
+    get createCalls() { return createCalls; }, get tree() { return tree; }};
+}
+
+async function prepareSyntheticProfileOwner(env) {
+  const email = `e1703-${randomUUID()}@example.invalid`, password = randomUUID();
+  await env.controller.initialize('#/register');
+  for (const [key, value] of Object.entries({state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'})) {
+    await env.controller.selectSchool(key, value);
+  }
+  await env.controller.dispatch('public:terms-consent', {accepted: true});
+  assert.equal((await env.controller.dispatch('public:register', {name: 'Synthetic E1703 Teacher', email, password, confirmPassword: password})).ok, true);
+  assert.equal((await env.controller.dispatch('public:approve')).ok, true);
+  assert.equal((await env.controller.dispatch('public:login', {email, password})).ok, true);
+  await env.controller.navigate('#/profile');
+  assert.equal(env.controller.state.journey.profile.status, 'absent');
+  assertCredentialsNotPersisted(env, [password]);
+  return password;
+}
+
 function controlledFixtureRuntime(delayedPorts = [], {failPorts = []} = {}) {
   const base = createFixtureProvider({fixture: true});
   const gates = new Map(delayedPorts.map(port => {
@@ -348,6 +392,77 @@ test('failed profile creation service sync preserves a captured reference when a
   assert.equal(runtime.snapshot().ownProfile.status, 'present');
   assert.equal(controller.route.profileId, 'reference-sarah');
   assert.deepEqual(controller.state.journey.profile, capturedReference);
+});
+
+test('held profile creation keeps the live create draft through failure and explicit resubmission', async () => {
+  const scenarios = [
+    {name: 'known transport failure', failWith: 'transport_failure', requestStatus: 'failed', outcomeKnown: true},
+    {name: 'unknown outcome', failWith: 'outcome_unknown', requestStatus: 'outcome_unknown', outcomeKnown: false},
+    {name: 'ordinary success control', failWith: null, requestStatus: 'completed'},
+  ];
+  for (const [index, scenario] of scenarios.entries()) {
+    const env = profileCreateFailureSetup({failWith: scenario.failWith});
+    const password = await prepareSyntheticProfileOwner(env);
+    const submittedDraft = {
+      name: `Synthetic E1703 Submitted ${index}`,
+      bio: 'Typed classroom introduction before the held request.',
+      wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-E1703',
+    };
+    const liveDraft = {
+      name: `Synthetic E1703 Edited ${index}`,
+      bio: 'Typed classroom introduction while the request is held.',
+      wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-E1703-LIVE',
+    };
+    for (const [key, value] of Object.entries(submittedDraft)) assert.equal(env.controller.updateDraft(key, value), true);
+
+    const attempt = env.controller.dispatch('public:profile-create', {});
+    await env.started;
+    assert.equal(env.createCalls, 1);
+    assert.equal(env.controller.state.request.status, 'busy');
+    assert.equal(env.runtime.snapshot().ownProfile.status, 'absent');
+    for (const [key, value] of Object.entries(liveDraft)) assert.equal(env.controller.updateDraft(key, value), true);
+    assert.deepEqual(env.controller.state.journey.profile.createDraft, liveDraft);
+    assert.ok(nodeById(env.tree, 'hh-profile-create-form'), 'the create form remains rendered while the write is held');
+    assert.equal(nodeById(env.tree, 'hh-profile-name')?.attrs?.value, liveDraft.name);
+    assert.equal(nodeById(env.tree, 'hh-profile-bio')?.attrs?.value, liveDraft.bio);
+    assert.equal(nodeById(env.tree, 'hh-profile-wishlist-url')?.attrs?.value, liveDraft.wishlistUrl);
+
+    env.release();
+    const result = await attempt;
+    if (scenario.failWith) {
+      assert.equal(result.ok, false);
+      assert.equal(result.error?.code, scenario.failWith);
+      assert.equal(result.error?.outcomeKnown, scenario.outcomeKnown);
+      assert.equal(env.controller.state.request.status, scenario.requestStatus);
+      assert.equal(env.runtime.snapshot().ownProfile.status, 'absent');
+      assert.equal(env.controller.state.journey.profile.status, 'absent');
+      assert.deepEqual(env.controller.state.journey.profile.createDraft, liveDraft);
+      assert.ok(nodeById(env.tree, 'hh-profile-create-form'), 'the failed write preserves the create form');
+      assert.equal(nodeById(env.tree, 'hh-profile-name')?.attrs?.value, liveDraft.name);
+      assert.equal(nodeById(env.tree, 'hh-profile-bio')?.attrs?.value, liveDraft.bio);
+      assert.equal(nodeById(env.tree, 'hh-profile-wishlist-url')?.attrs?.value, liveDraft.wishlistUrl);
+      assert.equal(env.controller.canRetry, false);
+      assert.equal(env.createCalls, 1, 'completion does not automatically repeat the profile write');
+      assert.equal((await env.controller.dispatch('public:retry')).error?.code, 'nothing_to_retry');
+      assert.equal(env.createCalls, 1, 'public:retry does not repeat an unsafe profile write');
+    } else {
+      assert.equal(result.ok, true);
+      assert.equal(env.controller.state.request.status, scenario.requestStatus);
+    }
+
+    // Failure leaves the latest edits available; deliberate resubmission must use them.
+    const resubmitted = scenario.failWith ? await env.controller.dispatch('public:profile-create', {}) : result;
+    const expectedProfile = scenario.failWith ? liveDraft : submittedDraft;
+    assert.equal(resubmitted.ok, true);
+    assert.equal(env.createCalls, scenario.failWith ? 2 : 1);
+    assert.equal(env.runtime.snapshot().ownProfile.status, 'present');
+    assert.equal(env.controller.state.journey.profile.value.name, expectedProfile.name);
+    assert.equal(env.controller.state.journey.profile.value.bio, expectedProfile.bio);
+    assert.equal(env.controller.state.journey.profile.value.wishlistUrl, expectedProfile.wishlistUrl);
+    assert.deepEqual(env.controller.state.journey.profile.createDraft, {name: '', bio: '', wishlistUrl: ''});
+    assert.equal(nodeById(env.tree, 'hh-profile-create-form'), null, 'successful creation replaces the form');
+    assertCredentialsNotPersisted(env, [password]);
+  }
 });
 
 for (const action of ['create', 'edit']) {
