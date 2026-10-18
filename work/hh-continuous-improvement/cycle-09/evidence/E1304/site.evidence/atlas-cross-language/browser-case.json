@@ -1,0 +1,223 @@
+{
+  "format": "kompozed.atlas.cross-language-case.v1",
+  "recipe": {
+    "nodes": [
+      {
+        "calculation": "probe_decision",
+        "id": "decision",
+        "inputs": [
+          "/models/posterior",
+          "/parts/policy"
+        ],
+        "output": "/evidence/decision"
+      },
+      {
+        "calculation": "probe_model",
+        "id": "parameter_probe",
+        "inputs": [
+          "/models/fitted",
+          "/parts/specification"
+        ],
+        "output": "/evidence/parameters"
+      },
+      {
+        "calculation": "update_beta",
+        "id": "posterior",
+        "inputs": [
+          "/parts/prior",
+          "/evidence/predictions"
+        ],
+        "output": "/models/posterior"
+      },
+      {
+        "calculation": "probe_predictions",
+        "id": "prediction_probe",
+        "inputs": [
+          "/models/predicted",
+          "/parts/observed"
+        ],
+        "output": "/evidence/predictions"
+      },
+      {
+        "calculation": "predict_motion",
+        "id": "predict",
+        "inputs": [
+          "/models/fitted",
+          "/parts/queries"
+        ],
+        "output": "/models/predicted"
+      },
+      {
+        "calculation": "fit_motion",
+        "id": "fit",
+        "inputs": [
+          "/parts/training",
+          "/parts/config"
+        ],
+        "output": "/models/fitted"
+      }
+    ],
+    "outputs": {
+      "decision": "/evidence/decision",
+      "model": "/models/fitted",
+      "parameter_probe": "/evidence/parameters",
+      "posterior": "/models/posterior",
+      "prediction_probe": "/evidence/predictions"
+    }
+  },
+  "sources": {
+    "/parts/config": {},
+    "/parts/observed": {
+      "tolerance": 1e-9,
+      "values": [
+        -10,
+        -1,
+        8,
+        17,
+        26,
+        35,
+        44,
+        53,
+        62,
+        71
+      ]
+    },
+    "/parts/policy": {
+      "min_cases": 10,
+      "min_mean": 0.8
+    },
+    "/parts/prior": {
+      "alpha": 1,
+      "beta": 1
+    },
+    "/parts/queries": {
+      "transitions": [
+        {
+          "action": 1,
+          "x": -13
+        },
+        {
+          "action": 2,
+          "x": -6
+        },
+        {
+          "action": 3,
+          "x": 1
+        },
+        {
+          "action": 4,
+          "x": 8
+        },
+        {
+          "action": 5,
+          "x": 15
+        },
+        {
+          "action": 6,
+          "x": 22
+        },
+        {
+          "action": 7,
+          "x": 29
+        },
+        {
+          "action": 8,
+          "x": 36
+        },
+        {
+          "action": 9,
+          "x": 43
+        },
+        {
+          "action": 10,
+          "x": 50
+        }
+      ]
+    },
+    "/parts/specification": {
+      "expected_bias": 1,
+      "expected_gain": 2,
+      "tolerance": 1e-9
+    },
+    "/parts/training": {
+      "transitions": [
+        {
+          "action": -2,
+          "next_x": -7,
+          "x": -4
+        },
+        {
+          "action": -1,
+          "next_x": -2,
+          "x": -1
+        },
+        {
+          "action": 0,
+          "next_x": 3,
+          "x": 2
+        },
+        {
+          "action": 1,
+          "next_x": 8,
+          "x": 5
+        },
+        {
+          "action": 2,
+          "next_x": 13,
+          "x": 8
+        }
+      ]
+    }
+  },
+  "implementationIdentity": {
+    "digest": "b1cd98c6ff4195b183d6b6e0cee21b1ca0e2e16afa2bd3d482b400a175f13739",
+    "files": {
+      "exp/atlas/atlas-fg.mjs": {
+        "bytes": 3776,
+        "sha256": "3672845e47fa35c21a14d6db5a69b17925509caaa0780070d84f8e0dde2c1840"
+      },
+      "exp/atlas/atlas-session.mjs": {
+        "bytes": 9688,
+        "sha256": "7bf3089806a4ddf03f8e3dd07f0cbff1e968e4c22738f95c68f9bb8fd2112bce"
+      },
+      "exp/atlas/calculations.mjs": {
+        "bytes": 14134,
+        "sha256": "fa4128bd4ab6ca313c833ad8ca8dff5fff8f72391ba9495c3f4731a2e9b00247"
+      },
+      "exp/atlas/capability-protocol.mjs": {
+        "bytes": 16292,
+        "sha256": "63a25cf4aa1610a509ce22ad44b4a6996036f647dae357f1d08dc130c9015088"
+      },
+      "exp/atlas/cross-language.mjs": {
+        "bytes": 7075,
+        "sha256": "299dcc87db0c6b14ae6c0a6530a0d3e8b9dd601d79d6c916cc956295b129c41e"
+      },
+      "exp/atlas/runtime-adapter.mjs": {
+        "bytes": 16226,
+        "sha256": "ea24b4c8b810ff8ae483b92a87235df74c6df194fbc493e5dd06d5bbc122ffa8"
+      },
+      "exp/cooperative/annotation-fg.mjs": {
+        "bytes": 23147,
+        "sha256": "bdad53539c809b0b75f64778454da66d51d81ff747086a236ee41f88ff25a451"
+      },
+      "exp/cooperative/fg-association.mjs": {
+        "bytes": 3815,
+        "sha256": "c1a3c0c7f2ec2a2f29caa32292cee38ecd6c8c89bc5030f70aa4defcca608aab"
+      },
+      "vendor/hh/services/pxc.mjs": {
+        "bytes": 2869,
+        "sha256": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9"
+      },
+      "vendor/hh/src/teacher-journey.mjs": {
+        "bytes": 13429,
+        "sha256": "dde771c3048fba787704f2fc62606d51065775afcc067d2f907a3bf9a78c5596"
+      }
+    },
+    "roots": [
+      "exp/atlas/atlas-session.mjs",
+      "exp/atlas/cross-language.mjs"
+    ],
+    "schema": "atlas-implementation-closure@1"
+  },
+  "case_id": "sha256:0d9c0275e91cd52da36bf22e0c890ee45c78f76e91ceff303bcbf73b3264c7da"
+}

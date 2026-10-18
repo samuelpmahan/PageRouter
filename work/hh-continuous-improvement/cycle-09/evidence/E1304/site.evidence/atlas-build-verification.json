@@ -1,0 +1,138 @@
+{
+  "projects": {
+    "pxcube": {
+      "old": "b2070b4f86ba16a35152739ffca7e42658aaa56542814c21136b39ee3eb6b053",
+      "new": "b2070b4f86ba16a35152739ffca7e42658aaa56542814c21136b39ee3eb6b053",
+      "equal": true
+    },
+    "hh": {
+      "old": "69f5d78faac5cdcb2a7a40116e6637d186ccb08f55c2c9195786df5489f37fa3",
+      "new": "69f5d78faac5cdcb2a7a40116e6637d186ccb08f55c2c9195786df5489f37fa3",
+      "equal": true
+    },
+    "justin": {
+      "old": "05a005cb29e5d7b41d515a0d9d844f9512482a6ad7540e52d4d911c2492967e3",
+      "new": "05a005cb29e5d7b41d515a0d9d844f9512482a6ad7540e52d4d911c2492967e3",
+      "equal": true
+    }
+  },
+  "release": {
+    "version": "0.0.0",
+    "channel": "candidate",
+    "buildId": "af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492",
+    "siteBuildId": "fea2626b882e958a0e4dc80b619d2aed490b59a941d9d9cf510380389f1b027c",
+    "evaluatorIdentity": {
+      "schema": "evaluator-dependency-closure@1",
+      "roots": [
+        "src/session-repl.mjs",
+        "exp/cooperative/hh-workbench.mjs"
+      ],
+      "files": {
+        "exp/cooperative/hh-workbench.mjs": {
+          "sha256": "120579662183ab248460c93234200dad10fd1f5f956900c47b603bc91cedcfd9",
+          "bytes": 47537
+        },
+        "vendor/hh/services/contract.mjs": {
+          "sha256": "6d50ddd27ac35df190a5e3c65e5fc4e5c269ca52ae8febb1d9d332bc2597738c",
+          "bytes": 4062
+        },
+        "vendor/hh/services/pxc.mjs": {
+          "sha256": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+          "bytes": 2869
+        },
+        "vendor/hh/services/runtime.mjs": {
+          "sha256": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+          "bytes": 4589
+        },
+        "vendor/hh/services/devtools-board.mjs": {
+          "sha256": "90113ea78b98ae526db03f0a5ff7cf43c41190a886a7bf8c0d2639edacde8999",
+          "bytes": 3537
+        },
+        "vendor/hh/services/fixture-provider.mjs": {
+          "sha256": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+          "bytes": 16820
+        },
+        "vendor/hh/services/fixtures.mjs": {
+          "sha256": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+          "bytes": 1507
+        },
+        "src/session-repl.mjs": {
+          "sha256": "5a43c22d3f0a8c8fcd21689a798d57866e29451250e5a5a415736130b897b7cf",
+          "bytes": 18744
+        }
+      },
+      "hostBindings": {
+        "initialization": {
+          "sha256": "319e74ee4c6df72e299df65edc9224ba910710248317f385233f4ccb542ed420",
+          "bytes": 140
+        },
+        "output": {
+          "sha256": "be461d0a137ca08038ff8ccb89afe494cf407eb2dd266a2d282762ab6ee4eb90",
+          "bytes": 340
+        },
+        "functionsView": {
+          "sha256": "8f8bb6514cf0e6fc3814e74b75120d4f07652718ee0f1ae215b2a41fed9b91a0",
+          "bytes": 2706
+        },
+        "composeView": {
+          "sha256": "2dbb28b2ce7ff41b0070ade8ca16904b35053223f5a68e45c5f447a692ccfa66",
+          "bytes": 2841
+        }
+      },
+      "digest": "572f02f674ac1cdf8b27664a803d4d06ac32ac16833a527f14718a33b249cdff"
+    },
+    "atlasIdentity": {
+      "schema": "atlas-implementation-closure@1",
+      "roots": [
+        "exp/atlas/atlas-session.mjs"
+      ],
+      "files": {
+        "exp/atlas/atlas-session.mjs": {
+          "sha256": "aaf98181c1ab3e7394d4a1c992d917e6986b4f9561bb487506e6db68af558c1e",
+          "bytes": 9213
+        },
+        "exp/atlas/calculations.mjs": {
+          "sha256": "fa4128bd4ab6ca313c833ad8ca8dff5fff8f72391ba9495c3f4731a2e9b00247",
+          "bytes": 14134
+        },
+        "exp/atlas/runtime-adapter.mjs": {
+          "sha256": "a1b8042595f7c0cdb4b7ab2f35296dae3e6433c9b82d118021fb7686c912fb5b",
+          "bytes": 13176
+        },
+        "vendor/hh/services/pxc.mjs": {
+          "sha256": "1b280236336522fd0568e9e7c0fc652b88c259c65f7db4efcd5b23f04ee88af9",
+          "bytes": 2869
+        }
+      },
+      "digest": "c07e22a6db3623821ef6ee01fccb73b3e1fe580d1bd2c0abe4266387fd6d4bf9"
+    },
+    "notes": [
+      "Recovered original PageRouter A/B comparison and pinned project loading",
+      "Full existing PxCube crisp packages and authoritative neat/tidy lifecycle",
+      "Visual live composition session with actual HH Calculation Parts, typed connections and nested reuse",
+      "Exact-pin agent-readable graph/session export/import, separate from optional execution evidence",
+      "Compiled exact-byte deltas over real source closure, with clean-build equality proofs",
+      "Justin site IDE: declaratively composed annotation switch, guarded issue markers, reversible presentation prototypes and exact-base export",
+      "Game Boy cartridge picker with Connect Four baseline and a same-rules PxC + seek-tree migration",
+      "Bounded HH style playground with seeded fast-check variants, real PxC receipts, and a safe CSS-variable boundary",
+      "PxCube Atlas: live bounded program search, concrete counterexamples, real Part provenance and persistent-session replay/cache inspection"
+    ],
+    "record": "package.json",
+    "sourceCheckpoint": null
+  },
+  "pxcubeRelocation": {
+    "schema": "exact-shipped-pxcube-relocation@1",
+    "originalEvidencePath": "/workspace/scratch/acdc354f2dcd/composed-workbench/sources/pxcube/.pxcube/runs/2026-10-03T04-57-02-751Z-f7caf981/site",
+    "materializedSource": "dist/compiled/pxcube",
+    "localAssemblyPath": "build/pxcube-preserved",
+    "digest": "b2070b4f86ba16a35152739ffca7e42658aaa56542814c21136b39ee3eb6b053",
+    "fileCount": 574,
+    "rebuilt": false
+  },
+  "verification": {
+    "nodeTests": 74,
+    "builtImportTests": 2,
+    "runtimeMatchesIdentity": true,
+    "compressedDeliveryVerified": true
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "job_id": "E1307",
+  "worker": "H1",
+  "status": "prospective_not_run",
+  "recorded_at_utc": "2026-10-18 15:34:35 UTC",
+  "scope": "Package-archive hygiene only. Preserve the exact R1305-AMENDED 113-file package recoverably, rename the archived candidate from a Node-discoverable .test.mjs suffix to .test.mjs.txt without changing its bytes, add a clearly superseding manifest and append-only post-review records. No product/test source changes, canonical build, commit, or export.",
+  "frozen_old_package": {
+    "path": "/workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-09",
+    "old_manifest_sha256": "9cd5ba3824b50ebc064f361d6998c60c2024c562943ea7ab86d22237ae67dc42",
+    "old_manifest_entries_excluding_self": 112,
+    "old_total_regular_files": 113,
+    "source_archive_path": "evidence/source-candidate/public-controller.test.mjs",
+    "source_archive_sha256": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9",
+    "controller_sha256": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+    "native_R1305_raw_result_sha256": "28064a89f6b02405295b4abdce1e749c3bbab5a48da8e54adeaf8032d94f671e",
+    "native_R1305_commands_sha256": "4602ad26e4511389861ae2b772a78ceb25f28fe5198bfdb6f133475a65df0a97"
+  },
+  "archive_plan": {
+    "archive_outside_package": "/workspace/scratch/8528bb251845/hh-cycle09/E1307/original-cycle09.tar.zst",
+    "restore_dir_outside_package": "/workspace/scratch/8528bb251845/hh-cycle09/E1307/restored-original",
+    "create_command": "set -o pipefail; tar --zstd --sort=name --mtime='UTC 1970-01-01' --owner=0 --group=0 --numeric-owner -cvf /workspace/scratch/8528bb251845/hh-cycle09/E1307/original-cycle09.tar.zst -C /workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-09 . 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle09/E1307/archive-create.stdout.log; archive_status=(\"${PIPESTATUS[@]}\"); printf 'tar_exit=%s\\ntee_exit=%s\\n' \"${archive_status[0]}\" \"${archive_status[1]}\"; exit \"${archive_status[0]}\"",
+    "verification_command": "node /workspace/scratch/8528bb251845/hh-cycle09/E1307/verify-original-archive.mjs /workspace/scratch/8528bb251845/hh-cycle09/E1307/original-cycle09.tar.zst /workspace/scratch/8528bb251845/hh-cycle09/E1307/restored-original",
+    "validation": "Verifier checks archive paths for traversal/absolute names, extracts only into the new scratch restore directory, compares the archive's regular-file set to the old manifest plus its own manifest file, and checks all 112 original SHA-256 entries before any package mutation."
+  },
+  "rename_plan": {
+    "old_path": "evidence/source-candidate/public-controller.test.mjs",
+    "new_path": "evidence/source-candidate/public-controller.test.mjs.txt",
+    "expected_sha256_before_and_after": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9",
+    "semantics": "Archival filename only. This is not a product test edit and does not claim the archived source is executable from the package."
+  },
+  "post_rename_validation_commands": [
+    {
+      "command": "set -o pipefail; node --test 2>&1 | tee /workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-09/post-review-admin/validation/package-discovery.stdout.log; run_status=(\"${PIPESTATUS[@]}\"); printf 'node_exit=%s\\ntee_exit=%s\\n' \"${run_status[0]}\" \"${run_status[1]}\"; exit \"${run_status[0]}\"",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-09",
+      "interpretation": "A zero-test discovery result is only evidence the archived source snapshot is no longer auto-discovered; it is not a product test pass or green test suite. Preserve exact counts/exit."
+    },
+    {
+      "command": "cmp -s /workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-09/evidence/source-candidate/public-controller.test.mjs.txt /workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "interpretation": "Byte identity check for the archived text snapshot against the unchanged candidate source."
+    },
+    {
+      "command": "git diff --check",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+      "interpretation": "Whitespace check; does not substitute for test/build evidence."
+    }
+  ],
+  "gates": [
+    "Create and verify the exact old-package recovery archive before mutation.",
+    "Preserve old manifest and raw R1305 AMEND; do not relabel the prior decision as accepted.",
+    "Keep old README.md, NEXT.md, and continuation.json byte-identical; append post-review docs instead.",
+    "Recompute a clearly superseding manifest with exact path/hash mapping and archive hash.",
+    "No commit/export/publication until separate R1307 accepted and root explicit GO."
+  ]
+}

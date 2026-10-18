@@ -1,0 +1,26 @@
+R1307 recorded check commands and results
+
+Provenance: exact `checks[].command` and `checks[].result` fields from `result.json`, rendered as a readable ledger. Placeholder text remains as H2 recorded it; this is not a raw shell log and does not claim access to one.
+
+1. Command: sha256sum evidence/manifest.json /workspace/scratch/8528bb251845/hh-cycle09/H1/E1307/actualresult.json /workspace/scratch/8528bb251845/hh-cycle09/E1307/original-cycle09.tar.zst
+   Result: manifest 4a745ebe37defec57f166c9f08350333f1af78477fef7e0cdc78874455af8416; E1307 result ce5f7eb221d158d33dfe3976104095b3d27d20dd909907e99f83e6b1fe996e20; archive deafbd9e09bd52692cbc5bc742ec72ba53cab0689937559fb2b397b38e5587e6
+
+2. Command: node --input-type=module -e '<recursive regular-file walk; SHA-256 compare every file to evidence/manifest.json>'
+   Result: 137 manifest entries; 137 actual regular files; missing=[], extra=[], hashMismatches=[]; ok=true
+
+3. Command: node --input-type=module -e '<compare post-review-admin/original-manifest.json entries to active manifest, applying only declared filename mapping>'
+   Result: 112/112 old payload hashes matched; 111 unchanged paths; one test snapshot mapped to .mjs.txt with same hash; mismatches=[]
+
+4. Command: node /workspace/scratch/8528bb251845/hh-cycle09/E1307/verify-original-archive-stream.mjs /workspace/scratch/8528bb251845/hh-cycle09/E1307/original-cycle09.tar.zst
+   Result: exit 0; 113 archived regular files; old manifest SHA-256 9cd5ba3824b50ebc064f361d6998c60c2024c562943ea7ab86d22237ae67dc42; 1,767,298 streamed bytes; zero mismatches; in-memory tar member reads only
+
+5. Command: node --test (cwd: PageRouter/work/hh-continuous-improvement/cycle-09)
+   Result: exit 0; tests=0, suites=0, pass=0, fail=0; package non-discovery check only
+
+6. Command: sha256sum evidence/source-candidate/public-controller.test.mjs.txt /workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs /workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.mjs; rg --files evidence | rg '\\.(test|spec)\\.(js|mjs|cjs)$'
+   Result: snapshot and live test source both d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9; controller 8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b; no executable test-suffix file in active evidence package
+
+7. Command: git -C /workspace/scratch/8528bb251845/PageRouter status --short && git -C /workspace/scratch/8528bb251845/PageRouter rev-parse HEAD && git -C /workspace/scratch/8528bb251845/PageRouter rev-parse 'HEAD^{tree}'
+   Result: only pre-existing H1 test modification and root-owned untracked cycle-09 package; HEAD 46d1f32aca87919abceecf8b0c53454173cd574f; tree b80f1408d3c21c23e058989ce79fcfc60a0ba674
+
+These are review testimony as preserved by H2, not newly rerun by H1. The review's limitations and original AMEND status are preserved verbatim in `result.json`.

@@ -1,0 +1,6 @@
+{
+  "job_id": "E1303",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "Added two public-controller regression tests only, exercising the existing non-secret updateDraft sequence before mismatch and missing-terms validation. Both focused tests passed 2/2; full public-controller passed 51/51; HH core non-style suite passed 118/118; git diff --check passed. Product controller is unchanged at SHA-256 8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b; test file is SHA-256 d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9. Generated password values remained ephemeral and all leak assertions compare booleans only. No red-before-fix or mounted-DOM claim. No source change, canonical build, commit, push, main update, or deployment. Exact command/exit/count records and transcript-capture qualification are in run-receipt.json; summary output files were authored after execution and are not represented as raw shell logs."
+}

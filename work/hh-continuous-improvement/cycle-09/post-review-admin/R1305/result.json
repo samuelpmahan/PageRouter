@@ -1,0 +1,83 @@
+{
+  "job_id": "R1305",
+  "worker": "H2",
+  "decision": "amend",
+  "summary": "Independent audit verified every one of the frozen package's 112 regular files against its 112-entry manifest, including exact candidate, canonical-build, native, and H2 R1303 provenance. It also found a real packaging/discovery defect: the archived source snapshot is named public-controller.test.mjs despite having no imported siblings in the archive. Both explicit execution and bare `node --test` from the cycle package root discover it and fail resolving evidence/services/index.mjs. Preserve the original package and manifest unchanged; owner should issue a separately versioned/append-only erratum or corrected package that archives this source copy under a non-test extension such as .mjs.txt with a hash mapping and updates its manifest.",
+  "manifest_audit": {
+    "path": "PageRouter/work/hh-continuous-improvement/cycle-09/evidence/manifest.json",
+    "sha256": "9cd5ba3824b50ebc064f361d6998c60c2024c562943ea7ab86d22237ae67dc42",
+    "declared_regular_files_excluding_manifest": 112,
+    "listed_files": 112,
+    "actual_regular_files_excluding_manifest": 112,
+    "verified_sha256_entries": 112,
+    "missing_unlisted_or_hash_mismatches": 0
+  },
+  "source_and_build_binding": {
+    "source_candidate": "evidence/source-candidate/public-controller.test.mjs",
+    "source_candidate_sha256": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9",
+    "candidate_byte_equal_to_current_checkpoint_source": true,
+    "controller_sha256": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+    "canonical_build_receipt_sha256": "ac7efdc22c3c56fb2c7b575f54b46a635b12012301c0f772c2316a4c2234d18f",
+    "canonical_build_log_sha256": "8f3c6843e23add84d561637f1e8f2d6d56a67dc3a49e6db700d4c15dd6aa2d75",
+    "build_result_receipt_binding": "E1304 receipt names both unchanged controller and exact test candidate hashes, process exit 0 and tee exit 0; records build helpers 2/2, targeted HH 125/125, full site suite 280/280, Atlas closure 1/1, 14 PxCube packages, 843 verified files, build id 831692c8dc830d6528fbaf3b431583809bc24a470fa1fa5661d68dd7d36868a1, digest 319f172f8a79194ad2410e9ad389a2a158f433092bcc4684e252a9397c148b91. This is record audit, not an H2 build rerun."
+  },
+  "native_and_provenance_review": {
+    "E1301": "Native receipt says not_reuse. README correctly distinguishes the preserved preflight-invalid `success` proposal from the actual result.",
+    "E1302": "Native receipt outcome is insufficient_evidence. README correctly says coordinator mapped the worker's allowed_outcome field; no native rejection occurred.",
+    "E1303": "Native receipt is confirmed_reuse for two test-only cases. README and manifest scope explicitly label H1 E1303 companion stdout files as retrospective summaries, not raw shell logs.",
+    "E1304": "Native receipt is confirmed_reuse and is bound to the canonical build receipt/log and exact source hashes.",
+    "R1303": "Native review receipt is accepted. Packaged H2 R1303 command and TAP stdout/exit artifacts are hash-bound by the manifest.",
+    "historical_state": "The E1305-packaging-running state snapshot is explicitly historical; it records H1 E1305 running and H2 R1305 pending at capture time. It is not live dispatch authority. Current scratch native state showed H1 E1305 done and H2 R1305 running.",
+    "browser_claims": "README/NEXT/continuation consistently state mounted DOM and visual QA are unverified; no backend or production behavior is claimed."
+  },
+  "checks_run": [
+    {
+      "check": "Read-only regular-file walk and SHA-256 comparison for every manifest path; compare exact enumerated path set.",
+      "result": "112 declared/listed/actual, all 112 verified, zero missing/unlisted/mismatched."
+    },
+    {
+      "command": "sha256sum PageRouter/work/hh-continuous-improvement/cycle-09/evidence/manifest.json PageRouter/work/hh-continuous-improvement/cycle-09/evidence/source-candidate/public-controller.test.mjs PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs PageRouter/checkpoint/vendor/hh/src/public-controller.mjs",
+      "result": "Manifest SHA 9cd5ba3824b50ebc064f361d6998c60c2024c562943ea7ab86d22237ae67dc42; candidate and checkpoint test both SHA d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9; controller SHA 8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b."
+    },
+    {
+      "command": "node --test evidence/source-candidate/public-controller.test.mjs",
+      "cwd": "PageRouter/work/hh-continuous-improvement/cycle-09",
+      "exit_code": 1,
+      "observed": "ERR_MODULE_NOT_FOUND for evidence/services/index.mjs imported by evidence/source-candidate/public-controller.test.mjs."
+    },
+    {
+      "command": "node --test",
+      "cwd": "PageRouter/work/hh-continuous-improvement/cycle-09",
+      "exit_code": 1,
+      "observed": "Bare discovery selected exactly one test file, the archived public-controller.test.mjs, and failed on the same missing evidence/services/index.mjs import."
+    },
+    {
+      "command": "cmp -s PageRouter/work/hh-continuous-improvement/cycle-09/evidence/source-candidate/public-controller.test.mjs PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "exit_code": 0
+    },
+    {
+      "command": "git -C PageRouter diff --check",
+      "exit_code": 0,
+      "observed": "Whitespace gate passed for the current H1 test-only diff."
+    }
+  ],
+  "packaging_finding": {
+    "severity": "package discovery failure, not a product test failure",
+    "cause": "The archived source snapshot keeps an executable `.test.mjs` suffix but its relative imports resolve within `evidence/`; required services and sibling HH modules are not in this archive. Bare Node test discovery from the package root auto-runs it.",
+    "reproduced": true,
+    "requested_owner_action": "AMEND through a separately versioned package/erratum. Do not rewrite this frozen package or its exact 112-entry manifest during H2 review. A corrected package can store the same candidate bytes as `.mjs.txt` (with explicit SHA mapping), omit the executable `.test.mjs` path in the superseding manifest, and recompute its entry count and manifest hash."
+  },
+  "limits": [
+    "The bare test discovery reproduction was run from the cycle-09 package root; H2 did not run a potentially broader `node --test` across the entire PageRouter repository.",
+    "H2 did not rerun the canonical build, the 118-test HH core suite, or mounted-browser QA; those claims were audited from manifest-verified receipts/logs and are not represented as H2 executions.",
+    "H2 made no source, package, manifest, or Git changes. PageRouter source candidate remains HEAD 46d1f32aca87919abceecf8b0c53454173cd574f / tree b80f1408d3c21c23e058989ce79fcfc60a0ba674, with only H1's test-file modification plus the root-owned untracked cycle-09 package."
+  ],
+  "evidence": {
+    "commands": "COMMANDS.txt",
+    "manifest_sha256": "9cd5ba3824b50ebc064f361d6998c60c2024c562943ea7ab86d22237ae67dc42",
+    "controller_sha256": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+    "test_sha256": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9",
+    "build_receipt_sha256": "ac7efdc22c3c56fb2c7b575f54b46a635b12012301c0f772c2316a4c2234d18f",
+    "R1303_review_receipt_sha256": "851d987557f0826af1a98058b934e3b62fc97e974949c5e5ef7469a258582302"
+  }
+}

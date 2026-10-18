@@ -1,0 +1,30 @@
+{
+  "schema": "hh-cycle09-original-package-restore-map/v1",
+  "original_package": {
+    "path": "work/hh-continuous-improvement/cycle-09/ before post-review changes",
+    "regular_files": 113,
+    "manifest_entries_excluding_self": 112,
+    "manifest_sha256": "9cd5ba3824b50ebc064f361d6998c60c2024c562943ea7ab86d22237ae67dc42",
+    "verbatim_manifest_copy": "post-review-admin/original-manifest.json"
+  },
+  "recoverable_archive": {
+    "path": "post-review-admin/archive/original-cycle09.tar.zst",
+    "bytes": 710258,
+    "sha256": "deafbd9e09bd52692cbc5bc742ec72ba53cab0689937559fb2b397b38e5587e6",
+    "regular_members_verified": 113,
+    "verification": "Every member streamed to memory via tar -xOf and SHA-256 checked against the embedded old manifest; 112 entries plus manifest, zero mismatches.",
+    "extraction_limit": "A first extraction attempt failed on preserved mode-0555 directories/mode-0444 files. No permission override or retry was attempted. The archive is byte-verified but a successful filesystem restoration is not claimed."
+  },
+  "in_place_recovery": {
+    "unchanged_old_payloads_at_original_paths": 111,
+    "unchanged_payload_verification": "Read-only hash check against original manifest passed for all 111 paths.",
+    "renamed_file_mapping": {
+      "from": "evidence/source-candidate/public-controller.test.mjs",
+      "to": "evidence/source-candidate/public-controller.test.mjs.txt",
+      "sha256": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9",
+      "bytes": 67386
+    },
+    "old_manifest": "The original manifest remains verbatim at post-review-admin/original-manifest.json and inside the archive. The active evidence/manifest.json is the superseding manifest for the corrected package.",
+    "restore_steps": "To reconstruct the pre-review logical package tree, preserve the 111 unchanged paths, copy the .mjs.txt bytes back to the old .mjs path, and use the verbatim original manifest. This is a mapping, not a claim that the original tree layout remains physically unchanged."
+  }
+}

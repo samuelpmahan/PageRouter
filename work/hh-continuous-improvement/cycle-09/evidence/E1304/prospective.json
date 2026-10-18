@@ -1,0 +1,42 @@
+{
+  "status": "prospective_not_run",
+  "recorded_at_utc": "2026-10-18 15:19:49 UTC",
+  "job_id": "E1304",
+  "worker": "H1",
+  "mode": "canonical local source build and output verification; no publication",
+  "source": {
+    "repository": "PageRouter/checkpoint",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "46d1f32aca87919abceecf8b0c53454173cd574f",
+    "tree_before_build": "b80f1408d3c21c23e058989ce79fcfc60a0ba674",
+    "controller_path": "vendor/hh/src/public-controller.mjs",
+    "controller_sha256": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+    "test_path": "vendor/hh/src/public-controller.test.mjs",
+    "test_sha256": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9",
+    "package_lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534",
+    "bazel_wrapper_sha256": "2a1a6fc5bc919f67b424d6fed92e4e888bf3767b634b1ad9544604067fbe072c"
+  },
+  "environment": {
+    "node": "v24.19.0",
+    "npm": "11.9.0",
+    "python": "3.12.14",
+    "expected_bazel": "7.4.1",
+    "bazel_binary": "/workspace/scratch/8528bb251845/tools/bazel",
+    "bazel_binary_sha256": "c97f02133adce63f0c28678ac1f21d65fa8255c80429b588aeeba8a1fac6202b",
+    "note": "Bazel was not on PATH; the workspace's verified 7.4.1 binary will be supplied through the build script's documented BAZEL override."
+  },
+  "command": {
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "shell": "bash",
+    "script": "set -o pipefail; BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle09/H1/E1304/build.combined.log; build_status=(\"${PIPESTATUS[@]}\"); printf 'build_process_exit=%s\\n' \"${build_status[0]}\"; exit \"${build_status[0]}\"",
+    "expected_process_exit_capture": "PIPESTATUS[0] is captured immediately after the build|tee pipeline; PIPESTATUS[1] is tee status."
+  },
+  "expected_outputs_not_yet_verified": [
+    "bazel-bin/site.site",
+    "bazel-bin/site.receipt.json",
+    "bazel-bin/site.evidence",
+    "bazel-bin/site.log"
+  ],
+  "gates": ["E1303 tests passed on unchanged product source", "canonical build", "output receipt/source input verification", "authored whitespace check"],
+  "limitations": ["No browser retry", "No Git commit/push", "No publication/deployment", "No production data or backend calls"]
+}

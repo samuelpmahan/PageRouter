@@ -1,0 +1,6 @@
+{
+  "job_id": "E1301",
+  "worker": "H1",
+  "outcome": "not_reuse",
+  "summary": "Cycle-08 stale-draft hypothesis was falsified: actual app source binds named input events to controller.updateDraft before form submission; the controller/render-projection fixture probe retained synthetic name, email, and phone across mismatch and missing-terms local validation, while a valid fixture control reached pending with identity retained. Passwords were generated only at execution and were absent from controller state; stdout was restricted to booleans/status. This evidence is source/controller/render-projection, not mounted-DOM evidence: Playwright had no browser executable and cloud Chrome could not reach the local fixture server. No product source or tests changed. See README.md for exact source hashes, candidate identity, command/tool testimony and limitations."
+}

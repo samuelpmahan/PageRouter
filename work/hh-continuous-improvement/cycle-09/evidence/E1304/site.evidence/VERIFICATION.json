@@ -1,0 +1,158 @@
+{
+  "schema": "composed-workbench-verification@1",
+  "version": "0.0.0",
+  "channel": "candidate",
+  "buildId": "af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492",
+  "checks": [
+    {
+      "name": "recovered HH C6 suite",
+      "passed": 37,
+      "failed": 0,
+      "evidence": "evidence/hh-original-suite.tap"
+    },
+    {
+      "name": "existing crisp suite",
+      "passed": 68,
+      "failed": 0,
+      "evidence": "evidence/crisp-original-suite.log"
+    },
+    {
+      "name": "integrated adapter/patch/router/session Node suites",
+      "passed": 34,
+      "failed": 0,
+      "evidence": "evidence/unit-tests.tap"
+    },
+    {
+      "name": "complete pinned-project/browser/import UI",
+      "passed": 26,
+      "failed": 0,
+      "evidence": "exp/adversarial/evidence/browser-qa.json"
+    },
+    {
+      "name": "visual runtime graph/nested reuse/export/import",
+      "passed": 29,
+      "failed": 0,
+      "evidence": "exp/adversarial/evidence/session-browser-qa.json"
+    }
+  ],
+  "deltaProofs": {
+    "HH": {
+      "kind": "actual-HH-C6-compiled-byte-delta",
+      "baseDigest": "48b928f941454ec62d2191ec6caa77399a2c37e6bbc2d9af82acdab015d7e6d9",
+      "targetDigest": "baa7f469774759449bca15bedc04471664f5d74728f7fe587bfaa1611a193d21",
+      "cleanDigest": "baa7f469774759449bca15bedc04471664f5d74728f7fe587bfaa1611a193d21",
+      "equal": true,
+      "rebuilt": [
+        "file:styles.css",
+        "file:index.html"
+      ],
+      "reused": [
+        "file:teacher-journey.mjs",
+        "file:controller.mjs",
+        "file:services/pxc.mjs",
+        "file:pxc-devtools/devtools-data.mjs",
+        "file:pxc-devtools/devtools.mjs",
+        "file:services/contract.mjs",
+        "file:services/fixtures.mjs",
+        "file:services/fixture-provider.mjs",
+        "file:services/http-provider.mjs",
+        "file:services/devtools-board.mjs",
+        "file:services/runtime.mjs",
+        "file:services/index.mjs",
+        "file:webmcp.mjs",
+        "file:app.mjs",
+        "file:assets/apple.jpg",
+        "file:assets/favicon.ico",
+        "file:assets/hero_border.jpg",
+        "file:assets/logo_transparent.png",
+        "file:pxc-devtools/devtools.css",
+        "file:services/CHECKPOINT.md",
+        "file:services/PROVENANCE.json",
+        "file:services/README.md"
+      ],
+      "operations": [
+        {
+          "path": "styles.css",
+          "kind": "splice",
+          "beforeSha256": "64e305f0a3c9b5c8a852f326ea2ce42de11e68eccc4c570de0a9cf58b429d434",
+          "afterSha256": "6d76d764ab916aca59baeb9a9c29d336e9dcbb5fda86f8fb3c3b5719c4b076d4",
+          "bytes": 10215,
+          "start": 10143,
+          "deleteCount": 0,
+          "payloadBytes": 72
+        }
+      ],
+      "patchBytes": 7068,
+      "fullBytes": 289660,
+      "payloadBytes": 72
+    },
+    "existingCrisp": {
+      "schema": "existing-crisp-delta-proof@1",
+      "sourceChange": "experiences/hello/index.html",
+      "sourceChangeBytes": 46,
+      "changedPackageKeys": [
+        "hello"
+      ],
+      "reusedPackageKeys": [
+        "build-bag",
+        "create-graphics",
+        "explore-shelf",
+        "export-graphics",
+        "gameboy",
+        "mock-smoke",
+        "on-course",
+        "snake",
+        "upload-disc-to-shelf",
+        "upload-disc-to-shelf-delta",
+        "your-shelf"
+      ],
+      "baseDigest": "22c2e04d47a579f57f261f91b656e47de87eab92e55eb2d65af1675bd31c5bbf",
+      "targetDigest": "327e5a815e0c902022de959594b00a38a84bdf38f58fdb0cc5253872084a7690",
+      "cleanDigest": "327e5a815e0c902022de959594b00a38a84bdf38f58fdb0cc5253872084a7690",
+      "exactCompiledEquality": true,
+      "rebuilt": [
+        "hello"
+      ],
+      "reused": [
+        "build-bag",
+        "create-graphics",
+        "explore-shelf",
+        "export-graphics",
+        "gameboy",
+        "mock-smoke",
+        "on-course",
+        "snake",
+        "upload-disc-to-shelf",
+        "upload-disc-to-shelf-delta",
+        "your-shelf"
+      ],
+      "ops": [
+        {
+          "path": "experiences/hello/index.html",
+          "kind": "splice",
+          "beforeSha256": "130311678ebbd422e41f93a0653ff118fbc4eb4c4e8794c0899c3000d2320bc6",
+          "afterSha256": "75d75bbc86a6921ff8db15a4288e44c7440486a9b0f84e99fc6524eb0bf7d4c0",
+          "bytes": 1683,
+          "start": 1637,
+          "deleteCount": 0,
+          "payloadBytes": 46
+        }
+      ],
+      "baselineRun": "2026-10-02T21-07-49-402Z-5d815ed0",
+      "candidateRun": "2026-10-02T21-17-05-821Z-83e7e8ae",
+      "cleanRun": "2026-10-02T21-17-13-467Z-4d624473",
+      "boundary": "Equality covers every crisp testified compiled chunk across all 13 experiences. Attempt IDs and generated launcher provenance are intentionally separate, not claimed deterministic."
+    }
+  },
+  "unresolved": [
+    "Circlefit/ellipsefit/rimfit are not loaded or adapted; compatibility not asserted",
+    "FunctionalGuarantees remain undefined by user",
+    "No new contract milestone or human acceptance asserted"
+  ],
+  "publication": {
+    "target": "samuelpmahan/PageRouter",
+    "oldHead": "5cc1ae3d8d4d3c14074829c48118d1e70912b6dd",
+    "rollbackBranch": "rollback/pre-composed-workbench-20261002-5cc1ae3",
+    "status": "Drive checkpoint and deployment pending"
+  }
+}

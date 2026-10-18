@@ -1,0 +1,69 @@
+{
+  "projects": [
+    {
+      "id": "pxcube",
+      "files": 551,
+      "digest": "a11869ee06dbf76ebc33cde99225b17896539f496304c60d83ffb0b7d47f5cd7"
+    },
+    {
+      "id": "hh",
+      "files": 24,
+      "digest": "48b928f941454ec62d2191ec6caa77399a2c37e6bbc2d9af82acdab015d7e6d9"
+    },
+    {
+      "id": "justin",
+      "files": 22,
+      "digest": "05a005cb29e5d7b41d515a0d9d844f9512482a6ad7540e52d4d911c2492967e3"
+    }
+  ],
+  "delta": {
+    "kind": "actual-HH-C6-compiled-byte-delta",
+    "baseDigest": "48b928f941454ec62d2191ec6caa77399a2c37e6bbc2d9af82acdab015d7e6d9",
+    "targetDigest": "baa7f469774759449bca15bedc04471664f5d74728f7fe587bfaa1611a193d21",
+    "cleanDigest": "baa7f469774759449bca15bedc04471664f5d74728f7fe587bfaa1611a193d21",
+    "equal": true,
+    "rebuilt": [
+      "file:styles.css",
+      "file:index.html"
+    ],
+    "reused": [
+      "file:teacher-journey.mjs",
+      "file:controller.mjs",
+      "file:services/pxc.mjs",
+      "file:pxc-devtools/devtools-data.mjs",
+      "file:pxc-devtools/devtools.mjs",
+      "file:services/contract.mjs",
+      "file:services/fixtures.mjs",
+      "file:services/fixture-provider.mjs",
+      "file:services/http-provider.mjs",
+      "file:services/devtools-board.mjs",
+      "file:services/runtime.mjs",
+      "file:services/index.mjs",
+      "file:webmcp.mjs",
+      "file:app.mjs",
+      "file:assets/apple.jpg",
+      "file:assets/favicon.ico",
+      "file:assets/hero_border.jpg",
+      "file:assets/logo_transparent.png",
+      "file:pxc-devtools/devtools.css",
+      "file:services/CHECKPOINT.md",
+      "file:services/PROVENANCE.json",
+      "file:services/README.md"
+    ],
+    "operations": [
+      {
+        "path": "styles.css",
+        "kind": "splice",
+        "beforeSha256": "64e305f0a3c9b5c8a852f326ea2ce42de11e68eccc4c570de0a9cf58b429d434",
+        "afterSha256": "6d76d764ab916aca59baeb9a9c29d336e9dcbb5fda86f8fb3c3b5719c4b076d4",
+        "bytes": 10215,
+        "start": 10143,
+        "deleteCount": 0,
+        "payloadBytes": 72
+      }
+    ],
+    "patchBytes": 7068,
+    "fullBytes": 289660,
+    "payloadBytes": 72
+  }
+}

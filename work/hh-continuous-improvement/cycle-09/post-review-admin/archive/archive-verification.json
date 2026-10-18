@@ -1,0 +1,32 @@
+{
+  "schema": "hh-cycle09-original-archive-verification/v1",
+  "create": {
+    "command": "set -o pipefail; tar --zstd --sort=name --mtime='UTC 1970-01-01' --owner=0 --group=0 --numeric-owner -cvf /workspace/scratch/8528bb251845/hh-cycle09/E1307/original-cycle09.tar.zst -C /workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-09 . 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle09/E1307/archive-create.stdout.log; archive_status=(\"${PIPESTATUS[@]}\"); printf 'tar_exit=%s\\ntee_exit=%s\\n' \"${archive_status[0]}\" \"${archive_status[1]}\"; exit \"${archive_status[0]}\"",
+    "tar_exit": 0,
+    "tee_exit": 0,
+    "archive_bytes": 710258,
+    "archive_sha256": "deafbd9e09bd52692cbc5bc742ec72ba53cab0689937559fb2b397b38e5587e6",
+    "captured_verbose_stdout_path": "archive-create.stdout.log",
+    "captured_verbose_stdout_sha256": "51330a3b8f73a2d644a2d04cff4b21c5bc07f0b293cf799602995ff28b6320e2",
+    "note": "GNU tar reported that the supplied UTC timestamp parsed as 1970-01-01 03:00:00. Archive member bytes were independently validated; timestamp metadata is not part of the old file SHA-256 manifest."
+  },
+  "first_extraction_attempt": {
+    "script": "verify-original-archive.mjs",
+    "command": "node /workspace/scratch/8528bb251845/hh-cycle09/E1307/verify-original-archive.mjs /workspace/scratch/8528bb251845/hh-cycle09/E1307/original-cycle09.tar.zst /workspace/scratch/8528bb251845/hh-cycle09/E1307/restored-original",
+    "result": "nonzero; tar stderr reported Permission denied when writing under preserved 0555 directories and 0444 files; tool output showed nested tar status 2.",
+    "diagnostic_artifact": "first-extraction-attempt.tool-testimony.txt",
+    "qualification": "The tool output was not tee-captured as a raw log. The separate diagnostic file is explicitly retrospective tool testimony, not original raw stdout/stderr."
+  },
+  "safe_stream_verification": {
+    "script": "verify-original-archive-stream.mjs",
+    "script_sha256": "79596d995b7494d4fbe13d7e12f0f23102c96e76312b74943c720339261f903b",
+    "command": "node /workspace/scratch/8528bb251845/hh-cycle09/E1307/verify-original-archive-stream.mjs /workspace/scratch/8528bb251845/hh-cycle09/E1307/original-cycle09.tar.zst",
+    "exit_code": 0,
+    "method": "Read archive member bytes to memory with tar -xOf; did not extract or change filesystem permissions.",
+    "archived_regular_files": 113,
+    "old_manifest_entries": 112,
+    "old_manifest_sha256": "9cd5ba3824b50ebc064f361d6998c60c2024c562943ea7ab86d22237ae67dc42",
+    "streamed_bytes": 1767298,
+    "mismatches": 0
+  }
+}

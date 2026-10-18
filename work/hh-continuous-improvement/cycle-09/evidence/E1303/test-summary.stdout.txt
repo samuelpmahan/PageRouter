@@ -1,0 +1,13 @@
+Transcript summary from the exec_command stdout (full per-test output was returned by the tool and is preserved in the execution transcript; this file is not a shell-captured raw log).
+
+node --test --test-concurrency=1 --test-name-pattern='registration (mismatch|missing-terms) validation' vendor/hh/src/public-controller.test.mjs
+✔ registration mismatch validation retains delegated non-secret drafts and selected school
+✔ registration missing-terms validation retains delegated non-secret drafts and selected school
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+exit_code=0

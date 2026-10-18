@@ -1,0 +1,73 @@
+{
+  "job_id": "E1304",
+  "worker": "H1",
+  "recorded_at_utc": "2026-10-18 15:22:31 UTC",
+  "process_exit_code": 0,
+  "tee_exit_code": 0,
+  "actual_command": "set -o pipefail; BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle09/H1/E1304/build.combined.log; build_status=(\"${PIPESTATUS[@]}\"); printf 'build_process_exit=%s\\ntee_exit=%s\\n' \"${build_status[0]}\" \"${build_status[1]}\"; exit \"${build_status[0]}\"",
+  "raw_combined_build_output": {
+    "path": "build.combined.log",
+    "bytes": 2334,
+    "sha256": "8f3c6843e23add84d561637f1e8f2d6d56a67dc3a49e6db700d4c15dd6aa2d75",
+    "note": "stdout and stderr merged and captured byte-for-byte by tee; actual process and tee exit codes are recorded separately above."
+  },
+  "build_receipt": {
+    "path": "output/site.receipt.json",
+    "bytes": 467222,
+    "sha256": "ac7efdc22c3c56fb2c7b575f54b46a635b12012301c0f772c2316a4c2234d18f",
+    "siteBuildId": "831692c8dc830d6528fbaf3b431583809bc24a470fa1fa5661d68dd7d36868a1",
+    "siteDigest": "319f172f8a79194ad2410e9ad389a2a158f433092bcc4684e252a9397c148b91",
+    "sourceDigest": "370bb7b77fcf82abceabf8fadc909d6d3d290ff26a497f4c5b7d0948fe222d13",
+    "sourceInputCount": 1538,
+    "siteFileCount": 843,
+    "pxcubePackages": 14,
+    "pxcubeRelocated": false,
+    "crispExactCompiledEquality": true,
+    "built_controller_input": {
+      "path": "vendor/hh/src/public-controller.mjs",
+      "bytes": 52766,
+      "sha256": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b"
+    },
+    "built_test_input": {
+      "path": "vendor/hh/src/public-controller.test.mjs",
+      "bytes": 67386,
+      "sha256": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9"
+    },
+    "toolchain": {
+      "node": "v24.19.0",
+      "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534"
+    }
+  },
+  "current_build_checks": {
+    "bazel_build_helpers": {"passed": 2, "failed": 0},
+    "targeted_HH_controller_community": {"passed": 125, "failed": 0},
+    "full_npm_test_suite_fresh_site": {"passed": 280, "failed": 0},
+    "built_atlas_import_closure": {"passed": 1, "failed": 0},
+    "verified_site_files": 843,
+    "pxcube_packages": {"passed": 14, "failed": 0}
+  },
+  "site_log": {
+    "path": "output/site.log",
+    "bytes": 49226,
+    "sha256": "5e6d1e5f7c9645886a0ba850010296c32d73bcca23abe5a78aebbde94417d61a"
+  },
+  "site_evidence": {
+    "path": "output/site.evidence",
+    "file_count": 48,
+    "bytes": 1024007,
+    "sorted_relative_path_sha256_manifest_digest": "a929feda01728ea177c339cf8eb01c2ea2a069a940cd9a200f4c1977eb933f9e",
+    "copy_matches_build_output": true
+  },
+  "source_worktree": {
+    "head": "46d1f32aca87919abceecf8b0c53454173cd574f",
+    "tree_before_and_after": "b80f1408d3c21c23e058989ce79fcfc60a0ba674",
+    "product_controller_unchanged": true,
+    "only_tracked_change": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "git_diff_check_exit_code": 0
+  },
+  "limitations": [
+    "No browser attempt was made; the earlier native browser policy block remains and does not affect the canonical build checks.",
+    "The copied site.evidence includes historical VERIFICATION.json material; current build claims above are grounded in this run's build.combined.log, site.log, and site.receipt.json, not copied historical browser flags.",
+    "No canonical artifact was published or deployed; site.site was not copied to scratch."
+  ]
+}

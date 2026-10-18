@@ -1,0 +1,11 @@
+RETROSPECTIVE TOOL TESTIMONY — not a raw captured log.
+
+Command attempted once:
+node /workspace/scratch/8528bb251845/hh-cycle09/E1307/verify-original-archive.mjs /workspace/scratch/8528bb251845/hh-cycle09/E1307/original-cycle09.tar.zst /workspace/scratch/8528bb251845/hh-cycle09/E1307/restored-original
+
+The verifier failed while extracting into the dedicated scratch restore directory. Tool output included GNU tar diagnostics such as:
+tar: ./evidence/E1304/site.evidence/ANNOTATION-PATCH-VERIFICATION.json: Cannot open: Permission denied
+tar: ./evidence/E1304/site.evidence/atlas-cross-language: Cannot mkdir: Permission denied
+tar: Exiting with failure status due to previous errors
+
+The inner tar command reported status 2 in the Node error. The outer tool invocation returned a nonzero result. No chmod, permission override, elevation, or extraction retry was attempted. The partial restore directory remains outside the package and is not used as verification. The original archive bytes were instead independently hash-checked in memory using tar -xOf; see archive-verification.json.

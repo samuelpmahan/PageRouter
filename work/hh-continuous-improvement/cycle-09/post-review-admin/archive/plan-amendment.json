@@ -1,0 +1,25 @@
+{
+  "job_id": "E1307",
+  "status": "plan_amendment_before_followup_verification",
+  "recorded_at_utc": "2026-10-18 15:35:10 UTC",
+  "original_archive_create": {
+    "command": "set -o pipefail; tar --zstd --sort=name --mtime='UTC 1970-01-01' --owner=0 --group=0 --numeric-owner -cvf /workspace/scratch/8528bb251845/hh-cycle09/E1307/original-cycle09.tar.zst -C /workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-09 . 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle09/E1307/archive-create.stdout.log; archive_status=(\"${PIPESTATUS[@]}\"); printf 'tar_exit=%s\\ntee_exit=%s\\n' \"${archive_status[0]}\" \"${archive_status[1]}\"; exit \"${archive_status[0]}\"",
+    "tar_exit": 0,
+    "tee_exit": 0,
+    "archive_sha256": "deafbd9e09bd52692cbc5bc742ec72ba53cab0689937559fb2b397b38e5587e6",
+    "log_sha256": "51330a3b8f73a2d644a2d04cff4b21c5bc07f0b293cf799602995ff28b6320e2"
+  },
+  "failed_extract_attempt": {
+    "command": "node /workspace/scratch/8528bb251845/hh-cycle09/E1307/verify-original-archive.mjs /workspace/scratch/8528bb251845/hh-cycle09/E1307/original-cycle09.tar.zst /workspace/scratch/8528bb251845/hh-cycle09/E1307/restored-original",
+    "exit_code": 1,
+    "cause": "The archive preserves original mode 0555 directories and 0444 files; extraction into the dedicated restore directory could not create later entries beneath those restrictive directories. The tar archive itself was created successfully. No chmod, privilege change, permission override, retry, or package mutation occurred.",
+    "qualification": "The partial restore directory and first stderr/stdout tool testimony are retained outside the package as a failed verification attempt; no restored-byte verification is claimed from it."
+  },
+  "safe_followup": {
+    "root_direction": "Hash archived member bytes in memory with tar -xOf; do not retry extraction or alter restrictive permissions.",
+    "command": "node /workspace/scratch/8528bb251845/hh-cycle09/E1307/verify-original-archive-stream.mjs /workspace/scratch/8528bb251845/hh-cycle09/E1307/original-cycle09.tar.zst",
+    "script_sha256": "79596d995b7494d4fbe13d7e12f0f23102c96e76312b74943c720339261f903b",
+    "scope": "Read-only archive listing and member reads to memory only; compare exact 113-file set to the embedded 112-entry original manifest plus manifest self-file."
+  },
+  "fallback": "If streamed archive-byte verification is not possible, do not use the archive as a verified restore. Preserve the original manifest separately and use the current package's 111 unchanged files plus exact source rename mapping as the recoverability record."
+}

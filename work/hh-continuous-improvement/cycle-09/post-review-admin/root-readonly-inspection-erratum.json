@@ -1,0 +1,13 @@
+{
+  "schema": "hh-cycle09-root-readonly-inspection-erratum/v1",
+  "label": "Root read-only inspection after R1305; separate from the original audit result",
+  "relationship_to_R1305": "Owner-side confirmation of the same packaging condition, not a change to or replacement for H2's AMEND finding.",
+  "root_inspection": {
+    "finding": "The archived public-controller.test.mjs keeps a Node test-discovery suffix, while its relative imports resolve under the archive directory and required neighboring modules are not archived there.",
+    "classification": "archive naming/discovery packaging defect only; not a product test failure or product behavior defect",
+    "new_execution_by_root": false,
+    "new_execution_by_H1": false,
+    "independent_reproduction_source": "H2 R1305 result and commands; exact raw result and command record are preserved separately under post-review-admin/R1305/."
+  },
+  "disposition": "Preserve R1305 as AMEND. Supersede package layout by renaming only the archived source snapshot to .mjs.txt, keep its bytes/hash, preserve the old manifest and archive, and seek independent R1307 review."
+}

@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
 import {createFixtureProvider, createServiceRuntime} from '../services/index.mjs';
 import {createCommunity} from './community.mjs';
 import {createPublicController, normalizePublicRoute} from './public-controller.mjs';
@@ -22,6 +23,66 @@ function setup() {
   const community = createCommunity({storage});
   const controller = createPublicController({runtime, storage, community});
   return {controller, runtime, storage, community};
+}
+
+function registrationDraftSetup() {
+  const storage = memoryStorage();
+  const provider = createFixtureProvider({fixture: true, storage});
+  const runtime = createServiceRuntime(provider);
+  const community = createCommunity({storage});
+  let tree = null;
+  const controller = createPublicController({runtime, storage, community,
+    onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+  });
+  return {controller, runtime, storage, get tree() { return tree; }};
+}
+
+function nodeById(tree, id) {
+  if (!tree || typeof tree !== 'object') return null;
+  if (tree.attrs?.id === id) return tree;
+  for (const child of tree.children || []) {
+    const match = nodeById(child, id);
+    if (match) return match;
+  }
+  return null;
+}
+
+function selectedOptionValue(tree, id) {
+  const select = nodeById(tree, id);
+  return select?.children?.find(option => option?.attrs?.selected)?.attrs?.value || '';
+}
+
+async function prepareRegistrationDraft(env, {name, email, phone}) {
+  const {controller} = env;
+  await controller.initialize('#/register');
+  for (const [key, value] of Object.entries({
+    state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy',
+  })) await controller.selectSchool(key, value);
+
+  // Mirror app.mjs's delegated `input` listener for the non-secret fields.
+  for (const [key, value] of Object.entries({name, email, phone})) {
+    assert.equal(controller.updateDraft(key, value), true);
+  }
+}
+
+function assertRegistrationDraftRendered(tree, {name, email, phone}) {
+  assert.equal(nodeById(tree, 'hh-register-name')?.attrs?.value, name);
+  assert.equal(nodeById(tree, 'hh-register-email')?.attrs?.value, email);
+  assert.equal(nodeById(tree, 'hh-register-phone')?.attrs?.value, phone);
+  assert.equal(selectedOptionValue(tree, 'hh-directory-state'), 'Demo Washington');
+  assert.equal(selectedOptionValue(tree, 'hh-directory-county'), 'Demo King');
+  assert.equal(selectedOptionValue(tree, 'hh-directory-district'), 'Demo District');
+  assert.equal(selectedOptionValue(tree, 'hh-directory-school'), 'Demo Academy');
+}
+
+function assertCredentialsNotPersisted(env, credentials) {
+  const surfaces = [
+    JSON.stringify(env.controller.state),
+    JSON.stringify(env.runtime.inspect()),
+    JSON.stringify(env.runtime.pxc.entries().map(([address, part]) => ({address, value: part.value}))),
+    [...env.storage.values.values()].join('\n'),
+  ].join('\n');
+  for (const credential of credentials) assert.equal(surfaces.includes(credential), false);
 }
 
 async function registeredProfileSetup() {
@@ -686,6 +747,47 @@ test('rejects stored school selections whose individual values do not form one f
   assert.equal(storage.getItem('hh-public-directory-filters.v1'), null);
   assert.equal(controller.state.journey.rememberedFilters, null);
   assert.equal(controller.state.journey.outcome.kind, 'local-warning');
+});
+
+test('registration mismatch validation retains delegated non-secret drafts and selected school', async () => {
+  const env = registrationDraftSetup();
+  const identity = {name: 'Jamie Example', email: 'jamie.mismatch@example.test', phone: '312-555-0198'};
+  await prepareRegistrationDraft(env, identity);
+  await env.controller.dispatch('public:terms-consent', {accepted: true});
+
+  const password = randomUUID();
+  let confirmation = randomUUID();
+  while (confirmation === password) confirmation = randomUUID();
+  const receiptsBefore = env.runtime.inspect().receipts.length;
+  const result = await env.controller.dispatch('public:register', {
+    ...identity, password, confirmPassword: confirmation, termsAccepted: true,
+    state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy',
+  });
+
+  assert.equal(result.error?.code, 'validation_failed');
+  assertRegistrationDraftRendered(env.tree, identity);
+  assert.equal(env.runtime.inspect().receipts.length, receiptsBefore);
+  assert.equal(env.runtime.snapshot().registration.status, 'none');
+  assertCredentialsNotPersisted(env, [password, confirmation]);
+});
+
+test('registration missing-terms validation retains delegated non-secret drafts and selected school', async () => {
+  const env = registrationDraftSetup();
+  const identity = {name: 'Jamie Example', email: 'jamie.terms@example.test', phone: '312-555-0198'};
+  await prepareRegistrationDraft(env, identity);
+
+  const password = randomUUID();
+  const receiptsBefore = env.runtime.inspect().receipts.length;
+  const result = await env.controller.dispatch('public:register', {
+    ...identity, password, confirmPassword: password,
+    state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy',
+  });
+
+  assert.equal(result.error?.code, 'validation_failed');
+  assertRegistrationDraftRendered(env.tree, identity);
+  assert.equal(env.runtime.inspect().receipts.length, receiptsBefore);
+  assert.equal(env.runtime.snapshot().registration.status, 'none');
+  assertCredentialsNotPersisted(env, [password]);
 });
 
 test('registration keeps passwords ephemeral, approval and login stay separate, and edits remain local', async () => {

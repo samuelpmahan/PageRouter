@@ -1,0 +1,50 @@
+{
+  "job_id": "E1303",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "source_candidate": {
+    "branch": "codex/hh-continuous-improvement",
+    "head": "46d1f32aca87919abceecf8b0c53454173cd574f",
+    "tree_before_and_after_tests": "b80f1408d3c21c23e058989ce79fcfc60a0ba674",
+    "controller_sha256_before_and_after": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+    "public_controller_test_sha256": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9",
+    "tracked_change_scope": ["checkpoint/vendor/hh/src/public-controller.test.mjs"]
+  },
+  "commands": [
+    {
+      "command": "node --test --test-concurrency=1 --test-name-pattern='registration (mismatch|missing-terms) validation' vendor/hh/src/public-controller.test.mjs",
+      "cwd": "PageRouter/checkpoint",
+      "exit_code": 0,
+      "counts": {"tests": 2, "pass": 2, "fail": 0, "skipped": 0},
+      "stdout_summary": "test-summary.stdout.txt"
+    },
+    {
+      "command": "node --test vendor/hh/src/public-controller.test.mjs",
+      "cwd": "PageRouter/checkpoint",
+      "exit_code": 0,
+      "counts": {"tests": 51, "pass": 51, "fail": 0, "skipped": 0},
+      "stdout_summary": "controller-summary.stdout.txt"
+    },
+    {
+      "command": "node --test --test-concurrency=2 exp/cooperative/hh-geography-review.test.mjs exp/cooperative/hh-parity-community.test.mjs exp/cooperative/hh-parity-public.test.mjs exp/cooperative/hh-workbench.test.mjs vendor/hh/src/*.test.mjs",
+      "cwd": "PageRouter/checkpoint",
+      "exit_code": 0,
+      "counts": {"tests": 118, "pass": 118, "fail": 0, "skipped": 0},
+      "stdout_summary": "hh-core-summary.stdout.txt"
+    },
+    {
+      "command": "git diff --check",
+      "cwd": "PageRouter",
+      "exit_code": 0,
+      "result": "authored whitespace gate passed"
+    }
+  ],
+  "stdout_capture_note": "Full per-test stdout was returned by the exec_command tool and is available in the execution transcript. Files beside this receipt contain exact command/count summary lines only; they are explicitly not shell-captured raw logs.",
+  "privacy": "Passwords and confirmations were generated at test execution with randomUUID(), never logged or serialized into assertions; all leak checks compare only booleans.",
+  "behavioral_claim": "The existing controller behavior is reused; these tests passed on unchanged product source. This is not a red-before-fix claim or mounted-DOM evidence.",
+  "build_or_publication": "No canonical build, Git commit, push, main update, deployment, or publication was performed.",
+  "cleanup": {
+    "local_fixture_server_4189": "stopped; a subsequent ps readback found no python3 http.server process on 4189 or 4188",
+    "cloud_tab_7": "close action was blocked by the browser URL security policy; no alternate attempt was made; tab status remains unknown"
+  }
+}

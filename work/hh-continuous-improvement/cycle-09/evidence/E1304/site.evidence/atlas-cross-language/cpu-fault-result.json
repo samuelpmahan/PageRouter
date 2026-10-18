@@ -1,0 +1,140 @@
+{
+  "question": "Can existing FGs locate an injected memory upset without knowing its site?",
+  "prediction": "The delay FG fails at the first corrupted state; OUT alone misses it.",
+  "seed": 20261004,
+  "steps": 10,
+  "source": "loop: NOP\nJMP loop",
+  "initial": {
+    "RAM": [
+      201,
+      140,
+      97,
+      64,
+      243,
+      74,
+      201,
+      184,
+      106,
+      109,
+      48,
+      127,
+      91,
+      136,
+      203,
+      133
+    ]
+  },
+  "injection": {
+    "t": 4,
+    "part": "cpu/ram/word/1/q/4",
+    "before": 0,
+    "after": 1
+  },
+  "located": {
+    "audit": {
+      "status": "FAIL",
+      "loss": 1,
+      "issues": [
+        {
+          "t": 4,
+          "kind": "calculation-value",
+          "calculation": "cpu/ram/word/1/q/4/calc"
+        }
+      ]
+    },
+    "storageViolations": [
+      {
+        "t": 4,
+        "part": "cpu/ram/word/1/q/4",
+        "expected": 0,
+        "observed": 1
+      }
+    ],
+    "earliest": {
+      "t": 4,
+      "part": "cpu/ram/word/1/q/4",
+      "expected": 0,
+      "observed": 1
+    }
+  },
+  "cleanAudit": "PASS",
+  "cleanByte": 140,
+  "faultyByte": 156,
+  "outputUnchanged": true,
+  "corruptionPersistsThrough": 10,
+  "failedFGs": [
+    {
+      "t": 4,
+      "failures": [
+        "cpu/ram/word/1/q/4/fg"
+      ]
+    }
+  ],
+  "followingStateFGFailures": 0,
+  "existingDiagnosticFirstDifference": {
+    "kind": "missing-evidence",
+    "t": 4,
+    "address": "cpu/ram/word/1/q/4",
+    "expected": {
+      "t": 4,
+      "address": "cpu/ram/word/1/q/4",
+      "value": 0,
+      "available": true,
+      "missing": [],
+      "calculation": "cpu/ram/word/1/q/4/calc",
+      "rule": "delay",
+      "mode": "evaluated",
+      "inputs": [
+        {
+          "address": "cpu/ram/word/1/load/bit/4/out",
+          "t": 3
+        }
+      ],
+      "expectedInputs": [
+        {
+          "address": "cpu/ram/word/1/load/bit/4/out",
+          "t": 3
+        }
+      ]
+    },
+    "actual": {
+      "t": 4,
+      "address": "cpu/ram/word/1/q/4",
+      "value": 1,
+      "available": false,
+      "missing": [
+        "matching execution record",
+        "execution value agrees with declared rule"
+      ],
+      "calculation": "cpu/ram/word/1/q/4/calc",
+      "rule": "delay",
+      "mode": "evaluated",
+      "inputs": [
+        {
+          "address": "cpu/ram/word/1/load/bit/4/out",
+          "t": 3
+        }
+      ],
+      "expectedInputs": [
+        {
+          "address": "cpu/ram/word/1/load/bit/4/out",
+          "t": 3
+        }
+      ]
+    }
+  },
+  "existingDiagnosticStatus": "FAIL",
+  "limits": [
+    "Single simulated live bit flip at one explicit calculation boundary.",
+    "Logical Part and first recorded state, not physical RAM address or wall-clock instant.",
+    "Plan, prior observations, checker and retained logs assumed trustworthy.",
+    "OUT-only observations cannot distinguish these runs.",
+    "A transient reversed before any observation or effect can be invisible.",
+    "A value/log contradiction alone does not prove which physical mechanism failed."
+  ],
+  "sourceSHA256": {
+    "fault-localization\\probe.py": "52e65dd12a6710ac854c488fbb60a92d9190cfafd40739b93ea1ee1fb0acb8ad",
+    "pxc-machine\\core.py": "177439b1efaf308e275ffe054d1eab96c33ec86352a6f0d560aae9f24e32a952",
+    "pxc-machine\\circuits.py": "c3e4ca44a94e1570ee17658444f3cd115182d7665be5b07711c17946a4d6df1c"
+  }
+}

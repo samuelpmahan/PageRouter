@@ -1,0 +1,69 @@
+{
+  "assertions": "passed",
+  "scenarios": [
+    {
+      "name": "mismatch",
+      "accepted": true,
+      "result_ok": false,
+      "error_code": "validation_failed",
+      "identity_preserved": true,
+      "school_preserved": true,
+      "registration_status": "none",
+      "valid_runtime_pending": null,
+      "credentials_absent": {
+        "controller_state": true,
+        "runtime_inspect": true,
+        "runtime_parts": true,
+        "storage": true
+      }
+    },
+    {
+      "name": "missing-terms",
+      "accepted": false,
+      "result_ok": false,
+      "error_code": "validation_failed",
+      "identity_preserved": true,
+      "school_preserved": true,
+      "registration_status": "none",
+      "valid_runtime_pending": null,
+      "credentials_absent": {
+        "controller_state": true,
+        "runtime_inspect": true,
+        "runtime_parts": true,
+        "storage": true
+      }
+    },
+    {
+      "name": "valid",
+      "accepted": true,
+      "result_ok": true,
+      "error_code": null,
+      "identity_preserved": null,
+      "school_preserved": null,
+      "registration_status": "pending",
+      "valid_runtime_pending": true,
+      "credentials_absent": {
+        "controller_state": true,
+        "runtime_inspect": true,
+        "runtime_parts": true,
+        "storage": true
+      }
+    },
+    {
+      "name": "direct-no-draft",
+      "accepted": true,
+      "result_ok": false,
+      "error_code": "validation_failed",
+      "identity_preserved": null,
+      "school_preserved": true,
+      "registration_status": "none",
+      "valid_runtime_pending": null,
+      "credentials_absent": {
+        "controller_state": true,
+        "runtime_inspect": true,
+        "runtime_parts": true,
+        "storage": true
+      }
+    }
+  ]
+}
