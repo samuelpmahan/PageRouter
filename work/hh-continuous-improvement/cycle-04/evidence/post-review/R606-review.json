@@ -1,0 +1,66 @@
+{
+  "schema": "hh-continuous-improvement-review/v1",
+  "job_id": "R606",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "The frozen cycle-04 package is internally consistent. Its 75-entry evidence manifest and 77-entry package checksum list verify; all 49 JSON documents parse and all six compressed native bundles decompress. The current PageRouter source, packaged source freeze, canonical build receipt, and accepted R604 source hashes agree. Raw receipt corrections and the historical E606-running snapshot are explicitly preserved and labeled.",
+  "package": {
+    "path": "PageRouter/work/hh-continuous-improvement/cycle-04",
+    "manifest_sha256": "44cfa61986d7cadada6b27d11e1abfec65135486d32c7672ca774cae06ac91c6",
+    "E606_result_sha256": "2d45a9093b47b8a5260b604558c35ef49baad6d158852a50b9d1d898755011c2",
+    "SHA256SUMS_sha256": "51a58bbb4f62d72f0e4b0d04126b9221dc1aa13f3ccf2556743f1d880d4736ee",
+    "manifest_entries": 75,
+    "checksum_entries": 77,
+    "checksum_validation": "77 unique declared entries independently hashed; no mismatches. The manifest and E606 result are included in SHA256SUMS.txt; SHA256SUMS.txt is not self-hashed.",
+    "manifest_tree_validation": "The 75 listed files match bytes and hashes exactly. Including the manifest and E606 result gives 77 files, matching the full package set other than SHA256SUMS.txt.",
+    "json_documents": {"parsed": 49, "errors": 0},
+    "native_bundles": {"count": 6, "format": "zstd", "decompression": "all six decompressed successfully"}
+  },
+  "source_and_build": {
+    "repository_head": "6488c98774adb41c4bcdcec02387753c492233d8",
+    "repository_tree": "eb12130d5eadf8b854254246eca5d50a0fc54204",
+    "modified_product_files": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "worktree_status_at_review": "The two expected source/test files are modified; the cycle-04 evidence package directory is untracked. No further PageRouter status entries were present.",
+    "controller_sha256": "908c4fa0aa1c0d809c804b83d680f45c2775cf1919e5244a58af769d2bb8d70f",
+    "tests_sha256": "d84876bb26e846bbb5a482c637a324c9a808d223b668e164204e9191abfeed9d",
+    "canonical_receipt_sha256": "4a9245d4f82e2a7dc1ef832c9c0a9b68e2fee03ec8ba2c992fe0031ce507d3e",
+    "receipt_identity": "Packaged E605 receipt is byte-identical to checkpoint/bazel-bin/site.receipt.json. Both sourceInputs match the manifest and R604 accepted hashes.",
+    "build": {
+      "siteBuildId": "ee631cce67903dafd20228b5090d208fb50aaecedd0d713974ea47b9a3c75ff5",
+      "siteDigest": "d62d763c939b15a2e7ec1c2fb4c675afb91e70efa7bc7405664a514906348bb9",
+      "siteFiles": 843,
+      "pxcubePackages": 14,
+      "targetedHH": {"passed": 107, "failed": 0},
+      "fullSuite": {"passed": 262, "failed": 0},
+      "builtAtlasImport": {"passed": 1, "failed": 0}
+    }
+  },
+  "provenance_audit": {
+    "E601": "The raw worker report has summary=not_reuse and descriptive text under outcome. The coordinator rejection is retained and explicitly attributed to the swapped fields. The normalized receipt maps the enum to outcome=not_reuse and preserves the description as summary; the falsifier verdict is unchanged.",
+    "E602": "The original report/raw receipt with no summary is retained. No E602 rejection appears in coordinator-rejections.json. The normalized receipt adds the required summary from expected_vs_actual and preserves outcome=mixed_change; this is recorded as normalization rather than a wrapper rejection.",
+    "E604_red_run": "The packaged red log is labeled as reconstructed, not original E604 stdout. red-stage.json records the baseline controller hash, exact test hash, and capture time. The author-reported original counts remain separately identified as testimony.",
+    "race_evidence": "E601's four delayed public-profile cases falsify the loading/auth lockout hypothesis. E602 and E603 establish stranded shared controller state without auth-form lockout or visible auth-route progress. E604's change clears loading at navigation, while the pending new lookup owns it until completion.",
+    "portable_replays": "Five runners are listed and verified. E601 plus both R604 probes replay against reviewed source; E602 and E603 replay against a temporary path-only baseline-controller stage. Every replay output matches its retained output byte-for-byte. The packaged E604 source.diff also matches the actual two-file git diff.",
+    "native_snapshot": "state-at-E606-start.json and its note label E606 running / R606 blocked as a copied historical snapshot. It is explicitly not current dispatch authority or evidence of a live worker.",
+    "next_hypothesis": "The pending TeacherProfile.createProfile overlap is marked executed=false and source-inspection-only; the package makes no claim that this behavior is a defect or reachable."
+  },
+  "commands_and_checks": [
+    "sha256sum evidence/manifest.json evidence/E606/result.json",
+    "python audit: compare 75 manifest entries, file sizes/hashes, complete package file set, 49 JSON parses, and 77 SHA256SUMS entries",
+    "python audit: independently hash all 77 SHA256SUMS.txt paths",
+    "python audit: decompress all evidence/native/solves/epoch-*.bundle using zstandard",
+    "python audit: compare product manifest hashes with evidence/E605/site.receipt.json sourceInputs",
+    "sha256sum PageRouter/checkpoint/bazel-bin/site.receipt.json PageRouter/work/hh-continuous-improvement/cycle-04/evidence/E605/site.receipt.json",
+    "git -C PageRouter diff --no-ext-diff -- checkpoint/vendor/hh/src/public-controller.mjs checkpoint/vendor/hh/src/public-controller.test.mjs | diff - PageRouter/work/hh-continuous-improvement/cycle-04/evidence/E604/source.diff",
+    "python audit: compare the five portable replay outputs byte-for-byte with their retained outputs",
+    "git -C PageRouter status --short; git -C PageRouter diff --check"
+  ],
+  "limits": [
+    "This review audited existing canonical-build evidence and did not rerun the build or broad unchanged test suite.",
+    "No browser visual QA, backend behavior, real teacher data, human acceptance, main update, deployment, or publication is verified.",
+    "No PageRouter file was edited by H2. The existing source/test modifications and untracked cycle-04 evidence package remain as found; source hashes match the reviewed freeze."
+  ]
+}

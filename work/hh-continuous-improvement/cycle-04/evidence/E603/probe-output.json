@@ -1,0 +1,191 @@
+{
+  "schema": "hh-cycle04-E603-probe/v1",
+  "cases": [
+    {
+      "target": "login",
+      "atDirectory": {
+        "route": "directory",
+        "loading": true,
+        "matchesStatus": "loading",
+        "ui": {
+          "page": "directory",
+          "loadingCopy": [
+            "Loading…",
+            "Loading teachers…"
+          ],
+          "formId": null,
+          "submitId": null,
+          "submitDisabled": false,
+          "inputs": [
+            "hh-query"
+          ],
+          "statuses": [
+            "Loading…"
+          ]
+        }
+      },
+      "immediatelyAtTarget": {
+        "route": "login",
+        "loading": true,
+        "ui": {
+          "page": "login",
+          "loadingCopy": [],
+          "formId": "hh-login-form",
+          "submitId": "hh-login-submit",
+          "submitDisabled": false,
+          "inputs": [
+            "hh-login-email",
+            "hh-login-password"
+          ],
+          "statuses": []
+        }
+      },
+      "afterRaces": {
+        "route": "login",
+        "loading": true,
+        "matchesStatus": "loading",
+        "profileStatus": "unknown",
+        "ui": {
+          "page": "login",
+          "loadingCopy": [],
+          "formId": "hh-login-form",
+          "submitId": "hh-login-submit",
+          "submitDisabled": false,
+          "inputs": [
+            "hh-login-email",
+            "hh-login-password"
+          ],
+          "statuses": []
+        }
+      },
+      "dispatch": {
+        "ok": false,
+        "errorCode": "validation_failed"
+      },
+      "afterDispatch": {
+        "route": "login",
+        "loading": true,
+        "outcome": "validation-error",
+        "ui": {
+          "page": "login",
+          "loadingCopy": [],
+          "formId": "hh-login-form",
+          "submitId": "hh-login-submit",
+          "submitDisabled": false,
+          "inputs": [
+            "hh-login-email",
+            "hh-login-password"
+          ],
+          "statuses": [
+            "Enter the demo email and password field to continue. The preview does not verify passwords."
+          ]
+        }
+      },
+      "boundary": {
+        "mode": "fixture",
+        "fixture": true,
+        "persistence": "per-tab-sessionStorage",
+        "remoteOrBackend": false
+      }
+    },
+    {
+      "target": "register",
+      "atDirectory": {
+        "route": "directory",
+        "loading": true,
+        "matchesStatus": "loading",
+        "ui": {
+          "page": "directory",
+          "loadingCopy": [
+            "Loading…",
+            "Loading teachers…"
+          ],
+          "formId": null,
+          "submitId": null,
+          "submitDisabled": false,
+          "inputs": [
+            "hh-query"
+          ],
+          "statuses": [
+            "Loading…"
+          ]
+        }
+      },
+      "immediatelyAtTarget": {
+        "route": "register",
+        "loading": true,
+        "ui": {
+          "page": "register",
+          "loadingCopy": [],
+          "formId": "hh-register-form",
+          "submitId": "hh-register-submit",
+          "submitDisabled": false,
+          "inputs": [
+            "hh-register-name",
+            "hh-register-email",
+            "hh-register-phone",
+            "hh-register-password",
+            "hh-register-confirm",
+            "hh-terms-consent"
+          ],
+          "statuses": []
+        }
+      },
+      "afterRaces": {
+        "route": "register",
+        "loading": true,
+        "matchesStatus": "loading",
+        "profileStatus": "unknown",
+        "ui": {
+          "page": "register",
+          "loadingCopy": [],
+          "formId": "hh-register-form",
+          "submitId": "hh-register-submit",
+          "submitDisabled": false,
+          "inputs": [
+            "hh-register-name",
+            "hh-register-email",
+            "hh-register-phone",
+            "hh-register-password",
+            "hh-register-confirm",
+            "hh-terms-consent"
+          ],
+          "statuses": []
+        }
+      },
+      "dispatch": {
+        "ok": false,
+        "errorCode": "validation_failed"
+      },
+      "afterDispatch": {
+        "route": "register",
+        "loading": true,
+        "outcome": "validation-error",
+        "ui": {
+          "page": "register",
+          "loadingCopy": [],
+          "formId": "hh-register-form",
+          "submitId": "hh-register-submit",
+          "submitDisabled": false,
+          "inputs": [
+            "hh-register-name",
+            "hh-register-email",
+            "hh-register-phone",
+            "hh-register-password",
+            "hh-register-confirm",
+            "hh-terms-consent"
+          ],
+          "statuses": [
+            "Enter your name, a valid email, and both password fields."
+          ]
+        }
+      },
+      "boundary": {
+        "mode": "fixture",
+        "fixture": true,
+        "persistence": "per-tab-sessionStorage",
+        "remoteOrBackend": false
+      }
+    }
+  ]
+}

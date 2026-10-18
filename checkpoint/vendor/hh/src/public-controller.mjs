@@ -281,6 +281,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
     routeEpoch += 1;
     schoolEpoch += 1;
     const epoch = routeEpoch;
+    state.journey.loading = false;
     state.route = normalizePublicRoute(hash);
     state.journey.navOpen = false;
     state.journey.error = '';

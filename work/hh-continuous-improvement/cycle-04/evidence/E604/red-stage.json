@@ -1,0 +1,33 @@
+{
+  "purpose": "Reproduced the TDD red result after implementation, using a temporary isolated copy with only the product controller restored from the PageRouter HEAD baseline. The checked-out source remained at the accepted product freeze.",
+  "baseline_commit": "6488c98774adb41c4bcdcec02387753c492233d8",
+  "staged_controller_sha256": "c5d31f45140397536e22e6ac744e689d06fdec09c8b7e4c1a43167548adad4d1",
+  "staged_test_file": "copied exact cycle-04 public-controller.test.mjs with both new regressions",
+  "command": "node --test --test-concurrency=2 vendor/hh/src/public-controller.test.mjs (working directory: temporary staged checkout)",
+  "exit_code": 1,
+  "expected_failure": "leaving a pending directory read for login or registration retires shared loading: login must not inherit abandoned directory loading flag; actual true, expected false",
+  "counts": {
+    "passed": 32,
+    "failed": 1
+  },
+  "after_patch_commands": [
+    "node --test --test-concurrency=2 vendor/hh/src/public-controller.test.mjs",
+    "node --test --test-concurrency=2 vendor/hh/src/*.test.mjs"
+  ],
+  "after_patch_counts": {
+    "focused": {
+      "passed": 33,
+      "failed": 0
+    },
+    "all_hh": {
+      "passed": 60,
+      "failed": 0
+    }
+  },
+  "executed_at_utc": {
+    "start": "2026-10-18T10:35:16Z",
+    "end": "2026-10-18T10:35:16Z"
+  },
+  "staged_test_sha256": "d84876bb26e846bbb5a482c637a324c9a808d223b668e164204e9191abfeed9d",
+  "evidence_status": "This is an after-the-fact reconstructed red run captured during E606 packaging, not the original E604 stdout. It pairs the exact cycle-04 tests with the baseline controller source from HEAD in a temporary staging copy. The original E604 red/green pass counts remain author-reported in result.json; this log independently demonstrates the red assertion against the stated baseline."
+}

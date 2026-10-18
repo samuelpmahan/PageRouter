@@ -1,0 +1,317 @@
+{
+  "schema": "hh-cycle04-E601-probe/v1",
+  "cases": [
+    {
+      "target": "register",
+      "resolution": "success",
+      "request": {
+        "profileId": "demo-jordan"
+      },
+      "pendingAtProfile": {
+        "route": "profile",
+        "loading": false,
+        "profileStatus": "loading"
+      },
+      "atTargetBefore": {
+        "route": "register",
+        "loading": false,
+        "profileStatus": "loading",
+        "ui": {
+          "page": "register",
+          "formId": "hh-register-form",
+          "submitId": "hh-register-submit",
+          "submitType": "submit",
+          "submitDisabled": false,
+          "inputIds": [
+            "hh-register-name",
+            "hh-register-email",
+            "hh-register-phone",
+            "hh-register-password",
+            "hh-register-confirm",
+            "hh-terms-consent"
+          ],
+          "statusTexts": []
+        }
+      },
+      "after": {
+        "route": "register",
+        "routeProfileId": null,
+        "loading": false,
+        "profileStatus": "loading",
+        "profileId": null,
+        "profileSource": "runtime",
+        "outcome": "validation-error",
+        "ui": {
+          "page": "register",
+          "formId": "hh-register-form",
+          "submitId": "hh-register-submit",
+          "submitType": "submit",
+          "submitDisabled": false,
+          "inputIds": [
+            "hh-register-name",
+            "hh-register-email",
+            "hh-register-phone",
+            "hh-register-password",
+            "hh-register-confirm",
+            "hh-terms-consent"
+          ],
+          "statusTexts": [
+            "Enter your name, a valid email, and both password fields."
+          ]
+        },
+        "dispatch": {
+          "ok": false,
+          "errorCode": "validation_failed",
+          "outcomeAfterDispatch": "validation-error"
+        }
+      },
+      "staleReadResult": {
+        "ok": true,
+        "route": {
+          "page": "register",
+          "path": "/register"
+        }
+      },
+      "sideEffectBoundary": {
+        "mode": "fixture",
+        "fixture": true,
+        "persistence": "per-tab-sessionStorage",
+        "profileDataIds": [
+          "demo-avery",
+          "demo-jordan"
+        ],
+        "remoteOrBackend": false
+      }
+    },
+    {
+      "target": "register",
+      "resolution": "failure",
+      "request": {
+        "profileId": "demo-jordan"
+      },
+      "pendingAtProfile": {
+        "route": "profile",
+        "loading": false,
+        "profileStatus": "loading"
+      },
+      "atTargetBefore": {
+        "route": "register",
+        "loading": false,
+        "profileStatus": "loading",
+        "ui": {
+          "page": "register",
+          "formId": "hh-register-form",
+          "submitId": "hh-register-submit",
+          "submitType": "submit",
+          "submitDisabled": false,
+          "inputIds": [
+            "hh-register-name",
+            "hh-register-email",
+            "hh-register-phone",
+            "hh-register-password",
+            "hh-register-confirm",
+            "hh-terms-consent"
+          ],
+          "statusTexts": []
+        }
+      },
+      "after": {
+        "route": "register",
+        "routeProfileId": null,
+        "loading": false,
+        "profileStatus": "loading",
+        "profileId": null,
+        "profileSource": "runtime",
+        "outcome": "validation-error",
+        "ui": {
+          "page": "register",
+          "formId": "hh-register-form",
+          "submitId": "hh-register-submit",
+          "submitType": "submit",
+          "submitDisabled": false,
+          "inputIds": [
+            "hh-register-name",
+            "hh-register-email",
+            "hh-register-phone",
+            "hh-register-password",
+            "hh-register-confirm",
+            "hh-terms-consent"
+          ],
+          "statusTexts": [
+            "Enter your name, a valid email, and both password fields."
+          ]
+        },
+        "dispatch": {
+          "ok": false,
+          "errorCode": "validation_failed",
+          "outcomeAfterDispatch": "validation-error"
+        }
+      },
+      "staleReadResult": {
+        "ok": true,
+        "route": {
+          "page": "register",
+          "path": "/register"
+        }
+      },
+      "sideEffectBoundary": {
+        "mode": "fixture",
+        "fixture": true,
+        "persistence": "per-tab-sessionStorage",
+        "profileDataIds": [
+          "demo-avery",
+          "demo-jordan"
+        ],
+        "remoteOrBackend": false
+      }
+    },
+    {
+      "target": "login",
+      "resolution": "success",
+      "request": {
+        "profileId": "demo-jordan"
+      },
+      "pendingAtProfile": {
+        "route": "profile",
+        "loading": false,
+        "profileStatus": "loading"
+      },
+      "atTargetBefore": {
+        "route": "login",
+        "loading": false,
+        "profileStatus": "loading",
+        "ui": {
+          "page": "login",
+          "formId": "hh-login-form",
+          "submitId": "hh-login-submit",
+          "submitType": "submit",
+          "submitDisabled": false,
+          "inputIds": [
+            "hh-login-email",
+            "hh-login-password"
+          ],
+          "statusTexts": []
+        }
+      },
+      "after": {
+        "route": "login",
+        "routeProfileId": null,
+        "loading": false,
+        "profileStatus": "loading",
+        "profileId": null,
+        "profileSource": "runtime",
+        "outcome": "validation-error",
+        "ui": {
+          "page": "login",
+          "formId": "hh-login-form",
+          "submitId": "hh-login-submit",
+          "submitType": "submit",
+          "submitDisabled": false,
+          "inputIds": [
+            "hh-login-email",
+            "hh-login-password"
+          ],
+          "statusTexts": [
+            "Enter the demo email and password field to continue. The preview does not verify passwords."
+          ]
+        },
+        "dispatch": {
+          "ok": false,
+          "errorCode": "validation_failed",
+          "outcomeAfterDispatch": "validation-error"
+        }
+      },
+      "staleReadResult": {
+        "ok": true,
+        "route": {
+          "page": "login",
+          "path": "/login"
+        }
+      },
+      "sideEffectBoundary": {
+        "mode": "fixture",
+        "fixture": true,
+        "persistence": "per-tab-sessionStorage",
+        "profileDataIds": [
+          "demo-avery",
+          "demo-jordan"
+        ],
+        "remoteOrBackend": false
+      }
+    },
+    {
+      "target": "login",
+      "resolution": "failure",
+      "request": {
+        "profileId": "demo-jordan"
+      },
+      "pendingAtProfile": {
+        "route": "profile",
+        "loading": false,
+        "profileStatus": "loading"
+      },
+      "atTargetBefore": {
+        "route": "login",
+        "loading": false,
+        "profileStatus": "loading",
+        "ui": {
+          "page": "login",
+          "formId": "hh-login-form",
+          "submitId": "hh-login-submit",
+          "submitType": "submit",
+          "submitDisabled": false,
+          "inputIds": [
+            "hh-login-email",
+            "hh-login-password"
+          ],
+          "statusTexts": []
+        }
+      },
+      "after": {
+        "route": "login",
+        "routeProfileId": null,
+        "loading": false,
+        "profileStatus": "loading",
+        "profileId": null,
+        "profileSource": "runtime",
+        "outcome": "validation-error",
+        "ui": {
+          "page": "login",
+          "formId": "hh-login-form",
+          "submitId": "hh-login-submit",
+          "submitType": "submit",
+          "submitDisabled": false,
+          "inputIds": [
+            "hh-login-email",
+            "hh-login-password"
+          ],
+          "statusTexts": [
+            "Enter the demo email and password field to continue. The preview does not verify passwords."
+          ]
+        },
+        "dispatch": {
+          "ok": false,
+          "errorCode": "validation_failed",
+          "outcomeAfterDispatch": "validation-error"
+        }
+      },
+      "staleReadResult": {
+        "ok": true,
+        "route": {
+          "page": "login",
+          "path": "/login"
+        }
+      },
+      "sideEffectBoundary": {
+        "mode": "fixture",
+        "fixture": true,
+        "persistence": "per-tab-sessionStorage",
+        "profileDataIds": [
+          "demo-avery",
+          "demo-jordan"
+        ],
+        "remoteOrBackend": false
+      }
+    }
+  ]
+}

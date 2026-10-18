@@ -1,0 +1,49 @@
+{
+  "schema": "hh-cycle04-worker-result/v1",
+  "job_id": "E601",
+  "worker": "H1",
+  "summary": "not_reuse",
+  "outcome": "The delayed public-profile completion does not keep journey.loading active or disturb registration/login. Route-epoch protection suppresses both stale success and failure. The profile projection remains internally marked loading, but auth routes render their own usable form and do not expose that profile status. No adjacent directory/lookup loading defect was observed.",
+  "scope": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head_before": "6488c98774adb41c4bcdcec02387753c492233d8",
+    "head_after": "6488c98774adb41c4bcdcec02387753c492233d8",
+    "source_mutation": false,
+    "git_worktree_clean_after": true,
+    "provider": "volatile synthetic fixture provider wrapper; no backend/network call",
+    "visual_browser_qa": "not performed; UI tree projection and controller dispatch were exercised"
+  },
+  "execution": {
+    "command": "node /workspace/scratch/8528bb251845/hh-cycle04/H1/probe.mjs",
+    "node": "v24.19.0",
+    "result": "passed all 4 cases",
+    "matrix": [
+      {"route": "register", "stale_read": "success"},
+      {"route": "register", "stale_read": "failure"},
+      {"route": "login", "stale_read": "success"},
+      {"route": "login", "stale_read": "failure"}
+    ],
+    "observed": {
+      "journey_loading": "false before and after stale completion",
+      "route": "target auth route retained",
+      "profile_projection": "status remains loading with null value; stale data/error did not replace it",
+      "auth_ui": "correct form and input controls rendered; submit enabled before and after completion",
+      "dispatch": "registration and login handlers returned validation_failed for empty inputs; stale completion did not overwrite that outcome"
+    }
+  },
+  "evidence": {
+    "probe": "/workspace/scratch/8528bb251845/hh-cycle04/H1/probe.mjs",
+    "probe_sha256": "bcc1c46fbc6ad7921f813c3a1a21c51faac045daca6cade65dc200dbeac6648f",
+    "output": "/workspace/scratch/8528bb251845/hh-cycle04/H1/probe-output.json",
+    "output_sha256": "c6354cf344c2f74849219ca14be2b7368ac3243cb4b29051183ffede67961587",
+    "source_sha256": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "c5d31f45140397536e22e6ac744e689d06fdec09c8b7e4c1a43167548adad4d1",
+      "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+      "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+    },
+    "git_status_command": "git status --porcelain=v1",
+    "git_status_output": "",
+    "visual_qa_limit": "Rendered-tree projection was checked, not browser screenshots or visual layout."
+  }
+}

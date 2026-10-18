@@ -1,0 +1,60 @@
+{
+  "schema": "hh-cycle04-worker-result/v1",
+  "job_id": "E604",
+  "worker": "H1",
+  "summary": "The delayed public-profile hypothesis from E601 remains falsified: its completion did not set journey.loading or disturb auth routes. The adjacent directory microtask race from E603 was confirmed. Navigation now retires the prior shared loading flag before the next route read starts, and new tests cover both auth destinations plus a pending registration lookup that retains ownership through the stale directory return.",
+  "outcome": "mixed_change",
+  "scope": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "6488c98774adb41c4bcdcec02387753c492233d8",
+    "changed_files": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "change_boundary": "one loading reset at navigation handoff; no renderer, provider, ownership, wishlist, school geography, read-only reference, or profile stale-write changes",
+    "provider_boundary": "fixture-only, local state; no backend/network call",
+    "source_freeze": true,
+    "canonical_build": "not run; pending independent H2 R604 review or root authorization",
+    "browser_visual_qa": "not performed; UI behavior was exercised in prior rendered-tree repros, not screenshots"
+  },
+  "implementation_flow": [
+    "navigate increments routeEpoch and schoolEpoch, records the current epoch, then clears the prior shared journey.loading flag.",
+    "The route is replaced and its normal route-specific read starts; a directory load or school lookup sets journey.loading=true for its own pending work.",
+    "Older directory/lookup completions retain existing epoch checks and return before writing state when stale, so they cannot clear a newer read's loading flag.",
+    "A current read completes under its existing code path and clears the flag it owns."
+  ],
+  "tdd": {
+    "red_command": "node --test --test-concurrency=2 vendor/hh/src/public-controller.test.mjs",
+    "red_result": "32 passed, 1 failed; expected assertion failed: login inherited journey.loading=true after leaving the directory",
+    "green_focused_command": "node --test --test-concurrency=2 vendor/hh/src/public-controller.test.mjs",
+    "green_focused_result": "33 passed, 0 failed",
+    "green_all_hh_command": "node --test --test-concurrency=2 vendor/hh/src/*.test.mjs",
+    "green_all_hh_result": "60 passed, 0 failed",
+    "diff_check": "git diff --check passed"
+  },
+  "regressions": {
+    "directory_to_login": "After the abandoned directory's first-microtask completion, route is login and journey.loading is false.",
+    "directory_to_register": "After the abandoned directory's first-microtask completion, route is register and journey.loading is false.",
+    "stale_directory_during_current_school_lookup": "A delayed registration SchoolData.getStates read sets loading=true; the abandoned directory returns while that lookup is pending without clearing it; the current states read then completes, populates fixture choices, and clears loading."
+  },
+  "evidence": {
+    "source_diff": "/workspace/scratch/8528bb251845/hh-cycle04/H1/E604/source.diff",
+    "source_diff_sha256": "1e6f7bc4609178f99cf3f38fc8e5e72a859f1798333760f7781636b4cc6a960b",
+    "source_sha256": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "908c4fa0aa1c0d809c804b83d680f45c2775cf1919e5244a58af769d2bb8d70f",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "d84876bb26e846bbb5a482c637a324c9a808d223b668e164204e9191abfeed9d"
+    },
+    "prior_evidence": {
+      "E601_falsifier": "/workspace/scratch/8528bb251845/hh-cycle04/H1/result.json",
+      "E603_directory_race": "/workspace/scratch/8528bb251845/hh-cycle04/H1/E603/result.json"
+    },
+    "git_status": "Two expected modified PageRouter source/test files only; no commit or push."
+  },
+  "limits": [
+    "No observed login or registration form disruption; those controls remained enabled and dispatchable in the prior E603 repro.",
+    "No screenshot or browser visual QA claim.",
+    "No canonical build until H2 review or root authorization.",
+    "No production teacher data, backend operation, publication, commit, or push."
+  ]
+}

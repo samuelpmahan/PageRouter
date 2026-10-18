@@ -374,6 +374,57 @@ test('distinguishes an explicit empty-filter search from the initial background 
   assert.equal(controller.state.journey.matches.status, 'loaded');
 });
 
+test('leaving a pending directory read for login or registration retires shared loading', async () => {
+  for (const target of ['login', 'register']) {
+    const {controller} = setup();
+    await controller.initialize('#/');
+    const directory = controller.navigate('#/directory');
+    assert.equal(controller.state.journey.loading, true);
+    const destination = controller.navigate(`#/${target}`);
+    await Promise.all([directory, destination]);
+    assert.equal(controller.route.page, target);
+    assert.equal(controller.state.journey.loading, false, `${target} must not inherit the abandoned directory loading flag`);
+  }
+});
+
+test('an abandoned directory completion cannot clear a newer pending school lookup', async () => {
+  const storage = memoryStorage();
+  const base = createServiceRuntime(createFixtureProvider({fixture: true, storage}));
+  let holdStates = false;
+  let finishStates = null;
+  const runtime = {
+    ready: base.ready,
+    pxc: base.pxc,
+    snapshot: () => base.snapshot(),
+    inspect: () => base.inspect(),
+    get capabilities() { return base.capabilities; },
+    get fixture() { return base.fixture; },
+    invoke(port, input, boundary) {
+      if (holdStates && port === 'SchoolData.getStates' && !finishStates) {
+        return new Promise(resolve => {
+          finishStates = () => base.invoke(port, input, boundary).then(resolve);
+        });
+      }
+      return base.invoke(port, input, boundary);
+    },
+  };
+  const controller = createPublicController({runtime, storage});
+  await controller.initialize('#/');
+  controller.state.journey.lookups.states = [];
+  holdStates = true;
+  const directory = controller.navigate('#/directory');
+  assert.equal(controller.state.journey.loading, true);
+  const registration = controller.navigate('#/register');
+  await directory;
+  assert.equal(controller.route.page, 'register');
+  assert.equal(typeof finishStates, 'function', 'registration started its own delayed school-state read');
+  assert.equal(controller.state.journey.loading, true, 'the current lookup still owns the loading state');
+  finishStates();
+  await registration;
+  assert.equal(controller.state.journey.loading, false, 'the lookup completion clears its own loading state');
+  assert.deepEqual(controller.state.journey.lookups.states, ['Demo California', 'Demo Washington']);
+});
+
 test('bounded text drafts keep spaces while typing and normalize only on submit', async () => {
   const {controller} = setup();
   const typeIntoDraft = (name, value, read) => {

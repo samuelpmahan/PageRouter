@@ -1,0 +1,9 @@
+{
+  "job_id": "E601",
+  "worker": "H1",
+  "summary": "The delayed public-profile completion does not keep journey.loading active or disturb registration/login. Route-epoch protection suppresses both stale success and failure. The profile projection remains internally marked loading, but auth routes render their own usable form and do not expose that profile status. No adjacent directory/lookup loading defect was observed.",
+  "outcome": "not_reuse",
+  "producerReport": "../H1/result.json",
+  "producerReportSha256": "1a684e9325e78038da166068ed5299b12992f236d1e69d93447d361c103177fa",
+  "normalization": "Producer swapped summary and outcome fields; explicit coordinator envelope maps raw summary enum not_reuse and raw descriptive outcome text; original retained, hypothesis stays falsified."
+}

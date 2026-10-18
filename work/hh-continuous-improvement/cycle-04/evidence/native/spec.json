@@ -1,0 +1,35 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "HH cycle04 delayed profile load",
+    "scope": "synthetic controller fixture: stale public-profile read then registration/login navigation; no real teacher data/backend",
+    "source": "b07944d38a69ac3959bec9a54445cf4a0adbb89c",
+    "actualCapacity": "2 cheap workers plus coordinator; separate Lab currently owns4worker slots, total7",
+    "ownership": "H1 sole PageRouter source/Git owner; H2 readonly scratch; Lab D6 different repo"
+  },
+  "workers": [
+    "H1",
+    "H2"
+  ],
+  "review_policy": {
+    "enabled": false
+  },
+  "jobs": [
+    {
+      "id": "E601",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Reproduce promise-controlled stale public-profile read, navigate registration/login then resolve; inspect current route/loading/form usability; source owner read-only until concrete defect demonstrated"
+    },
+    {
+      "id": "E602",
+      "kind": "extract",
+      "allow_workers": [
+        "H2"
+      ],
+      "subject": "Independently reproduce stale public-profile invalidated-read loading behavior using volatile synthetic provider; trace actual UI/dispatch projection; no source edits"
+    }
+  ]
+}

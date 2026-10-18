@@ -1,0 +1,48 @@
+{
+  "schema": "hh-continuous-improvement-result/v1",
+  "job_id": "E602",
+  "worker": "H2",
+  "outcome": "mixed_change",
+  "repository": {
+    "name": "PageRouter",
+    "head": "6488c98774adb41c4bcdcec02387753c492233d8",
+    "tree": "eb12130d5eadf8b854254246eca5d50a0fc54204",
+    "status": "clean; read-only throughout"
+  },
+  "source_hashes": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "c5d31f45140397536e22e6ac744e689d06fdec09c8b7e4c1a43167548adad4d1",
+    "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "9eda3ffc8e7553d16845ef1eb25fbdd2420981274f67b49bcb61649618099ea0",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    ".github/workflows/deploy-pages.yml": "ab5577ab3f50647ff3d52589b85592ef9611915155c13fbab38d8a2be8d3a9d7",
+    "checkpoint/.github/workflows/deploy-pages.yml": "ab5577ab3f50647ff3d52589b85592ef9611915155c13fbab38d8a2be8d3a9d7",
+    "work/hh-continuous-improvement/cycle-03/NEXT.md": "e5cfd3cfb15b8970323e636aa931d0eb23dacb935ed4051c4f01e6193f1b884c",
+    "work/hh-continuous-improvement/cycle-03/continuation.json": "60335cd1151f0f1e2eaf7ecffdf11e45f9a3a92600f77a3df0517192e0b9cb7b"
+  },
+  "evidence": {
+    "probe": "hh-cycle04/H2/probe.mjs",
+    "probe_sha256": "a722b05d5ce86893337dba0085774cf16c4c2693cb6c04d47067a95466e4c61d",
+    "probe_result": "hh-cycle04/H2/probe-result.json",
+    "probe_result_sha256": "dee8d14ea1a3668fad3f646a1cac98111fde854854578eb687754dba98ee032c",
+    "commands": [
+      "node hh-cycle04/H2/probe.mjs > hh-cycle04/H2/probe-result.json",
+      "node --test checkpoint/vendor/hh/src/public-controller.test.mjs checkpoint/vendor/hh/src/public-site.test.mjs"
+    ],
+    "tests": {"passed": 45, "failed": 0},
+    "evidence_boundary": "Synthetic volatile fixture runtime and controller/render tree execution only. No browser visual inspection, real account, backend, or production calls."
+  },
+  "expected_vs_actual": {
+    "public_profile_to_register_or_login": {
+      "expected_hypothesis": "A delayed TeacherProfile.openPublicProfile read might leave shared journey.loading stuck or block the new auth form, or overwrite the current route/projection when it settles.",
+      "actual": "Four promise-controlled cases (register/login x success/failure) left journey.loading=false throughout. The controller set profile.status=loading, then the epoch guard ignored the stale completion. Register/login forms and submit buttons rendered; submit disabled was false. Current route stayed put. The superseded profile projection remained status=loading in hidden controller state, and public-site rendering did not show it on the auth route.",
+      "assessment": "The public-profile shared-loading defect is not reproduced; the profile read does not use journey.loading."
+    },
+    "adjacent_directory_search_to_login": {
+      "expected_hypothesis": "An invalidated directory operation may return before clearing shared loading.",
+      "actual": "A real microtask race started public:directory-search for query 'avery' and immediately navigated to login. The search returned {ok:false, ignored:true}; journey.loading remained true and matches.status remained loading. The login form and submit rendered, submit disabled was false, no loading/progress copy appeared on login, and blank public:login dispatch reached local validation_failed while the stale loading flag remained true.",
+      "assessment": "A controller-only stale flag and hidden directory projection reproduce, with no disabled-submit or visible login progress effect."
+    }
+  },
+  "next_grounded_action": "Treat E602 as a falsification of the profile-read hypothesis. H1 is independently probing the adjacent directory race; reconcile its result before choosing any source change. If correcting the adjacent state, bind or clear loading to the active directory request lifecycle and add a deterministic controller test for route invalidation; keep any claim limited to controller state because this probe found no visible auth-form effect."
+}

@@ -1,0 +1,50 @@
+{
+  "schema": "hh-cycle04-portable-runner-smoke/v1",
+  "rootParameter": "PAGEROUTER_ROOT",
+  "commands": [
+    "PAGEROUTER_ROOT=/workspace/scratch/8528bb251845/PageRouter node work/hh-continuous-improvement/cycle-04/evidence/E601/probe.mjs > evidence/E606/E601-portable-replay.json",
+    "PAGEROUTER_ROOT=/workspace/scratch/8528bb251845/PageRouter node work/hh-continuous-improvement/cycle-04/evidence/R604/profile-control.mjs > evidence/E606/R604-profile-replay.json",
+    "PAGEROUTER_ROOT=/workspace/scratch/8528bb251845/PageRouter node work/hh-continuous-improvement/cycle-04/evidence/R604/adversarial.mjs > evidence/E606/R604-adversarial-replay.json"
+  ],
+  "currentReviewedSourceReplay": {
+    "E601": {
+      "result": "passed 4 cases",
+      "output_matches_retained_pre-fix_output": true,
+      "output_sha256": "c6354cf344c2f74849219ca14be2b7368ac3243cb4b29051183ffede67961587"
+    },
+    "R604_profile_control": {
+      "result": "passed",
+      "output_matches_H2_retained_output": true,
+      "output_sha256": "a75399e873c35c72bbd84f455e54c52e600e4f97fb80529a0226f10f10b5ecea"
+    },
+    "R604_adversarial": {
+      "result": "passed",
+      "output_matches_H2_retained_output": true,
+      "output_sha256": "c6d7bbc9bbf69a8e47708ec85e6d5b87a5af4873fc349ba6fd535aa5b79cff24"
+    }
+  },
+  "historical_probes": {
+    "E602_and_E603": "Their pre-correction directory-race assertions are expected to fail against the current reviewed source because navigation now retires the stale loading flag. Retained pre-fix outputs remain the original evidence; the portable scripts accept PAGEROUTER_ROOT to run against a selected checkout."
+  },
+  "portableRunnerScripts": {
+    "evidence/E601/probe.mjs": "aa255888b364e340bb3a7885f806e99fe6409b30d41edb6f902d0c2028a1799f",
+    "evidence/E602/probe.mjs": "cc52aadc224537a26dac372ad085b03b02313eb66c0ab47bd29bba72fd551f5a",
+    "evidence/E603/probe.mjs": "43cb19734eeed6b06fd2ad930be2f7fa96bf5a5043c9bb98587b8f6e81ad1ad7",
+    "evidence/R604/adversarial.mjs": "413d4d2140a425d6717e756dd00c6db385d2ffcd0eed3d6eebc0e23511c9835d",
+    "evidence/R604/profile-control.mjs": "1dbdbfae7a3743fc681681805ec2d5fd1fae9eca07f5c8254b98248afe1326f5"
+  },
+  "historicalBaselineReplay": {
+    "staging": "Temporary path-only staged PageRouter root at /workspace/scratch/8528bb251845/hh-cycle04/H1/E606-red-stage/checkpoint; vendor/hh controller restored from commit 6488c98774adb41c4bcdcec02387753c492233d8 (sha256 c5d31f45140397536e22e6ac744e689d06fdec09c8b7e4c1a43167548adad4d1); all other HH modules copied from the exact PageRouter checkout.",
+    "E602": {
+      "command": "PAGEROUTER_ROOT=/workspace/scratch/8528bb251845/hh-cycle04/H1/E606-red-stage node work/hh-continuous-improvement/cycle-04/evidence/E602/probe.mjs",
+      "result": "passed; output matched retained H2 output byte-for-byte",
+      "output_sha256": "dee8d14ea1a3668fad3f646a1cac98111fde854854578eb687754dba98ee032c"
+    },
+    "E603": {
+      "command": "PAGEROUTER_ROOT=/workspace/scratch/8528bb251845/hh-cycle04/H1/E606-red-stage node work/hh-continuous-improvement/cycle-04/evidence/E603/probe.mjs",
+      "result": "passed; output matched retained H1 output byte-for-byte",
+      "output_sha256": "41dd311ecc68e3bd564a6b10d846936ad3a0648225aef608579b18b1c4cb5b58"
+    },
+    "stageScope": "Path-only scratch copy; no PageRouter source or Git state was changed."
+  }
+}

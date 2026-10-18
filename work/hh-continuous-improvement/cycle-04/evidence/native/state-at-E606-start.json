@@ -1,0 +1,619 @@
+{
+  "schema": "chainspot.rebalancer-state/v1",
+  "service": {
+    "name": "HH cycle04 delayed profile load",
+    "scope": "synthetic controller fixture: stale public-profile read then registration/login navigation; no real teacher data/backend",
+    "source": "b07944d38a69ac3959bec9a54445cf4a0adbb89c",
+    "actualCapacity": "2 cheap workers plus coordinator; separate Lab currently owns4worker slots, total7",
+    "ownership": "H1 sole PageRouter source/Git owner; H2 readonly scratch; Lab D6 different repo"
+  },
+  "workers": {
+    "H1": {
+      "job": "E606",
+      "agent": "/root/hh4_impl"
+    },
+    "H2": {
+      "job": null,
+      "agent": null
+    }
+  },
+  "jobs": {
+    "E601": {
+      "id": "E601",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Reproduce promise-controlled stale public-profile read, navigate registration/login then resolve; inspect current route/loading/form usability; source owner read-only until concrete defect demonstrated",
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-18T10:13:12.449353+00:00",
+      "finished_at": "2026-10-18T10:15:38.897630+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle04/receipts/E601.json"
+    },
+    "E602": {
+      "id": "E602",
+      "kind": "extract",
+      "allow_workers": [
+        "H2"
+      ],
+      "subject": "Independently reproduce stale public-profile invalidated-read loading behavior using volatile synthetic provider; trace actual UI/dispatch projection; no source edits",
+      "status": "done",
+      "worker": "H2",
+      "started_at": "2026-10-18T10:13:13.264282+00:00",
+      "finished_at": "2026-10-18T10:18:47.975013+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle04/receipts/E602.json"
+    },
+    "E603": {
+      "id": "E603",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-18T10:15:39.776449+00:00",
+      "finished_at": "2026-10-18T10:18:47.524422+00:00",
+      "subject": "Falsified profile hypothesis -> controlled adjacent directory read invalidated by navigation; verify journey.loading and actual login/register usability before correction",
+      "guard": "E601 exact4-case public-profile falsification executed; source loading flag/epoch early return inspected",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle04/receipts/E603.json"
+    },
+    "E604": {
+      "id": "E604",
+      "kind": "extract",
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-18T10:18:52.391175+00:00",
+      "finished_at": "2026-10-18T10:21:56.588431+00:00",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Minimal route ownership handoff correction for proven stranded journey.loading; red/green regressions preserve existing usable auth UI and stale-write protection; old read cannot clear new lookup loading",
+      "guard": "E603 actual login/register race reproduced and E602 independent same state defect, no user lockout claim",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle04/receipts/E604.json"
+    },
+    "R604": {
+      "id": "R604",
+      "kind": "review",
+      "depends_on": "E604",
+      "status": "done",
+      "worker": "H2",
+      "started_at": "2026-10-18T10:21:57.519427+00:00",
+      "finished_at": "2026-10-18T10:25:18.490902+00:00",
+      "allow_workers": [
+        "H2"
+      ],
+      "subject": "Independent exact source/fixture regression plus overlapping new lookup loading; reviewer differs from implementer",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle04/receipts/R604.json"
+    },
+    "E605": {
+      "id": "E605",
+      "kind": "extract",
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-18T10:25:21.144822+00:00",
+      "finished_at": "2026-10-18T10:29:16.337514+00:00",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Run canonical checkpoint bash ci/bazel/run.sh on accepted exact2file source; capture build/site/input hashes and evidence, no source edits",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle04/receipts/E605.json"
+    },
+    "E606": {
+      "id": "E606",
+      "kind": "extract",
+      "status": "running",
+      "worker": "H1",
+      "started_at": "2026-10-18T10:29:17.639789+00:00",
+      "finished_at": null,
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Sole PageRouter ADMIN source owner package exact2file canonical candidate, raw falsifier/repro/review/build/native receipts and minimal continuation, no commit yet"
+    },
+    "R606": {
+      "id": "R606",
+      "kind": "review",
+      "depends_on": "E606",
+      "status": "blocked",
+      "worker": null,
+      "started_at": null,
+      "finished_at": null,
+      "allow_workers": [
+        "H2"
+      ],
+      "subject": "Independent exact package/source/build/continuation audit before bounded checkpoint publication"
+    }
+  },
+  "events": [
+    {
+      "type": "solve",
+      "epoch": 0,
+      "at": "2026-10-18T10:13:05.380936+00:00",
+      "ready_jobs": [
+        "E601",
+        "E602"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H2": "E602",
+        "H1": "E601"
+      },
+      "dispatch": {
+        "H2": "E602",
+        "H1": "E601"
+      },
+      "native_seconds": 0.0040343509972444735,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 200,
+      "native_score": 200,
+      "caps": {
+        "E601": 1,
+        "E602": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E601": [
+          "H1"
+        ],
+        "E602": [
+          "H2"
+        ]
+      },
+      "weights": {
+        "E601": 100,
+        "E602": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T10:13:12.449353+00:00",
+      "worker": "H1",
+      "job": "E601",
+      "agent": "/root/hh4_impl"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T10:13:13.264282+00:00",
+      "worker": "H2",
+      "job": "E602",
+      "agent": "/root/hh4_review"
+    },
+    {
+      "type": "conditional_next",
+      "at": "2026-10-18T10:15:27.023398+00:00",
+      "from": "E601 falsified",
+      "to": "E603 directory delayed-read control",
+      "reason": "source loadDirectory sets shared journey.loading then stale return precedes clear; UI disable must be executed before fix"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T10:15:38.897630+00:00",
+      "worker": "H1",
+      "job": "E601"
+    },
+    {
+      "type": "solve",
+      "epoch": 1,
+      "at": "2026-10-18T10:15:39.353028+00:00",
+      "ready_jobs": [
+        "E603"
+      ],
+      "pinned_workers": [
+        "H2"
+      ],
+      "assignments": {
+        "H2": "E602",
+        "H1": "E603"
+      },
+      "dispatch": {
+        "H1": "E603"
+      },
+      "native_seconds": 0.004668649999075569,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 1 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E601": 0,
+        "E602": 1,
+        "E603": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E603": [
+          "H1"
+        ]
+      },
+      "weights": {
+        "E603": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": "/root/hh4_review"
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T10:15:39.776449+00:00",
+      "worker": "H1",
+      "job": "E603",
+      "agent": "/root/hh4_impl"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T10:18:47.524422+00:00",
+      "worker": "H1",
+      "job": "E603"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T10:18:47.975013+00:00",
+      "worker": "H2",
+      "job": "E602"
+    },
+    {
+      "type": "solve",
+      "epoch": 2,
+      "at": "2026-10-18T10:18:49.310815+00:00",
+      "ready_jobs": [
+        "E604"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H1": "E604",
+        "H2": "BENCH"
+      },
+      "dispatch": {
+        "H1": "E604"
+      },
+      "native_seconds": 0.0029917249994468875,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E601": 0,
+        "E602": 0,
+        "E603": 0,
+        "E604": 1,
+        "R604": 0,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E604": [
+          "H1"
+        ]
+      },
+      "weights": {
+        "E604": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T10:18:52.391175+00:00",
+      "worker": "H1",
+      "job": "E604",
+      "agent": "/root/hh4_impl"
+    },
+    {
+      "type": "guard_ready",
+      "at": "2026-10-18T10:21:56.143897+00:00",
+      "job": "R604",
+      "reason": "E604 source frozen, actual red/green retained; source owner stopped; independent H2 available after E602"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T10:21:56.588431+00:00",
+      "worker": "H1",
+      "job": "E604"
+    },
+    {
+      "type": "solve",
+      "epoch": 3,
+      "at": "2026-10-18T10:21:57.038413+00:00",
+      "ready_jobs": [
+        "R604"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H2": "R604",
+        "H1": "BENCH"
+      },
+      "dispatch": {
+        "H2": "R604"
+      },
+      "native_seconds": 0.0033593309999560006,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 200,
+      "native_score": 200,
+      "caps": {
+        "E601": 0,
+        "E602": 0,
+        "E603": 0,
+        "E604": 0,
+        "R604": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "R604": [
+          "H2"
+        ]
+      },
+      "weights": {
+        "R604": 200
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T10:21:57.519427+00:00",
+      "worker": "H2",
+      "job": "R604",
+      "agent": "/root/hh4_review"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T10:25:18.490902+00:00",
+      "worker": "H2",
+      "job": "R604"
+    },
+    {
+      "type": "solve",
+      "epoch": 4,
+      "at": "2026-10-18T10:25:19.844900+00:00",
+      "ready_jobs": [
+        "E605"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H1": "E605",
+        "H2": "BENCH"
+      },
+      "dispatch": {
+        "H1": "E605"
+      },
+      "native_seconds": 0.0034897020013886504,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E601": 0,
+        "E602": 0,
+        "E603": 0,
+        "E604": 0,
+        "R604": 0,
+        "E605": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E605": [
+          "H1"
+        ]
+      },
+      "weights": {
+        "E605": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T10:25:21.144822+00:00",
+      "worker": "H1",
+      "job": "E605",
+      "agent": "/root/hh4_impl"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T10:29:16.337514+00:00",
+      "worker": "H1",
+      "job": "E605"
+    },
+    {
+      "type": "solve",
+      "epoch": 5,
+      "at": "2026-10-18T10:29:16.795488+00:00",
+      "ready_jobs": [
+        "E606"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H1": "E606",
+        "H2": "BENCH"
+      },
+      "dispatch": {
+        "H1": "E606"
+      },
+      "native_seconds": 0.004428354004630819,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E601": 0,
+        "E602": 0,
+        "E603": 0,
+        "E604": 0,
+        "R604": 0,
+        "E605": 0,
+        "E606": 1,
+        "R606": 0,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E606": [
+          "H1"
+        ]
+      },
+      "weights": {
+        "E606": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T10:29:17.639789+00:00",
+      "worker": "H1",
+      "job": "E606",
+      "agent": "/root/hh4_impl"
+    }
+  ],
+  "epoch": 6,
+  "policy": {
+    "extract_priority": 100,
+    "review_priority": 200,
+    "repair_priority": 300
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schema": "hh-continuous-improvement-review/v1",
+  "job_id": "R604",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "The exact H1 change correctly retires shared loading when navigation invalidates the prior route, while a destination lookup can immediately claim loading for its own pending work. Epoch guards continue to prevent stale reads from changing current state. The public-profile success/failure controls remain route-safe and do not lock auth forms.",
+  "checkpoint": {
+    "repository": "PageRouter",
+    "head": "6488c98774adb41c4bcdcec02387753c492233d8",
+    "tree": "eb12130d5eadf8b854254246eca5d50a0fc54204",
+    "expected_dirty_files": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "controller_sha256": "908c4fa0aa1c0d809c804b83d680f45c2775cf1919e5244a58af769d2bb8d70f",
+    "tests_sha256": "d84876bb26e846bbb5a482c637a324c9a808d223b668e164204e9191abfeed9d",
+    "author_result_sha256": "349528f5431e6d8641a813aa1ee828076763c1920b79e2a19bad61f7f80fc8aa",
+    "git_diff_check": "passed"
+  },
+  "verification": {
+    "commands": [
+      "node --test --test-concurrency=2 vendor/hh/src/public-controller.test.mjs",
+      "node --test --test-concurrency=2 vendor/hh/src/*.test.mjs",
+      "node hh-cycle04/H2/review-R604/profile-control.mjs > hh-cycle04/H2/review-R604/profile-control.json",
+      "node hh-cycle04/H2/review-R604/adversarial.mjs > hh-cycle04/H2/review-R604/adversarial.json",
+      "git diff --check"
+    ],
+    "results": {
+      "focused_controller": {"passed": 33, "failed": 0},
+      "all_hh_tests": {"passed": 60, "failed": 0},
+      "controlled_profile_cases": "Four cases: register/login crossed with provider success/failure. Shared loading stayed false; current route and auth form remained stable; submit remained enabled; stale profile result did not replace the current projection.",
+      "lookup_to_login": "Controlled county lookup success and failure both became stale after login navigation. Loading cleared synchronously at navigation and remained false after stale settlement; old lookup did not populate counties or surface an error.",
+      "directory_to_register_with_lookup": "The old directory microtask returned while a current SchoolData.getStates read remained pending. Loading stayed true until the registration lookup completed, then cleared with the expected fixture states.",
+      "newer_lookup_before_older": "A newer California county lookup completed before an older Washington lookup. The older result was ignored and did not overwrite the selected state, county choices, or loading state."
+    },
+    "adversarial_probe_sha256": "d02b31db166eb447ab5cbefaad192633184968d81bb7b41f3e6c9bc3bc3d6cd0",
+    "adversarial_output_sha256": "c6d7bbc9bbf69a8e47708ec85e6d5b87a5af4873fc349ba6fd535aa5b79cff24",
+    "profile_control_probe_sha256": "c10609a4820f9ca51e66dd5f66b7f1a0d598a0c34d8cc94003f8549af2655ccc",
+    "profile_control_output_sha256": "a75399e873c35c72bbd84f455e54c52e600e4f97fb80529a0226f10f10b5ecea"
+  },
+  "limits": [
+    "All controller/provider behavior used synthetic volatile fixtures; no real teacher data or backend calls.",
+    "Rendered-tree checks only; no browser visual QA or screenshot inspected.",
+    "Canonical source build was not run."
+  ]
+}
