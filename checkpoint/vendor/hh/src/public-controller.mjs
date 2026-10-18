@@ -84,6 +84,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
       loading: false,
       error: '',
       lookupError: '',
+      lookupRetryable: false,
       filters: {query: '', sort: 'date-newest', limit: 50},
       rememberedFilters: null,
       searchPerformed: false,
@@ -111,7 +112,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
   let syntheticAccount = 0;
   let randomIndex = 0;
   let lastRetry = null;
-  let lastLookup = null;
+  let schoolLookupRetry = null;
   const aliasToFixtureEmail = new Map();
   const identityByFixtureEmail = new Map();
   const profileOverlays = new Map();
@@ -193,9 +194,12 @@ export function createPublicController({runtime, storage = null, onChange = () =
   }
 
   async function loadLookup(port, input, target, epoch = schoolEpoch) {
+    if (state.journey.lookupError && state.journey.outcome?.kind === 'local-error') state.journey.outcome = null;
     state.journey.loading = true;
     state.journey.lookupError = '';
-    lastLookup = () => loadLookup(port, input, target, schoolEpoch);
+    state.journey.lookupRetryable = false;
+    const retryInput = clone(input);
+    const retryLookup = () => loadLookup(port, retryInput, target, epoch);
     notify();
     const failNext = state.journey.failNext === true;
     if (failNext) state.journey.failNext = false;
@@ -207,11 +211,13 @@ export function createPublicController({runtime, storage = null, onChange = () =
     if (result.ok) {
       state.journey.lookups[target] = clone(result.data.values || []);
       state.journey.lookupError = '';
-      lastRetry = null;
+      state.journey.lookupRetryable = false;
+      if (schoolLookupRetry?.epoch === epoch) schoolLookupRetry = null;
     } else {
       state.journey.lookupError = result.message || result.error?.message || 'School choices are unavailable.';
+      state.journey.lookupRetryable = result.error?.retryable === true && result.error?.outcomeKnown !== false;
       state.journey.error = state.journey.lookupError;
-      lastRetry = result.error?.retryable ? lastLookup : null;
+      schoolLookupRetry = state.journey.lookupRetryable ? {epoch, run: retryLookup} : null;
       setOutcome('local-error', state.journey.lookupError, {code: result.error?.code || 'lookup_failed'});
     }
     notify();
@@ -255,10 +261,20 @@ export function createPublicController({runtime, storage = null, onChange = () =
     await runtime.ready;
     syncRuntime();
     readRememberedFilters();
-    schoolEpoch += 1;
-    await loadLookup('SchoolData.getStates', {}, 'states', schoolEpoch);
     await navigate(hash || '#/');
+    if (state.route.page !== 'register' && !state.journey.lookups.states.length) {
+      await loadLookup('SchoolData.getStates', {}, 'states', schoolEpoch);
+    }
     return state;
+  }
+
+  async function loadRegistrationChoices() {
+    const school = state.journey.school;
+    if (!state.journey.lookups.states.length) return loadLookup('SchoolData.getStates', {}, 'states', schoolEpoch);
+    if (school.state && !state.journey.lookups.counties.length) return loadLookup('SchoolData.getCounties', school, 'counties', schoolEpoch);
+    if (school.county && !state.journey.lookups.districts.length) return loadLookup('SchoolData.getDistricts', school, 'districts', schoolEpoch);
+    if (school.district && !state.journey.lookups.schools.length) return loadLookup('SchoolData.getSchools', school, 'schools', schoolEpoch);
+    return {ok: true, local: true};
   }
 
   async function navigate(hash = '#/') {
@@ -269,13 +285,19 @@ export function createPublicController({runtime, storage = null, onChange = () =
     state.journey.navOpen = false;
     state.journey.error = '';
     state.journey.terms = {...state.journey.terms, open: state.route.termsOpen === true};
+    if (state.journey.lookupError && state.journey.outcome?.kind === 'local-error') state.journey.outcome = null;
+    state.journey.lookupError = '';
+    state.journey.lookupRetryable = false;
     lastRetry = null;
+    schoolLookupRetry = null;
     if (state.route.page === 'directory') {
       await loadDirectory(state.journey.filters.query, state.journey.school, epoch);
     } else if (state.route.page === 'profile' && state.route.profileId) {
       await loadPublicProfile(state.route.profileId, epoch);
     } else if (state.route.page === 'profile') {
       syncRuntime();
+    } else if (state.route.page === 'register') {
+      await loadRegistrationChoices();
     }
     notify();
     return {ok: true, route: clone(state.route)};
@@ -292,6 +314,8 @@ export function createPublicController({runtime, storage = null, onChange = () =
     const keys = ['state', 'county', 'district', 'school'];
     const index = keys.indexOf(key);
     if (index < 0) throw new Error('Unknown school selection.');
+    lastRetry = null;
+    schoolLookupRetry = null;
     schoolEpoch += 1;
     const epoch = schoolEpoch;
     state.journey.school[key] = clean(value, 100);
@@ -300,7 +324,9 @@ export function createPublicController({runtime, storage = null, onChange = () =
       const lookupKey = {state: 'states', county: 'counties', district: 'districts', school: 'schools'}[keys[i]];
       state.journey.lookups[lookupKey] = [];
     }
+    if (state.journey.lookupError && state.journey.outcome?.kind === 'local-error') state.journey.outcome = null;
     state.journey.lookupError = '';
+    state.journey.lookupRetryable = false;
     state.journey.error = '';
     clearMutationStatus();
     notify();
@@ -761,6 +787,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
     }
     if (event === 'public:retry' || event === 'retry') {
       if (lastRetry) return lastRetry();
+      if (schoolLookupRetry?.epoch === schoolEpoch) return schoolLookupRetry.run();
       return {ok: false, error: {code: 'nothing_to_retry', message: 'There is no safe read operation to retry.'}};
     }
     if (event === 'public:fail-next') {
@@ -812,7 +839,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
   return Object.freeze({
     state,
     get route() { return state.route; },
-    get canRetry() { return typeof lastRetry === 'function'; },
+    get canRetry() { return typeof lastRetry === 'function' || schoolLookupRetry?.epoch === schoolEpoch; },
     initialize, navigate, selectSchool, dispatch, updateDraft,
     community,
   });

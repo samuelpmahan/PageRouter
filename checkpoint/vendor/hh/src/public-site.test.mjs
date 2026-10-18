@@ -36,6 +36,32 @@ test('registration exposes the school cascade, password confirmation, Terms, and
   assert.ok(byId(pending,'hh-register-approve'));
 });
 
+test('registration shows a contextual school lookup retry only while choices are unavailable',()=>{
+  const failed=renderPublicSite({route:{page:'register'},journey:{
+    lookupError:'School choices are unavailable.',
+    lookupRetryable:true,
+    lookups:{states:['Demo Washington'],counties:[],districts:[],schools:[]},
+    school:{state:'Demo Washington',county:'',district:'',school:''},
+    registration:{status:'none'},terms:{accepted:false},
+  }});
+  assert.match(text(failed),/School choices are unavailable\./);
+  assert.equal(byId(failed,'hh-register-lookup-retry').attrs['data-event'],'public:retry');
+  assert.match(text({children:[byId(failed,'hh-register-lookup-retry')]}),/Retry school choices/);
+
+  const recovered=renderPublicSite({route:{page:'register'},journey:{
+    lookupError:'',lookups:{states:['Demo Washington'],counties:['Demo King'],districts:[],schools:[]},
+    school:{state:'Demo Washington',county:'',district:'',school:''},registration:{status:'none'},terms:{accepted:false},
+  }});
+  assert.equal(byId(recovered,'hh-register-lookup-retry'),undefined);
+
+  const permanent=renderPublicSite({route:{page:'register'},journey:{
+    lookupError:'School choices are unavailable.',lookupRetryable:false,
+    lookups:{states:[],counties:[],districts:[],schools:[]},school:{},registration:{status:'none'},
+  }});
+  assert.match(text(permanent),/School choices are unavailable\./,'permanent lookup failures must remain visible');
+  assert.equal(byId(permanent,'hh-register-lookup-retry'),undefined,'non-retryable lookup errors must not offer a dead action');
+});
+
 test('directory and contact reflect saved state, error/loading status, and remaining characters',()=>{
   const journey={filters:{query:'Ada',sort:'name'},lookups:{states:['WA'],counties:[],districts:[],schools:[]},school:{state:'WA'},matches:{status:'error',items:[],error:'Fixture lookup failed'},contact:{remaining:230,form:{message:'x'.repeat(20)}}};
   const directory=renderPublicSite({route:{page:'directory'},journey});

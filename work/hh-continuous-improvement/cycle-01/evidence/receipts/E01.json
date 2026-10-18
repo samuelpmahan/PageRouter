@@ -1,0 +1,10 @@
+{
+  "job_id": "E01",
+  "worker": "W1",
+  "outcome": "mixed_change",
+  "summary": "Implemented current-selection-bound lookup retries, cleared stale retry/error on route/selection changes, preserved initial-state lookup retry, and added contextual retryable-only registration action. Four scoped source/test files, 28 focused tests pass; failing-before cases observed by implementation owner. Canonical build and independent candidate review pending.",
+  "agent": "/root/hh_owner",
+  "branch": "codex/hh-continuous-improvement",
+  "source": "7adf7e74a85c4310a5704a4c42808e85a1a82d71",
+  "internalDeferred": "Shared journey.loading cancellation issue remains outside this visible recovery correction."
+}

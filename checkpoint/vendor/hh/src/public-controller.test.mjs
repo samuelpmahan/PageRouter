@@ -127,6 +127,111 @@ test('cascades school filters, loads local directory matches and restores rememb
   assert.deepEqual(controller.state.journey.lookups.schools, []);
 });
 
+test('school lookup retry stays bound to the failed current selection', async () => {
+  const {controller} = setup();
+  await controller.initialize('#/register');
+  await controller.dispatch('public:fail-next');
+  const failed = await controller.selectSchool('state', 'Demo Washington');
+  assert.equal(failed.ok, false);
+  assert.equal(controller.canRetry, true);
+  assert.match(controller.state.journey.lookupError, /school-data failure/);
+
+  const cleared = await controller.selectSchool('state', '');
+  assert.equal(cleared.ok, true);
+  const retried = await controller.dispatch('public:retry');
+  assert.equal(retried.ok, false, 'a retry for an invalidated selection must be unavailable');
+  assert.equal(controller.state.journey.school.state, '');
+  assert.deepEqual(controller.state.journey.lookups.counties, []);
+  assert.equal(controller.canRetry, false);
+});
+
+test('school lookup retry recovers the same current selection', async () => {
+  const {controller} = setup();
+  await controller.initialize('#/register');
+  await controller.dispatch('public:fail-next');
+  const failed = await controller.selectSchool('state', 'Demo Washington');
+  assert.equal(failed.ok, false);
+  const retried = await controller.dispatch('public:retry');
+  assert.equal(retried.ok, true);
+  assert.deepEqual(controller.state.journey.lookups.counties, ['Demo King']);
+  assert.equal(controller.state.journey.lookupError, '');
+  assert.equal(controller.canRetry, false);
+});
+
+test('navigating away invalidates a failed registration school lookup retry', async () => {
+  const {controller} = setup();
+  await controller.initialize('#/register');
+  await controller.dispatch('public:fail-next');
+  await controller.selectSchool('state', 'Demo Washington');
+  assert.equal(controller.canRetry, true);
+  await controller.navigate('#/login');
+  await controller.navigate('#/register');
+  assert.equal(controller.canRetry, false);
+  assert.equal(controller.state.journey.lookupError, '');
+  assert.equal(controller.state.journey.outcome, null);
+});
+
+test('initial school choices remain retryable when the states read fails', async () => {
+  const {controller} = setup();
+  await controller.dispatch('public:fail-next');
+  await controller.initialize('#/register');
+  assert.equal(controller.state.journey.lookupError, 'Simulated local school-data failure; no state changed.');
+  assert.equal(controller.canRetry, true);
+  assert.equal(controller.state.journey.lookupRetryable, true);
+  const retry = await controller.dispatch('public:retry');
+  assert.equal(retry.ok, true);
+  assert.deepEqual(controller.state.journey.lookups.states, ['Demo California', 'Demo Washington']);
+});
+
+test('returning to registration reloads states after an invalidated initial lookup failure', async () => {
+  const {controller} = setup();
+  await controller.dispatch('public:fail-next');
+  await controller.initialize('#/register');
+  assert.deepEqual(controller.state.journey.lookups.states, []);
+  await controller.navigate('#/login');
+  await controller.navigate('#/register');
+  assert.deepEqual(controller.state.journey.lookups.states, ['Demo California', 'Demo Washington']);
+  assert.equal(controller.state.journey.lookupError, '');
+  assert.equal(controller.canRetry, false);
+});
+
+test('successful initial school-data read does not erase a directory retry', async () => {
+  const {controller} = setup();
+  await controller.dispatch('public:fail-next');
+  await controller.initialize('#/directory');
+  assert.equal(controller.state.journey.matches.status, 'error');
+  assert.equal(controller.canRetry, true);
+  const retried = await controller.dispatch('public:retry');
+  assert.equal(retried.ok, true);
+  assert.equal(controller.state.journey.matches.status, 'loaded');
+});
+
+test('returning to registration reloads a failed county cascade', async () => {
+  const {controller} = setup();
+  await controller.initialize('#/register');
+  await controller.dispatch('public:fail-next');
+  await controller.selectSchool('state', 'Demo Washington');
+  assert.equal(controller.state.journey.lookupRetryable, true);
+  assert.deepEqual(controller.state.journey.lookups.counties, []);
+  await controller.navigate('#/login');
+  await controller.navigate('#/register');
+  assert.deepEqual(controller.state.journey.lookups.counties, ['Demo King']);
+  assert.equal(controller.state.journey.lookupError, '');
+  assert.equal(controller.canRetry, false);
+});
+
+test('school lookup retry remains available from directory when no directory retry owns it', async () => {
+  const {controller} = setup();
+  await controller.initialize('#/directory');
+  await controller.dispatch('public:fail-next');
+  const failed = await controller.selectSchool('state', 'Demo Washington');
+  assert.equal(failed.ok, false);
+  assert.equal(controller.canRetry, true);
+  const retried = await controller.dispatch('public:retry');
+  assert.equal(retried.ok, true);
+  assert.deepEqual(controller.state.journey.lookups.counties, ['Demo King']);
+});
+
 test('distinguishes an explicit empty-filter search from the initial background directory load', async () => {
   const {controller} = setup();
   await controller.initialize('#/find-teachers');

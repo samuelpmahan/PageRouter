@@ -1,0 +1,40 @@
+✔ normalizes captured public route aliases and forum paths (2.713007ms)
+✔ captured Teacher of the Day opens as a read-only snapshot without invoking teacher services (9.61516ms)
+✔ cascades school filters, loads local directory matches and restores remembered filters (4.127879ms)
+✔ school lookup retry stays bound to the failed current selection (1.191175ms)
+✔ school lookup retry recovers the same current selection (1.800121ms)
+✔ navigating away invalidates a failed registration school lookup retry (0.910512ms)
+✔ initial school choices remain retryable when the states read fails (1.111565ms)
+✔ returning to registration reloads states after an invalidated initial lookup failure (0.53068ms)
+✔ successful initial school-data read does not erase a directory retry (0.636448ms)
+✔ returning to registration reloads a failed county cascade (0.942319ms)
+✔ school lookup retry remains available from directory when no directory retry owns it (0.844121ms)
+✔ distinguishes an explicit empty-filter search from the initial background directory load (0.739794ms)
+✔ bounded text drafts keep spaces while typing and normalize only on submit (1.50706ms)
+✔ rejects stored school selections whose individual values do not form one fixture row (0.530509ms)
+✔ registration keeps passwords ephemeral, approval and login stay separate, and edits remain local (5.044509ms)
+✔ Terms checkbox consent tracks both checking and unchecking without opening the modal (0.712643ms)
+✔ seeded UI login, local contact and reset never claim remote effects (2.020694ms)
+✔ wishlist and community actions are explicit local preview handoffs (1.330955ms)
+✔ late login, approval and logout results never redirect away from the current route (4.215099ms)
+✔ public route tree binds nav state, exposes accessible stable controls, and avoids inline styling (3.546562ms)
+✔ registration exposes the school cascade, password confirmation, Terms, and local approval (1.562744ms)
+✔ registration shows a contextual school lookup retry only while choices are unavailable (1.785991ms)
+✔ directory and contact reflect saved state, error/loading status, and remaining characters (0.857341ms)
+✔ profile error can retry and editable profile drafts survive renderer replacement (0.671442ms)
+✔ public profile formats structured school and scalar location fields without object coercion (0.446984ms)
+✔ Terms displays the complete captured section set and public profiles require an explicit wishlist choice (0.432201ms)
+✔ Teacher of the Day uses the captured Sarah profile and keeps it separate from runtime-owned demo profiles (0.588226ms)
+✔ Login and password-help content stays inside the single centered account card (0.45153ms)
+✔ partner and About renders expose source-shaped images and readable team text (0.631031ms)
+✔ Contact uses the captured local brand font glyphs and footer preview controls bind state (1.140258ms)
+✔ Logout is available in the authenticated account menu and absent anonymously (0.207142ms)
+✔ directory Results stays blank until an explicit search and then renders zero-result guidance (1.105956ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 130.255326

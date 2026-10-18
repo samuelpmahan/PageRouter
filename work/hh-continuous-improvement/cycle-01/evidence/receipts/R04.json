@@ -1,0 +1,7 @@
+{
+  "job_id": "R04",
+  "worker": "W2",
+  "decision": "amend",
+  "summary": "E04 permanent error visibility works, 28 focused tests pass. Two reproducible remaining gaps: initial states failure then navigate login/register leaves no states/error/retry; directory fail-next during initialize has visible Retry but successful independent states lookup clears shared lastRetry. Restore viable registration states recovery and avoid erasing unrelated directory retry.",
+  "agent": "/root/hh_ux"
+}
