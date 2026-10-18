@@ -1,0 +1,109 @@
+{
+  "schema": "hh-cycle03-e402-postfix-probe/v1",
+  "cases": {
+    "nonowner": {
+      "ownerTeacherIdBefore": "demo-seed-avery",
+      "ownerTeacherIdAfter": "demo-seed-avery",
+      "viewed": {
+        "profileId": "demo-jordan",
+        "teacherIdBefore": "demo-seed-jordan",
+        "teacherIdAfter": "demo-seed-jordan",
+        "nameBefore": "Demo Jordan",
+        "nameAfter": "Demo Jordan",
+        "sourceAfterReopen": "runtime"
+      },
+      "toggle": {
+        "ok": false,
+        "error": {
+          "code": "profile_owner_mismatch",
+          "message": "You can only edit your own local profile."
+        }
+      },
+      "submit": {
+        "ok": false,
+        "error": {
+          "code": "profile_owner_mismatch",
+          "message": "You can only edit your own local profile."
+        }
+      },
+      "providerRuntimeSnapshotUnchanged": true,
+      "otherProfileOverlayUnchanged": true,
+      "reopenedProfileUnchanged": true
+    },
+    "ownedPublicAlias": {
+      "ownerTeacherId": "demo-seed-avery",
+      "profileTeacherIdBefore": "demo-seed-avery",
+      "profileTeacherIdAfter": "demo-seed-avery",
+      "save": {
+        "ok": true,
+        "localOnly": true
+      },
+      "nameAfter": "Demo Avery owner edited",
+      "nameAfterReopen": "Demo Avery owner edited",
+      "providerRuntimeSnapshotUnchanged": true
+    },
+    "capturedReference": {
+      "ownerTeacherId": "demo-seed-avery",
+      "requested": {
+        "profileId": "reference-sarah",
+        "source": "captured-readonly",
+        "readOnly": true
+      },
+      "toggle": {
+        "ok": false,
+        "error": {
+          "code": "read_only_reference",
+          "message": "Captured public reference profiles are read-only."
+        }
+      },
+      "submit": {
+        "ok": false,
+        "error": {
+          "code": "read_only_reference",
+          "message": "Captured public reference profiles are read-only."
+        }
+      },
+      "nameBefore": "Sarah Endsley",
+      "nameAfter": "Sarah Endsley",
+      "providerRuntimeSnapshotUnchanged": true
+    },
+    "anonymous": {
+      "ownerTeacherId": null,
+      "viewedTeacherId": "demo-seed-jordan",
+      "toggle": {
+        "ok": false,
+        "error": {
+          "code": "authentication_required"
+        }
+      },
+      "submit": {
+        "ok": false,
+        "error": {
+          "code": "authentication_required"
+        }
+      },
+      "profileUnchanged": true,
+      "providerRuntimeSnapshotUnchanged": true
+    },
+    "missingSessionTeacherId": {
+      "sessionTeacherIdBefore": "",
+      "profileTeacherId": "demo-seed-avery",
+      "toggle": {
+        "ok": false,
+        "error": {
+          "code": "profile_owner_mismatch",
+          "message": "You can only edit your own local profile."
+        }
+      },
+      "submit": {
+        "ok": false,
+        "error": {
+          "code": "profile_owner_mismatch",
+          "message": "You can only edit your own local profile."
+        }
+      },
+      "profileUnchanged": true,
+      "providerRuntimeSnapshotUnchanged": true
+    }
+  }
+}

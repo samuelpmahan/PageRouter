@@ -146,6 +146,87 @@ test('captured Teacher of the Day opens as a read-only snapshot without invoking
   assert.deepEqual(runtime.snapshot(), before, 'a logged-in demo account still cannot mutate captured reference data');
 });
 
+test('profile edit toggle rejects another authenticated teacher profile', async () => {
+  const {controller, runtime} = setup();
+  await controller.initialize('#/login');
+  assert.equal((await controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'local-demo'})).ok, true);
+  await controller.navigate('#/public-profile/demo-jordan');
+
+  const runtimeBefore = runtime.snapshot();
+  const profileBefore = structuredClone(controller.state.journey.profile.value);
+  assert.equal(runtimeBefore.session.teacherId, 'demo-seed-avery');
+  assert.equal(profileBefore.teacherId, 'demo-seed-jordan');
+
+  const result = await controller.dispatch('public:edit-profile');
+
+  assert.equal(result.ok, false);
+  assert.equal(result.error.code, 'profile_owner_mismatch');
+  assert.equal(controller.state.journey.profile.editOpen, false);
+  assert.deepEqual(controller.state.journey.profile.value, profileBefore);
+  await controller.navigate('#/public-profile/demo-jordan');
+  assert.equal(controller.state.journey.profile.value.name, profileBefore.displayName);
+  assert.deepEqual(runtime.snapshot(), runtimeBefore);
+});
+
+test('profile edit submit rejects another authenticated teacher profile without creating an overlay', async () => {
+  const {controller, runtime} = setup();
+  await controller.initialize('#/login');
+  assert.equal((await controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'local-demo'})).ok, true);
+  await controller.navigate('#/public-profile/demo-jordan');
+
+  const runtimeBefore = runtime.snapshot();
+  const profileBefore = structuredClone(controller.state.journey.profile.value);
+  assert.equal(runtimeBefore.session.teacherId, 'demo-seed-avery');
+  assert.equal(profileBefore.teacherId, 'demo-seed-jordan');
+
+  const result = await controller.dispatch('public:profile-edit', {name: 'Demo Jordan changed by Avery', bio: 'Unauthorized local overlay'});
+
+  assert.equal(result.ok, false);
+  assert.equal(result.error.code, 'profile_owner_mismatch');
+  assert.deepEqual(controller.state.journey.profile.value, profileBefore);
+  await controller.navigate('#/public-profile/demo-jordan');
+  assert.equal(controller.state.journey.profile.value.name, profileBefore.displayName);
+  assert.deepEqual(runtime.snapshot(), runtimeBefore);
+});
+
+test('profile edit toggle fails closed for anonymous and missing teacher identities', async () => {
+  const anonymous = setup();
+  await anonymous.controller.initialize('#/public-profile/demo-jordan');
+  const anonymousResult = await anonymous.controller.dispatch('public:edit-profile');
+  assert.equal(anonymousResult.ok, false);
+  assert.equal(anonymousResult.error.code, 'authentication_required');
+  assert.equal(anonymous.controller.state.journey.profile.editOpen, false);
+
+  const missingIdentity = setup();
+  await missingIdentity.controller.initialize('#/login');
+  assert.equal((await missingIdentity.controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'local-demo'})).ok, true);
+  await missingIdentity.controller.navigate('#/public-profile/demo-avery');
+  missingIdentity.controller.state.journey.session.teacherId = '';
+  const missingIdentityResult = await missingIdentity.controller.dispatch('public:edit-profile');
+  assert.equal(missingIdentityResult.ok, false);
+  assert.equal(missingIdentityResult.error.code, 'profile_owner_mismatch');
+  assert.equal(missingIdentity.controller.state.journey.profile.editOpen, false);
+});
+
+test('profile edit remains available to its owner through a public profile alias', async () => {
+  const {controller, runtime} = setup();
+  await controller.initialize('#/login');
+  assert.equal((await controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'local-demo'})).ok, true);
+  await controller.navigate('#/teachers/demo-avery');
+  assert.equal(controller.state.journey.session.teacherId, 'demo-seed-avery');
+  assert.equal(controller.state.journey.profile.value.teacherId, 'demo-seed-avery');
+  const runtimeBefore = runtime.snapshot();
+
+  const result = await controller.dispatch('public:profile-edit', {name: 'Demo Avery public alias edit'});
+
+  assert.equal(result.ok, true);
+  assert.equal(result.localOnly, true);
+  assert.equal(controller.state.journey.profile.value.name, 'Demo Avery public alias edit');
+  await controller.navigate('#/teachers/demo-avery');
+  assert.equal(controller.state.journey.profile.value.name, 'Demo Avery public alias edit');
+  assert.deepEqual(runtime.snapshot(), runtimeBefore);
+});
+
 test('cascades school filters, loads local directory matches and restores remembered filters', async () => {
   const {controller} = setup();
   await controller.initialize('#/');

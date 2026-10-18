@@ -1,0 +1,203 @@
+{
+  "schema": "hh-cycle03-e402-result/v1",
+  "job_id": "E402",
+  "worker": "H1",
+  "outcome": "fixed_verified",
+  "summary": "Both profile edit dispatch paths now require the authenticated session teacherId to match the loaded profile teacherId. Anonymous sessions and missing identities fail closed; captured read-only reference precedence is preserved. Actual synthetic runtime checks show another teacher profile and provider state remain unchanged after rejected actions, while an owned public-profile alias remains locally editable.",
+  "repository": {
+    "name": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "baseCommit": "a156bae0873ba4207bd48d79359d96103cb74f30",
+    "baseTree": "598c2d839b39e6dbece16dfbffbdd61407e0d78e",
+    "changesUncommitted": true,
+    "publication": "not performed"
+  },
+  "sourceFreeze": {
+    "frozen": true,
+    "files": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": {
+        "sha256": "c5d31f45140397536e22e6ac744e689d06fdec09c8b7e4c1a43167548adad4d1",
+        "bytes": 49712
+      },
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": {
+        "sha256": "9eda3ffc8e7553d16845ef1eb25fbdd2420981274f67b49bcb61649618099ea0",
+        "bytes": 32681
+      }
+    },
+    "scope": "Only the controller and its focused tests changed; no site UI, backend/provider, wishlist, geography, or dist files changed."
+  },
+  "implementation": {
+    "toggle": "After profile-availability and captured-readonly checks, require authenticated session and matching profile/session teacherId before toggling edit state.",
+    "submit": "Preserve existing authentication and captured-readonly check order, then require matching profile/session teacherId before validating or writing a tab-local overlay.",
+    "ownerIdentityError": {
+      "code": "profile_owner_mismatch",
+      "message": "You can only edit your own local profile."
+    },
+    "publicAlias": "Controller authorization follows actual teacherId ownership. Existing public UI affordance behavior remains unchanged."
+  },
+  "redGreen": {
+    "red": {
+      "command": "node --test vendor/hh/src/public-controller.test.mjs (before controller change)",
+      "passed": 27,
+      "failed": 3,
+      "expectedFailures": [
+        "nonowner edit toggle accepted",
+        "nonowner edit submit accepted",
+        "anonymous toggle accepted"
+      ]
+    },
+    "green": {
+      "command": "node --test vendor/hh/src/public-controller.test.mjs",
+      "passed": 31,
+      "failed": 0,
+      "log": "../../hh-cycle03/H1/focused-controller.log",
+      "logSha256": "4d1044f904135ec3b03e05874fac7ba132cdb780013e7abe090d194b72ab14fc"
+    }
+  },
+  "canonicalBuild": {
+    "command": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "workingDirectory": "PageRouter/checkpoint",
+    "status": "passed",
+    "node": "v24.19.0",
+    "siteBuildId": "1d6a3300b185019346bd1cf340a77d98f21954604e9fa2c832cd1a23e28254bf",
+    "siteDigest": "ab2e5df284ad329152b8d2c5ef217197d4a3aaea78348c2f62ccbc7b7e046f90",
+    "files": 843,
+    "pxcubePackages": 14,
+    "crispExactCompiledEquality": true,
+    "tests": {
+      "targetedHH": {
+        "passed": 105,
+        "failed": 0
+      },
+      "fullSuite": {
+        "passed": 260,
+        "failed": 0
+      },
+      "atlasImports": {
+        "passed": 1,
+        "failed": 0
+      }
+    },
+    "receiptPath": "checkpoint/bazel-bin/site.receipt.json",
+    "receiptSha256": "bb0ee56b7daa98addb9bc61d22c86b37d7191a6bb8d0ba5de0ccc22b20ad1a93",
+    "logPath": "../../hh-cycle03/H1/canonical-build.log",
+    "logSha256": "8b58b337af9d55ebaeef287f20019395c5baf90e4c9baf19a6deecb3c70173a4"
+  },
+  "actualRuntimeProbe": {
+    "command": "node ../../hh-cycle03/H1/postfix-probe.mjs (cwd: PageRouter/checkpoint)",
+    "scriptSha256": "355aa2657f02c4b385f0431d5f00666826a2b71925ec4e8d6b94428ffa5e9606",
+    "resultSha256": "1960318eaa662331017fe280e8996c1d44a07e221c919a46dd9ce0bb8bde48d4",
+    "cases": {
+      "nonowner": {
+        "ownerTeacherIdBefore": "demo-seed-avery",
+        "ownerTeacherIdAfter": "demo-seed-avery",
+        "viewed": {
+          "profileId": "demo-jordan",
+          "teacherIdBefore": "demo-seed-jordan",
+          "teacherIdAfter": "demo-seed-jordan",
+          "nameBefore": "Demo Jordan",
+          "nameAfter": "Demo Jordan",
+          "sourceAfterReopen": "runtime"
+        },
+        "toggle": {
+          "ok": false,
+          "error": {
+            "code": "profile_owner_mismatch",
+            "message": "You can only edit your own local profile."
+          }
+        },
+        "submit": {
+          "ok": false,
+          "error": {
+            "code": "profile_owner_mismatch",
+            "message": "You can only edit your own local profile."
+          }
+        },
+        "providerRuntimeSnapshotUnchanged": true,
+        "otherProfileOverlayUnchanged": true,
+        "reopenedProfileUnchanged": true
+      },
+      "ownedPublicAlias": {
+        "ownerTeacherId": "demo-seed-avery",
+        "profileTeacherIdBefore": "demo-seed-avery",
+        "profileTeacherIdAfter": "demo-seed-avery",
+        "save": {
+          "ok": true,
+          "localOnly": true
+        },
+        "nameAfter": "Demo Avery owner edited",
+        "nameAfterReopen": "Demo Avery owner edited",
+        "providerRuntimeSnapshotUnchanged": true
+      },
+      "capturedReference": {
+        "ownerTeacherId": "demo-seed-avery",
+        "requested": {
+          "profileId": "reference-sarah",
+          "source": "captured-readonly",
+          "readOnly": true
+        },
+        "toggle": {
+          "ok": false,
+          "error": {
+            "code": "read_only_reference",
+            "message": "Captured public reference profiles are read-only."
+          }
+        },
+        "submit": {
+          "ok": false,
+          "error": {
+            "code": "read_only_reference",
+            "message": "Captured public reference profiles are read-only."
+          }
+        },
+        "nameBefore": "Sarah Endsley",
+        "nameAfter": "Sarah Endsley",
+        "providerRuntimeSnapshotUnchanged": true
+      },
+      "anonymous": {
+        "ownerTeacherId": null,
+        "viewedTeacherId": "demo-seed-jordan",
+        "toggle": {
+          "ok": false,
+          "error": {
+            "code": "authentication_required"
+          }
+        },
+        "submit": {
+          "ok": false,
+          "error": {
+            "code": "authentication_required"
+          }
+        },
+        "profileUnchanged": true,
+        "providerRuntimeSnapshotUnchanged": true
+      },
+      "missingSessionTeacherId": {
+        "sessionTeacherIdBefore": "",
+        "profileTeacherId": "demo-seed-avery",
+        "toggle": {
+          "ok": false,
+          "error": {
+            "code": "profile_owner_mismatch",
+            "message": "You can only edit your own local profile."
+          }
+        },
+        "submit": {
+          "ok": false,
+          "error": {
+            "code": "profile_owner_mismatch",
+            "message": "You can only edit your own local profile."
+          }
+        },
+        "profileUnchanged": true,
+        "providerRuntimeSnapshotUnchanged": true
+      }
+    }
+  },
+  "limits": [
+    "Probe used only volatile seeded synthetic fixture accounts and the captured Sarah reference.",
+    "The provider has no profile-update operation; all successful owner edits remain tab-local overlays. No real account, backend authorization, or remote mutation was tested.",
+    "Browser visual QA was not run; the prior isolated local candidate was unreachable from cloud Chrome. Rendered-tree state is not claimed as visual validation.",
+    "No source edits after the recorded freeze; no commit, push, pull request update, or publication was performed."
+  ]
+}

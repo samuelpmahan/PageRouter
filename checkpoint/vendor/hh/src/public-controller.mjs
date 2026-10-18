@@ -624,6 +624,9 @@ export function createPublicController({runtime, storage = null, onChange = () =
       if (state.journey.profile.readOnly || state.journey.profile.value?.readOnly) {
         return {ok: false, error: {code: 'read_only_reference', message: 'Captured public reference profiles are read-only.'}};
       }
+      if (state.journey.session.status !== 'authenticated') return {ok: false, error: {code: 'authentication_required'}};
+      const ownershipError = profileOwnerError(state.journey.profile.value);
+      if (ownershipError) return ownershipError;
       state.journey.profile.editOpen = !state.journey.profile.editOpen;
       state.journey.profile.editDraft = state.journey.profile.editOpen
         ? {name: state.journey.profile.value.name || '', bio: state.journey.profile.value.bio || '', wishlistUrl: state.journey.profile.value.wishlistUrl || ''}
@@ -637,6 +640,8 @@ export function createPublicController({runtime, storage = null, onChange = () =
       if (state.journey.profile.readOnly || profile.readOnly || state.journey.profile.source === 'captured-readonly') {
         return {ok: false, error: {code: 'read_only_reference', message: 'Captured public reference profiles are read-only.'}};
       }
+      const ownershipError = profileOwnerError(profile);
+      if (ownershipError) return ownershipError;
       const draft = state.journey.profile.editDraft || {};
       const name = clean(payload.name ?? draft.name ?? profile.name, 100);
       const bio = clean(payload.bio ?? draft.bio ?? profile.bio, 500);
@@ -807,6 +812,11 @@ export function createPublicController({runtime, storage = null, onChange = () =
     setOutcome('validation-error', message);
     notify();
     return {ok: false, error: {code: 'validation_failed', message}};
+  }
+  function profileOwnerError(profile) {
+    const teacherId = state.journey.session.teacherId;
+    if (teacherId && profile?.teacherId === teacherId) return null;
+    return {ok: false, error: {code: 'profile_owner_mismatch', message: 'You can only edit your own local profile.'}};
   }
   function safeWishlist(value) {
     if (typeof value !== 'string' || value.length > 512) return false;

@@ -1,0 +1,98 @@
+{
+  "schema": "hh-cycle03-e404-result/v1",
+  "job_id": "E404",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "Packaged the frozen E402 source repair, independent accepted R402 review, test/build/runtime evidence, and actual native scheduler history into the cycle-03 record. E404 made no further product-source changes.",
+  "repository": {
+    "name": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "baseCommit": "a156bae0873ba4207bd48d79359d96103cb74f30",
+    "baseTree": "598c2d839b39e6dbece16dfbffbdd61407e0d78e",
+    "productSourceChanges": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "otherChanges": "cycle-03 documentation and evidence only",
+    "commitOrPublication": "not performed"
+  },
+  "sourceFreeze": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "c5d31f45140397536e22e6ac744e689d06fdec09c8b7e4c1a43167548adad4d1",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "9eda3ffc8e7553d16845ef1eb25fbdd2420981274f67b49bcb61649618099ea0",
+    "reviewerVerifiedBothFiles": true,
+    "reviewReceipt": "work/hh-continuous-improvement/cycle-03/evidence/native/receipts/R402.json",
+    "reviewReceiptSha256": "4f34bd524340693c4e747cd327bea4634d869bd07f82062b190efb46281d9d76"
+  },
+  "acceptedIndependentReview": {
+    "job_id": "R402",
+    "worker": "H2",
+    "decision": "accepted",
+    "report": "work/hh-continuous-improvement/cycle-03/evidence/R402/result.json",
+    "reportSha256": "3e115bb5d59ee47baf28c027ba685d75ef4e27898d5ee044b5bb6aa22c005bee",
+    "focusedControllerTests": {
+      "passed": 31,
+      "failed": 0
+    },
+    "actualRuntimeAdversarialCases": 5,
+    "reviewedClaims": [
+      "Other-owner toggle and submit return profile_owner_mismatch; profile and provider/runtime state remain unchanged after reopen.",
+      "Forged teacherId/profileId submit fields do not grant edit authority.",
+      "Anonymous and missing identities fail closed.",
+      "Captured readonly reference error precedence remains intact.",
+      "Owned public alias can dispatch an edit by actual teacherId match; its rendered edit control remains hidden under existing UI behavior."
+    ],
+    "browserVisualQA": "not run; rendered-tree assertions are not visual QA"
+  },
+  "canonicalBuild": {
+    "command": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "workingDirectory": "PageRouter/checkpoint",
+    "status": "passed",
+    "targetedHH": {
+      "passed": 105,
+      "failed": 0
+    },
+    "fullSuite": {
+      "passed": 260,
+      "failed": 0
+    },
+    "atlasImports": {
+      "passed": 1,
+      "failed": 0
+    },
+    "siteFiles": 843,
+    "pxcubePackages": 14,
+    "siteBuildId": "1d6a3300b185019346bd1cf340a77d98f21954604e9fa2c832cd1a23e28254bf",
+    "siteDigest": "ab2e5df284ad329152b8d2c5ef217197d4a3aaea78348c2f62ccbc7b7e046f90",
+    "sourceReceipt": "work/hh-continuous-improvement/cycle-03/evidence/build/site.receipt.json",
+    "sourceReceiptSha256": "bb0ee56b7daa98addb9bc61d22c86b37d7191a6bb8d0ba5de0ccc22b20ad1a93"
+  },
+  "diagnosticHistory": {
+    "E401": "H1 actual synthetic repro confirmed reuse of another runtime-owned profile through direct dispatch despite hidden UI control.",
+    "E403": "H2 independently confirmed the same toggle/submit overlay behavior and preserved own/reference/anonymous controls.",
+    "E402": "Bounded teacherId equality guard implemented test-first; initial three expected RED failures, then focused 31/31 and canonical green.",
+    "coordinationErrata": "E402 start acknowledgement/state discrepancy and invalid raw outcome enum are documented with preserved snapshots, rejected envelope, normalized native receipt, and no backdated times.",
+    "nativeSnapshot": "work/hh-continuous-improvement/cycle-03/evidence/native/state.json"
+  },
+  "nextHypothesis": {
+    "candidate": "Start a delayed public-profile read with an explicit promise-controlled fixture provider, navigate to registration or login before resolving it, then resolve the stale read.",
+    "observe": [
+      "whether journey.loading clears",
+      "whether the current registration/login form remains usable",
+      "whether stale profile data replaces the current route or projection"
+    ],
+    "method": "Use the actual fixture-backed controller/UI and demonstrate the behavior before correction.",
+    "constraints": "No production or backend claim; do not execute or implement this hypothesis during cycle 03.",
+    "status": "root-selected next-cycle repro; not executed or implemented in cycle 03",
+    "deferred": "If not better supported by this repro, shared journey.loading after invalidated async reads remains the deferred issue.",
+    "humanAcceptance": "not claimed"
+  },
+  "artifactManifest": {
+    "path": "work/hh-continuous-improvement/cycle-03/evidence/manifest.json",
+    "sha256": "fe7741f2396f9ff26bdf8772bd74def0571e6d20794c2a642c14a973f1ead51d"
+  },
+  "limits": [
+    "All reproduction and review cases used only volatile synthetic fixture accounts and captured reference data.",
+    "Successful owner edits are tab-local overlays; the provider has no profile-update capability and its snapshot remained unchanged.",
+    "No production/backend authorization, real teacher-data, remote mutation, visual QA, commit, push, new pull request, or deployment is claimed."
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "job_id": "E403",
+  "worker": "H2",
+  "outcome": "confirmed_reuse",
+  "summary": "Confirmed an ownership-gating defect: an authenticated fixture teacher cannot see Edit on another runtime-owned teacher public profile, but direct public:edit-profile and public:profile-edit dispatches open and mutate a tab-local overlay keyed to the other profile teacherId. The fixture provider snapshot is unchanged. Own-profile edit works; anonymous mutation and captured readonly authority are correctly rejected.",
+  "evidence": "H2/result.json"
+}
