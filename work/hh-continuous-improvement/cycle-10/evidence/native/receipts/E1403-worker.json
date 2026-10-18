@@ -1,0 +1,93 @@
+{
+  "job_id": "E1403",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "TDD identified and corrected a registration transaction defect in the public controller. Before the change, known transport and simulated unknown failures erased valid non-secret form identity, and a failed re-registration replaced the alias of an already-approved demo account. The bounded fix preserves the live registration draft on failed outcomes only when the registration route is still relevant, and commits synthetic email/identity aliases only after provider success. Focused, full controller, and relevant non-style HH tests passed. No canonical build or Git landing was performed.",
+  "candidate": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "headBeforeAndAfter": "9853c03e1f7458526528d2b350b8bad0c5e3c990",
+    "baseTree": "3e23395038495c7e1ff025ce885b91d9201025d8",
+    "changedProductPaths": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "publicControllerSha256": "6dde984ebf6b4f71267345341a2f6765e96d28dfd1876f6f8284555e6310b0b8",
+    "publicControllerTestSha256": "d28de1e22f382918e8dcf1be2628234c877b732ad2a30ea5d597ef32d1f9a845",
+    "worktree": "exactly the two authorized paths are modified; no commit"
+  },
+  "implementation": {
+    "serviceSeam": "Registration.registerTeacher only: immediately before syncRuntime, capture the current non-secret registration identity when the current route is register. Restore it only on failure/unknown outcome and only if the route remains register at the same captured epoch. Successful results keep the provider-confirmed registration projection.",
+    "aliasTransaction": "Move aliasToFixtureEmail and identityByFixtureEmail writes to a synchronous pre-sync callback that runs only for result.ok. A failed or unknown re-registration leaves an existing approved alias untouched. No automatic retry was added.",
+    "nonGoals": ["No generic runtime/provider behavior change", "No change to route, owner, geography, captured-profile, or success policy"],
+    "reviewLimit": "H2 nav-away/back behavior is an independent review target and is not claimed verified by H1's tests."
+  },
+  "commands": [
+    {
+      "command": "node --test --test-concurrency=1 --test-name-pattern='registration (transport failure|unknown outcome)|failed re-registration' vendor/hh/src/public-controller.test.mjs",
+      "cwd": "PageRouter/checkpoint",
+      "phase": "pre-fix-red",
+      "exit": 1,
+      "counts": {"tests": 3, "pass": 0, "fail": 3},
+      "stdout": "/workspace/scratch/8528bb251845/hh-cycle10/H1/E1403/red.log",
+      "stdoutSha256": "9f9b8328079b6244ccf51c3dfed0ba6bcea4804fa8043f133f2e33b946ec05f6",
+      "exitRecord": "red.exit"
+    },
+    {
+      "command": "node --test --test-concurrency=1 --test-name-pattern='registration (transport failure|unknown outcome)|failed re-registration' vendor/hh/src/public-controller.test.mjs",
+      "cwd": "PageRouter/checkpoint",
+      "phase": "post-fix-focused-green",
+      "exit": 0,
+      "counts": {"tests": 3, "pass": 3, "fail": 0, "skipped": 0},
+      "stdout": "/workspace/scratch/8528bb251845/hh-cycle10/H1/E1403/focused-green.log",
+      "stdoutSha256": "10a6b04ab8792ba6ca693e952620b84ba45d6e3eaa989ddf0156f36fca4c3eb7",
+      "exitRecord": "focused-green.exit"
+    },
+    {
+      "command": "node --test vendor/hh/src/public-controller.test.mjs",
+      "cwd": "PageRouter/checkpoint",
+      "phase": "post-fix-full-controller",
+      "exit": 0,
+      "counts": {"tests": 54, "pass": 54, "fail": 0, "skipped": 0},
+      "stdout": "/workspace/scratch/8528bb251845/hh-cycle10/H1/E1403/controller-full.log",
+      "stdoutSha256": "eb7441d4ab3b9df98af9d3f6bdecf84a5e7209f5dca0cb5effe89d823ef981d5",
+      "exitRecord": "controller-full.exit"
+    },
+    {
+      "command": "node --test --test-concurrency=2 exp/cooperative/hh-geography-review.test.mjs exp/cooperative/hh-parity-community.test.mjs exp/cooperative/hh-parity-public.test.mjs exp/cooperative/hh-workbench.test.mjs vendor/hh/src/*.test.mjs",
+      "cwd": "PageRouter/checkpoint",
+      "phase": "post-fix-relevant-nonstyle-HH",
+      "exit": 0,
+      "counts": {"tests": 121, "pass": 121, "fail": 0, "skipped": 0},
+      "stdout": "/workspace/scratch/8528bb251845/hh-cycle10/H1/E1403/hh-core.log",
+      "stdoutSha256": "6096009aa542846dfe3e43eca00ea3c93c03006a4cde1de2d01e9725baa63101",
+      "exitRecord": "hh-core.exit"
+    },
+    {
+      "command": "git diff --check",
+      "cwd": "PageRouter",
+      "exit": 0
+    }
+  ],
+  "observations": {
+    "preFixRed": "Known failure and unknown outcome lost rendered identity; approved-alias test could no longer log in after failed re-registration.",
+    "knownFailureAfterFix": "Current draft (including name/email/phone updated while provider promise was pending) and school remain rendered; provider has no registration; public:retry returns nothing_to_retry without another write; explicit resubmission with fresh ephemeral credentials succeeds.",
+    "unknownOutcomeAfterFix": "Draft and school remain; no provider registration is present in the fixture; public retry performs no second write.",
+    "approvedAliasAfterFix": "Registration attempt 2 returns injected transport_failure; login still uses the original alias index 1 and succeeds after approval.",
+    "credentials": "All new password/confirmation values use randomUUID() at test execution and are checked absent from controller state, runtime inspection, Parts, and memory storage."
+  },
+  "additionalTranscript": {
+    "initialSelectorAttempt": {
+      "command": "node --test --test-concurrency=1 --test-name-pattern='registration (transport failure|unknown outcome|failed re-registration)' vendor/hh/src/public-controller.test.mjs",
+      "note": "Initial regex selected only the two test names beginning with registration; it omitted the failed re-registration test. This is preserved as non-definitive selector-attempt testimony, not the complete red gate.",
+      "stdout": "/workspace/scratch/8528bb251845/hh-cycle10/H1/E1403/red.initial.log",
+      "stdoutSha256": "b40f328ee48feac6fc16be125f6632640f9a2ed606e00cced0ffe28bc0c661ca"
+    }
+  },
+  "limits": [
+    "Controller/render-tree tests only; no mounted-browser or visual QA.",
+    "No canonical Bazel build in E1403; root reserved that for the next native build packet.",
+    "No commit, push, publication, or deployment.",
+    "H2 independent nav-away/back review remains pending; the H1 guard is limited to a current registration route at pre-sync and does not claim epoch-change coverage."
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "operator": "root coordinator validation, NOT extra native worker packet",
+  "recordedBeforeExecution": "2026-10-18 16:43:13 UTC",
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+  "command": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh > /workspace/scratch/8528bb251845/hh-cycle10/root-canonical-verification.raw.log 2>&1",
+  "expectedSource": {
+    "controller": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "test": "dfe05ff98c859f926c839d8b0e5bffbd17c96e58444400d6e108744e8111e389"
+  },
+  "purpose": "New exact-command verification after historical command-ledger discrepancy; not a backdated record and not replacement for actual fresh E1404 driver log. Determine cache status from actual output.",
+  "authorization": "Existing ordinary short canonical validation under HH implementation task; source/Git untouched"
+}

@@ -1,0 +1,31 @@
+✖ registration retains the current draft after navigation away and back on failed writes (16.369633ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 124.103207
+
+✖ failing tests:
+
+test at vendor/hh/src/public-controller.test.mjs:888:1
+✖ registration retains the current draft after navigation away and back on failed writes (16.369633ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + ''
+  - 'E1405 Current transport_failure'
+  
+      at assertRegistrationDraftRendered (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:103:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:907:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'E1405 Current transport_failure',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

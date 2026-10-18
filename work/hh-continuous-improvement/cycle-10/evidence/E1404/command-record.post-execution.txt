@@ -1,0 +1,14 @@
+job_id: E1404
+worker: H1
+working_directory: /workspace/scratch/8528bb251845/PageRouter/checkpoint
+source_commit: 9853c03e1f7458526528d2b350b8bad0c5e3c990
+source_tree_before_changes: 3e23395038495c7e1ff025ce885b91d9201025d8
+source_inputs:
+  vendor/hh/src/public-controller.mjs sha256=fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2
+  vendor/hh/src/public-controller.test.mjs sha256=dfe05ff98c859f926c839d8b0e5bffbd17c96e58444400d6e108744e8111e389
+command:
+  bash -o pipefail -c 'date -u +%Y-%m-%dT%H:%M:%SZ > /workspace/scratch/8528bb251845/hh-cycle10/H1/E1404/build.start.utc; BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle10/H1/E1404/build.raw.log; status=$?; date -u +%Y-%m-%dT%H:%M:%SZ > /workspace/scratch/8528bb251845/hh-cycle10/H1/E1404/build.end.utc; printf "%s\n" "$status" > /workspace/scratch/8528bb251845/hh-cycle10/H1/E1404/build.exit; exit "$status"'
+stdout_log: build.raw.log
+exit_status: build.exit
+timestamps: build.start.utc, build.end.utc
+scope: canonical source build only; no source changes, commit, or push

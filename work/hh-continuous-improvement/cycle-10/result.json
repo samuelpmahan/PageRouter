@@ -1,0 +1,42 @@
+{
+  "job_id": "E1406",
+  "worker": "H1",
+  "summary": "Assembled the lean cycle-10 engineering evidence package under PageRouter/work/hh-continuous-improvement/cycle-10 for pending independent R1406 audit. It binds the exact accepted source hashes to the successful canonical build receipt and retains the actual probes, E1403/R1403 amendment, E1405/R1405 acceptance, and native coordination history including the E1404 finish rejection and later outcome normalization.",
+  "outcome": "mixed_change",
+  "candidate": {
+    "controller_sha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "test_sha256": "dfe05ff98c859f926c839d8b0e5bffbd17c96e58444400d6e108744e8111e389",
+    "independent_review": "R1405 accepted exact source; result SHA-256 055f24470d7713fca1f16bc6bbabe2b464b79130c89a027979b93f290ad588a9",
+    "canonical_build": "E1404 passed, site build ID 8166fe07df91c79fb3dd8d0ddcc659a4d9aa756379e81e07861f5ced46dbb2e8"
+  },
+  "build_test_counts": {
+    "build_helpers": "2/2",
+    "targeted_hh": "129/129",
+    "full_npm": "284/284",
+    "atlas_import_closure": "1/1",
+    "qualification": "Suite sets overlap; do not describe their 416 arithmetic sum as distinct tests. Root's separate canonical command verification was an exit-0 cache hit, not a fresh suite."
+  },
+  "provenance": {
+    "R1403": "Original independent AMEND and reproducer remain labeled AMEND, not acceptance.",
+    "E1404": "Original worker result remains fresh_source_build; normalized native receipt is mixed_change after one actual unknown-outcome finish rejection. No no-rejections claim. Current command record was modified after execution; original prospective bytes unavailable; command discrepancy and root cache-verification are separately documented.",
+    "E1402": "Raw stdout is a post-run tool-output capture, not original redirected stdout; failed early selector attempts are testimony only.",
+    "red_gate": "E1405 pre-fix table run stopped at the first known transport_failure case; unknown-outcome branch was not independently observed red, though green checks cover both logical cases."
+  },
+  "package": {
+    "path": "PageRouter/work/hh-continuous-improvement/cycle-10",
+    "manifest": "evidence/manifest.json",
+    "manifest_policy": "Lists exact package files and hashes but excludes itself; pending independent audit.",
+    "no_historical_site_evidence_tree": true,
+    "no_discoverable_test_archives": true,
+    "next_proposal": "Failure completing after navigation to /login may leave stale registration feedback; unexecuted, not a defect claim, requires fresh native admission before probe or edits."
+  },
+  "limits": {
+    "no_product_source_changes_during_package": true,
+    "no_commit_or_push": true,
+    "fixture_controller_render_tree_only": true,
+    "browser_visual_qa_unverified": true,
+    "human_acceptance_not_claimed": true,
+    "production_backend_not_tested": true,
+    "R1406_pending": true
+  }
+}

@@ -1,0 +1,52 @@
+✖ registration transport failure retains the live draft and only permits explicit resubmission (16.082142ms)
+✖ registration unknown outcome retains the live draft and has no safe automatic retry (3.883832ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 124.29856
+
+✖ failing tests:
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:827:1
+✖ registration transport failure retains the live draft and only permits explicit resubmission (16.082142ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + ''
+  - 'E1403 Edited While Pending'
+  
+      at assertRegistrationDraftRendered (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:103:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:845:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'E1403 Edited While Pending',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:867:1
+✖ registration unknown outcome retains the live draft and has no safe automatic retry (3.883832ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + ''
+  - 'E1403 Unknown'
+  
+      at assertRegistrationDraftRendered (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:103:10)
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:879:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'E1403 Unknown',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

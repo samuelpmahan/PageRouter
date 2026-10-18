@@ -1,0 +1,84 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Suite sets overlap/. Input:
+
+'# HH continuous-improvement cycle 10\n' +
+  '\n' +
+  'This package records a bounded registration-failure correction for PageRouter. The accepted source candidate is the uncommitted worktree on `codex/hh-continuous-improvement`, base HEAD `9853c03e1f7458526528d2b350b8bad0c5e3c990` (tree `3e23395038495c7e1ff025ce885b91d9201025d8`). The published branch breadcrumb is `dfef8eec126e3e0eb9f1aa3f3a1f9c950408d568`; main remains `7adf7e74a85c4310a5704a4c42808e85a1a82d71`.\n' +
+  '\n' +
+  'The only changed product files are:\n' +
+  '\n' +
+  '- `checkpoint/vendor/hh/src/public-controller.mjs` — SHA-256 `fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2`\n' +
+  '- `checkpoint/vendor/hh/src/public-controller.test.mjs` — SHA-256 `dfe05ff98c859f926c839d8b0e5bffbd17c96e58444400d6e108744e8111e389`\n' +
+  '\n' +
+  'The repair preserves the current non-secret registration draft across failed or unknown writes when the registration route is current at runtime synchronization, including navigation away and back while the provider request is held. Provider-confirmed success projection is unchanged; synthetic alias mappings remain success-only. No password or confirmation is retained. Final source snapshots are in `evidence/source-candidate/`; exact pre-E1405 source bytes are retained as `.txt` snapshots in `evidence/E1403/`.\n' +
+  '\n' +
+  '## Evidence and review\n' +
+  '\n' +
+  "E1401 and independent H2 E1402 reproduced identity loss with known and simulated unknown failures through the fixture provider and controller/render-tree. H2 also found the adjacent alias issue. H1's baseline build was a cache hit; it is not a fresh build result. E1402's `raw.stdout.txt` is a post-run tool-output capture, not the original shell-redirected stdout. The initial H2 assertion/selector attempts are testimony only; see `evidence/E1402/provenance-clarification.json`. H1's first-red log and surviving final characterization script are kept separately; the script is not claimed to be the exact bytes used for the first red attempt.\n" +
+  '\n' +
+  "E1403 added the first correction and red/green tests. Independent H2 review R1403 returned **AMEND**: the route-epoch guard lost a newer draft if a held failure completed after navigating away and back. The original R1403 adversarial log and reproducer are retained. E1405 added the re-entry regression and made the bounded current-register-route repair. Its red table case stopped at the first known `transport_failure` assertion; the unknown-outcome branch was not reached in that pre-fix run, so the package does not claim both branches independently failed red. Focused green runs exercised the known and unknown table cases. H2's R1405 final review accepted the exact sources and additionally replayed the unchanged adversarial script and a real fixture storage failure.\n" +
+  '\n' +
+  'R1405 accepted result SHA-256: `055f24470d7713fca1f16bc6bbabe2b464b79130c89a027979b93f290ad588a9`. Its alias regression is direct controller dispatch; the rendered approved route shows an approval panel, not a re-registration form. This is not visible UI re-registration coverage.\n' +
+  '\n' +
+  '## Canonical build\n' +
+  '\n' +
+  'E1404 ran `bash ci/bazel/run.sh` with Bazel `7.4.1` and Node `v24.19.0` against the exact two source hashes above. The sandbox build action ran; it was not an up-to-date-only cache hit. The build receipt binds those source inputs and verifies 843 files (site build ID `8166fe07df91c79fb3dd8d0ddcc659a4d9aa756379e81e07861f5ced46dbb2e8`, site digest `65eab878c780aa48c9e0915cad8280afecb5a8b80cbf4d17d1b201fab836396c`). Fourteen PxCube packages rebuilt and crisp exact-compiled equality passed.\n' +
+  '\n' +
+  "Report suite counts independently; they overlap and are not a count of distinct tests: build helpers 2/2, targeted HH 129/129, full npm suite 284/284, built Atlas import closure 1/1. The original worker result's arithmetic `416` total is their sum, not 416 unique tests.\n" +
+  '\n' +
+  'The E1404 worker result is preserved unchanged with outcome `fresh_source_build`. The native extraction schema rejected that outcome once as unknown. The coordinator later recorded `mixed_change` in the normalized E1404 receipt while leaving the build result facts unchanged. The rejection and orchestration sequence are documented in `evidence/provenance/E1404-coordination-erratum.json`; there is no “no rejections” claim. After the rejection, root continued the sequence while E1404 was still pinned: epoch 06 solved with H1 still assigned to E1404 and an empty dispatch; a premature E1406 start was rejected and did not dispatch a worker. E1404 was then finished, and epoch 07 assigned and actually dispatched E1406. See the preserved solve bundles/logs and `evidence/native/state-at-E1406-start.json` for the native event trail. The package does not rewrite this history.\n' +
+  '\n' +
+  'The original E1404 worker result is preserved byte-for-byte, including its command string. The separate command.txt working artifact was modified after execution, and the original prospective bytes were not retained. The copied `evidence/E1404/command-record.post-execution.txt` is therefore not claimed as prospective evidence or an executable reproduction. `evidence/E1404/command-record-clarification.json` documents the discrepancy. Root separately ran the simple canonical command `BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh` from the checkpoint directory as an exit-0 cache verification; it was an actual cache hit and did not run a fresh suite or replace the original build. Its command, log, exit, and clarification files are retained under `evidence/E1404/root-canonical-verification.*` and `root-E1404-command-provenance-clarification.json`. The original raw wrapper log, driver log, receipt, timestamps, and exit file remain unchanged.\n' +
+  '\n' +
+  '## Limits and state\n' +
+  '\n' +
+  "All behavioral checks used synthetic `.test` identities and the local fixture provider. Evidence is controller/render-tree and fixture behavior, not mounted-browser visual QA, Python runtime behavior, a production backend, real data, or human acceptance. Current browser connection is unverified; the supported connected-browser request refused the originating context and no workaround was attempted. `evidence/native/state-at-E1406-start.json` is a historical snapshot taken after E1406's epoch-07 start; it shows E1406 running and R1406 pending at that point. No source commit, push, publication, or deployment is included.\n" +
+  '\n' +
+  'See [NEXT.md](NEXT.md) for the guarded next probe and [evidence/manifest.json](evidence/manifest.json) for the exact package file hashes. The manifest excludes itself; a later independent review/admin append must be separately indexed.\n'
+
+    at file:///workspace/scratch/8528bb251845/hh-cycle10/H2/R1406/audit.mjs:147:8 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: '# HH continuous-improvement cycle 10\n' +
+    '\n' +
+    'This package records a bounded registration-failure correction for PageRouter. The accepted source candidate is the uncommitted worktree on `codex/hh-continuous-improvement`, base HEAD `9853c03e1f7458526528d2b350b8bad0c5e3c990` (tree `3e23395038495c7e1ff025ce885b91d9201025d8`). The published branch breadcrumb is `dfef8eec126e3e0eb9f1aa3f3a1f9c950408d568`; main remains `7adf7e74a85c4310a5704a4c42808e85a1a82d71`.\n' +
+    '\n' +
+    'The only changed product files are:\n' +
+    '\n' +
+    '- `checkpoint/vendor/hh/src/public-controller.mjs` — SHA-256 `fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2`\n' +
+    '- `checkpoint/vendor/hh/src/public-controller.test.mjs` — SHA-256 `dfe05ff98c859f926c839d8b0e5bffbd17c96e58444400d6e108744e8111e389`\n' +
+    '\n' +
+    'The repair preserves the current non-secret registration draft across failed or unknown writes when the registration route is current at runtime synchronization, including navigation away and back while the provider request is held. Provider-confirmed success projection is unchanged; synthetic alias mappings remain success-only. No password or confirmation is retained. Final source snapshots are in `evidence/source-candidate/`; exact pre-E1405 source bytes are retained as `.txt` snapshots in `evidence/E1403/`.\n' +
+    '\n' +
+    '## Evidence and review\n' +
+    '\n' +
+    "E1401 and independent H2 E1402 reproduced identity loss with known and simulated unknown failures through the fixture provider and controller/render-tree. H2 also found the adjacent alias issue. H1's baseline build was a cache hit; it is not a fresh build result. E1402's `raw.stdout.txt` is a post-run tool-output capture, not the original shell-redirected stdout. The initial H2 assertion/selector attempts are testimony only; see `evidence/E1402/provenance-clarification.json`. H1's first-red log and surviving final characterization script are kept separately; the script is not claimed to be the exact bytes used for the first red attempt.\n" +
+    '\n' +
+    "E1403 added the first correction and red/green tests. Independent H2 review R1403 returned **AMEND**: the route-epoch guard lost a newer draft if a held failure completed after navigating away and back. The original R1403 adversarial log and reproducer are retained. E1405 added the re-entry regression and made the bounded current-register-route repair. Its red table case stopped at the first known `transport_failure` assertion; the unknown-outcome branch was not reached in that pre-fix run, so the package does not claim both branches independently failed red. Focused green runs exercised the known and unknown table cases. H2's R1405 final review accepted the exact sources and additionally replayed the unchanged adversarial script and a real fixture storage failure.\n" +
+    '\n' +
+    'R1405 accepted result SHA-256: `055f24470d7713fca1f16bc6bbabe2b464b79130c89a027979b93f290ad588a9`. Its alias regression is direct controller dispatch; the rendered approved route shows an approval panel, not a re-registration form. This is not visible UI re-registration coverage.\n' +
+    '\n' +
+    '## Canonical build\n' +
+    '\n' +
+    'E1404 ran `bash ci/bazel/run.sh` with Bazel `7.4.1` and Node `v24.19.0` against the exact two source hashes above. The sandbox build action ran; it was not an up-to-date-only cache hit. The build receipt binds those source inputs and verifies 843 files (site build ID `8166fe07df91c79fb3dd8d0ddcc659a4d9aa756379e81e07861f5ced46dbb2e8`, site digest `65eab878c780aa48c9e0915cad8280afecb5a8b80cbf4d17d1b201fab836396c`). Fourteen PxCube packages rebuilt and crisp exact-compiled equality passed.\n' +
+    '\n' +
+    "Report suite counts independently; they overlap and are not a count of distinct tests: build helpers 2/2, targeted HH 129/129, full npm suite 284/284, built Atlas import closure 1/1. The original worker result's arithmetic `416` total is their sum, not 416 unique tests.\n" +
+    '\n' +
+    'The E1404 worker result is preserved unchanged with outcome `fresh_source_build`. The native extraction schema rejected that outcome once as unknown. The coordinator later recorded `mixed_change` in the normalized E1404 receipt while leaving the build result facts unchanged. The rejection and orchestration sequence are documented in `evidence/provenance/E1404-coordination-erratum.json`; there is no “no rejections” claim. After the rejection, root continued the sequence while E1404 was still pinned: epoch 06 solved with H1 still assigned to E1404 and an empty dispatch; a premature E1406 start was rejected and did not dispatch a worker. E1404 was then finished, and epoch 07 assigned and actually dispatched E1406. See the preserved solve bundles/logs and `evidence/native/state-at-E1406-start.json` for the native event trail. The package does not rewrite this history.\n' +
+    '\n' +
+    'The original E1404 worker result is preserved byte-for-byte, including its command string. The separate command.txt working artifact was modified after execution, and the original prospective bytes were not retained. The copied `evidence/E1404/command-record.post-execution.txt` is therefore not claimed as prospective evidence or an executable reproduction. `evidence/E1404/command-record-clarification.json` documents the discrepancy. Root separately ran the simple canonical command `BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh` from the checkpoint directory as an exit-0 cache verification; it was an actual cache hit and did not run a fresh suite or replace the original build. Its command, log, exit, and clarification files are retained under `evidence/E1404/root-canonical-verification.*` and `root-E1404-command-provenance-clarification.json`. The original raw wrapper log, driver log, receipt, timestamps, and exit file remain unchanged.\n' +
+    '\n' +
+    '## Limits and state\n' +
+    '\n' +
+    "All behavioral checks used synthetic `.test` identities and the local fixture provider. Evidence is controller/render-tree and fixture behavior, not mounted-browser visual QA, Python runtime behavior, a production backend, real data, or human acceptance. Current browser connection is unverified; the supported connected-browser request refused the originating context and no workaround was attempted. `evidence/native/state-at-E1406-start.json` is a historical snapshot taken after E1406's epoch-07 start; it shows E1406 running and R1406 pending at that point. No source commit, push, publication, or deployment is included.\n" +
+    '\n' +
+    'See [NEXT.md](NEXT.md) for the guarded next probe and [evidence/manifest.json](evidence/manifest.json) for the exact package file hashes. The manifest excludes itself; a later independent review/admin append must be separately indexed.\n',
+  expected: /Suite sets overlap/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

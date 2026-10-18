@@ -1,0 +1,60 @@
+{
+  "job_id": "E1401",
+  "worker": "H1",
+  "outcome": "not_reuse",
+  "summary": "On both known transport_failure and simulated outcome_unknown from the real volatile fixture Registration.registerTeacher service, createPublicController.syncRuntime replaces the valid pre-call registration.identity with empty identity because the fixture snapshot remains unregistered. The registration route and form remain, school selection and terms acceptance persist, but rendered name/email/phone fields and controller identity are blank. A retryable known failure has no safe public:retry handler; manual re-entry/resubmit succeeds and the second synthetic alias is used for login. The valid control succeeds; fixture provider state has no registration after either injected failure. No product source was changed.",
+  "candidate": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "9853c03e1f7458526528d2b350b8bad0c5e3c990",
+    "tree": "3e23395038495c7e1ff025ce885b91d9201025d8",
+    "main": "7adf7e74a85c4310a5704a4c42808e85a1a82d71",
+    "worktree": "clean"
+  },
+  "evidence": {
+    "probeCommand": "node /workspace/scratch/8528bb251845/hh-cycle10/H1/E1401/probe.mjs",
+    "probeExit": 0,
+    "probeScriptSha256": "91cc09d9c6b88fbe1fceb331bbfebb9989fff38f0c5b19bd11d261f9052b4ba6",
+    "probeStdoutSha256": "b16f74843ab97e7984d62201a1add1cd088ebea98f5b23d9a1788040687a4475",
+    "redReproductionCommand": "E1401_RED_RETENTION=1 node /workspace/scratch/8528bb251845/hh-cycle10/H1/E1401/probe.mjs",
+    "redReproductionExit": 1,
+    "redLogSha256": "08f7dc9565fe20d217039d6119820c69d5257df529eb372d7e6a36731d65b4a4",
+    "baselineCommand": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "baselineExit": 0,
+    "baselineKind": "exact-source canonical Bazel cache hit; target reported up-to-date, output verifier reported 843 files and 14 PxCube packages; not a fresh current-cycle suite execution",
+    "baselineSiteBuildId": "831692c8dc830d6528fbaf3b431583809bc24a470fa1fa5661d68dd7d36868a1",
+    "baselineReceiptSha256": "ac7efdc22c3c56fb2c7b575f54b46a635b12012301c0f772c2316a4c2234d18f",
+    "baselineLogSha256": "17d4632309582f26dc7c9c1e22d33c8fe16b97326951dab57faa45c89051cc69",
+    "sourceSha256": {
+      "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+      "checkpoint/vendor/hh/src/public-controller.mjs": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+      "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+      "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+      "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d"
+    }
+  },
+  "counts": {
+    "scenarios": 3,
+    "validRegistrationControl": 1,
+    "knownTransportFailure": 1,
+    "manualResubmissionAfterKnownFailure": 1,
+    "simulatedUnknownOutcome": 1,
+    "registrationProviderCalls": 4,
+    "explicitRetryAttempts": 2,
+    "explicitRetryResults": "nothing_to_retry for known and unknown failure"
+  },
+  "observations": {
+    "validControl": "pending registration; completed request; form replaced by pending view",
+    "knownFailure": "route register, request failed, outcomeKnown true, retryable true; controller identity fields empty and rendered form fields blank; school and terms retained; provider registration none and session anonymous",
+    "unknownOutcome": "route register, request outcome_unknown, outcomeKnown false; identity fields blank; school retained; fixture registration none; automatic/public retry unavailable",
+    "resubmit": "manual re-entry succeeded on registration attempt 2; observed synthetic alias indices [1,2]; after simulated approval, login used alias index 2 and restored the entered synthetic email",
+    "credentialBoundary": "passwords/confirmations were randomBytes-generated in memory and absent from controller state, runtime inspection, and PxC Parts; no storage configured",
+    "network": "zero network calls; fixture mode only; no production authority"
+  },
+  "limits": [
+    "Controller plus renderPublicSite projection evidence only; no mounted-browser or visual QA.",
+    "The fixture's outcome_unknown mode deliberately fails before changing fixture state; it does not establish what an actual remote provider may have committed.",
+    "The baseline build was a Bazel cache hit; no fresh current-cycle full suite counts are claimed.",
+    "No application source/test edits, commit, push, publication, or deployment."
+  ]
+}

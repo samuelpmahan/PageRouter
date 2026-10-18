@@ -183,7 +183,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
     state.journey.share = {intent: false, url: '', profileId: null, remote: false, copied: false};
   }
 
-  async function service(port, input = {}, boundary = {}, {retry = false, after = null} = {}) {
+  async function service(port, input = {}, boundary = {}, {retry = false, beforeSync = null, after = null} = {}) {
     if (mutation) return {ok: false, ignored: true, error: {code: 'request_in_flight', message: 'A preview request is already running.'}};
     const startRouteEpoch = routeEpoch;
     mutation = true;
@@ -193,7 +193,13 @@ export function createPublicController({runtime, storage = null, onChange = () =
     try { result = await runtime.invoke(port, input, boundary); }
     catch { result = {ok: false, error: {code: 'runtime_failure', message: 'The local preview request failed.'}, message: 'The local preview request failed.'}; }
     mutation = false;
+    if (beforeSync) beforeSync(result);
+    const registrationDraft = port === 'Registration.registerTeacher' && state.route.page === 'register'
+      ? clone(state.journey.registration.identity) : null;
     syncRuntime();
+    if (!result.ok && registrationDraft && state.route.page === 'register') {
+      state.journey.registration.identity = registrationDraft;
+    }
     if (result.ok) {
       setRequest('completed', result.message || 'Local preview updated.');
       setOutcome('local-simulation', result.message || 'Local preview updated.');
@@ -714,15 +720,18 @@ export function createPublicController({runtime, storage = null, onChange = () =
       state.journey.registration.identity = {name, email: clean(payload.email, 254), phone};
       state.journey.school = {...state.journey.school, ...school, grade: clean(payload.grade, 40) || state.journey.school.grade};
       const fixtureEmail = `public-teacher-${++syntheticAccount}@fixture.test`;
-      aliasToFixtureEmail.set(email, fixtureEmail);
-      identityByFixtureEmail.set(fixtureEmail, {name, email: clean(payload.email, 254), phone});
       const internalName = `Demo ${name.replace(/[^A-Za-z0-9 ]/g, ' ').trim().slice(0, 60) || 'Teacher'}`;
       lastRetry = null;
       return service('Registration.registerTeacher', {
         teacher: {name: internalName, email: fixtureEmail, phoneNumber: 'DEMO'},
         school: {state: school.state, county: school.county, district: school.district, school: school.school},
         termsAccepted: true, demoAccount: true,
-      }, {credentials: {password, confirmPassword}}, {after: async () => {
+      }, {credentials: {password, confirmPassword}}, {beforeSync: result => {
+        if (result.ok) {
+          aliasToFixtureEmail.set(email, fixtureEmail);
+          identityByFixtureEmail.set(fixtureEmail, {name, email: clean(payload.email, 254), phone});
+        }
+      }, after: async () => {
         state.journey.session.email = clean(payload.email, 254);
         state.journey.terms.open = false;
         setCommunityRole('anonymous');

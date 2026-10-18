@@ -1,0 +1,155 @@
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {createFixtureProvider, createServiceRuntime} from '../../../PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createCommunity} from '../../../PageRouter/checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '../../../PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '../../../PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+const school = {state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'};
+const memoryStorage = () => {
+  const values = new Map();
+  return {values, getItem(key) { return values.get(key) ?? null; }, setItem(key, value) { values.set(key, String(value)); }, removeItem(key) { values.delete(key); }};
+};
+const nodeById = (node, id) => {
+  if (!node || typeof node !== 'object') return null;
+  if (node.attrs?.id === id) return node;
+  for (const child of node.children || []) { const found = nodeById(child, id); if (found) return found; }
+  return null;
+};
+const assertSafe = (env, secrets) => {
+  const serialized = [JSON.stringify(env.controller.state), JSON.stringify(env.runtime.inspect()),
+    JSON.stringify(env.runtime.pxc.entries().map(([address, part]) => ({address, value: part.value}))),
+    [...env.storage.values.values()].join('\n')].join('\n');
+  for (const secret of secrets) assert.equal(serialized.includes(secret), false);
+};
+
+function environment({pauseCall = 0, failCalls = {}} = {}) {
+  const storage = memoryStorage(), base = createFixtureProvider({fixture: true, storage});
+  let resolveStarted, release;
+  const started = new Promise(resolve => { resolveStarted = resolve; });
+  const pending = new Promise(resolve => { release = resolve; });
+  let registrationCalls = 0, loginAliasIndex = null, tree = null;
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    if (port === 'Registration.registerTeacher') {
+      registrationCalls++;
+      if (pauseCall === registrationCalls) { resolveStarted(); await pending; }
+      const failure = failCalls[registrationCalls];
+      return invoke(failure ? {...input, failWith: failure} : input);
+    }
+    if (port === 'Session.login') {
+      const match = /^public-teacher-(\d+)@fixture\.test$/.exec(input.email);
+      loginAliasIndex = match ? Number(match[1]) : null;
+    }
+    return invoke(input);
+  }]));
+  const runtime = createServiceRuntime({...base, services: Object.freeze(services)});
+  const controller = createPublicController({runtime, storage, community: createCommunity({storage}),
+    onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); }});
+  return {controller, runtime, storage, started, release, get registrationCalls() { return registrationCalls; },
+    get loginAliasIndex() { return loginAliasIndex; }, get tree() { return tree; }};
+}
+
+async function prepare(env, identity) {
+  await env.controller.initialize('#/register');
+  for (const [key, value] of Object.entries(school)) await env.controller.selectSchool(key, value);
+  await env.controller.dispatch('public:terms-consent', {accepted: true});
+  for (const [key, value] of Object.entries(identity)) assert.equal(env.controller.updateDraft(key, value), true);
+}
+const registerPayload = (identity, password) => ({...identity, ...school, grade: '4th Grade', termsAccepted: true,
+  password, confirmPassword: password});
+
+async function navAwayBackFailure() {
+  const env = environment({pauseCall: 1, failCalls: {1: 'transport_failure'}});
+  const submitted = {name: 'E1403 Original Draft', email: 'e1403.original@example.test', phone: '312-555-0140'};
+  const live = {name: 'E1403 Newer Draft', email: 'e1403.newer@example.test', phone: '312-555-0141'};
+  await prepare(env, submitted);
+  const password = randomUUID();
+  const attempt = env.controller.dispatch('public:register', registerPayload(submitted, password));
+  await env.started;
+  await env.controller.navigate('#/about');
+  await env.controller.navigate('#/register');
+  for (const [key, value] of Object.entries(live)) assert.equal(env.controller.updateDraft(key, value), true);
+  env.release();
+  const result = await attempt;
+  const rendered = {name: nodeById(env.tree, 'hh-register-name')?.attrs?.value || '',
+    email: nodeById(env.tree, 'hh-register-email')?.attrs?.value || '', phone: nodeById(env.tree, 'hh-register-phone')?.attrs?.value || ''};
+  const report = {case: 'navigate away/back, edit live draft, delayed known failure', result: result.error?.code,
+    expectedDraft: live, renderedDraft: rendered, retainedLiveDraft: rendered.name === live.name && rendered.email === live.email && rendered.phone === live.phone,
+    retryAvailable: env.controller.canRetry, registrationCalls: env.registrationCalls};
+  assertSafe(env, [password]);
+  return report;
+}
+
+async function successWhileEdited() {
+  const env = environment({pauseCall: 1});
+  const submitted = {name: 'E1403 Committed Identity', email: 'e1403.committed@example.test', phone: '312-555-0142'};
+  const newer = {name: 'E1403 Unsaved Newer', email: 'e1403.unsaved@example.test', phone: '312-555-0143'};
+  await prepare(env, submitted);
+  const password = randomUUID();
+  const attempt = env.controller.dispatch('public:register', registerPayload(submitted, password));
+  await env.started;
+  for (const [key, value] of Object.entries(newer)) assert.equal(env.controller.updateDraft(key, value), true);
+  env.release();
+  const result = await attempt;
+  const identity = {...env.controller.state.journey.registration.identity};
+  const report = {case: 'success while newer draft is typed', ok: result.ok, status: env.controller.state.journey.registration.status,
+    displayedIdentity: identity, matchesCommittedIdentity: identity.email === submitted.email && identity.name === submitted.name};
+  assertSafe(env, [password]);
+  assert.equal(result.ok, true);
+  assert.equal(report.matchesCommittedIdentity, true);
+  return report;
+}
+
+async function aliasFailure(failure, suffix) {
+  const env = environment({failCalls: {2: failure}});
+  const identity = {name: `E1403 Alias ${suffix}`, email: `e1403.alias-${suffix}@example.test`, phone: '312-555-0144'};
+  await prepare(env, identity);
+  const firstPassword = randomUUID();
+  assert.equal((await env.controller.dispatch('public:register', registerPayload(identity, firstPassword))).ok, true);
+  assert.equal((await env.controller.dispatch('public:approve')).ok, true);
+  const secondPassword = randomUUID();
+  const failed = await env.controller.dispatch('public:register', registerPayload(identity, secondPassword));
+  assert.equal(failed.error?.code, failure);
+  const login = await env.controller.dispatch('public:login', {email: identity.email, password: secondPassword});
+  const report = {case: `approved alias after ${failure}`, failure: failed.error?.code, loginOk: login.ok,
+    aliasIndexUsed: env.loginAliasIndex, registrationStatus: env.runtime.snapshot().registration.status};
+  assertSafe(env, [firstPassword, secondPassword]);
+  return report;
+}
+
+async function profileAuthorityDuringFailure(profilePath, expectedSource, expectedId) {
+  const env = environment({pauseCall: 1, failCalls: {1: 'transport_failure'}});
+  const identity = {name: 'E1403 Route Probe', email: 'e1403.route@example.test', phone: '312-555-0145'};
+  await prepare(env, identity);
+  const password = randomUUID();
+  const attempt = env.controller.dispatch('public:register', registerPayload(identity, password));
+  await env.started;
+  await env.controller.navigate(profilePath);
+  const before = {route: env.controller.route.page, profileId: env.controller.route.profileId || null,
+    source: env.controller.state.journey.profile.source, status: env.controller.state.journey.profile.status,
+    profileValueId: env.controller.state.journey.profile.value?.id || null};
+  env.release();
+  const result = await attempt;
+  const after = {route: env.controller.route.page, profileId: env.controller.route.profileId || null,
+    source: env.controller.state.journey.profile.source, status: env.controller.state.journey.profile.status,
+    profileValueId: env.controller.state.journey.profile.value?.id || null};
+  const report = {case: `profile authority during registration failure: ${profilePath}`, result: result.error?.code,
+    before, after, authorityPreserved: after.route === 'profile' && after.source === expectedSource && after.profileValueId === expectedId};
+  assertSafe(env, [password]);
+  return report;
+}
+
+const reports = [];
+reports.push(await navAwayBackFailure());
+reports.push(await successWhileEdited());
+reports.push(await aliasFailure('transport_failure', 'known'));
+reports.push(await aliasFailure('outcome_unknown', 'unknown'));
+reports.push(await profileAuthorityDuringFailure('#/public-profile/demo-jordan', 'runtime', 'demo-jordan'));
+reports.push(await profileAuthorityDuringFailure('#/public-profile/reference-sarah', 'captured-readonly', 'reference-sarah'));
+console.log(JSON.stringify({reports}));
+assert.equal(reports[0].retainedLiveDraft, true, 'a newer register draft must survive a same-page re-entry while an older request is pending');
+assert.equal(reports[1].matchesCommittedIdentity, true);
+assert.ok(reports[2].loginOk && reports[3].loginOk);
+assert.equal(reports[2].aliasIndexUsed, 1);
+assert.equal(reports[3].aliasIndexUsed, 1);
+assert.ok(reports[4].authorityPreserved && reports[5].authorityPreserved);

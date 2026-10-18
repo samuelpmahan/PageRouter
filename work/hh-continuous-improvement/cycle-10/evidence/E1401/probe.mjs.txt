@@ -1,0 +1,217 @@
+import assert from 'node:assert/strict';
+import {randomBytes} from 'node:crypto';
+import {createFixtureProvider} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/services/fixture-provider.mjs';
+import {createServiceRuntime} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/services/runtime.mjs';
+import {createCommunity} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+const nodeById = (tree, id) => {
+  if (!tree || typeof tree !== 'object') return null;
+  if (tree.attrs?.id === id) return tree;
+  for (const child of tree.children || []) {
+    const match = nodeById(child, id);
+    if (match) return match;
+  }
+  return null;
+};
+const selectedOptionValue = (tree, id) => nodeById(tree, id)?.children?.find(option => option?.attrs?.selected)?.attrs?.value || '';
+const treeText = (tree) => {
+  if (typeof tree === 'string') return tree;
+  if (!tree || typeof tree !== 'object') return '';
+  return (tree.text || '') + (tree.children || []).map(treeText).join(' ');
+};
+const ephemeralCredential = () => randomBytes(24).toString('base64url');
+
+function makeEnv({failCall = null, pauseFirst = false} = {}) {
+  const base = createFixtureProvider({fixture: true});
+  let announceStart;
+  let release;
+  const started = new Promise(resolve => { announceStart = resolve; });
+  const gate = new Promise(resolve => { release = resolve; });
+  let registrationCalls = 0;
+  let loginAliasIndex = null;
+  const registrationAliasIndices = [];
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    if (port === 'Registration.registerTeacher') {
+      registrationCalls += 1;
+      const match = /^public-teacher-(\d+)@fixture\.test$/.exec(input.teacher.email);
+      registrationAliasIndices.push(match ? Number(match[1]) : null);
+      if (pauseFirst && registrationCalls === 1) {
+        announceStart();
+        await gate;
+      }
+      if (registrationCalls === failCall?.call) return invoke({...input, failWith: failCall.kind});
+      return invoke(input);
+    }
+    if (port === 'Session.login') {
+      const match = /^public-teacher-(\d+)@fixture\.test$/.exec(input.email);
+      loginAliasIndex = match ? Number(match[1]) : null;
+    }
+    return invoke(input);
+  }]));
+  const provider = {...base, services: Object.freeze(services)};
+  const runtime = createServiceRuntime(provider);
+  let tree = null;
+  const controller = createPublicController({runtime, community: createCommunity(), onChange(state, route) {
+    tree = renderPublicSite({route, state, journey: state.journey});
+  }});
+  return {provider, runtime, controller, get tree() { return tree; }, started, release,
+    get registrationCalls() { return registrationCalls; }, get registrationAliasIndices() { return [...registrationAliasIndices]; },
+    get loginAliasIndex() { return loginAliasIndex; }};
+}
+
+async function prepare(env, suffix) {
+  await env.controller.initialize('#/register');
+  for (const [key, value] of Object.entries({state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'})) {
+    await env.controller.selectSchool(key, value);
+  }
+  await env.controller.dispatch('public:terms-consent', {accepted: true});
+  const identity = {name: `E1401 Teacher ${suffix}`, email: `e1401-${suffix}@example.test`, phone: '555-0101'};
+  for (const [key, value] of Object.entries(identity)) assert.equal(env.controller.updateDraft(key, value), true);
+  return identity;
+}
+
+function draftRendered(env, identity) {
+  const tree = env.tree;
+  return {
+    form: nodeById(tree, 'hh-register-form') !== null,
+    name: nodeById(tree, 'hh-register-name')?.attrs?.value === identity.name,
+    email: nodeById(tree, 'hh-register-email')?.attrs?.value === identity.email,
+    phone: nodeById(tree, 'hh-register-phone')?.attrs?.value === identity.phone,
+    state: selectedOptionValue(tree, 'hh-directory-state') === 'Demo Washington',
+    county: selectedOptionValue(tree, 'hh-directory-county') === 'Demo King',
+    district: selectedOptionValue(tree, 'hh-directory-district') === 'Demo District',
+    school: selectedOptionValue(tree, 'hh-directory-school') === 'Demo Academy',
+  };
+}
+const draftErased = (env) => ['name', 'email', 'phone'].every(field =>
+  env.controller.state.journey.registration.identity[field] === '' &&
+  nodeById(env.tree, `hh-register-${field}`)?.attrs?.value === '');
+
+function credentialBoundary(env, credentials) {
+  const stored = [JSON.stringify(env.controller.state), JSON.stringify(env.runtime.inspect()),
+    JSON.stringify(env.runtime.pxc.entries().map(([address, part]) => ({address, value: part.value})))].join('\n');
+  return credentials.every(value => !stored.includes(value));
+}
+
+const validEnv = makeEnv();
+const validIdentity = await prepare(validEnv, 'valid');
+const validCredentials = [ephemeralCredential(), ephemeralCredential()];
+const validResult = await validEnv.controller.dispatch('public:register', {...validIdentity, termsAccepted: true,
+  password: validCredentials[0], confirmPassword: validCredentials[1]});
+assert.equal(validResult.ok, false, 'unequal confirmation is rejected locally');
+// Use an actually matching ephemeral credential pair for the valid control.
+const validPassword = ephemeralCredential();
+const validControl = await validEnv.controller.dispatch('public:register', {...validIdentity, termsAccepted: true,
+  password: validPassword, confirmPassword: validPassword});
+assert.equal(validControl.ok, true);
+assert.equal(validEnv.provider.snapshot().registration.status, 'pending');
+assert.equal(validEnv.provider.snapshot().demo.selectedTeacher.email.endsWith('@fixture.test'), true);
+assert.equal(nodeById(validEnv.tree, 'hh-register-form'), null);
+assert.equal(validEnv.controller.route.page, 'register');
+assert.equal(credentialBoundary(validEnv, [validCredentials[0], validCredentials[1], validPassword]), true);
+
+const knownEnv = makeEnv({failCall: {call: 1, kind: 'transport_failure'}, pauseFirst: true});
+const knownIdentity = await prepare(knownEnv, 'known');
+const knownPassword = ephemeralCredential();
+const firstAttempt = knownEnv.controller.dispatch('public:register', {...knownIdentity, termsAccepted: true,
+  password: knownPassword, confirmPassword: knownPassword});
+await knownEnv.started;
+const busyObservation = {route: knownEnv.controller.route.page, status: knownEnv.controller.state.request.status,
+  identityMatches: knownEnv.controller.state.journey.registration.identity.email === knownIdentity.email};
+assert.deepEqual(busyObservation, {route: 'register', status: 'busy', identityMatches: true});
+knownEnv.release();
+const knownFailure = await firstAttempt;
+assert.equal(knownFailure.ok, false);
+assert.equal(knownFailure.error.code, 'transport_failure');
+assert.equal(knownFailure.error.outcomeKnown, true);
+const failedSnapshot = knownEnv.provider.snapshot();
+const knownAfterFailure = {route: knownEnv.controller.route.page,
+  requestStatus: knownEnv.controller.state.request.status,
+  outcomeKind: knownEnv.controller.state.journey.outcome.kind,
+  identity: {...knownEnv.controller.state.journey.registration.identity},
+  termsAccepted: knownEnv.controller.state.journey.terms.accepted,
+  renderedDraftAndSchool: draftRendered(knownEnv, knownIdentity),
+  providerTeacherCount: failedSnapshot.demo.teachers?.length ?? (failedSnapshot.registration.status === 'none' ? 0 : 1),
+  providerRegistration: failedSnapshot.registration.status,
+  sessionStatus: failedSnapshot.session.status,
+  canRetry: knownEnv.controller.canRetry,
+  failureMessageRendered: treeText(knownEnv.tree).includes(knownFailure.message)};
+assert.equal(knownAfterFailure.requestStatus, 'failed');
+assert.equal(knownAfterFailure.outcomeKind, 'local-error');
+assert.equal(knownAfterFailure.renderedDraftAndSchool.form, true);
+assert.equal(knownAfterFailure.renderedDraftAndSchool.state && knownAfterFailure.renderedDraftAndSchool.county &&
+  knownAfterFailure.renderedDraftAndSchool.district && knownAfterFailure.renderedDraftAndSchool.school, true);
+if (process.env.E1401_RED_RETENTION === '1') {
+  assert.equal(knownAfterFailure.identity.name === knownIdentity.name &&
+    knownAfterFailure.identity.email === knownIdentity.email && knownAfterFailure.identity.phone === knownIdentity.phone,
+  true, 'red check: non-secret identity should survive provider failure');
+}
+const identityClearedAfterFailure = draftErased(knownEnv);
+assert.equal(identityClearedAfterFailure, true);
+assert.equal(knownAfterFailure.providerRegistration, 'none');
+assert.equal(knownAfterFailure.sessionStatus, 'anonymous');
+assert.equal(knownAfterFailure.canRetry, false);
+assert.equal(knownAfterFailure.failureMessageRendered, true);
+const safeRetry = await knownEnv.controller.dispatch('public:retry');
+assert.equal(safeRetry.error.code, 'nothing_to_retry');
+assert.equal(knownEnv.registrationCalls, 1);
+const manualRetry = await knownEnv.controller.dispatch('public:register', {...knownIdentity, termsAccepted: true,
+  password: knownPassword, confirmPassword: knownPassword});
+assert.equal(manualRetry.ok, true);
+assert.deepEqual(knownEnv.registrationAliasIndices, [1, 2]);
+const registrationAfterManualResubmit = knownEnv.provider.snapshot().registration.status;
+assert.equal(registrationAfterManualResubmit, 'pending');
+assert.equal(knownEnv.provider.snapshot().session.status, 'anonymous');
+await knownEnv.controller.dispatch('public:approve');
+const login = await knownEnv.controller.dispatch('public:login', {email: knownIdentity.email, password: knownPassword});
+assert.equal(login.ok, true);
+assert.equal(knownEnv.loginAliasIndex, 2);
+assert.equal(knownEnv.controller.state.journey.session.email, knownIdentity.email);
+assert.equal(credentialBoundary(knownEnv, [knownPassword]), true);
+
+const unknownEnv = makeEnv({failCall: {call: 1, kind: 'outcome_unknown'}});
+const unknownIdentity = await prepare(unknownEnv, 'unknown');
+const unknownPassword = ephemeralCredential();
+const unknownResult = await unknownEnv.controller.dispatch('public:register', {...unknownIdentity, termsAccepted: true,
+  password: unknownPassword, confirmPassword: unknownPassword});
+assert.equal(unknownResult.ok, false);
+assert.equal(unknownResult.error.code, 'outcome_unknown');
+assert.equal(unknownResult.error.outcomeKnown, false);
+assert.equal(unknownEnv.controller.state.request.status, 'outcome_unknown');
+assert.equal(draftRendered(unknownEnv, unknownIdentity).form, true);
+assert.equal(draftErased(unknownEnv), true);
+assert.equal(unknownEnv.provider.snapshot().registration.status, 'none');
+assert.equal(unknownEnv.controller.canRetry, false);
+const unknownRetry = await unknownEnv.controller.dispatch('public:retry');
+assert.equal(unknownRetry.error.code, 'nothing_to_retry');
+assert.equal(unknownEnv.registrationCalls, 1);
+assert.equal(credentialBoundary(unknownEnv, [unknownPassword]), true);
+
+process.stdout.write(JSON.stringify({
+  schema: 'hh-cycle10-probe-summary/v1', job_id: 'E1401', worker: 'H1',
+  fixture: {mode: 'fixture', persistence: 'volatile-memory', networkCalls: 0, productionAuthority: false},
+  validControl: {ok: validControl.ok, providerRegistration: validEnv.provider.snapshot().registration.status,
+    renderedFormRemoved: nodeById(validEnv.tree, 'hh-register-form') === null,
+    requestStatus: validEnv.controller.state.request.status},
+  controlledFailure: {busyObservation, knownFailure: {ok: knownFailure.ok, code: knownFailure.error.code,
+      outcomeKnown: knownFailure.error.outcomeKnown, retryable: knownFailure.error.retryable},
+    afterFailure: knownAfterFailure, identityClearedAndFieldsBlank: identityClearedAfterFailure,
+    explicitRetryCode: safeRetry.error.code,
+    manualResubmit: {ok: manualRetry.ok, registrationCalls: knownEnv.registrationCalls,
+      observedAliasIndices: knownEnv.registrationAliasIndices,
+      providerRegistrationAfterResubmit: registrationAfterManualResubmit,
+      loginAfterApproval: login.ok, observedLoginAliasIndex: knownEnv.loginAliasIndex,
+      sessionEmailMatchesDraft: knownEnv.controller.state.journey.session.email === knownIdentity.email}},
+  unknownOutcome: {ok: unknownResult.ok, code: unknownResult.error.code, outcomeKnown: unknownResult.error.outcomeKnown,
+    requestStatus: unknownEnv.controller.state.request.status, formRendered: draftRendered(unknownEnv, unknownIdentity).form,
+    identityClearedAndFieldsBlank: draftErased(unknownEnv),
+    schoolSelectionRetained: draftRendered(unknownEnv, unknownIdentity).state && draftRendered(unknownEnv, unknownIdentity).county &&
+      draftRendered(unknownEnv, unknownIdentity).district && draftRendered(unknownEnv, unknownIdentity).school,
+    providerRegistration: unknownEnv.provider.snapshot().registration.status,
+    canRetry: unknownEnv.controller.canRetry, explicitRetryCode: unknownRetry.error.code,
+    registrationCalls: unknownEnv.registrationCalls},
+  credentialsAbsentFromControllerRuntimeAndParts: true,
+  noStorageConfigured: true,
+}, null, 2) + '\n');

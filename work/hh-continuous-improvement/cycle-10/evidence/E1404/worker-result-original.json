@@ -1,0 +1,62 @@
+{
+  "job_id": "E1404",
+  "worker": "H1",
+  "summary": "Canonical Bazel source build completed successfully on the independently accepted E1405 source. Build action executed in the sandbox; this was not an up-to-date/cache-only hit. The verifier accepted the output receipt and 843 built files.",
+  "outcome": "fresh_source_build",
+  "execution": {
+    "working_directory": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "command_file": "command.txt",
+    "command": "bash -o pipefail -c 'date -u +%Y-%m-%dT%H:%M:%SZ > /workspace/scratch/8528bb251845/hh-cycle10/H1/E1404/build.start.utc; BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle10/H1/E1404/build.raw.log; status=$?; date -u +%Y-%m-%dT%H:%M:%SZ > /workspace/scratch/8528bb251845/hh-cycle10/H1/E1404/build.end.utc; printf \"%s\\\\n\" \"$status\" > /workspace/scratch/8528bb251845/hh-cycle10/H1/E1404/build.exit; exit \"$status\"'",
+    "start_utc": "2026-10-18T16:34:16Z",
+    "end_utc": "2026-10-18T16:35:28Z",
+    "exit_code": 0,
+    "cache_status": "Fresh processwrapper-sandbox build action executed; target reported successful completion with 2 actions, not an up-to-date-only hit."
+  },
+  "source": {
+    "commit": "9853c03e1f7458526528d2b350b8bad0c5e3c990",
+    "tree_before_changes": "3e23395038495c7e1ff025ce885b91d9201025d8",
+    "controller_sha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "test_sha256": "dfe05ff98c859f926c839d8b0e5bffbd17c96e58444400d6e108744e8111e389",
+    "source_input_count": 1538,
+    "source_digest": "ef87600765158265ffab89bbc5d8a54e25d89bfba9f5652ce45a7bc89e623c8c"
+  },
+  "build": {
+    "bazel": "7.4.1",
+    "node": "v24.19.0",
+    "package_lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534",
+    "toolchain_receipt": {
+      "node": "bc17c508ffeed0ec622934f9b7fa72f8e78da65350e63c3eceb56fa688aa5e12",
+      "sh": "86d31f6fb799e91fa21bad341484564510ca287703a16e9e46c53338776f4f42",
+      "cp": "fd4fc0c009e06b550970f7f5b9d0197825d521105271af38f9f577f5c32a2090",
+      "mkdir": "9a403934bdc186e5780e065f33c63628fdfe947d5c3207c6ff456aff97a83fdb"
+    },
+    "site_build_id": "8166fe07df91c79fb3dd8d0ddcc659a4d9aa756379e81e07861f5ced46dbb2e8",
+    "site_files_verified": 843,
+    "site_digest": "65eab878c780aa48c9e0915cad8280afecb5a8b80cbf4d17d1b201fab836396c",
+    "pxcube_packages_rebuilt": 14,
+    "crisp_exact_compiled_equality": true,
+    "suite_counts": [
+      {"suite": "Bazel build-helper tests", "tests": 2, "passed": 2, "failed": 0},
+      {"suite": "Targeted HH controller/community regressions", "tests": 129, "passed": 129, "failed": 0},
+      {"suite": "Complete npm test suite", "tests": 284, "passed": 284, "failed": 0},
+      {"suite": "Built Atlas import closure", "tests": 1, "passed": 1, "failed": 0}
+    ],
+    "test_total": {"tests": 416, "passed": 416, "failed": 0}
+  },
+  "evidence": {
+    "raw_wrapper_log": {"path": "build.raw.log", "sha256": "0c4944e740ee4b99ff5ba7d9b1ff8daaae16ff88d7ade5349d843455f64c3ec0"},
+    "build_receipt": {"path": "build.receipt.json", "sha256": "99eb0d566822d87552ec9d9df178a14cb64f27ec15d9f4704c764b7cff576ea7"},
+    "driver_test_log": {"path": "build.driver.log", "sha256": "818e8bdbc0a5328bb143d36d8896797488ec63b3cf22b529d5f8d05b374f72e3"},
+    "start_time": "build.start.utc",
+    "end_time": "build.end.utc",
+    "exit_status": "build.exit"
+  },
+  "limits": {
+    "no_source_edits": true,
+    "no_commit_or_push": true,
+    "historical_site_evidence_copied": false,
+    "browser_or_visual_qa_claimed": false,
+    "human_acceptance_claimed": false,
+    "python_runtime_claimed": false
+  }
+}

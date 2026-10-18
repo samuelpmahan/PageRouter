@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -u
+evidence=/workspace/scratch/8528bb251845/hh-cycle10/H2/R1406
+cd /workspace/scratch/8528bb251845/PageRouter || exit 2
+node /workspace/scratch/8528bb251845/hh-cycle10/H2/R1406/audit.mjs > "$evidence/audit.verified.raw.log" 2>&1
+status=$?
+printf '%s\n' "$status" > "$evidence/audit.verified.exit"
+exit "$status"

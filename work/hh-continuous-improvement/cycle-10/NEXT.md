@@ -1,0 +1,7 @@
+# Next
+
+Proposed bounded follow-up, **not executed or admitted yet**: determine whether a registration failure that completes after navigation to `/login` leaves stale registration feedback on the current login form. Do not presume that global feedback is a defect; it may be intentional.
+
+First verify the current exact source and route/form reachability. Use only a volatile local fixture, synthetic `.test` identities, and credentials generated in memory. Hold each failure until `/login` is current, then release one known `transport_failure` and one `outcome_unknown`. Include a same-route existing-error control. Inspect actual current route, rendered login form, feedback, runtime/projection authority, and whether any automatic second write occurs. Verify credentials are absent from retained state/runtime/Parts/storage/output. Keep raw script/output/exit provenance and do not alter product source unless a fresh probe demonstrates an unacceptable behavior and a separate native repair admission authorizes a bounded fix.
+
+The approved-alias test is a direct controller-dispatch safety regression; the rendered approved route is not a registration form. Do not treat it as mounted UI re-registration coverage. Browser access remains unverified; do not route around the originating-context block. E1405/R1405 already accepted the current candidate, so this proposed probe must be a new task/source identity and must not rewrite prior evidence.

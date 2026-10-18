@@ -1,0 +1,16 @@
+{
+  "job_id": "E1405",
+  "worker": "H1",
+  "snapshot_source": "E1403 pre-repair controller and test files",
+  "files": [
+    {
+      "path": "public-controller.mjs.txt",
+      "sha256": "6dde984ebf6b4f71267345341a2f6765e96d28dfd1876f6f8284555e6310b0b8"
+    },
+    {
+      "path": "public-controller.test.mjs.txt",
+      "sha256": "d28de1e22f382918e8dcf1be2628234c877b732ad2a30ea5d597ef32d1f9a845"
+    }
+  ],
+  "snapshot_note": "Copies retain the E1403 exact source bytes; .txt suffix avoids Node test discovery. R1403AMEND evidence remains separate and unchanged."
+}

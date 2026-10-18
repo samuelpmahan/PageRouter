@@ -37,6 +37,40 @@ function registrationDraftSetup() {
   return {controller, runtime, storage, get tree() { return tree; }};
 }
 
+function registrationFailureSetup({failCalls = {}, pauseCall = 0} = {}) {
+  const storage = memoryStorage();
+  const base = createFixtureProvider({fixture: true, storage});
+  let announceStart, release;
+  const started = new Promise(resolve => { announceStart = resolve; });
+  const pending = new Promise(resolve => { release = resolve; });
+  let registrationCalls = 0;
+  let loginAliasIndex = null;
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    if (port === 'Registration.registerTeacher') {
+      registrationCalls += 1;
+      if (pauseCall === registrationCalls) {
+        announceStart();
+        await pending;
+      }
+      const failWith = failCalls[registrationCalls];
+      return invoke(failWith ? {...input, failWith} : input);
+    }
+    if (port === 'Session.login') {
+      const match = /^public-teacher-(\d+)@fixture\.test$/.exec(input.email);
+      loginAliasIndex = match ? Number(match[1]) : null;
+    }
+    return invoke(input);
+  }]));
+  const runtime = createServiceRuntime({...base, services: Object.freeze(services)});
+  let tree = null;
+  const controller = createPublicController({runtime, storage, community: createCommunity({storage}),
+    onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+  });
+  return {controller, runtime, storage, started, release,
+    get registrationCalls() { return registrationCalls; }, get loginAliasIndex() { return loginAliasIndex; },
+    get tree() { return tree; }};
+}
+
 function nodeById(tree, id) {
   if (!tree || typeof tree !== 'object') return null;
   if (tree.attrs?.id === id) return tree;
@@ -788,6 +822,125 @@ test('registration missing-terms validation retains delegated non-secret drafts 
   assert.equal(env.runtime.inspect().receipts.length, receiptsBefore);
   assert.equal(env.runtime.snapshot().registration.status, 'none');
   assertCredentialsNotPersisted(env, [password]);
+});
+
+test('registration transport failure retains the live draft and only permits explicit resubmission', async () => {
+  const env = registrationFailureSetup({failCalls: {1: 'transport_failure'}, pauseCall: 1});
+  const submitted = {name: 'E1403 Submitted', email: 'e1403.submitted@example.test', phone: '312-555-0140'};
+  await prepareRegistrationDraft(env, submitted);
+  await env.controller.dispatch('public:terms-consent', {accepted: true});
+  const password = randomUUID();
+  const attempt = env.controller.dispatch('public:register', {...submitted, password, confirmPassword: password,
+    termsAccepted: true, state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'});
+  await env.started;
+  const liveDraft = {name: 'E1403 Edited While Pending', email: 'e1403.edited@example.test', phone: '312-555-0141'};
+  for (const [key, value] of Object.entries(liveDraft)) assert.equal(env.controller.updateDraft(key, value), true);
+  env.release();
+  const failed = await attempt;
+
+  assert.equal(failed.error?.code, 'transport_failure');
+  assert.equal(failed.error?.outcomeKnown, true);
+  assert.equal(env.controller.route.page, 'register');
+  assert.equal(env.controller.state.request.status, 'failed');
+  assertRegistrationDraftRendered(env.tree, liveDraft);
+  assert.equal(env.controller.state.journey.registration.identity.email, liveDraft.email);
+  assert.equal(env.controller.state.journey.terms.accepted, true);
+  assert.equal(env.runtime.snapshot().registration.status, 'none');
+  assert.equal(env.runtime.snapshot().session.status, 'anonymous');
+  assert.equal(env.controller.canRetry, false);
+  assert.equal(env.registrationCalls, 1);
+  assert.equal((await env.controller.dispatch('public:retry')).error?.code, 'nothing_to_retry');
+  assert.equal(env.registrationCalls, 1, 'safe retry must not issue another registration write');
+  assertCredentialsNotPersisted(env, [password]);
+
+  const freshPassword = randomUUID();
+  const resubmitted = await env.controller.dispatch('public:register', {...liveDraft, password: freshPassword,
+    confirmPassword: freshPassword, termsAccepted: true,
+    state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'});
+  assert.equal(resubmitted.ok, true);
+  assert.equal(env.registrationCalls, 2);
+  assert.equal(env.runtime.snapshot().registration.status, 'pending');
+  assert.equal(env.controller.state.journey.registration.identity.email, liveDraft.email);
+  assertCredentialsNotPersisted(env, [password, freshPassword]);
+});
+
+test('registration unknown outcome retains the live draft and has no safe automatic retry', async () => {
+  const env = registrationFailureSetup({failCalls: {1: 'outcome_unknown'}});
+  const identity = {name: 'E1403 Unknown', email: 'e1403.unknown@example.test', phone: '312-555-0142'};
+  await prepareRegistrationDraft(env, identity);
+  await env.controller.dispatch('public:terms-consent', {accepted: true});
+  const password = randomUUID();
+  const failed = await env.controller.dispatch('public:register', {...identity, password, confirmPassword: password,
+    termsAccepted: true, state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'});
+
+  assert.equal(failed.error?.code, 'outcome_unknown');
+  assert.equal(failed.error?.outcomeKnown, false);
+  assert.equal(env.controller.state.request.status, 'outcome_unknown');
+  assertRegistrationDraftRendered(env.tree, identity);
+  assert.equal(env.controller.state.journey.registration.identity.email, identity.email);
+  assert.equal(env.runtime.snapshot().registration.status, 'none');
+  assert.equal(env.controller.canRetry, false);
+  assert.equal((await env.controller.dispatch('public:retry')).error?.code, 'nothing_to_retry');
+  assert.equal(env.registrationCalls, 1, 'unknown outcome must not be automatically retried');
+  assertCredentialsNotPersisted(env, [password]);
+});
+
+test('registration retains the current draft after navigation away and back on failed writes', async () => {
+  for (const failure of ['transport_failure', 'outcome_unknown']) {
+    const env = registrationFailureSetup({failCalls: {1: failure}, pauseCall: 1});
+    const submitted = {name: `E1405 Submitted ${failure}`, email: `e1405.submitted-${failure}@example.test`, phone: '312-555-0145'};
+    const liveDraft = {name: `E1405 Current ${failure}`, email: `e1405.current-${failure}@example.test`, phone: '312-555-0146'};
+    await prepareRegistrationDraft(env, submitted);
+    await env.controller.dispatch('public:terms-consent', {accepted: true});
+    const password = randomUUID();
+    const attempt = env.controller.dispatch('public:register', {...submitted, password, confirmPassword: password,
+      termsAccepted: true, state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'});
+    await env.started;
+    await env.controller.navigate('#/about');
+    await env.controller.navigate('#/register');
+    for (const [key, value] of Object.entries(liveDraft)) assert.equal(env.controller.updateDraft(key, value), true);
+    env.release();
+    const failed = await attempt;
+
+    assert.equal(failed.error?.code, failure);
+    assert.equal(env.controller.route.page, 'register');
+    assertRegistrationDraftRendered(env.tree, liveDraft);
+    assert.equal(env.controller.state.journey.registration.identity.email, liveDraft.email);
+    assert.equal(env.runtime.snapshot().registration.status, 'none');
+    assert.equal(env.controller.canRetry, false);
+    assert.equal((await env.controller.dispatch('public:retry')).error?.code, 'nothing_to_retry');
+    assert.equal(env.registrationCalls, 1, 'failure must not issue an automatic registration retry');
+    assertCredentialsNotPersisted(env, [password]);
+  }
+});
+
+test('failed re-registration preserves the approved synthetic alias for login', async () => {
+  const env = registrationFailureSetup({failCalls: {2: 'transport_failure'}});
+  const identity = {name: 'E1403 Approved Alias', email: 'e1403.alias@example.test', phone: '312-555-0143'};
+  await prepareRegistrationDraft(env, identity);
+  await env.controller.dispatch('public:terms-consent', {accepted: true});
+  const firstPassword = randomUUID();
+  const registered = await env.controller.dispatch('public:register', {...identity, password: firstPassword,
+    confirmPassword: firstPassword, termsAccepted: true,
+    state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'});
+  assert.equal(registered.ok, true);
+  assert.equal(env.registrationCalls, 1);
+  assert.equal((await env.controller.dispatch('public:approve')).ok, true);
+  assert.equal(env.runtime.snapshot().registration.status, 'approved');
+
+  const secondPassword = randomUUID();
+  const failedReregistration = await env.controller.dispatch('public:register', {...identity,
+    password: secondPassword, confirmPassword: secondPassword, termsAccepted: true,
+    state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'});
+  assert.equal(failedReregistration.error?.code, 'transport_failure');
+  assert.equal(env.runtime.snapshot().registration.status, 'approved');
+  assert.equal(env.registrationCalls, 2);
+
+  const login = await env.controller.dispatch('public:login', {email: identity.email, password: secondPassword});
+  assert.equal(login.ok, true);
+  assert.equal(env.loginAliasIndex, 1, 'failed re-registration must not replace the previously approved alias');
+  assert.equal(env.controller.state.journey.session.email, identity.email);
+  assertCredentialsNotPersisted(env, [firstPassword, secondPassword]);
 });
 
 test('registration keeps passwords ephemeral, approval and login stay separate, and edits remain local', async () => {

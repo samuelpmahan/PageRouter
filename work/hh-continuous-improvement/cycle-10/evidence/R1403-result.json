@@ -1,0 +1,38 @@
+{
+  "job_id": "R1403",
+  "worker": "H2",
+  "decision": "amend",
+  "summary": "The frozen candidate fixes the E1402 failure-retention defect for current-route known and unknown failures, commits aliases only after successful registration, and passes focused plus full controller tests. However, its same-route-epoch guard misses a reachable case: while registration is pending, navigate away, navigate back to /register, edit a newer draft, then resolve a known failure. The candidate clears all three newer rendered identity fields. Amend with this exact reproducer before acceptance; do not alter the passing alias/success behavior.",
+  "evidence": {
+    "focused_tap": {"command": "node --test --test-concurrency=1 --test-name-pattern='registration (transport failure|unknown outcome)|failed re-registration' vendor/hh/src/public-controller.test.mjs", "exit": 0, "tests": 3, "pass": 3, "fail": 0, "file": "focused.tap", "sha256": "c5295d35006cfd9882299e8d4823467e659be36bcc2457e9505b4d9ba4f9d2e4"},
+    "controller_tap": {"command": "node --test --test-concurrency=1 vendor/hh/src/public-controller.test.mjs", "exit": 0, "tests": 54, "pass": 54, "fail": 0, "file": "controller.tap", "sha256": "4834d8d8309ac089ca5b0758ad2631be3ffc3484d2c02c4f7fed4f0566d74ea0"},
+    "adversarial_command": {"command": "node /workspace/scratch/8528bb251845/hh-cycle10/H2/R1403/adversarial.mjs", "exit": 1, "file": "adversarial.raw.log", "sha256": "ec6f746e94a153078965ffb2331d1dbfc8f278198dc966a35a04f345d238a191"},
+    "nav_away_back_failure": {"provider_result": "transport_failure", "expected": {"name": "E1403 Newer Draft", "email": "e1403.newer@example.test", "phone": "312-555-0141"}, "rendered": {"name": "", "email": "", "phone": ""}, "retained": false, "automatic_retry": false, "provider_calls": 1},
+    "success_while_edited": {"ok": true, "registration_status": "pending", "projected_identity": "submitted/committed identity rather than newer unsaved edits", "passed": true},
+    "approved_alias_known_failure": {"failure": "transport_failure", "login_ok": true, "alias_index_used": 1, "passed": true},
+    "approved_alias_unknown_failure": {"failure": "outcome_unknown", "login_ok": true, "alias_index_used": 1, "passed": true},
+    "profile_authority": {"foreign_runtime_profile": "demo-jordan remained present/runtime after pending registration failure", "captured_readonly_profile": "reference-sarah remained present/captured-readonly after pending registration failure", "passed": true},
+    "credentials": "All adversarial credentials were generated with randomUUID() and asserted absent from controller state, runtime.inspect(), actual PxC Part values, and fixture storage; no credential values appeared in stdout."
+  },
+  "runner_history": {
+    "initial_attempt": "The first run of run-controller-checks.sh exited 1 because the script had not changed into its declared checkpoint working directory; both TAP outputs said the test file could not be found. This harness failure is preserved in first-attempt.log. The initial script bytes were not retained; the runner was then amended to cd to checkpoint and both checks passed.",
+    "successful_capture": "The fixed runner redirects Node's original stdout/stderr to focused.tap and controller.tap and records each process exit in focused.exit and controller.exit. The adversarial runner likewise stores original stdout/stderr in adversarial.raw.log and exit in adversarial.exit."
+  },
+  "sourcehashes": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "9853c03e1f7458526528d2b350b8bad0c5e3c990",
+    "baseline_tree": "3e23395038495c7e1ff025ce885b91d9201025d8",
+    "candidate_controller_sha256_before": "6dde984ebf6b4f71267345341a2f6765e96d28dfd1876f6f8284555e6310b0b8",
+    "candidate_controller_sha256_after": "6dde984ebf6b4f71267345341a2f6765e96d28dfd1876f6f8284555e6310b0b8",
+    "candidate_test_sha256_before": "d28de1e22f382918e8dcf1be2628234c877b732ad2a30ea5d597ef32d1f9a845",
+    "candidate_test_sha256_after": "d28de1e22f382918e8dcf1be2628234c877b732ad2a30ea5d597ef32d1f9a845",
+    "repository_diff_check": "git diff --check passed; source files remained at the exact frozen candidate hashes."
+  },
+  "bounded_correction": "On registration failure/unknown completion, preserve the live identity if the current route is register, even if the route epoch changed due to navigating away and back; do not restore submitted-time identity or touch registration fields when a different route is current. Keep provider-confirmed success projection and success-only alias commit unchanged. Add the exact nav-away/back held-write failure test.",
+  "limits": [
+    "Controller/render-tree and real fixture-provider tests only; no mounted browser, screenshot, or visual QA.",
+    "No production/backend behavior was tested.",
+    "Repository/source/Git were read-only for H2; all H2 writes are confined to hh-cycle10/H2/R1403."
+  ]
+}

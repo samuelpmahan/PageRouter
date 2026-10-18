@@ -1,0 +1,47 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "hh-continuous-improvement-cycle10",
+    "source": "dfef8eec126e3e0eb9f1aa3f3a1f9c950408d568",
+    "localSource": "9853c03e1f7458526528d2b350b8bad0c5e3c990",
+    "tree": "3e23395038495c7e1ff025ce885b91d9201025d8",
+    "scope": "Actual synthetic Registration.registerTeacher failure, nonsecret draft retention and resubmit/privacy; demonstrate before correction",
+    "actualCapacity": "Two actual freshly registered Luna/high contexts H1/H2 beneath root. Current agent list shows no other running stream; reserve remaining slots, do not invent allocation or workers.",
+    "streams": [
+      "registration flow integration",
+      "independent failure/provider/projection verification",
+      "canonical build and checkpoint"
+    ],
+    "floatingReserve": "Two useful HH workers; H1 sole source/Git owner and H2 independent scratch-only review; streams sequenced, no background dispatch"
+  },
+  "workers": [
+    "H1",
+    "H2"
+  ],
+  "review_policy": {
+    "enabled": false
+  },
+  "jobs": [
+    {
+      "id": "E1401",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Read exact instructions/current cycle09 continuation/source/tests; canonical current-base build before edits; promise-controlled synthetic registration provider-failure/form/retry/alias/privacy probe. Demonstrate/falsify actual tree/runtime behavior; no source correction yet, no secrets retained."
+    },
+    {
+      "id": "E1402",
+      "kind": "extract",
+      "allow_workers": [
+        "H2"
+      ],
+      "subject": "Independent read-only/scratch-only provider-failure retention/retry probe and source/runtime reachability; transport_failure/outcome_unknown/valid controls, ephemeral credentials excluded from evidence. No product/source/Git mutation, no browser-policy workaround."
+    }
+  ],
+  "policy": {
+    "extract_priority": 100,
+    "review_priority": 200,
+    "repair_priority": 300
+  }
+}

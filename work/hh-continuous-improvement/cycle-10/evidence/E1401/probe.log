@@ -1,0 +1,85 @@
+{
+  "schema": "hh-cycle10-probe-summary/v1",
+  "job_id": "E1401",
+  "worker": "H1",
+  "fixture": {
+    "mode": "fixture",
+    "persistence": "volatile-memory",
+    "networkCalls": 0,
+    "productionAuthority": false
+  },
+  "validControl": {
+    "ok": true,
+    "providerRegistration": "pending",
+    "renderedFormRemoved": true,
+    "requestStatus": "completed"
+  },
+  "controlledFailure": {
+    "busyObservation": {
+      "route": "register",
+      "status": "busy",
+      "identityMatches": true
+    },
+    "knownFailure": {
+      "ok": false,
+      "code": "transport_failure",
+      "outcomeKnown": true,
+      "retryable": true
+    },
+    "afterFailure": {
+      "route": "register",
+      "requestStatus": "failed",
+      "outcomeKind": "local-error",
+      "identity": {
+        "name": "",
+        "email": "",
+        "phone": ""
+      },
+      "termsAccepted": true,
+      "renderedDraftAndSchool": {
+        "form": true,
+        "name": false,
+        "email": false,
+        "phone": false,
+        "state": true,
+        "county": true,
+        "district": true,
+        "school": true
+      },
+      "providerTeacherCount": 0,
+      "providerRegistration": "none",
+      "sessionStatus": "anonymous",
+      "canRetry": false,
+      "failureMessageRendered": true
+    },
+    "identityClearedAndFieldsBlank": true,
+    "explicitRetryCode": "nothing_to_retry",
+    "manualResubmit": {
+      "ok": true,
+      "registrationCalls": 2,
+      "observedAliasIndices": [
+        1,
+        2
+      ],
+      "providerRegistrationAfterResubmit": "pending",
+      "loginAfterApproval": true,
+      "observedLoginAliasIndex": 2,
+      "sessionEmailMatchesDraft": true
+    }
+  },
+  "unknownOutcome": {
+    "ok": false,
+    "code": "outcome_unknown",
+    "outcomeKnown": false,
+    "requestStatus": "outcome_unknown",
+    "formRendered": true,
+    "identityClearedAndFieldsBlank": true,
+    "schoolSelectionRetained": true,
+    "providerRegistration": "none",
+    "canRetry": false,
+    "explicitRetryCode": "nothing_to_retry",
+    "registrationCalls": 1
+  },
+  "credentialsAbsentFromControllerRuntimeAndParts": true,
+  "noStorageConfigured": true
+}

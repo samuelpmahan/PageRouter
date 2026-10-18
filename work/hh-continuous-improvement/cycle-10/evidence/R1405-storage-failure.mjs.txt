@@ -1,0 +1,59 @@
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {createFixtureProvider, createServiceRuntime} from '../../../PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createCommunity} from '../../../PageRouter/checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '../../../PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '../../../PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+const values = new Map();
+let rejectWrites = false, writeAttempts = 0;
+const storage = {
+  values,
+  getItem(key) { return values.get(key) ?? null; },
+  setItem(key, value) { writeAttempts++; if (rejectWrites) throw new Error('ephemeral fixture persistence fault'); values.set(key, String(value)); },
+  removeItem(key) { values.delete(key); },
+};
+const school = {state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'};
+const identity = {name: 'R1405 Storage Failure Draft', email: 'r1405.storage@example.test', phone: '312-555-0188'};
+const find = (node, id) => {
+  if (!node || typeof node !== 'object') return null;
+  if (node.attrs?.id === id) return node;
+  for (const child of node.children || []) { const match = find(child, id); if (match) return match; }
+  return null;
+};
+const provider = createFixtureProvider({fixture: true, storage});
+const runtime = createServiceRuntime(provider);
+let tree = null;
+const controller = createPublicController({runtime, storage, community: createCommunity({storage}),
+  onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); }});
+await controller.initialize('#/register');
+for (const [key, value] of Object.entries(school)) await controller.selectSchool(key, value);
+await controller.dispatch('public:terms-consent', {accepted: true});
+for (const [key, value] of Object.entries(identity)) assert.equal(controller.updateDraft(key, value), true);
+const password = randomUUID();
+rejectWrites = true;
+const result = await controller.dispatch('public:register', {...identity, ...school, grade: '4th Grade', termsAccepted: true,
+  password, confirmPassword: password});
+const retained = ['name', 'email', 'phone'].every(key => find(tree, `hh-register-${key}`)?.attrs?.value === identity[key]);
+const noAccount = runtime.snapshot().registration.status === 'none' && runtime.snapshot().session.status === 'anonymous';
+const canRetry = controller.canRetry;
+const retry = await controller.dispatch('public:retry');
+const safeSurfaces = [JSON.stringify(controller.state), JSON.stringify(runtime.inspect()),
+  JSON.stringify(runtime.pxc.entries().map(([address, part]) => ({address, value: part.value}))),
+  [...values.values()].join('\n')].join('\n');
+const credentialsAbsent = !safeSurfaces.includes(password);
+const report = {serviceResult: result.error?.code, requestStatus: controller.state.request.status, retainedRenderedDraft: retained,
+  selectedSchoolRetained: controller.state.journey.school.school === school.school, noAccountOrSession: noAccount,
+  canRetry, explicitRetry: retry.error?.code, writeAttempts, persistedEntries: values.size, credentialsAbsent};
+console.log(JSON.stringify(report));
+assert.equal(result.error?.code, 'storage_unavailable');
+assert.equal(controller.state.request.status, 'failed');
+assert.equal(retained, true);
+assert.equal(controller.state.journey.terms.accepted, true);
+assert.equal(report.selectedSchoolRetained, true);
+assert.equal(noAccount, true);
+assert.equal(canRetry, false);
+assert.equal(retry.error?.code, 'nothing_to_retry');
+assert.equal(writeAttempts, 1);
+assert.equal(values.size, 0);
+assert.equal(credentialsAbsent, true);
