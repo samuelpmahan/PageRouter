@@ -7,7 +7,7 @@
     "branch": "main",
     "commit": "7adf7e74a85c4310a5704a4c42808e85a1a82d71"
   },
-  "candidate_status": "source frozen; canonical build passed; publication checkpoint pending",
+  "candidate_status": "source frozen; canonical build passed; draft PR published",
   "product_files": {
     "checkpoint/vendor/hh/src/public-controller.mjs": "4eb1ecc139a89a87777a827e9460b370813dd0f498a269ff0c47c2d0f4da94a4",
     "checkpoint/vendor/hh/src/public-controller.test.mjs": "7088a497f633718630cfde56a12111240887c41d3c7b50239345429237b292af",
@@ -86,7 +86,20 @@
   "active_execution": false,
   "active_mutation_owner": null,
   "publication": {
-    "status": "pending draft PR publication",
+    "status": "draft PR opened",
+    "branch": "codex/hh-continuous-improvement",
+    "pull_request": {
+      "number": 8,
+      "url": "https://github.com/samuelpmahan/PageRouter/pull/8",
+      "draft": true,
+      "base": "main"
+    },
+    "source_checkpoint": {
+      "local_commit": "aff44ae3ba04c6193e5d123016cd6198b647271b",
+      "local_tree": "7fe74777d2aec2a2ee678243a774034773933a34",
+      "published_commit": "b47e9c6860ee5c7c232d6a7b32155fdca17b2ee8",
+      "published_tree": "7fe74777d2aec2a2ee678243a774034773933a34"
+    },
     "main_landing": "not authorized by this cycle",
     "human_acceptance": "not inferred"
   }
