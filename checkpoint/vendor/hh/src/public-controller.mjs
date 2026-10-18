@@ -753,14 +753,13 @@ export function createPublicController({runtime, storage = null, onChange = () =
       if (!validEmail(email) || !password) return localValidation('Enter the demo email and password field to continue. The preview does not verify passwords.');
       const fixtureEmail = aliasToFixtureEmail.get(email) || email;
       const startRouteEpoch = routeEpoch;
-      const result = await service('Session.login', {email: fixtureEmail, demoAccount: true}, {credentials: {password, confirmPassword: password}});
-      if (result.ok) {
+      const result = await service('Session.login', {email: fixtureEmail, demoAccount: true}, {credentials: {password, confirmPassword: password}}, {after: async () => {
         const identity = identityByFixtureEmail.get(emailKey(fixtureEmail));
         state.journey.loginDraft = {email: null};
         state.journey.session.email = identity?.email || clean(payload.email, 254);
         setCommunityRole('teacher');
-        if (routeEpoch === startRouteEpoch) requestNavigation('/profile');
-      }
+      }});
+      if (result.ok && routeEpoch === startRouteEpoch) requestNavigation('/profile');
       return result;
     }
     if (event === 'public:logout') {

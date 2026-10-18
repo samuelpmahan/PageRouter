@@ -1,0 +1,56 @@
+R1905 file-audit inventory attempt 02 — preserved before narrowing original-copy mapping
+Scope: read-only manifest/package walk plus copy/hash/mode comparisons; no package files changed.
+Verifier correction from attempt 01: for an archived script suffix `.mjs.txt` / `.sh.txt`, compare to `.mjs` / `.sh` original when present.
+
+Exact emitted JSON:
+{
+  "listed": 95,
+  "actualRegularFiles": 97,
+  "expectedRegularFiles": 97,
+  "listedCountField": 95,
+  "totalCountField": 97,
+  "excludedFiles": [
+    "evidence/manifest.json",
+    "evidence/E1905/result.json"
+  ],
+  "extras": [],
+  "missing": [],
+  "symlinks": [],
+  "manifestMismatches": [],
+  "originalCopyModeOrByteMismatches": [
+    {
+      "path": "evidence/native/state.json",
+      "source": "hh-cycle14/state.json",
+      "size": [
+        14231,
+        16171
+      ],
+      "mode": [
+        "644",
+        "644"
+      ],
+      "sha": [
+        "70b8b7bc29ea254926f631a16571b810e7df9ecbc98c432ba3b8bcd56d748571",
+        "d199642770711faf2d4b925bf68ff339609225a5975a627199a3221069d7977e"
+      ]
+    },
+    {
+      "path": "evidence/red-green/E1903-H1/controller-test.pre-red-run.mjs.txt",
+      "source": "hh-cycle14/H1/E1903/controller-test.pre-red-run.mjs",
+      "kind": "missing original"
+    },
+    {
+      "path": "evidence/red-green/E1903-H1/controller.pre-red.mjs.txt",
+      "source": "hh-cycle14/H1/E1903/controller.pre-red.mjs",
+      "kind": "missing original"
+    }
+  ],
+  "modeCounts": {
+    "555": 2,
+    "600": 5,
+    "644": 90
+  },
+  "executableScriptSuffixEntries": []
+}
+
+Interpretation pending focused validation: manifest itself passed for all 95 payload files; package had 97 regular files with exactly the two declared exclusions, no extras or symlinks. The current `hh-cycle14/state.json` is expected to have advanced after package freeze, so its difference is not yet treated as a package integrity failure. The two `.mjs.txt` snapshot names are literal source artifact names, not scripts to de-suffix; only archived runnable script names map to `.mjs`/`.sh` originals. Package contents remain untouched.

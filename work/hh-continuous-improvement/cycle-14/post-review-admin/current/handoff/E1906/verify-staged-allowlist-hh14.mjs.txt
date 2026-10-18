@@ -1,0 +1,25 @@
+// PREPARED ONLY. Run only after root admits a frozen plan + hash and staging GO.
+// Corrected v2 form: `git ls-files --stage -z -- <literal paths>`; no unsupported ls-files pathspec flags.
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {readFile} from 'node:fs/promises';
+
+const repo='/workspace/scratch/8528bb251845/PageRouter';
+const args=process.argv.slice(2),planPath=args[0],planSha=args[1];
+if(!planPath||!/^[0-9a-f]{64}$/.test(planSha??''))throw new Error('usage: node verify-staged-allowlist-hh14.mjs <root-admitted-plan-path> <plan-sha256>');
+const sha256=b=>createHash('sha256').update(b).digest('hex');
+const blobSha1=b=>createHash('sha1').update(`blob ${b.length}\0`).update(b).digest('hex');
+const git=(...a)=>execFileSync('git',a,{cwd:repo,maxBuffer:64*1024*1024});
+const bytes=await readFile(planPath);if(sha256(bytes)!==planSha)throw new Error('prospective plan hash mismatch');
+const plan=JSON.parse(bytes.toString('utf8'));
+const branch=git('branch','--show-current').toString('utf8').trim(),head=git('rev-parse','HEAD').toString('utf8').trim();
+if(branch!==plan.branch||head!==plan.expectedParent)throw new Error('branch or parent changed since plan');
+if(!Array.isArray(plan.files)||plan.files.length!==plan.allowlistCount)throw new Error('allowlist count mismatch');
+const expected=new Map(plan.files.map(x=>[x.path,x]));if(expected.size!==plan.files.length)throw new Error('duplicate allowlist path');
+const staged=git('diff','--cached','--name-only','-z').toString('utf8').split('\0').filter(Boolean).sort();
+if(staged.length!==expected.size||staged.some(p=>!expected.has(p)))throw new Error(`staged names differ from exact plan: ${JSON.stringify(staged)}`);
+const records=git('ls-files','--stage','-z','--',...expected.keys()).toString('utf8').split('\0').filter(Boolean),indexed=new Map();
+for(const rec of records){const t=rec.indexOf('\t'),[mode,oid,stage]=rec.slice(0,t).split(' '),path=rec.slice(t+1);if(stage!=='0'||!expected.has(path)||indexed.has(path))throw new Error(`unexpected index record for ${path}`);indexed.set(path,{mode,oid})}
+if(indexed.size!==expected.size)throw new Error(`index entries ${indexed.size} != planned ${expected.size}`);
+let verifiedBytes=0;for(const [p,item] of expected){const e=indexed.get(p);if(!e||e.mode!==item.mode)throw new Error(`staged mode mismatch: ${p}`);const b=git('cat-file','blob',e.oid);const sha=sha256(b),blob=blobSha1(b);if(b.length!==item.bytes||sha!==item.sha256||blob!==item.gitBlobSha1||blob!==e.oid)throw new Error(`staged blob mismatch: ${p}`);verifiedBytes+=b.length}
+console.log(JSON.stringify({result:'PASS',branch,parent:head,expectedPaths:expected.size,stagedPaths:staged.length,indexRecords:indexed.size,verifiedBlobBytes:verifiedBytes,modes:'matched',sha256AndGitBlobSha1:'verified every staged path'},null,2));

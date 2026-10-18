@@ -1,0 +1,97 @@
+{
+  "job_id": "R1903",
+  "worker": "H2",
+  "outcome": "accepted",
+  "summary": "Independent review accepts the exact two-file checkpoint. The success-only callback runs after runtime synchronization and before the service's final notification, so session authority, draft clearing, community role, and emitted-tree projection update together; the existing route-epoch redirect remains outside and guarded. H1's predeclared RED failed at the emitted-tree assertion after preceding checks, and the unchanged focused regression independently passed. The unchanged E1902 replay also passed the repaired projection/authority/login-specific checks before stopping at its own incorrect total-provider-call expectation: initialization performs one SchoolData.getStates read in addition to the explicit login. No retry, source edit, or assertion change followed.",
+  "review_scope": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "06b6da36e326758ccd14cda021bc0a15cfd00817",
+    "tree": "eb7136f80b1bdfd08c771f519a626a1e508bb1a9",
+    "files_reviewed": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "controller_sha256": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "controller_test_sha256": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164",
+    "pre_change_controller_snapshot_sha256": "308c876e8bbfeb20a3e8ee92a4065549f5ca815bec0aa6979bf39c61fa4dc07c",
+    "contemporaneous_test_snapshot_sha256": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164",
+    "source_and_git_changes_by_h2": false,
+    "other_worktree_state": "Existing untracked PageRouter/hh-cycle13/ preserved and excluded."
+  },
+  "review_findings": {
+    "callback_order": "service() synchronizes runtime, updates success request/outcome state, invokes after only when result.ok, then calls its existing final notify. The moved login projection therefore lands in the emitted tree before notification.",
+    "navigation": "The original routeEpoch capture and conditional requestNavigation('/profile') remain outside service() and execute only after successful completion when routeEpoch is unchanged.",
+    "failure_policy": "The new callback is success-only; transport/known/unknown failure paths do not clear loginDraft. The exact diff does not alter blank-draft semantics or the runtime credential boundary.",
+    "test": "The focused regression prepares a synthetic approved account, holds one login, enters a newer draft, navigates away and back, and asserts authority A, draft null, retained login route, secret absence, and emitted tree A.",
+    "test_scope": "Controller/runtime/fixture plus emitted render tree through onChange; not mounted DOM or browser.",
+    "production_or_real_account": false,
+    "browser_qa_or_screenshots": false,
+    "build_or_publication": false
+  },
+  "independent_runs": [
+    {
+      "name": "Focused E1903 rerun",
+      "outer_argv": ["bash", "/workspace/scratch/8528bb251845/hh-cycle14/H2/R1903/run-focused.sh"],
+      "inner_argv": ["node", "--test", "--test-name-pattern=held successful login projects authenticated email after route reentry", "checkpoint/vendor/hh/src/public-controller.test.mjs"],
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+      "started_utc": "2026-10-18T22:22:03.540817241Z",
+      "ended_utc": "2026-10-18T22:22:03.733128646Z",
+      "exit_code": 0,
+      "summary": "One selected test passed; 59 nonmatching tests skipped. The test's credential-absence assertions ran before the final emitted-tree assertion.",
+      "stdout_sha256": "bbd83756512016ae5f0594f2e3c788c36699c55e3bcfebfdf721d57bd78b45a2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_capture_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+      "start_capture_sha256": "a64bf6ad3e74095804eb08711cb93d55abf8f646b315a816281ebfb356602812",
+      "end_capture_sha256": "1b8fccbc2e54c7b8a09f2cecf7f2fe5da590ecef9c4538f4642981457b8c1730"
+    },
+    {
+      "name": "Unchanged E1902 probe replay against changed source",
+      "outer_argv": ["bash", "/workspace/scratch/8528bb251845/hh-cycle14/H2/R1903/run-e1902-replay.sh"],
+      "inner_argv": ["node", "--unhandled-rejections=strict", "/workspace/scratch/8528bb251845/hh-cycle14/H2/E1902/probe.mjs"],
+      "cwd": "/workspace/scratch/8528bb251845",
+      "probe_sha256": "6b8f640b0031ee0c4c62df7baed4b360dcf912445118f594c245ec4afcea1618",
+      "started_utc": "2026-10-18T22:22:05.654533761Z",
+      "ended_utc": "2026-10-18T22:22:05.729913920Z",
+      "exit_code": 1,
+      "reached": "Success result, authenticated identity A, cleared controller draft, reentered route, emitted projection A, one Session.login call, zero registration writes, zero profile-creation writes.",
+      "stopped_at": "The unchanged harness asserted total provider calls equal 1; actual was 2. initialize('#/login') performs SchoolData.getStates once, in addition to the explicit Session.login. This is a probe expectation defect, not evidence of an extra login/write. No further assertions ran, including this replay's secret-surface scan.",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "1e3b540045df44c81ba47b20a026cbe336531f95b5399f6d648ee9d1560fb356",
+      "exit_capture_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+      "start_capture_sha256": "95b1043ceaa1dc685554959a33df040832acfdb3122a6b44eaef80f835e5b37e",
+      "end_capture_sha256": "911261fe4b177f4d07a02da4cf3aede5c0d0e994ad0f2a96d1dc296cac2d0298"
+    }
+  ],
+  "h1_provenance_review": {
+    "pre_red_snapshot_hashes_match": true,
+    "red": {
+      "started_utc": "2026-10-18T22:19:06.737900805Z",
+      "ended_utc": "2026-10-18T22:19:06.912360231Z",
+      "exit_code": 1,
+      "stdout_sha256": "46242f88463d6e9f4042a7746fd6bb0a0f749a9414038236f3954f54e7f72315",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "qualification": "The expected final emitted-tree assertion was the only failure after preceding authority/draft/route/credential checks passed."
+    },
+    "green": {
+      "started_utc": "2026-10-18T22:19:30.528910129Z",
+      "ended_utc": "2026-10-18T22:19:30.694053137Z",
+      "exit_code": 0,
+      "stdout_sha256": "3a85ef2f178eafd780ab0cad4c5a7a5d8ce1e4abc80b24d9f80bd889b1a76f2d",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "h1_reported_nonindependent_full_runs": ["60/60 public-controller tests", "14/14 public-site tests"],
+    "h2_did_not_repeat_full_suites": true
+  },
+  "limitations": [
+    "The unchanged E1902 replay stopped at its prospectively frozen, overly strict total-call assertion. No retry, assertion change, or additional replay was made.",
+    "The E1902 replay's later credential scan was not reached; the independent focused regression did execute its credential-absence helper and passed.",
+    "H2 did not rerun H1's full 60-controller/14-site suites, full npm suite, canonical build, mounted browser QA, or screenshots.",
+    "No backend, real account, production authority, external write, publication, deployment, or main-branch action was used or claimed."
+  ],
+  "h2_artifacts": {
+    "PRE-RUN-CHECKPOINT.md": "c33b1cf6e94c52727191f61bdb4b40afbc58ad9d0d3b27c3ee5480c4810cc68d",
+    "run-focused.sh": "c22742762e87a2ddea60a627208a87f6e4841c853854b1090d7a41caa3b7cbb1",
+    "run-e1902-replay.sh": "00ab9eb3c999a872369bf5d9adb75d8ae700a06ddabae6e49eb53c0fb66b2ca5"
+  }
+}

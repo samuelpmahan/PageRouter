@@ -258,6 +258,61 @@ test('login draft keeps existing fallback order and clears only after authority 
   assert.notEqual(nodeById(env.tree, 'hh-login-email')?.attrs?.value, 'pre-reset@example.test');
 });
 
+test('held successful login projects authenticated email after route reentry', async () => {
+  const storage = memoryStorage();
+  const base = createFixtureProvider({fixture: true, storage});
+  let announceStart, release;
+  const started = new Promise(resolve => { announceStart = resolve; });
+  const pending = new Promise(resolve => { release = resolve; });
+  let loginCalls = 0;
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    if (port !== 'Session.login') return invoke(input);
+    loginCalls += 1;
+    announceStart();
+    await pending;
+    return invoke(input);
+  }]));
+  const runtime = createServiceRuntime({...base, services: Object.freeze(services)});
+  let tree = null;
+  const controller = createPublicController({runtime, storage, community: createCommunity({storage}),
+    onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+  });
+  const accountEmail = `e1903-${randomUUID()}@example.test`;
+  const account = await runtime.invoke('Registration.registerTeacher', {
+    teacher: {name: 'Demo E1903 Synthetic', email: accountEmail, phoneNumber: 'DEMO'},
+    school: {state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'},
+    termsAccepted: true, demoAccount: true,
+  });
+  assert.equal(account.ok, true);
+  const approval = await runtime.invoke('Demo.simulateApproval', {teacherId: account.data.registration.teacherId});
+  assert.equal(approval.ok, true);
+  await controller.initialize('#/login');
+
+  const password = randomUUID();
+  const newerEmail = `newer-${randomUUID()}@example.test`;
+  controller.updateDraft('email', accountEmail);
+  const login = controller.dispatch('public:login', {email: accountEmail, password});
+  await started;
+  assert.equal(controller.state.request.status, 'busy');
+  assert.equal(controller.updateDraft('email', newerEmail), true);
+  await controller.navigate('#/about');
+  await controller.navigate('#/login');
+  assert.equal(controller.state.journey.loginDraft.email, newerEmail);
+  release();
+
+  const result = await login;
+  assert.equal(result.ok, true);
+  assert.equal(loginCalls, 1);
+  assert.equal(controller.state.journey.session.status, 'authenticated');
+  assert.equal(controller.state.journey.session.email, accountEmail);
+  assert.equal(controller.state.journey.runtime.session.teacherId, account.data.registration.teacherId);
+  assert.equal(controller.state.journey.loginDraft.email, null);
+  assert.equal(controller.route.page, 'login');
+  assertLoginCredentialsNotPersisted({controller, runtime, storage, get tree() { return tree; }}, [password]);
+  assert.equal(nodeById(tree, 'hh-login-email')?.attrs?.value, accountEmail,
+    'reentered login view follows the successful authenticated identity, not the superseded draft');
+});
+
 async function registeredProfileSetup() {
   const env = setup(), {controller} = env;
   await controller.initialize('#/register');

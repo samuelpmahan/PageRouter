@@ -1,0 +1,31 @@
+R1905 file-audit harness attempt 01 — preserved before correction
+UTC noted: 2026-10-18 22:36:07 UTC
+Scope: read-only integrity inventory; no repository/package files were changed.
+Command: node -e '<inline manifest/regular-file/hash/original-copy mode verifier>' from /workspace/scratch/8528bb251845
+Failure: verifier attempted to map archived `evidence/build/E1904-H1/run-captured.mjs.txt` to nonexistent original `hh-cycle14/H1/E1904/run-captured.mjs.txt`; H1 source is named `run-captured.mjs` and the package copy intentionally has inert `.txt` suffix.
+
+Exact emitted diagnostic:
+node:fs:1795
+  const stats = binding.stat(
+                        ^
+
+Error: ENOENT: no such file or directory, stat '/workspace/scratch/8528bb251845/hh-cycle14/H1/E1904/run-captured.mjs.txt'
+    at Object.statSync (node:fs:1795:25)
+    at [eval]:1:2425
+    at [eval]:1:3444
+    at runScriptInThisContext (node:internal/vm:209:10)
+    at node:internal/process/execution:451:12
+    at [eval]-wrapper:6:24
+    at runScriptInContext (node:internal/process/execution:449:60)
+    at evalFunction (node:internal/process/execution:283:30)
+    at evalTypeScript (node:internal/process/execution:291:3)
+    at node:internal/main/eval_string:74:3 {
+  errno: -2,
+  code: 'ENOENT',
+  syscall: 'stat',
+  path: '/workspace/scratch/8528bb251845/hh-cycle14/H1/E1904/run-captured.mjs.txt'
+}
+
+No source/product failure is implied. The planned bounded correction is only to strip the inert `.txt` archive suffix for archived script source-copy comparisons; all package bytes remain unchanged.
+
+Transcription erratum (appended, prior text retained): exact tool output had `at evalFunction (node:internal/process/execution:291:3)` followed by `at evalTypeScript (node:internal/process/execution:284:3)`. The first transcription above mistakenly placed 291 on evalTypeScript; this erratum preserves the observed frames without replacing the initial record.

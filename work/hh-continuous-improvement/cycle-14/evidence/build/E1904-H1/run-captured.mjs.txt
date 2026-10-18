@@ -1,0 +1,77 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+
+const packetDir = path.dirname(fileURLToPath(import.meta.url));
+const commandPath = path.join(packetDir, 'prospective-command.json');
+const commandBytes = fs.readFileSync(commandPath);
+const commandSha256 = createHash('sha256').update(commandBytes).digest('hex');
+const command = JSON.parse(commandBytes.toString('utf8'));
+if (command.schema !== 'pagerouter-e1904-command@1') throw new Error('Unexpected command record schema.');
+
+const names = ['stdout.raw', 'stderr.raw', 'exit.json', 'start.utc', 'end.utc'];
+const outputs = Object.fromEntries(names.map(name => [name, path.join(packetDir, name)]));
+for (const file of Object.values(outputs)) {
+  if (fs.existsSync(file)) throw new Error(`Refusing to overwrite existing capture: ${file}`);
+}
+
+const buildOutputs = Object.fromEntries(['site.receipt.json', 'site.log'].map(name => {
+  const file = path.join(command.child.cwd, 'bazel-bin', name);
+  let before = null;
+  if (fs.existsSync(file)) {
+    const stat = fs.statSync(file);
+    before = {mtimeMs: stat.mtimeMs, sha256: createHash('sha256').update(fs.readFileSync(file)).digest('hex')};
+  }
+  return [name, {file, before}];
+}));
+
+const start = new Date();
+const startUtc = `${start.toISOString()}\n`;
+const stdoutFd = fs.openSync(outputs['stdout.raw'], 'wx', 0o600);
+const stderrFd = fs.openSync(outputs['stderr.raw'], 'wx', 0o600);
+fs.writeFileSync(outputs['start.utc'], startUtc, {flag: 'wx', mode: 0o600});
+const result = spawnSync(command.child.executable, command.child.argv, {
+  cwd: command.child.cwd,
+  env: process.env,
+  stdio: ['ignore', stdoutFd, stderrFd],
+});
+fs.closeSync(stdoutFd);
+fs.closeSync(stderrFd);
+const end = new Date();
+fs.writeFileSync(outputs['end.utc'], `${end.toISOString()}\n`, {flag: 'wx', mode: 0o600});
+
+const copied = {};
+if (result.status === 0) {
+  for (const [name, output] of Object.entries(buildOutputs)) {
+    if (!fs.existsSync(output.file)) {
+      copied[name] = {copied: false, reason: 'missing_after_successful_build'};
+      continue;
+    }
+    const stat = fs.statSync(output.file);
+    const bytes = fs.readFileSync(output.file);
+    const sha256 = createHash('sha256').update(bytes).digest('hex');
+    const fresh = !output.before || stat.mtimeMs > output.before.mtimeMs || sha256 !== output.before.sha256;
+    if (!fresh) {
+      copied[name] = {copied: false, reason: 'not_changed_during_invocation', sha256};
+      continue;
+    }
+    const destination = path.join(packetDir, name);
+    fs.copyFileSync(output.file, destination, fs.constants.COPYFILE_EXCL);
+    copied[name] = {copied: true, bytes: bytes.length, sha256,
+      sourceMtimeUtc: stat.mtime.toISOString(), packetPath: name};
+  }
+}
+
+const exitRecord = {
+  schema: 'pagerouter-e1904-process-result@1',
+  commandSha256,
+  status: result.status,
+  signal: result.signal,
+  error: result.error ? {code: result.error.code || null, message: result.error.message} : null,
+  existingBuildOutputBindings: buildOutputs,
+  copiedFreshBuildOutputs: copied,
+};
+fs.writeFileSync(outputs['exit.json'], `${JSON.stringify(exitRecord, null, 2)}\n`, {flag: 'wx', mode: 0o600});
+if (result.status !== 0) process.exitCode = result.status ?? (result.error ? 127 : 128);

@@ -1,0 +1,89 @@
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {createFixtureProvider, createServiceRuntime} from '../../../PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createCommunity} from '../../../PageRouter/checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '../../../PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '../../../PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+function memoryStorage() {
+  const values = new Map();
+  return {values, getItem(key) { return values.get(key) ?? null; },
+    setItem(key, value) { values.set(key, String(value)); }, removeItem(key) { values.delete(key); }};
+}
+
+const storage = memoryStorage();
+const base = createFixtureProvider({fixture: true, storage});
+let announceStart;
+let release;
+const started = new Promise(resolve => { announceStart = resolve; });
+const held = new Promise(resolve => { release = resolve; });
+let loginCalls = 0;
+let capturedLoginEmail = null;
+const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+  if (port !== 'Session.login') return invoke(input);
+  loginCalls += 1;
+  capturedLoginEmail = input.email;
+  announceStart();
+  await held;
+  return invoke(input);
+}]));
+const runtime = createServiceRuntime({...base, services: Object.freeze(services)});
+let tree = null;
+const controller = createPublicController({runtime, storage, community: createCommunity({storage}),
+  onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); }});
+
+const accountEmail = `e1901-${randomUUID()}@example.test`;
+const account = await runtime.invoke('Registration.registerTeacher', {
+  teacher: {name: 'Demo E1901 Synthetic', email: accountEmail, phoneNumber: 'DEMO'},
+  school: {state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'},
+  termsAccepted: true, demoAccount: true,
+});
+assert.equal(account.ok, true, 'synthetic fixture account registers locally');
+const approval = await runtime.invoke('Demo.simulateApproval', {teacherId: account.data.registration.teacherId});
+assert.equal(approval.ok, true, 'synthetic fixture account is approved locally');
+await controller.initialize('#/login');
+
+const password = randomUUID();
+const newerDraft = `newer-${randomUUID()}@example.test`;
+controller.updateDraft('email', accountEmail);
+const login = controller.dispatch('public:login', {email: accountEmail, password});
+await started;
+assert.equal(controller.state.request.status, 'busy');
+assert.equal(controller.state.route.page, 'login');
+assert.equal(controller.updateDraft('email', newerDraft), true);
+assert.equal(controller.state.journey.loginDraft.email, newerDraft);
+await controller.navigate('#/about');
+assert.equal(controller.state.route.page, 'about');
+await controller.navigate('#/login');
+assert.equal(controller.state.route.page, 'login');
+assert.equal(controller.state.journey.loginDraft.email, newerDraft);
+release();
+const result = await login;
+
+const surfaces = [JSON.stringify(controller.state), JSON.stringify(runtime.snapshot()), JSON.stringify(runtime.inspect()),
+  JSON.stringify(runtime.pxc.entries().map(([, part]) => part.value)), [...storage.values.values()].join('\n'), JSON.stringify(tree)].join('\n');
+const secretAbsent = !surfaces.includes(password);
+assert.equal(secretAbsent, true, 'ephemeral password absent from inspected state/runtime/Parts/storage/projection');
+assert.equal(result.ok, true, 'held synthetic fixture login succeeds');
+assert.equal(loginCalls, 1, 'exactly one synthetic login attempt');
+assert.equal(capturedLoginEmail, accountEmail, 'runtime request remains bound to the originally submitted identity');
+assert.equal(controller.state.journey.session.status, 'authenticated');
+assert.equal(controller.state.journey.session.email, accountEmail, 'authenticated authority projection uses submitted identity');
+assert.equal(controller.state.journey.runtime.session.teacherId, account.data.registration.teacherId);
+assert.equal(controller.state.journey.loginDraft.email, null, 'successful authority change clears draft overlay');
+assert.equal(controller.state.route.page, 'login', 'reentered route is not redirected after route epoch changed');
+assert.equal(tree?.attrs?.['data-public-page'], 'login');
+const renderedInput = (() => {
+  const visit = (node, id) => node?.attrs?.id === id ? node : (node?.children || []).map(child => visit(child, id)).find(Boolean);
+  assert.ok(visit(tree, 'hh-main'), 'delegated-equivalent tree contains the main login content');
+  const input = visit(tree, 'hh-login-email');
+  return input?.attrs?.value;
+})();
+assert.equal(renderedInput, accountEmail, 'successful authority projection displays authenticated email, not newer draft');
+console.log(JSON.stringify({job_id: 'E1901', worker: 'H1', allowed_outcome: 'read-only synthetic fixture probe',
+  repository: 'PageRouter/checkpoint/vendor/hh source and delegated-equivalent render tree; not mounted browser',
+  account: 'random synthetic .test identity, fixture provider only', requestIdentityMatchesOriginal: capturedLoginEmail === accountEmail,
+  loginCalls, routeAfterSuccess: controller.state.route.page, sessionStatus: controller.state.journey.session.status,
+  sessionEmailMatchesSubmitted: controller.state.journey.session.email === accountEmail,
+  draftAfterSuccess: controller.state.journey.loginDraft.email, renderedEmailMatchesAuthority: renderedInput === accountEmail,
+  passwordAbsentFromInspectedSurfaces: secretAbsent, result: result.ok ? 'success' : 'failure'}, null, 2));

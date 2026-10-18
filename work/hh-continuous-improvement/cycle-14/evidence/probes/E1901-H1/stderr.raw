@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: successful authority projection displays authenticated email, not newer draft
++ actual - expected
+
++ 'newer-8d66f938-fb37-4423-8e38-2d749b199e9b@example.test'
+- 'e1901-36c98499-f7aa-462b-bec3-0ac8d039289d@example.test'
+
+    at file:///workspace/scratch/8528bb251845/hh-cycle14/H1/E1901/probe.mjs:82:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'newer-8d66f938-fb37-4423-8e38-2d749b199e9b@example.test',
+  expected: 'e1901-36c98499-f7aa-462b-bec3-0ac8d039289d@example.test',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

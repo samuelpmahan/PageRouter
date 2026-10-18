@@ -1,0 +1,32 @@
+{
+  "schema": "hh-cycle14-e1906-prospective-commands@1",
+  "status": "scratch proposal only; R1905 audit and root phase-specific GO required; nothing executed",
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+  "source_gate": {
+    "command": ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1906/precommit-gates-hh14.mjs"],
+    "status": "blocked pending accepted R1905 and root GO"
+  },
+  "future_git_phase": {
+    "stage": ["git", "add", "--pathspec-from-file=<root-approved-literal-NUL-list>", "--pathspec-file-nul"],
+    "whitespace": ["git", "diff", "--cached", "--check"],
+    "verify_staged": ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1906/verify-staged-allowlist-hh14.mjs", "<root-admitted-plan-path>", "<plan-sha256>"],
+    "commit": ["git", "commit", "-m", "<root-approved-message>"],
+    "status": "blocked until root reviews actual future admin bytes, final allowlist/prospective records and separately GOes"
+  },
+  "export": {
+    "command": ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1906/prepare-export-hh14.mjs", "<immutable-admitted-40-hex-commit>"],
+    "expected_local_parent": "06b6da36e326758ccd14cda021bc0a15cfd00817",
+    "expected_local_parent_tree": "eb7136f80b1bdfd08c771f519a626a1e508bb1a9",
+    "reported_canonical_remote_parent_only": "a2b2c45631c14e5f5cb22c3cc2c74fa6bf88d153",
+    "fresh_output": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1906/export/prepared",
+    "segment_json_cap_bytes": 60000,
+    "index_json_cap_bytes": 190000,
+    "status": "blocked until root admits exact immutable commit and export plan"
+  },
+  "limits": [
+    "No command in this record has run.",
+    "No Git stage/commit/export, repository/package/product edit, test/build, fetch/push, or publication/deployment.",
+    "The separate post-review-admin/current closure is expected only after R1905 acceptance and root GO; not created or represented as present.",
+    "The existing 21 untracked PageRouter/hh-cycle13 files remain preserved and excluded."
+  ]
+}

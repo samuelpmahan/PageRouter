@@ -1,0 +1,66 @@
+{
+  "schema": "hh-cycle14-package-result@1",
+  "job_id": "E1905",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Assembled a lean cycle-14 package preserving unchanged H1/H2 raw probes and captures, red-first regression and green runs, H2 independent review and its unchanged replay qualifications, the one accepted canonical local build with current receipt/log/original channels, and native epochs 00–04 plus current spec/registry/state. Raw records and root-derived qualifications remain separate. Product sources remain frozen at the reviewed two-file hashes. The package is pending independent H2 audit; it is not release acceptance or publication.",
+  "native_assignment": {
+    "epoch": 4,
+    "job": "E1905",
+    "worker": "H1",
+    "assignment_record": "evidence/native/solves/epoch-04.json",
+    "assignment_record_sha256": "c83283d22296ecdc3b3b402c341d3779fcdabfe5d38a7f399a8f124ffb581b0c",
+    "native_command_record": "evidence/native/solves/epoch-04.root-command.json",
+    "native_command_sha256": "bb885a0a177fdd291aaf201069f2ac3107fc564e2c46b69546678aadffe0eec7",
+    "native_bundle": "evidence/native/solves/epoch-04.bundle"
+  },
+  "package": {
+    "root": "PageRouter/work/hh-continuous-improvement/cycle-14",
+    "entrypoint": "README.md",
+    "manifest": {
+      "path": "evidence/manifest.json",
+      "sha256": "0534667e8c1960ba8a8562fafe3a0cfc365942945a3852c0eb982d97c326d2bb",
+      "listed_file_count": 95,
+      "total_regular_file_count": 97,
+      "exclusions": [
+        "evidence/manifest.json (self-hash omitted to avoid circular digest)",
+        "evidence/E1905/result.json (this result records the manifest hash)"
+      ]
+    },
+    "all_archived_scripts_inert_text": true,
+    "portable_import_claim": false,
+    "no_old_cycle_or_lab_evidence": true,
+    "raw_records_unchanged": true
+  },
+  "source_binding": {
+    "independent_review": {
+      "job": "R1903",
+      "decision": "accepted",
+      "receipt": "evidence/native/receipts/R1903.json"
+    },
+    "files": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164"
+    }
+  },
+  "evidence_qualifications": {
+    "E1901_H1": "One predeclared emitted-tree assertion failed after the actual secret-absence, one-call, and authority checks passed; source/delegated-equivalent tree only.",
+    "E1902_H2": "Predeclared emitted-tree assertion failed; later secret and provider-count checks were unreached.",
+    "E1903_H1": "Test-first RED, then focused GREEN; controller suite 60/60 and public-site suite 14/14.",
+    "R1903_H2": "Accepted exact two-file source/test checkpoint; focused regression 1 pass, 0 fail, 0 skipped. Unchanged replay reached projection/authority/one login/zero registration-profile writes, then failed the old 2-versus-1 total provider-call assertion because initialization reads SchoolData.getStates; replay secret scan unreached. No retry/assertion change.",
+    "E1904_H1": "One canonical local build exit 0; 1,538 inputs; 14 PxCube packages; 843 site files; exact compiled equality. Named summaries: helpers 2/2, targeted HH 134/134, full npm 289/289, Atlas closure 1/1. Targeted HH overlaps full npm; no distinct-behavior total claimed.",
+    "scope": "Synthetic fixtures and delegated-equivalent emitted tree only; no mounted browser/screenshots, production/backend/real-account/external-email activity, or human acceptance. Ephemeral passwords are absent from the package; unreached scans are not passes. No second login, registration, or profile write."
+  },
+  "build": {
+    "job": "E1904",
+    "process_exit": 0,
+    "source_input_count": 1538,
+    "source_digest": "b48ad9a809682aab5b6eccd4a1e6d68ce52f61d860b9f0d889433e76118c442f",
+    "verified_site_file_count": 843,
+    "site_digest": "1343fcceb41ec09acd0ff550054c38e3a73bf3f4a5e54361d9fe758596e58628",
+    "site_build_id": "02862d25fc8675fa79307b9e72f5b5ffb4d71de2fabd21f384ebdca98f1f7781",
+    "receipt": "evidence/build/E1904-H1/site.receipt.json",
+    "log": "evidence/build/E1904-H1/site.log"
+  },
+  "next_gate": "Independent H2 package audit (R1905), then root decision; no Git staging/commit/export/publication/deploy authorized here."
+}
