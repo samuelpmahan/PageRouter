@@ -1,0 +1,13 @@
+{
+  "job_id": "E3201",
+  "attempt": "baseline-01",
+  "source_pin": "source-pins.json",
+  "started_utc": "2026-10-19 14:18:56 UTC",
+  "ended_utc": "2026-10-19 14:19:10 UTC",
+  "command": "node probe.mjs",
+  "exit_status": 1,
+  "stdout": "stdout.raw (0 bytes)",
+  "stderr": "stderr.raw (408 bytes)",
+  "classification": "probe_harness_assertion_mismatch",
+  "detail": "Flow reached back navigation; assertion expected normalized community route page `index`, but controller represents the route as `forum`. Product state was not changed; retain this attempt as-is and correct only the route-name assertion in a new attempt directory."
+}

@@ -1,0 +1,21 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Upvotes sort ranks the topic with more upvotes first
++ actual - expected
+
++ 'topic-official-bug-forum'
+- 'topic-local-2'
+         ^
+
+    at file:///workspace/scratch/afc0d51965a8/hh26/H2/E3202/attempt-05/probe.mjs:124:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'topic-official-bug-forum',
+  expected: 'topic-local-2',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

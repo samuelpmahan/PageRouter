@@ -1,0 +1,52 @@
+✖ projects the current teacher vote on index and detail without exposing it to other roles (19.314718ms)
+✖ rendered teacher vote state follows actual index, detail correction, and back payloads (30.774479ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 147.417399
+
+✖ failing tests:
+
+test at src/community.test.mjs:164:1
+✖ projects the current teacher vote on index and detail without exposing it to other roles (19.314718ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + null
+  - 'Your vote: No vote'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/86659bbafcce/PageRouter/checkpoint/vendor/hh/src/community.test.mjs:174:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: 'Your vote: No vote',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at src/public-controller.test.mjs:2087:1
+✖ rendered teacher vote state follows actual index, detail correction, and back payloads (30.774479ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + null
+  - 'Your vote: Upvote'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/86659bbafcce/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:2111:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: 'Your vote: Upvote',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'upvote'
+- 'downvote'
+
+    at file:///workspace/scratch/afc0d51965a8/hh26/H2/E3202/attempt-02/probe.mjs:71:8 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'upvote',
+  expected: 'downvote',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

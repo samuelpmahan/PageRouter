@@ -2084,6 +2084,58 @@ test('reported-items index button toggles from the rendered data-event payload',
   assert.equal(updatedButton.attrs['aria-pressed'],'true');
 });
 
+test('rendered teacher vote state follows actual index, detail correction, and back payloads', async () => {
+  const runtime=createServiceRuntime(createFixtureProvider({fixture:true,storage:null}));
+  const community=createCommunity({storage:null});
+  let tree=null;
+  const controller=createPublicController({runtime,storage:null,community,
+    onChange(state,route){tree=renderPublicSite({route,state,journey:state.journey})}});
+  const nodes=()=>{const found=[];const walk=node=>{if(!node||typeof node!=='object')return;found.push(node);for(const child of node.children||[])walk(child)};walk(tree);return found};
+  const dataPayload=element=>{const data=Object.fromEntries(Object.entries(element.attrs||{}).filter(([key])=>key.startsWith('data-')).map(([key,value])=>[key.slice(5).replace(/-([a-z])/g,(_match,letter)=>letter.toUpperCase()),String(value)]));return {...data,threadId:data.threadId||data.postId||data.threadId,postId:data.postId||data.threadId,replyId:data.replyId||data.commentId,commentId:data.commentId||data.replyId}};
+  const dispatchRendered=element=>controller.dispatch(element.attrs['data-event'],dataPayload(element));
+  const targetId='topic-official-bug-forum';
+
+  await controller.initialize('#/forum');
+  const startupReceiptCount=runtime.inspect().receipts.length;
+  await controller.dispatch('forum-role',{role:'teacher'});
+  const indexVote=()=>nodes().find(node=>node.attrs?.['data-event']==='forum-vote'&&node.attrs?.['data-post-id']===targetId);
+  const sortedButton=nodes().find(node=>node.attrs?.id==='sort-upvotes');
+  await dispatchRendered(sortedButton);
+  assert.equal(nodes().find(node=>node.attrs?.class?.includes('community-topic ')).attrs['data-thread-id'],targetId);
+  await dispatchRendered(nodes().find(node=>node.attrs?.['data-event']==='forum-open-thread'&&node.attrs?.['data-thread-id']===targetId));
+
+  const upvote=()=>nodes().find(node=>node.attrs?.id==='upvote-btn');
+  const downvote=()=>nodes().find(node=>node.attrs?.id==='downvote-btn');
+  const voteStatus=()=>nodes().find(node=>node.attrs?.class==='community-current-vote')?.children?.join('')||null;
+  await dispatchRendered(upvote());
+  assert.equal(voteStatus(),'Your vote: Upvote');
+  assert.equal(upvote().attrs['aria-pressed'],'true');
+  assert.equal(downvote().attrs['aria-pressed'],'false');
+  await dispatchRendered(downvote());
+  assert.equal(voteStatus(),'Your vote: Downvote');
+  assert.equal(upvote().attrs['aria-pressed'],'false');
+  assert.equal(downvote().attrs['aria-pressed'],'true');
+  assert.deepEqual(community.getThread(targetId,{role:'teacher'}).votes,['seed-upvote-1','seed-upvote-2']);
+  assert.deepEqual(community.getThread(targetId,{role:'teacher'}).downvotes,['demo-teacher']);
+
+  const back=nodes().find(node=>node.tag==='a'&&node.attrs?.href==='#/forum'&&node.children?.includes('← Back to Forum'));
+  await controller.navigate(back.attrs.href);
+  assert.equal(controller.state.community.sort,'upvotes');
+  assert.equal(indexVote().attrs['aria-pressed'],'false');
+  await dispatchRendered(indexVote());
+  assert.equal(indexVote().attrs['aria-pressed'],'true');
+  assert.equal(community.getThread(targetId,{role:'teacher'}).votes.length,3);
+  assert.equal(community.getThread(targetId,{role:'teacher'}).downvotes.length,0);
+  await dispatchRendered(indexVote());
+  assert.equal(indexVote().attrs['aria-pressed'],'false','clicking the active index upvote removes this persona vote');
+  assert.equal(community.getThread(targetId,{role:'teacher'}).votes.length,2);
+  await dispatchRendered(nodes().find(node=>node.attrs?.['data-event']==='forum-open-thread'&&node.attrs?.['data-thread-id']===targetId));
+  assert.equal(voteStatus(),'Your vote: No vote');
+  assert.equal(upvote().attrs['aria-pressed'],'false');
+  assert.equal(downvote().attrs['aria-pressed'],'false');
+  assert.equal(runtime.inspect().receipts.length,startupReceiptCount,'forum vote UI does not add HH account-service receipts');
+});
+
 test('wishlist handoff is invalidated before a foreign profile read and must be freshly prepared for that profile', async () => {
   const base = createFixtureProvider({fixture: true});
   let announceJordan, releaseJordan;

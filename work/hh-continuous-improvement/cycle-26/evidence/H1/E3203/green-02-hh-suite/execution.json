@@ -1,0 +1,14 @@
+{
+  "job_id": "E3203",
+  "worker": "H1",
+  "attempt": "green-02-hh-suite",
+  "started_utc": "2026-10-19 14:29:59 UTC",
+  "ended_utc": "2026-10-19 14:30:13 UTC",
+  "command": "node --test src/community.test.mjs src/public-controller.test.mjs src/public-site.test.mjs",
+  "cwd": "/workspace/scratch/86659bbafcce/PageRouter/checkpoint/vendor/hh",
+  "exit_status": 0,
+  "source_pins": "source-pins.json",
+  "stdout": {"path": "stdout.raw", "bytes": 11110, "sha256": "ea4aea84e7459f6b63d881aea1a0e4ce7c9d5677cc7382394011457268f6904f"},
+  "stderr": {"path": "stderr.raw", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+  "counts": {"tests": 110, "passed": 110, "failed": 0, "skipped": 0}
+}

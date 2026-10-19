@@ -1,0 +1,14 @@
+{
+  "job_id": "E3203",
+  "worker": "H1",
+  "attempt": "red-02",
+  "started_utc": "2026-10-19 14:26:51 UTC",
+  "ended_utc": "2026-10-19 14:27:03 UTC",
+  "command": "node --test --test-name-pattern='projects the current teacher vote on index and detail|rendered teacher vote state follows actual index' src/community.test.mjs src/public-controller.test.mjs",
+  "cwd": "/workspace/scratch/86659bbafcce/PageRouter/checkpoint/vendor/hh",
+  "exit_status": 1,
+  "source_pins": "source-pins.json",
+  "stdout": {"path": "stdout.raw", "bytes": 1920, "sha256": "a3138ad02c59f54774592fbd4d217e2bac974ee230f77b525f0b7b46bd034879"},
+  "stderr": {"path": "stderr.raw", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+  "result": "Both exact regression tests were selected and failed at the expected missing rendered current-vote text (`No vote` projection in community render; `Upvote` after controller-dispatched index event). No harness failure; product source remained unchanged."
+}

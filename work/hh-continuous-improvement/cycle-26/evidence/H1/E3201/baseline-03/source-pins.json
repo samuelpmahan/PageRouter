@@ -1,0 +1,17 @@
+{
+  "job_id": "E3201",
+  "attempt": "baseline-03",
+  "source_commit": "ce139be6b26a56736efb3f1981af3c3aa2cd8b5e",
+  "source_tree": "8a3ca1921e69c8e34b374d0ed674489191c76d01",
+  "probe_sha256": "a587b4686f7a16499fe55dc33b77ad3c7a03e602ce53f930992a524e7f911a3c",
+  "baseline_metadata_sha256": "cb5009ba9d271f1dccad3a64cf0fb03deeb87f6b0813e1dc9c2a52af9e6ca83f",
+  "files": {
+    "checkpoint/vendor/hh/src/community.mjs": "713caf929cf685e1233e3a6a7368fe0810492f57683894f6063500563d518bf5",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "5df1e0f71385b22976951dbf2127c8ab78aeb7ddc8dad3608eb7b96850539890",
+    "checkpoint/vendor/hh/src/public-site.mjs": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d",
+    "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  },
+  "execution": "one bounded synthetic baseline flow; no repo writes, Git mutation, external account, service mutation, browser or network"
+}

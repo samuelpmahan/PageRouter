@@ -1,0 +1,25 @@
+{
+  "job_id": "E3204",
+  "worker": "H1",
+  "repo": "/workspace/scratch/86659bbafcce/PageRouter",
+  "cwd": "/workspace/scratch/86659bbafcce/PageRouter/checkpoint",
+  "head": "ce139be6b26a56736efb3f1981af3c3aa2cd8b5e",
+  "tree": "8a3ca1921e69c8e34b374d0ed674489191c76d01",
+  "worktree_changes": [
+    "checkpoint/vendor/hh/src/community.mjs",
+    "checkpoint/vendor/hh/src/community.test.mjs",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs"
+  ],
+  "source_inputs": [
+    { "path": "vendor/hh/src/community.mjs", "bytes": 34057, "sha256": "9e5ce0c47acea55e4217463f099b115080faa7d1e1b412eecc9128690e6a9cc2" },
+    { "path": "vendor/hh/src/community.test.mjs", "bytes": 22341, "sha256": "6d39274f02039760a6e6fbd813f07d1f221aee1d08f21c55a81d33b78c9a6253" },
+    { "path": "vendor/hh/src/public-controller.test.mjs", "bytes": 145016, "sha256": "3a86fbb96948d99de2e7fa453b4654b6629b8f4d9a849b67c7f25fbaa330c218" }
+  ],
+  "toolchain": {
+    "node": "v24.19.0",
+    "bazel_path": "/workspace/scratch/86659bbafcce/hh25/tools/bazel",
+    "bazel_sha256": "c97f02133adce63f0c28678ac1f21d65fa8255c80429b588aeeba8a1fac6202b",
+    "run_script": "ci/bazel/run.sh",
+    "run_script_sha256": "2a1a6fc5bc919f67b424d6fed92e4e888bf3767b634b1ad9544604067fbe072c"
+  }
+}

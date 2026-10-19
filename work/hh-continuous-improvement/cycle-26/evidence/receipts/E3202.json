@@ -1,0 +1,37 @@
+{
+  "job_id": "E3202",
+  "worker": "H2",
+  "outcome": "insufficient_evidence",
+  "summary": "Bounded probe did not reach a successful end-to-end run. Five immutable attempts retained; harness/setup assertions failed before a complete vote/sort/open/back/guard lifecycle. Source inspection supports a possible vote-state feedback gap: detail vote arrows render without selected-state attributes, and successful controller actions use the generic message 'Local forum preview updated.' The Upvotes sort is explicitly based on upvote count, not net score; no net-score defect is claimed. Attempt runs used a hand-written runtime stub and therefore do not satisfy actual fixture-runtime isolation.",
+  "repository": {
+    "path": "/workspace/scratch/86659bbafcce/PageRouter",
+    "commit": "ce139be6b26a56736efb3f1981af3c3aa2cd8b5e",
+    "git_status_before_probe": "clean"
+  },
+  "source_pins": {
+    "checkpoint/vendor/hh/src/community.mjs": "713caf929cf685e1233e3a6a7368fe0810492f57683894f6063500563d518bf5",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "5df1e0f71385b22976951dbf2127c8ab78aeb7ddc8dad3608eb7b96850539890",
+    "checkpoint/vendor/hh/src/public-site.mjs": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d",
+    "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3"
+  },
+  "attempts": [
+    {"path": "attempt-01", "exit_code": 1, "failure": "Successful topic submission navigated to detail; probe then incorrectly expected index vote control."},
+    {"path": "attempt-02", "exit_code": 1, "failure": "Probe helper selected first vote arrow (upvote), while assertion expected downvote."},
+    {"path": "attempt-03", "exit_code": 1, "failure": "Harness expected repeated same-persona upvote to remain; actual source toggles vote off."},
+    {"path": "attempt-04", "exit_code": 1, "failure": "Probe attempted index sort while still on detail route."},
+    {"path": "attempt-05", "exit_code": 1, "failure": "Incorrect sort fixture expectation: seeded Official Bug Forum has two upvotes and correctly precedes synthetic Beta with one."}
+  ],
+  "source_observations": {
+    "vote_correction_logic": "community.mjs vote() removes the same persona from the opposite direction and returns upvotes/downvotes/score/voted; no successful run independently verified full controller lifecycle.",
+    "sort_semantics": "community.mjs Upvotes sort compares votes.length only; no net-score sort defect is asserted.",
+    "vote_state_feedback_gap": "community.mjs detail arrows have direction labels but no aria-pressed or selected-vote state binding; controller.mjs uses generic success feedback. Source-level usability candidate only, not validated as a complete reproduced issue."
+  },
+  "evidence_paths": [
+    "attempt-01/probe.mjs", "attempt-01/stdout.raw", "attempt-01/stderr.raw", "attempt-01/exit-code.txt", "attempt-01/timestamp.txt",
+    "attempt-02/probe.mjs", "attempt-02/stdout.raw", "attempt-02/stderr.raw", "attempt-02/exit-code.txt", "attempt-02/timestamp.txt",
+    "attempt-03/probe.mjs", "attempt-03/stdout.raw", "attempt-03/stderr.raw", "attempt-03/exit-code.txt", "attempt-03/timestamp.txt",
+    "attempt-04/probe.mjs", "attempt-04/stdout.raw", "attempt-04/stderr.raw", "attempt-04/exit-code.txt", "attempt-04/timestamp.txt",
+    "attempt-05/probe.mjs", "attempt-05/stdout.raw", "attempt-05/stderr.raw", "attempt-05/exit-code.txt", "attempt-05/timestamp.txt"
+  ],
+  "boundaries": "No repository/source/native/Git edits, no browser, server, network, or external service use. No sixth attempt run."
+}
