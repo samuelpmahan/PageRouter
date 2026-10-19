@@ -1,0 +1,54 @@
+{
+  "job_id": "E3003",
+  "worker": "H2",
+  "argv": [
+    "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "/workspace/scratch/86659bbafcce/hh24/H2/E3002/probe.mjs"
+  ],
+  "displayCommand": "node /workspace/scratch/86659bbafcce/hh24/H2/E3002/probe.mjs",
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+  "nodeVersion": "v24.19.0",
+  "timeoutMs": 20000,
+  "startedAtUtc": "2026-10-19T12:17:07.039Z",
+  "endedAtUtc": "2026-10-19T12:17:07.199Z",
+  "elapsedMs": 160,
+  "status": 0,
+  "signal": null,
+  "error": null,
+  "stdoutFile": "stdout.raw",
+  "stderrFile": "stderr.raw",
+  "raw": {
+    "stdout": {
+      "bytes": 2770,
+      "sha256": "dfc533b40471e7487b7d75d3d2327e0f80166c5f051873135b8a42775168fbb3"
+    },
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "frozenProbeSha256": "4a8fdfda3c65845563d304cf6822c017270fe5507f50d7a7ce47cf9325e2d472",
+  "sourcePinsBefore": {
+    "probe": "4a8fdfda3c65845563d304cf6822c017270fe5507f50d7a7ce47cf9325e2d472",
+    "community": "311d598b6d6ffc675dc4ee5b07ac0005c55e6ce7a34f8acfac5384d5789288f4",
+    "controller": "97b5c17bf519b7fd05e2933a12dc55ff0e3e0c3e7939db4072368c070b4f67a0",
+    "site": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d",
+    "app": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3"
+  },
+  "sourcePinsAfter": {
+    "probe": "4a8fdfda3c65845563d304cf6822c017270fe5507f50d7a7ce47cf9325e2d472",
+    "community": "311d598b6d6ffc675dc4ee5b07ac0005c55e6ce7a34f8acfac5384d5789288f4",
+    "controller": "97b5c17bf519b7fd05e2933a12dc55ff0e3e0c3e7939db4072368c070b4f67a0",
+    "site": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d",
+    "app": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3"
+  },
+  "probeUnchanged": true,
+  "sourcesUnchanged": true,
+  "sourceFilesUnchanged": {
+    "probe": true,
+    "community": true,
+    "controller": true,
+    "site": true,
+    "app": true
+  }
+}

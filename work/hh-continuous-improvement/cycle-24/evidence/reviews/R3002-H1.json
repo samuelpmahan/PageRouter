@@ -1,0 +1,36 @@
+{
+  "job_id": "R3002",
+  "worker": "H1",
+  "decision": "amend",
+  "summary": "The H2 probe code covers the requested teacher-role source-backed recovery path and contains assertions for search, opening a discussion, back navigation, empty-filter recovery, sort/page-window preservation, and role-based hidden-topic guards. The reported result is internally consistent with the probe's output object and assertions. However, no separate probe stdout/stderr, exact probe argv, or probe exit status is retained, so I cannot verify that this script actually ran or distinguish a captured stdout copy from a manually transcribed result. Treat E3002 as reported evidence, not a custody-verified falsifier, until execution evidence is attached.",
+  "evidence_reviewed": {
+    "probe": "/workspace/scratch/86659bbafcce/hh24/H2/E3002/probe.mjs",
+    "result": "/workspace/scratch/86659bbafcce/hh24/H2/E3002/result.json",
+    "native_receipt": "/workspace/scratch/86659bbafcce/hh24/receipts/E3002.json",
+    "native_status": "state.json marks E3002 done for H2; the receipt repeats the reported result but carries no probe argv/status/raw stream"
+  },
+  "probe_scope_findings": {
+    "role": "teacher is set before initial rendered-tree baseline and remains teacher through search/open/back/empty/clear; moderator and teacher hidden-thread controls are separately exercised",
+    "flow": "Questions + recovery-key search; open visible result; back retains query/category; no-match state; clear restores category, upvotes sort, page size, and load-more availability",
+    "hidden_guard": "teacher results exclude hidden topic; moderator search/detail includes it and exposes restore; teacher direct navigation renders unavailable without hidden title",
+    "source": "imports checkpoint/vendor/hh service/runtime, community, public controller, and public site renderer",
+    "fixture": "synthetic community storage:null and fixture service runtime with in-memory account storage; no external account or backend",
+    "rendering_boundary": "assertions inspect the public renderer's virtual tree, not a browser DOM or visual interaction"
+  },
+  "custody": {
+    "probe_bytes": 10143,
+    "probe_mode": "0644",
+    "result_bytes": 2558,
+    "result_mode": "0644",
+    "separate_stdout_file": false,
+    "separate_stderr_file": false,
+    "probe_command_argv": null,
+    "probe_exit_status": null,
+    "result_json_classification": "structured result matching the probe's process.stdout.write payload; whether it is captured stdout or a manual transcription is unverified"
+  },
+  "limits": [
+    "No rerun was performed.",
+    "No source or Git changes were made.",
+    "No browser, DOM, backend, real-account, or production behavior is verified."
+  ]
+}

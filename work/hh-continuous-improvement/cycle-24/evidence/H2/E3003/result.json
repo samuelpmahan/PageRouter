@@ -1,0 +1,35 @@
+{
+  "job_id": "E3003",
+  "worker": "H2",
+  "outcome": "not_reuse",
+  "summary": "A single fresh run of the unchanged E3002 probe reproduced the qualified teacher-role volatile-fixture observations: search/open/back preserved filters; empty-query recovery preserved category/sort/page size/load-more; hidden-topic visibility remained role-gated. No recovery defect was reproduced.",
+  "capture": {
+    "execution_file": "execution.json",
+    "stdout_file": "stdout.raw",
+    "stderr_file": "stderr.raw",
+    "status": 0,
+    "signal": null,
+    "error": null,
+    "probe_sha256_unchanged": "4a8fdfda3c65845563d304cf6822c017270fe5507f50d7a7ce47cf9325e2d472",
+    "stdout_sha256": "dfc533b40471e7487b7d75d3d2327e0f80166c5f051873135b8a42775168fbb3",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "sources_unchanged": true
+  },
+  "observations": {
+    "storageStatus": "memory_only",
+    "teacherRole": true,
+    "initialVisibleCards": 10,
+    "upvotesSortTop": "topic-local-5",
+    "pageSizeAfterLoadMore": 20,
+    "visibleCardsAfterLoadMore": 20,
+    "filteredTeacherResults": ["topic-local-1"],
+    "hiddenSearchMatchOmittedForTeacher": true,
+    "backPreservedQueryAndCategory": true,
+    "emptyFilterMessage": "No discussions found",
+    "clearRestoredCategorySortAndPagination": true,
+    "moderatorSawHiddenMatch": true,
+    "teacherHiddenDetailUnavailable": true,
+    "accountServiceReceipts": "2 before and after community flow"
+  },
+  "scope": "One source-backed controller/community render-tree probe run; no assertion suite, browser/DOM, backend, real account, or production claim."
+}

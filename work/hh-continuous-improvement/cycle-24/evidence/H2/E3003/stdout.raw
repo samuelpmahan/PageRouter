@@ -1,0 +1,104 @@
+{
+  "job_id": "E3002",
+  "worker": "H2",
+  "outcome": "not_reuse",
+  "summary": "No reusable search/filter→discussion→back/clear/empty-filter recovery defect reproduced in the volatile synthetic teacher-community fixture. Search and category state persisted on return; clear restored the active category, sort, page size, and pagination, while role-based hidden-thread visibility remained enforced.",
+  "evidence": {
+    "storage": "memory_only",
+    "initial": {
+      "role": "teacher",
+      "pageSize": 10,
+      "cards": 10,
+      "hiddenInCards": false,
+      "sortControls": [
+        [
+          "sort-date-newest",
+          "true"
+        ],
+        [
+          "sort-date-oldest",
+          "false"
+        ],
+        [
+          "sort-upvotes",
+          "false"
+        ]
+      ],
+      "loadMorePresent": true,
+      "visibilityControls": true
+    },
+    "sort": {
+      "sort": "upvotes",
+      "topUpvoted": "topic-local-5"
+    },
+    "afterLoadMore": {
+      "pageSize": 20,
+      "cards": 20,
+      "loadMorePresent": true
+    },
+    "teacherSearch": {
+      "category": "Questions",
+      "query": "recovery-key",
+      "ids": [
+        "topic-local-1"
+      ],
+      "visibleDiscussionPresent": true,
+      "hiddenDiscussionPresent": false,
+      "resultCount": 1
+    },
+    "detail": {
+      "route": "/posts/topic-local-1",
+      "titlePresent": true,
+      "backLinkPresent": true,
+      "teacherRole": "teacher"
+    },
+    "afterBack": {
+      "route": "/forum",
+      "query": "recovery-key",
+      "category": "Questions",
+      "ids": [
+        "topic-local-1"
+      ],
+      "hiddenInCards": false
+    },
+    "empty": {
+      "query": "term-with-no-match-xyz",
+      "message": "No discussions found",
+      "clearPresent": true,
+      "category": "Questions"
+    },
+    "cleared": {
+      "query": "",
+      "category": "Questions",
+      "questionCards": 20,
+      "categoryPickerValue": "Questions",
+      "upvotesPressed": "true",
+      "loadMorePresent": true
+    },
+    "moderatorSearch": {
+      "role": "moderator",
+      "ids": [
+        "topic-local-1",
+        "topic-local-2"
+      ],
+      "hiddenPresent": true,
+      "rolePicker": "moderator"
+    },
+    "moderatorDetail": {
+      "route": "/posts/topic-local-2",
+      "titlePresent": true,
+      "restoreControl": true
+    },
+    "teacherHiddenDetail": {
+      "route": "/posts/topic-local-2",
+      "unavailable": true,
+      "hiddenTitleVisible": false
+    },
+    "accountServiceReceipts": {
+      "atStart": 2,
+      "atEnd": 2,
+      "unchanged": true
+    }
+  },
+  "scope": "Source-backed controller/community runtime probe with seeded forum data plus volatile synthetic pagination/recovery-key topics. No browser, DOM, backend, real account, or production claim."
+}
