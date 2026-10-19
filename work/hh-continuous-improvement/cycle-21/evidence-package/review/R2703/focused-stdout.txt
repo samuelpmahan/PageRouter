@@ -1,0 +1,13 @@
+✔ rejected topic with a whitespace-only title retains category and meaningful body in compose (31.661557ms)
+✔ rejected topic with a whitespace-only body retains title and category in compose (1.989157ms)
+✔ corrected explicit topic retry clears draft and creates exactly one local topic (2.585025ms)
+✔ rejected overlength topic draft stays invalid and cannot be silently truncated into a post (1.597757ms)
+✔ topic draft clears when teacher role leaves, on forum reset, logout, and app reset (5.941114ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 158.690989

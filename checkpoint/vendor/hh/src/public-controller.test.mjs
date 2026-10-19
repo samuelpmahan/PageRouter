@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {randomUUID} from 'node:crypto';
 import {createFixtureProvider, createServiceRuntime} from '../services/index.mjs';
-import {createCommunity} from './community.mjs';
+import {createCommunity, renderCommunity} from './community.mjs';
 import {createPublicController, normalizePublicRoute} from './public-controller.mjs';
 import {renderPublicSite} from './public-site.mjs';
 
@@ -35,6 +35,50 @@ function registrationDraftSetup() {
     onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
   });
   return {controller, runtime, storage, get tree() { return tree; }};
+}
+
+function communityDraftSetup() {
+  const storage = memoryStorage();
+  const runtime = createServiceRuntime(createFixtureProvider({fixture: true, storage}));
+  const community = createCommunity({storage});
+  let tree = null;
+  const controller = createPublicController({runtime, storage, community,
+    onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+  });
+  return {controller, runtime, storage, community, get tree() { return tree; }};
+}
+
+function topicComposerFields(tree) {
+  const nodes = [];
+  const walk = node => {
+    if (!node || typeof node !== 'object') return;
+    nodes.push(node);
+    for (const child of node.children || []) walk(child);
+  };
+  walk(tree);
+  const form = nodes.find(node => node.tag === 'form' && node.attrs?.['data-submit'] === 'forum-topic');
+  if (!form) return null;
+  const fields = [];
+  const walkForm = node => {
+    if (!node || typeof node !== 'object') return;
+    if (node.attrs?.name) fields.push(node);
+    for (const child of node.children || []) walkForm(child);
+  };
+  walkForm(form);
+  const title = fields.find(node => node.attrs.name === 'title');
+  const category = fields.find(node => node.attrs.name === 'category');
+  const content = fields.find(node => node.attrs.name === 'content');
+  return {
+    title: title?.attrs.value ?? '',
+    category: category?.children?.find(option => option?.attrs?.selected)?.attrs?.value ?? '',
+    content: content?.children?.join('') ?? '',
+  };
+}
+
+async function openTeacherTopicComposer(env) {
+  await env.controller.initialize('#/create-post');
+  await env.controller.dispatch('forum-role', {role: 'teacher'});
+  assert.ok(topicComposerFields(env.tree), 'teacher sees the topic composer');
 }
 
 function loginDraftFailureSetup() {
@@ -1576,6 +1620,121 @@ test('wishlist and community actions are explicit local preview handoffs', async
   assert.equal(controller.state.journey.runtime.session.status, 'anonymous', 'forum role does not create an HH login');
   await controller.navigate(`#/posts/${created.value.id}`);
   assert.deepEqual(controller.state.route.communityRoute, {page: 'post', threadId: created.value.id});
+});
+
+test('rejected topic with a whitespace-only title retains category and meaningful body in compose', async () => {
+  const env = communityDraftSetup();
+  await openTeacherTopicComposer(env);
+  const beforeTree = env.tree;
+  assert.equal(env.controller.updateDraft('title', 'typed but not submitted'), false);
+  assert.strictEqual(env.tree, beforeTree, 'topic typing stays DOM-local and does not trigger a controller rerender');
+  const beforeCount = env.community.snapshot().threads.length;
+  const beforeStorage = env.storage.getItem('hh-forum-v1');
+  const payload = {title: '   ', category: 'Questions', content: 'A meaningful teacher question.'};
+  const result = await env.controller.dispatch('forum-topic', payload);
+  assert.equal(result.ok, false);
+  assert.equal(result.error, 'title_and_body_required');
+  assert.deepEqual(env.controller.state.community.topicDraft, payload);
+  assert.deepEqual(topicComposerFields(env.tree), payload);
+  assert.equal(env.community.snapshot().threads.length, beforeCount);
+  assert.equal(env.storage.getItem('hh-forum-v1'), beforeStorage, 'a failed topic draft is not written to forum storage');
+  assert.equal(env.controller.state.journey.session.status, 'anonymous', 'a forum role does not create an HH account');
+  const inlineTree = renderCommunity({route: {page: 'forum'}, state: {...env.controller.state.community, composer: 'topic'}, session: {role: 'teacher'}});
+  assert.deepEqual(topicComposerFields(inlineTree), payload, 'the inline composer projects the same rejected submit draft');
+});
+
+test('rejected topic with a whitespace-only body retains title and category in compose', async () => {
+  const env = communityDraftSetup();
+  await openTeacherTopicComposer(env);
+  const beforeCount = env.community.snapshot().threads.length;
+  const payload = {title: 'A valid teacher title', category: 'Resources', content: '   '};
+  const result = await env.controller.dispatch('forum-topic', payload);
+  assert.equal(result.ok, false);
+  assert.equal(result.error, 'title_and_body_required');
+  assert.deepEqual(env.controller.state.community.topicDraft, payload);
+  assert.deepEqual(topicComposerFields(env.tree), payload);
+  assert.equal(env.community.snapshot().threads.length, beforeCount);
+});
+
+test('corrected explicit topic retry clears draft and creates exactly one local topic', async () => {
+  const env = communityDraftSetup();
+  await openTeacherTopicComposer(env);
+  const receiptsBefore = env.runtime.inspect().receipts.length;
+  const invalid = {title: '  ', category: 'Questions', content: 'Keep this meaningful body.'};
+  assert.equal((await env.controller.dispatch('forum-topic', invalid)).ok, false);
+  assert.deepEqual(topicComposerFields(env.tree), invalid);
+  const corrected = {...invalid, title: 'A corrected local topic'};
+  const created = await env.controller.dispatch('forum-topic', corrected);
+  assert.equal(created.ok, true);
+  assert.equal(created.value.title, corrected.title);
+  assert.equal(created.value.body, corrected.content);
+  assert.equal(env.controller.state.community.topicDraft, null);
+  assert.equal(env.community.snapshot().threads.length, 4);
+  assert.equal(env.runtime.inspect().receipts.length, receiptsBefore, 'forum submissions do not invoke teacher account services');
+  assert.equal(env.controller.state.journey.session.status, 'anonymous');
+  assert.equal(env.controller.canRetry, false, 'a rejected topic does not arm automatic retry');
+  assert.equal(JSON.parse(env.storage.getItem('hh-forum-v1')).threads.length, 4);
+});
+
+test('rejected overlength topic draft stays invalid and cannot be silently truncated into a post', async () => {
+  const env = communityDraftSetup();
+  await openTeacherTopicComposer(env);
+  const beforeCount = env.community.snapshot().threads.length;
+  const oversized = {title: 'x'.repeat(300), category: 'Community', content: 'Bounded retained body.'};
+  const rejected = await env.controller.dispatch('forum-topic', oversized);
+  assert.equal(rejected.ok, false);
+  assert.equal(rejected.error, 'input_too_long');
+  const retained = topicComposerFields(env.tree);
+  assert.equal(retained.title.length, 256, 'retain one over the acceptance limit so retry remains invalid until edited');
+  assert.equal(retained.category, oversized.category);
+  assert.equal(retained.content, oversized.content);
+  const repeated = await env.controller.dispatch('forum-topic', retained);
+  assert.equal(repeated.ok, false);
+  assert.equal(repeated.error, 'input_too_long');
+  assert.equal(env.community.snapshot().threads.length, beforeCount);
+  assert.equal(env.storage.getItem('hh-forum-v1'), null);
+
+  const oversizedBody = {title: 'Valid body-bound title', category: 'Questions', content: 'b'.repeat(10_500)};
+  const rejectedBody = await env.controller.dispatch('forum-topic', oversizedBody);
+  assert.equal(rejectedBody.ok, false);
+  assert.equal(rejectedBody.error, 'input_too_long');
+  const retainedBody = topicComposerFields(env.tree);
+  assert.equal(retainedBody.content.length, 10_001, 'retain one over the acceptance limit so retry remains invalid until edited');
+  const repeatedBody = await env.controller.dispatch('forum-topic', retainedBody);
+  assert.equal(repeatedBody.ok, false);
+  assert.equal(repeatedBody.error, 'input_too_long');
+  assert.equal(env.community.snapshot().threads.length, beforeCount);
+  assert.equal(env.storage.getItem('hh-forum-v1'), null);
+});
+
+test('topic draft clears when teacher role leaves, on forum reset, logout, and app reset', async () => {
+  const env = communityDraftSetup();
+  await openTeacherTopicComposer(env);
+  const invalid = {title: '  ', category: 'Questions', content: 'A local body.'};
+  assert.equal((await env.controller.dispatch('forum-topic', invalid)).ok, false);
+  assert.deepEqual(env.controller.state.community.topicDraft, invalid);
+  await env.controller.dispatch('forum-role', {role: 'anonymous'});
+  assert.equal(env.controller.state.community.topicDraft, null);
+
+  await env.controller.dispatch('forum-role', {role: 'teacher'});
+  assert.equal((await env.controller.dispatch('forum-topic', invalid)).ok, false);
+  assert.deepEqual(env.controller.state.community.topicDraft, invalid);
+  await env.controller.dispatch('forum-reset');
+  assert.equal(env.controller.state.community.topicDraft, null);
+
+  assert.equal((await env.controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'})).ok, true);
+  assert.equal((await env.controller.dispatch('forum-topic', invalid)).ok, false);
+  assert.deepEqual(env.controller.state.community.topicDraft, invalid);
+  assert.equal((await env.controller.dispatch('public:logout')).ok, true);
+  assert.equal(env.controller.state.community.topicDraft, null);
+  assert.equal(env.controller.state.journey.communityRole, 'anonymous');
+
+  await env.controller.dispatch('forum-role', {role: 'teacher'});
+  assert.equal((await env.controller.dispatch('forum-topic', invalid)).ok, false);
+  assert.deepEqual(env.controller.state.community.topicDraft, invalid);
+  assert.equal((await env.controller.dispatch('public:reset')).ok, true);
+  assert.equal(env.controller.state.community.topicDraft, null);
+  assert.equal(env.controller.state.journey.communityRole, 'anonymous');
 });
 
 test('wishlist handoff is invalidated before a foreign profile read and must be freshly prepared for that profile', async () => {

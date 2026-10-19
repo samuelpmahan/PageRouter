@@ -2,8 +2,9 @@
 import {node as h} from './teacher-journey.mjs';
 
 export const COMMUNITY_CATEGORIES = Object.freeze(['Classroom','Resources','Questions','Community']);
+export const COMMUNITY_LIMITS = Object.freeze({title:255,body:10000,category:80});
 const DEFAULT_KEY='hh-forum-v1';
-const MAX_THREADS=100, MAX_REPLIES=500, MAX_TITLE=255, MAX_BODY=10000;
+const MAX_THREADS=100, MAX_REPLIES=500, MAX_TITLE=COMMUNITY_LIMITS.title, MAX_BODY=COMMUNITY_LIMITS.body;
 const MAX_STORAGE_CHARS=1_000_000;
 const roles=new Set(['teacher','moderator','anonymous']);
 const seedThreads=[
@@ -185,7 +186,20 @@ function topicCard(topic,session){
     h('div',{class:'community-topic-meta'},`Posted by ${actor} on ${formatDate(topic.createdAt)}`,topic.reported?h('span',{class:'community-reported'},'Reported'):null,topic.hidden?h('span',{class:'community-hidden'},'Hidden'):null),
     h('div',{class:'community-topic-divider'}),p(excerpt,'community-topic-body'));
 }
-function topicComposer(){return h('form',{class:'community-composer','data-submit':'forum-topic'},h('h2',{},'New Discussion'),h('label',{class:'community-field'},h('span',{},'Discussion Title'),h('input',{name:'title',maxlength:String(MAX_TITLE),required:true,'aria-label':'Discussion title',placeholder:'Enter a concise and descriptive title'})),h('label',{class:'community-field'},h('span',{},'Category'),h('select',{name:'category',required:true,'aria-label':'Topic category'},COMMUNITY_CATEGORIES.map(c=>h('option',{value:c},c)))),h('label',{class:'community-field'},h('span',{},'Content'),h('textarea',{name:'content',maxlength:String(MAX_BODY),rows:'10',required:true,'aria-label':'Discussion content',placeholder:'Write the full body of your forum post here. Be respectful and informative.'})),h('button',{type:'submit'},'Submit New Post'))}
+function topicComposer(draft=null){
+  const hasDraft=!!draft;
+  const validCategory=COMMUNITY_CATEGORIES.includes(draft?.category);
+  const categoryOptions=hasDraft&&!validCategory
+    ?[h('option',{value:draft.category||'',selected:true},draft.category?`Unknown category: ${draft.category}`:'Choose a category')]
+    :[];
+  categoryOptions.push(...COMMUNITY_CATEGORIES.map(c=>h('option',{value:c,...(hasDraft?{selected:c===draft.category}:{})},c)));
+  return h('form',{class:'community-composer','data-submit':'forum-topic'},
+    h('h2',{},'New Discussion'),
+    h('label',{class:'community-field'},h('span',{},'Discussion Title'),h('input',{name:'title',...(hasDraft?{value:draft.title}:{}),maxlength:String(MAX_TITLE),required:true,'aria-label':'Discussion title',placeholder:'Enter a concise and descriptive title'})),
+    h('label',{class:'community-field'},h('span',{},'Category'),h('select',{name:'category',required:true,'aria-label':'Topic category'},categoryOptions)),
+    h('label',{class:'community-field'},h('span',{},'Content'),h('textarea',{name:'content',maxlength:String(MAX_BODY),rows:'10',required:true,'aria-label':'Discussion content',placeholder:'Write the full body of your forum post here. Be respectful and informative.'},hasDraft?draft.content:undefined)),
+    h('button',{type:'submit'},'Submit New Post'));
+}
 function replyComposer(threadId){return h('form',{id:'comment-form',class:'community-comment-form','data-submit':'forum-reply','data-thread-id':threadId},h('label',{class:'community-comment-field',for:'comment-content'},h('textarea',{id:'comment-content',name:'content',maxlength:String(MAX_BODY),rows:'5',required:true,'aria-label':'Share your thoughts',placeholder:'Share your thoughts…'})),h('button',{type:'submit',id:'post-comment-btn'},'Post Comment'))}
 function replyCard(reply,topic,session,state){const role=roleOf(session),own=role==='teacher'&&reply.authorId===(session.personaId||'demo-teacher'),editing=state.editingReplyId===reply.id;return h('article',{class:`community-reply ${reply.hidden?'is-hidden':''}`,'data-reply-id':reply.id},h('div',{class:'community-reply-meta'},h('strong',{},reply.author),reply.reported?h('span',{class:'community-reported'},'Reported'):null,reply.hidden?h('span',{class:'community-hidden'},'Hidden'):null),editing?h('form',{id:`edit-comment-form-${reply.id}`,class:'community-composer community-edit-form','data-submit':'forum-edit-comment','data-thread-id':topic.id,'data-reply-id':reply.id,'data-comment-id':reply.id},h('label',{class:'community-field'},h('span',{},'Edit comment'),h('textarea',{id:`edit-comment-content-${reply.id}`,name:'content',maxlength:String(MAX_BODY),rows:'4',required:true,'aria-label':'Edit comment content'},reply.body)),h('button',{type:'submit',id:`save-edit-comment-btn-${reply.id}`},'Save comment'),button('Cancel','forum-cancel-edit',{id:`cancel-edit-comment-btn-${reply.id}`,class:'community-action'})):p(reply.body,'community-reply-body'),role==='teacher'&&!reply.reported?button('Report comment','forum-flag-reply',{'data-thread-id':topic.id,'data-reply-id':reply.id,class:'community-action'}):null,own||role==='moderator'?button('Edit comment','forum-edit-comment',{'data-thread-id':topic.id,'data-reply-id':reply.id,'data-comment-id':reply.id,id:`edit-comment-btn-${reply.id}`,class:'community-action'}):null,own||role==='moderator'?button('Delete comment','forum-delete-comment',{'data-thread-id':topic.id,'data-reply-id':reply.id,'data-comment-id':reply.id,class:'community-action'}):null,role==='moderator'?(reply.hidden?button('Restore comment','forum-unhide-reply',{'data-thread-id':topic.id,'data-reply-id':reply.id,class:'community-action'}):button('Hide comment','forum-hide-reply',{'data-thread-id':topic.id,'data-reply-id':reply.id,class:'community-action'})):null)}
 function postEditForm(topic){return h('form',{id:'edit-post-form',class:'community-composer community-edit-form','data-submit':'forum-edit-post','data-thread-id':topic.id,'data-post-id':topic.id},h('h2',{},'Edit discussion'),h('label',{class:'community-field'},h('span',{},'Discussion title'),h('input',{id:'edit-post-title',name:'title',maxlength:String(MAX_TITLE),required:true,'aria-label':'Edit discussion title',value:topic.title})),h('label',{class:'community-field'},h('span',{},'Content'),h('textarea',{id:'edit-post-content',name:'content',maxlength:String(MAX_BODY),rows:'8',required:true,'aria-label':'Edit discussion content'},topic.body)),h('button',{type:'submit',id:'save-edit-post-btn'},'Save changes'),button('Cancel','forum-cancel-edit',{id:'cancel-edit-post-btn',class:'community-action'}))}
@@ -199,7 +213,7 @@ export function renderCommunity({route={page:'index'},state={},session={role:'an
   const category=route.category||state.category||'All',query=route.query||state.query||'',sort=state.sort||'date-newest',pageSize=Math.max(1,Math.min(100,Number(state.pageSize)||10));
   let content;
   if(page==='compose'){
-    content=h('div',{},storageNotice(state),stateNotice(state),h('section',{class:'community-panel community-compose-page'},h('a',{href:'#/forum',class:'community-back-link'},"← The Teachers' Lounge"),h('h1',{id:'page-title'},'Create New Post'),role==='teacher'?topicComposer():h('section',{class:'community-auth-required'},h('h2',{},'Log in to create a post'),p('A teacher preview role is required to start a discussion.'),h('a',{href:'#/login',class:'community-text-link'},'Open login'))));
+    content=h('div',{},storageNotice(state),stateNotice(state),h('section',{class:'community-panel community-compose-page'},h('a',{href:'#/forum',class:'community-back-link'},"← The Teachers' Lounge"),h('h1',{id:'page-title'},'Create New Post'),role==='teacher'?topicComposer(state.topicDraft):h('section',{class:'community-auth-required'},h('h2',{},'Log in to create a post'),p('A teacher preview role is required to start a discussion.'),h('a',{href:'#/login',class:'community-text-link'},'Open login'))));
   } else if(page==='thread'){
     const topic=threads.find(t=>t.id===route.threadId);
     if(!route.threadId)content=postErrorPage('Error: Post ID is missing from the URL. Please ensure you are navigating from the forum list.');
@@ -218,7 +232,7 @@ export function renderCommunity({route={page:'index'},state={},session={role:'an
         button('Date (Oldest)','forum-sort',{id:'sort-date-oldest',class:`community-sort-button ${sort==='date-oldest'?'active':''}`,'data-sort':'date-oldest','aria-pressed':sort==='date-oldest'?'true':'false'}),
         button('Upvotes','forum-sort',{id:'sort-upvotes',class:`community-sort-button ${sort==='upvotes'?'active':''}`,'data-sort':'upvotes','aria-pressed':sort==='upvotes'?'true':'false'}),
         h('a',{href:'#/create-post','data-event':'forum-compose-topic',id:'create-post-btn',class:'community-primary-button'},'+ New Post'))),
-      state.composer==='topic'&&role==='teacher'?topicComposer():null,
+      state.composer==='topic'&&role==='teacher'?topicComposer(state.topicDraft):null,
       h('div',{class:'community-results','aria-live':'polite'},shown.length?shown.map(t=>topicCard(t,session)):h('div',{class:'community-empty-state'},h('h3',{},normalizedQuery?'No discussions found':'No posts found'),p(normalizedQuery?'Try a different keyword!':'Be the first to start a discussion!'))),
       shown.length<visible.length?button('Load 10 More Discussions','forum-load-more',{class:'community-load-more'}):null));
   }

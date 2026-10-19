@@ -1,0 +1,134 @@
+import assert from 'node:assert/strict';
+import {createFixtureProvider, createServiceRuntime} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createCommunity, renderCommunity} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+const storageMap = new Map();
+const storage = {
+  getItem(key) { return storageMap.has(key) ? storageMap.get(key) : null; },
+  setItem(key, value) { storageMap.set(key, String(value)); },
+  removeItem(key) { storageMap.delete(key); },
+};
+const provider = createFixtureProvider({fixture: true, storage, storageKey: 'E2701-fixture'});
+const runtime = createServiceRuntime(provider);
+const community = createCommunity({storage, key: 'E2701-community'});
+let controller;
+let navigation = Promise.resolve();
+let emittedTree;
+let emittedCount = 0;
+function emit(state, route) {
+  emittedTree = renderPublicSite({route, state, journey: state.journey});
+  emittedCount += 1;
+}
+controller = createPublicController({
+  runtime,
+  storage,
+  community,
+  onChange: emit,
+  onNavigate(path) { navigation = controller.navigate(`#${path}`); },
+});
+
+function walk(node, visit) {
+  if (!node || typeof node !== 'object') return;
+  visit(node);
+  for (const child of node.children || []) walk(child, visit);
+}
+function find(node, predicate) {
+  let match = null;
+  walk(node, candidate => { if (!match && predicate(candidate)) match = candidate; });
+  return match;
+}
+function composerSnapshot() {
+  const form = find(emittedTree, node => node.tag === 'form' && node.attrs?.['data-submit'] === 'forum-topic');
+  assert.ok(form, 'teacher compose form is present in the emitted page tree');
+  const fields = {};
+  walk(form, node => {
+    if (node.attrs?.name) fields[node.attrs.name] = {
+      tag: node.tag,
+      valueAttribute: Object.hasOwn(node.attrs, 'value') ? node.attrs.value : null,
+      required: node.attrs.required === true,
+      options: (node.children || []).filter(child => child?.tag === 'option').map(child => ({value: child.attrs?.value, selected: child.attrs?.selected === true})),
+    };
+  });
+  return {fields, formSubmit: form.attrs['data-submit']};
+}
+function visibleStatus() {
+  return find(emittedTree, node => node.attrs?.role === 'status')?.children?.map(child => typeof child === 'string' ? child : '').join('') || null;
+}
+
+await controller.initialize('#/forum');
+const serviceReceiptsBefore = runtime.inspect().receipts.length;
+await controller.dispatch('forum-role', {role: 'teacher'});
+await controller.dispatch('forum-compose-topic');
+await navigation;
+assert.equal(controller.route.communityRoute.page, 'create-post');
+const initialComposer = composerSnapshot();
+
+// Mirror app.mjs's actual input listener: each named input calls updateDraft.
+// Whitespace is nonempty for a native required text control, so the real submit
+// handler proceeds to its FormData payload and the controller trims/rejects it.
+const firstAttempt = {title: '   ', category: 'Questions', content: 'A synthetic teacher question for this volatile preview.'};
+const draftInputAccepts = Object.fromEntries(Object.entries(firstAttempt).map(([name, value]) => [name, controller.updateDraft(name, value)]));
+const threadsBeforeInvalid = community.snapshot().threads.length;
+const storedBeforeInvalid = storageMap.get('E2701-community') || null;
+const invalidResult = await controller.dispatch('forum-topic', firstAttempt);
+const afterInvalidComposer = composerSnapshot();
+const invalidEvidence = {
+  result: invalidResult,
+  visibleStatus: visibleStatus(),
+  emitted: afterInvalidComposer,
+  titleAndBodyInControllerDrafts: Object.fromEntries(['title', 'category', 'content'].map(name => [name, controller.updateDraft(name, firstAttempt[name])])),
+  retainedSubmittedValues: Object.fromEntries(['title', 'category', 'content'].map(name => [name, afterInvalidComposer.fields[name]?.valueAttribute ?? null])),
+  threadsBefore: threadsBeforeInvalid,
+  threadsAfter: community.snapshot().threads.length,
+  storageUnchanged: (storageMap.get('E2701-community') || null) === storedBeforeInvalid,
+};
+assert.equal(invalidResult.ok, false);
+assert.equal(invalidResult.error, 'title_and_body_required');
+assert.deepEqual(draftInputAccepts, {title: false, category: false, content: false});
+assert.equal(invalidEvidence.threadsAfter, threadsBeforeInvalid);
+assert.equal(invalidEvidence.storageUnchanged, true);
+assert.deepEqual(invalidEvidence.retainedSubmittedValues, {title: null, category: null, content: null});
+assert.equal(invalidEvidence.visibleStatus, 'title and body required');
+
+// A user can edit again and explicitly submit a corrected local topic.
+const retryPayload = {title: 'Local classroom routines', category: 'Questions', content: firstAttempt.content};
+const retryInputAccepts = Object.fromEntries(Object.entries(retryPayload).map(([name, value]) => [name, controller.updateDraft(name, value)]));
+const retryResult = await controller.dispatch('forum-topic', retryPayload);
+await navigation;
+assert.equal(retryResult.ok, true);
+assert.equal(controller.route.communityRoute.page, 'post');
+assert.equal(controller.route.communityRoute.threadId, retryResult.value.id);
+assert.equal(community.getThread(retryResult.value.id, {role: 'teacher'}).title, retryPayload.title);
+assert.equal(community.snapshot().threads.length, threadsBeforeInvalid + 1);
+assert.equal(runtime.inspect().receipts.length, serviceReceiptsBefore);
+
+const result = {
+  job_id: 'E2701',
+  worker: 'H1',
+  outcome: 'mixed_change',
+  summary: 'The local controller rejects a whitespace-only title with a meaningful body and emits status while leaving thread/storage unchanged, but its input-draft API rejects the composer field names and the next emitted compose form has no submitted values. Correcting only the title and explicitly retrying creates exactly one volatile topic and navigates to its detail. Fixture service receipts do not change. This is a source/controller/renderer run, not a browser-native constraint-validation claim.',
+  sourcePins: {
+    repoCommit: '0d52cde4f2a502b6ee0d4b188bfc3b10c376daa4',
+    repoTree: '8e8b71932d59f13be4b3dd92bc9c7cd8f91b9d51',
+    communitySource: '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/community.mjs',
+    controllerSource: '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.mjs',
+    wrapperSource: '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/app.mjs',
+    rendererSource: '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.mjs',
+  },
+  probeScope: 'Synthetic in-memory fixture provider + volatile Map-backed forum storage; actual createPublicController, createCommunity, renderPublicSite, renderCommunity and emitted tree. Input and submit payloads follow app.mjs listener field names and dispatch event. No live accounts, email, or outbound network.',
+  initialComposer,
+  invalidAttempt: {draftInputAccepts, ...invalidEvidence},
+  correctedRetry: {
+    draftInputAccepts: retryInputAccepts,
+    result: {ok: retryResult.ok, id: retryResult.value.id, title: retryResult.value.title, category: retryResult.value.category},
+    route: controller.route,
+    threadsAfter: community.snapshot().threads.length,
+    fixtureServiceReceiptDelta: runtime.inspect().receipts.length - serviceReceiptsBefore,
+    communityStorageKeys: [...storageMap.keys()].filter(key => key === 'E2701-community'),
+  },
+  emittedTrees: emittedCount,
+  browserExecution: 'Unavailable: Playwright browser binary absent; connected browser extension unavailable; cloud browser cannot reach 127.0.0.1 scratch server.',
+};
+console.log(JSON.stringify(result, null, 2));

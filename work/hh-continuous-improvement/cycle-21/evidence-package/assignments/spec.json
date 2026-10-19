@@ -1,0 +1,10 @@
+{
+  "schema":"chainspot.rebalancer-spec/v1",
+  "service":{"name":"hh21-community-compose-recovery","source":"56feaa041033b81b80b0c373166ca91f46d50e6c","localSource":"0d52cde4f2a502b6ee0d4b188bfc3b10c376daa4","scope":"One teacher community topic compose invalid-submit and draft-recovery flow. Reproduce actual behavior, preserve authority/storage/local-only contracts; implement only demonstrated correction, test, independent review, canonical build, same draftPR8.","capacity":"Two actual Luna/high contexts. H1 source/Git owner, H2 independent read-only. Three-stream/floating/reserve intent constrained to owner+reviewer; no invented slots."},
+  "workers":["H1","H2"],
+  "review_policy":{"enabled":true,"review_prefix":"R","reviewer_must_differ_from_extractor":true},
+  "jobs":[
+    {"id":"E2701","kind":"extract","allow_workers":["H1"],"subject":"Read actual community controller/app/event bindings and probe teacher topic invalid submit/draft retention/correction in volatile fixture; preserve counterexample. No product edits yet."},
+    {"id":"E2702","kind":"extract","allow_workers":["H2"],"subject":"Independent read-only falsifier: same community topic compose invalid submit/draft recovery and current event wiring/authority; demonstrate suspected failure or working case using volatile fixture. No repo edits."}
+  ]
+}

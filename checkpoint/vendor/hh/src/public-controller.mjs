@@ -1,5 +1,5 @@
 import {SCHOOL_FIXTURES, FIXTURE_WISHLIST_URL} from '../services/index.mjs';
-import {createCommunity} from './community.mjs';
+import {createCommunity, COMMUNITY_CATEGORIES, COMMUNITY_LIMITS} from './community.mjs';
 import {teacherOfDayReference} from './site-data.mjs';
 
 const clone = value => value == null ? value : structuredClone(value);
@@ -62,7 +62,7 @@ export function normalizePublicRoute(value = '') {
 
 function initialCommunity(community) {
   return {...community.snapshot(), query: '', category: 'All', composer: null, sort: 'date-newest', pageSize: 10, message: '',
-    editingPostId: null, editingReplyId: null, editingThreadId: null};
+    editingPostId: null, editingReplyId: null, editingThreadId: null, topicDraft: null};
 }
 
 /**
@@ -157,7 +157,9 @@ export function createPublicController({runtime, storage = null, onChange = () =
     }
   }
   function setCommunityRole(role) {
-    state.journey.communityRole = ['anonymous', 'teacher', 'moderator'].includes(role) ? role : 'anonymous';
+    const nextRole = ['anonymous', 'teacher', 'moderator'].includes(role) ? role : 'anonymous';
+    if (state.journey.communityRole === 'teacher' && nextRole !== 'teacher') state.community.topicDraft = null;
+    state.journey.communityRole = nextRole;
     refreshCommunity();
   }
   function refreshCommunity() {
@@ -166,7 +168,8 @@ export function createPublicController({runtime, storage = null, onChange = () =
       composer: state.community.composer || null, sort: state.community.sort || 'date-newest',
       pageSize: Math.max(1, Math.min(100, Number(state.community.pageSize) || 10)),
       message: state.community.message || '', editingPostId: state.community.editingPostId || null,
-      editingReplyId: state.community.editingReplyId || null, editingThreadId: state.community.editingThreadId || null};
+      editingReplyId: state.community.editingReplyId || null, editingThreadId: state.community.editingThreadId || null,
+      topicDraft: state.community.topicDraft || null};
   }
   function clearMutationStatus() { setRequest('idle', ''); state.journey.error = ''; }
   function activeWishlistProfileId(route = state.route, projection = state.journey.profile) {
@@ -514,9 +517,19 @@ export function createPublicController({runtime, storage = null, onChange = () =
       return requestNavigation('/create-post');
     }
     if (event === 'forum-topic' || event === 'forum-submit-topic') {
-      result = community.createThread({title: payload.title, body: payload.body ?? payload.content, category: payload.category,
+      const content = payload.body ?? payload.content;
+      result = community.createThread({title: payload.title, body: content, category: payload.category,
         author: state.journey.registration.identity.name || 'Preview Teacher', role, authorId: 'demo-teacher'});
-      if (result.ok) requestNavigation(`/posts/${encodeURIComponent(result.value.id)}`);
+      if (result.ok) {
+        state.community.topicDraft = null;
+        requestNavigation(`/posts/${encodeURIComponent(result.value.id)}`);
+      } else if (role === 'teacher') {
+        state.community.topicDraft = {
+          title: boundedDraft(payload.title, COMMUNITY_LIMITS.title + 1),
+          category: boundedDraft(payload.category, COMMUNITY_LIMITS.category),
+          content: boundedDraft(content, COMMUNITY_LIMITS.body + 1),
+        };
+      }
       return syncCommunityNotice(result);
     }
     if (event === 'forum-open-thread') return requestNavigation(`/posts/${encodeURIComponent(postId)}`);
@@ -550,7 +563,10 @@ export function createPublicController({runtime, storage = null, onChange = () =
       state.community.editingThreadId = null;
       return syncCommunityNotice({ok: true}, 'Forum edit cancelled.');
     }
-    else if (event === 'forum-reset') result = community.reset();
+    else if (event === 'forum-reset') {
+      state.community.topicDraft = null;
+      result = community.reset();
+    }
     else if (event === 'forum-export') {
       const data = community.exportData();
       state.community.exportData = data;
@@ -841,6 +857,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
         clearWishlistHandoff();
         state.journey.share = {intent: false, url: ''};
         state.journey.communityRole = 'anonymous';
+        state.community.topicDraft = null;
         state.journey.profile = {status: 'absent', value: null, editOpen: false, source: 'runtime'};
         try { storage?.removeItem(FILTER_KEY); } catch {}
         await community.reset(); refreshCommunity();

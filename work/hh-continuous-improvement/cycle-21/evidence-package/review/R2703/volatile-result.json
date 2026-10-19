@@ -1,0 +1,97 @@
+{
+  "job_id": "R2703",
+  "worker": "H2",
+  "phase": "independent-volatile-fixture-render-tree-probe",
+  "decision": "accepted",
+  "summary": "Independent synthetic fixture/controller/render-tree probe confirms semantic invalid drafts retain valid peers and unknown category visibly, cap+1 values remain invalid after re-submit, corrected retry creates once without account receipts, and anonymous/moderator/reset/logout/app-reset boundaries clear/hide drafts. Community storage stayed memory-only; no browser/server/provider HTTP call.",
+  "invocation": {
+    "argv": [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+      "/workspace/scratch/afc0d51965a8/hh21/H2/R2703/probe-volatile-fixture.mjs"
+    ],
+    "cwd": "/workspace/scratch/afc0d51965a8",
+    "node": "v24.19.0"
+  },
+  "start_utc": "2026-10-19T09:00:00.219Z",
+  "finish_utc": "2026-10-19T09:00:00.253Z",
+  "duration_ms": 33.997611,
+  "exit_code": 0,
+  "wall_start_epoch_ms": 1792400400219,
+  "sourceSha256": {
+    "checkpoint/vendor/hh/src/community.mjs": "d5f4bf9b416fd53eb66fe4d983f08865c532b9982519e73735be88a0eaf1a964",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "2ffc11a0b694d752930eb8ef93abe1d045a3811096b8ac81fc429b60a49c91e9",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "88385bec51b14da0bd6f6e586e591d5198759892b4f697ce7c46517738ab2e7f",
+    "checkpoint/vendor/hh/src/public-site.mjs": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d",
+    "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d"
+  },
+  "checks": {
+    "whitespaceTitle": {
+      "error": "title_and_body_required",
+      "restoredFields": {
+        "title": "   ",
+        "category": "Questions",
+        "content": "A meaningful synthetic teacher question."
+      },
+      "threads": 3,
+      "forumStorageKey": null,
+      "persistence": "memory_only",
+      "fixturePersistence": "volatile-memory",
+      "receiptsUnchanged": true,
+      "canRetry": false
+    },
+    "correctedRetry": {
+      "ok": true,
+      "id": "topic-local-1",
+      "title": "E2703 corrected retry title",
+      "category": "Questions",
+      "body": "A meaningful synthetic teacher question.",
+      "threadCount": 4,
+      "draftCleared": true,
+      "forumStorageKey": null,
+      "serviceReceiptsUnchanged": true
+    },
+    "roles": {
+      "anonymousError": "authentication_required",
+      "moderatorError": "authentication_required",
+      "composerAsAnonymous": false,
+      "composerAsModerator": false,
+      "noForumDiskWrite": true,
+      "communityStorage": "memory_only"
+    },
+    "whitespaceBody": {
+      "error": "title_and_body_required",
+      "restoredFields": {
+        "title": "Valid synthetic title",
+        "category": "Resources",
+        "content": " \n\t "
+      }
+    },
+    "unknownCategory": {
+      "error": "invalid_category",
+      "restoredFields": {
+        "title": "Valid title for unknown category",
+        "category": "UnlistedCategory",
+        "content": "Meaningful synthetic content."
+      },
+      "categoryAccepted": false
+    },
+    "caps": {
+      "titleLimit": 255,
+      "titleRetained": 256,
+      "bodyLimit": 10000,
+      "bodyRetained": 10001,
+      "repeatedSubmitsRemainInvalid": true,
+      "topicCount": 3,
+      "forumStorageKey": null
+    },
+    "lifecycle": {
+      "forumResetClearsDraftAndRestoresSeeds": true,
+      "logoutClearsDraftAndAnonymizes": true,
+      "appResetClearsDraftAndAnonymizes": true,
+      "serviceMode": "fixture",
+      "forumPersistence": "memory_only"
+    }
+  },
+  "network": "none; direct local imports, fixture provider, no browser/server/production endpoint"
+}

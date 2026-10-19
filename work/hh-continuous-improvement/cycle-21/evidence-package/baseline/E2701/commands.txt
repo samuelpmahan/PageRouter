@@ -1,0 +1,14 @@
+Baseline and pins:
+  git -C /workspace/scratch/8528bb251845/PageRouter status --short --branch
+  git -C /workspace/scratch/8528bb251845/PageRouter rev-parse HEAD
+  git -C /workspace/scratch/8528bb251845/PageRouter rev-parse HEAD^{tree}
+
+Browser availability checks:
+  node --input-type=module -e "const {chromium}=await import('/opt/codex/runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright/index.mjs'); const b=await chromium.launch({headless:true}); console.log('launched',b.version()); await b.close()"
+  # unavailable: no Playwright browser executable
+  # connected extension unavailable; CUA cloud browser localhost navigation returned ERR_CONNECTION_REFUSED
+
+Probe:
+  node /workspace/scratch/afc0d51965a8/hh21/H1/E2701/probe.mjs
+  # passing run captured 2026-10-19T08:47:22Z–2026-10-19T08:47:33Z; exit 0
+  # stdout.raw and stderr.raw are direct captures of the passing run; attempt1.* / whitespace-title-and-body.* preserve prior harness attempts

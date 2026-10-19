@@ -1,0 +1,187 @@
+✔ login draft retains typed, newer, and explicit blank email through held failures (15.662535ms)
+✔ login draft keeps existing fallback order and clears only after authority changes (4.857061ms)
+✔ held successful login projects authenticated email after route reentry (3.453119ms)
+✔ prepared share handoff is invalidated before foreign profile read resolves (5.517599ms)
+✔ route-derived share dispatch remains available to anonymous, pending, missing, and captured viewers (2.915424ms)
+✔ delayed profile creation preserves the current other-teacher route and edit authority (6.284768ms)
+✔ delayed profile creation preserves a captured read-only reference projection (5.434855ms)
+✔ delayed profile creation leaves an in-flight public-profile read projection intact (3.190586ms)
+✔ failed profile creation service sync preserves a captured reference when an own profile exists (5.413404ms)
+✔ held profile creation keeps the live create draft through failure and explicit resubmission (22.265295ms)
+✔ profile create rejects unsupported wishlist before mutation and retains draft (4.453967ms)
+✔ profile create rejects overlength wishlist before mutation and retains draft (2.039834ms)
+✔ profile create preserves blank wishlist compatibility (3.077371ms)
+✔ profile create preserves valid synthetic wishlist compatibility (2.640073ms)
+✔ profile edit rejects unsupported wishlist before mutation and retains draft (2.796746ms)
+✔ profile edit rejects overlength wishlist before mutation and retains draft (2.646211ms)
+✔ profile edit preserves blank wishlist compatibility (2.469717ms)
+✔ profile edit preserves valid synthetic wishlist compatibility (3.501892ms)
+✔ normalizes captured public route aliases and forum paths (0.42793ms)
+✔ captured Teacher of the Day opens as a read-only snapshot without invoking teacher services (1.56982ms)
+✔ profile edit toggle rejects another authenticated teacher profile (1.28885ms)
+✔ profile edit submit rejects another authenticated teacher profile without creating an overlay (1.187959ms)
+✔ profile edit toggle fails closed for anonymous and missing teacher identities (1.492454ms)
+✔ profile edit remains available to its owner through a public profile alias (1.154548ms)
+✔ cascades school filters, loads local directory matches and restores remembered filters (2.460313ms)
+✔ school lookup retry stays bound to the failed current selection (0.605716ms)
+✔ school lookup retry recovers the same current selection (0.743853ms)
+✔ navigating away invalidates a failed registration school lookup retry (0.781069ms)
+✔ initial school choices remain retryable when the states read fails (0.535502ms)
+✔ returning to registration reloads states after an invalidated initial lookup failure (0.551986ms)
+✔ successful initial school-data read does not erase a directory retry (0.595611ms)
+✔ returning to registration reloads a failed county cascade (0.700299ms)
+✔ school lookup retry remains available from directory when no directory retry owns it (0.840959ms)
+✔ distinguishes an explicit empty-filter search from the initial background directory load (0.656964ms)
+✔ leaving a pending directory read for login or registration retires shared loading (1.076311ms)
+✔ an abandoned directory completion cannot clear a newer pending school lookup (1.975307ms)
+✔ bounded text drafts keep spaces while typing and normalize only on submit (1.104683ms)
+✔ rejects stored school selections whose individual values do not form one fixture row (0.513809ms)
+✔ registration mismatch validation retains delegated non-secret drafts and selected school (2.546251ms)
+✔ registration missing-terms validation retains delegated non-secret drafts and selected school (2.129979ms)
+✔ registration transport failure retains the live draft and only permits explicit resubmission (4.999964ms)
+✔ registration unknown outcome retains the live draft and has no safe automatic retry (2.606071ms)
+✔ registration retains the current draft after navigation away and back on failed writes (7.627308ms)
+✔ held registration completion on login preserves transaction classification without replay (9.862623ms)
+✔ failed re-registration preserves the approved synthetic alias for login (4.41518ms)
+✔ registration keeps passwords ephemeral, approval and login stay separate, and edits remain local (3.375052ms)
+✔ profile edit overlay remains local to this controller and reset clears it (6.20599ms)
+✔ Terms checkbox consent tracks both checking and unchecking without opening the modal (0.643033ms)
+✔ seeded UI login, local contact and reset never claim remote effects (1.28938ms)
+✔ wishlist and community actions are explicit local preview handoffs (1.838793ms)
+✖ rejected topic with a whitespace-only title retains category and meaningful body in compose (3.536144ms)
+✖ rejected topic with a whitespace-only body retains title and category in compose (1.199245ms)
+✖ corrected explicit topic retry clears draft and creates exactly one local topic (1.166536ms)
+✖ rejected overlength topic draft stays invalid and cannot be silently truncated into a post (1.089681ms)
+✖ topic draft clears when teacher role leaves, on forum reset, logout, and app reset (1.078014ms)
+✔ wishlist handoff is invalidated before a foreign profile read and must be freshly prepared for that profile (1.677281ms)
+✔ wishlist handoff remains on same-profile aliases and captured reference keeps its static link (1.529329ms)
+✔ failed profile navigation clears prior wishlist handoff and stale confirmation is rejected (1.167898ms)
+✔ confirmed wishlist destination is not rendered on a foreign profile (1.202059ms)
+✔ same-profile wishlist handoff cannot be confirmed while its profile reload is pending or failed (1.624312ms)
+✔ late login, approval and logout results never redirect away from the current route (3.482653ms)
+✔ successful logout clears the own projection and anonymizes the community on its original route (1.140768ms)
+✔ successful logout preserves a foreign public-profile projection after navigation (1.287637ms)
+✔ successful logout preserves a captured readonly projection and its readonly guard (1.235329ms)
+✔ successful logout does not clear a public-profile projection while its read is pending (1.223141ms)
+✔ failed logout after navigation leaves foreign projection and authenticated authority unchanged (1.271624ms)
+ℹ tests 66
+ℹ suites 0
+ℹ pass 61
+ℹ fail 5
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 338.007424
+
+✖ failing tests:
+
+test at vendor/hh/src/public-controller.test.mjs:1625:1
+✖ rejected topic with a whitespace-only title retains category and meaningful body in compose (3.536144ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - {
+  -   category: 'Questions',
+  -   content: 'A meaningful teacher question.',
+  -   title: '   '
+  - }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:1637:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { title: '   ', category: 'Questions', content: 'A meaningful teacher question.' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at vendor/hh/src/public-controller.test.mjs:1644:1
+✖ rejected topic with a whitespace-only body retains title and category in compose (1.199245ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - {
+  -   category: 'Resources',
+  -   content: '   ',
+  -   title: 'A valid teacher title'
+  - }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:1652:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { title: 'A valid teacher title', category: 'Resources', content: '   ' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at vendor/hh/src/public-controller.test.mjs:1657:1
+✖ corrected explicit topic retry clears draft and creates exactly one local topic (1.166536ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   category: '',
+  +   content: '',
+  +   title: ''
+  -   category: 'Questions',
+  -   content: 'Keep this meaningful body.',
+  -   title: '  '
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:1663:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { title: '', category: '', content: '' },
+    expected: { title: '  ', category: 'Questions', content: 'Keep this meaningful body.' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at vendor/hh/src/public-controller.test.mjs:1677:1
+✖ rejected overlength topic draft stays invalid and cannot be silently truncated into a post (1.089681ms)
+  AssertionError [ERR_ASSERTION]: retain one over the acceptance limit so retry remains invalid until edited
+  
+  0 !== 256
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:1686:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 256,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at vendor/hh/src/public-controller.test.mjs:1696:1
+✖ topic draft clears when teacher role leaves, on forum reset, logout, and app reset (1.078014ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + undefined
+  - {
+  -   category: 'Questions',
+  -   content: 'A local body.',
+  -   title: '  '
+  - }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:1701:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { title: '  ', category: 'Questions', content: 'A local body.' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

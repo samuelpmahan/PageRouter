@@ -1,0 +1,190 @@
+#!/usr/bin/env node
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {promises as fs} from 'node:fs';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {createFixtureProvider, createServiceRuntime} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createCommunity, COMMUNITY_LIMITS} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+const startedAt = new Date().toISOString();
+const start = process.hrtime.bigint();
+const startedMs = Date.now();
+const repo = '/workspace/scratch/8528bb251845/PageRouter';
+const outDir = path.dirname(fileURLToPath(import.meta.url));
+const pinned = [
+  'checkpoint/vendor/hh/src/community.mjs',
+  'checkpoint/vendor/hh/src/public-controller.mjs',
+  'checkpoint/vendor/hh/src/public-controller.test.mjs',
+  'checkpoint/vendor/hh/src/public-site.mjs',
+  'checkpoint/vendor/hh/src/app.mjs',
+  'checkpoint/vendor/hh/services/fixture-provider.mjs',
+];
+const sourceSha256 = Object.fromEntries(await Promise.all(pinned.map(async file => [
+  file, createHash('sha256').update(await fs.readFile(path.join(repo, file))).digest('hex'),
+])));
+const scenarios = {};
+function memoryStorage() {
+  const values = new Map();
+  return {values, getItem(key) { return values.get(key) ?? null; }, setItem(key, value) { values.set(key, String(value)); }, removeItem(key) { values.delete(key); }};
+}
+function topicFields(tree) {
+  const nodes = [];
+  const walk = node => { if (!node || typeof node !== 'object') return; nodes.push(node); for (const child of node.children || []) walk(child); };
+  walk(tree);
+  const form = nodes.find(node => node.tag === 'form' && node.attrs?.['data-submit'] === 'forum-topic');
+  if (!form) return null;
+  const fields = [];
+  const walkForm = node => { if (!node || typeof node !== 'object') return; if (node.attrs?.name) fields.push(node); for (const child of node.children || []) walkForm(child); };
+  walkForm(form);
+  const title = fields.find(node => node.attrs.name === 'title');
+  const category = fields.find(node => node.attrs.name === 'category');
+  const content = fields.find(node => node.attrs.name === 'content');
+  return {title: title?.attrs.value ?? '', category: category?.children?.find(option => option?.attrs?.selected)?.attrs?.value ?? '',
+    content: content?.children?.join('') ?? ''};
+}
+async function createTeacherEnv() {
+  const storage = memoryStorage();
+  const provider = createFixtureProvider({fixture: true});
+  const runtime = createServiceRuntime(provider);
+  const community = createCommunity({storage: null});
+  let tree = null;
+  const controller = createPublicController({runtime, community, storage,
+    onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+  });
+  await controller.initialize('#/create-post');
+  await controller.dispatch('forum-role', {role: 'teacher'});
+  assert.ok(topicFields(tree), 'teacher composer emitted');
+  return {storage, provider, runtime, community, controller, get tree() { return tree; }};
+}
+const noThreadOrDiskWrite = env => env.community.snapshot().threads.length === 3 && env.storage.getItem('hh-forum-v1') === null;
+
+{
+  const env = await createTeacherEnv();
+  const receiptsBefore = env.runtime.inspect().receipts.length;
+  const payload = {title: '   ', category: 'Questions', content: 'A meaningful synthetic teacher question.'};
+  const result = await env.controller.dispatch('forum-topic', payload);
+  assert.equal(result.error, 'title_and_body_required');
+  assert.deepEqual(env.controller.state.community.topicDraft, payload);
+  assert.deepEqual(topicFields(env.tree), payload);
+  assert.ok(noThreadOrDiskWrite(env));
+  assert.equal(env.community.snapshot().storageStatus, 'memory_only');
+  assert.equal(env.provider.diagnostics.persistence, 'volatile-memory');
+  assert.equal(env.runtime.inspect().receipts.length, receiptsBefore, 'forum submit must not invoke account/service ports');
+  assert.equal(env.controller.canRetry, false, 'rejected submit has no automatic retry');
+  scenarios.whitespaceTitle = {error: result.error, restoredFields: topicFields(env.tree), threads: env.community.snapshot().threads.length,
+    forumStorageKey: env.storage.getItem('hh-forum-v1'), persistence: env.community.snapshot().storageStatus,
+    fixturePersistence: env.provider.diagnostics.persistence, receiptsUnchanged: env.runtime.inspect().receipts.length === receiptsBefore,
+    canRetry: env.controller.canRetry};
+
+  const corrected = {...payload, title: 'E2703 corrected retry title'};
+  const created = await env.controller.dispatch('forum-topic', corrected);
+  assert.equal(created.ok, true);
+  assert.equal(created.value.title, corrected.title);
+  assert.equal(created.value.body, corrected.content);
+  assert.equal(created.value.category, corrected.category);
+  assert.equal(env.community.snapshot().threads.length, 4, 'one corrected explicit retry creates exactly one topic');
+  assert.equal(env.controller.state.community.topicDraft, null);
+  assert.equal(env.runtime.inspect().receipts.length, receiptsBefore);
+  assert.equal(env.controller.state.journey.session.status, 'anonymous');
+  scenarios.correctedRetry = {ok: created.ok, id: created.value.id, title: created.value.title,
+    category: created.value.category, body: created.value.body, threadCount: env.community.snapshot().threads.length,
+    draftCleared: env.controller.state.community.topicDraft === null, forumStorageKey: env.storage.getItem('hh-forum-v1'),
+    serviceReceiptsUnchanged: env.runtime.inspect().receipts.length === receiptsBefore};
+
+  const persistedBytesBeforeRoleChange = JSON.stringify(env.community.snapshot().threads);
+  await env.controller.dispatch('forum-role', {role: 'anonymous'});
+  assert.equal(topicFields(env.tree), null, 'anonymous cannot see compose form');
+  assert.equal(JSON.stringify(env.community.snapshot().threads), persistedBytesBeforeRoleChange);
+  assert.equal(env.controller.state.community.topicDraft, null);
+  const anon = await env.controller.dispatch('forum-topic', {title: 'No auth', category: 'Questions', content: 'No body write.'});
+  assert.equal(anon.error, 'authentication_required');
+  assert.equal(env.community.snapshot().threads.length, 4);
+  await env.controller.dispatch('forum-role', {role: 'moderator'});
+  assert.equal(topicFields(env.tree), null, 'moderator gets no create composer');
+  const mod = await env.controller.dispatch('forum-topic', {title: 'No moderator create', category: 'Questions', content: 'No body write.'});
+  assert.equal(mod.error, 'authentication_required');
+  assert.equal(env.community.snapshot().threads.length, 4);
+  scenarios.roles = {anonymousError: anon.error, moderatorError: mod.error, composerAsAnonymous: false, composerAsModerator: false,
+    noForumDiskWrite: env.storage.getItem('hh-forum-v1') === null, communityStorage: env.community.snapshot().storageStatus};
+}
+
+{
+  const env = await createTeacherEnv();
+  const bodyWhitespace = {title: 'Valid synthetic title', category: 'Resources', content: ' \n\t '};
+  const bodyResult = await env.controller.dispatch('forum-topic', bodyWhitespace);
+  assert.equal(bodyResult.error, 'title_and_body_required');
+  assert.deepEqual(env.controller.state.community.topicDraft, bodyWhitespace);
+  assert.deepEqual(topicFields(env.tree), bodyWhitespace);
+  const bodyWhitespaceFields = topicFields(env.tree);
+
+  const unknown = {title: 'Valid title for unknown category', category: 'UnlistedCategory', content: 'Meaningful synthetic content.'};
+  const unknownResult = await env.controller.dispatch('forum-topic', unknown);
+  assert.equal(unknownResult.error, 'invalid_category');
+  assert.deepEqual(env.controller.state.community.topicDraft, unknown);
+  const unknownFields = topicFields(env.tree);
+  assert.deepEqual(unknownFields, unknown, 'unknown category option remains selected visibly in render tree');
+  assert.ok(!env.community.snapshot().threads.some(topic => topic.category === unknown.category));
+
+  const overTitle = {title: 't'.repeat(COMMUNITY_LIMITS.title + 1), category: 'Community', content: 'Meaningful body.'};
+  const overTitleResult = await env.controller.dispatch('forum-topic', overTitle);
+  assert.equal(overTitleResult.error, 'input_too_long');
+  const retainedTitle = topicFields(env.tree);
+  assert.equal(retainedTitle.title.length, COMMUNITY_LIMITS.title + 1);
+  assert.equal((await env.controller.dispatch('forum-topic', retainedTitle)).error, 'input_too_long');
+  assert.equal(env.community.snapshot().threads.length, 3);
+  const overBody = {title: 'Valid title', category: 'Questions', content: 'b'.repeat(COMMUNITY_LIMITS.body + 1)};
+  const overBodyResult = await env.controller.dispatch('forum-topic', overBody);
+  assert.equal(overBodyResult.error, 'input_too_long');
+  const retainedBody = topicFields(env.tree);
+  assert.equal(retainedBody.content.length, COMMUNITY_LIMITS.body + 1);
+  assert.equal((await env.controller.dispatch('forum-topic', retainedBody)).error, 'input_too_long');
+  assert.equal(env.community.snapshot().threads.length, 3, 'cap+1 retries never truncate into acceptance');
+  assert.equal(env.storage.getItem('hh-forum-v1'), null);
+  scenarios.whitespaceBody = {error: bodyResult.error, restoredFields: bodyWhitespaceFields};
+  scenarios.unknownCategory = {error: unknownResult.error, restoredFields: unknownFields, categoryAccepted: false};
+  scenarios.caps = {titleLimit: COMMUNITY_LIMITS.title, titleRetained: retainedTitle.title.length,
+    bodyLimit: COMMUNITY_LIMITS.body, bodyRetained: retainedBody.content.length, repeatedSubmitsRemainInvalid: true,
+    topicCount: env.community.snapshot().threads.length, forumStorageKey: env.storage.getItem('hh-forum-v1')};
+
+  await env.controller.dispatch('forum-role', {role: 'teacher'});
+  await env.controller.dispatch('forum-reset');
+  assert.equal(env.controller.state.community.topicDraft, null);
+  assert.equal(env.community.snapshot().threads.length, 3);
+  await env.controller.dispatch('forum-role', {role: 'teacher'});
+  await env.controller.dispatch('forum-topic', {title: ' ', category: 'Questions', content: 'Draft before logout.'});
+  const login = await env.controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'});
+  assert.equal(login.ok, true);
+  await env.controller.dispatch('forum-topic', {title: ' ', category: 'Questions', content: 'Draft before logout.'});
+  const logout = await env.controller.dispatch('public:logout');
+  assert.equal(logout.ok, true);
+  assert.equal(env.controller.state.community.topicDraft, null);
+  assert.equal(env.controller.state.journey.communityRole, 'anonymous');
+  await env.controller.dispatch('forum-role', {role: 'teacher'});
+  await env.controller.dispatch('forum-topic', {title: ' ', category: 'Questions', content: 'Draft before app reset.'});
+  const appReset = await env.controller.dispatch('public:reset');
+  assert.equal(appReset.ok, true);
+  assert.equal(env.controller.state.community.topicDraft, null);
+  assert.equal(env.controller.state.journey.communityRole, 'anonymous');
+  scenarios.lifecycle = {forumResetClearsDraftAndRestoresSeeds: true, logoutClearsDraftAndAnonymizes: true,
+    appResetClearsDraftAndAnonymizes: true, serviceMode: env.provider.mode, forumPersistence: env.community.snapshot().storageStatus};
+}
+
+const finishedAt = new Date().toISOString();
+const durationMs = Number(process.hrtime.bigint() - start) / 1e6;
+const result = {
+  job_id: 'R2703', worker: 'H2', phase: 'independent-volatile-fixture-render-tree-probe',
+  decision: 'accepted',
+  summary: 'Independent synthetic fixture/controller/render-tree probe confirms semantic invalid drafts retain valid peers and unknown category visibly, cap+1 values remain invalid after re-submit, corrected retry creates once without account receipts, and anonymous/moderator/reset/logout/app-reset boundaries clear/hide drafts. Community storage stayed memory-only; no browser/server/provider HTTP call.',
+  invocation: {argv: process.argv, cwd: process.cwd(), node: process.version},
+  start_utc: startedAt, finish_utc: finishedAt, duration_ms: durationMs, wall_start_epoch_ms: startedMs,
+  sourceSha256,
+  checks: scenarios,
+  network: 'none; direct local imports, fixture provider, no browser/server/production endpoint',
+};
+await fs.writeFile(path.join(outDir, 'volatile-result.json'), `${JSON.stringify(result, null, 2)}\n`);
+process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+
+function topicFieldsFrom(value) { return value; }

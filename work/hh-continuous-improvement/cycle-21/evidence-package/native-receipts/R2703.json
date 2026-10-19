@@ -1,0 +1,30 @@
+{
+  "job_id": "R2703",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Scoped review accepted: the pinned implementation retains semantic-invalid topic drafts in the emitted compose tree, rejects unknown categories and over-limit retries, allows one explicit corrected create, and clears/hides drafts across the tested role/reset/logout boundaries. Focused five-test run and independent volatile-fixture/render-tree probe passed. This is not a browser or full-suite green claim; the provided full-suite record is 283/290 with seven missing-dependency/stale-dist failures and canonical fresh-source build pending.",
+  "review": {
+    "baseline_head": "0d52cde4f2a502b6ee0d4b188bfc3b10c376daa4",
+    "source_sha256": {
+      "checkpoint/vendor/hh/src/community.mjs": "d5f4bf9b416fd53eb66fe4d983f08865c532b9982519e73735be88a0eaf1a964",
+      "checkpoint/vendor/hh/src/public-controller.mjs": "2ffc11a0b694d752930eb8ef93abe1d045a3811096b8ac81fc429b60a49c91e9",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "88385bec51b14da0bd6f6e586e591d5198759892b4f697ce7c46517738ab2e7f"
+    },
+    "focused_tests": {
+      "exit_code": 0,
+      "tests": 5,
+      "passed": 5,
+      "record": "focused-result.json",
+      "stdout": "focused-stdout.txt",
+      "stderr": "focused-stderr.txt"
+    },
+    "volatile_fixture_probe": {
+      "exit_code": 0,
+      "record": "volatile-result.json",
+      "stdout": "volatile-stdout.txt",
+      "stderr": "volatile-stderr.txt",
+      "timing_basis": "start_utc, finish_utc, and duration_ms were measured inside the successful probe; exit_code came from the exec wrapper result."
+    },
+    "scope_qualification": "No browser, server, production endpoint, or repo source edit. The first volatile-probe attempt had a duplicate-binding SyntaxError, but its original raw stderr was overwritten by the corrected run and is not retained as a file; the root tool transcript retains the 955-byte error. The first attempt executed no probe behavior or production code."
+  }
+}
