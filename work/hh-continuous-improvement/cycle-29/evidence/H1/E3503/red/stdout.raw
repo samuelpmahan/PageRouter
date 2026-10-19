@@ -1,0 +1,33 @@
+✖ breaks last-directory-subset wrong pool for rendered Home random teacher action (23.546778ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 139.423523
+
+✖ failing tests:
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:831:1
+✖ breaks last-directory-subset wrong pool for rendered Home random teacher action (23.546778ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  -   'demo-avery',
+      'demo-jordan',
+  +   'demo-jordan'
+    ]
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/86659bbafcce/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:872:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'demo-jordan', 'demo-jordan' ],
+    expected: [ 'demo-avery', 'demo-jordan' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

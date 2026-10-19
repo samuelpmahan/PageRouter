@@ -1,0 +1,40 @@
+{
+  "job_id": "E3504",
+  "worker": "H1",
+  "frozen_at": "2026-10-19T18:25:14Z",
+  "repository": "/workspace/scratch/86659bbafcce/PageRouter",
+  "head": "128876031737d853303bbee9906dd7f8d618094d",
+  "tree": "2e6c9aba404034d37f894bacb48b55b639a4ec18",
+  "working_directory": "/workspace/scratch/86659bbafcce/PageRouter/checkpoint",
+  "command": "BAZEL=/workspace/scratch/86659bbafcce/hh25/tools/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/workspace/scratch/86659bbafcce/hh29/bazel-output bash ci/bazel/run.sh",
+  "changed_product_sources_sha256": {
+    "vendor/hh/src/public-controller.mjs": "b1523381ce4845dd95afc3650a9eceabfa2ff6e4f8cd0a86eec2f88c0e224be2",
+    "vendor/hh/src/public-controller.test.mjs": "2dcced44f31127fb78c367419fab76ded170e74e072a8b8fde21a2b32f240993"
+  },
+  "related_input_pins_sha256": {
+    "vendor/hh/src/public-site.mjs": "524df4132426814cc9621246a4cba548d54c0c537dd840b3997e375e78c9ad4d",
+    "vendor/hh/services/fixtures.mjs": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+    "vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+    "ci/bazel/run.sh": "2a1a6fc5bc919f67b424d6fed92e4e888bf3767b634b1ad9544604067fbe072c",
+    "ci/bazel/bootstrap.py": "1cea8856f26e95427bd97d3c3aadfcf5554417382f4979eda34eb58f0256a58f",
+    "ci/bazel/site.bzl": "978dac959ce02699237ec235aa6f598b9735862785acb9911f42aa1d9769cd20",
+    "ci/bazel/build-driver.mjs": "e3088879bd49ef401b66e2e9fa0083d25433416468ea5f7f0611f4c618e23acf",
+    "ci/bazel/verify-output.mjs": "d2a3528e96fdb5cccb9ac4e873da6200a9261e9c14b45828a08d413d6ec1cb5a",
+    "BUILD.bazel": "72784e42dfded1173ad550a41c6b98d536f4eb6f076e2f3cbf6df7244e862665",
+    ".bazelversion": "910121d8fda1ee513d664110f94bef46c4791698010db514c2a71cc1932bc3cf",
+    ".nvmrc": "7e8a2fa94951112b894a3dbe3d05efef5e9263741fa49125f0a70f40fedab4cc",
+    "package.json": "c48b7a8c42fd2818519d26bcfc218e4a8a1553d5ac682ebfd2ac6204df2acdd8",
+    "package-lock.json": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534"
+  },
+  "toolchain": {
+    "node": "v24.19.0",
+    "bazel": "7.4.1",
+    "bazel_binary_sha256": "c97f02133adce63f0c28678ac1f21d65fa8255c80429b588aeeba8a1fac6202b",
+    "bazel_binary_mode": "0755",
+    "bazel_binary_size": 59580428,
+    "available_disk_before_build": "23G"
+  },
+  "build_target": "//:site",
+  "receipt_and_log_copy_policy": "Copy fresh checkpoint/bazel-bin/site.receipt.json and site.log after successful run, preserving file modes."
+}

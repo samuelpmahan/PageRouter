@@ -1,0 +1,37 @@
+{
+  "ok": true,
+  "priorDirectory": {
+    "query": "Jordan",
+    "school": {
+      "state": "Demo California",
+      "county": "",
+      "district": "",
+      "school": "",
+      "grade": ""
+    },
+    "matches": [
+      "demo-jordan"
+    ]
+  },
+  "homeCycle": [
+    "demo-avery",
+    "demo-jordan"
+  ],
+  "freshHomeProfile": "demo-avery",
+  "ports": [
+    "SchoolData.getStates",
+    "SchoolData.getCounties",
+    "TeacherProfile.openPublicProfile",
+    "TeacherProfile.openPublicProfile"
+  ],
+  "freshPorts": [
+    "SchoolData.getStates",
+    "TeacherProfile.openPublicProfile"
+  ],
+  "runtimeAccountProfileUnchanged": true,
+  "runtimeReceiptCounts": [
+    5,
+    3
+  ],
+  "storage": "null/volatile-memory"
+}

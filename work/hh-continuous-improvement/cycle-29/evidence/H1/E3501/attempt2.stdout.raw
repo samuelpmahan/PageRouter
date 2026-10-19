@@ -1,0 +1,129 @@
+{
+  "operation": "volatile-fixture actual rendered-control/form baseline for H1 E3501",
+  "safety": {
+    "provider": "createFixtureProvider({fixture:true, storage:null})",
+    "persistentStorage": false,
+    "browser": false,
+    "server": false,
+    "accountOrProfileWrites": false,
+    "productionProvider": false
+  },
+  "scenarios": [
+    {
+      "query": null,
+      "storageCapability": "volatile-memory",
+      "fixtureCapability": true,
+      "beforeClick": {
+        "route": "home",
+        "matchesStatus": "idle",
+        "matchesIds": [],
+        "matchesNames": []
+      },
+      "search": null,
+      "renderedAction": {
+        "id": "hh-home-random-teacher",
+        "event": "public:random-teacher",
+        "label": "Find Random Teacher"
+      },
+      "dispatch": {
+        "ok": true,
+        "errorCode": null
+      },
+      "selectedProfileId": "demo-avery",
+      "resultingRoute": "profile",
+      "portCalls": {
+        "SchoolData.getStates": 1,
+        "TeacherProfile.openPublicProfile": 1
+      },
+      "runtimeReceiptCount": 3
+    },
+    {
+      "query": "Avery",
+      "storageCapability": "volatile-memory",
+      "fixtureCapability": true,
+      "beforeClick": {
+        "route": "home",
+        "matchesStatus": "loaded",
+        "matchesIds": [
+          "demo-avery"
+        ],
+        "matchesNames": [
+          "Demo Avery"
+        ]
+      },
+      "search": {
+        "formEvent": "public:directory-search",
+        "payload": {
+          "query": "Avery"
+        },
+        "ok": true,
+        "resultIds": [
+          "demo-avery"
+        ],
+        "resultNames": [
+          "Demo Avery"
+        ]
+      },
+      "renderedAction": {
+        "id": "hh-home-random-teacher",
+        "event": "public:random-teacher",
+        "label": "Find Random Teacher"
+      },
+      "dispatch": {
+        "ok": true,
+        "errorCode": null
+      },
+      "selectedProfileId": "demo-avery",
+      "resultingRoute": "profile",
+      "portCalls": {
+        "SchoolData.getStates": 1,
+        "TeacherProfile.openPublicProfile": 1
+      },
+      "runtimeReceiptCount": 3
+    },
+    {
+      "query": "Jordan",
+      "storageCapability": "volatile-memory",
+      "fixtureCapability": true,
+      "beforeClick": {
+        "route": "home",
+        "matchesStatus": "loaded",
+        "matchesIds": [
+          "demo-jordan"
+        ],
+        "matchesNames": [
+          "Demo Jordan"
+        ]
+      },
+      "search": {
+        "formEvent": "public:directory-search",
+        "payload": {
+          "query": "Jordan"
+        },
+        "ok": true,
+        "resultIds": [
+          "demo-jordan"
+        ],
+        "resultNames": [
+          "Demo Jordan"
+        ]
+      },
+      "renderedAction": {
+        "id": "hh-home-random-teacher",
+        "event": "public:random-teacher",
+        "label": "Find Random Teacher"
+      },
+      "dispatch": {
+        "ok": true,
+        "errorCode": null
+      },
+      "selectedProfileId": "demo-jordan",
+      "resultingRoute": "profile",
+      "portCalls": {
+        "SchoolData.getStates": 1,
+        "TeacherProfile.openPublicProfile": 1
+      },
+      "runtimeReceiptCount": 3
+    }
+  ]
+}

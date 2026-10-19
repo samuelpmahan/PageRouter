@@ -828,6 +828,61 @@ test('normalizes captured public route aliases and forum paths', () => {
     {page: 'post', threadId: 'topic-local-1'});
 });
 
+test('breaks last-directory-subset wrong pool for rendered Home random teacher action', async () => {
+  const storage = null;
+  const runtime = createServiceRuntime(createFixtureProvider({fixture: true, storage}));
+  const community = createCommunity({storage});
+  let tree = null;
+  const controller = createPublicController({runtime, storage, community,
+    onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+  });
+  const nodes = root => {
+    const found = [];
+    const visit = node => {
+      if (!node || typeof node !== 'object') return;
+      found.push(node);
+      for (const child of node.children || []) visit(child);
+    };
+    visit(root);
+    return found;
+  };
+  const byId = id => nodes(tree).find(node => node.attrs?.id === id);
+  const publicRoute = page => nodes(tree).find(node => node.tag === 'a' && node.attrs?.['data-public-route'] === page);
+
+  await controller.initialize('#/');
+  await controller.navigate(byId('hh-home-find-teachers').attrs.href);
+  controller.updateDraft('query', 'Jordan');
+  const directoryForm = nodes(tree).find(node => node.tag === 'form' && node.attrs?.id === 'hh-directory-form');
+  const queryField = nodes(directoryForm).find(node => node.tag === 'input' && node.attrs?.name === 'query');
+  const searchResult = await controller.dispatch(directoryForm.attrs['data-submit'], {query: queryField.attrs.value});
+  assert.equal(searchResult.ok, true);
+  assert.deepEqual(controller.state.journey.matches.items.map(profile => profile.id), ['demo-jordan']);
+  const retainedQuery = controller.state.journey.filters.query;
+  const retainedMatches = controller.state.journey.matches.items.map(profile => profile.id);
+
+  const selections = [];
+  for (let click = 0; click < 2; click += 1) {
+    const home = publicRoute('home');
+    await controller.navigate(home.attrs.href);
+    const randomTeacher = byId('hh-home-random-teacher');
+    await controller.dispatch(randomTeacher.attrs['data-event']);
+    selections.push(controller.route.profileId);
+  }
+
+  assert.deepEqual(selections, ['demo-avery', 'demo-jordan']);
+  assert.equal(controller.state.journey.filters.query, retainedQuery);
+  assert.deepEqual(controller.state.journey.matches.items.map(profile => profile.id), retainedMatches);
+
+  const home = publicRoute('home');
+  await controller.navigate(home.attrs.href);
+  await controller.navigate(byId('hh-home-find-teachers').attrs.href);
+  const nextDirectoryForm = nodes(tree).find(node => node.tag === 'form' && node.attrs?.id === 'hh-directory-form');
+  const nextQueryField = nodes(nextDirectoryForm).find(node => node.tag === 'input' && node.attrs?.name === 'query');
+  const nextSearch = await controller.dispatch(nextDirectoryForm.attrs['data-submit'], {query: nextQueryField.attrs.value});
+  assert.equal(nextSearch.ok, true);
+  assert.deepEqual(controller.state.journey.matches.items.map(profile => profile.id), ['demo-jordan']);
+});
+
 test('captured Teacher of the Day opens as a read-only snapshot without invoking teacher services', async () => {
   const storage = memoryStorage();
   const base = createServiceRuntime(createFixtureProvider({fixture: true, storage}));

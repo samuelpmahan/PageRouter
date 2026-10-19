@@ -1,0 +1,94 @@
+{
+  "job_id": "E3503",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Confirmed and corrected Home random-teacher history dependence. A rendered Home random-teacher click now always draws from the actual runtime publicProfiles list, independent of retained directory matches. Directory filters/results remain untouched. The focused frozen regression passed and the single HH source suite passed.",
+  "repository": {
+    "path": "/workspace/scratch/86659bbafcce/PageRouter",
+    "head": "128876031737d853303bbee9906dd7f8d618094d",
+    "tree": "2e6c9aba404034d37f894bacb48b55b639a4ec18",
+    "branch": "codex/hh-continuous-improvement"
+  },
+  "change": {
+    "production_path": "checkpoint/vendor/hh/src/public-controller.mjs",
+    "diff": "In public:random-teacher dispatch, replace the matches-first ternary with `const items = runtime.snapshot().demo?.publicProfiles || [];`.",
+    "preserved": [
+      "randomIndex deterministic cycle",
+      "profile navigation and encoded profile ID",
+      "no_profiles error semantics",
+      "directory query, school, matches, and rendering",
+      "services, storage, runtime authority, and application wiring"
+    ],
+    "no_other_changes": "Exactly public-controller.mjs and public-controller.test.mjs are modified; nothing staged or committed."
+  },
+  "regression": {
+    "name": "breaks last-directory-subset wrong pool for rendered Home random teacher action",
+    "frozen_test_sha256": "2dcced44f31127fb78c367419fab76ded170e74e072a8b8fde21a2b32f240993",
+    "red": {
+      "started_at": "2026-10-19T18:15:42Z",
+      "ended_at": "2026-10-19T18:15:42Z",
+      "command": "node --test --test-name-pattern='breaks last-directory-subset wrong pool for rendered Home random teacher action' vendor/hh/src/public-controller.test.mjs",
+      "exit_code": 1,
+      "counts": {"pass": 0, "fail": 1},
+      "first_failure": {
+        "actual": ["demo-jordan", "demo-jordan"],
+        "expected": ["demo-avery", "demo-jordan"]
+      }
+    },
+    "focused_green": {
+      "started_at": "2026-10-19T18:17:03Z",
+      "ended_at": "2026-10-19T18:17:03Z",
+      "command": "node --test --test-name-pattern='breaks last-directory-subset wrong pool for rendered Home random teacher action' vendor/hh/src/public-controller.test.mjs",
+      "exit_code": 0,
+      "counts": {"pass": 1, "fail": 0},
+      "qualification": "The first RED assertion is the two-click selection sequence. Later assertions preserving directory state and proving a subsequent Jordan search remains filtered are post-fix / first-GREEN-only coverage; RED does not independently prove those assertions."
+    }
+  },
+  "source_suite": {
+    "started_at": "2026-10-19T18:17:06Z",
+    "ended_at": "2026-10-19T18:17:07Z",
+    "command": "node --test vendor/hh/src/*.test.mjs",
+    "working_directory": "/workspace/scratch/86659bbafcce/PageRouter/checkpoint",
+    "exit_code": 0,
+    "counts": {"pass": 115, "fail": 0}
+  },
+  "source_pins_sha256": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "b1523381ce4845dd95afc3650a9eceabfa2ff6e4f8cd0a86eec2f88c0e224be2",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "2dcced44f31127fb78c367419fab76ded170e74e072a8b8fde21a2b32f240993",
+    "checkpoint/vendor/hh/src/public-site.mjs": "524df4132426814cc9621246a4cba548d54c0c537dd840b3997e375e78c9ad4d",
+    "checkpoint/vendor/hh/services/fixtures.mjs": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  },
+  "raw_artifact_sha256": {
+    "red/stdout.raw": "73191684f11f851a0a65d01783aa7c54c92b2831b193ef9fd15295a4ab82cba1",
+    "red/stderr.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "red/exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "green/stdout.raw": "971c68c26ad91bd804c68acf33335341a40ab43317205e7edfa4bd1820111f37",
+    "green/stderr.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "green/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "suite/stdout.raw": "ae081e9875974556f8cbf686f1c720c46ba3719baf9f54e77b37858532c1abea",
+    "suite/stderr.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "suite/exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "artifact_links": [
+    "E3503/red/freeze.json",
+    "E3503/red/public-controller.test.mjs",
+    "E3503/red/start",
+    "E3503/red/end",
+    "E3503/red/exit",
+    "E3503/red/stdout.raw",
+    "E3503/red/stderr.raw",
+    "E3503/green/start",
+    "E3503/green/end",
+    "E3503/green/exit",
+    "E3503/green/stdout.raw",
+    "E3503/green/stderr.raw",
+    "E3503/suite/start",
+    "E3503/suite/end",
+    "E3503/suite/exit",
+    "E3503/suite/stdout.raw",
+    "E3503/suite/stderr.raw"
+  ],
+  "qualification": "No canonical Bazel build performed. No browser/server/origin/production verification. No Git stage, commit, push, or PR change."
+}

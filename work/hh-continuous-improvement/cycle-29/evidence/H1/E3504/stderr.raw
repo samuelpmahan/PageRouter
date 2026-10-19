@@ -1,0 +1,23 @@
+Extracting Bazel installation...
+OpenJDK 64-Bit Server VM warning: Options -Xverify:none and -noverify were deprecated in JDK 13 and will likely be removed in a future release.
+Computing main repo mapping: 
+Computing main repo mapping: 
+Loading: 
+Loading: 0 packages loaded
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+Analyzing: target //:site (1 packages loaded, 0 targets configured)
+
+INFO: Analyzed target //:site (7 packages loaded, 1635 targets configured).
+[1 / 2] Building and verifying PageRouter from source; 0s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 11s processwrapper-sandbox
+[1 / 2] Building and verifying PageRouter from source; 41s processwrapper-sandbox
+INFO: From Building and verifying PageRouter from source:
+INFO: Found 1 target...
+Target //:site up-to-date:
+  bazel-bin/site.site
+  bazel-bin/site.evidence
+  bazel-bin/site.receipt.json
+  bazel-bin/site.log
+INFO: Elapsed time: 91.596s, Critical Path: 87.25s
+INFO: 2 processes: 1 internal, 1 processwrapper-sandbox.
+INFO: Build completed successfully, 2 total actions

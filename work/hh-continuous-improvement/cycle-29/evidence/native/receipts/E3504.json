@@ -1,0 +1,105 @@
+{
+  "job_id": "E3504",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "The one authorized canonical PageRouter source build succeeded for the accepted E3503 candidate. Its fresh receipt binds both changed HH files to their frozen SHA-256 values, verifies 843 site files, and reports site build ID 10183645694e0c0183f9e461a3d55c51ef737f259531c406e54c4458e80f8064. No build retry, publication, or Git write occurred.",
+  "repository": {
+    "path": "/workspace/scratch/86659bbafcce/PageRouter",
+    "head": "128876031737d853303bbee9906dd7f8d618094d",
+    "tree": "2e6c9aba404034d37f894bacb48b55b639a4ec18",
+    "branch": "codex/hh-continuous-improvement"
+  },
+  "build": {
+    "working_directory": "/workspace/scratch/86659bbafcce/PageRouter/checkpoint",
+    "command": "BAZEL=/workspace/scratch/86659bbafcce/hh25/tools/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/workspace/scratch/86659bbafcce/hh29/bazel-output bash ci/bazel/run.sh",
+    "started_at": "2026-10-19T18:25:38Z",
+    "ended_at": "2026-10-19T18:27:11Z",
+    "exit_code": 0,
+    "attempts": 1,
+    "target": "//:site",
+    "toolchain": {
+      "node": "v24.19.0",
+      "bazel": "7.4.1",
+      "bazel_binary": "/workspace/scratch/86659bbafcce/hh25/tools/bazel",
+      "bazel_binary_sha256": "c97f02133adce63f0c28678ac1f21d65fa8255c80429b588aeeba8a1fac6202b",
+      "bazel_binary_mode": "0755",
+      "bazel_binary_size": 59580428,
+      "lock_sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534"
+    }
+  },
+  "fresh_receipt": {
+    "path": "site.receipt.json",
+    "mode": "0555",
+    "bytes": 467313,
+    "sha256": "9ad8bd5302b1ea0ced1b75017d3716a3a771dad6878b97301e33ad2ea14aeed8",
+    "schema": "pagerouter-source-build@1",
+    "siteBuildId": "10183645694e0c0183f9e461a3d55c51ef737f259531c406e54c4458e80f8064",
+    "sourceDigest": "93afb5a9c716f76135dd142cc4b9844da2c66b1292e30e42e35ba3dfbb81e652",
+    "siteDigest": "6cf2ae4e9c40b9d1b01ea1d7e3efb3e212ff2ce3be3b819f3763f648bc1de1c5",
+    "site_files_verified": 843,
+    "pxcube_packages_rebuilt": 14,
+    "pxcube_relocated": false,
+    "crisp_exact_compiled_equality": true,
+    "changed_source_inputs": [
+      {
+        "path": "vendor/hh/src/public-controller.mjs",
+        "bytes": 58635,
+        "sha256": "b1523381ce4845dd95afc3650a9eceabfa2ff6e4f8cd0a86eec2f88c0e224be2"
+      },
+      {
+        "path": "vendor/hh/src/public-controller.test.mjs",
+        "bytes": 151158,
+        "sha256": "2dcced44f31127fb78c367419fab76ded170e74e072a8b8fde21a2b32f240993"
+      }
+    ]
+  },
+  "site_log": {
+    "path": "site.log",
+    "mode": "0555",
+    "bytes": 56718,
+    "sha256": "c6e58bf6bf70508d795e104455a4b7a313a8a03a3f3a7e3fba30598bcc4ac123"
+  },
+  "build_raw_streams": {
+    "stdout": {"path": "stdout.raw", "sha256": "45bcbbffdb97e76f02344e2e58fff2b6a28deabe41a0beb546d5325b327114d0"},
+    "stderr": {"path": "stderr.raw", "sha256": "0625b852def8668cdcedf5c05999465636d5cc58481b4dee07f34cb8b3a5dd2b"},
+    "exit": {"path": "exit", "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"},
+    "start": "start",
+    "end": "end"
+  },
+  "count_qualification": {
+    "targeted_hh_controller_community": {"tests": 162, "pass": 162, "fail": 0, "source": "site.log"},
+    "full_site_npm_test_suite": {"tests": 317, "pass": 317, "fail": 0, "source": "site.log"},
+    "atlas_built_import_closure": {"tests": 1, "pass": 1, "fail": 0, "source": "site.log"},
+    "bazel_build_helper_tests": {"tests": 2, "pass": 2, "fail": 0, "source": "stdout.raw"},
+    "qualification": "The targeted HH group is included in the full npm test suite; 162 and 317 overlap and must not be summed. Atlas import-closure and build-helper groups are separately logged."
+  },
+  "frozen_source_pins_sha256": {
+    "vendor/hh/src/public-controller.mjs": "b1523381ce4845dd95afc3650a9eceabfa2ff6e4f8cd0a86eec2f88c0e224be2",
+    "vendor/hh/src/public-controller.test.mjs": "2dcced44f31127fb78c367419fab76ded170e74e072a8b8fde21a2b32f240993",
+    "vendor/hh/src/public-site.mjs": "524df4132426814cc9621246a4cba548d54c0c537dd840b3997e375e78c9ad4d",
+    "vendor/hh/services/fixtures.mjs": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+    "vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+    "ci/bazel/run.sh": "2a1a6fc5bc919f67b424d6fed92e4e888bf3767b634b1ad9544604067fbe072c",
+    "ci/bazel/bootstrap.py": "1cea8856f26e95427bd97d3c3aadfcf5554417382f4979eda34eb58f0256a58f",
+    "ci/bazel/site.bzl": "978dac959ce02699237ec235aa6f598b9735862785acb9911f42aa1d9769cd20",
+    "ci/bazel/build-driver.mjs": "e3088879bd49ef401b66e2e9fa0083d25433416468ea5f7f0611f4c618e23acf",
+    "ci/bazel/verify-output.mjs": "d2a3528e96fdb5cccb9ac4e873da6200a9261e9c14b45828a08d413d6ec1cb5a",
+    "BUILD.bazel": "72784e42dfded1173ad550a41c6b98d536f4eb6f076e2f3cbf6df7244e862665",
+    ".bazelversion": "910121d8fda1ee513d664110f94bef46c4791698010db514c2a71cc1932bc3cf",
+    ".nvmrc": "7e8a2fa94951112b894a3dbe3d05efef5e9263741fa49125f0a70f40fedab4cc",
+    "package.json": "c48b7a8c42fd2818519d26bcfc218e4a8a1553d5ac682ebfd2ac6204df2acdd8",
+    "package-lock.json": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534"
+  },
+  "artifact_links": [
+    "freeze.json",
+    "start",
+    "end",
+    "exit",
+    "stdout.raw",
+    "stderr.raw",
+    "site.receipt.json",
+    "site.log"
+  ],
+  "qualification": "Fresh receipt and site.log copies retained from bazel-bin with original mode 0555. No browser QA, deploy, server, origin workaround, real-account action, Git stage, or commit. No build retry."
+}

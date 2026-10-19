@@ -1,0 +1,14 @@
+{
+  "schema": "hh29-browser-check/v1",
+  "attempt": "Official connected Browser Work bootstrap",
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "tool call error: tool call failed for `codex_apps/browser.js`\n\nCaused by:\n    Mcp error: -32001: Unknown tool({\"name\":\"browser.js\"})"
+      }
+    ],
+    "isError": true
+  },
+  "boundary": "Fresh tool unavailable. No alternate browser/origin/server/loopback workaround attempted. No browser DOM/screenshot/visual/AT claim."
+}

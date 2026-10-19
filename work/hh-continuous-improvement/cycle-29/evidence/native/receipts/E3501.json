@@ -1,0 +1,82 @@
+{
+  "job_id": "E3501",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "The actual rendered Home random-teacher action reuses nonempty directory matches after navigating Home. Fresh volatile fixture baselines picked Demo Avery globally; the same first click after a submitted Avery search picked Demo Avery, and after a Jordan search picked Demo Jordan. Thus prior directory filter state changes Home discovery selection. This confirms route-history coupling, but whether that is a product defect depends on intended semantics; no product edits or tests were made.",
+  "repository": {
+    "path": "/workspace/scratch/86659bbafcce/PageRouter",
+    "head": "128876031737d853303bbee9906dd7f8d618094d",
+    "tree": "2e6c9aba404034d37f894bacb48b55b639a4ec18",
+    "branch": "codex/hh-continuous-improvement"
+  },
+  "method": {
+    "harness": "Node v24.19.0; createFixtureProvider({fixture:true,storage:null}), createServiceRuntime, createPublicController, renderPublicSite; traversed actual rendered controls/form in virtual tree and dispatched their exact data-event/data-submit values.",
+    "scenarios": [
+      "Fresh Home, click rendered #hh-home-random-teacher: selected demo-avery from global profile list.",
+      "Fresh Home, follow rendered Find Teachers route, submit rendered directory form with payload {query:'Avery'}, follow rendered Home route, click rendered #hh-home-random-teacher: selected demo-avery; directory match remained demo-avery.",
+      "Fresh Home, follow rendered Find Teachers route, submit rendered directory form with payload {query:'Jordan'}, follow rendered Home route, click rendered #hh-home-random-teacher: selected demo-jordan; directory match remained demo-jordan."
+    ],
+    "ports_per_scenario": {
+      "SchoolData.getStates": 1,
+      "TeacherProfile.openPublicProfile": 1
+    },
+    "runtime_receipts_per_scenario": 3,
+    "fixture_profile_count": 2,
+    "safety": "Volatile memory only; no browser, server, origin workaround, real account, product write, or persistent storage. No directory filter/result cleanup or other flow replay."
+  },
+  "interpretation": {
+    "source_mechanism": "public-controller.mjs dispatch public:random-teacher prefers journey.matches.items when nonempty and falls back to runtime snapshot publicProfiles only when matches are empty. Home exposes this action as Find Random Teacher.",
+    "smallest_candidate_if_home_means_global_discovery": "For public:random-teacher, select from runtime.snapshot().demo.publicProfiles regardless of retained directory matches; keep directory filter/results state and rendering unchanged.",
+    "falsifier": "If intended product semantics are that Home's random discovery honors the user's most recent directory filter even after leaving the directory, current behavior may be deliberate. No acceptance criterion resolving that meaning was present in the reviewed source/package."
+  },
+  "execution": {
+    "attempt1": {
+      "result": "Harness-only error before product behavior: provider services map is frozen and cannot be wrapped by assignment.",
+      "raw_stdout": "attempt01/stdout.raw",
+      "raw_stderr": "attempt01/stderr.raw",
+      "exit": "attempt01/exit",
+      "started_at": "2026-10-19T18:11:15Z",
+      "ended_at": "2026-10-19T18:11:15Z",
+      "probe_sha256": "7252b91bbea592ce856b1a4dc73696ab9b133f81f5e0585e1e49a283c927d473",
+      "note": "The preserved attempt01/probe.mjs SHA-256 matches the initial frozen probe hash exactly. Attempt 2 used a separate wrapper provider that delegates unchanged fixture services."
+    },
+    "attempt2": {
+      "started_at": "2026-10-19T18:11:50Z",
+      "ended_at": "2026-10-19T18:11:50Z",
+      "exit_code": 0,
+      "stdout": "attempt2.stdout.raw",
+      "stderr": "attempt2.stderr.raw"
+    }
+  },
+  "source_pins_sha256": {
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+    "checkpoint/vendor/hh/services/fixtures.mjs": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+    "checkpoint/vendor/hh/src/community.mjs": "9e5ce0c47acea55e4217463f099b115080faa7d1e1b412eecc9128690e6a9cc2",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "9c9276c93b4ab9f1afc3263c601588e97af6a7182ff337df55baaa472c0c2481",
+    "checkpoint/vendor/hh/src/public-site.mjs": "524df4132426814cc9621246a4cba548d54c0c537dd840b3997e375e78c9ad4d"
+  },
+  "probe_sha256": "6def7b65dbab1736a7e4a4391e8dd49848339a2c24d26b896def10078a0b0960",
+  "artifact_sha256": {
+    "attempt2.stdout.raw": "4898ccc56e3d8c49b400ca01da19297102f71f5f12156d318e8436c6e1de0c9e",
+    "attempt2.stderr.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "attempt2.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "artifact_links": [
+    "probe.mjs",
+    "freeze-attempt2.json",
+    "attempt2.start",
+    "attempt2.end",
+    "attempt2.exit",
+    "attempt2.stdout.raw",
+    "attempt2.stderr.raw",
+    "attempt01/probe.mjs",
+    "attempt01/freeze.json",
+    "attempt01/start",
+    "attempt01/end",
+    "attempt01/exit",
+    "attempt01/stdout.raw",
+    "attempt01/stderr.raw"
+  ],
+  "scope": "Harness and evidence only, under /workspace/scratch/86659bbafcce/hh29/H1. No PageRouter source/test/build/main/PR edits; no commits or publication."
+}

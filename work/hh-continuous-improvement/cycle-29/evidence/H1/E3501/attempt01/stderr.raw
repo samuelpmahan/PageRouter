@@ -1,0 +1,12 @@
+file:///workspace/scratch/86659bbafcce/hh29/H1/probe.mjs:18
+    provider.services[port] = async input => {
+                            ^
+
+TypeError: Cannot assign to read only property 'SchoolData.getStates' of object '#<Object>'
+    at scenario (file:///workspace/scratch/86659bbafcce/hh29/H1/probe.mjs:18:29)
+    at file:///workspace/scratch/86659bbafcce/hh29/H1/probe.mjs:85:21
+    at ModuleJob.run (node:internal/modules/esm/module_job:439:25)
+    at async node:internal/modules/esm/loader:643:26
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)
+
+Node.js v24.19.0

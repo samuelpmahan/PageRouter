@@ -1,0 +1,621 @@
+{
+  "schema": "chainspot.rebalancer-state/v1",
+  "service": {
+    "name": "hh29-home-discovery-context",
+    "scope": "Home Find Random Teacher after submitted directory filter; volatilefixture-only and separate independentreview"
+  },
+  "workers": {
+    "H1": {
+      "job": "E3505",
+      "agent": "/root/hh29_h1"
+    },
+    "H2": {
+      "job": null,
+      "agent": null
+    }
+  },
+  "jobs": {
+    "E3501": {
+      "id": "E3501",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Frontdoor integrationowner: actualvolatilefixture home randomteacher after priorfilter, baseline before anypatch",
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-19T18:09:30.917680+00:00",
+      "finished_at": "2026-10-19T18:13:41.813928+00:00",
+      "receipt": "/workspace/scratch/86659bbafcce/hh29/receipts/E3501.json"
+    },
+    "E3502": {
+      "id": "E3502",
+      "kind": "extract",
+      "allow_workers": [
+        "H2"
+      ],
+      "subject": "Independent read-only controlscope/nonduplication/sourcecontext and smallest meaningful acceptance",
+      "status": "done",
+      "worker": "H2",
+      "started_at": "2026-10-19T18:09:31.007203+00:00",
+      "finished_at": "2026-10-19T18:11:53.516858+00:00",
+      "receipt": "/workspace/scratch/86659bbafcce/hh29/receipts/E3502.json"
+    },
+    "E3503": {
+      "id": "E3503",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Home discovery global preview pool correction with actualrendered-control regression RED then minimalfix",
+      "guard": "Actual E3501 retainedsubsetbehavior and independentE3502 onlyHomecaller source establish bounded gap; ordinaryreversibletest/fix authorized; rootmust inspectwrittenflow beforeGREEN",
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-19T18:13:43.205089+00:00",
+      "finished_at": "2026-10-19T18:19:44.823546+00:00",
+      "receipt": "/workspace/scratch/86659bbafcce/hh29/receipts/E3503.json"
+    },
+    "R3503": {
+      "id": "R3503",
+      "kind": "review",
+      "depends_on": "E3503",
+      "allow_workers": [
+        "H2"
+      ],
+      "subject": "Independent review globalHomepool correction/frozenregression + ONE actualvolatilefixtureflow, no ownacceptance",
+      "guard": "E3503 realREDthenfocused1GREEN+115HHsourceGREEN andexact2changedpaths; independentreviewerH2 notimplementorH1; no canonicalbuild/replayyet",
+      "status": "done",
+      "worker": "H2",
+      "started_at": "2026-10-19T18:19:45.229801+00:00",
+      "finished_at": "2026-10-19T18:24:22.194536+00:00",
+      "receipt": "/workspace/scratch/86659bbafcce/hh29/receipts/R3503.json"
+    },
+    "E3504": {
+      "id": "E3504",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "ONE configured canonical source build on independentlyaccepted HH29 exact2sourceinputs",
+      "guard": "R3503 accepted differentworker focused1GREEN+actualvolatileprobe, H2harnesscountrepairoriginalsourcecustody separatelyqualified; currentproductpinsunchanged andcanonical build explicitlyauthorized",
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-19T18:24:22.532468+00:00",
+      "finished_at": "2026-10-19T18:29:01.141452+00:00",
+      "receipt": "/workspace/scratch/86659bbafcce/hh29/receipts/E3504.json"
+    },
+    "E3506": {
+      "id": "E3506",
+      "kind": "extract",
+      "allow_workers": [
+        "H2"
+      ],
+      "subject": "Clarify original vs repaired independentprobe source custody without rerun/reconstruction",
+      "guard": "Rootreview accepted product but actualfileinventory has currentprobe+initial/repairedhashes and no apparent originalbody; preserveexactscope provenance, no product/source/test execution",
+      "status": "done",
+      "worker": "H2",
+      "started_at": "2026-10-19T18:25:06.326750+00:00",
+      "finished_at": "2026-10-19T18:26:17.381046+00:00",
+      "receipt": "/workspace/scratch/86659bbafcce/hh29/receipts/E3506.json"
+    },
+    "E3505": {
+      "id": "E3505",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Package accepted HH29 source/tests/raw evidence and ordinary commit on existing reviewbranch after rootaudit",
+      "guard": "R3503 accepted/E3506custodyqualified/ONEcanonicalE3504successful; rootverifiedfreshreceiptboth2changedrelativeinputs; no further product/test/buildreruns",
+      "status": "running",
+      "worker": "H1",
+      "started_at": "2026-10-19T18:29:01.444257+00:00",
+      "finished_at": null
+    }
+  },
+  "events": [
+    {
+      "type": "solve",
+      "epoch": 0,
+      "at": "2026-10-19T18:09:30.822046+00:00",
+      "ready_jobs": [
+        "E3501",
+        "E3502"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H1": "E3501",
+        "H2": "E3502"
+      },
+      "dispatch": {
+        "H1": "E3501",
+        "H2": "E3502"
+      },
+      "native_seconds": 0.003093478000664618,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 200,
+      "native_score": 200,
+      "caps": {
+        "E3501": 1,
+        "E3502": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E3501": [
+          "H1"
+        ],
+        "E3502": [
+          "H2"
+        ]
+      },
+      "weights": {
+        "E3501": 100,
+        "E3502": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T18:09:30.917680+00:00",
+      "worker": "H1",
+      "job": "E3501",
+      "agent": "/root/hh29_h1"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T18:09:31.007203+00:00",
+      "worker": "H2",
+      "job": "E3502",
+      "agent": "/root/hh29_h2"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T18:11:53.516858+00:00",
+      "worker": "H2",
+      "job": "E3502"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T18:13:41.813928+00:00",
+      "worker": "H1",
+      "job": "E3501"
+    },
+    {
+      "type": "coordinator_guard_admission",
+      "at": "2026-10-19T18:13:42.995447+00:00",
+      "job": "E3503",
+      "guard": "Actual E3501 retainedsubsetbehavior and independentE3502 onlyHomecaller source establish bounded gap; ordinaryreversibletest/fix authorized; rootmust inspectwrittenflow beforeGREEN"
+    },
+    {
+      "type": "solve",
+      "epoch": 1,
+      "at": "2026-10-19T18:13:43.096296+00:00",
+      "ready_jobs": [
+        "E3503"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H2": "BENCH",
+        "H1": "E3503"
+      },
+      "dispatch": {
+        "H1": "E3503"
+      },
+      "native_seconds": 0.0032128790007845964,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E3501": 0,
+        "E3502": 0,
+        "E3503": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E3503": [
+          "H1"
+        ]
+      },
+      "weights": {
+        "E3503": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T18:13:43.205089+00:00",
+      "worker": "H1",
+      "job": "E3503",
+      "agent": "/root/hh29_h1"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T18:19:44.823546+00:00",
+      "worker": "H1",
+      "job": "E3503"
+    },
+    {
+      "type": "coordinator_guard_admission",
+      "at": "2026-10-19T18:19:44.979172+00:00",
+      "job": "R3503",
+      "guard": "E3503 realREDthenfocused1GREEN+115HHsourceGREEN andexact2changedpaths; independentreviewerH2 notimplementorH1; no canonicalbuild/replayyet"
+    },
+    {
+      "type": "solve",
+      "epoch": 2,
+      "at": "2026-10-19T18:19:45.098130+00:00",
+      "ready_jobs": [
+        "R3503"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H1": "BENCH",
+        "H2": "R3503"
+      },
+      "dispatch": {
+        "H2": "R3503"
+      },
+      "native_seconds": 0.003551789999619359,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 200,
+      "native_score": 200,
+      "caps": {
+        "E3501": 0,
+        "E3502": 0,
+        "E3503": 0,
+        "R3503": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "R3503": [
+          "H2"
+        ]
+      },
+      "weights": {
+        "R3503": 200
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T18:19:45.229801+00:00",
+      "worker": "H2",
+      "job": "R3503",
+      "agent": "/root/hh29_h2"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T18:24:22.194536+00:00",
+      "worker": "H2",
+      "job": "R3503"
+    },
+    {
+      "type": "coordinator_guard_admission",
+      "at": "2026-10-19T18:24:22.301943+00:00",
+      "job": "E3504",
+      "guard": "R3503 accepted differentworker focused1GREEN+actualvolatileprobe, H2harnesscountrepairoriginalsourcecustody separatelyqualified; currentproductpinsunchanged andcanonical build explicitlyauthorized"
+    },
+    {
+      "type": "solve",
+      "epoch": 3,
+      "at": "2026-10-19T18:24:22.419409+00:00",
+      "ready_jobs": [
+        "E3504"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H2": "BENCH",
+        "H1": "E3504"
+      },
+      "dispatch": {
+        "H1": "E3504"
+      },
+      "native_seconds": 0.005747084000176983,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E3501": 0,
+        "E3502": 0,
+        "E3503": 0,
+        "R3503": 0,
+        "E3504": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E3504": [
+          "H1"
+        ]
+      },
+      "weights": {
+        "E3504": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T18:24:22.532468+00:00",
+      "worker": "H1",
+      "job": "E3504",
+      "agent": "/root/hh29_h1"
+    },
+    {
+      "type": "coordinator_guard_admission",
+      "at": "2026-10-19T18:25:06.100436+00:00",
+      "job": "E3506",
+      "guard": "Rootreview accepted product but actualfileinventory has currentprobe+initial/repairedhashes and no apparent originalbody; preserveexactscope provenance, no product/source/test execution"
+    },
+    {
+      "type": "solve",
+      "epoch": 4,
+      "at": "2026-10-19T18:25:06.219178+00:00",
+      "ready_jobs": [
+        "E3506"
+      ],
+      "pinned_workers": [
+        "H1"
+      ],
+      "assignments": {
+        "H1": "E3504",
+        "H2": "E3506"
+      },
+      "dispatch": {
+        "H2": "E3506"
+      },
+      "native_seconds": 0.004161270000622608,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 1 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E3501": 0,
+        "E3502": 0,
+        "E3503": 0,
+        "R3503": 0,
+        "E3504": 1,
+        "E3506": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E3506": [
+          "H2"
+        ]
+      },
+      "weights": {
+        "E3506": 100
+      },
+      "agent_by_worker": {
+        "H1": "/root/hh29_h1",
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T18:25:06.326750+00:00",
+      "worker": "H2",
+      "job": "E3506",
+      "agent": "/root/hh29_h2"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T18:26:17.381046+00:00",
+      "worker": "H2",
+      "job": "E3506"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T18:29:01.141452+00:00",
+      "worker": "H1",
+      "job": "E3504"
+    },
+    {
+      "type": "coordinator_guard_admission",
+      "at": "2026-10-19T18:29:01.242510+00:00",
+      "job": "E3505",
+      "guard": "R3503 accepted/E3506custodyqualified/ONEcanonicalE3504successful; rootverifiedfreshreceiptboth2changedrelativeinputs; no further product/test/buildreruns"
+    },
+    {
+      "type": "solve",
+      "epoch": 5,
+      "at": "2026-10-19T18:29:01.346406+00:00",
+      "ready_jobs": [
+        "E3505"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H2": "BENCH",
+        "H1": "E3505"
+      },
+      "dispatch": {
+        "H1": "E3505"
+      },
+      "native_seconds": 0.004181746000540443,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E3501": 0,
+        "E3502": 0,
+        "E3503": 0,
+        "R3503": 0,
+        "E3504": 0,
+        "E3506": 0,
+        "E3505": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E3505": [
+          "H1"
+        ]
+      },
+      "weights": {
+        "E3505": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T18:29:01.444257+00:00",
+      "worker": "H1",
+      "job": "E3505",
+      "agent": "/root/hh29_h1"
+    }
+  ],
+  "epoch": 6,
+  "policy": {
+    "extract_priority": 100,
+    "review_priority": 200,
+    "repair_priority": 300
+  }
+}

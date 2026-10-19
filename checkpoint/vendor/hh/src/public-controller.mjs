@@ -697,7 +697,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
       return {ok: true};
     }
     if (event === 'public:random-teacher') {
-      const items = state.journey.matches.items.length ? state.journey.matches.items : (runtime.snapshot().demo?.publicProfiles || []);
+      const items = runtime.snapshot().demo?.publicProfiles || [];
       if (!items.length) return {ok: false, error: {code: 'no_profiles', message: 'No synthetic teacher profiles are available.'}};
       const picked = items[randomIndex++ % items.length];
       return requestNavigation(`/public-profile/${encodeURIComponent(picked.id)}`);
