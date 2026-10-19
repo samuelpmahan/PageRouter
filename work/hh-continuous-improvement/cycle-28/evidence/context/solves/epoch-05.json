@@ -1,0 +1,63 @@
+{
+  "epoch": 5,
+  "at": "2026-10-19T16:23:01.786411+00:00",
+  "ready_jobs": [
+    "E3405"
+  ],
+  "pinned_workers": [],
+  "assignments": {
+    "H2": "BENCH",
+    "H1": "E3405"
+  },
+  "dispatch": {
+    "H1": "E3405"
+  },
+  "native_seconds": 0.004137253001317731,
+  "native_constraints": {
+    "solved": true,
+    "brokenVal": 0,
+    "brokenCount": 0,
+    "constraints": [
+      {
+        "name": "independent_review",
+        "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+        "value": 0
+      },
+      {
+        "name": "pin_in_flight",
+        "desc": "avoidMovingSpec: Avoid moving 0 objects",
+        "value": 0
+      },
+      {
+        "name": "ready_packet_capacity",
+        "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+        "value": 0
+      }
+    ]
+  },
+  "independent_capacity_check": true,
+  "independent_eligibility_check": true,
+  "exact_score": 100,
+  "native_score": 100,
+  "caps": {
+    "E3401": 0,
+    "E3402": 0,
+    "E3403": 0,
+    "R3403": 0,
+    "E3404": 0,
+    "E3405": 1,
+    "BENCH": 2
+  },
+  "eligible": {
+    "E3405": [
+      "H1"
+    ]
+  },
+  "weights": {
+    "E3405": 100
+  },
+  "agent_by_worker": {
+    "H1": null,
+    "H2": null
+  }
+}

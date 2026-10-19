@@ -37,10 +37,13 @@ const h1=(attrs,text)=>h('h1',attrs,text),h2=(text)=>h('h2',{},text),h3=(text)=>
 function termsText(){const groups=[];let section=null;for(const {tag,text} of termsSections){if(tag==='h1'){section={title:text,children:[]};groups.push(section);}else if(tag==='h2'){section?.children.push(h('h3',{},text));}else if(section)section.children.push(h('p',{},text));}return h('div',{class:'hh-terms-copy'},...groups.map((item,index)=>h('article',{class:'hh-terms-card'},h(index===0?'h2':'h2',{class:index===0?'hh-terms-introduction':''},item.title),...item.children)),h('p',{class:'hh-terms-updated'},'Last Updated: September 26, 2026 (PST)'));}
 function directory(j={}){
  const filters=j.filters||{},lookups=j.lookups||{},school=j.school||{},result=j.matches||{},matches=Array.isArray(result.items)?result.items:[];
+ const schoolLookupError=j.lookupError?status(j.lookupError,'error'):null;
+ const schoolLookupRetry=j.lookupError&&j.lookupRetryable?button('Retry school choices','public:retry-school-lookup',{id:'hh-directory-lookup-retry',class:'hh-text-button'}):null;
  const searchCard=h('section',{class:'hh-card hh-directory-search-card'},
   h1({},'Find a Teacher'),
   h('form',{id:'hh-directory-form','data-submit':'public:directory-search'},
    h('div',{class:'hh-form-grid'},selectField('State:','state',lookups.states,school.state),selectField('County:','county',lookups.counties,school.county),selectField('School District','district',lookups.districts,school.district),selectField('School:','school',lookups.schools,school.school)),
+   schoolLookupError||schoolLookupRetry?h('div',{class:'hh-directory-school-lookup-recovery'},schoolLookupError,schoolLookupRetry):null,
    h('details',{class:'hh-directory-advanced'},h('summary',{},'More search options'),field('Search by teacher','query',filters.query||'',{type:'search',maxlength:'100'})),
    h('button',{id:'hh-directory-search',type:'submit',class:'hh-button hh-full-button'},'Find Teachers')));
  const completedSearch=!!j.searchPerformed;
@@ -50,7 +53,7 @@ function directory(j={}){
   completedSearch?h('div',{id:'hh-directory-results',class:'hh-empty'},h3('No teachers found'),intro('Try another school or search term.')):null;
  const resultsCard=h('section',{class:'hh-card hh-directory-results-card'},h2('Search Results'),
   ['loading','error'].includes(result.status)||j.searchPerformed?h('p',{id:'hh-directory-status','aria-live':'polite'},result.status==='loading'?'Loading…':result.status==='error'?'Could not load results':`${matches.length} ${matches.length===1?'teacher':'teachers'}`):null,
-  status(result.error||j.error,'error'),resultBody);
+  status(result.error||(j.lookupError?'':j.error),'error'),resultBody);
  return h('main',{id:'hh-main',class:'hh-main hh-directory'},searchCard,resultsCard);
 }
 function selectField(label,key,options,value){return h('label',{class:'hh-field',for:`hh-directory-${key}`},h('span',{},label),h('select',{id:`hh-directory-${key}`,name:key,'data-public-select':key,'data-school':key},h('option',{value:''},`Choose ${label.replace(/:$/,'').toLowerCase()}`),(options||[]).map(o=>{const val=typeof o==='string'?o:o.id??o.name;return h('option',{value:val,selected:String(val)===String(value)},typeof o==='string'?o:o.name)})));}

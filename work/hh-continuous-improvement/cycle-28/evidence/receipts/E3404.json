@@ -1,0 +1,73 @@
+{
+  "job_id": "E3404",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "One canonical Bazel source build completed successfully from checkpoint/ with the accepted four HH source inputs bound exactly. It verified 843 site files, rebuilt all 14 PxCube packages, and produced build ID daf53f62ab1c4ac1235eab69ba82329d3045addd7b820153f6f39af6d9f6ba32. Fresh receipt and site log were copied byte- and mode-faithfully. No product edits, reruns, staging, commit, or packaging occurred in E3404.",
+  "command": {
+    "cwd": "/workspace/scratch/86659bbafcce/PageRouter/checkpoint",
+    "exact": "env BAZEL=/workspace/scratch/86659bbafcce/hh25/tools/bazel bash ci/bazel/run.sh",
+    "started_utc": "2026-10-19T16:20:19Z",
+    "ended_utc": "2026-10-19T16:21:47Z",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/afc0d51965a8/hh28/H1/E3404/build.stdout.raw",
+    "stdout_sha256": "a27e3cdacc9a43c717f36307cbf208618cb034d407366bdbfcb98836ccd68d9b",
+    "stderr": "/workspace/scratch/afc0d51965a8/hh28/H1/E3404/build.stderr.raw",
+    "stderr_sha256": "a9cc24bd163015426f64515d8eb2f52f6549f4d82c208ca739a3ad3436227240"
+  },
+  "build": {
+    "node": "v24.19.0",
+    "site_build_id": "daf53f62ab1c4ac1235eab69ba82329d3045addd7b820153f6f39af6d9f6ba32",
+    "source_digest": "540028a938749c95199aa92edabf2b91016b5b3495349195e7dda53d827adae7",
+    "site_digest": "fa129a3d6994fc5271beef53e1a97141aef44310f32f34cc2b00094dcf0e2596",
+    "verified_site_files": 843,
+    "pxcube_rebuilt": true,
+    "pxcube_packages": 14,
+    "counts": {
+      "bazel_runner_tests": {"pass": 2, "fail": 0},
+      "hh_source_tests": {"pass": 316, "fail": 0},
+      "atlas_import_closure_tests": {"pass": 1, "fail": 0}
+    }
+  },
+  "changed_input_bindings": [
+    {
+      "path": "vendor/hh/src/public-controller.mjs",
+      "bytes": 58704,
+      "sha256": "9c9276c93b4ab9f1afc3263c601588e97af6a7182ff337df55baaa472c0c2481"
+    },
+    {
+      "path": "vendor/hh/src/public-site.mjs",
+      "bytes": 30431,
+      "sha256": "524df4132426814cc9621246a4cba548d54c0c537dd840b3997e375e78c9ad4d"
+    },
+    {
+      "path": "vendor/hh/src/public-controller.test.mjs",
+      "bytes": 148217,
+      "sha256": "1a290586620e47f7c5a04460c4375416b966e7997f8519b95577a550db2120dc"
+    },
+    {
+      "path": "vendor/hh/src/public-site.test.mjs",
+      "bytes": 23098,
+      "sha256": "e2ed463e7c37b7431a2767579e41f90e2df055893a6362e8690597571707ea1e"
+    }
+  ],
+  "fresh_outputs": {
+    "receipt": {
+      "source": "/workspace/scratch/86659bbafcce/PageRouter/checkpoint/bazel-bin/site.receipt.json",
+      "copy": "/workspace/scratch/afc0d51965a8/hh28/H1/E3404/site.receipt.json",
+      "bytes": 467313,
+      "mode_octal": "555",
+      "sha256": "44a42d0017d577f08b1e59fc2cdd933644733e80f5a82823faa3902f7659479e",
+      "byte_compare": "identical"
+    },
+    "site_log": {
+      "source": "/workspace/scratch/86659bbafcce/PageRouter/checkpoint/bazel-bin/site.log",
+      "copy": "/workspace/scratch/afc0d51965a8/hh28/H1/E3404/site.log",
+      "bytes": 56510,
+      "mode_octal": "555",
+      "sha256": "fd784a8aae3a4d53d0dd18c3f3e8d7b8afad3a3402d6ece0029957a6421acbc2",
+      "byte_compare": "identical"
+    }
+  },
+  "tool_diagnostic_note": "A separate polling tool response contained the text 'fatal library error, lookup self'. It was not present in the captured build stdout or stderr; its origin is unknown. The actual build process remained alive, completed successfully, and returned exit code 0. No retry or fallback was used.",
+  "scope": "No source/test edits, extra product reruns, build fallback, stage, commit, or package operation in this job."
+}

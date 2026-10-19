@@ -124,6 +124,24 @@ test('directory and contact reflect saved state, error/loading status, and remai
   assert.equal(text({children:[byId(contact,'hh-contact-counter')]}).trim(),'230 characters remaining');
 });
 
+test('directory shows a school-choice retry only for a retryable lookup failure',()=>{
+  const retryable=renderPublicSite({route:{page:'directory'},journey:{
+    lookupError:'School choices are unavailable.',lookupRetryable:true,
+    matches:{status:'loaded',items:[]},lookups:{states:[],counties:[],districts:[],schools:[]},school:{},
+  }});
+  const action=byId(retryable,'hh-directory-lookup-retry');
+  assert.ok(action,'retryable lookup failure has a rendered recovery action');
+  assert.equal(action.attrs['data-event'],'public:retry-school-lookup');
+  assert.match(text(retryable),/School choices are unavailable\./);
+
+  const permanent=renderPublicSite({route:{page:'directory'},journey:{
+    lookupError:'School choices are unavailable.',lookupRetryable:false,
+    matches:{status:'loaded',items:[]},lookups:{states:[],counties:[],districts:[],schools:[]},school:{},
+  }});
+  assert.match(text(permanent),/School choices are unavailable\./,'permanent lookup failures remain visible');
+  assert.equal(byId(permanent,'hh-directory-lookup-retry'),undefined,'permanent failures do not offer a dead action');
+});
+
 test('contact message counter is associated with the bounded multiline draft',()=>{
   for(const [length,remaining] of [[0,250],[7,243],[250,0]]){
     const message='x'.repeat(length);

@@ -1,0 +1,19 @@
+{
+  "qualificationFor": "E3404 build.counts.hh_source_tests",
+  "originalField": {
+    "pass": 316,
+    "fail": 0
+  },
+  "correctInterpretation": "316 is the full freshly assembled npm suite, not the targeted HH group. The targeted HH group is161passed; groups overlap. Do not sum.",
+  "source": "H1/E3404/site.log",
+  "logSHA256": "fd784a8aae3a4d53d0dd18c3f3e8d7b8afad3a3402d6ece0029957a6421acbc2",
+  "observedGroups": {
+    "helpers": 2,
+    "targetedHH": 161,
+    "fullSuite": 316,
+    "builtAtlas": 1
+  },
+  "failures": 0,
+  "skips": 0,
+  "qualification": "Original E3404 receipt and raw logs preserved unchanged; metadata-only clarification, no build/test rerun."
+}

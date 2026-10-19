@@ -1078,6 +1078,58 @@ test('school lookup retry remains available from directory when no directory ret
   assert.deepEqual(controller.state.journey.lookups.counties, ['Demo King']);
 });
 
+test('directory renders a distinct school-choice retry and clears only its recovered error', async () => {
+  const env = registrationDraftSetup();
+  await env.controller.initialize('#/directory');
+  await env.controller.dispatch('public:fail-next');
+  assert.equal((await env.controller.selectSchool('state', 'Demo Washington')).ok, false);
+  const retry = nodeById(env.tree, 'hh-directory-lookup-retry');
+  assert.ok(retry, 'retryable school choice failure has a visible directory recovery action');
+  assert.equal(retry.attrs['data-event'], 'public:retry-school-lookup');
+  assert.equal(env.controller.state.journey.matches.status, 'loaded');
+  assert.match(env.controller.state.journey.error, /school-data failure/i);
+
+  const recovered = await env.controller.dispatch(retry.attrs['data-event']);
+  assert.equal(recovered.ok, true);
+  assert.deepEqual(env.controller.state.journey.lookups.counties, ['Demo King']);
+  assert.equal(env.controller.state.journey.lookupError, '');
+  assert.equal(env.controller.state.journey.error, '', 'the recovered lookup error is no longer rendered as current');
+  assert.equal(nodeById(env.tree, 'hh-directory-lookup-retry'), null);
+});
+
+test('directory school-choice retry does not consume a coexisting directory-results retry', async () => {
+  const env = registrationDraftSetup();
+  await env.controller.initialize('#/directory');
+  await env.controller.dispatch('public:fail-next');
+  await env.controller.selectSchool('state', 'Demo Washington');
+  await env.controller.dispatch('public:fail-next');
+  assert.equal((await env.controller.dispatch('public:directory-search', {query: ''})).ok, false);
+  assert.equal(env.controller.state.journey.matches.status, 'error');
+  assert.equal(nodeById(env.tree, 'hh-directory-retry').attrs['data-event'], 'public:retry');
+  assert.equal(nodeById(env.tree, 'hh-directory-lookup-retry').attrs['data-event'], 'public:retry-school-lookup');
+
+  assert.equal((await env.controller.dispatch('public:retry-school-lookup')).ok, true);
+  assert.deepEqual(env.controller.state.journey.lookups.counties, ['Demo King']);
+  assert.equal(env.controller.state.journey.matches.status, 'error', 'school recovery must not consume directory result retry');
+  assert.equal(env.controller.state.journey.error, 'Directory results could not be loaded.', 'unrelated directory error survives school recovery');
+
+  assert.equal((await env.controller.dispatch('public:retry')).ok, true);
+  assert.equal(env.controller.state.journey.matches.status, 'loaded');
+});
+
+test('school-choice retry event rejects a lookup closure invalidated by a new selection', async () => {
+  const {controller} = setup();
+  await controller.initialize('#/directory');
+  await controller.dispatch('public:fail-next');
+  await controller.selectSchool('state', 'Demo Washington');
+  assert.equal(controller.canRetry, true);
+  assert.equal((await controller.selectSchool('state', 'Demo California')).ok, true);
+  const staleRetry = await controller.dispatch('public:retry-school-lookup');
+  assert.equal(staleRetry.ok, false);
+  assert.equal(staleRetry.error.code, 'nothing_to_retry');
+  assert.deepEqual(controller.state.journey.lookups.counties, ['Demo Alameda']);
+});
+
 test('distinguishes an explicit empty-filter search from the initial background directory load', async () => {
   const {controller} = setup();
   await controller.initialize('#/find-teachers');

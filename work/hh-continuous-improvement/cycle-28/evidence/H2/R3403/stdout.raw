@@ -1,0 +1,76 @@
+{
+  "fixture": {
+    "mode": "fixture",
+    "fixture": true,
+    "persistence": "volatile-memory",
+    "productionAuthority": false
+  },
+  "renderedSchoolEvent": "public:retry-school-lookup",
+  "renderedResultEvent": "public:retry",
+  "schoolClickPortDelta": {
+    "SchoolData.getCounties": 1
+  },
+  "afterSelectionInvalidationPortDelta": {
+    "SchoolData.getCounties": 1
+  },
+  "afterRouteInvalidationPortDelta": {},
+  "before": {
+    "actualPortCalls": {
+      "SchoolData.getStates": 1
+    },
+    "runtimeReceiptCount": 2,
+    "account": {
+      "session": {
+        "status": "anonymous",
+        "role": null,
+        "teacherId": null
+      },
+      "registration": {
+        "status": "none",
+        "teacherId": null,
+        "email": null
+      },
+      "ownProfile": {
+        "status": "unknown",
+        "profile": null
+      },
+      "selectedTeacher": null,
+      "selectedSchool": null,
+      "publicProfileIds": [
+        "demo-avery",
+        "demo-jordan"
+      ]
+    }
+  },
+  "after": {
+    "actualPortCalls": {
+      "SchoolData.getCounties": 2,
+      "SchoolData.getStates": 1
+    },
+    "runtimeReceiptCount": 4,
+    "account": {
+      "session": {
+        "status": "anonymous",
+        "role": null,
+        "teacherId": null
+      },
+      "registration": {
+        "status": "none",
+        "teacherId": null,
+        "email": null
+      },
+      "ownProfile": {
+        "status": "unknown",
+        "profile": null
+      },
+      "selectedTeacher": null,
+      "selectedSchool": null,
+      "publicProfileIds": [
+        "demo-avery",
+        "demo-jordan"
+      ]
+    }
+  },
+  "directoryRecovered": true,
+  "accountReceiptUnchanged": true
+}

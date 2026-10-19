@@ -1,0 +1,6 @@
+{
+  "job_id": "E3402",
+  "worker": "H2",
+  "outcome": "confirmed_reuse",
+  "summary": "Confirmed directory school-lookup recovery is invisible when matches.status is not error: the controller stores a current, safe schoolLookupRetry, while directory rendering only exposes Retry search for matches.status=error. The current directory test dispatches generic public:retry directly and misses the UI gap. A contextual school-choice action needs a distinct controller event because generic public:retry prioritizes lastRetry over schoolLookupRetry. Existing selection/route epoch invalidation and unsafe-outcome gating should remain intact."
+}

@@ -1,0 +1,25 @@
+{
+  "kind": "measurement_qualification",
+  "job_id": "R3403",
+  "worker": "H2",
+  "scope": "Metadata clarification only; original receipt, probe, raw output, and review are unchanged; no rerun performed.",
+  "qualification": {
+    "field": "probe.stale_selection_retry_read_delta",
+    "original_value": {
+      "SchoolData.getCounties": 1
+    },
+    "correct_interpretation": "This count is measured across the legitimate replacement selection read and the subsequent stale-event rejection. The one observed county read is attributable to selecting Demo Washington after the failed Demo California lookup; the named stale retry then returns nothing_to_retry and adds no read.",
+    "independent_stale_event_measurement": "probe.afterRouteInvalidationPortDelta is {}, showing the route-invalidated stale event adds no service read. The probe also asserts the provider-call delta across the selection-plus-stale-event sequence is exactly one SchoolData.getCounties call, the replacement selection's expected read.",
+    "source_probe_pins": [
+      "/workspace/scratch/afc0d51965a8/hh28/H2/R3403/probe.mjs:105-114",
+      "/workspace/scratch/afc0d51965a8/hh28/H2/R3403/stdout.raw"
+    ]
+  },
+  "related_field": {
+    "field": "probe.afterSelectionInvalidationPortDelta",
+    "original_value": {
+      "SchoolData.getCounties": 1
+    },
+    "correct_interpretation": "This same combined window reports the replacement selection read plus stale-event dispatch; it is not a standalone stale-event count. The separate route-invalidation delta is empty."
+  }
+}

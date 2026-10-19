@@ -240,6 +240,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
   }
 
   async function loadLookup(port, input, target, epoch = schoolEpoch) {
+    const priorLookupError = state.journey.lookupError;
     if (state.journey.lookupError && state.journey.outcome?.kind === 'local-error') state.journey.outcome = null;
     state.journey.loading = true;
     state.journey.lookupError = '';
@@ -258,6 +259,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
       state.journey.lookups[target] = clone(result.data.values || []);
       state.journey.lookupError = '';
       state.journey.lookupRetryable = false;
+      if (state.journey.error === priorLookupError) state.journey.error = '';
       if (schoolLookupRetry?.epoch === epoch) schoolLookupRetry = null;
     } else {
       state.journey.lookupError = result.message || result.error?.message || 'School choices are unavailable.';
@@ -932,6 +934,10 @@ export function createPublicController({runtime, storage = null, onChange = () =
         if (routeEpoch === startRouteEpoch) requestNavigation('/');
       }
       return result;
+    }
+    if (event === 'public:retry-school-lookup') {
+      if (schoolLookupRetry?.epoch === schoolEpoch) return schoolLookupRetry.run();
+      return {ok: false, error: {code: 'nothing_to_retry', message: 'There is no safe school-lookup read to retry.'}};
     }
     if (event === 'public:retry' || event === 'retry') {
       if (lastRetry) return lastRetry();
