@@ -1,0 +1,127 @@
+{
+  "job_id": "E2904",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "The single authorized canonical Bazel site build exited 0. The fresh receipt reports exact source/compiled equality, 843 verified site files, all 14 PxCube packages rebuilt, and siteBuildId 05891098a24d62880031b8f098c2d51047d4fdaced475d1cfe4a1c64abf8c48a. The HH controller/community targeted suite passed 152/152; the fresh-site npm suite passed 307/307; Atlas import passed 1/1. The three intended source files remained pinned to the accepted E2903 revisions. No stage, commit, native receipt, or canonical package write was performed.",
+  "execution": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "argv": "env BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "argv_capture": {
+      "path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2904/argv.raw",
+      "bytes": 75,
+      "sha256": "cfff3343c905f187381583ff832b6c518a5e6e6967282fbcc9f1abfb1f94f5fd"
+    },
+    "environment_literal": {
+      "path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2904/env-literal.raw",
+      "value": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel",
+      "bytes": 50,
+      "sha256": "4ba0cc9866fcad7e4a58dcdd859a8151d5251de6fcd569461672b05e49d24c34"
+    },
+    "started_utc": "2026-10-19T11:23:13Z",
+    "start_capture": {
+      "path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2904/start-utc.txt",
+      "sha256": "560806d1d34e056d5ea1a74a3a018ea614dbaab018acf700acae5b01175a378f"
+    },
+    "ended_utc": "2026-10-19T11:24:35Z",
+    "end_capture": {
+      "path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2904/end-utc.txt",
+      "sha256": "3999fa504e11f16160d8617c124405a69e01fd36b15f5e1267196b4a8119527b"
+    },
+    "exit_code": 0,
+    "exit_capture": {
+      "path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2904/exit-code.txt",
+      "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    "stdout": {
+      "path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2904/stdout.raw",
+      "bytes": 1299,
+      "sha256": "f71c81da3ed7eb55a8ff3812bd2c4bf890b567263d04793881a82efb52026aca"
+    },
+    "stderr": {
+      "path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2904/stderr.raw",
+      "bytes": 1037,
+      "sha256": "64a00007c1f29d9673bde0814567d1c0e31eb45f4bcb050808d5f6450067b50e",
+      "note": "Contains an OpenJDK deprecation warning; build exited successfully."
+    }
+  },
+  "source_pins": {
+    "path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2904/source-pins.json",
+    "sha256": "189af3cc1ee14e6cd6a18f6cdd3e303bb3350ccd4f9752bf78aedf4452f6f9db",
+    "repository_head": "a7ef289c6232a6bb1daa7c805765179b5b502068",
+    "accepted_hh_sources": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "97b5c17bf519b7fd05e2933a12dc55ff0e3e0c3e7939db4072368c070b4f67a0",
+      "checkpoint/vendor/hh/src/community.mjs": "311d598b6d6ffc675dc4ee5b07ac0005c55e6ce7a34f8acfac5384d5789288f4",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "417dfa6b6456a978554ce8184849e1d8f63a5b135ebfffb41442b2162222c35f"
+    }
+  },
+  "fresh_build_evidence": {
+    "receipt": {
+      "path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2904/site.receipt.json",
+      "source_path": "/workspace/scratch/8528bb251845/PageRouter/checkpoint/bazel-bin/site.receipt.json",
+      "bytes": 467223,
+      "mode": "0555",
+      "sha256": "fbca7d6a6e1db36df6f1deff27c076669b77458800112f9a800e78f9ac4d71d4",
+      "source_and_copy_byte_identical": true,
+      "siteBuildId": "05891098a24d62880031b8f098c2d51047d4fdaced475d1cfe4a1c64abf8c48a",
+      "sourceDigest": "49f126555741081a4f25e763e23cacd2b2f90bc2aaff31cd95c71a16c05804e5",
+      "siteDigest": "9494d44d81ab2738552a4c625bef95f4f3defa3de1bfa61cd5efccd7e0beb135",
+      "sourceInputs": 1538,
+      "siteFiles": 843,
+      "crispExactCompiledEquality": true,
+      "pxcube": {
+        "rebuilt": true,
+        "packages": 14,
+        "relocated": false
+      },
+      "node": "24.19.0"
+    },
+    "site_log": {
+      "path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2904/site.log",
+      "source_path": "/workspace/scratch/8528bb251845/PageRouter/checkpoint/bazel-bin/site.log",
+      "bytes": 54720,
+      "mode": "0555",
+      "sha256": "868bc768519ea7f2bfdb4c56f504dbd5b0fcec02f274479329f6e7836dd6ebd1",
+      "source_and_copy_byte_identical": true
+    },
+    "test_suites": [
+      {
+        "scope": "HH controller/community targeted regressions",
+        "passed": 152,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "scope": "fresh-site npm suite",
+        "passed": 307,
+        "failed": 0,
+        "skipped": 0
+      },
+      {
+        "scope": "Atlas import",
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      }
+    ]
+  },
+  "worktree": {
+    "expected_modified_sources": [
+      "checkpoint/vendor/hh/src/community.mjs",
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "preexisting_untracked_preserved": [
+      "hh-cycle13/",
+      "hh-cycle15/"
+    ],
+    "staged_changes": false,
+    "commit_created": false
+  },
+  "limits": [
+    "This records the one authorized canonical build only; no test command was rerun separately.",
+    "No browser QA was performed.",
+    "No native receipt/state or canonical package files were written by H1.",
+    "No stage or commit was created."
+  ]
+}

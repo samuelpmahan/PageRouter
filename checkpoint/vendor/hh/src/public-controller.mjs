@@ -7,6 +7,11 @@ const FILTER_KEY = 'hh-public-directory-filters.v1';
 const GRADES = Object.freeze(['Pre-K', 'Kindergarten', '1st Grade', '2nd Grade', '3rd Grade', '4th Grade', '5th Grade', '6th Grade', '7th Grade', '8th Grade', 'High School']);
 const clean = (value, max) => typeof value === 'string' ? value.trim().slice(0, max) : '';
 const boundedDraft = (value, max) => typeof value === 'string' ? value.slice(0, max) : '';
+const boundedPostEditTitle = value => {
+  if (typeof value !== 'string') return '';
+  const source = value.length > COMMUNITY_LIMITS.title + 1 ? value.trim() : value;
+  return boundedDraft(source, COMMUNITY_LIMITS.title + 1);
+};
 const boundedReplyDraft = value => {
   if (typeof value !== 'string') return '';
   const source = value.length > COMMUNITY_LIMITS.body + 1 ? value.trim() : value;
@@ -67,7 +72,7 @@ export function normalizePublicRoute(value = '') {
 
 function initialCommunity(community) {
   return {...community.snapshot(), query: '', category: 'All', composer: null, sort: 'date-newest', pageSize: 10, message: '',
-    editingPostId: null, editingReplyId: null, editingThreadId: null, topicDraft: null};
+    editingPostId: null, editingReplyId: null, editingThreadId: null, topicDraft: null, postEditDraft: null};
 }
 
 /**
@@ -163,6 +168,10 @@ export function createPublicController({runtime, storage = null, onChange = () =
   }
   function setCommunityRole(role) {
     const nextRole = ['anonymous', 'teacher', 'moderator'].includes(role) ? role : 'anonymous';
+    if (state.journey.communityRole !== nextRole) {
+      state.community.postEditDraft = null;
+      state.community.editingPostId = null;
+    }
     if (state.journey.communityRole === 'teacher' && nextRole !== 'teacher') {
       state.community.topicDraft = null;
       state.community.replyDraft = null;
@@ -177,7 +186,8 @@ export function createPublicController({runtime, storage = null, onChange = () =
       pageSize: Math.max(1, Math.min(100, Number(state.community.pageSize) || 10)),
       message: state.community.message || '', editingPostId: state.community.editingPostId || null,
       editingReplyId: state.community.editingReplyId || null, editingThreadId: state.community.editingThreadId || null,
-      topicDraft: state.community.topicDraft || null, replyDraft: state.community.replyDraft || null};
+      topicDraft: state.community.topicDraft || null, replyDraft: state.community.replyDraft || null,
+      postEditDraft: state.community.postEditDraft || null};
   }
   function clearMutationStatus() { setRequest('idle', ''); state.journey.error = ''; }
   function activeWishlistProfileId(route = state.route, projection = state.journey.profile) {
@@ -320,6 +330,13 @@ export function createPublicController({runtime, storage = null, onChange = () =
     const replyDraftRoute = nextRoute.page === 'community' && nextRoute.communityRoute?.page === 'post'
       ? nextRoute.communityRoute.threadId : null;
     if (state.community.replyDraft && replyDraftRoute !== state.community.replyDraft.threadId) state.community.replyDraft = null;
+    const nextPostId = replyDraftRoute;
+    if (state.community.editingPostId && state.community.editingPostId !== nextPostId) {
+      state.community.editingPostId = null;
+      state.community.postEditDraft = null;
+    } else if (state.community.postEditDraft && nextPostId !== state.community.postEditDraft.postId) {
+      state.community.postEditDraft = null;
+    }
     state.route = nextRoute;
     const targetWishlistProfileId = activeWishlistProfileId();
     if (state.journey.wishlist.intent && state.journey.wishlist.profileId !== targetWishlistProfileId) clearWishlistHandoff();
@@ -564,13 +581,27 @@ export function createPublicController({runtime, storage = null, onChange = () =
     else if (event === 'forum-vote') result = community.vote(postId, {...roleArgs(), direction: payload.direction || 'upvote'});
     else if (event === 'forum-edit-post') {
       if (payload.title === undefined && payload.body === undefined && payload.content === undefined) {
+        if (state.community.editingPostId !== postId) state.community.postEditDraft = null;
         state.community.editingPostId = postId;
         return syncCommunityNotice({ok: true}, 'Edit this local post in the forum editor.');
       }
+      const saved = state.community.threads.find(thread => thread.id === postId);
+      const title = payload.title === undefined ? saved?.title : payload.title;
+      const body = payload.body ?? payload.content ?? saved?.body;
       result = community.updatePost(postId, {title: payload.title, body: payload.body ?? payload.content, ...roleArgs()});
+      if (result?.ok) {
+        state.community.postEditDraft = null;
+      } else if (role === 'teacher' && state.community.editingPostId === postId &&
+          ['title_and_body_required', 'input_too_long'].includes(result?.error)) {
+        state.community.postEditDraft = {postId, title: boundedPostEditTitle(title), content: boundedReplyDraft(body)};
+      } else if (state.community.postEditDraft?.postId === postId) {
+        state.community.postEditDraft = null;
+      }
     } else if (event === 'forum-delete-post') result = community.deletePost(postId, roleArgs());
     else if (event === 'forum-edit-comment') {
       if (payload.body === undefined && payload.content === undefined) {
+        state.community.postEditDraft = null;
+        state.community.editingPostId = null;
         state.community.editingReplyId = replyId;
         state.community.editingThreadId = postId;
         return syncCommunityNotice({ok: true}, 'Edit this local comment in the forum editor.');
@@ -578,6 +609,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
       result = community.updateReply(postId, replyId, {body: payload.body ?? payload.content, ...roleArgs()});
     } else if (event === 'forum-delete-comment') result = community.deleteReply(postId, replyId, roleArgs());
     else if (event === 'forum-cancel-edit') {
+      state.community.postEditDraft = null;
       state.community.editingPostId = null;
       state.community.editingReplyId = null;
       state.community.editingThreadId = null;
@@ -586,6 +618,8 @@ export function createPublicController({runtime, storage = null, onChange = () =
     else if (event === 'forum-reset') {
       state.community.topicDraft = null;
       state.community.replyDraft = null;
+      state.community.postEditDraft = null;
+      state.community.editingPostId = null;
       result = community.reset();
     }
     else if (event === 'forum-export') {
@@ -594,6 +628,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
       return syncCommunityNotice({ok: true, value: data}, 'Local forum data is ready to copy; no data was uploaded.');
     } else return null;
     if (result?.ok) {
+      state.community.postEditDraft = null;
       state.community.editingPostId = null;
       state.community.editingReplyId = null;
       state.community.editingThreadId = null;
@@ -880,6 +915,8 @@ export function createPublicController({runtime, storage = null, onChange = () =
         state.journey.communityRole = 'anonymous';
         state.community.topicDraft = null;
         state.community.replyDraft = null;
+        state.community.postEditDraft = null;
+        state.community.editingPostId = null;
         state.journey.profile = {status: 'absent', value: null, editOpen: false, source: 'runtime'};
         try { storage?.removeItem(FILTER_KEY); } catch {}
         await community.reset(); refreshCommunity();

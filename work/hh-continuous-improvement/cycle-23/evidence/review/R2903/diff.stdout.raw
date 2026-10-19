@@ -1,0 +1,1395 @@
+diff --git a/checkpoint/vendor/hh/src/community.mjs b/checkpoint/vendor/hh/src/community.mjs
+index 7528679..4c36d54 100644
+--- a/checkpoint/vendor/hh/src/community.mjs
++++ b/checkpoint/vendor/hh/src/community.mjs
+@@ -125,116 +125,121 @@ export function createCommunity(options={}) {
+     const nextTitle=title===undefined?topic.title:cleanText(title,MAX_TITLE),nextBody=body===undefined?topic.body:cleanText(body,MAX_BODY);
+     if(!nextTitle||!nextBody)return resultError('title_and_body_required');
+     if(typeof title==='string'&&title.trim().length>MAX_TITLE||typeof body==='string'&&body.trim().length>MAX_BODY)return resultError('input_too_long');
+     topic.title=nextTitle;topic.body=nextBody;persist();const warning=persistenceWarning();return {ok:true,value:clone(topic),...(warning?{warning}:{})};
+   }
+   function deletePost(id,{role='anonymous',personaId='demo-teacher'}={}){
+     const index=data.findIndex(t=>t.id===String(id));if(index<0)return resultError('thread_not_found');
+     if(data[index].hidden&&safeRole(role)!=='moderator')return resultError('thread_unavailable');
+     if(safeRole(role)!=='moderator'&&!(safeRole(role)==='teacher'&&data[index].authorId===personaId))return resultError('owner_required');
+     const [removed]=data.splice(index,1);persist();const warning=persistenceWarning();return {ok:true,value:clone(removed),...(warning?{warning}:{})};
+   }
+   function updateReply(id,replyId,{body,role='anonymous',personaId='demo-teacher'}={}){
+     const topic=findThread(id);if(!topic)return resultError('thread_not_found');
+     if(topic.hidden&&safeRole(role)!=='moderator')return resultError('thread_unavailable');
+     const item=topic.replies.find(r=>r.id===String(replyId));if(!item)return resultError('reply_not_found');
+     if(item.hidden&&safeRole(role)!=='moderator')return resultError('reply_unavailable');
+     if(safeRole(role)!=='moderator'&&!(safeRole(role)==='teacher'&&item.authorId===personaId))return resultError('owner_required');
+     const next=cleanText(body,MAX_BODY);if(!next)return resultError('reply_required');if(typeof body==='string'&&body.trim().length>MAX_BODY)return resultError('input_too_long');
+     item.body=next;persist();const warning=persistenceWarning();return {ok:true,value:clone(item),...(warning?{warning}:{})};
+   }
+   function deleteReply(id,replyId,{role='anonymous',personaId='demo-teacher'}={}){
+     const topic=findThread(id);if(!topic)return resultError('thread_not_found');
+     if(topic.hidden&&safeRole(role)!=='moderator')return resultError('thread_unavailable');
+     const index=topic.replies.findIndex(r=>r.id===String(replyId));if(index<0)return resultError('reply_not_found');
+     if(topic.replies[index].hidden&&safeRole(role)!=='moderator')return resultError('reply_unavailable');
+     if(safeRole(role)!=='moderator'&&!(safeRole(role)==='teacher'&&topic.replies[index].authorId===personaId))return resultError('owner_required');
+     const [removed]=topic.replies.splice(index,1);persist();const warning=persistenceWarning();return {ok:true,value:clone(removed),...(warning?{warning}:{})};
+   }
+   function reset(){data=clone(seedThreads);counter=0;try{storage?.removeItem(key);storageStatus=storage?'available':'memory_only';storageError=''}catch(error){storageStatus='unavailable';storageError=String(error?.message||error)}const warning=persistenceWarning();return {ok:true,value:snapshot(),...(warning?{warning}:{})}}
+   function exportData(){return JSON.stringify({version:1,nextId:counter,threads:data},null,2)}
+   return Object.freeze({snapshot,list,getThread,createThread,reply,flag,moderate,vote,updatePost,deletePost,updateReply,deleteReply,reset,exportData});
+ }
+ 
+ const button=(label,event,attrs={})=>h('button',{type:'button','data-event':event,...attrs},label);
+ const p=(text,cls)=>h('p',{class:cls},text);
+ function formatDate(value){const date=new Date(value);const month=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][date.getUTCMonth()];const time=date.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',hour12:true,timeZone:'UTC'});return `${month} ${date.getUTCDate()}, ${date.getUTCFullYear()}, ${time}`}
+ const categorySelect=(selected)=>h('label',{class:'community-filter'},h('span',{},'Category'),h('select',{id:'community-category-select','data-event':'forum-category','aria-label':'Filter topics by category'},['All',...COMMUNITY_CATEGORIES].map(name=>h('option',{value:name,selected:name===selected},name))));
+ const roleOf=session=>safeRole(session?.role);
+ function notice(text,kind='info'){return text?h('div',{class:`community-notice ${kind}`,role:'status','aria-live':'polite'},text):null}
+ function storageNotice(state){
+   if(state.storageStatus==='unavailable')return notice('Browser storage is unavailable. New changes remain in this tab only.','warning');
+   if(state.storageStatus==='memory_only')return notice('This preview has no session storage. Changes remain in memory until the tab closes.','warning');
+   return null;
+ }
+ function stateNotice(state){return state.message?notice(String(state.message).replaceAll('_',' ')):null}
+ function moderationControls(topic,session){
+   if(roleOf(session)!=='moderator')return null;
+   return topic.hidden?button('Restore topic','forum-unhide-thread',{'data-thread-id':topic.id,class:'community-action'}):button('Hide topic','forum-hide-thread',{'data-thread-id':topic.id,class:'community-action'});
+ }
+ function topicCard(topic,session){
+   const actor=topic.author.startsWith('User ')?`User: ${topic.author.slice(5)}`:topic.author;
+   const replyCount=topic.replies.filter(reply=>!reply.hidden).length;
+   const excerpt=topic.body.length>200?`${topic.body.slice(0,200)}...`:topic.body;
+   const voteBadge=roleOf(session)==='teacher'
+     ?h('button',{type:'button','data-event':'forum-vote','data-post-id':topic.id,'data-thread-id':topic.id,'aria-label':'Upvote discussion',class:'community-stat-button'},h('span',{class:'community-card-icon','aria-hidden':'true'},'👍'),h('span',{},String((topic.votes||[]).length)))
+     :h('span',{class:'community-stat-button'},h('span',{class:'community-card-icon','aria-hidden':'true'},'👍'),h('span',{},String((topic.votes||[]).length)));
+   const commentsBadge=h('a',{href:`#/posts/${encodeURIComponent(topic.id)}`,'data-event':'forum-open-thread','data-thread-id':topic.id,class:'community-stat-button','aria-label':`${replyCount} comments`},h('span',{class:'community-card-icon','aria-hidden':'true'},'💬'),h('span',{},String(replyCount)));
+   return h('article',{class:`community-topic ${topic.hidden?'is-hidden':''}`,'data-thread-id':topic.id},
+     h('div',{class:'community-topic-card-heading'},
+       h('h2',{},h('a',{href:`#/posts/${encodeURIComponent(topic.id)}`,'data-event':'forum-open-thread','data-thread-id':topic.id},topic.title)),
+       h('div',{class:'community-card-stats'},voteBadge,commentsBadge)),
+     h('div',{class:'community-topic-meta'},`Posted by ${actor} on ${formatDate(topic.createdAt)}`,topic.reported?h('span',{class:'community-reported'},'Reported'):null,topic.hidden?h('span',{class:'community-hidden'},'Hidden'):null),
+     h('div',{class:'community-topic-divider'}),p(excerpt,'community-topic-body'));
+ }
+ function topicComposer(draft=null){
+   const hasDraft=!!draft;
+   const validCategory=COMMUNITY_CATEGORIES.includes(draft?.category);
+   const categoryOptions=hasDraft&&!validCategory
+     ?[h('option',{value:draft.category||'',selected:true},draft.category?`Unknown category: ${draft.category}`:'Choose a category')]
+     :[];
+   categoryOptions.push(...COMMUNITY_CATEGORIES.map(c=>h('option',{value:c,...(hasDraft?{selected:c===draft.category}:{})},c)));
+   return h('form',{class:'community-composer','data-submit':'forum-topic'},
+     h('h2',{},'New Discussion'),
+     h('label',{class:'community-field'},h('span',{},'Discussion Title'),h('input',{name:'title',...(hasDraft?{value:draft.title}:{}),maxlength:String(MAX_TITLE),required:true,'aria-label':'Discussion title',placeholder:'Enter a concise and descriptive title'})),
+     h('label',{class:'community-field'},h('span',{},'Category'),h('select',{name:'category',required:true,'aria-label':'Topic category'},categoryOptions)),
+     h('label',{class:'community-field'},h('span',{},'Content'),h('textarea',{name:'content',maxlength:String(MAX_BODY),rows:'10',required:true,'aria-label':'Discussion content',placeholder:'Write the full body of your forum post here. Be respectful and informative.'},hasDraft?draft.content:undefined)),
+     h('button',{type:'submit'},'Submit New Post'));
+ }
+ function replyComposer(threadId,session,state){const draft=roleOf(session)==='teacher'&&state.replyDraft?.threadId===threadId?state.replyDraft.content:undefined;return h('form',{id:'comment-form',class:'community-comment-form','data-submit':'forum-reply','data-thread-id':threadId},h('label',{class:'community-comment-field',for:'comment-content'},h('textarea',{id:'comment-content',name:'content',maxlength:String(MAX_BODY),rows:'5',required:true,'aria-label':'Share your thoughts',placeholder:'Share your thoughts…'},draft)),h('button',{type:'submit',id:'post-comment-btn'},'Post Comment'))}
+ function replyCard(reply,topic,session,state){const role=roleOf(session),own=role==='teacher'&&reply.authorId===(session.personaId||'demo-teacher'),editing=state.editingReplyId===reply.id;return h('article',{class:`community-reply ${reply.hidden?'is-hidden':''}`,'data-reply-id':reply.id},h('div',{class:'community-reply-meta'},h('strong',{},reply.author),reply.reported?h('span',{class:'community-reported'},'Reported'):null,reply.hidden?h('span',{class:'community-hidden'},'Hidden'):null),editing?h('form',{id:`edit-comment-form-${reply.id}`,class:'community-composer community-edit-form','data-submit':'forum-edit-comment','data-thread-id':topic.id,'data-reply-id':reply.id,'data-comment-id':reply.id},h('label',{class:'community-field'},h('span',{},'Edit comment'),h('textarea',{id:`edit-comment-content-${reply.id}`,name:'content',maxlength:String(MAX_BODY),rows:'4',required:true,'aria-label':'Edit comment content'},reply.body)),h('button',{type:'submit',id:`save-edit-comment-btn-${reply.id}`},'Save comment'),button('Cancel','forum-cancel-edit',{id:`cancel-edit-comment-btn-${reply.id}`,class:'community-action'})):p(reply.body,'community-reply-body'),role==='teacher'&&!reply.reported?button('Report comment','forum-flag-reply',{'data-thread-id':topic.id,'data-reply-id':reply.id,class:'community-action'}):null,own||role==='moderator'?button('Edit comment','forum-edit-comment',{'data-thread-id':topic.id,'data-reply-id':reply.id,'data-comment-id':reply.id,id:`edit-comment-btn-${reply.id}`,class:'community-action'}):null,own||role==='moderator'?button('Delete comment','forum-delete-comment',{'data-thread-id':topic.id,'data-reply-id':reply.id,'data-comment-id':reply.id,class:'community-action'}):null,role==='moderator'?(reply.hidden?button('Restore comment','forum-unhide-reply',{'data-thread-id':topic.id,'data-reply-id':reply.id,class:'community-action'}):button('Hide comment','forum-hide-reply',{'data-thread-id':topic.id,'data-reply-id':reply.id,class:'community-action'})):null)}
+-function postEditForm(topic){return h('form',{id:'edit-post-form',class:'community-composer community-edit-form','data-submit':'forum-edit-post','data-thread-id':topic.id,'data-post-id':topic.id},h('h2',{},'Edit discussion'),h('label',{class:'community-field'},h('span',{},'Discussion title'),h('input',{id:'edit-post-title',name:'title',maxlength:String(MAX_TITLE),required:true,'aria-label':'Edit discussion title',value:topic.title})),h('label',{class:'community-field'},h('span',{},'Content'),h('textarea',{id:'edit-post-content',name:'content',maxlength:String(MAX_BODY),rows:'8',required:true,'aria-label':'Edit discussion content'},topic.body)),h('button',{type:'submit',id:'save-edit-post-btn'},'Save changes'),button('Cancel','forum-cancel-edit',{id:'cancel-edit-post-btn',class:'community-action'}))}
++function postEditForm(topic,draft=null){return h('form',{id:'edit-post-form',class:'community-composer community-edit-form','data-submit':'forum-edit-post','data-thread-id':topic.id,'data-post-id':topic.id},h('h2',{},'Edit discussion'),h('label',{class:'community-field'},h('span',{},'Discussion title'),h('input',{id:'edit-post-title',name:'title',maxlength:String(MAX_TITLE),required:true,'aria-label':'Edit discussion title',value:draft?.title??topic.title})),h('label',{class:'community-field'},h('span',{},'Content'),h('textarea',{id:'edit-post-content',name:'content',maxlength:String(MAX_BODY),rows:'8',required:true,'aria-label':'Edit discussion content'},draft?.content??topic.body)),h('button',{type:'submit',id:'save-edit-post-btn'},'Save changes'),button('Cancel','forum-cancel-edit',{id:'cancel-edit-post-btn',class:'community-action'}))}
+ const voteArrow=direction=>h('svg',{viewBox:'0 0 24 24',width:'20',height:'20','aria-hidden':'true',focusable:'false'},h('path',{d:direction==='up'?'M5 14l7-7 7 7':'M5 10l7 7 7-7',fill:'none',stroke:'currentColor','stroke-width':'2','stroke-linecap':'round','stroke-linejoin':'round'}));
+-function postDetail(topic,session,state){const role=roleOf(session),own=role==='teacher'&&topic.authorId===(session.personaId||'demo-teacher'),replies=(topic.replies||[]).filter(r=>!r.hidden||role==='moderator'),author=topic.author.startsWith('User ')?topic.author.slice(5):topic.author;return h('div',{},storageNotice(state),stateNotice(state),h('section',{class:'community-detail-page'},h('h1',{id:'page-title'},'Discussion Detail'),h('div',{class:'community-heading-divider'}),h('a',{href:'#/forum',class:'community-back-link'},'← Back to Forum'),h('article',{class:'community-detail-card'},h('div',{class:'community-detail-meta'},h('div',{class:'community-detail-votes'},button(voteArrow('up'),'forum-vote',{'data-post-id':topic.id,'data-thread-id':topic.id,'data-direction':'upvote',id:'upvote-btn','aria-label':'Upvote discussion',class:'community-vote-arrow'}),h('strong',{},String((topic.votes||[]).length)),button(voteArrow('down'),'forum-vote',{'data-post-id':topic.id,'data-thread-id':topic.id,'data-direction':'downvote',id:'downvote-btn','aria-label':'Downvote discussion',class:'community-vote-arrow'})),h('span',{},`Posted by ${author} on ${formatDate(topic.createdAt)}`)),h('div',{class:'community-detail-divider'}),h('h2',{class:'community-detail-title'},topic.title),state.editingPostId===topic.id?postEditForm(topic):h('div',{class:'community-detail-body'},topic.body),own||role==='moderator'?button('Edit post','forum-edit-post',{'data-post-id':topic.id,'data-thread-id':topic.id,id:'edit-post-btn',class:'community-action'}):null,own||role==='moderator'?button('Delete post','forum-delete-post',{'data-post-id':topic.id,'data-thread-id':topic.id,class:'community-action'}):null,role==='teacher'&&!topic.reported?button('Report post','forum-flag-thread',{'data-thread-id':topic.id,class:'community-action'}):null,moderationControls(topic,session),h('div',{class:'community-detail-divider'}),h('h2',{class:'community-leave-comment'},'Leave a Comment'),replyComposer(topic.id,session,state),h('h2',{class:'community-comment-count'},`${replies.length} Comments`),h('aside',{class:'community-advertisement'},'Advertisement'),replies.length?replies.map(reply=>replyCard(reply,topic,session,state)):p('No comments yet. Be the first to start the discussion!','community-detail-empty'))))}
++function postDetail(topic,session,state){
++  const role=roleOf(session),own=role==='teacher'&&topic.authorId===(session.personaId||'demo-teacher'),
++    replies=(topic.replies||[]).filter(r=>!r.hidden||role==='moderator'),author=topic.author.startsWith('User ')?topic.author.slice(5):topic.author,
++    editDraft=own&&state.postEditDraft?.postId===topic.id?state.postEditDraft:null;
++  return h('div',{},storageNotice(state),stateNotice(state),h('section',{class:'community-detail-page'},h('h1',{id:'page-title'},'Discussion Detail'),h('div',{class:'community-heading-divider'}),h('a',{href:'#/forum',class:'community-back-link'},'← Back to Forum'),h('article',{class:'community-detail-card'},h('div',{class:'community-detail-meta'},h('div',{class:'community-detail-votes'},button(voteArrow('up'),'forum-vote',{'data-post-id':topic.id,'data-thread-id':topic.id,'data-direction':'upvote',id:'upvote-btn','aria-label':'Upvote discussion',class:'community-vote-arrow'}),h('strong',{},String((topic.votes||[]).length)),button(voteArrow('down'),'forum-vote',{'data-post-id':topic.id,'data-thread-id':topic.id,'data-direction':'downvote',id:'downvote-btn','aria-label':'Downvote discussion',class:'community-vote-arrow'})),h('span',{},`Posted by ${author} on ${formatDate(topic.createdAt)}`)),h('div',{class:'community-detail-divider'}),h('h2',{class:'community-detail-title'},topic.title),state.editingPostId===topic.id?postEditForm(topic,editDraft):h('div',{class:'community-detail-body'},topic.body),own||role==='moderator'?button('Edit post','forum-edit-post',{'data-post-id':topic.id,'data-thread-id':topic.id,id:'edit-post-btn',class:'community-action'}):null,own||role==='moderator'?button('Delete post','forum-delete-post',{'data-post-id':topic.id,'data-thread-id':topic.id,class:'community-action'}):null,role==='teacher'&&!topic.reported?button('Report post','forum-flag-thread',{'data-thread-id':topic.id,class:'community-action'}):null,moderationControls(topic,session),h('div',{class:'community-detail-divider'}),h('h2',{class:'community-leave-comment'},'Leave a Comment'),replyComposer(topic.id,session,state),h('h2',{class:'community-comment-count'},`${replies.length} Comments`),h('aside',{class:'community-advertisement'},'Advertisement'),replies.length?replies.map(reply=>replyCard(reply,topic,session,state)):p('No comments yet. Be the first to start the discussion!','community-detail-empty'))))
++}
+ function postErrorPage(message){return h('section',{class:'community-detail-page'},h('h1',{id:'page-title'},'Discussion Detail'),h('div',{class:'community-heading-divider'}),h('a',{href:'#/forum',class:'community-back-link'},'← Back to Forum'),h('article',{class:'community-detail-card community-missing-card'},p(message,'community-missing-message')))}
+ export function renderCommunity({route={page:'index'},state={},session={role:'anonymous'}}={}) {
+   const role=roleOf(session), threads=state.threads||[], rawPage=route.page||'index';
+   const page=rawPage==='forum'?'index':rawPage==='post'?'thread':rawPage==='create-post'?'compose':rawPage;
+   const rolePicker=h('label',{class:'community-role-picker'},h('span',{},'Simulated preview role'),h('select',{id:'community-role-select','data-event':'forum-role','aria-label':'Choose simulated preview role'},['anonymous','teacher','moderator'].map(value=>h('option',{value,selected:value===role},value==='anonymous'?'Visitor':value==='teacher'?'Teacher':'Moderator'))));
+   const category=route.category||state.category||'All',query=route.query||state.query||'',sort=state.sort||'date-newest',pageSize=Math.max(1,Math.min(100,Number(state.pageSize)||10));
+   let content;
+   if(page==='compose'){
+     content=h('div',{},storageNotice(state),stateNotice(state),h('section',{class:'community-panel community-compose-page'},h('a',{href:'#/forum',class:'community-back-link'},"← The Teachers' Lounge"),h('h1',{id:'page-title'},'Create New Post'),role==='teacher'?topicComposer(state.topicDraft):h('section',{class:'community-auth-required'},h('h2',{},'Log in to create a post'),p('A teacher preview role is required to start a discussion.'),h('a',{href:'#/login',class:'community-text-link'},'Open login'))));
+   } else if(page==='thread'){
+     const topic=threads.find(t=>t.id===route.threadId);
+     if(!route.threadId)content=postErrorPage('Error: Post ID is missing from the URL. Please ensure you are navigating from the forum list.');
+     else if(!topic||topic.hidden&&role!=='moderator')content=postErrorPage('Error: This conversation is unavailable in this local preview.');
+     else content=postDetail(topic,session,state);
+   } else {
+     const normalizedQuery=String(query).slice(0,MAX_BODY).toLocaleLowerCase();
+     const matching=threads.filter(t=>!t.hidden||role==='moderator').filter(t=>(category==='All'||t.category===category)).filter(t=>!normalizedQuery||`${t.title} ${t.body} ${(t.replies||[]).filter(r=>!r.hidden||role==='moderator').map(r=>r.body).join(' ')}`.toLocaleLowerCase().includes(normalizedQuery));
+     const visible=matching.slice().sort(sort==='upvotes'?(a,b)=>(b.votes||[]).length-(a.votes||[]).length:sort==='date-oldest'?(a,b)=>String(a.createdAt).localeCompare(String(b.createdAt)):(a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));
+     const shown=normalizedQuery?visible:visible.slice(0,pageSize);
+     content=h('div',{},storageNotice(state),stateNotice(state),h('section',{class:'community-panel community-index'},
+       h('div',{class:'community-heading'},h('div',{},h('h1',{id:'page-title'},"The Teachers' Lounge"))),
+       h('div',{class:'community-toolbar'},h('label',{class:'community-search'},h('span',{},'Search discussions'),h('input',{type:'text',id:'post-search-input',value:query,maxlength:String(MAX_BODY),placeholder:'Search posts by keyword…','data-event':'forum-search','aria-label':'Search discussions'})),button('Clear','forum-clear-search',{id:'forum-clear-search',class:'community-clear-button'})),
+       h('div',{class:'community-sortbar'},h('strong',{},'Sort By:'),h('div',{class:'community-sort-controls'},
+         button('Date (Newest)','forum-sort',{id:'sort-date-newest',class:`community-sort-button ${sort==='date-newest'?'active':''}`,'data-sort':'date-newest','aria-pressed':sort==='date-newest'?'true':'false'}),
+         button('Date (Oldest)','forum-sort',{id:'sort-date-oldest',class:`community-sort-button ${sort==='date-oldest'?'active':''}`,'data-sort':'date-oldest','aria-pressed':sort==='date-oldest'?'true':'false'}),
+         button('Upvotes','forum-sort',{id:'sort-upvotes',class:`community-sort-button ${sort==='upvotes'?'active':''}`,'data-sort':'upvotes','aria-pressed':sort==='upvotes'?'true':'false'}),
+         h('a',{href:'#/create-post','data-event':'forum-compose-topic',id:'create-post-btn',class:'community-primary-button'},'+ New Post'))),
+       state.composer==='topic'&&role==='teacher'?topicComposer(state.topicDraft):null,
+       h('div',{class:'community-results','aria-live':'polite'},shown.length?shown.map(t=>topicCard(t,session)):h('div',{class:'community-empty-state'},h('h3',{},normalizedQuery?'No discussions found':'No posts found'),p(normalizedQuery?'Try a different keyword!':'Be the first to start a discussion!'))),
+       shown.length<visible.length?button('Load 10 More Discussions','forum-load-more',{class:'community-load-more'}):null));
+   }
+   return h('div',{'data-community':'true','data-role':role},h('main',{class:'community-shell',id:'community-main',tabindex:'-1'},content),h('footer',{class:'community-footer'},h('span',{},'© 2024 Homeroom Heroes. All rights reserved.'),h('details',{class:'community-preview-controls'},h('summary',{},'Local preview controls'),p('Synthetic data only. Changes stay in this tab; no live service is connected.','community-preview-explanation'),rolePicker,categorySelect(category),role==='moderator'?button('Reset forum preview','forum-reset',{class:'community-utility'}):null,button('Export forum data','forum-export',{class:'community-utility'}))));
+ }
+diff --git a/checkpoint/vendor/hh/src/public-controller.mjs b/checkpoint/vendor/hh/src/public-controller.mjs
+index 216920a..867bd6e 100644
+--- a/checkpoint/vendor/hh/src/public-controller.mjs
++++ b/checkpoint/vendor/hh/src/public-controller.mjs
+@@ -1,402 +1,419 @@
+ import {SCHOOL_FIXTURES, FIXTURE_WISHLIST_URL} from '../services/index.mjs';
+ import {createCommunity, COMMUNITY_CATEGORIES, COMMUNITY_LIMITS} from './community.mjs';
+ import {teacherOfDayReference} from './site-data.mjs';
+ 
+ const clone = value => value == null ? value : structuredClone(value);
+ const FILTER_KEY = 'hh-public-directory-filters.v1';
+ const GRADES = Object.freeze(['Pre-K', 'Kindergarten', '1st Grade', '2nd Grade', '3rd Grade', '4th Grade', '5th Grade', '6th Grade', '7th Grade', '8th Grade', 'High School']);
+ const clean = (value, max) => typeof value === 'string' ? value.trim().slice(0, max) : '';
+ const boundedDraft = (value, max) => typeof value === 'string' ? value.slice(0, max) : '';
++const boundedPostEditTitle = value => {
++  if (typeof value !== 'string') return '';
++  const source = value.length > COMMUNITY_LIMITS.title + 1 ? value.trim() : value;
++  return boundedDraft(source, COMMUNITY_LIMITS.title + 1);
++};
+ const boundedReplyDraft = value => {
+   if (typeof value !== 'string') return '';
+   const source = value.length > COMMUNITY_LIMITS.body + 1 ? value.trim() : value;
+   return boundedDraft(source, COMMUNITY_LIMITS.body + 1);
+ };
+ const emailKey = value => clean(value, 254).toLowerCase();
+ const validEmail = value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+ const routeKey = value => String(value || '').replace(/^#/, '').split(/[?#]/, 1)[0] || '/';
+ 
+ export function normalizePublicRoute(value = '') {
+   const raw = String(value || '').replace(/^#/, '');
+   const path = routeKey(raw);
+   const query = raw.includes('?') ? raw.slice(raw.indexOf('?') + 1).split('#', 1)[0] : '';
+   const params = new URLSearchParams(query);
+   const parts = path.split('/').filter(Boolean).map(part => {
+     try { return decodeURIComponent(part); } catch { return part; }
+   });
+   const first = (parts[0] || '').toLowerCase();
+   const route = {page: 'home', path};
+   if (['', 'home', 'index'].includes(first)) return route;
+   if (['about', 'contact', 'partners', 'login', 'register'].includes(first)) return {...route, page: first};
+   if (['forgot', 'forgotpassword', 'forgot-password', 'password-reset'].includes(first)) return {...route, page: 'forgot'};
+   if (['directory', 'find-teachers', 'teachers'].includes(first) && parts.length === 1) return {...route, page: 'directory'};
+   if ((first === 'teachers' || first === 'public-profile' || first === 'profile') && parts[1]) {
+     return {...route, page: 'profile', profileId: parts[1]};
+   }
+   if (first === 'profile' && parts.length === 1) return {...route, page: 'profile'};
+   if (['community', 'forum'].includes(first) && parts.length === 1) {
+     return {...route, page: 'community', communityRoute: {page: 'forum'}};
+   }
+   if (first === 'create-post') return {...route, page: 'community', communityRoute: {page: 'create-post'}};
+   if (first === 'posts' && parts[1]) return {...route, page: 'community', communityRoute: {page: 'post', threadId: parts[1]}};
+   if (first === 'community' && parts[1] === 'thread' && parts[2]) {
+     return {...route, page: 'community', communityRoute: {page: 'post', threadId: parts[2]}};
+   }
+   if (first === 'pages') {
+     const file = String(parts[1] || '').toLowerCase();
+     const filePages = {
+       'homepage.html': 'home', 'index.html': 'directory', 'find_teachers.html': 'directory',
+       'about.html': 'about', 'contact.html': 'contact', 'partners.html': 'partners',
+       'login.html': 'login', 'forgot.html': 'forgot', 'register.html': 'register',
+     };
+     if (filePages[file]) return {...route, page: filePages[file]};
+     if (file === 'terms_conditions.html') return {...route, page: 'register', termsOpen: true};
+     if (file === 'forum.html') return {...route, page: 'community', communityRoute: {page: 'forum'}};
+     if (file === 'create_post.html') return {...route, page: 'community', communityRoute: {page: 'create-post'}};
+     if (file === 'post.html') {
+       const threadId = clean(params.get('id') || params.get('publicid') || '', 120);
+       return {...route, page: 'community', communityRoute: {page: 'post', ...(threadId ? {threadId} : {})}};
+     }
+     if (file === 'teacher.html') {
+       const profileId = clean(params.get('id') || params.get('publicid') || teacherOfDayReference.id, 120);
+       return {...route, page: 'profile', profileId};
+     }
+   }
+   return {...route, page: 'not-found'};
+ }
+ 
+ function initialCommunity(community) {
+   return {...community.snapshot(), query: '', category: 'All', composer: null, sort: 'date-newest', pageSize: 10, message: '',
+-    editingPostId: null, editingReplyId: null, editingThreadId: null, topicDraft: null};
++    editingPostId: null, editingReplyId: null, editingThreadId: null, topicDraft: null, postEditDraft: null};
+ }
+ 
+ /**
+  * Controller for the public HH preview. It projects the real fixture runtime,
+  * while keeping entered display identity and edits in memory-only overlays.
+  */
+ export function createPublicController({runtime, storage = null, onChange = () => {}, onNavigate = null, community: suppliedCommunity = null} = {}) {
+   if (!runtime || typeof runtime.invoke !== 'function' || typeof runtime.snapshot !== 'function') {
+     throw new TypeError('createPublicController needs the HH service runtime.');
+   }
+   const community = suppliedCommunity || createCommunity({storage});
+   const state = {
+     route: normalizePublicRoute('#/'),
+     request: {status: 'idle', message: ''},
+     journey: {
+       runtime: clone(runtime.snapshot()),
+       lookups: {states: [], counties: [], districts: [], schools: [], grades: [...GRADES]},
+       school: {state: '', county: '', district: '', school: '', grade: ''},
+       loading: false,
+       error: '',
+       lookupError: '',
+       lookupRetryable: false,
+       filters: {query: '', sort: 'date-newest', limit: 50},
+       rememberedFilters: null,
+       searchPerformed: false,
+       matches: {status: 'idle', items: [], error: ''},
+       registration: {status: runtime.snapshot().registration.status, identity: {name: '', email: '', phone: ''}},
+       loginDraft: {email: null},
+       terms: {open: false, accepted: false},
+       session: {...clone(runtime.snapshot().session), email: ''},
+       profile: {status: runtime.snapshot().ownProfile.status === 'present' ? 'present' : 'absent', value: null,
+         editOpen: false, editDraft: {name: '', bio: '', wishlistUrl: ''},
+         createDraft: {name: '', bio: '', wishlistUrl: ''}, source: 'runtime'},
+       wishlist: {intent: false, remote: false, destination: null, profileId: null},
+       share: {intent: false, url: '', profileId: null, remote: false, copied: false},
+       contact: {name: '', email: '', subject: '', message: ''},
+       outcome: null,
+       communityRole: 'anonymous',
+       navOpen: false,
+     },
+     community: initialCommunity(community),
+   };
+ 
+   let routeEpoch = 0;
+   let schoolEpoch = 0;
+   let directoryEpoch = 0;
+   let mutation = false;
+   let syntheticAccount = 0;
+   let randomIndex = 0;
+   let lastRetry = null;
+   let schoolLookupRetry = null;
+   const aliasToFixtureEmail = new Map();
+   const identityByFixtureEmail = new Map();
+   const profileOverlays = new Map();
+ 
+   function notify() { onChange(state, state.route); }
+   function setOutcome(kind, message, extras = {}) {
+     state.journey.outcome = {kind, message: clean(message, 500), remote: false, ...extras};
+   }
+   function setRequest(status, message = '') {
+     state.request = {status, message: clean(message, 500)};
+   }
+   function syncRuntime({email = ''} = {}) {
+     const raw = clone(runtime.snapshot());
+     state.journey.runtime = raw;
+     const selectedEmail = email || (raw.session.status === 'authenticated'
+       ? identityByFixtureEmail.get(emailKey(raw.registration.email))?.email || ''
+       : identityByFixtureEmail.get(emailKey(raw.registration.email))?.email || '');
+     state.journey.registration = {
+       ...clone(raw.registration),
+       identity: clone(identityByFixtureEmail.get(emailKey(raw.registration.email)) || {name: '', email: '', phone: ''}),
+     };
+     state.journey.session = {...clone(raw.session), email: selectedEmail};
+     const own = raw.ownProfile?.profile;
+     if (raw.ownProfile?.status === 'present' && own) {
+       if (!state.route.profileId || state.route.profileId === own.id) {
+         const overlay = profileOverlays.get(own.teacherId);
+         state.journey.profile = {
+           status: 'present',
+           value: {...clone(own), name: overlay?.name || own.displayName, bio: overlay?.bio ?? own.bio,
+             wishlistUrl: overlay?.wishlistUrl ?? own.wishlistUrl},
+           editOpen: state.journey.profile.editOpen === true,
+           editDraft: state.journey.profile.editDraft || {name: '', bio: '', wishlistUrl: ''},
+           createDraft: state.journey.profile.createDraft || {name: '', bio: '', wishlistUrl: ''},
+           source: overlay ? 'local-overlay' : 'runtime',
+         };
+       }
+     } else if (!state.route.profileId) {
+       state.journey.profile = {status: raw.session.status === 'authenticated' ? 'absent' : 'unknown', value: null,
+         editOpen: false, editDraft: {name: '', bio: '', wishlistUrl: ''},
+         createDraft: state.journey.profile.createDraft || {name: '', bio: '', wishlistUrl: ''}, source: 'runtime'};
+     }
+   }
+   function setCommunityRole(role) {
+     const nextRole = ['anonymous', 'teacher', 'moderator'].includes(role) ? role : 'anonymous';
++    if (state.journey.communityRole !== nextRole) {
++      state.community.postEditDraft = null;
++      state.community.editingPostId = null;
++    }
+     if (state.journey.communityRole === 'teacher' && nextRole !== 'teacher') {
+       state.community.topicDraft = null;
+       state.community.replyDraft = null;
+     }
+     state.journey.communityRole = nextRole;
+     refreshCommunity();
+   }
+   function refreshCommunity() {
+     const snapshot = community.snapshot();
+     state.community = {...snapshot, query: state.community.query || '', category: state.community.category || 'All',
+       composer: state.community.composer || null, sort: state.community.sort || 'date-newest',
+       pageSize: Math.max(1, Math.min(100, Number(state.community.pageSize) || 10)),
+       message: state.community.message || '', editingPostId: state.community.editingPostId || null,
+       editingReplyId: state.community.editingReplyId || null, editingThreadId: state.community.editingThreadId || null,
+-      topicDraft: state.community.topicDraft || null, replyDraft: state.community.replyDraft || null};
++      topicDraft: state.community.topicDraft || null, replyDraft: state.community.replyDraft || null,
++      postEditDraft: state.community.postEditDraft || null};
+   }
+   function clearMutationStatus() { setRequest('idle', ''); state.journey.error = ''; }
+   function activeWishlistProfileId(route = state.route, projection = state.journey.profile) {
+     if (route.page !== 'profile' || projection.status !== 'present') return null;
+     const profile = projection.value;
+     if (!profile || projection.readOnly || profile.readOnly || projection.source === 'captured-readonly') return null;
+     if (route.profileId) return profile.id === route.profileId ? profile.id : null;
+     return state.journey.session.status === 'authenticated' && profile.teacherId === state.journey.session.teacherId
+       ? profile.id : null;
+   }
+   function clearWishlistHandoff() {
+     state.journey.wishlist = {intent: false, remote: false, destination: null, profileId: null};
+   }
+   function clearShareHandoff() {
+     state.journey.share = {intent: false, url: '', profileId: null, remote: false, copied: false};
+   }
+ 
+   async function service(port, input = {}, boundary = {}, {retry = false, beforeSync = null, after = null} = {}) {
+     if (mutation) return {ok: false, ignored: true, error: {code: 'request_in_flight', message: 'A preview request is already running.'}};
+     const startRouteEpoch = routeEpoch;
+     mutation = true;
+     setRequest('busy', 'Working on the local preview…');
+     notify();
+     let result;
+     try { result = await runtime.invoke(port, input, boundary); }
+     catch { result = {ok: false, error: {code: 'runtime_failure', message: 'The local preview request failed.'}, message: 'The local preview request failed.'}; }
+     mutation = false;
+     if (beforeSync) beforeSync(result);
+     const registrationDraft = port === 'Registration.registerTeacher' && state.route.page === 'register'
+       ? clone(state.journey.registration.identity) : null;
+     syncRuntime();
+     if (!result.ok && registrationDraft && state.route.page === 'register') {
+       state.journey.registration.identity = registrationDraft;
+     }
+     if (result.ok) {
+       setRequest('completed', result.message || 'Local preview updated.');
+       setOutcome('local-simulation', result.message || 'Local preview updated.');
+       lastRetry = null;
+       if (after) await after(result, {routeCurrent: routeEpoch === startRouteEpoch});
+     } else {
+       const message = result.message || result.error?.message || 'The local preview request could not be completed.';
+       setRequest(result.error?.outcomeKnown === false ? 'outcome_unknown' : 'failed', message);
+       setOutcome('local-error', message, {code: result.error?.code || 'request_failed'});
+       lastRetry = retry && result.error?.retryable && result.error?.outcomeKnown !== false ? retry : null;
+     }
+     notify();
+     return result;
+   }
+ 
+   async function loadLookup(port, input, target, epoch = schoolEpoch) {
+     if (state.journey.lookupError && state.journey.outcome?.kind === 'local-error') state.journey.outcome = null;
+     state.journey.loading = true;
+     state.journey.lookupError = '';
+     state.journey.lookupRetryable = false;
+     const retryInput = clone(input);
+     const retryLookup = () => loadLookup(port, retryInput, target, epoch);
+     notify();
+     const failNext = state.journey.failNext === true;
+     if (failNext) state.journey.failNext = false;
+     const result = failNext
+       ? {ok: false, message: 'Simulated local school-data failure; no state changed.', error: {code: 'transport_failure', retryable: true}}
+       : await runtime.invoke(port, input);
+     if (epoch !== schoolEpoch) return {ok: false, ignored: true};
+     state.journey.loading = false;
+     if (result.ok) {
+       state.journey.lookups[target] = clone(result.data.values || []);
+       state.journey.lookupError = '';
+       state.journey.lookupRetryable = false;
+       if (schoolLookupRetry?.epoch === epoch) schoolLookupRetry = null;
+     } else {
+       state.journey.lookupError = result.message || result.error?.message || 'School choices are unavailable.';
+       state.journey.lookupRetryable = result.error?.retryable === true && result.error?.outcomeKnown !== false;
+       state.journey.error = state.journey.lookupError;
+       schoolLookupRetry = state.journey.lookupRetryable ? {epoch, run: retryLookup} : null;
+       setOutcome('local-error', state.journey.lookupError, {code: result.error?.code || 'lookup_failed'});
+     }
+     notify();
+     return result;
+   }
+ 
+   function validateRemembered(value) {
+     if (!value || value.version !== 1 || !value.school || typeof value.school !== 'object' ||
+         typeof value.query !== 'string' || value.query.length > 100 || !['date-newest', 'date-oldest', 'upvotes'].includes(value.sort || 'date-newest')) return null;
+     const school = {state: clean(value.school.state, 80), county: clean(value.school.county, 80),
+       district: clean(value.school.district, 80), school: clean(value.school.school, 100), grade: clean(value.school.grade, 40)};
+     const hierarchy = ['state', 'county', 'district', 'school'];
+     const hasSchoolSelection = hierarchy.some(key => school[key]);
+     const coherentRow = SCHOOL_FIXTURES.some(item => hierarchy.every(key => !school[key] || item[key] === school[key]));
+     if ((hasSchoolSelection && !coherentRow) || (school.grade && !GRADES.includes(school.grade))) return null;
+     return {version: 1, school, query: clean(value.query, 100), sort: value.sort || 'date-newest'};
+   }
+   function readRememberedFilters() {
+     if (!storage) return;
+     try {
+       const raw = storage.getItem(FILTER_KEY);
+       if (!raw) return;
+       if (raw.length > 2048) throw new Error('too_large');
+       const saved = validateRemembered(JSON.parse(raw));
+       if (!saved) throw new Error('invalid');
+       state.journey.rememberedFilters = saved;
+     } catch {
+       try { storage.removeItem(FILTER_KEY); } catch {}
+       setOutcome('local-warning', 'Saved directory filters were invalid and have been cleared.');
+     }
+   }
+   function rememberFilters() {
+     const value = {version: 1, school: clone(state.journey.school), query: clean(state.journey.filters.query, 100), sort: state.journey.filters.sort};
+     state.journey.rememberedFilters = value;
+     if (!storage) return;
+     try { storage.setItem(FILTER_KEY, JSON.stringify(value)); }
+     catch { setOutcome('local-warning', 'Filters are available for this page but could not be remembered in browser storage.'); }
+   }
+ 
+   async function initialize(hash = '') {
+     await runtime.ready;
+     syncRuntime();
+     readRememberedFilters();
+     await navigate(hash || '#/');
+     if (state.route.page !== 'register' && !state.journey.lookups.states.length) {
+       await loadLookup('SchoolData.getStates', {}, 'states', schoolEpoch);
+     }
+     return state;
+   }
+ 
+   async function loadRegistrationChoices() {
+     const school = state.journey.school;
+     if (!state.journey.lookups.states.length) return loadLookup('SchoolData.getStates', {}, 'states', schoolEpoch);
+     if (school.state && !state.journey.lookups.counties.length) return loadLookup('SchoolData.getCounties', school, 'counties', schoolEpoch);
+     if (school.county && !state.journey.lookups.districts.length) return loadLookup('SchoolData.getDistricts', school, 'districts', schoolEpoch);
+     if (school.district && !state.journey.lookups.schools.length) return loadLookup('SchoolData.getSchools', school, 'schools', schoolEpoch);
+     return {ok: true, local: true};
+   }
+ 
+   async function navigate(hash = '#/') {
+     routeEpoch += 1;
+     schoolEpoch += 1;
+     const epoch = routeEpoch;
+     state.journey.loading = false;
+     const nextRoute = normalizePublicRoute(hash);
+     const replyDraftRoute = nextRoute.page === 'community' && nextRoute.communityRoute?.page === 'post'
+       ? nextRoute.communityRoute.threadId : null;
+     if (state.community.replyDraft && replyDraftRoute !== state.community.replyDraft.threadId) state.community.replyDraft = null;
++    const nextPostId = replyDraftRoute;
++    if (state.community.editingPostId && state.community.editingPostId !== nextPostId) {
++      state.community.editingPostId = null;
++      state.community.postEditDraft = null;
++    } else if (state.community.postEditDraft && nextPostId !== state.community.postEditDraft.postId) {
++      state.community.postEditDraft = null;
++    }
+     state.route = nextRoute;
+     const targetWishlistProfileId = activeWishlistProfileId();
+     if (state.journey.wishlist.intent && state.journey.wishlist.profileId !== targetWishlistProfileId) clearWishlistHandoff();
+     const targetShareProfileId = state.route.page === 'profile'
+       ? state.route.profileId || state.journey.runtime?.ownProfile?.profile?.id || null
+       : null;
+     if (state.journey.share.intent && state.journey.share.profileId !== targetShareProfileId) clearShareHandoff();
+     state.journey.navOpen = false;
+     state.journey.error = '';
+     state.journey.terms = {...state.journey.terms, open: state.route.termsOpen === true};
+     if (state.journey.lookupError && state.journey.outcome?.kind === 'local-error') state.journey.outcome = null;
+     state.journey.lookupError = '';
+     state.journey.lookupRetryable = false;
+     lastRetry = null;
+     schoolLookupRetry = null;
+     if (state.route.page === 'directory') {
+       await loadDirectory(state.journey.filters.query, state.journey.school, epoch);
+     } else if (state.route.page === 'profile' && state.route.profileId) {
+       await loadPublicProfile(state.route.profileId, epoch);
+     } else if (state.route.page === 'profile') {
+       syncRuntime();
+     } else if (state.route.page === 'register') {
+       await loadRegistrationChoices();
+     }
+     notify();
+     return {ok: true, route: clone(state.route)};
+   }
+ 
+   async function selectSchool(key, value) {
+     const aliases = {region: 'state', schoolDistrict: 'district'};
+     key = aliases[key] || key;
+     if (key === 'grade') {
+       state.journey.school.grade = clean(value, 40);
+       notify();
+       return {ok: true};
+     }
+     const keys = ['state', 'county', 'district', 'school'];
+     const index = keys.indexOf(key);
+     if (index < 0) throw new Error('Unknown school selection.');
+     lastRetry = null;
+     schoolLookupRetry = null;
+     schoolEpoch += 1;
+     const epoch = schoolEpoch;
+     state.journey.school[key] = clean(value, 100);
+     for (let i = index + 1; i < keys.length; i += 1) {
+       state.journey.school[keys[i]] = '';
+       const lookupKey = {state: 'states', county: 'counties', district: 'districts', school: 'schools'}[keys[i]];
+       state.journey.lookups[lookupKey] = [];
+     }
+     if (state.journey.lookupError && state.journey.outcome?.kind === 'local-error') state.journey.outcome = null;
+     state.journey.lookupError = '';
+     state.journey.lookupRetryable = false;
+     state.journey.error = '';
+     clearMutationStatus();
+     notify();
+     if (!value || key === 'school') return {ok: true};
+     const requests = [
+       ['SchoolData.getCounties', 'counties'],
+       ['SchoolData.getDistricts', 'districts'],
+       ['SchoolData.getSchools', 'schools'],
+     ];
+     const [port, target] = requests[index];
+     const input = {...state.journey.school};
+     return loadLookup(port, input, target, epoch);
+   }
+ 
+   async function loadDirectory(query = '', school = state.journey.school, expectedRouteEpoch = routeEpoch) {
+     const epoch = ++directoryEpoch;
+     state.journey.matches = {status: 'loading', items: [], error: ''};
+     state.journey.loading = true;
+     state.journey.filters.query = clean(query, 100);
+     state.journey.filters.sort = state.community.sort || 'date-newest';
+     notify();
+     await Promise.resolve();
+     if (epoch !== directoryEpoch || expectedRouteEpoch !== routeEpoch || state.route.page !== 'directory') return {ok: false, ignored: true};
+     try {
+       if (state.journey.failNext === true) {
+         state.journey.failNext = false;
+         throw new Error('simulated_directory_read_failure');
+       }
+@@ -487,190 +504,208 @@ export function createPublicController({runtime, storage = null, onChange = () =
+ 
+   async function directorySearch(payload = {}) {
+     if (payload.school || payload.state || payload.county || payload.district) {
+       const incoming = {...state.journey.school};
+       for (const key of ['state', 'county', 'district', 'school', 'grade']) if (typeof payload[key] === 'string') incoming[key] = payload[key];
+       state.journey.school = incoming;
+     }
+     state.journey.filters.query = clean(payload.query, 100);
+     state.journey.filters.sort = ['date-newest', 'date-oldest', 'upvotes'].includes(payload.sort) ? payload.sort : state.journey.filters.sort;
+     state.journey.searchPerformed = true;
+     rememberFilters();
+     return loadDirectory(state.journey.filters.query, state.journey.school, routeEpoch);
+   }
+ 
+   function syncCommunityNotice(result, message = '') {
+     refreshCommunity();
+     state.community.message = message || (result?.ok ? 'Local forum preview updated.' : result?.error || 'The forum action could not be completed.');
+     notify();
+     return result;
+   }
+   function roleArgs() { return {role: state.journey.communityRole, personaId: 'demo-teacher'}; }
+   function forumAction(event, payload = {}) {
+     const role = state.journey.communityRole;
+     const postId = clean(payload.postId || payload.threadId || payload.id, 120);
+     const replyId = clean(payload.replyId || payload.commentId, 120);
+     let result;
+     if (event === 'forum-role' || event === 'community:role') {
+       setCommunityRole(payload.role);
+       return syncCommunityNotice({ok: true}, `Local forum preview role is now ${state.journey.communityRole}.`);
+     }
+     if (event === 'forum-search') { state.community.query = boundedDraft(payload.query ?? payload.value, 250); return syncCommunityNotice({ok: true}, 'Forum search updated locally.'); }
+     if (event === 'forum-clear-search') { state.community.query = ''; return syncCommunityNotice({ok: true}, 'Forum search cleared.'); }
+     if (event === 'forum-category') { state.community.category = clean(payload.category ?? payload.value, 80) || 'All'; return syncCommunityNotice({ok: true}, 'Forum category updated.'); }
+     if (event === 'forum-sort') {
+       const sort = payload.sort ?? payload.value;
+       if (!['date-newest', 'date-oldest', 'upvotes'].includes(sort)) return syncCommunityNotice({ok: false, error: 'invalid_sort'}, 'Choose a supported local sort.');
+       state.community.sort = sort;
+       return syncCommunityNotice({ok: true}, 'Forum sort updated locally.');
+     }
+     if (event === 'forum-load-more') { state.community.pageSize = Math.min(100, state.community.pageSize + 10); return syncCommunityNotice({ok: true}, 'More local topics are visible.'); }
+     if (event === 'forum-compose-topic') {
+       state.community.composer = 'topic';
+       return requestNavigation('/create-post');
+     }
+     if (event === 'forum-topic' || event === 'forum-submit-topic') {
+       const content = payload.body ?? payload.content;
+       result = community.createThread({title: payload.title, body: content, category: payload.category,
+         author: state.journey.registration.identity.name || 'Preview Teacher', role, authorId: 'demo-teacher'});
+       if (result.ok) {
+         state.community.topicDraft = null;
+         requestNavigation(`/posts/${encodeURIComponent(result.value.id)}`);
+       } else if (role === 'teacher') {
+         state.community.topicDraft = {
+           title: boundedDraft(payload.title, COMMUNITY_LIMITS.title + 1),
+           category: boundedDraft(payload.category, COMMUNITY_LIMITS.category),
+           content: boundedDraft(content, COMMUNITY_LIMITS.body + 1),
+         };
+       }
+       return syncCommunityNotice(result);
+     }
+     if (event === 'forum-open-thread') return requestNavigation(`/posts/${encodeURIComponent(postId)}`);
+     if (event === 'forum-reply' || event === 'forum-comment') {
+       const content = payload.body ?? payload.content;
+       result = community.reply(postId, {body: content, author: state.journey.registration.identity.name || 'Preview Teacher', role, authorId: 'demo-teacher'});
+       if (result?.ok) {
+         if (state.community.replyDraft?.threadId === postId) state.community.replyDraft = null;
+       } else if (role === 'teacher' && ['reply_required', 'input_too_long', 'reply_limit_reached'].includes(result?.error)) {
+         state.community.replyDraft = {threadId: postId, content: boundedReplyDraft(content)};
+       } else if (state.community.replyDraft?.threadId === postId) {
+         state.community.replyDraft = null;
+       }
+       return syncCommunityNotice(result);
+     }
+     if (event === 'forum-flag-thread') result = community.flag(postId, {role});
+     else if (event === 'forum-flag-reply') result = community.flag(postId, {replyId, role});
+     else if (event === 'forum-hide-thread' || event === 'forum-unhide-thread') result = community.moderate(postId, {hidden: event === 'forum-hide-thread', role});
+     else if (event === 'forum-hide-reply' || event === 'forum-unhide-reply') result = community.moderate(postId, {replyId, hidden: event === 'forum-hide-reply', role});
+     else if (event === 'forum-vote') result = community.vote(postId, {...roleArgs(), direction: payload.direction || 'upvote'});
+     else if (event === 'forum-edit-post') {
+       if (payload.title === undefined && payload.body === undefined && payload.content === undefined) {
++        if (state.community.editingPostId !== postId) state.community.postEditDraft = null;
+         state.community.editingPostId = postId;
+         return syncCommunityNotice({ok: true}, 'Edit this local post in the forum editor.');
+       }
++      const saved = state.community.threads.find(thread => thread.id === postId);
++      const title = payload.title === undefined ? saved?.title : payload.title;
++      const body = payload.body ?? payload.content ?? saved?.body;
+       result = community.updatePost(postId, {title: payload.title, body: payload.body ?? payload.content, ...roleArgs()});
++      if (result?.ok) {
++        state.community.postEditDraft = null;
++      } else if (role === 'teacher' && state.community.editingPostId === postId &&
++          ['title_and_body_required', 'input_too_long'].includes(result?.error)) {
++        state.community.postEditDraft = {postId, title: boundedPostEditTitle(title), content: boundedReplyDraft(body)};
++      } else if (state.community.postEditDraft?.postId === postId) {
++        state.community.postEditDraft = null;
++      }
+     } else if (event === 'forum-delete-post') result = community.deletePost(postId, roleArgs());
+     else if (event === 'forum-edit-comment') {
+       if (payload.body === undefined && payload.content === undefined) {
++        state.community.postEditDraft = null;
++        state.community.editingPostId = null;
+         state.community.editingReplyId = replyId;
+         state.community.editingThreadId = postId;
+         return syncCommunityNotice({ok: true}, 'Edit this local comment in the forum editor.');
+       }
+       result = community.updateReply(postId, replyId, {body: payload.body ?? payload.content, ...roleArgs()});
+     } else if (event === 'forum-delete-comment') result = community.deleteReply(postId, replyId, roleArgs());
+     else if (event === 'forum-cancel-edit') {
++      state.community.postEditDraft = null;
+       state.community.editingPostId = null;
+       state.community.editingReplyId = null;
+       state.community.editingThreadId = null;
+       return syncCommunityNotice({ok: true}, 'Forum edit cancelled.');
+     }
+     else if (event === 'forum-reset') {
+       state.community.topicDraft = null;
+       state.community.replyDraft = null;
++      state.community.postEditDraft = null;
++      state.community.editingPostId = null;
+       result = community.reset();
+     }
+     else if (event === 'forum-export') {
+       const data = community.exportData();
+       state.community.exportData = data;
+       return syncCommunityNotice({ok: true, value: data}, 'Local forum data is ready to copy; no data was uploaded.');
+     } else return null;
+     if (result?.ok) {
++      state.community.postEditDraft = null;
+       state.community.editingPostId = null;
+       state.community.editingReplyId = null;
+       state.community.editingThreadId = null;
+     }
+     refreshCommunity();
+     state.community.message = result?.ok ? 'Local forum preview updated.' : result?.error || 'The forum action could not be completed.';
+     notify();
+     return result;
+   }
+ 
+   async function dispatch(event, payload = {}) {
+     const aliases = {
+       'public-toggle-nav': 'public:toggle-nav',
+       'public-open-terms': 'public:open-terms',
+       'public-close-terms': 'public:close-terms',
+       'public-accept-terms': 'public:accept-terms',
+       'register': 'public:register',
+       'login': 'public:login',
+       'create-profile': 'public:profile-create',
+       'reset': 'public:reset',
+       'retry': 'public:retry',
+       approve: 'public:approve',
+       logout: 'public:logout',
+       'arm-failure': 'public:fail-next',
+       'directory-restore': 'public:directory-restore',
+       'public-directory-search': 'public:directory-search',
+     };
+     event = aliases[event] || event;
+     if (typeof event !== 'string') throw new TypeError('Expected a public preview event name.');
+     if (event.startsWith('forum-') || event === 'community:role') return forumAction(event, payload);
+ 
+     if (event === 'public:toggle-nav') { state.journey.navOpen = !state.journey.navOpen; notify(); return {ok: true}; }
+     if (event === 'public:open-terms') { state.journey.terms.open = true; notify(); return {ok: true}; }
+     if (event === 'public:close-terms') { state.journey.terms.open = false; notify(); return {ok: true}; }
+     if (event === 'public:terms-consent') {
+       state.journey.terms.accepted = payload.accepted === true;
+       notify();
+       return {ok: true};
+     }
+     if (event === 'public:accept-terms') { state.journey.terms = {open: false, accepted: true}; notify(); return {ok: true}; }
+     if (event === 'public:directory-search') return directorySearch(payload);
+     if (event === 'public:directory-restore') {
+       const saved = validateRemembered(state.journey.rememberedFilters);
+       if (!saved) return {ok: false, error: {code: 'no_remembered_filters', message: 'There are no valid remembered filters.'}};
+       state.journey.school = {...saved.school};
+       state.journey.filters.query = saved.query;
+       state.community.sort = saved.sort;
+       schoolEpoch += 1;
+       const epoch = schoolEpoch;
+       const school = saved.school;
+       if (school.state) await loadLookup('SchoolData.getCounties', school, 'counties', epoch);
+       if (school.county) await loadLookup('SchoolData.getDistricts', school, 'districts', epoch);
+       if (school.district) await loadLookup('SchoolData.getSchools', school, 'schools', epoch);
+       if (state.route.page === 'directory') return loadDirectory(saved.query, saved.school, routeEpoch);
+       notify();
+       return {ok: true};
+     }
+     if (event === 'public:random-teacher') {
+       const items = state.journey.matches.items.length ? state.journey.matches.items : (runtime.snapshot().demo?.publicProfiles || []);
+       if (!items.length) return {ok: false, error: {code: 'no_profiles', message: 'No synthetic teacher profiles are available.'}};
+       const picked = items[randomIndex++ % items.length];
+       return requestNavigation(`/public-profile/${encodeURIComponent(picked.id)}`);
+     }
+     if (event === 'public:wishlist') {
+       const profile = state.journey.profile.value;
+       if (state.route.page === 'profile' && (state.journey.profile.readOnly || profile?.readOnly || state.journey.profile.source === 'captured-readonly')) {
+         return {ok: false, error: {code: 'read_only_reference', message: 'Captured public reference profiles do not use the synthetic wishlist handoff.'}};
+       }
+       const profileId = activeWishlistProfileId();
+       if (state.route.page === 'profile' && !profileId) {
+         return {ok: false, error: {code: 'profile_unavailable', message: 'Load the current profile before preparing its wishlist handoff.'}};
+       }
+       const destination = profile?.wishlistUrl || FIXTURE_WISHLIST_URL;
+       state.journey.wishlist = {intent: true, remote: false, destination, profileId, choiceRequired: true, opened: false};
+       setOutcome('handoff-ready', 'This synthetic wishlist is an external handoff. Choose whether to open the displayed fixture destination; this preview has not opened it.');
+       notify();
+       return {ok: true, handoff: clone(state.journey.wishlist)};
+     }
+     if (event === 'public:confirm-wishlist') {
+       if (!state.journey.wishlist.intent) return {ok: false, error: {code: 'no_wishlist_handoff'}};
+@@ -803,153 +838,155 @@ export function createPublicController({runtime, storage = null, onChange = () =
+       const startRouteEpoch = routeEpoch;
+       const ownProfileId = runtime.snapshot().ownProfile?.profile?.id || null;
+       const result = await service('Session.logout');
+       if (result.ok) {
+         state.journey.loginDraft = {email: null};
+         setCommunityRole('anonymous');
+         if (!state.route.profileId || state.route.profileId === ownProfileId) {
+           state.journey.profile = {status: 'unknown', value: null, editOpen: false, source: 'runtime'};
+         }
+         if (routeEpoch === startRouteEpoch) requestNavigation('/login');
+       }
+       return result;
+     }
+     if (event === 'public:profile-create') {
+       if (state.journey.session.status !== 'authenticated') return {ok: false, error: {code: 'authentication_required', message: 'Log in to create a teacher profile.'}};
+       const identity = identityByFixtureEmail.get(emailKey(state.journey.runtime.registration.email)) || state.journey.registration.identity;
+       const createDraft = state.journey.profile.createDraft || {};
+       const name = clean(payload.name ?? createDraft.name, 100) || identity?.name || 'Demo Teacher';
+       const bio = clean(payload.bio ?? createDraft.bio, 500);
+       const wishlistInput = payload.wishlistUrl ?? createDraft.wishlistUrl;
+       const wishlistUrl = typeof wishlistInput === 'string' ? wishlistInput.trim() : '';
+       if (wishlistUrl && !safeWishlist(wishlistUrl)) return localValidation('Use a synthetic preview wishlist URL such as https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM, or leave it blank to use the default link.');
+       const internalName = `Demo ${name.replace(/[^A-Za-z0-9 ]/g, ' ').trim().slice(0, 60) || 'Teacher'}`;
+       const result = await service('TeacherProfile.createProfile', {
+         displayName: internalName, bio: 'Synthetic local preview profile.', subjects: [], wishlistUrl: FIXTURE_WISHLIST_URL,
+       });
+       if (result.ok) {
+         const profile = result.data.profile;
+         profileOverlays.set(profile.teacherId, {name, bio: bio || profile.bio,
+           wishlistUrl: safeWishlist(wishlistUrl) ? wishlistUrl : profile.wishlistUrl});
+         syncRuntime({email: identity?.email || state.journey.session.email});
+         if (state.route.page === 'profile' && (!state.route.profileId || state.route.profileId === profile.id) &&
+             state.journey.profile.status === 'present' && state.journey.profile.value?.id === profile.id) {
+           state.journey.profile.editOpen = false;
+           state.journey.profile.createDraft = {name: '', bio: '', wishlistUrl: ''};
+           state.journey.profile.source = 'local-overlay';
+           state.journey.profile.value.name = name;
+           state.journey.profile.value.bio = bio || profile.bio;
+           state.journey.profile.value.wishlistUrl = safeWishlist(wishlistUrl) ? wishlistUrl : profile.wishlistUrl;
+         }
+         notify();
+       }
+       return result;
+     }
+     if (event === 'public:forgot') {
+       const email = clean(payload.email, 254);
+       if (!validEmail(email)) return localValidation('Enter a valid email address.');
+       setOutcome('local-simulation', 'Password recovery is not connected. No email was sent.');
+       setRequest('completed', state.journey.outcome.message);
+       notify();
+       return {ok: true, remote: false, message: state.journey.outcome.message};
+     }
+     if (event === 'public:contact') {
+       const name = clean(payload.name, 100), email = clean(payload.email, 254), subject = clean(payload.subject, 120), message = typeof payload.message === 'string' ? payload.message.trim() : '';
+       if (!name || !validEmail(email) || !subject || !message) return localValidation('Enter your name, a valid email, a subject, and a message.');
+       if (message.length > 250) return localValidation('Keep the message at or below 250 characters.');
+       state.journey.contact = {name, email, subject, message};
+       setOutcome('local-simulation', 'Your contact note is ready in this preview only. Nothing was sent.');
+       setRequest('completed', state.journey.outcome.message);
+       notify();
+       return {ok: true, remote: false, message: state.journey.outcome.message};
+     }
+     if (event === 'public:reset') {
+       const startRouteEpoch = routeEpoch;
+       const result = await service('Demo.reset');
+       if (result.ok) {
+         aliasToFixtureEmail.clear(); identityByFixtureEmail.clear(); profileOverlays.clear();
+         syntheticAccount = 0; state.journey.school = {state: '', county: '', district: '', school: '', grade: ''};
+         state.journey.filters = {query: '', sort: 'date-newest', limit: 50};
+         state.journey.searchPerformed = false;
+         state.journey.matches = {status: 'idle', items: [], error: ''};
+         state.journey.registration.identity = {name: '', email: '', phone: ''};
+         state.journey.loginDraft = {email: null};
+         state.journey.terms = {open: false, accepted: false};
+         state.journey.contact = {name: '', email: '', subject: '', message: ''};
+         clearWishlistHandoff();
+         state.journey.share = {intent: false, url: ''};
+         state.journey.communityRole = 'anonymous';
+         state.community.topicDraft = null;
+         state.community.replyDraft = null;
++        state.community.postEditDraft = null;
++        state.community.editingPostId = null;
+         state.journey.profile = {status: 'absent', value: null, editOpen: false, source: 'runtime'};
+         try { storage?.removeItem(FILTER_KEY); } catch {}
+         await community.reset(); refreshCommunity();
+         for (const lookup of ['counties', 'districts', 'schools']) state.journey.lookups[lookup] = [];
+         if (routeEpoch === startRouteEpoch) requestNavigation('/');
+       }
+       return result;
+     }
+     if (event === 'public:retry' || event === 'retry') {
+       if (lastRetry) return lastRetry();
+       if (schoolLookupRetry?.epoch === schoolEpoch) return schoolLookupRetry.run();
+       return {ok: false, error: {code: 'nothing_to_retry', message: 'There is no safe read operation to retry.'}};
+     }
+     if (event === 'public:fail-next') {
+       state.journey.failNext = !state.journey.failNext;
+       notify();
+       return {ok: true};
+     }
+     return null;
+   }
+ 
+   function localValidation(message) {
+     setRequest('failed', message);
+     setOutcome('validation-error', message);
+     notify();
+     return {ok: false, error: {code: 'validation_failed', message}};
+   }
+   function profileOwnerError(profile) {
+     const teacherId = state.journey.session.teacherId;
+     if (teacherId && profile?.teacherId === teacherId) return null;
+     return {ok: false, error: {code: 'profile_owner_mismatch', message: 'You can only edit your own local profile.'}};
+   }
+   function safeWishlist(value) {
+     if (typeof value !== 'string' || value.length > 512) return false;
+     try {
+       const url = new URL(value);
+       return url.protocol === 'https:' && url.hostname === 'www.amazon.com' && !url.username && !url.password &&
+         !url.search && !url.hash && /^\/hz\/wishlist\/ls\/DEMO(?:-[A-Z0-9]+)+$/.test(url.pathname);
+     } catch { return false; }
+   }
+   function updateDraft(name, value) {
+     if (typeof name !== 'string' || /password|confirmPassword/i.test(name)) return false;
+     if (name === 'query' && state.route.page === 'community') state.community.query = boundedDraft(value, 250);
+     else if (name === 'query') state.journey.filters.query = boundedDraft(value, 100);
+     else if (name === 'email' && state.route.page === 'login') state.journey.loginDraft = {email: boundedDraft(value, 254)};
+     else if (name === 'name' && state.route.page === 'register') state.journey.registration.identity.name = boundedDraft(value, 80);
+     else if (name === 'email' && state.route.page === 'register') state.journey.registration.identity.email = boundedDraft(value, 254);
+     else if ((name === 'phone' || name === 'phone_number') && state.route.page === 'register') state.journey.registration.identity.phone = boundedDraft(value, 32);
+     else if (name === 'name' && state.route.page === 'contact') state.journey.contact.name = boundedDraft(value, 100);
+     else if (name === 'email' && state.route.page === 'contact') state.journey.contact.email = boundedDraft(value, 254);
+     else if (name === 'subject' && state.route.page === 'contact') state.journey.contact.subject = boundedDraft(value, 120);
+     else if (name === 'message' && state.route.page === 'contact') state.journey.contact.message = boundedDraft(value, 250);
+     else if (['name', 'bio', 'wishlistUrl'].includes(name) && state.journey.profile.editOpen) {
+       const max = name === 'name' ? 100 : name === 'bio' ? 500 : 512;
+       state.journey.profile.editDraft = {...state.journey.profile.editDraft, [name]: boundedDraft(value, max)};
+     }
+     else if (['name', 'bio', 'wishlistUrl'].includes(name) && state.route.page === 'profile' && state.journey.profile.status === 'absent') {
+       const max = name === 'name' ? 100 : name === 'bio' ? 500 : 512;
+       state.journey.profile.createDraft = {...state.journey.profile.createDraft, [name]: boundedDraft(value, max)};
+     }
+     else return false;
+     onChange(state, state.route, {draft: true});
+     return true;
+   }
+ 
+   return Object.freeze({
+     state,
+     get route() { return state.route; },
+     get canRetry() { return typeof lastRetry === 'function' || schoolLookupRetry?.epoch === schoolEpoch; },
+     initialize, navigate, selectSchool, dispatch, updateDraft,
+     community,
+   });
+ }
+diff --git a/checkpoint/vendor/hh/src/public-controller.test.mjs b/checkpoint/vendor/hh/src/public-controller.test.mjs
+index 12cdc0b..2178518 100644
+--- a/checkpoint/vendor/hh/src/public-controller.test.mjs
++++ b/checkpoint/vendor/hh/src/public-controller.test.mjs
+@@ -25,160 +25,182 @@ function setup() {
+   return {controller, runtime, storage, community};
+ }
+ 
+ function registrationDraftSetup() {
+   const storage = memoryStorage();
+   const provider = createFixtureProvider({fixture: true, storage});
+   const runtime = createServiceRuntime(provider);
+   const community = createCommunity({storage});
+   let tree = null;
+   const controller = createPublicController({runtime, storage, community,
+     onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+   });
+   return {controller, runtime, storage, get tree() { return tree; }};
+ }
+ 
+ function communityDraftSetup() {
+   const storage = memoryStorage();
+   const runtime = createServiceRuntime(createFixtureProvider({fixture: true, storage}));
+   const community = createCommunity({storage});
+   let tree = null;
+   const controller = createPublicController({runtime, storage, community,
+     onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+   });
+   return {controller, runtime, storage, community, get tree() { return tree; }};
+ }
+ 
+ function topicComposerFields(tree) {
+   const nodes = [];
+   const walk = node => {
+     if (!node || typeof node !== 'object') return;
+     nodes.push(node);
+     for (const child of node.children || []) walk(child);
+   };
+   walk(tree);
+   const form = nodes.find(node => node.tag === 'form' && node.attrs?.['data-submit'] === 'forum-topic');
+   if (!form) return null;
+   const fields = [];
+   const walkForm = node => {
+     if (!node || typeof node !== 'object') return;
+     if (node.attrs?.name) fields.push(node);
+     for (const child of node.children || []) walkForm(child);
+   };
+   walkForm(form);
+   const title = fields.find(node => node.attrs.name === 'title');
+   const category = fields.find(node => node.attrs.name === 'category');
+   const content = fields.find(node => node.attrs.name === 'content');
+   return {
+     title: title?.attrs.value ?? '',
+     category: category?.children?.find(option => option?.attrs?.selected)?.attrs?.value ?? '',
+     content: content?.children?.join('') ?? '',
+   };
+ }
+ 
+ async function openTeacherTopicComposer(env) {
+   await env.controller.initialize('#/create-post');
+   await env.controller.dispatch('forum-role', {role: 'teacher'});
+   assert.ok(topicComposerFields(env.tree), 'teacher sees the topic composer');
+ }
+ 
+ function replyComposerFields(tree) {
+   const nodes = [];
+   const walk = node => {
+     if (!node || typeof node !== 'object') return;
+     nodes.push(node);
+     for (const child of node.children || []) walk(child);
+   };
+   walk(tree);
+   const form = nodes.find(node => node.tag === 'form' && node.attrs?.['data-submit'] === 'forum-reply');
+   if (!form) return null;
+   const formNodes = [];
+   const walkForm = node => {
+     if (!node || typeof node !== 'object') return;
+     formNodes.push(node);
+     for (const child of node.children || []) walkForm(child);
+   };
+   walkForm(form);
+   const textarea = formNodes.find(node => node.tag === 'textarea' && node.attrs?.name === 'content');
+   return {threadId: form.attrs['data-thread-id'], content: textarea?.children?.join('') ?? textarea?.attrs?.value ?? ''};
+ }
+ 
++function postEditFields(tree) {
++  const nodes = [];
++  const walk = node => {
++    if (!node || typeof node !== 'object') return;
++    nodes.push(node);
++    for (const child of node.children || []) walk(child);
++  };
++  walk(tree);
++  const form = nodes.find(node => node.tag === 'form' && node.attrs?.['data-submit'] === 'forum-edit-post');
++  if (!form) return null;
++  const formNodes = [];
++  const walkForm = node => {
++    if (!node || typeof node !== 'object') return;
++    formNodes.push(node);
++    for (const child of node.children || []) walkForm(child);
++  };
++  walkForm(form);
++  const title = formNodes.find(node => node.tag === 'input' && node.attrs?.name === 'title');
++  const content = formNodes.find(node => node.tag === 'textarea' && node.attrs?.name === 'content');
++  return {postId: form.attrs['data-post-id'], title: title?.attrs?.value ?? '', content: content?.children?.join('') ?? ''};
++}
++
+ async function openTeacherReplyComposer(env, threadId = 'topic-official-bug-forum') {
+   await env.controller.initialize(`#/posts/${threadId}`);
+   await env.controller.dispatch('forum-role', {role: 'teacher'});
+   assert.equal(replyComposerFields(env.tree)?.threadId, threadId, 'teacher sees the reply composer on the selected thread');
+ }
+ 
+ function loginDraftFailureSetup() {
+   const storage = memoryStorage();
+   const base = createFixtureProvider({fixture: true, storage});
+   const started = [];
+   const pending = [];
+   const releases = [];
+   let loginCalls = 0;
+   const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+     if (port !== 'Session.login') return invoke(input);
+     const index = loginCalls++;
+     let announceStart, release;
+     started[index] = new Promise(resolve => { announceStart = resolve; });
+     pending[index] = new Promise(resolve => { release = resolve; });
+     releases[index] = release;
+     announceStart();
+     await pending[index];
+     return invoke(index === 0 ? {...input, failWith: 'transport_failure'} : input);
+   }]));
+   const runtime = createServiceRuntime({...base, services: Object.freeze(services)});
+   let tree = null;
+   const controller = createPublicController({runtime, storage, community: createCommunity({storage}),
+     onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+   });
+   return {controller, runtime, storage, started, release(index) { releases[index](); },
+     get loginCalls() { return loginCalls; }, get tree() { return tree; }};
+ }
+ 
+ function registrationFailureSetup({failCalls = {}, pauseCall = 0} = {}) {
+   const storage = memoryStorage();
+   const base = createFixtureProvider({fixture: true, storage});
+   let announceStart, release;
+   const started = new Promise(resolve => { announceStart = resolve; });
+   const pending = new Promise(resolve => { release = resolve; });
+   let registrationCalls = 0;
+   let loginAliasIndex = null;
+   const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+     if (port === 'Registration.registerTeacher') {
+       registrationCalls += 1;
+       if (pauseCall === registrationCalls) {
+         announceStart();
+         await pending;
+       }
+       const failWith = failCalls[registrationCalls];
+       return invoke(failWith ? {...input, failWith} : input);
+     }
+     if (port === 'Session.login') {
+       const match = /^public-teacher-(\d+)@fixture\.test$/.exec(input.email);
+       loginAliasIndex = match ? Number(match[1]) : null;
+     }
+     return invoke(input);
+   }]));
+   const runtime = createServiceRuntime({...base, services: Object.freeze(services)});
+   let tree = null;
+   const controller = createPublicController({runtime, storage, community: createCommunity({storage}),
+     onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+   });
+   return {controller, runtime, storage, started, release,
+     get registrationCalls() { return registrationCalls; }, get loginAliasIndex() { return loginAliasIndex; },
+     get tree() { return tree; }};
+ }
+ 
+ function nodeById(tree, id) {
+   if (!tree || typeof tree !== 'object') return null;
+   if (tree.attrs?.id === id) return tree;
+   for (const child of tree.children || []) {
+     const match = nodeById(child, id);
+     if (match) return match;
+   }
+   return null;
+ }
+ 
+ function selectedOptionValue(tree, id) {
+   const select = nodeById(tree, id);
+   return select?.children?.find(option => option?.attrs?.selected)?.attrs?.value || '';
+@@ -1572,160 +1594,288 @@ test('profile edit overlay remains local to this controller and reset clears it'
+   }
+   assert.equal(JSON.stringify(controller.state).includes(ephemeralPassword), false);
+   assert.equal(JSON.stringify(runtime.pxc.entries().map(([, part]) => part.value)).includes(ephemeralPassword), false);
+   assert.equal([...storage.values.values()].join('\n').includes(ephemeralPassword), false);
+ 
+   const readsBeforeAlias = calls['TeacherProfile.openPublicProfile'];
+   await controller.navigate('#/public-profile/demo-avery');
+   assert.equal(controller.state.journey.profile.value.name, 'E2203 Synthetic Avery',
+     'same-controller alias read should merge its local overlay');
+   assert.equal(controller.state.journey.profile.source, 'local-overlay');
+   assert.equal(calls['TeacherProfile.openPublicProfile'], readsBeforeAlias + 1,
+     'alias reentry should use the real fixture public-profile read');
+ 
+   const freshProvider = createFixtureProvider({fixture: true, storage});
+   const freshRuntime = createServiceRuntime(freshProvider);
+   const freshCommunity = createCommunity({storage});
+   const freshController = createPublicController({runtime: freshRuntime, storage, community: freshCommunity});
+   await freshController.initialize('#/profile');
+   assert.equal(freshController.state.journey.session.status, 'authenticated', 'synthetic fixture session survives in shared storage');
+   assert.equal(freshController.state.journey.profile.value.name, 'Demo Avery',
+     'new provider/runtime/controller must load the original fixture profile, not the old controller overlay');
+   assert.equal(freshController.state.journey.profile.source, 'runtime');
+ 
+   assert.equal((await controller.dispatch('public:reset')).ok, true);
+   await controller.navigate('#/public-profile/demo-avery');
+   assert.equal(controller.state.journey.profile.value.name, 'Demo Avery', 'explicit fixture reset clears the overlay');
+   assert.equal(controller.state.journey.profile.source, 'runtime');
+ });
+ 
+ test('Terms checkbox consent tracks both checking and unchecking without opening the modal', async () => {
+   const {controller} = setup();
+   await controller.initialize('#/register');
+   await controller.dispatch('public:terms-consent', {accepted: true});
+   assert.deepEqual(controller.state.journey.terms, {open: false, accepted: true});
+   await controller.dispatch('public:terms-consent', {accepted: false});
+   assert.deepEqual(controller.state.journey.terms, {open: false, accepted: false});
+   await controller.navigate('#/pages/terms_conditions.html');
+   assert.equal(controller.state.journey.terms.open, true);
+   await controller.navigate('#/about');
+   assert.equal(controller.state.journey.terms.open, false);
+ });
+ 
+ test('seeded UI login, local contact and reset never claim remote effects', async () => {
+   const {controller, runtime} = setup();
+   await controller.initialize('#/login');
+   const login = await controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'entered-but-not-verified'});
+   assert.equal(login.ok, true);
+   assert.equal(runtime.snapshot().session.status, 'authenticated');
+   assert.equal(controller.state.journey.outcome.kind, 'local-simulation');
+   const contact = await controller.dispatch('public:contact', {name: 'Guest', email: 'guest@example.org', subject: 'A local question', message: 'A'.repeat(250)});
+   assert.equal(contact.ok, true);
+   assert.equal(controller.state.journey.outcome.kind, 'local-simulation');
+   const tooLong = await controller.dispatch('public:contact', {name: 'Guest', email: 'guest@example.org', subject: 'A local question', message: 'A'.repeat(251)});
+   assert.equal(tooLong.ok, false);
+   assert.equal((await controller.dispatch('public:forgot', {email: 'avery@fixture.test'})).ok, true);
+   assert.equal(controller.state.journey.outcome.remote, false);
+   await controller.navigate('#/find-teachers');
+   await controller.dispatch('public:directory-search', {query: 'avery'});
+   assert.equal(controller.state.journey.searchPerformed, true);
+   await controller.dispatch('reset');
+   assert.equal(runtime.snapshot().session.status, 'anonymous');
+   assert.equal(controller.state.journey.registration.status, 'none');
+   assert.equal(controller.state.journey.searchPerformed, false);
+ });
+ 
+ test('wishlist and community actions are explicit local preview handoffs', async () => {
+   const {controller, community} = setup();
+   await controller.initialize('#/');
+   await controller.dispatch('public:wishlist');
+   assert.equal(controller.state.journey.wishlist.intent, true);
+   assert.equal(controller.state.journey.wishlist.remote, false);
+   await controller.dispatch('community:role', {role: 'teacher'});
+   const created = await controller.dispatch('forum-topic', {title: 'Local topic', content: 'Only in preview.', category: 'Questions'});
+   assert.equal(created.ok, true);
+   assert.ok(community.snapshot().threads.some(thread => thread.id === created.value.id));
+   assert.equal(controller.state.journey.runtime.session.status, 'anonymous', 'forum role does not create an HH login');
+   await controller.navigate(`#/posts/${created.value.id}`);
+   assert.deepEqual(controller.state.route.communityRoute, {page: 'post', threadId: created.value.id});
+ });
+ 
++test('rejected author post edit retains rendered fields and corrected explicit save commits once', async () => {
++  const env = communityDraftSetup();
++  let forumWrites = 0;
++  const setItem = env.storage.setItem.bind(env.storage);
++  env.storage.setItem = (key, value) => { if (key === 'hh-forum-v1') forumWrites += 1; setItem(key, value); };
++  await env.controller.initialize('#/create-post');
++  await env.controller.dispatch('forum-role', {role: 'teacher'});
++  const created = env.community.createThread({title: 'E2903 original', body: 'Original persisted body.', category: 'Questions', author: 'Synthetic teacher', authorId: 'demo-teacher', role: 'teacher'});
++  assert.equal(created.ok, true);
++  const postId = created.value.id;
++  await env.controller.navigate(`#/posts/${postId}`);
++  const beforeStorage = env.storage.getItem('hh-forum-v1');
++  const beforeReceipts = env.runtime.inspect().receipts.length;
++  const beforeThreadCount = env.community.snapshot().threads.length;
++  const changedBody = 'Meaningful changed body survives the rejected title.';
++
++  await env.controller.dispatch('forum-edit-post', {postId, threadId: postId});
++  assert.ok(postEditFields(env.tree), 'the author has an edit form');
++  const rejected = await env.controller.dispatch('forum-edit-post', {postId, threadId: postId, title: '   ', content: changedBody});
++  assert.equal(rejected.ok, false);
++  assert.equal(rejected.error, 'title_and_body_required');
++  assert.deepEqual(postEditFields(env.tree), {postId, title: '   ', content: changedBody});
++  assert.deepEqual(env.controller.state.community.postEditDraft, {postId, title: '   ', content: changedBody});
++  assert.equal(env.storage.getItem('hh-forum-v1'), beforeStorage, 'rejected edit leaves forum storage unchanged');
++  assert.equal(env.runtime.inspect().receipts.length, beforeReceipts, 'post editing does not invoke HH account services');
++  assert.equal(env.community.snapshot().threads.length, beforeThreadCount);
++  assert.equal(env.community.getThread(postId, {role: 'teacher'}).body, 'Original persisted body.');
++
++  const writesBeforeCorrection = forumWrites;
++  const corrected = await env.controller.dispatch('forum-edit-post', {postId, threadId: postId, title: 'E2903 corrected', content: changedBody});
++  assert.equal(corrected.ok, true);
++  assert.equal(env.controller.state.community.postEditDraft, null);
++  assert.equal(postEditFields(env.tree), null);
++  const saved = env.community.snapshot().threads.filter(thread => thread.id === postId);
++  assert.equal(saved.length, 1, 'the explicit corrected save updates the original post without creating another topic');
++  assert.equal(saved[0].title, 'E2903 corrected');
++  assert.equal(saved[0].body, changedBody);
++  assert.equal(forumWrites, writesBeforeCorrection + 1, 'one corrected submit persists exactly once');
++  assert.equal(env.runtime.inspect().receipts.length, beforeReceipts);
++});
++
++test('cancelled author post edit discards its draft and restores persisted fields on reopen', async () => {
++  const env = communityDraftSetup();
++  await env.controller.initialize('#/create-post');
++  await env.controller.dispatch('forum-role', {role: 'teacher'});
++  const created = env.community.createThread({title: 'E2903 cancel', body: 'Saved body.', category: 'Questions', author: 'Synthetic teacher', authorId: 'demo-teacher', role: 'teacher'});
++  const postId = created.value.id;
++  await env.controller.navigate(`#/posts/${postId}`);
++  const beforeStorage = env.storage.getItem('hh-forum-v1');
++  await env.controller.dispatch('forum-edit-post', {postId, threadId: postId});
++  const rejected = await env.controller.dispatch('forum-edit-post', {postId, threadId: postId, title: '   ', content: 'Uncommitted replacement body.'});
++  assert.equal(rejected.error, 'title_and_body_required');
++  assert.deepEqual(postEditFields(env.tree), {postId, title: '   ', content: 'Uncommitted replacement body.'});
++
++  await env.controller.dispatch('forum-cancel-edit', {postId, threadId: postId});
++  assert.equal(env.controller.state.community.postEditDraft, null);
++  assert.equal(env.controller.state.community.editingPostId, null);
++  assert.equal(postEditFields(env.tree), null);
++  assert.equal(env.community.getThread(postId, {role: 'teacher'}).body, 'Saved body.');
++  assert.equal(env.storage.getItem('hh-forum-v1'), beforeStorage, 'cancel does not persist draft text');
++  await env.controller.dispatch('forum-edit-post', {postId, threadId: postId});
++  assert.deepEqual(postEditFields(env.tree), {postId, title: 'E2903 cancel', content: 'Saved body.'});
++});
++
++test('post edit draft is thread-bound and cleared on role exit, forum reset, logout, and app reset', async () => {
++  const env = communityDraftSetup();
++  assert.equal((await env.controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'})).ok, true);
++  await env.controller.dispatch('forum-role', {role: 'teacher'});
++  const first = env.community.createThread({title: 'E2903 first', body: 'First saved body.', category: 'Questions', author: 'Synthetic teacher', authorId: 'demo-teacher', role: 'teacher'});
++  const second = env.community.createThread({title: 'E2903 second', body: 'Second saved body.', category: 'Questions', author: 'Synthetic teacher', authorId: 'demo-teacher', role: 'teacher'});
++  await env.controller.navigate(`#/posts/${first.value.id}`);
++  await env.controller.dispatch('forum-edit-post', {postId: first.value.id, threadId: first.value.id});
++  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: first.value.id, threadId: first.value.id, title: '   ', content: 'First edit draft.'})).ok, false);
++  assert.deepEqual(env.controller.state.community.postEditDraft, {postId: first.value.id, title: '   ', content: 'First edit draft.'});
++
++  await env.controller.navigate(`#/posts/${second.value.id}`);
++  assert.equal(env.controller.state.community.postEditDraft, null, 'leaving the source thread discards its edit draft');
++  assert.equal(env.controller.state.community.editingPostId, null);
++  await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id});
++  assert.deepEqual(postEditFields(env.tree), {postId: second.value.id, title: 'E2903 second', content: 'Second saved body.'}, 'another post never inherits the first draft');
++
++  const oversizedTitle = 'x'.repeat(300);
++  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id, title: oversizedTitle, content: 'Second saved body.'})).error, 'input_too_long');
++  assert.equal(postEditFields(env.tree).title.length, 256, 'overlength retry keeps one character beyond the acceptance cap');
++  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id, title: postEditFields(env.tree).title, content: 'Second saved body.'})).error, 'input_too_long', 'the retained sentinel remains invalid');
++  const paddedTitle = `${' '.repeat(2_000)}${'p'.repeat(1_000)}`;
++  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id, title: paddedTitle, content: 'Second saved body.'})).error, 'input_too_long');
++  assert.equal(postEditFields(env.tree).title, 'p'.repeat(256), 'trimmed overlength title retains an invalid sentinel');
++  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id, title: postEditFields(env.tree).title, content: 'Second saved body.'})).error, 'input_too_long');
++  const paddedBody = `${' '.repeat(10_000)}${'b'.repeat(10_001)}`;
++  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id, title: 'E2903 second', content: paddedBody})).error, 'input_too_long');
++  assert.equal(postEditFields(env.tree).content, 'b'.repeat(10_001), 'trimmed overlength body retains an invalid sentinel');
++  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id, title: 'E2903 second', content: postEditFields(env.tree).content})).error, 'input_too_long');
++
++  await env.controller.dispatch('forum-role', {role: 'moderator'});
++  assert.equal(env.controller.state.community.postEditDraft, null, 'leaving teacher role clears retained text');
++  assert.equal(env.controller.state.community.editingPostId, null);
++  const foreignTree = renderCommunity({route: {page: 'post', threadId: 'topic-official-bug-forum'}, state: env.community.snapshot(), session: {role: 'teacher', personaId: 'demo-teacher'}});
++  assert.equal(postEditFields(foreignTree), null);
++  assert.ok(JSON.stringify(foreignTree).includes('Edit post') === false, 'a teacher still has no edit control for a foreign post');
++  const moderatorTree = renderCommunity({route: {page: 'post', threadId: 'topic-official-bug-forum'}, state: env.community.snapshot(), session: {role: 'moderator'}});
++  assert.ok(JSON.stringify(moderatorTree).includes('Edit post'), 'moderator edit control remains available');
++
++  await env.controller.dispatch('forum-role', {role: 'teacher'});
++  await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id});
++  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id, title: '   ', content: 'Draft before forum reset.'})).ok, false);
++  await env.controller.dispatch('forum-reset');
++  assert.equal(env.controller.state.community.postEditDraft, null, 'forum reset clears retained edit text');
++  assert.equal(env.controller.state.community.editingPostId, null);
++
++  const afterForumReset = env.community.createThread({title: 'E2903 after forum reset', body: 'Saved body.', category: 'Questions', author: 'Synthetic teacher', authorId: 'demo-teacher', role: 'teacher'});
++  await env.controller.navigate(`#/posts/${afterForumReset.value.id}`);
++  await env.controller.dispatch('forum-edit-post', {postId: afterForumReset.value.id, threadId: afterForumReset.value.id});
++  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: afterForumReset.value.id, threadId: afterForumReset.value.id, title: '   ', content: 'Draft before logout.'})).ok, false);
++  assert.equal((await env.controller.dispatch('public:logout')).ok, true);
++  assert.equal(env.controller.state.community.postEditDraft, null, 'successful logout clears retained edit text');
++  assert.equal(env.controller.state.community.editingPostId, null);
++
++  await env.controller.dispatch('forum-role', {role: 'teacher'});
++  const afterLogout = env.community.createThread({title: 'E2903 after logout', body: 'Saved body.', category: 'Questions', author: 'Synthetic teacher', authorId: 'demo-teacher', role: 'teacher'});
++  await env.controller.navigate(`#/posts/${afterLogout.value.id}`);
++  await env.controller.dispatch('forum-edit-post', {postId: afterLogout.value.id, threadId: afterLogout.value.id});
++  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: afterLogout.value.id, threadId: afterLogout.value.id, title: '   ', content: 'Draft before app reset.'})).ok, false);
++  assert.equal((await env.controller.dispatch('public:reset')).ok, true);
++  assert.equal(env.controller.state.community.postEditDraft, null, 'app reset clears retained edit text');
++  assert.equal(env.controller.state.community.editingPostId, null);
++});
++
+ test('rejected topic with a whitespace-only title retains category and meaningful body in compose', async () => {
+   const env = communityDraftSetup();
+   await openTeacherTopicComposer(env);
+   const beforeTree = env.tree;
+   assert.equal(env.controller.updateDraft('title', 'typed but not submitted'), false);
+   assert.strictEqual(env.tree, beforeTree, 'topic typing stays DOM-local and does not trigger a controller rerender');
+   const beforeCount = env.community.snapshot().threads.length;
+   const beforeStorage = env.storage.getItem('hh-forum-v1');
+   const payload = {title: '   ', category: 'Questions', content: 'A meaningful teacher question.'};
+   const result = await env.controller.dispatch('forum-topic', payload);
+   assert.equal(result.ok, false);
+   assert.equal(result.error, 'title_and_body_required');
+   assert.deepEqual(env.controller.state.community.topicDraft, payload);
+   assert.deepEqual(topicComposerFields(env.tree), payload);
+   assert.equal(env.community.snapshot().threads.length, beforeCount);
+   assert.equal(env.storage.getItem('hh-forum-v1'), beforeStorage, 'a failed topic draft is not written to forum storage');
+   assert.equal(env.controller.state.journey.session.status, 'anonymous', 'a forum role does not create an HH account');
+   const inlineTree = renderCommunity({route: {page: 'forum'}, state: {...env.controller.state.community, composer: 'topic'}, session: {role: 'teacher'}});
+   assert.deepEqual(topicComposerFields(inlineTree), payload, 'the inline composer projects the same rejected submit draft');
+ });
+ 
+ test('rejected topic with a whitespace-only body retains title and category in compose', async () => {
+   const env = communityDraftSetup();
+   await openTeacherTopicComposer(env);
+   const beforeCount = env.community.snapshot().threads.length;
+   const payload = {title: 'A valid teacher title', category: 'Resources', content: '   '};
+   const result = await env.controller.dispatch('forum-topic', payload);
+   assert.equal(result.ok, false);
+   assert.equal(result.error, 'title_and_body_required');
+   assert.deepEqual(env.controller.state.community.topicDraft, payload);
+   assert.deepEqual(topicComposerFields(env.tree), payload);
+   assert.equal(env.community.snapshot().threads.length, beforeCount);
+ });
+ 
+ test('corrected explicit topic retry clears draft and creates exactly one local topic', async () => {
+   const env = communityDraftSetup();
+   await openTeacherTopicComposer(env);
+   const receiptsBefore = env.runtime.inspect().receipts.length;
+   const invalid = {title: '  ', category: 'Questions', content: 'Keep this meaningful body.'};
+   assert.equal((await env.controller.dispatch('forum-topic', invalid)).ok, false);
+   assert.deepEqual(topicComposerFields(env.tree), invalid);
+   const corrected = {...invalid, title: 'A corrected local topic'};
+   const created = await env.controller.dispatch('forum-topic', corrected);
+   assert.equal(created.ok, true);
+   assert.equal(created.value.title, corrected.title);
+   assert.equal(created.value.body, corrected.content);
+   assert.equal(env.controller.state.community.topicDraft, null);
+   assert.equal(env.community.snapshot().threads.length, 4);
+   assert.equal(env.runtime.inspect().receipts.length, receiptsBefore, 'forum submissions do not invoke teacher account services');
+   assert.equal(env.controller.state.journey.session.status, 'anonymous');
+   assert.equal(env.controller.canRetry, false, 'a rejected topic does not arm automatic retry');
+   assert.equal(JSON.parse(env.storage.getItem('hh-forum-v1')).threads.length, 4);
+ });
+ 
+ test('rejected overlength topic draft stays invalid and cannot be silently truncated into a post', async () => {
+   const env = communityDraftSetup();
+   await openTeacherTopicComposer(env);
+   const beforeCount = env.community.snapshot().threads.length;
+   const oversized = {title: 'x'.repeat(300), category: 'Community', content: 'Bounded retained body.'};
+   const rejected = await env.controller.dispatch('forum-topic', oversized);
+   assert.equal(rejected.ok, false);
+   assert.equal(rejected.error, 'input_too_long');
+   const retained = topicComposerFields(env.tree);
+   assert.equal(retained.title.length, 256, 'retain one over the acceptance limit so retry remains invalid until edited');
+   assert.equal(retained.category, oversized.category);
+   assert.equal(retained.content, oversized.content);
+   const repeated = await env.controller.dispatch('forum-topic', retained);
+   assert.equal(repeated.ok, false);
+   assert.equal(repeated.error, 'input_too_long');
+   assert.equal(env.community.snapshot().threads.length, beforeCount);
+   assert.equal(env.storage.getItem('hh-forum-v1'), null);
+ 
+   const oversizedBody = {title: 'Valid body-bound title', category: 'Questions', content: 'b'.repeat(10_500)};
+   const rejectedBody = await env.controller.dispatch('forum-topic', oversizedBody);
+   assert.equal(rejectedBody.ok, false);
+   assert.equal(rejectedBody.error, 'input_too_long');
+   const retainedBody = topicComposerFields(env.tree);
+   assert.equal(retainedBody.content.length, 10_001, 'retain one over the acceptance limit so retry remains invalid until edited');
+   const repeatedBody = await env.controller.dispatch('forum-topic', retainedBody);
+   assert.equal(repeatedBody.ok, false);

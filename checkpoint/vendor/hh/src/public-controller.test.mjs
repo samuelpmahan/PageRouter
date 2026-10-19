@@ -102,6 +102,28 @@ function replyComposerFields(tree) {
   return {threadId: form.attrs['data-thread-id'], content: textarea?.children?.join('') ?? textarea?.attrs?.value ?? ''};
 }
 
+function postEditFields(tree) {
+  const nodes = [];
+  const walk = node => {
+    if (!node || typeof node !== 'object') return;
+    nodes.push(node);
+    for (const child of node.children || []) walk(child);
+  };
+  walk(tree);
+  const form = nodes.find(node => node.tag === 'form' && node.attrs?.['data-submit'] === 'forum-edit-post');
+  if (!form) return null;
+  const formNodes = [];
+  const walkForm = node => {
+    if (!node || typeof node !== 'object') return;
+    formNodes.push(node);
+    for (const child of node.children || []) walkForm(child);
+  };
+  walkForm(form);
+  const title = formNodes.find(node => node.tag === 'input' && node.attrs?.name === 'title');
+  const content = formNodes.find(node => node.tag === 'textarea' && node.attrs?.name === 'content');
+  return {postId: form.attrs['data-post-id'], title: title?.attrs?.value ?? '', content: content?.children?.join('') ?? ''};
+}
+
 async function openTeacherReplyComposer(env, threadId = 'topic-official-bug-forum') {
   await env.controller.initialize(`#/posts/${threadId}`);
   await env.controller.dispatch('forum-role', {role: 'teacher'});
@@ -1647,6 +1669,134 @@ test('wishlist and community actions are explicit local preview handoffs', async
   assert.equal(controller.state.journey.runtime.session.status, 'anonymous', 'forum role does not create an HH login');
   await controller.navigate(`#/posts/${created.value.id}`);
   assert.deepEqual(controller.state.route.communityRoute, {page: 'post', threadId: created.value.id});
+});
+
+test('rejected author post edit retains rendered fields and corrected explicit save commits once', async () => {
+  const env = communityDraftSetup();
+  let forumWrites = 0;
+  const setItem = env.storage.setItem.bind(env.storage);
+  env.storage.setItem = (key, value) => { if (key === 'hh-forum-v1') forumWrites += 1; setItem(key, value); };
+  await env.controller.initialize('#/create-post');
+  await env.controller.dispatch('forum-role', {role: 'teacher'});
+  const created = env.community.createThread({title: 'E2903 original', body: 'Original persisted body.', category: 'Questions', author: 'Synthetic teacher', authorId: 'demo-teacher', role: 'teacher'});
+  assert.equal(created.ok, true);
+  const postId = created.value.id;
+  await env.controller.navigate(`#/posts/${postId}`);
+  const beforeStorage = env.storage.getItem('hh-forum-v1');
+  const beforeReceipts = env.runtime.inspect().receipts.length;
+  const beforeThreadCount = env.community.snapshot().threads.length;
+  const changedBody = 'Meaningful changed body survives the rejected title.';
+
+  await env.controller.dispatch('forum-edit-post', {postId, threadId: postId});
+  assert.ok(postEditFields(env.tree), 'the author has an edit form');
+  const rejected = await env.controller.dispatch('forum-edit-post', {postId, threadId: postId, title: '   ', content: changedBody});
+  assert.equal(rejected.ok, false);
+  assert.equal(rejected.error, 'title_and_body_required');
+  assert.deepEqual(postEditFields(env.tree), {postId, title: '   ', content: changedBody});
+  assert.deepEqual(env.controller.state.community.postEditDraft, {postId, title: '   ', content: changedBody});
+  assert.equal(env.storage.getItem('hh-forum-v1'), beforeStorage, 'rejected edit leaves forum storage unchanged');
+  assert.equal(env.runtime.inspect().receipts.length, beforeReceipts, 'post editing does not invoke HH account services');
+  assert.equal(env.community.snapshot().threads.length, beforeThreadCount);
+  assert.equal(env.community.getThread(postId, {role: 'teacher'}).body, 'Original persisted body.');
+
+  const writesBeforeCorrection = forumWrites;
+  const corrected = await env.controller.dispatch('forum-edit-post', {postId, threadId: postId, title: 'E2903 corrected', content: changedBody});
+  assert.equal(corrected.ok, true);
+  assert.equal(env.controller.state.community.postEditDraft, null);
+  assert.equal(postEditFields(env.tree), null);
+  const saved = env.community.snapshot().threads.filter(thread => thread.id === postId);
+  assert.equal(saved.length, 1, 'the explicit corrected save updates the original post without creating another topic');
+  assert.equal(saved[0].title, 'E2903 corrected');
+  assert.equal(saved[0].body, changedBody);
+  assert.equal(forumWrites, writesBeforeCorrection + 1, 'one corrected submit persists exactly once');
+  assert.equal(env.runtime.inspect().receipts.length, beforeReceipts);
+});
+
+test('cancelled author post edit discards its draft and restores persisted fields on reopen', async () => {
+  const env = communityDraftSetup();
+  await env.controller.initialize('#/create-post');
+  await env.controller.dispatch('forum-role', {role: 'teacher'});
+  const created = env.community.createThread({title: 'E2903 cancel', body: 'Saved body.', category: 'Questions', author: 'Synthetic teacher', authorId: 'demo-teacher', role: 'teacher'});
+  const postId = created.value.id;
+  await env.controller.navigate(`#/posts/${postId}`);
+  const beforeStorage = env.storage.getItem('hh-forum-v1');
+  await env.controller.dispatch('forum-edit-post', {postId, threadId: postId});
+  const rejected = await env.controller.dispatch('forum-edit-post', {postId, threadId: postId, title: '   ', content: 'Uncommitted replacement body.'});
+  assert.equal(rejected.error, 'title_and_body_required');
+  assert.deepEqual(postEditFields(env.tree), {postId, title: '   ', content: 'Uncommitted replacement body.'});
+
+  await env.controller.dispatch('forum-cancel-edit', {postId, threadId: postId});
+  assert.equal(env.controller.state.community.postEditDraft, null);
+  assert.equal(env.controller.state.community.editingPostId, null);
+  assert.equal(postEditFields(env.tree), null);
+  assert.equal(env.community.getThread(postId, {role: 'teacher'}).body, 'Saved body.');
+  assert.equal(env.storage.getItem('hh-forum-v1'), beforeStorage, 'cancel does not persist draft text');
+  await env.controller.dispatch('forum-edit-post', {postId, threadId: postId});
+  assert.deepEqual(postEditFields(env.tree), {postId, title: 'E2903 cancel', content: 'Saved body.'});
+});
+
+test('post edit draft is thread-bound and cleared on role exit, forum reset, logout, and app reset', async () => {
+  const env = communityDraftSetup();
+  assert.equal((await env.controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'})).ok, true);
+  await env.controller.dispatch('forum-role', {role: 'teacher'});
+  const first = env.community.createThread({title: 'E2903 first', body: 'First saved body.', category: 'Questions', author: 'Synthetic teacher', authorId: 'demo-teacher', role: 'teacher'});
+  const second = env.community.createThread({title: 'E2903 second', body: 'Second saved body.', category: 'Questions', author: 'Synthetic teacher', authorId: 'demo-teacher', role: 'teacher'});
+  await env.controller.navigate(`#/posts/${first.value.id}`);
+  await env.controller.dispatch('forum-edit-post', {postId: first.value.id, threadId: first.value.id});
+  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: first.value.id, threadId: first.value.id, title: '   ', content: 'First edit draft.'})).ok, false);
+  assert.deepEqual(env.controller.state.community.postEditDraft, {postId: first.value.id, title: '   ', content: 'First edit draft.'});
+
+  await env.controller.navigate(`#/posts/${second.value.id}`);
+  assert.equal(env.controller.state.community.postEditDraft, null, 'leaving the source thread discards its edit draft');
+  assert.equal(env.controller.state.community.editingPostId, null);
+  await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id});
+  assert.deepEqual(postEditFields(env.tree), {postId: second.value.id, title: 'E2903 second', content: 'Second saved body.'}, 'another post never inherits the first draft');
+
+  const oversizedTitle = 'x'.repeat(300);
+  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id, title: oversizedTitle, content: 'Second saved body.'})).error, 'input_too_long');
+  assert.equal(postEditFields(env.tree).title.length, 256, 'overlength retry keeps one character beyond the acceptance cap');
+  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id, title: postEditFields(env.tree).title, content: 'Second saved body.'})).error, 'input_too_long', 'the retained sentinel remains invalid');
+  const paddedTitle = `${' '.repeat(2_000)}${'p'.repeat(1_000)}`;
+  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id, title: paddedTitle, content: 'Second saved body.'})).error, 'input_too_long');
+  assert.equal(postEditFields(env.tree).title, 'p'.repeat(256), 'trimmed overlength title retains an invalid sentinel');
+  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id, title: postEditFields(env.tree).title, content: 'Second saved body.'})).error, 'input_too_long');
+  const paddedBody = `${' '.repeat(10_000)}${'b'.repeat(10_001)}`;
+  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id, title: 'E2903 second', content: paddedBody})).error, 'input_too_long');
+  assert.equal(postEditFields(env.tree).content, 'b'.repeat(10_001), 'trimmed overlength body retains an invalid sentinel');
+  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id, title: 'E2903 second', content: postEditFields(env.tree).content})).error, 'input_too_long');
+
+  await env.controller.dispatch('forum-role', {role: 'moderator'});
+  assert.equal(env.controller.state.community.postEditDraft, null, 'leaving teacher role clears retained text');
+  assert.equal(env.controller.state.community.editingPostId, null);
+  const foreignTree = renderCommunity({route: {page: 'post', threadId: 'topic-official-bug-forum'}, state: env.community.snapshot(), session: {role: 'teacher', personaId: 'demo-teacher'}});
+  assert.equal(postEditFields(foreignTree), null);
+  assert.ok(JSON.stringify(foreignTree).includes('Edit post') === false, 'a teacher still has no edit control for a foreign post');
+  const moderatorTree = renderCommunity({route: {page: 'post', threadId: 'topic-official-bug-forum'}, state: env.community.snapshot(), session: {role: 'moderator'}});
+  assert.ok(JSON.stringify(moderatorTree).includes('Edit post'), 'moderator edit control remains available');
+
+  await env.controller.dispatch('forum-role', {role: 'teacher'});
+  await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id});
+  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: second.value.id, threadId: second.value.id, title: '   ', content: 'Draft before forum reset.'})).ok, false);
+  await env.controller.dispatch('forum-reset');
+  assert.equal(env.controller.state.community.postEditDraft, null, 'forum reset clears retained edit text');
+  assert.equal(env.controller.state.community.editingPostId, null);
+
+  const afterForumReset = env.community.createThread({title: 'E2903 after forum reset', body: 'Saved body.', category: 'Questions', author: 'Synthetic teacher', authorId: 'demo-teacher', role: 'teacher'});
+  await env.controller.navigate(`#/posts/${afterForumReset.value.id}`);
+  await env.controller.dispatch('forum-edit-post', {postId: afterForumReset.value.id, threadId: afterForumReset.value.id});
+  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: afterForumReset.value.id, threadId: afterForumReset.value.id, title: '   ', content: 'Draft before logout.'})).ok, false);
+  assert.equal((await env.controller.dispatch('public:logout')).ok, true);
+  assert.equal(env.controller.state.community.postEditDraft, null, 'successful logout clears retained edit text');
+  assert.equal(env.controller.state.community.editingPostId, null);
+
+  await env.controller.dispatch('forum-role', {role: 'teacher'});
+  const afterLogout = env.community.createThread({title: 'E2903 after logout', body: 'Saved body.', category: 'Questions', author: 'Synthetic teacher', authorId: 'demo-teacher', role: 'teacher'});
+  await env.controller.navigate(`#/posts/${afterLogout.value.id}`);
+  await env.controller.dispatch('forum-edit-post', {postId: afterLogout.value.id, threadId: afterLogout.value.id});
+  assert.equal((await env.controller.dispatch('forum-edit-post', {postId: afterLogout.value.id, threadId: afterLogout.value.id, title: '   ', content: 'Draft before app reset.'})).ok, false);
+  assert.equal((await env.controller.dispatch('public:reset')).ok, true);
+  assert.equal(env.controller.state.community.postEditDraft, null, 'app reset clears retained edit text');
+  assert.equal(env.controller.state.community.editingPostId, null);
 });
 
 test('rejected topic with a whitespace-only title retains category and meaningful body in compose', async () => {

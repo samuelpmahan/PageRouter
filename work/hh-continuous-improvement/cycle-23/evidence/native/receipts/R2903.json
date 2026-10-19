@@ -1,0 +1,94 @@
+{
+  "job_id": "R2903",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Independent review accepted the bounded post-only recovery: H1 source pins match the current three-file diff, focused 3/3 passes, and H2's volatile-fixture boundary probe confirms null-body/content aliasing, omitted-body defaults, route/thread/foreign projection isolation, unchanged service authority, and no persistence/account side effects on rejection.",
+  "source": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "base_head": "a7ef289c6232a6bb1daa7c805765179b5b502068",
+    "current_head": "a7ef289c6232a6bb1daa7c805765179b5b502068",
+    "current_sha256_matches_E2903_pins": true,
+    "files": [
+      {
+        "path": "checkpoint/vendor/hh/src/public-controller.mjs",
+        "sha256": "97b5c17bf519b7fd05e2933a12dc55ff0e3e0c3e7939db4072368c070b4f67a0"
+      },
+      {
+        "path": "checkpoint/vendor/hh/src/community.mjs",
+        "sha256": "311d598b6d6ffc675dc4ee5b07ac0005c55e6ce7a34f8acfac5384d5789288f4"
+      },
+      {
+        "path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+        "sha256": "417dfa6b6456a978554ce8184849e1d8f63a5b135ebfffb41442b2162222c35f"
+      }
+    ],
+    "diff_stat": "3 files changed, 196 insertions(+), 4 deletions",
+    "worktree": "Only the three listed paths are modified; pre-existing untracked hh-cycle13/ and hh-cycle15/ remain; no staged paths."
+  },
+  "review": {
+    "critical": [],
+    "important": [],
+    "minor": [],
+    "considered_but_declined": [
+      {
+        "behavior": "Retaining rejected reply-edit drafts",
+        "reason": "H2's earlier oversized-reply observation is controller-level only and the existing textarea maxlength constrains normal UI input. Reply editing is outside this post-only change, so no reply recovery change was requested."
+      }
+    ]
+  },
+  "verification": {
+    "H1_E2901": {
+      "result": "/workspace/scratch/afc0d51965a8/hh23/H1/E2901/result.json",
+      "native_outcome": "/workspace/scratch/afc0d51965a8/hh23/H1/E2901/native-outcome.json",
+      "finding": "Baseline author-owned post edit rejection reproduced; corrected explicit save and cancel worked. Native outcome was insufficient_evidence for reusable-product acceptance."
+    },
+    "H1_E2903": {
+      "result": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/result.json",
+      "red_result": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/red-result.json",
+      "native_receipt": "/workspace/scratch/afc0d51965a8/hh23/receipts/E2903.json",
+      "raw_files_read": [
+        "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/red.stdout.raw",
+        "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/green-focused.stdout.raw",
+        "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/hh-source.stdout.raw"
+      ],
+      "source_pins": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/implementation-source-pins.json",
+      "result": "Baseline-pinned RED failed 3/3 as expected; focused GREEN passed 3/3; HH controller/community source suite passed 86/86 with zero skips or failures."
+    },
+    "H2_focused3": {
+      "command": "node --test --test-name-pattern='rejected author post edit retains rendered fields|cancelled author post edit discards its draft|post edit draft is thread-bound' checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "exit_code": 0,
+      "counts": {"tests": 3, "pass": 3, "fail": 0, "skipped": 0},
+      "argv": "focused3.argv.raw",
+      "stdout": "focused3.stdout.raw",
+      "stderr": "focused3.stderr.raw",
+      "exit_file": "focused3.exit.raw"
+    },
+    "H2_boundary_probe": {
+      "source": "probe-attempt-2/probe.mjs",
+      "argv": "probe-attempt-2/probe.argv.raw",
+      "stdout": "probe-attempt-2/probe.stdout.raw",
+      "stderr": "probe-attempt-2/probe.stderr.raw",
+      "exit_file": "probe-attempt-2/probe.exit.raw",
+      "exit_code": 0,
+      "observations": {
+        "body_null_with_content_alias": "title_and_body_required; meaningful content alias appears unchanged in the matching owner's rejected editor draft",
+        "omitted_body": "title_and_body_required; draft and editor use the saved-body default",
+        "same_thread_alias": "draft preserved",
+        "changed_thread": "draft and editor state cleared before opening the other post",
+        "stale_cross_thread_draft": "not projected",
+        "foreign_teacher_and_moderator": "teacher-only draft not projected; foreign edit control absent; moderator control present",
+        "foreign_updatePost": "owner_required; saved data unchanged",
+        "forum_storage_and_runtime_receipts": "unchanged by rejection and foreign update"
+      }
+    },
+    "source_and_worktree_capture": {
+      "full_diff": "diff.stdout.raw",
+      "diff_exit": "diff.exit.raw",
+      "verified_pins": "pins.stdout.raw",
+      "pins_exit": "pins.exit.raw",
+      "worktree": "worktree.stdout.raw",
+      "worktree_exit": "worktree.exit.raw"
+    }
+  },
+  "limits": "H2 performed no source, test, Git, native-state, or receipt writes. The local probe is synthetic and volatile; no browser-native or production behavior is claimed. The first H2 probe output-snapshot attempt is preserved under probe-attempt-1/ and is superseded only by the accurate stage-captured attempt-2; no product-source rerun was made."
+}

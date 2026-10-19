@@ -1,0 +1,48 @@
+{
+  "job_id": "E2902",
+  "worker": "H2",
+  "outcome": "insufficient_evidence",
+  "summary": "A rejected author post edit leaves edit mode open but reprojects saved values, discarding the submitted meaningful body; owner save/cancel and foreign-authority controls remain correct. Reply rejection also reprojects its saved value.",
+  "evidence": {
+    "volatileCommunity": "memory_only",
+    "post": {
+      "error": "title_and_body_required",
+      "attempted": {
+        "title": "   ",
+        "body": "Meaningful changed post body that must survive a rejected save."
+      },
+      "afterReject": {
+        "title": "Original synthetic title",
+        "body": "Original synthetic post body."
+      },
+      "editOpen": true,
+      "correctedSave": true,
+      "cancelClosed": true
+    },
+    "reply": {
+      "error": "input_too_long",
+      "attemptedBodyLength": 10047,
+      "afterReject": {
+        "title": null,
+        "body": "Original synthetic reply body."
+      },
+      "editOpenAfterReject": true,
+      "correctedSave": true,
+      "cancelClosed": true
+    },
+    "ownerControls": 2,
+    "foreign": {
+      "postError": "owner_required",
+      "replyError": "owner_required",
+      "dataUnchanged": true,
+      "controlsHidden": true
+    },
+    "accountReceiptsUnchanged": true
+  },
+  "source": {
+    "repo_head": "a7ef289c6232a6bb1daa7c805765179b5b502068",
+    "controller": "checkpoint/vendor/hh/src/public-controller.mjs:565-600",
+    "community_service": "checkpoint/vendor/hh/src/community.mjs:121-146",
+    "edit_projection": "checkpoint/vendor/hh/src/community.mjs:204-207"
+  }
+}

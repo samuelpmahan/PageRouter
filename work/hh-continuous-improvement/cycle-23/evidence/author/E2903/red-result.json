@@ -1,0 +1,14 @@
+{
+  "job_id": "E2903",
+  "worker": "H1",
+  "phase": "RED-before-implementation",
+  "outcome": "expected_failure",
+  "command_file": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/red-command.txt",
+  "source_pins_file": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/red-source-pins.json",
+  "captured": {
+    "stdout": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/red.stdout.raw", "sha256": "81a86e3bfbe10a3f108821df184b8300651317a19e1d86606416aa8d9759d885"},
+    "stderr": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/red.stderr.raw", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "exit_code": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/red.exit-code.txt", "value": 1, "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"}
+  },
+  "summary": "All three focused regression tests failed: the rejected-save and cancel scenarios rendered saved fields rather than rejected values, and the isolation/cleanup test found no postEditDraft. Stderr was empty; no test syntax or harness failure occurred. This RED was run once before any implementation source change."
+}

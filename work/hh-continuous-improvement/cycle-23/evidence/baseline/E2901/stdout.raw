@@ -1,0 +1,72 @@
+{
+  "job_id": "E2901",
+  "baseline": {
+    "route": {
+      "page": "community",
+      "path": "/posts/topic-local-1",
+      "communityRoute": {
+        "page": "post",
+        "threadId": "topic-local-1"
+      }
+    },
+    "role": "teacher",
+    "postId": "topic-local-1",
+    "authorId": "demo-teacher",
+    "persistedTitle": "E2901 baseline post",
+    "persistedBody": "Original persisted body.",
+    "storageStatus": "available",
+    "storage": "{\"version\":1,\"nextId\":1,\"threads\":[{\"id\":\"topic-forum-styling-guide\",\"title\":\"Forum Styling Guide\",\"body\":\"To style your text, wrap your words in the tags shown below.\\n\\n1. Bold Text...\\nRead these local examples to explore discussion formatting.\",\"category\":\"Resources\",\"author\":\"User 5\",\"authorId\":\"seed-user-5\",\"votes\":[\"seed-upvote-1\"],\"createdAt\":\"2026-04-16T02:41:00.000Z\",\"hidden\":false,\"reported\":false,\"replies\":[]},{\"id\":\"topic-teachers-lounge-open\",\"title\":\"The Teachers' Lounge is Open\",\"body\":\"We're thrilled to launch this dedicated space just for educators like you! The Homeroom Heroes Forum is designed to be your quick, reliable resource for peer-to-peer support, sharing creative solutions.\",\"category\":\"Community\",\"author\":\"User 5\",\"authorId\":\"seed-user-5\",\"votes\":[\"seed-upvote-1\"],\"createdAt\":\"2025-11-12T04:51:00.000Z\",\"hidden\":false,\"reported\":false,\"replies\":[]},{\"id\":\"topic-official-bug-forum\",\"title\":\"Official Bug Forum\",\"body\":\"Please comment below if you run into any significant bugs. We are doing our best to patch bugs as we find them. This is a synthetic local discussion example.\",\"category\":\"Questions\",\"author\":\"User 5\",\"authorId\":\"seed-user-5\",\"votes\":[\"seed-upvote-1\",\"seed-upvote-2\"],\"createdAt\":\"2025-11-12T04:50:00.000Z\",\"hidden\":false,\"reported\":false,\"replies\":[{\"id\":\"reply-bug-example-1\",\"body\":\"This is a local example comment.\",\"author\":\"User 5\",\"authorId\":\"seed-user-5\",\"createdAt\":\"2025-11-12T05:00:00.000Z\",\"hidden\":false,\"reported\":false},{\"id\":\"reply-bug-example-2\",\"body\":\"Comments are kept in this tab only.\",\"author\":\"User 5\",\"authorId\":\"seed-user-5\",\"createdAt\":\"2025-11-12T05:05:00.000Z\",\"hidden\":false,\"reported\":false}]},{\"id\":\"topic-local-1\",\"title\":\"E2901 baseline post\",\"body\":\"Original persisted body.\",\"category\":\"Questions\",\"author\":\"Synthetic teacher\",\"authorId\":\"demo-teacher\",\"votes\":[],\"downvotes\":[],\"createdAt\":\"2026-10-19T11:07:51.803Z\",\"hidden\":false,\"reported\":false,\"replies\":[]}]}",
+    "receipts": 2
+  },
+  "editing": {
+    "form": true,
+    "fields": {
+      "title": "E2901 baseline post",
+      "content": "Original persisted body."
+    },
+    "editingPostId": "topic-local-1"
+  },
+  "rejectedSave": {
+    "ok": false,
+    "error": "title_and_body_required",
+    "form": true,
+    "fields": {
+      "title": "E2901 baseline post",
+      "content": "Original persisted body."
+    },
+    "editingPostId": "topic-local-1",
+    "persisted": {
+      "title": "E2901 baseline post",
+      "body": "Original persisted body."
+    },
+    "storageUnchanged": true,
+    "receiptsUnchanged": true
+  },
+  "correction": {
+    "ok": true,
+    "error": null,
+    "form": false,
+    "persisted": {
+      "title": "E2901 corrected post",
+      "body": "Meaningful replacement body submitted with a rejected title."
+    },
+    "storageChanged": true,
+    "receiptsUnchanged": true
+  },
+  "beforeCancel": {
+    "form": true,
+    "fields": {
+      "title": "E2901 corrected post",
+      "content": "Meaningful replacement body submitted with a rejected title."
+    },
+    "persistedBody": "Meaningful replacement body submitted with a rejected title."
+  },
+  "afterCancel": {
+    "form": false,
+    "editingPostId": null,
+    "persisted": {
+      "title": "E2901 corrected post",
+      "body": "Meaningful replacement body submitted with a rejected title."
+    }
+  }
+}

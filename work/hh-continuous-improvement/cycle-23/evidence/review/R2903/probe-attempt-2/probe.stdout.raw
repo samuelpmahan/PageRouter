@@ -1,0 +1,51 @@
+{
+  "job_id": "R2903",
+  "worker": "H2",
+  "probe": {
+    "fixture": "synthetic local teacher posts with Map-backed in-memory storage; no browser/backend/network/new dependency",
+    "null_body_content_alias": {
+      "error": "title_and_body_required",
+      "draft": {
+        "postId": "topic-local-1",
+        "title": "   ",
+        "content": "Meaningful body supplied through the legacy content alias."
+      },
+      "editor": {
+        "postId": "topic-local-1",
+        "title": "   ",
+        "content": "Meaningful body supplied through the legacy content alias."
+      }
+    },
+    "same_thread_alias_preserved": true,
+    "omitted_body": {
+      "error": "title_and_body_required",
+      "draft": {
+        "postId": "topic-local-1",
+        "title": "   ",
+        "content": "R2903 first saved body."
+      },
+      "editor": {
+        "postId": "topic-local-1",
+        "title": "   ",
+        "content": "R2903 first saved body."
+      }
+    },
+    "changed_thread_cleared": true,
+    "stale_cross_thread_not_projected": true,
+    "foreign_and_moderator_drafts_not_projected": true,
+    "foreign_service_result": {
+      "ok": false,
+      "error": "owner_required"
+    },
+    "persisted_storage_unchanged": true,
+    "account_receipts_unchanged": true
+  },
+  "source": {
+    "base_head": "a7ef289c6232a6bb1daa7c805765179b5b502068",
+    "implementation": {
+      "controller": "checkpoint/vendor/hh/src/public-controller.mjs#forumAction",
+      "renderer": "checkpoint/vendor/hh/src/community.mjs#postDetail/postEditForm",
+      "authority": "checkpoint/vendor/hh/src/community.mjs#createCommunity.updatePost"
+    }
+  }
+}

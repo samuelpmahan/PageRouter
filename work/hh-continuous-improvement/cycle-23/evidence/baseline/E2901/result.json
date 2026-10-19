@@ -1,0 +1,38 @@
+{
+  "job_id": "E2901",
+  "worker": "H1",
+  "outcome": "defect_reproduced",
+  "summary": "An author-owned post edit with a whitespace-only title is rejected by the community service. The controller keeps the editor open but re-renders fields from the saved topic, losing the changed body. Storage and runtime receipts remain unchanged on rejection. Explicit corrected submission succeeds, and cancel exits edit mode without changing saved data.",
+  "source": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "a7ef289c6232a6bb1daa7c805765179b5b502068",
+    "initial_worktree": "exactly two pre-existing untracked paths: hh-cycle13/ and hh-cycle15/; tracked diff empty; staged diff empty",
+    "files": [
+      {"path": "checkpoint/vendor/hh/src/public-controller.mjs", "sha256": "8e70652af3ffe9ac40825b8132321febf7ee0dc6c7748008f3492ee5a57efcab"},
+      {"path": "checkpoint/vendor/hh/src/community.mjs", "sha256": "3613ec5676623cc3bee9905ab68e5dbeac090effea36ebb0e6069c785f1581db"},
+      {"path": "checkpoint/vendor/hh/src/public-site.mjs", "sha256": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d"},
+      {"path": "checkpoint/vendor/hh/src/public-controller.test.mjs", "sha256": "a2bb6f73d053ccc14c3c0deafe72a2f6af20ccf642f4ce418c73d010f9a86959"},
+      {"path": "checkpoint/vendor/hh/src/app.mjs", "sha256": "bde60c7db3393a57c8d1936b149c7ca0181dc90d0bb16f846635f4110d6b8a5c3"}
+    ]
+  },
+  "probe": {
+    "path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2901/probe.mjs",
+    "sha256": "07c504fee8dff8b0e532856049726b0ed6d4207cb360d3a5bc394b3e095803c9",
+    "fixture": "createFixtureProvider({fixture:true}) and createCommunity with an in-memory Map-backed storage adapter; synthetic author demo-teacher; no browser, server, backend, account, email, network, or new dependency",
+    "falsifier": "Open an author-owned post editor, submit a whitespace-only title together with a meaningful changed body, and verify whether rejection keeps that body in the visible editor while leaving persisted data unchanged.",
+    "synthetic_ids": {"post": "topic-local-1", "author": "demo-teacher"},
+    "argv": "node /workspace/scratch/afc0d51965a8/hh23/H1/E2901/probe.mjs",
+    "working_directory": "/workspace/scratch/8528bb251845/PageRouter"
+  },
+  "results": {
+    "rejected_save": {"ok": false, "error": "title_and_body_required", "editor_remained_open": true, "changed_body_retained": false, "visible_title_after_rejection": "E2901 baseline post", "visible_body_after_rejection": "Original persisted body.", "persisted_data_unchanged": true, "runtime_receipts_unchanged": true},
+    "correction": {"ok": true, "editor_closed": true, "corrected_title_saved": true, "changed_body_saved": true, "runtime_receipts_unchanged": true},
+    "cancel": {"editor_closed": true, "persisted_data_unchanged": true},
+    "exit_code": 0,
+    "stdout": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2901/stdout.raw", "bytes": 3992, "sha256": "375d4373be1fc2d3e8cc5852b30a6b6d603cec347e5c8c2adb417ece71c79f4d"},
+    "stderr": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2901/stderr.raw", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "exit_file": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2901/exit-code.txt", "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"}
+  },
+  "limits": "Read-only baseline task completed. No repository source, test, app, Git, native state, or canonical receipt writes were made. This evidence covers the post edit rejection path only; it does not establish reply edit behavior or browser-native form behavior."
+}

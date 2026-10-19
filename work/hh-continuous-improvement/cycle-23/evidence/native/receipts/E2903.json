@@ -1,0 +1,56 @@
+{
+  "job_id": "E2903",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Implemented bounded memory-only recovery for author-owned post edit rejection. The single pre-fix RED failed all three focused tests as expected; the focused post-fix command passed 3/3, and the controller/community source suite passed 86/86 with zero skips or failures.",
+  "source": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "base_head": "a7ef289c6232a6bb1daa7c805765179b5b502068",
+    "files": [
+      {"path": "checkpoint/vendor/hh/src/public-controller.mjs", "sha256": "97b5c17bf519b7fd05e2933a12dc55ff0e3e0c3e7939db4072368c070b4f67a0"},
+      {"path": "checkpoint/vendor/hh/src/community.mjs", "sha256": "311d598b6d6ffc675dc4ee5b07ac0005c55e6ce7a34f8acfac5384d5789288f4"},
+      {"path": "checkpoint/vendor/hh/src/public-controller.test.mjs", "sha256": "417dfa6b6456a978554ce8184849e1d8f63a5b135ebfffb41442b2162222c35f"}
+    ],
+    "diff_stat": "3 files changed, 196 insertions(+), 4 deletions(-)",
+    "initial_untracked_preservation_reference": "/workspace/scratch/86659bbafcce/hh22/H1/E2801/initial-worktree",
+    "worktree_note": "Only the three listed source/test paths are modified; pre-existing untracked hh-cycle13/ and hh-cycle15/ remain untouched. No staged changes."
+  },
+  "change": {
+    "flow": "The unchanged app submit handler validates and builds the form payload, then dispatches forum-edit-post. The controller calls the existing community.updatePost with existing teacher/persona authority. When the current teacher editor receives title_and_body_required or input_too_long, it retains a bounded in-memory {postId,title,content} draft. Missing fields use saved values. Title/body overlength values retain one over-limit sentinel after safe normalization, so the retry remains invalid until corrected. The community renderer projects the draft only for the matching author-owned teacher post. Success clears it; cancel, a different edit/thread, role exit/logout, forum reset, and app reset clear post edit state.",
+    "boundaries": "No app, service authority/limits, storage-port, persistence-format, backend/account, network, or dependency changes. Existing foreign-author controls and moderator controls remain unchanged. Reply edit recovery was not changed."
+  },
+  "verification": {
+    "red": {
+      "command_file": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/red-command.txt",
+      "source_pins_file": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/red-source-pins.json",
+      "source_sha256": "417dfa6b6456a978554ce8184849e1d8f63a5b135ebfffb41442b2162222c35f",
+      "exit_code": 1,
+      "summary": "Three tests failed on expected persisted-value rerender/draft-absence assertions; stderr empty; one RED run only.",
+      "stdout": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/red.stdout.raw", "sha256": "81a86e3bfbe10a3f108821df184b8300651317a19e1d86606416aa8d9759d885"},
+      "stderr": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/red.stderr.raw", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "exit_file": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/red.exit-code.txt", "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"}
+    },
+    "focused_green": {
+      "command_file": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/green-focused-command.txt",
+      "exit_code": 0,
+      "counts": {"tests": 3, "pass": 3, "fail": 0, "skipped": 0},
+      "stdout": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/green-focused.stdout.raw", "sha256": "60e555e737a0b3944ad9393619819a69104f894b6d65d0d8a032cbc606e10c11"},
+      "stderr": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/green-focused.stderr.raw", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "exit_file": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/green-focused.exit-code.txt", "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"}
+    },
+    "hh_source_suite": {
+      "command_file": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/hh-source-suite-command.txt",
+      "exit_code": 0,
+      "counts": {"tests": 86, "pass": 86, "fail": 0, "skipped": 0},
+      "stdout": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/hh-source.stdout.raw", "sha256": "a780586d9e9eefc269ef87ff1366205fd16e37128e97410c5dc9ebc20c7a8b89"},
+      "stderr": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/hh-source.stderr.raw", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "exit_file": {"path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2903/hh-source.exit-code.txt", "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"}
+    }
+  },
+  "review_crosscheck": {
+    "H2_packet": "/workspace/scratch/afc0d51965a8/hh23/H2/E2902/result.json",
+    "finding": "No contradiction: H2 independently reproduced the same post edit loss and confirmed save/cancel and owner/foreign controls. H2 also observed a separate rejected reply edit reprojection; reply edit recovery remains outside this E2903 scope/proposal."
+  },
+  "evidence_limits": "The first assertion in each focused RED test failed before later assertions executed; correction-write count, cancel restoration, thread isolation, padded overlength sentinels, and role/logout/reset cleanup are first-GREEN-only evidence, not claimed as individually demonstrated RED. The focused 3/3 and source-suite 86/86 runs passed. No canonical full build, browser QA, native receipt write, stage, or commit was performed."
+}
