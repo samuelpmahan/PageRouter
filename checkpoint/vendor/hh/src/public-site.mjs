@@ -96,10 +96,10 @@ function contact(j={}){
   field('Message','contact-message',c.message||'',{name:'message',multiline:true,required:true,maxlength:'250'}),
   h('div',{class:'hh-counter',id:'hh-contact-counter'},`${Number.isFinite(contactState.remaining)?contactState.remaining:250-String(c.message||'').length} characters remaining`),
   h('p',{class:'hh-captcha-note'},'CAPTCHA is present in the captured public form. This local preview does not load or submit to the external CAPTCHA service.'),
-  h('button',{id:'hh-contact-submit',type:'submit',class:'hh-button hh-full-button'},'Submit'));
+  h('button',{id:'hh-contact-submit',type:'submit',class:'hh-button hh-full-button'},'Prepare note'));
  return h('main',{id:'hh-main',class:'hh-main hh-narrow hh-contact-page'},
   card(h2('Contact Information'),intro('If you have any questions, feedback, or need assistance, please feel free to reach out to us.'),socialList),
-  card(h2('Contact Form'),intro('You can also send us a message using the contact form below:'),status(j.outcome?.message||contactState.message,j.outcome?.kind||contactState.status),h('form',{id:'hh-contact-form','data-submit':'public:contact'},contactFields)));
+  card(h2('Contact Form'),intro('This preview lets you prepare a contact note. Nothing is sent.'),status(j.outcome?.message||contactState.message,j.outcome?.kind||contactState.status),h('form',{id:'hh-contact-form','data-submit':'public:contact'},contactFields)));
 }
 function partners(){
  const groups=[['Financial Partners',[['Coastal Community Bank - Darrington, Wa','Coastal.png','Coastal Community Bank','https://www.coastalbank.com/darrington/'],['Microsoft','Microsoft-logo.png','Microsoft','https://www.microsoft.com/']]],['Radio Partners',[['100.7 The Wolf Seattle','1007TheWolf.png','100.7 The Wolf Seattle','https://www.seattlewolf.com'],['96.5 Live Free Country','965CountryColor.png','96.5 Live Free Country','https://www.livefreecountry.com']]],['Event Partners',[['Base Camp Studio - Seattle, Wa','BaseCamp.png','Base Camp Studio','https://www.basecamp206.com/']]]];
