@@ -1433,6 +1433,100 @@ test('registration keeps passwords ephemeral, approval and login stay separate, 
   assert.equal(controller.state.journey.profile.source, 'local-overlay');
 });
 
+test('profile edit overlay remains local to this controller and reset clears it', async () => {
+  const storage = memoryStorage();
+  const baseProvider = createFixtureProvider({fixture: true, storage});
+  const ports = Object.keys(baseProvider.services);
+  const calls = Object.fromEntries(ports.map(port => [port, 0]));
+  const provider = {...baseProvider, services: Object.freeze(Object.fromEntries(ports.map(port => [port, async input => {
+    calls[port] += 1;
+    return baseProvider.services[port](input);
+  }]))) };
+  const runtime = createServiceRuntime(provider);
+  const community = createCommunity({storage});
+  let tree = null;
+  const controller = createPublicController({runtime, storage, community, onChange(state, route) {
+    tree = renderPublicSite({route, state, journey: state.journey});
+  }});
+  const textOf = node => node == null ? '' : typeof node === 'string' ? node :
+    (node.children || []).map(textOf).join(' ');
+  const captureParts = selectedRuntime => selectedRuntime.pxc.entries().map(([address, part]) => ({
+    address, part, value: part.value,
+    serialized: address === 'hh.provider' || typeof part.value === 'function' ? null : JSON.stringify(part.value),
+  }));
+
+  await controller.initialize('#/login');
+  const ephemeralPassword = randomUUID();
+  const login = await controller.dispatch('public:login', {email: 'avery@fixture.test', password: ephemeralPassword});
+  assert.equal(login.ok, true);
+  await controller.navigate('#/profile');
+  assert.equal(controller.state.journey.profile.value.id, 'demo-avery');
+
+  const disclosure = 'This is a locally rendered profile. Changes and sharing are not sent to the public service.';
+  assert.ok(textOf(tree).includes(disclosure), 'the rendered page discloses its local-only boundary before save');
+  assert.equal(runtime.capabilities.profileEdit, false);
+  assert.equal(Object.keys(baseProvider.services).some(port => port === 'TeacherProfile.updateProfile'), false);
+
+  assert.equal((await controller.dispatch('public:edit-profile')).ok, true);
+  assert.equal(controller.updateDraft('name', 'E2203 Synthetic Avery'), true);
+  assert.equal(controller.updateDraft('bio', 'E2203 local overlay test'), true);
+  const countsBeforeSave = {...calls};
+  const providerStateBeforeSave = structuredClone(baseProvider.snapshot());
+  const runtimeStateBeforeSave = structuredClone(runtime.snapshot());
+  const partsBeforeSave = captureParts(runtime);
+  const receiptsBeforeSave = runtime.pxc.receipts();
+  const storageBeforeSave = [...storage.values.entries()].sort(([a], [b]) => a.localeCompare(b));
+
+  const saved = await controller.dispatch('public:profile-edit', {});
+
+  assert.equal(saved.ok, true);
+  assert.equal(saved.localOnly, true);
+  assert.equal(controller.state.journey.outcome.kind, 'local-only');
+  assert.equal(controller.state.journey.profile.value.name, 'E2203 Synthetic Avery');
+  assert.match(textOf(tree), /shown in this tab only/i);
+  assert.deepEqual(calls, countsBeforeSave, 'profile save must call no provider port');
+  assert.deepEqual(baseProvider.snapshot(), providerStateBeforeSave, 'fixture provider state must remain unchanged');
+  assert.deepEqual(runtime.snapshot(), runtimeStateBeforeSave, 'runtime snapshot must remain unchanged');
+  assert.deepEqual(runtime.pxc.receipts(), receiptsBeforeSave, 'profile save must create no runtime receipt');
+  assert.deepEqual([...storage.values.entries()].sort(([a], [b]) => a.localeCompare(b)), storageBeforeSave,
+    'profile save must write no fixture storage');
+  const partsAfterSave = captureParts(runtime);
+  assert.equal(partsAfterSave.length, partsBeforeSave.length, 'profile save must add no Parts');
+  for (let index = 0; index < partsBeforeSave.length; index += 1) {
+    assert.equal(partsAfterSave[index].address, partsBeforeSave[index].address);
+    assert.strictEqual(partsAfterSave[index].part, partsBeforeSave[index].part, 'existing Part identity must be unchanged');
+    assert.strictEqual(partsAfterSave[index].value, partsBeforeSave[index].value, 'existing Part value identity must be unchanged');
+    assert.equal(partsAfterSave[index].serialized, partsBeforeSave[index].serialized,
+      'serializable Part value must be unchanged');
+  }
+  assert.equal(JSON.stringify(controller.state).includes(ephemeralPassword), false);
+  assert.equal(JSON.stringify(runtime.pxc.entries().map(([, part]) => part.value)).includes(ephemeralPassword), false);
+  assert.equal([...storage.values.values()].join('\n').includes(ephemeralPassword), false);
+
+  const readsBeforeAlias = calls['TeacherProfile.openPublicProfile'];
+  await controller.navigate('#/public-profile/demo-avery');
+  assert.equal(controller.state.journey.profile.value.name, 'E2203 Synthetic Avery',
+    'same-controller alias read should merge its local overlay');
+  assert.equal(controller.state.journey.profile.source, 'local-overlay');
+  assert.equal(calls['TeacherProfile.openPublicProfile'], readsBeforeAlias + 1,
+    'alias reentry should use the real fixture public-profile read');
+
+  const freshProvider = createFixtureProvider({fixture: true, storage});
+  const freshRuntime = createServiceRuntime(freshProvider);
+  const freshCommunity = createCommunity({storage});
+  const freshController = createPublicController({runtime: freshRuntime, storage, community: freshCommunity});
+  await freshController.initialize('#/profile');
+  assert.equal(freshController.state.journey.session.status, 'authenticated', 'synthetic fixture session survives in shared storage');
+  assert.equal(freshController.state.journey.profile.value.name, 'Demo Avery',
+    'new provider/runtime/controller must load the original fixture profile, not the old controller overlay');
+  assert.equal(freshController.state.journey.profile.source, 'runtime');
+
+  assert.equal((await controller.dispatch('public:reset')).ok, true);
+  await controller.navigate('#/public-profile/demo-avery');
+  assert.equal(controller.state.journey.profile.value.name, 'Demo Avery', 'explicit fixture reset clears the overlay');
+  assert.equal(controller.state.journey.profile.source, 'runtime');
+});
+
 test('Terms checkbox consent tracks both checking and unchecking without opening the modal', async () => {
   const {controller} = setup();
   await controller.initialize('#/register');

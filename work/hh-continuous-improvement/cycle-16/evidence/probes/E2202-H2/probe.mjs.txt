@@ -1,0 +1,124 @@
+import {randomUUID} from 'node:crypto';
+import {createFixtureProvider} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/services/fixture-provider.mjs';
+import {createServiceRuntime} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/services/runtime.mjs';
+import {createPublicController} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+const sourceRoot = '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh';
+const counts = Object.create(null);
+const storage = new Map();
+const memoryStorage = {
+  getItem(key) { return storage.get(key) ?? null; },
+  setItem(key, value) { storage.set(key, String(value)); },
+  removeItem(key) { storage.delete(key); },
+};
+const baseProvider = createFixtureProvider({fixture: true, storage: memoryStorage});
+const services = Object.fromEntries(Object.entries(baseProvider.services).map(([port, invoke]) => [port, async input => {
+  counts[port] = (counts[port] || 0) + 1;
+  return invoke(input);
+}]));
+const provider = {...baseProvider, services: Object.freeze(services)};
+const runtime = createServiceRuntime(provider);
+let renderedTree = null;
+const controller = createPublicController({runtime, storage: memoryStorage,
+  onChange(state, route) { renderedTree = renderPublicSite({route, state, journey: state.journey}); }});
+
+function textOf(node) {
+  if (node == null) return '';
+  if (typeof node === 'string' || typeof node === 'number') return String(node);
+  return [node.children || []].flat().map(textOf).join(' ');
+}
+function findById(node, id) {
+  if (!node || typeof node !== 'object') return null;
+  if (node.attrs?.id === id) return node;
+  for (const child of node.children || []) {
+    const match = findById(child, id);
+    if (match) return match;
+  }
+  return null;
+}
+function snapshotCounts() { return {...counts}; }
+function delta(before, after) {
+  return Object.fromEntries([...new Set([...Object.keys(before), ...Object.keys(after)])]
+    .map(key => [key, (after[key] || 0) - (before[key] || 0)]).filter(([, value]) => value !== 0));
+}
+function assert(condition, message) { if (!condition) throw new Error(`E2202 assertion: ${message}`); }
+
+await controller.initialize('#/login');
+const afterInitializeCounts = snapshotCounts();
+assert(afterInitializeCounts['SchoolData.getStates'] === 1, 'expected one initialization SchoolData.getStates');
+const ephemeralPassword = randomUUID();
+const loginResult = await controller.dispatch('public:login', {email: 'avery@fixture.test', password: ephemeralPassword});
+assert(loginResult.ok === true, 'seeded synthetic login should succeed');
+let secret = ephemeralPassword;
+const afterLoginCounts = snapshotCounts();
+const runtimeBaseline = runtime.snapshot();
+assert(controller.state.journey.session.status === 'authenticated', 'seeded synthetic account should be authenticated');
+assert(controller.state.journey.profile.status === 'present', 'seeded owner profile should be available');
+
+await controller.dispatch('public:edit-profile');
+assert(controller.state.journey.profile.editOpen === true, 'owner edit form should open');
+assert(controller.updateDraft('name', 'Demo Avery E2202 Edited') === true, 'name input delegation should update local draft');
+assert(controller.updateDraft('bio', 'HH16 E2202 synthetic local overlay.') === true, 'bio input delegation should update local draft');
+assert(controller.updateDraft('wishlistUrl', 'https://www.amazon.com/hz/wishlist/ls/DEMO-E2202') === true, 'wishlist input delegation should update local draft');
+assert(findById(renderedTree, 'hh-profile-edit-form') !== null, 'renderer tree should expose the edit form before save');
+const beforeSaveCounts = snapshotCounts();
+const saveResult = await controller.dispatch('public:profile-edit', {});
+assert(saveResult.ok === true && saveResult.localOnly === true, 'save should report local-only success');
+const outcomeRemoteAtSave = controller.state.journey.outcome?.remote ?? null;
+assert(outcomeRemoteAtSave === false, 'save outcome should be explicitly non-remote');
+const afterSaveCounts = snapshotCounts();
+const runtimeAfterSave = runtime.snapshot();
+assert(JSON.stringify(runtimeAfterSave) === JSON.stringify(runtimeBaseline), 'provider/runtime snapshot should be unchanged by profile save');
+assert(JSON.stringify(delta(beforeSaveCounts, afterSaveCounts)) === '{}', 'profile save should call no provider service');
+assert(controller.state.journey.profile.source === 'local-overlay', 'controller should identify overlay projection');
+assert(controller.state.journey.profile.value.name === 'Demo Avery E2202 Edited', 'own profile should show edited name');
+const ownTree = renderPublicSite({route: controller.route, state: controller.state, journey: controller.state.journey});
+assert(textOf(ownTree).includes('Changes and sharing are not sent to the public service.'), 'own-profile copy should disclose local scope');
+assert(textOf(ownTree).includes('Demo Avery E2202 Edited'), 'own-profile emitted tree should show edited name');
+assert(findById(ownTree, 'hh-profile-edit-form') === null, 'successful save should close the form');
+
+await controller.navigate('#/about');
+await controller.navigate('#/profile');
+const ownerReentry = {name: controller.state.journey.profile.value.name, source: controller.state.journey.profile.source};
+assert(ownerReentry.name === 'Demo Avery E2202 Edited' && ownerReentry.source === 'local-overlay', 'overlay should persist across own-view reentry in same controller');
+const beforeAliasCounts = snapshotCounts();
+const profileId = controller.state.journey.profile.value.id;
+await controller.navigate(`#/public-profile/${profileId}`);
+const aliasProjection = {name: controller.state.journey.profile.value.name, source: controller.state.journey.profile.source,
+  routePage: controller.route.page, renderedNamePresent: textOf(renderedTree).includes('Demo Avery E2202 Edited')};
+assert(aliasProjection.name === 'Demo Avery E2202 Edited' && aliasProjection.source === 'local-overlay', 'public alias should project same-controller overlay');
+assert(aliasProjection.renderedNamePresent, 'public alias emitted tree should show edited name');
+assert(JSON.stringify(runtime.snapshot()) === JSON.stringify(runtimeBaseline), 'alias read should not mutate provider/runtime snapshot');
+const aliasServiceDelta = delta(beforeAliasCounts, snapshotCounts());
+
+const freshController = createPublicController({runtime});
+await freshController.navigate('#/profile');
+const freshControllerProjection = {name: freshController.state.journey.profile.value.name, source: freshController.state.journey.profile.source};
+assert(freshControllerProjection.name === runtimeBaseline.ownProfile.profile.displayName && freshControllerProjection.source === 'runtime', 'fresh controller should see provider value without prior controller overlay');
+secret = null;
+const retainedSurfaceLeak = JSON.stringify({state: controller.state, runtime: runtime.inspect(), parts: runtime.pxc.entries().map(([, part]) => part.value), storage: [...storage.values()]})
+  .includes(String(ephemeralPassword));
+assert(retainedSurfaceLeak === false, 'ephemeral password should not appear in reached retained surfaces');
+
+const resetBeforeCounts = snapshotCounts();
+const resetResult = await controller.dispatch('public:reset');
+assert(resetResult.ok === true, 'synthetic demo reset should succeed');
+await controller.navigate('#/public-profile/demo-avery');
+const afterResetProjection = {name: controller.state.journey.profile.value.name, source: controller.state.journey.profile.source,
+  session: runtime.snapshot().session.status};
+assert(afterResetProjection.name === 'Demo Avery' && afterResetProjection.source === 'runtime' && afterResetProjection.session === 'anonymous', 'reset should clear overlay and return to seeded anonymous profile');
+
+process.stdout.write(JSON.stringify({
+  job_id: 'E2202', worker: 'H2', probe: 'profile-overlay-lifecycle',
+  initialization: {portCounts: afterInitializeCounts, statesCalls: afterInitializeCounts['SchoolData.getStates']},
+  login: {result: 'success', portDelta: delta(afterInitializeCounts, afterLoginCounts), syntheticSeed: 'avery@fixture.test', passwordRetainedSurfaceLeak: retainedSurfaceLeak},
+  edit: {result: {ok: saveResult.ok, localOnly: saveResult.localOnly, outcomeRemote: outcomeRemoteAtSave},
+    providerSnapshotUnchangedAtSave: JSON.stringify(runtimeAfterSave) === JSON.stringify(runtimeBaseline),
+    portDelta: delta(beforeSaveCounts, afterSaveCounts), providerHasProfileUpdatePort: Object.hasOwn(provider.services, 'TeacherProfile.updateProfile'),
+    source: 'local-overlay', ownTreeLocalDisclosure: true, ownName: 'Demo Avery E2202 Edited'},
+  sameController: {ownerReentry, publicAlias: aliasProjection, aliasPortDelta: aliasServiceDelta},
+  freshController: freshControllerProjection,
+  reset: {result: resetResult.ok, portDelta: delta(resetBeforeCounts, snapshotCounts()), afterReset: afterResetProjection},
+  qualifications: {emittedSourceEquivalentTreeOnly: true, mountedDomOrFormData: false, browserOrBackend: false, realEmail: false, realAccount: false},
+}, null, 2) + '\n');

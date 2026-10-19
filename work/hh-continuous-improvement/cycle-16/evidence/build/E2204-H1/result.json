@@ -1,0 +1,63 @@
+{
+  "job_id": "E2204",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "The single root-authorized canonical PageRouter build exited 0 and verified its fresh 843-file site output. It ran 2 build-helper tests, 136 targeted HH tests, 291 full-suite tests, and 1 Atlas import-closure test, all passing. The targeted HH count is a separately named run that overlaps tests in the full suite and is not additive. The fresh receipt binds the E2203 controller test hash bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0 and unchanged production inputs. No Git, stage, commit, export, publication, or deployment action occurred.",
+  "authorization": "Root E2204 phase 2: exactly one canonical wrapper invocation after full review; no retry.",
+  "command": {
+    "wrapper": "bash /workspace/scratch/8528bb251845/hh-cycle16/H1/E2204/run-once.sh",
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "canonicalArgv": ["/usr/bin/env", "BAZEL=/workspace/scratch/8528bb251845/tools/bazel", "bash", "ci/bazel/run.sh"],
+    "invocations": 1,
+    "exitCode": 0,
+    "signalCapture": "none (wrapper's shell-exit convention; not an independently observed operating-system signal).",
+    "startedUtc": "2026-10-19T01:30:16Z",
+    "endedUtc": "2026-10-19T01:31:29Z"
+  },
+  "sourceIdentity": {
+    "head": "1d8f32657922f0f67cbde1719472f688060b4e94",
+    "tree": "519253865a06aa60d651074db893fa0ae6428f07",
+    "changedTest": {
+      "path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "sha256": "bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0"
+    },
+    "unchangedProductionInputs": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+      "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+      "checkpoint/vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a"
+    }
+  },
+  "namedResults": {
+    "buildHelpers": {"tests": 2, "passed": 2, "failed": 0},
+    "targetedHH": {"tests": 136, "passed": 136, "failed": 0},
+    "fullSuite": {"tests": 291, "passed": 291, "failed": 0},
+    "atlasImportClosure": {"tests": 1, "passed": 1, "failed": 0},
+    "overlapQualification": "The named targeted HH suite overlaps the full-suite run; do not sum these counts as a unique-test total."
+  },
+  "freshOutput": {
+    "verifiedFileCount": 843,
+    "pxcube": {"rebuilt": true, "packages": 14, "relocated": false},
+    "crispExactCompiledEquality": true,
+    "siteBuildId": "5be59257e9ce9253bd7c6f7c0d84cf2b26fab889e9f3a28bbbc2cb9546f46734",
+    "sourceDigest": "cf0a4382a8c8d22da2c95372d1a462fd65a1361d3c192b77b3cda5e41dcfe6a6",
+    "siteDigest": "4210413ab0a0bba2dd84916879d87583ad936e17cd525e58d8621ced75a19a37",
+    "receiptSourceInputBindings": {
+      "vendor/hh/src/public-controller.test.mjs": "bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0",
+      "vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+      "vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+      "vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a"
+    }
+  },
+  "captures": {
+    "directory": "/workspace/scratch/8528bb251845/hh-cycle16/H1/E2204/captures",
+    "stdout": {"path": "captures/stdout.raw", "bytes": 1298, "sha256": "e943690b9ec92547e7cf4225965acbae67c64159ab3c440a68d2531dbe01de85"},
+    "stderr": {"path": "captures/stderr.raw", "bytes": 1037, "sha256": "d98df93bbd43d513e4487602fd52b345f4a0be42d6c9f6543fbf128830b7af17"},
+    "startUtc": {"path": "captures/start.utc", "sha256": "6096a730f333f546333b66838086a72f6ce792b30d3f09f933c15eb6f05af44f"},
+    "endUtc": {"path": "captures/end.utc", "sha256": "807e6e48f4765010ab824d677d6c2214eb01330ef35bc44cc876b52f088abf8c"},
+    "exitCode": {"path": "captures/exit.code", "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"},
+    "signal": {"path": "captures/signal.txt", "sha256": "fcf33dfbe13c2354bf0e1b063f9fb422747a46cee00b7420bceff2b81457b345"},
+    "freshReceipt": {"path": "build-output/site.receipt.json", "bytes": 467223, "sha256": "bcd95ee7f1ca1ef20a208e92591e26d43379aa359991c3791b8e00e3847e9aeb"},
+    "freshLog": {"path": "build-output/site.log", "bytes": 51376, "sha256": "1e625d06b3e7b1fe8765d3397640a38cde81400bc676882188ba4a8a722520cb"}
+  },
+  "scope": "Only the fresh receipt and log were retained from Bazel outputs; no site tree, historical evidence, screenshot, or PNG was copied. No Git stage/commit/export, publication, deployment, or browser/human validation is claimed."
+}

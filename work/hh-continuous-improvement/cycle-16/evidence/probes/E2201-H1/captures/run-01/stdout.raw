@@ -1,0 +1,348 @@
+{
+  "record": "HH16 E2201 H1 one-shot local profile edit boundary probe",
+  "startedAt": "2026-10-19T01:15:03.841Z",
+  "executionModel": "actual fixture provider + actual service runtime + actual controller + renderPublicSite emitted trees; no DOM or browser APIs",
+  "externalNetworkEnabled": false,
+  "stages": [
+    {
+      "name": "save-current-controller-overlay",
+      "observation": {
+        "result": {
+          "ok": true,
+          "localOnly": true,
+          "message": "Profile changes are shown in this tab only. The provider has no profile-update operation."
+        },
+        "profile": {
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "displayName": "Demo Avery",
+          "bio": "E2201 in-memory overlay only",
+          "subjects": [
+            "Science"
+          ],
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "school": {
+            "state": "Demo Washington",
+            "county": "Demo King",
+            "district": "Demo District",
+            "school": "Demo Academy"
+          },
+          "seeded": true,
+          "name": "E2201 Synthetic Avery"
+        },
+        "profileSource": "local-overlay",
+        "renderedText": "Skip to content Home Donate Sign Up About Contact Partners ☰ Home Donate Sign Up About Contact Partners My page Forum Logout Your local profile E2201 Synthetic Avery Demo Academy  Demo King, Demo Washington About the classroom E2201 in-memory overlay only Classroom wishlist Wishlist: https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY Prepare wishlist handoff Share profile View public profile Edit profile Profile changes are shown in this tab only. The provider has no profile-update operation. This is a locally rendered profile. Changes and sharing are not sent to the public service. © 2024 Homeroom Heroes. All rights reserved.",
+        "perPortCallDelta": {
+          "SchoolData.getStates": 0,
+          "SchoolData.getCounties": 0,
+          "SchoolData.getDistricts": 0,
+          "SchoolData.getSchools": 0,
+          "Registration.registerTeacher": 0,
+          "Registration.getOwnStatus": 0,
+          "Session.getSession": 0,
+          "Session.login": 0,
+          "Session.logout": 0,
+          "TeacherProfile.createProfile": 0,
+          "TeacherProfile.getOwnProfile": 0,
+          "TeacherProfile.openPublicProfile": 0,
+          "Demo.reset": 0,
+          "Demo.simulateApproval": 0
+        },
+        "runtimeSnapshotChanged": false,
+        "runtimePartsChanged": false,
+        "runtimeReceiptDelta": 0,
+        "storageChanged": false,
+        "runtimeUpdatePortPresent": false,
+        "capabilityProfileEdit": false
+      }
+    },
+    {
+      "name": "same-controller-public-alias-reentry",
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/demo-avery",
+        "profileId": "demo-avery"
+      },
+      "profileName": "E2201 Synthetic Avery",
+      "profileSource": "local-overlay",
+      "renderedText": "Skip to content Home Donate Sign Up About Contact Partners ☰ Home Donate Sign Up About Contact Partners My page Forum Logout Teacher profile E2201 Synthetic Avery Demo Academy  Demo King, Demo Washington About the classroom E2201 in-memory overlay only Classroom wishlist Wishlist: https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY Prepare wishlist handoff Share profile Showing a synthetic public teacher profile. This is a locally rendered profile. Changes and sharing are not sent to the public service. © 2024 Homeroom Heroes. All rights reserved.",
+      "perPortCallDelta": {
+        "SchoolData.getStates": 0,
+        "SchoolData.getCounties": 0,
+        "SchoolData.getDistricts": 0,
+        "SchoolData.getSchools": 0,
+        "Registration.registerTeacher": 0,
+        "Registration.getOwnStatus": 0,
+        "Session.getSession": 0,
+        "Session.login": 0,
+        "Session.logout": 0,
+        "TeacherProfile.createProfile": 0,
+        "TeacherProfile.getOwnProfile": 0,
+        "TeacherProfile.openPublicProfile": 1,
+        "Demo.reset": 0,
+        "Demo.simulateApproval": 0
+      },
+      "note": "The alias triggers the existing openPublicProfile read and merges this controller closure’s overlay; this is same-controller evidence only."
+    },
+    {
+      "name": "fresh-provider-runtime-controller-same-session-storage",
+      "sameStorageObject": true,
+      "persistedFixtureSession": "authenticated",
+      "profileNameAfterRecreation": "Demo Avery",
+      "profileSourceAfterRecreation": "runtime",
+      "profileEqualsOriginalFixtureValue": true,
+      "profileEqualsSavedOverlay": false,
+      "storageKeys": [
+        "hh.teacher-journey.fixture.v1"
+      ],
+      "storageSha256": "42317d2783873a1b948a366c6c1c55e7a3ed973a279f9c4069a820482ea91643",
+      "perPortCounts": {
+        "SchoolData.getStates": 1,
+        "SchoolData.getCounties": 0,
+        "SchoolData.getDistricts": 0,
+        "SchoolData.getSchools": 0,
+        "Registration.registerTeacher": 0,
+        "Registration.getOwnStatus": 0,
+        "Session.getSession": 0,
+        "Session.login": 0,
+        "Session.logout": 0,
+        "TeacherProfile.createProfile": 0,
+        "TeacherProfile.getOwnProfile": 0,
+        "TeacherProfile.openPublicProfile": 0,
+        "Demo.reset": 0,
+        "Demo.simulateApproval": 0
+      },
+      "note": "A new app/controller lifetime uses a new fixture provider and runtime over the same per-tab fixture storage; it retains the fixture session but has no original controller overlay."
+    }
+  ],
+  "final": {
+    "originalFixtureProfileName": "Demo Avery",
+    "sameControllerSavedName": "E2201 Synthetic Avery",
+    "sameControllerAliasName": "E2201 Synthetic Avery",
+    "freshControllerName": "Demo Avery",
+    "preSaveDisclosureVisible": true,
+    "noProviderUpdatePort": true,
+    "noProviderCallOrRuntimeOrStorageChangeOnSave": true,
+    "credentialAbsenceScans": {
+      "controllerState": false,
+      "runtimeParts": false,
+      "runtimeSnapshots": false,
+      "providerSnapshots": false,
+      "fixtureStorage": false,
+      "stdoutModel": false
+    },
+    "providerPortInventory": [
+      "Demo.reset",
+      "Demo.simulateApproval",
+      "Registration.getOwnStatus",
+      "Registration.registerTeacher",
+      "SchoolData.getCounties",
+      "SchoolData.getDistricts",
+      "SchoolData.getSchools",
+      "SchoolData.getStates",
+      "Session.getSession",
+      "Session.login",
+      "Session.logout",
+      "TeacherProfile.createProfile",
+      "TeacherProfile.getOwnProfile",
+      "TeacherProfile.openPublicProfile"
+    ],
+    "declaredTeacherProfilePorts": [
+      "TeacherProfile.createProfile",
+      "TeacherProfile.getOwnProfile",
+      "TeacherProfile.openPublicProfile"
+    ],
+    "providerCapabilities": {
+      "mode": "fixture",
+      "fixture": true,
+      "productionAuthority": false,
+      "persistence": "per-tab-sessionStorage",
+      "services": {
+        "SchoolData.getStates": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "SchoolData.getCounties": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "SchoolData.getDistricts": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "SchoolData.getSchools": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "Registration.registerTeacher": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "Registration.getOwnStatus": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "Session.getSession": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "Session.login": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "Session.logout": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "TeacherProfile.createProfile": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "TeacherProfile.getOwnProfile": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "TeacherProfile.openPublicProfile": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "Demo.reset": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "Demo.simulateApproval": {
+          "supported": true,
+          "fixtureOnly": true
+        }
+      },
+      "profileEdit": false,
+      "realMail": false,
+      "passwordAuthentication": false,
+      "payments": false
+    },
+    "serviceCallsAfterInitialization": {
+      "SchoolData.getStates": 0,
+      "SchoolData.getCounties": 0,
+      "SchoolData.getDistricts": 0,
+      "SchoolData.getSchools": 0,
+      "Registration.registerTeacher": 0,
+      "Registration.getOwnStatus": 0,
+      "Session.getSession": 0,
+      "Session.login": 1,
+      "Session.logout": 0,
+      "TeacherProfile.createProfile": 0,
+      "TeacherProfile.getOwnProfile": 0,
+      "TeacherProfile.openPublicProfile": 1,
+      "Demo.reset": 0,
+      "Demo.simulateApproval": 0
+    },
+    "finalRuntimeReceiptCount": 4,
+    "finalRuntimeParts": [
+      {
+        "address": "hh.contract",
+        "kind": "value"
+      },
+      {
+        "address": "hh.provider",
+        "kind": "provider"
+      },
+      {
+        "address": "hh.capabilities",
+        "kind": "value"
+      },
+      {
+        "address": "hh.calculation.bind-service-functions",
+        "kind": "function"
+      },
+      {
+        "address": "hh.service-bindings",
+        "kind": "value"
+      },
+      {
+        "address": "hh.service.SchoolData.getStates",
+        "kind": "function"
+      },
+      {
+        "address": "hh.service.SchoolData.getCounties",
+        "kind": "function"
+      },
+      {
+        "address": "hh.service.SchoolData.getDistricts",
+        "kind": "function"
+      },
+      {
+        "address": "hh.service.SchoolData.getSchools",
+        "kind": "function"
+      },
+      {
+        "address": "hh.service.Registration.registerTeacher",
+        "kind": "function"
+      },
+      {
+        "address": "hh.service.Registration.getOwnStatus",
+        "kind": "function"
+      },
+      {
+        "address": "hh.service.Session.getSession",
+        "kind": "function"
+      },
+      {
+        "address": "hh.service.Session.login",
+        "kind": "function"
+      },
+      {
+        "address": "hh.service.Session.logout",
+        "kind": "function"
+      },
+      {
+        "address": "hh.service.TeacherProfile.createProfile",
+        "kind": "function"
+      },
+      {
+        "address": "hh.service.TeacherProfile.getOwnProfile",
+        "kind": "function"
+      },
+      {
+        "address": "hh.service.TeacherProfile.openPublicProfile",
+        "kind": "function"
+      },
+      {
+        "address": "hh.service.Demo.reset",
+        "kind": "function"
+      },
+      {
+        "address": "hh.service.Demo.simulateApproval",
+        "kind": "function"
+      },
+      {
+        "address": "hh.request.1",
+        "kind": "value"
+      },
+      {
+        "address": "hh.result.1",
+        "kind": "value"
+      },
+      {
+        "address": "hh.request.2",
+        "kind": "value"
+      },
+      {
+        "address": "hh.result.2",
+        "kind": "value"
+      },
+      {
+        "address": "hh.request.3",
+        "kind": "value"
+      },
+      {
+        "address": "hh.result.3",
+        "kind": "value"
+      }
+    ],
+    "finalStorageKeys": [
+      "hh.teacher-journey.fixture.v1"
+    ],
+    "interpretation": "The local-only disclosure and local result match the implementation. The overlay survives only while the original controller closure exists; a new controller over the same fixture storage restores the provider profile. This confirms reuse of intended preview behavior and does not prove browser, production backend, human acceptance, or a profile-retention defect.",
+    "finishedAt": "2026-10-19T01:15:03.857Z"
+  }
+}

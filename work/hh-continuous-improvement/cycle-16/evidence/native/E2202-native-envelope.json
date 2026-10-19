@@ -1,0 +1,9 @@
+{
+  "job_id": "E2202",
+  "worker": "H2",
+  "outcome": "confirmed_reuse",
+  "summary": "Root coordinator envelope for independent extraction E2202. Raw worker result 6931e10190860ee52d765a541f56eca0aacd1830e79f099f5706044e37729e0e used review decision accepted rather than extract outcome. Raw bytes preserved; this envelope records confirmed_reuse from its actual one-shot exit0 and scoped local-only profile findings, not a native rejection or product correction.",
+  "raw_result": "H2/E2202/result.json",
+  "raw_sha256": "6931e10190860ee52d765a541f56eca0aacd1830e79f099f5706044e37729e0e",
+  "limitation": "Fixture/controller/emitted tree only; no browser/backend/human acceptance or persistence requirement."
+}

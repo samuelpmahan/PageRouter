@@ -1,0 +1,20 @@
+import {open} from 'node:fs/promises';
+import {spawn} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+
+const dir = '/workspace/scratch/8528bb251845/hh-cycle16/H2/E2202';
+const paths = Object.fromEntries(['stdout.raw', 'stderr.raw', 'exit.code', 'start.utc', 'end.utc']
+  .map(name => [name, `${dir}/${name}`]));
+const handles = {};
+for (const [name, path] of Object.entries(paths)) handles[name] = await open(path, 'wx');
+await handles['start.utc'].writeFile(`${new Date().toISOString()}\n`);
+const probe = `${dir}/probe.mjs`;
+const child = spawn(process.execPath, [probe], {cwd: '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh', stdio: ['ignore', handles['stdout.raw'].createWriteStream(), handles['stderr.raw'].createWriteStream()]});
+const code = await new Promise((resolve, reject) => {
+  child.once('error', reject);
+  child.once('close', (status, signal) => resolve(status === null ? (signal ? 128 : 1) : status));
+});
+await handles['exit.code'].writeFile(`${code}\n`);
+await handles['end.utc'].writeFile(`${new Date().toISOString()}\n`);
+for (const handle of Object.values(handles)) await handle.close();
+process.exitCode = code;

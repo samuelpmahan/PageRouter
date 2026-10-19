@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -uo pipefail
+set -o noclobber
+CAPTURE=/workspace/scratch/8528bb251845/hh-cycle16/H1/E2203/captures/focused-controller-01
+printf '%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$CAPTURE/start.utc"
+node --test --test-concurrency=2 checkpoint/vendor/hh/src/public-controller.test.mjs > "$CAPTURE/stdout.raw" 2> "$CAPTURE/stderr.raw"
+status=$?
+printf '%s\n' "$status" > "$CAPTURE/exit.code"
+printf '%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$CAPTURE/end.utc"
+exit "$status"

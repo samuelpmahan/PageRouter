@@ -1,0 +1,31 @@
+{
+  "schema": "hh16-conditional-plan@1",
+  "ready": [
+    "E2201",
+    "E2202"
+  ],
+  "proposals": [
+    {
+      "guard": "Reachable unacceptable behavior reproduced independently",
+      "next": "Smallest red-first fix by H1 then H2 independent review"
+    },
+    {
+      "guard": "Hypothesis falsified",
+      "next": "Retain negative; add only a useful missing regression protecting actual behavior, expected first pass"
+    },
+    {
+      "guard": "Regression introduced",
+      "next": "Diagnosis/repair and separate re-review"
+    },
+    {
+      "guard": "Evidence insufficient",
+      "next": "Abstain and choose other ready source-supported flow"
+    }
+  ],
+  "later": [
+    "Canonical build after accepted implementation/test-only improvement",
+    "Lean package and independent audit",
+    "One existing-branch commit and connected PR8 checkpoint"
+  ],
+  "limits": "No production/main/deploy/provider additions or duplicate completed login/registration/geography/wishlist/share/logout loops."
+}

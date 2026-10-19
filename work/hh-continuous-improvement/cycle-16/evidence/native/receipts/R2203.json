@@ -1,0 +1,56 @@
+{
+  "job_id": "R2203",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Independent review accepts the exact one-test regression addition. It meaningfully strengthens existing basic-edit/alias coverage with provider/runtime/receipt/storage/Part-boundary checks, a fresh provider/runtime/controller rehydrated from synthetic shared storage, and reset clearing. The exact focused test passed once. It is characterization of existing local-only behavior, not a production fix or defect claim.",
+  "source_review": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "1d8f32657922f0f67cbde1719472f688060b4e94",
+    "tree": "519253865a06aa60d651074db893fa0ae6428f07",
+    "reviewed_change": "exactly one added 94-line test in checkpoint/vendor/hh/src/public-controller.test.mjs; read-only diff showed no other source changes",
+    "test": "profile edit overlay remains local to this controller and reset clears it",
+    "baseline_sha256": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164",
+    "reviewed_sha256": "bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0",
+    "author_result_sha256": "8fcfe8f77682c8fa6f701fafffadb831cdd59911f3a1764a5c8966cb2c653a97",
+    "findings": [
+      "Pre-save emitted tree checks the local-only disclosure; fixture capability and absence of TeacherProfile.updateProfile are explicit.",
+      "Save checks local-only outcome and compares provider calls, provider/runtime snapshots, runtime receipts, fixture storage, Part address/count/object identity/value-reference identity, and JSON values of non-provider, non-function Parts.",
+      "Provider object and function closures are intentionally excluded from JSON serialization and separately bounded by provider snapshot/call counts, Part identity/reference checks, and runtime receipts; no claim is made about private closure serialization.",
+      "Same-controller public alias read is confirmed to use one actual fixture profile-read port and merge the existing local overlay.",
+      "The fresh-boundary case constructs a distinct fixture provider, runtime, community, and controller over the same storage; it confirms the synthetic session is restored but edited overlay is absent. This is stronger than H2 E2202, which reused the same runtime.",
+      "Reset is explicitly followed by same-controller public-profile reentry that shows the seeded value and runtime source."
+    ],
+    "incremental_coverage": "Existing controller tests already cover local edit and owner alias basics. This regression adds boundary accounting, genuinely fresh provider/runtime rehydration, and reset lifecycle assertions; it is not redundant with E2202's same-runtime fresh-controller observation."
+  },
+  "focused_run": {
+    "command": "node --test --test-name-pattern='profile edit overlay remains local to this controller and reset clears it' checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+    "wrapper": "bash /workspace/scratch/8528bb251845/hh-cycle16/H2/R2203/capture-once.sh",
+    "start_utc": "2026-10-19T01:28:00Z",
+    "end_utc": "2026-10-19T01:28:00Z",
+    "exit_code": 0,
+    "counts": {"tests":1,"passed":1,"failed":0,"cancelled":0,"skipped":0,"todo":0},
+    "only_named_test_executed": true,
+    "raw_captures": {
+      "stdout.raw": {"bytes":206,"sha256":"49f55447ba07bc6233403e05dff9798d8903ee268325cf88ea8a263ba3ce62cf"},
+      "stderr.raw": {"bytes":0,"sha256":"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "start.utc": {"sha256":"ce0020e8ce7f389e675391328b8b36dd7d13d3b0f406222a9c98f3924abb496e"},
+      "end.utc": {"sha256":"ce0020e8ce7f389e675391328b8b36dd7d13d3b0f406222a9c98f3924abb496e"},
+      "exit.code": {"sha256":"9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"}
+    }
+  },
+  "declined_scope": [
+    "No production implementation or provider/update port was added or requested.",
+    "No claim that local edits must persist across controllers or browser tabs; no persistence defect was demonstrated.",
+    "No mounted DOM, native validity/FormData, browser, screenshot, backend, production provider, real account, external email, or human-acceptance claim.",
+    "No broad test suite, build, rerun, source edit, Git write, or Lab operation was performed by H2."
+  ],
+  "artifacts": {
+    "prospective_path": "/workspace/scratch/8528bb251845/hh-cycle16/H2/R2203/prospective.md",
+    "prospective_sha256": "cc8f831d8e5eaacc300628172093ab96e5da03993cd95a30739a72129084f19e",
+    "capture_wrapper_path": "/workspace/scratch/8528bb251845/hh-cycle16/H2/R2203/capture-once.sh",
+    "capture_wrapper_sha256": "c7e516c329e5b7eef1ba4dcb3c7a00ae3f0f9aa89bed06047e0ce99ed463e23e",
+    "capture_directory": "/workspace/scratch/8528bb251845/hh-cycle16/H2/R2203/captures/focused-01"
+  }
+}

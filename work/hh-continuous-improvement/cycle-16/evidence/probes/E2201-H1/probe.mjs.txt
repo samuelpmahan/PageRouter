@@ -1,0 +1,183 @@
+import assert from 'node:assert/strict';
+import {createHash, randomBytes} from 'node:crypto';
+import {createFixtureProvider, createServiceRuntime, HH_PORTS} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createCommunity} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+const hash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+const walk = tree => tree && typeof tree === 'object' ? [tree, ...(tree.children || []).flatMap(walk)] : [];
+const byId = (tree, id) => walk(tree).find(node => node.attrs?.id === id) || null;
+const text = tree => walk(tree).flatMap(node => node.children || []).filter(value => typeof value === 'string').join(' ');
+function makeStorage() {
+  const values = new Map();
+  return {values, getItem(key) { return values.get(key) ?? null; }, setItem(key, value) { values.set(key, String(value)); }, removeItem(key) { values.delete(key); }};
+}
+function makeEnv(storage) {
+  const base = createFixtureProvider({fixture: true, storage});
+  const counts = Object.fromEntries(HH_PORTS.map(port => [port, 0]));
+  const provider = {...base, services: Object.freeze(Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    counts[port] += 1;
+    return invoke(input);
+  }]))) };
+  const runtime = createServiceRuntime(provider);
+  const community = createCommunity({storage});
+  let tree = null;
+  const controller = createPublicController({runtime, storage, community, onChange(state, route) {
+    tree = renderPublicSite({route, state, journey: state.journey});
+  }});
+  return {base, counts, provider, runtime, community, controller, get tree() { return tree; }};
+}
+const storageProjection = storage => [...storage.values.entries()].sort(([a], [b]) => a.localeCompare(b));
+const runtimeParts = runtime => runtime.pxc.entries().map(([address, part]) => ({address, kind: typeof part.value === 'function' ? 'function' : address === 'hh.provider' ? 'provider' : 'value'}));
+const runtimeState = runtime => runtime.snapshot();
+const delta = (before, after) => Object.fromEntries(HH_PORTS.map(port => [port, after[port] - before[port]]));
+const hasNonzero = values => Object.values(values).some(value => value !== 0);
+const renderedProfile = (tree, ids = ['hh-profile-edit-form', 'hh-profile-name', 'hh-profile-bio', 'hh-profile-public-view']) =>
+  Object.fromEntries(ids.map(id => { const node = byId(tree, id); return [id, node ? {tag: node.tag, attrs: node.attrs, text: text(node)} : null]; }));
+
+const storage = makeStorage();
+const env = makeEnv(storage);
+let ephemeralLoginSecret = randomBytes(32).toString('base64url');
+const output = {
+  record: 'HH16 E2201 H1 one-shot local profile edit boundary probe',
+  startedAt: new Date().toISOString(),
+  executionModel: 'actual fixture provider + actual service runtime + actual controller + renderPublicSite emitted trees; no DOM or browser APIs',
+  externalNetworkEnabled: false,
+  stages: [],
+};
+
+await env.controller.initialize('#/login');
+const initializedCalls = {...env.counts};
+const login = await env.controller.dispatch('public:login', {email: 'avery@fixture.test', password: ephemeralLoginSecret});
+assert.equal(login.ok, true, 'seeded synthetic fixture login must succeed');
+await env.controller.navigate('#/profile');
+assert.equal(env.controller.state.journey.session.status, 'authenticated');
+assert.equal(env.controller.state.journey.profile.status, 'present');
+assert.equal(env.controller.state.journey.profile.value.id, 'demo-avery');
+const initialProfile = structuredClone(env.controller.state.journey.profile.value);
+const disclosure = 'This is a locally rendered profile. Changes and sharing are not sent to the public service.';
+const beforeEditText = text(env.tree);
+assert.ok(beforeEditText.includes(disclosure), 'pre-save emitted profile tree must include local/no-public-service disclosure');
+const beforeEdit = {
+  profile: initialProfile,
+  tree: renderedProfile(env.tree),
+  disclosureVisible: beforeEditText.includes(disclosure),
+  runtimeSnapshotSha256: hash(runtimeState(env.runtime)),
+  runtimeParts: runtimeParts(env.runtime),
+  runtimeReceiptCount: env.runtime.inspect().receipts.length,
+  storageSha256: hash(storageProjection(storage)),
+  storageKeys: [...storage.values.keys()].sort(),
+  perPortCounts: {...env.counts},
+};
+
+const editToggle = await env.controller.dispatch('public:edit-profile');
+assert.equal(editToggle.ok, true);
+const editedName = 'E2201 Synthetic Avery';
+const editedBio = 'E2201 in-memory overlay only';
+assert.equal(env.controller.updateDraft('name', editedName), true);
+assert.equal(env.controller.updateDraft('bio', editedBio), true);
+assert.equal(byId(env.tree, 'hh-profile-name')?.attrs?.value, editedName, 'emitted edit tree should reflect delegated draft update');
+assert.equal(byId(env.tree, 'hh-profile-bio')?.attrs?.value, editedBio, 'emitted edit tree should reflect delegated draft update');
+const saveBaseline = {
+  calls: {...env.counts},
+  snapshotSha256: hash(runtimeState(env.runtime)),
+  parts: runtimeParts(env.runtime),
+  receiptCount: env.runtime.inspect().receipts.length,
+  storageSha256: hash(storageProjection(storage)),
+};
+const saved = await env.controller.dispatch('public:profile-edit', {});
+assert.equal(saved.ok, true, 'synthetic owner profile save should succeed locally');
+assert.equal(saved.localOnly, true, 'save should explicitly identify the local-only result');
+assert.equal(env.controller.state.journey.outcome?.kind, 'local-only');
+assert.equal(env.controller.state.journey.profile.value.name, editedName);
+assert.equal(env.controller.state.journey.profile.value.bio, editedBio);
+const saveObservation = {
+  result: {ok: saved.ok, localOnly: saved.localOnly, message: saved.profile ? env.controller.state.journey.outcome.message : null},
+  profile: structuredClone(env.controller.state.journey.profile.value),
+  profileSource: env.controller.state.journey.profile.source,
+  renderedText: text(env.tree),
+  perPortCallDelta: delta(saveBaseline.calls, env.counts),
+  runtimeSnapshotChanged: hash(runtimeState(env.runtime)) !== saveBaseline.snapshotSha256,
+  runtimePartsChanged: JSON.stringify(runtimeParts(env.runtime)) !== JSON.stringify(saveBaseline.parts),
+  runtimeReceiptDelta: env.runtime.inspect().receipts.length - saveBaseline.receiptCount,
+  storageChanged: hash(storageProjection(storage)) !== saveBaseline.storageSha256,
+  runtimeUpdatePortPresent: HH_PORTS.includes('TeacherProfile.updateProfile'),
+  capabilityProfileEdit: env.runtime.capabilities.profileEdit,
+};
+assert.equal(hasNonzero(saveObservation.perPortCallDelta), false, 'save must invoke no fixture provider service');
+assert.equal(saveObservation.runtimeSnapshotChanged, false);
+assert.equal(saveObservation.runtimePartsChanged, false);
+assert.equal(saveObservation.runtimeReceiptDelta, 0);
+assert.equal(saveObservation.storageChanged, false);
+assert.equal(saveObservation.runtimeUpdatePortPresent, false);
+assert.equal(saveObservation.capabilityProfileEdit, false);
+output.stages.push({name: 'save-current-controller-overlay', observation: saveObservation});
+
+const beforeAliasCalls = {...env.counts};
+await env.controller.navigate('#/public-profile/demo-avery');
+assert.equal(env.controller.state.journey.profile.value.name, editedName);
+assert.equal(env.controller.state.journey.profile.source, 'local-overlay');
+output.stages.push({name: 'same-controller-public-alias-reentry', route: env.controller.route,
+  profileName: env.controller.state.journey.profile.value.name,
+  profileSource: env.controller.state.journey.profile.source,
+  renderedText: text(env.tree),
+  perPortCallDelta: delta(beforeAliasCalls, env.counts),
+  note: 'The alias triggers the existing openPublicProfile read and merges this controller closure’s overlay; this is same-controller evidence only.'});
+
+const fresh = makeEnv(storage);
+await fresh.controller.initialize('#/profile');
+assert.equal(fresh.controller.state.journey.session.status, 'authenticated');
+assert.equal(fresh.controller.state.journey.profile.value.id, 'demo-avery');
+assert.equal(fresh.controller.state.journey.profile.value.name, initialProfile.name);
+assert.notEqual(fresh.controller.state.journey.profile.value.name, editedName);
+assert.equal(fresh.controller.state.journey.profile.source, 'runtime');
+output.stages.push({name: 'fresh-provider-runtime-controller-same-session-storage',
+  sameStorageObject: true,
+  persistedFixtureSession: fresh.controller.state.journey.session.status,
+  profileNameAfterRecreation: fresh.controller.state.journey.profile.value.name,
+  profileSourceAfterRecreation: fresh.controller.state.journey.profile.source,
+  profileEqualsOriginalFixtureValue: fresh.controller.state.journey.profile.value.name === initialProfile.name,
+  profileEqualsSavedOverlay: fresh.controller.state.journey.profile.value.name === editedName,
+  storageKeys: [...storage.values.keys()].sort(),
+  storageSha256: hash(storageProjection(storage)),
+  perPortCounts: {...fresh.counts},
+  note: 'A new app/controller lifetime uses a new fixture provider and runtime over the same per-tab fixture storage; it retains the fixture session but has no original controller overlay.'});
+
+const runtimeValues = runtime => JSON.stringify(runtime.pxc.entries().map(([, part]) => part.value));
+const storageText = JSON.stringify(storageProjection(storage));
+const controllerText = JSON.stringify([env.controller.state, fresh.controller.state]);
+const providerSnapshotText = JSON.stringify([env.base.snapshot(), fresh.base.snapshot()]);
+const scanMaterial = {
+  controllerState: controllerText,
+  runtimeParts: runtimeValues(env.runtime) + runtimeValues(fresh.runtime),
+  runtimeSnapshots: JSON.stringify([runtimeState(env.runtime), runtimeState(fresh.runtime)]),
+  providerSnapshots: providerSnapshotText,
+  fixtureStorage: storageText,
+  stdoutModel: JSON.stringify(output),
+};
+const secretLeakScan = Object.fromEntries(Object.entries(scanMaterial).map(([key, value]) => [key, value.includes(ephemeralLoginSecret)]));
+assert.equal(Object.values(secretLeakScan).some(Boolean), false, 'ephemeral fixture login credential must not persist in controller/provider/runtime/Parts/storage/output');
+output.final = {
+  originalFixtureProfileName: initialProfile.name,
+  sameControllerSavedName: saveObservation.profile.name,
+  sameControllerAliasName: env.controller.state.journey.profile.value.name,
+  freshControllerName: fresh.controller.state.journey.profile.value.name,
+  preSaveDisclosureVisible: beforeEdit.disclosureVisible,
+  noProviderUpdatePort: !saveObservation.runtimeUpdatePortPresent,
+  noProviderCallOrRuntimeOrStorageChangeOnSave: !hasNonzero(saveObservation.perPortCallDelta) && !saveObservation.runtimeSnapshotChanged && !saveObservation.runtimePartsChanged && saveObservation.runtimeReceiptDelta === 0 && !saveObservation.storageChanged,
+  credentialAbsenceScans: secretLeakScan,
+  providerPortInventory: Object.keys(env.base.services).sort(),
+  declaredTeacherProfilePorts: HH_PORTS.filter(port => port.startsWith('TeacherProfile.')),
+  providerCapabilities: env.runtime.capabilities,
+  serviceCallsAfterInitialization: delta(initializedCalls, env.counts),
+  finalRuntimeReceiptCount: env.runtime.inspect().receipts.length,
+  finalRuntimeParts: runtimeParts(env.runtime),
+  finalStorageKeys: [...storage.values.keys()].sort(),
+  interpretation: 'The local-only disclosure and local result match the implementation. The overlay survives only while the original controller closure exists; a new controller over the same fixture storage restores the provider profile. This confirms reuse of intended preview behavior and does not prove browser, production backend, human acceptance, or a profile-retention defect.',
+  finishedAt: new Date().toISOString(),
+};
+const finalOutput = JSON.stringify(output, null, 2);
+assert.equal(finalOutput.includes(ephemeralLoginSecret), false, 'serialized probe output must not contain the ephemeral credential');
+ephemeralLoginSecret = '';
+process.stdout.write(`${finalOutput}\n`);

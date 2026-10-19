@@ -1,0 +1,735 @@
+
+Self-host fast-check
+{
+  "bundle": "/tmp/pagerouter-build-999fsY/source/vendor/hh/src/vendor/fast-check-4.10.2.bundle.mjs",
+  "bytes": 171402,
+  "pin": "sha256:28fc0e4dc36e31eb48577b319cec521931b4bc88556205a76d82cde763a34d06",
+  "dependencies": [
+    "pure-rand@8.4.2"
+  ]
+}
+
+
+Compile PxCube/neat and crisp-package every experience
+neat check: 15 item schemas valid
+tidy: registry schema checked
+launcher: 14 shipped, 0 failed
+run: 2026-10-19T01-30-20-832Z-d83fcbf7
+{
+  "site": "/tmp/pagerouter-build-999fsY/source/sources/pxcube/.pxcube/runs/2026-10-19T01-30-20-832Z-d83fcbf7/site",
+  "results": [
+    {
+      "id": "build-bag",
+      "ok": true
+    },
+    {
+      "id": "connect4",
+      "ok": true
+    },
+    {
+      "id": "connect4-pxc",
+      "ok": true
+    },
+    {
+      "id": "create-graphics",
+      "ok": true
+    },
+    {
+      "id": "explore-shelf",
+      "ok": true
+    },
+    {
+      "id": "export-graphics",
+      "ok": true
+    },
+    {
+      "id": "gameboy",
+      "ok": true
+    },
+    {
+      "id": "hello",
+      "ok": true
+    },
+    {
+      "id": "mock-smoke",
+      "ok": true
+    },
+    {
+      "id": "on-course",
+      "ok": true
+    },
+    {
+      "id": "snake",
+      "ok": true
+    },
+    {
+      "id": "upload-disc-to-shelf",
+      "ok": true
+    },
+    {
+      "id": "upload-disc-to-shelf-delta",
+      "ok": true
+    },
+    {
+      "id": "your-shelf",
+      "ok": true
+    }
+  ]
+}
+(node:505) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+Assemble PageRouter
+{
+  "projects": [
+    {
+      "id": "pxcube",
+      "files": 579,
+      "digest": "e4724253be8d0a1799a4a24e1fbd0454cd054a26e18366960678b34a25445bfe"
+    },
+    {
+      "id": "hh",
+      "files": 67,
+      "digest": "8c678a9ac81ec477c7382a65e12a3ef3757b5e2139f5354c450d528e03e84db8"
+    },
+    {
+      "id": "justin",
+      "files": 22,
+      "digest": "05a005cb29e5d7b41d515a0d9d844f9512482a6ad7540e52d4d911c2492967e3"
+    },
+    {
+      "id": "capability-lab",
+      "files": 46,
+      "digest": "fd3a251a33559aa2a00032c3de42399e30db9249e993ebd3b2df946bf78e42ea"
+    }
+  ],
+  "delta": {
+    "kind": "actual-HH-C6-compiled-byte-delta",
+    "baseDigest": "8c678a9ac81ec477c7382a65e12a3ef3757b5e2139f5354c450d528e03e84db8",
+    "targetDigest": "f43476b97cf7c346bf1d04c4761bf9a0640885d0ff6c7fcae114fb3a1d845f3a",
+    "cleanDigest": "f43476b97cf7c346bf1d04c4761bf9a0640885d0ff6c7fcae114fb3a1d845f3a",
+    "equal": true,
+    "rebuilt": [
+      "file:styles.css"
+    ],
+    "reused": [
+      "file:teacher-journey.mjs",
+      "file:community.mjs",
+      "file:services/contract.mjs",
+      "file:services/fixtures.mjs",
+      "file:services/fixture-provider.mjs",
+      "file:services/http-provider.mjs",
+      "file:services/pxc.mjs",
+      "file:services/devtools-board.mjs",
+      "file:services/runtime.mjs",
+      "file:services/index.mjs",
+      "file:site-data.mjs",
+      "file:public-controller.mjs",
+      "file:public-site.mjs",
+      "file:pxc-devtools/devtools-data.mjs",
+      "file:services/style-playground.mjs",
+      "file:vendor/fast-check-4.10.2.bundle.mjs",
+      "file:vendor/fast-check-4.10.2.meta.mjs",
+      "file:style-playground.mjs",
+      "file:pxc-devtools/devtools.mjs",
+      "file:webmcp.mjs",
+      "file:app.mjs",
+      "file:assets/apple.jpg",
+      "file:assets/favicon.ico",
+      "file:assets/hero_border.jpg",
+      "file:assets/logo_transparent.png",
+      "file:assets/reference/fonts/DM-Sans-400-500-latin.woff2",
+      "file:assets/reference/fonts/Fraunces-400-500-latin.woff2",
+      "file:assets/reference/fonts/Fraunces-browser-observed.woff2",
+      "file:assets/reference/fonts/Inter-400-600-700-latin.woff2",
+      "file:assets/reference/fonts/Inter-browser-observed.woff2",
+      "file:assets/reference/fonts/site-fonts.css",
+      "file:assets/reference/static/fontawesome/css/all.min.css",
+      "file:assets/reference/static/fontawesome/webfonts/fa-brands-400.woff2",
+      "file:assets/reference/static/images/about/grape.jpg",
+      "file:assets/reference/static/images/about/jillian.jpg",
+      "file:assets/reference/static/images/about/majid.jpg",
+      "file:assets/reference/static/images/about/peanut.jpg",
+      "file:assets/reference/static/images/about/Tory.jpg",
+      "file:assets/reference/static/images/about/william.jpg",
+      "file:assets/reference/static/images/apple.jpg",
+      "file:assets/reference/static/images/favicon.ico",
+      "file:assets/reference/static/images/homepage/hero_border.jpg",
+      "file:assets/reference/static/images/homepage/teacher-of-day.jpg",
+      "file:assets/reference/static/images/homepage/tile_border_1.jpg",
+      "file:assets/reference/static/images/homepage/tile_border_2.jpg",
+      "file:assets/reference/static/images/homepage/tile_border_3.jpg",
+      "file:assets/reference/static/images/homepage/tile_border_4.jpg",
+      "file:assets/reference/static/images/logo_transparent.png",
+      "file:assets/reference/static/images/partners/1007TheWolf.png",
+      "file:assets/reference/static/images/partners/965CountryColor.png",
+      "file:assets/reference/static/images/partners/BaseCamp.png",
+      "file:assets/reference/static/images/partners/Coastal.png",
+      "file:assets/reference/static/images/partners/Microsoft-logo.png",
+      "file:assets/reference/static/images/regions/PNW.jpg",
+      "file:assets/reference/static/style.css",
+      "file:community.css",
+      "file:controller.mjs",
+      "file:public-site.css",
+      "file:index.html",
+      "file:pxc-devtools/devtools.css",
+      "file:services/CHECKPOINT.md",
+      "file:services/PROVENANCE.json",
+      "file:services/README.md",
+      "file:vendor/fast-check-4.10.2.LICENSE.txt",
+      "file:vendor/fast-check-4.10.2.provenance.json",
+      "file:vendor/pure-rand-8.4.2.LICENSE.txt"
+    ],
+    "operations": [
+      {
+        "path": "styles.css",
+        "kind": "splice",
+        "beforeSha256": "8d20b9d8ae814d94c7fb90c027a5903eb993de0017c7e1708ac79bd645a0d956",
+        "afterSha256": "5bd44d73ec70bea9b1c5dd786678599f877b41e1de0cfe05a28f754babc3cbc1",
+        "bytes": 11898,
+        "start": 11826,
+        "deleteCount": 0,
+        "payloadBytes": 72
+      }
+    ],
+    "patchBytes": 22302,
+    "fullBytes": 15806414,
+    "payloadBytes": 72
+  }
+}
+
+
+Verify crisp changed-source/cache/clean equality
+neat check: 15 item schemas valid
+tidy: registry schema checked
+launcher: 14 shipped, 0 failed
+run: 2026-10-19T01-30-48-436Z-06753d5e
+neat check: 15 item schemas valid
+tidy: registry schema checked
+launcher: 14 shipped, 0 failed
+run: 2026-10-19T01-30-53-910Z-7c4b9b35
+{
+  "schema": "existing-crisp-delta-proof@1",
+  "sourceChange": "experiences/hello/index.html",
+  "sourceChangeBytes": 46,
+  "changedPackageKeys": [
+    "hello"
+  ],
+  "reusedPackageKeys": [
+    "build-bag",
+    "connect4",
+    "connect4-pxc",
+    "create-graphics",
+    "explore-shelf",
+    "export-graphics",
+    "gameboy",
+    "mock-smoke",
+    "on-course",
+    "snake",
+    "upload-disc-to-shelf",
+    "upload-disc-to-shelf-delta",
+    "your-shelf"
+  ],
+  "baseDigest": "df253bd47dfad6e83cc2d9a387ea2c882c241c7765f50ef44ae2481034b49ebb",
+  "targetDigest": "929db4a188ac837d5af17d519cab7c4650a63f6df4a4f2ab90bdf461b7404b36",
+  "cleanDigest": "929db4a188ac837d5af17d519cab7c4650a63f6df4a4f2ab90bdf461b7404b36",
+  "exactCompiledEquality": true,
+  "rebuilt": [
+    "hello"
+  ],
+  "reused": [
+    "build-bag",
+    "gameboy",
+    "connect4",
+    "connect4-pxc",
+    "create-graphics",
+    "explore-shelf",
+    "export-graphics",
+    "mock-smoke",
+    "on-course",
+    "snake",
+    "upload-disc-to-shelf",
+    "upload-disc-to-shelf-delta",
+    "your-shelf"
+  ],
+  "ops": [
+    {
+      "path": "experiences/hello/index.html",
+      "kind": "splice",
+      "beforeSha256": "130311678ebbd422e41f93a0653ff118fbc4eb4c4e8794c0899c3000d2320bc6",
+      "afterSha256": "75d75bbc86a6921ff8db15a4288e44c7440486a9b0f84e99fc6524eb0bf7d4c0",
+      "bytes": 1683,
+      "start": 1637,
+      "deleteCount": 0,
+      "payloadBytes": 46
+    }
+  ],
+  "baselineRun": "2026-10-19T01-30-20-832Z-d83fcbf7",
+  "candidateRun": "2026-10-19T01-30-48-436Z-06753d5e",
+  "cleanRun": "2026-10-19T01-30-53-910Z-7c4b9b35",
+  "boundary": "Equality covers every crisp testified compiled chunk across all 14 experiences. Attempt IDs and generated launcher provenance are intentionally separate, not claimed deterministic."
+}
+
+
+Targeted HH controller/community regressions
+✔ mounted fixture check executes real services without browser storage or production authority (4.319598ms)
+✔ review presents executed backend results separately from the browser fixture and rollout (0.552209ms)
+✔ all published review artifacts are exact-hash bound to the report (0.890688ms)
+✔ recorded test labels are escaped before HTML rendering (0.283946ms)
+✔ forum writes require explicit teacher/moderator roles, never anonymous authority (1.144799ms)
+✔ literal topic, reply, search, category, flag and moderation work without network (1.679062ms)
+✔ hidden discussion cannot receive teacher replies, reports or votes through stale IDs (0.35297ms)
+✔ owner editing and one vote per persona with repeat-toggle preserve permissions (0.417467ms)
+✔ saved state restores exactly, ID sequence remains unique, reset removes local data (1.51797ms)
+✔ invalid JSON, duplicate IDs, excess collection size and invalid timestamps restore seeds (1.59159ms)
+✔ malformed stored booleans are rejected rather than coercing strings to moderation flags (0.335264ms)
+✔ modest input/count bounds reject rather than silently truncate or mutate (10.877717ms)
+✔ declared500 reply and1MB restore limits reject modest boundary fixtures (2.96279ms)
+✔ storage failure keeps bounded memory changes and exposes the failure (0.308784ms)
+✔ returned records and pure render tree cannot poison retained forum content (12.280213ms)
+✔ published public routes normalize while unknown and hostile destinations remain local (2.059884ms)
+✔ observed reference page aliases preserve their actual route and query identity (0.290426ms)
+✔ school cascade clears dependent values and choices before selecting a new state (5.907703ms)
+✔ late county responses cannot overwrite the latest selected state (4.505756ms)
+✔ clearing the upstream selection removes every dependent selected value and option list (1.185858ms)
+✔ lookup loading/failure/retry is observable and preserves the chosen upstream state (1.075061ms)
+✔ remembered filters retain the latest submitted empty query outcome and reject cross-row school storage (2.902951ms)
+✔ confirmation, consent and complete school are validated without retaining credentials (2.35486ms)
+✔ pending login, separate approval, actual credential boundary, profile edit/public view and reset compose (4.976379ms)
+✔ contact and reset are local; text length and email validation do not claim remote effects (0.892728ms)
+✔ unsafe wishlist replacements cannot survive in retained profile or handoff destinations (1.171465ms)
+✔ explicit forum preview role never creates an HH account or session (1.411125ms)
+✔ captured Teacher-of-Day reference is readonly even when a sample teacher is logged in (1.144645ms)
+✔ self-hosted browser bundle matches the exact pinned npm package bytes (4.123991ms)
+✔ six seeded style candidates stay within explicit bounds and retain real PxC source receipts (6.572792ms)
+✔ select, CSS-variable, and keep Calculations form a fixed inspectable chain (1.525136ms)
+✔ rejects unsafe seeds, bounds, selections, and CSS values without changing the target (1.125857ms)
+✔ style experiments preserve fixture teacher state and do not call any HH service (2.38186ms)
+✔ exposes each HH fixture service as a real kernel Part and receipt (4.048939ms)
+✔ runs a multi-stage school search through the HH service ports (5.47693ms)
+✔ composes registration, approval, demo login, profile creation and public read (3.28281ms)
+✔ supports separated approval/login, profile publication and directory reads (2.056784ms)
+✔ rejects credential-shaped inputs before creating a request Part (0.556565ms)
+✔ serializes concurrent calls and keeps receipts paired with their actual results (0.444546ms)
+✔ reports missing composition references with a real failed kernel receipt (0.744085ms)
+✔ defines and invokes a reusable Calculation Part using editable parameter bindings (4.239916ms)
+✔ nests a named Calculation inside a larger output-to-input composition with real inner receipts (2.779296ms)
+✔ requires explicit replace and pins existing dependents to the prior Calculation version (13.414529ms)
+✔ rejects undeclared inputs and cyclic imports before adding any Parts (1.022322ms)
+✔ exports and atomically imports data-only graph source, then replays it (2.867449ms)
+✔ built HH entry resolves its local module imports (10.755938ms)
+✔ PageRouter entry URL selects its exact module bytes instead of a cached older app (0.76085ms)
+✔ seeds a bounded topic index and applies category plus text search (1.437875ms)
+✔ requires teacher fixture for topic and reply writes, then persists valid writes (0.829323ms)
+✔ flags and moderator hide/unhide a thread; hidden threads stay out of public index (6.551721ms)
+✔ render keeps fixture-hostile text as literal node content and exposes delegated events (7.519332ms)
+✔ restores only validated bounded state, tolerates storage failure, and reset restores seeds (0.48705ms)
+✔ rejects duplicate IDs and oversized timestamps during restore, and exposes volatile writes (1.290855ms)
+✔ rejects malformed duplicate restores and reports failed writes without losing the in-memory result (0.242754ms)
+✔ keeps generated IDs monotonic across reload, and enforces title and per-persona vote bounds (1.383574ms)
+✔ round-trips human-readable fixture persona IDs and rejects malformed persisted flags (0.582714ms)
+✔ surfaces a throwing default sessionStorage getter without breaking the local store (0.367ms)
+✔ matches captured public forum titles, newest/oldest/upvote ordering, and visible source controls (2.195291ms)
+✔ keeps the full local post while rendering the source-length forum excerpt and icon controls (1.088132ms)
+✔ renders source-shaped forum controls and author-owned post/comment operations work locally (2.640067ms)
+✔ login draft retains typed, newer, and explicit blank email through held failures (32.847239ms)
+✔ login draft keeps existing fallback order and clears only after authority changes (4.007878ms)
+✔ held successful login projects authenticated email after route reentry (2.6219ms)
+✔ prepared share handoff is invalidated before foreign profile read resolves (1.882152ms)
+✔ route-derived share dispatch remains available to anonymous, pending, missing, and captured viewers (1.598386ms)
+✔ delayed profile creation preserves the current other-teacher route and edit authority (4.379976ms)
+✔ delayed profile creation preserves a captured read-only reference projection (6.822317ms)
+✔ delayed profile creation leaves an in-flight public-profile read projection intact (2.280518ms)
+✔ failed profile creation service sync preserves a captured reference when an own profile exists (2.551174ms)
+✔ held profile creation keeps the live create draft through failure and explicit resubmission (16.557045ms)
+✔ profile create rejects unsupported wishlist before mutation and retains draft (2.657343ms)
+✔ profile create rejects overlength wishlist before mutation and retains draft (1.558355ms)
+✔ profile create preserves blank wishlist compatibility (1.890934ms)
+✔ profile create preserves valid synthetic wishlist compatibility (1.558446ms)
+✔ profile edit rejects unsupported wishlist before mutation and retains draft (1.699227ms)
+✔ profile edit rejects overlength wishlist before mutation and retains draft (1.679938ms)
+✔ profile edit preserves blank wishlist compatibility (1.69422ms)
+✔ profile edit preserves valid synthetic wishlist compatibility (4.454853ms)
+✔ normalizes captured public route aliases and forum paths (0.363725ms)
+✔ captured Teacher of the Day opens as a read-only snapshot without invoking teacher services (1.272778ms)
+✔ profile edit toggle rejects another authenticated teacher profile (0.749764ms)
+✔ profile edit submit rejects another authenticated teacher profile without creating an overlay (1.079408ms)
+✔ profile edit toggle fails closed for anonymous and missing teacher identities (1.176173ms)
+✔ profile edit remains available to its owner through a public profile alias (0.946239ms)
+✔ cascades school filters, loads local directory matches and restores remembered filters (2.199377ms)
+✔ school lookup retry stays bound to the failed current selection (0.816594ms)
+✔ school lookup retry recovers the same current selection (0.560571ms)
+✔ navigating away invalidates a failed registration school lookup retry (0.756584ms)
+✔ initial school choices remain retryable when the states read fails (0.338718ms)
+✔ returning to registration reloads states after an invalidated initial lookup failure (0.519199ms)
+✔ successful initial school-data read does not erase a directory retry (0.544657ms)
+✔ returning to registration reloads a failed county cascade (0.649874ms)
+✔ school lookup retry remains available from directory when no directory retry owns it (0.683084ms)
+✔ distinguishes an explicit empty-filter search from the initial background directory load (0.569834ms)
+✔ leaving a pending directory read for login or registration retires shared loading (0.688823ms)
+✔ an abandoned directory completion cannot clear a newer pending school lookup (0.769554ms)
+✔ bounded text drafts keep spaces while typing and normalize only on submit (0.766339ms)
+✔ rejects stored school selections whose individual values do not form one fixture row (1.437555ms)
+✔ registration mismatch validation retains delegated non-secret drafts and selected school (1.875542ms)
+✔ registration missing-terms validation retains delegated non-secret drafts and selected school (1.786037ms)
+✔ registration transport failure retains the live draft and only permits explicit resubmission (3.766706ms)
+✔ registration unknown outcome retains the live draft and has no safe automatic retry (1.952426ms)
+✔ registration retains the current draft after navigation away and back on failed writes (5.174887ms)
+✔ held registration completion on login preserves transaction classification without replay (6.521756ms)
+✔ failed re-registration preserves the approved synthetic alias for login (4.12886ms)
+✔ registration keeps passwords ephemeral, approval and login stay separate, and edits remain local (2.93527ms)
+✔ profile edit overlay remains local to this controller and reset clears it (6.176098ms)
+✔ Terms checkbox consent tracks both checking and unchecking without opening the modal (0.629353ms)
+✔ seeded UI login, local contact and reset never claim remote effects (1.008352ms)
+✔ wishlist and community actions are explicit local preview handoffs (1.065547ms)
+✔ wishlist handoff is invalidated before a foreign profile read and must be freshly prepared for that profile (1.106519ms)
+✔ wishlist handoff remains on same-profile aliases and captured reference keeps its static link (0.893849ms)
+✔ failed profile navigation clears prior wishlist handoff and stale confirmation is rejected (0.873379ms)
+✔ confirmed wishlist destination is not rendered on a foreign profile (1.010565ms)
+✔ same-profile wishlist handoff cannot be confirmed while its profile reload is pending or failed (1.098226ms)
+✔ late login, approval and logout results never redirect away from the current route (2.767859ms)
+✔ successful logout clears the own projection and anonymizes the community on its original route (0.664356ms)
+✔ successful logout preserves a foreign public-profile projection after navigation (0.891327ms)
+✔ successful logout preserves a captured readonly projection and its readonly guard (0.861992ms)
+✔ successful logout does not clear a public-profile projection while its read is pending (1.071557ms)
+✔ failed logout after navigation leaves foreign projection and authenticated authority unchanged (0.908842ms)
+✔ profile create and edit wishlist fields explain supported synthetic links (2.877874ms)
+✔ public route tree binds nav state, exposes accessible stable controls, and avoids inline styling (1.533499ms)
+✔ registration exposes the school cascade, password confirmation, Terms, and local approval (1.202983ms)
+✔ registration shows a contextual school lookup retry only while choices are unavailable (0.727591ms)
+✔ directory and contact reflect saved state, error/loading status, and remaining characters (0.742303ms)
+✔ profile error can retry and editable profile drafts survive renderer replacement (0.416415ms)
+✔ public profile formats structured school and scalar location fields without object coercion (0.792578ms)
+✔ Terms displays the complete captured section set and public profiles require an explicit wishlist choice (0.428632ms)
+✔ Teacher of the Day uses the captured Sarah profile and keeps it separate from runtime-owned demo profiles (1.521911ms)
+✔ Login content stays inside the single centered account card (0.552167ms)
+✔ forgot-password disclosure accurately describes the local preview before submission (0.348542ms)
+✔ partner and About renders expose source-shaped images and readable team text (0.515303ms)
+✔ Contact uses the captured local brand font glyphs and footer preview controls bind state (1.257455ms)
+✔ Logout is available in the authenticated account menu and absent anonymously (0.391196ms)
+✔ directory Results stays blank until an explicit search and then renders zero-result guidance (0.56069ms)
+ℹ tests 136
+ℹ suites 0
+ℹ pass 136
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 484.867924
+
+
+npm test suite against freshly assembled site
+✔ mount is inert and completion after navigation only updates a later Atlas mount (5.719153ms)
+✔ failed pending invocation survives navigation; replay uses the same session and reset clears it (1.312668ms)
+✔ invalid model control is rejected before invoking the runtime (0.653069ms)
+✔ original composition switches the active result and keeps replay on the same session (0.93387ms)
+✔ hash is SHA-256 over exact bytes and UTF-8 strings (8.966361ms)
+✔ snapshot is deterministic and carries output/source integrity metadata (6.786833ms)
+✔ buildSnapshot accepts explicit prior baseline and reports unaffected outputs reused (4.789871ms)
+✔ declared dependency edits rebuild transitive closure and preserve unrelated branches (5.274407ms)
+✔ patch round trip handles additions, deletions, UTF-8, binary, zero bytes, and patch chains (12.926317ms)
+✔ patch is exact-baseline-bound and rejects wrong project or modified baseline (4.690701ms)
+✔ patch validation rejects malformed, duplicate, traversal, absolute, and tampered operations atomically (8.85947ms)
+✔ project graph rejects missing dependencies, cycles, duplicate outputs, and unsafe paths (4.228609ms)
+✔ snapshot metadata tampering is rejected even when the output bytes appear unchanged (4.605734ms)
+✔ packed snapshot delivery deduplicates exact byte payloads and round-trips losslessly (3.818429ms)
+✔ tampered or missing packed payloads fail ordinary snapshot hash validation (1.633384ms)
+✔ seeded adversarial requests replay exactly through real fast-check and stay in each supplied range (20.327041ms)
+✔ a raw select Calculation rejects a candidate Part paired with different bounds (0.788943ms)
+✔ candidate, selection, CSS, and kept outputs stay attached to exact visible PxC receipts (4.698954ms)
+✔ invalid seeds, bounds, selections, and forged saved records reject without adding outputs (1.909152ms)
+✔ keep/export/JSON restore re-derives CSS from the selected style and reset clears only HH style variables (1.155332ms)
+✔ pinned generator metadata matches the supplied real fast-check module and artifact bytes (2.212888ms)
+✔ style entry points do not expose dynamic source execution (0.470616ms)
+✔ route helpers preserve only known projects and views with safe leaf paths (1.38725ms)
+✔ route parser rejects decoded traversal, malformed encoding, and unsafe path syntax (0.309363ms)
+✔ pin URLs remain scoped under compiled project roots (0.261182ms)
+✔ Atlas is a canonical PxCube view while existing encoded leaf routes remain unchanged (1.193949ms)
+✔ named Calculation is a real pinned function Part with inspectable source graph and actual output receipts (7.226402ms)
+✔ nested composed Calculations pin dependency versions and execute through the same PxC (7.922276ms)
+✔ replacement creates a new version while older nested callers stay pinned to v1 (1.980018ms)
+✔ session export/import round-trip restores definitions without executing them, then explicit invocation works (4.370762ms)
+✔ invalid cyclic, unresolved, duplicate, credential-bearing, and wrong-shape sessions reject atomically (5.67042ms)
+✔ unsafe credential-shaped definition parameters are rejected before adding a function Part (4.310321ms)
+✔ static source compiler uses explicit relative asset graph and copies source bytes literally (17.405801ms)
+✔ relative link traversal is not mistaken for an in-project dependency (0.272259ms)
+✔ decision closure is derived from typed FG links over the pinned Atlas recipe (7.081946ms)
+✔ FG association rejects wiring drift before calculation execution (0.967831ms)
+✔ safe interpreter uses literal independent arithmetic and charges all bindings (5.261437ms)
+✔ complete parser rejects unsafe syntax, hidden branches, overflow, names and reserved bindings (0.845467ms)
+✔ motion fitting and Beta/Boolean behavior preserve three-piece Python fixture (1.14064ms)
+✔ DAG preflight permits multiple roots and rejects cycles, reference and namespace mistakes before bodies (8.641654ms)
+✔ live bounded search matches Python fixture behavior and genuinely prunes retained failures (102.234201ms)
+✔ acceptance requires strict size, zero failures and all declared cases without Beta (0.275393ms)
+✔ counterexamples and final composition close over actual inputs and implementation Parts (80.54571ms)
+✔ same session replay memoizes real bodies while kernel still makes receipts; changed model invalidates (182.673532ms)
+✔ registry replacement invalidates cached implementation bodies and export snapshots are isolated (1.664345ms)
+✔ optional live composition distinguishes good model, wrong model and policy-only cache invalidation (8.323327ms)
+✔ actual computed source identities bind implementation Parts and every calculation producer (106.457196ms)
+✔ declared __proto__ output remains an actual own output binding through compilation and execution (0.997425ms)
+✔ motion fit subtracts each large position before accumulating displacement (0.261772ms)
+✔ durable recipe export roundtrips literal source Parts in a fresh runtime without receipts or shared mutation (114.42778ms)
+✔ parse is independently callable, accepts syntax alone, and never executes a domain body (10.632118ms)
+✔ validation compiles multiple roots and interpretation binds fixed Calculations without domain work (4.120847ms)
+✔ bad references, cycles, registry names and addresses fail validation before execution (11.165862ms)
+✔ failed previous rungs compose structured failures and run stops at the failed rung (2.918685ms)
+✔ individual ladder and composed ladder give identical outputs with actual HH provenance (147.877306ms)
+✔ execute replay invokes real runtime receipts while reusing all six domain algorithm bodies (28.770072ms)
+✔ imported identity must exactly match the authoritative current identity (46.363089ms)
+✔ state is immutable and isolated, forged and cross-session handles cannot authorize a rung (8.623191ms)
+✔ protocol serializes mutations and reset invalidates earlier handles and domain caches (36.77768ms)
+✔ finite JSON rejects overflow, non-JSON host values and accessor input without domain work (2.063123ms)
+✔ output names such as __proto__ stay own JSON data (9.099159ms)
+✔ execution failures yield composed inspectable failure Parts and preserve real failed receipts (14.308779ms)
+✔ empty DAG can select a seeded Part without running any domain algorithm (7.309938ms)
+✔ failed Calculation attempts count once, retain failed trace and never enter the cache (1.091407ms)
+✔ runtime rejects a changed interpreted binding before any Calculation execution (0.372729ms)
+✔ run retains authentic nested interpret handles for independent execute replay (23.501279ms)
+✔ protocol and imported-domain producer references resolve in their declared inspection namespace (49.724628ms)
+✔ failed execution evidence composes the actual attempted input and Calculation Parts (11.279378ms)
+✔ domain aliasing qualifies typed address fields and preserves opaque colliding node IDs (24.234664ms)
+✔ six-node captured case executes through PxC and matches independently computed motion oracle (18.624849ms)
+✔ different training gain and stricter policy keep model, probe, posterior, and decision distinctions (15.243225ms)
+✔ FG rejects a corrupted prediction at its first differing path and repeats deterministically (10.46701ms)
+✔ tampered case identity is rejected before algorithm execution (1.903844ms)
+✔ uncached simulation emits deterministic semantic tick events through PxC (22.969382ms)
+✔ atomic cache reuses exact calculations and reports input/output impact separately (4.440056ms)
+✔ composed calculation uses the fixed provider registry and retains every node output (5.057101ms)
+✔ grid card stack executes real movable text rules through copied rule-engine semantics (3.532666ms)
+✔ B-discovered partial grid composition binds current cards by position and preserves outputs (20.600571ms)
+✔ actual Block B discovery program composes inside the Block A grid runtime (80.926381ms)
+✔ grid engine source digest pins the exact preserved public rule engine copy (0.574091ms)
+✔ provider identity changes when only a copied grid-engine lexical helper changes (7.70535ms)
+✔ borrowed cache values are frozen and cannot poison a later exact lookup (0.429133ms)
+✔ Block5 has a PxCube-only route (1.690144ms)
+✔ editing a word changes parsed game rules without editing the game engine (0.888652ms)
+✔ ordered direction cards perform successive real grid steps and cached replay preserves exact output (5.850349ms)
+✔ browser NTL fixture contains all supported canonical classes and stays explicitly synthetic (20.400751ms)
+✔ browser NFL fixture demonstrates pooled MAE improvement with equal-player MAE tie and native replay (5.382679ms)
+✔ browser runner refuses a completed or non-synthetic report (0.491707ms)
+✔ native examples are literal and complete, and registry examples execute exactly as declared (16.83095ms)
+✔ Name That LLM maps fixed labels by stable ID and uses native macro-recall with trace and replay (7.695566ms)
+✔ NFL displays row metrics separately and computes equal-player MAE on unequal play counts (3.998534ms)
+✔ inconclusive report without evaluation is preserved as a structured native run (0.468592ms)
+✔ synthetic source never becomes a completed empirical receipt even if a report says completed (5.046734ms)
+✔ report envelope rejects missing source kind, blocked evaluation, malformed metadata, and unknown keys (0.608001ms)
+✔ aggregate retains complete source runner reports, diagnostics, provenance, and hashes (0.260841ms)
+✔ 18-label report rejects unknown, missing, and unsupported actual classes before scoring (2.282ms)
+✔ report JSON schema is strict at the root and requires a reason for blocked reports (0.662093ms)
+✔ canonical JSON sorts object keys and retains prototype-looking data keys (1.353169ms)
+✔ canonical UTF-8 byte count includes multibyte characters (0.182634ms)
+✔ canonical clone preserves negative zero as a distinct finite JSON number (0.105969ms)
+✔ canonical JSON rejects values JSON cannot represent faithfully (0.483305ms)
+✔ nested model references recursively expand exact event objects and both source arrays (14.098304ms)
+✔ encoded byte accounting includes model dictionary, residuals, mappings and stream metadata (5.950971ms)
+✔ serialized canonical bundle roundtrip preserves negative zero, Unicode, and empty-versus-missing fields (3.826947ms)
+✔ overlapping repeated occurrences are selected greedily without duplicate coverage (4.500607ms)
+✔ decoder rejects duplicate event coverage and dangling or cyclic nested model references (3.803943ms)
+✔ lossless fallback handles empty streams and reports negative compression honestly (0.332228ms)
+✔ discovery groups repeated connected induced motifs, including a branched motif (5.902297ms)
+✔ discovery canonicalizes isomorphic occurrences despite different node numbering (0.450796ms)
+✔ discovery ranks by supplied complete representation byte cost (0.561702ms)
+✔ discovery enforces bounded search options and refuses malformed edges (0.695723ms)
+✔ feedback discovers a recurring calculation chain and executes it on changed state and direction (52.921957ms)
+✔ feedback discards a motif when an internal source reference value disagrees with its parent output (23.383922ms)
+✔ feedback discards a motif when one external source reference carries conflicting values (8.595856ms)
+✔ event graph merges collections stably and preserves source arrays and metadata (3.016391ms)
+✔ event graph retains typed directed temporal, semantic and declared dependency edges (0.522904ms)
+✔ event graph rejects duplicate IDs, unknown dependencies and dependencies that point forward (0.755692ms)
+✔ event graph retains duplicate dependency declarations as duplicate edges (0.265799ms)
+✔ online compressor does not request a future item before emitting a full bounded frame (19.964898ms)
+✔ bounded frames decode independently and reassemble original arrays with cross-frame refs intact (8.273903ms)
+✔ online byte accounting compares canonical raw chunk and full frame envelope bytes (3.64309ms)
+✔ online preserves unknown external dependency references instead of rejecting or dropping them (1.900028ms)
+✔ online rejects invalid bounds and out-of-order stream items (0.948772ms)
+✔ independently decoded frame rejects altered dependency sidecar (6.794826ms)
+✔ enable dispatch transitions hidden to visible and emits a geometry-backed marker tree (5.100456ms)
+✔ disable dispatch transitions visible to hidden and hides all issue markers (1.018176ms)
+✔ seek is a pure projection over current state and creates only a projection receipt (7.270563ms)
+✔ events, transitions, projection and the composed wrapper are real PxC function Parts (1.375461ms)
+✔ contract composition accepts nested same-shape FGs and rejects incompatible tagged ports (1.763023ms)
+✔ dispatch rejects unsupported event tags and unknown measured issue IDs (0.770605ms)
+✔ derives transitive Part closure and typed edges from the composed FG (3.874158ms)
+✔ same model Part participates in a different closure when the selected FG changes (0.571337ms)
+✔ event port feeding a delegate Calculation is an explicit FG association (0.636595ms)
+✔ rejects missing binding and incompatible actual Calculation before effects (1.019419ms)
+✔ mounted fixture check executes real services without browser storage or production authority (4.325243ms)
+✔ review presents executed backend results separately from the browser fixture and rollout (0.587661ms)
+✔ all published review artifacts are exact-hash bound to the report (0.898397ms)
+✔ recorded test labels are escaped before HTML rendering (0.23344ms)
+✔ forum writes require explicit teacher/moderator roles, never anonymous authority (2.054449ms)
+✔ literal topic, reply, search, category, flag and moderation work without network (1.384225ms)
+✔ hidden discussion cannot receive teacher replies, reports or votes through stale IDs (0.315293ms)
+✔ owner editing and one vote per persona with repeat-toggle preserve permissions (0.378788ms)
+✔ saved state restores exactly, ID sequence remains unique, reset removes local data (1.228602ms)
+✔ invalid JSON, duplicate IDs, excess collection size and invalid timestamps restore seeds (1.604475ms)
+✔ malformed stored booleans are rejected rather than coercing strings to moderation flags (0.336875ms)
+✔ modest input/count bounds reject rather than silently truncate or mutate (11.433779ms)
+✔ declared500 reply and1MB restore limits reject modest boundary fixtures (3.162901ms)
+✔ storage failure keeps bounded memory changes and exposes the failure (0.347571ms)
+✔ returned records and pure render tree cannot poison retained forum content (12.411114ms)
+✔ published public routes normalize while unknown and hostile destinations remain local (2.026207ms)
+✔ observed reference page aliases preserve their actual route and query identity (0.307691ms)
+✔ school cascade clears dependent values and choices before selecting a new state (6.131371ms)
+✔ late county responses cannot overwrite the latest selected state (1.358898ms)
+✔ clearing the upstream selection removes every dependent selected value and option list (1.422493ms)
+✔ lookup loading/failure/retry is observable and preserves the chosen upstream state (1.079498ms)
+✔ remembered filters retain the latest submitted empty query outcome and reject cross-row school storage (3.021199ms)
+✔ confirmation, consent and complete school are validated without retaining credentials (2.625206ms)
+✔ pending login, separate approval, actual credential boundary, profile edit/public view and reset compose (4.560497ms)
+✔ contact and reset are local; text length and email validation do not claim remote effects (0.915162ms)
+✔ unsafe wishlist replacements cannot survive in retained profile or handoff destinations (1.668461ms)
+✔ explicit forum preview role never creates an HH account or session (1.996042ms)
+✔ captured Teacher-of-Day reference is readonly even when a sample teacher is logged in (1.202152ms)
+✔ self-hosted browser bundle matches the exact pinned npm package bytes (4.408859ms)
+✔ six seeded style candidates stay within explicit bounds and retain real PxC source receipts (6.226703ms)
+✔ select, CSS-variable, and keep Calculations form a fixed inspectable chain (1.164696ms)
+✔ rejects unsafe seeds, bounds, selections, and CSS values without changing the target (0.933048ms)
+✔ style experiments preserve fixture teacher state and do not call any HH service (2.131285ms)
+✔ exposes each HH fixture service as a real kernel Part and receipt (5.177392ms)
+✔ runs a multi-stage school search through the HH service ports (2.812557ms)
+✔ composes registration, approval, demo login, profile creation and public read (3.54235ms)
+✔ supports separated approval/login, profile publication and directory reads (2.754749ms)
+✔ rejects credential-shaped inputs before creating a request Part (0.729974ms)
+✔ serializes concurrent calls and keeps receipts paired with their actual results (0.515402ms)
+✔ reports missing composition references with a real failed kernel receipt (1.014911ms)
+✔ defines and invokes a reusable Calculation Part using editable parameter bindings (4.664142ms)
+✔ nests a named Calculation inside a larger output-to-input composition with real inner receipts (3.752239ms)
+✔ requires explicit replace and pins existing dependents to the prior Calculation version (12.672757ms)
+✔ rejects undeclared inputs and cyclic imports before adding any Parts (0.873309ms)
+✔ exports and atomically imports data-only graph source, then replays it (2.621941ms)
+✔ every pairing replays exactly and the PxC-composed match is identical, with and without aim noise (11468.082967ms)
+✔ physics state stays integer (no float drift between Node and browser) (67.962565ms)
+✔ rules: grabbing, duplicates, flicks per GO, and the gap must fit a disc (0.368573ms)
+✔ PxC-composed match equals the original engine, GO for GO, for every pairing (5844.077724ms)
+✔ simultaneity and provenance are structural in PxC receipts (4.222982ms)
+✔ capability ledger: every implementation proves its contract (61.808868ms)
+✔ CapabilityLab competition overlay is assembled into its digest-covered static project (2.193824ms)
+✔ all overlay ES module relative imports remain present inside the built CapabilityLab project (1.832732ms)
+✔ built native composed descriptors execute synthetic 18-label and unequal-play examples and replay exactly (42.254247ms)
+✔ Capability Lab source copy matches its exact repository pin (4.194407ms)
+✔ published Capability Lab catalog and browser import closure (4.69264ms)
+✔ Atlas mount exposes an inert ladder with escaped editable literal seeds (2.569978ms)
+✔ staged actions retain authentic predecessor handles and invalidate downstream Parts on draft edit (3.612284ms)
+✔ composed run reveals its reached stages and replay reuses the authentic interpreted Part (1.267853ms)
+✔ pending ladder work is exclusive and completion after detach updates a new mount (0.669305ms)
+✔ failed stage stays inspectable while later rungs remain unavailable (0.638849ms)
+✔ queued inspection toggles from detached roots cannot write into a later mount (0.61934ms)
+✔ an invocation rejected after a programmatic draft edit cannot attach stale failure to the new draft (0.607803ms)
+✔ the real composed protocol lends authentic nested interpreted Parts to UI replay (69.30507ms)
+✔ audit/navigation/caption-only changes preserve exact executed evaluator closure and prior session pin (4.022769ms)
+✔ real evaluator calculation dependency changes invalidate prior implementation pin (3.441557ms)
+✔ built HH entry resolves its local module imports (3.965644ms)
+✔ PageRouter entry URL selects its exact module bytes instead of a cached older app (0.60575ms)
+✔ seeds a bounded topic index and applies category plus text search (1.39871ms)
+✔ requires teacher fixture for topic and reply writes, then persists valid writes (0.745079ms)
+✔ flags and moderator hide/unhide a thread; hidden threads stay out of public index (7.462804ms)
+✔ render keeps fixture-hostile text as literal node content and exposes delegated events (8.014923ms)
+✔ restores only validated bounded state, tolerates storage failure, and reset restores seeds (0.478498ms)
+✔ rejects duplicate IDs and oversized timestamps during restore, and exposes volatile writes (1.706563ms)
+✔ rejects malformed duplicate restores and reports failed writes without losing the in-memory result (0.490206ms)
+✔ keeps generated IDs monotonic across reload, and enforces title and per-persona vote bounds (1.450678ms)
+✔ round-trips human-readable fixture persona IDs and rejects malformed persisted flags (0.412479ms)
+✔ surfaces a throwing default sessionStorage getter without breaking the local store (0.437807ms)
+✔ matches captured public forum titles, newest/oldest/upvote ordering, and visible source controls (2.348385ms)
+✔ keeps the full local post while rendering the source-length forum excerpt and icon controls (1.035434ms)
+✔ renders source-shaped forum controls and author-owned post/comment operations work locally (3.023209ms)
+✔ login draft retains typed, newer, and explicit blank email through held failures (30.181863ms)
+✔ login draft keeps existing fallback order and clears only after authority changes (4.036781ms)
+✔ held successful login projects authenticated email after route reentry (3.648908ms)
+✔ prepared share handoff is invalidated before foreign profile read resolves (2.020934ms)
+✔ route-derived share dispatch remains available to anonymous, pending, missing, and captured viewers (1.614764ms)
+✔ delayed profile creation preserves the current other-teacher route and edit authority (5.391765ms)
+✔ delayed profile creation preserves a captured read-only reference projection (4.340116ms)
+✔ delayed profile creation leaves an in-flight public-profile read projection intact (2.894876ms)
+✔ failed profile creation service sync preserves a captured reference when an own profile exists (2.871531ms)
+✔ held profile creation keeps the live create draft through failure and explicit resubmission (16.3392ms)
+✔ profile create rejects unsupported wishlist before mutation and retains draft (2.160193ms)
+✔ profile create rejects overlength wishlist before mutation and retains draft (1.834695ms)
+✔ profile create preserves blank wishlist compatibility (2.079472ms)
+✔ profile create preserves valid synthetic wishlist compatibility (1.959502ms)
+✔ profile edit rejects unsupported wishlist before mutation and retains draft (2.150569ms)
+✔ profile edit rejects overlength wishlist before mutation and retains draft (1.920293ms)
+✔ profile edit preserves blank wishlist compatibility (2.507715ms)
+✔ profile edit preserves valid synthetic wishlist compatibility (1.594684ms)
+✔ normalizes captured public route aliases and forum paths (1.18515ms)
+✔ captured Teacher of the Day opens as a read-only snapshot without invoking teacher services (1.284719ms)
+✔ profile edit toggle rejects another authenticated teacher profile (1.051679ms)
+✔ profile edit submit rejects another authenticated teacher profile without creating an overlay (1.103637ms)
+✔ profile edit toggle fails closed for anonymous and missing teacher identities (0.972861ms)
+✔ profile edit remains available to its owner through a public profile alias (0.887602ms)
+✔ cascades school filters, loads local directory matches and restores remembered filters (1.920012ms)
+✔ school lookup retry stays bound to the failed current selection (0.558869ms)
+✔ school lookup retry recovers the same current selection (0.651328ms)
+✔ navigating away invalidates a failed registration school lookup retry (0.759531ms)
+✔ initial school choices remain retryable when the states read fails (0.444006ms)
+✔ returning to registration reloads states after an invalidated initial lookup failure (0.489855ms)
+✔ successful initial school-data read does not erase a directory retry (0.622685ms)
+✔ returning to registration reloads a failed county cascade (0.610697ms)
+✔ school lookup retry remains available from directory when no directory retry owns it (0.721833ms)
+✔ distinguishes an explicit empty-filter search from the initial background directory load (0.7727ms)
+✔ leaving a pending directory read for login or registration retires shared loading (0.993932ms)
+✔ an abandoned directory completion cannot clear a newer pending school lookup (0.687913ms)
+✔ bounded text drafts keep spaces while typing and normalize only on submit (0.9925ms)
+✔ rejects stored school selections whose individual values do not form one fixture row (0.485569ms)
+✔ registration mismatch validation retains delegated non-secret drafts and selected school (3.552944ms)
+✔ registration missing-terms validation retains delegated non-secret drafts and selected school (2.056928ms)
+✔ registration transport failure retains the live draft and only permits explicit resubmission (5.216952ms)
+✔ registration unknown outcome retains the live draft and has no safe automatic retry (2.065832ms)
+✔ registration retains the current draft after navigation away and back on failed writes (9.215916ms)
+✔ held registration completion on login preserves transaction classification without replay (6.922232ms)
+✔ failed re-registration preserves the approved synthetic alias for login (3.528046ms)
+✔ registration keeps passwords ephemeral, approval and login stay separate, and edits remain local (2.510849ms)
+✔ profile edit overlay remains local to this controller and reset clears it (5.434008ms)
+✔ Terms checkbox consent tracks both checking and unchecking without opening the modal (0.61974ms)
+✔ seeded UI login, local contact and reset never claim remote effects (1.046281ms)
+✔ wishlist and community actions are explicit local preview handoffs (1.335314ms)
+✔ wishlist handoff is invalidated before a foreign profile read and must be freshly prepared for that profile (1.237267ms)
+✔ wishlist handoff remains on same-profile aliases and captured reference keeps its static link (0.940742ms)
+✔ failed profile navigation clears prior wishlist handoff and stale confirmation is rejected (0.947092ms)
+✔ confirmed wishlist destination is not rendered on a foreign profile (0.884388ms)
+✔ same-profile wishlist handoff cannot be confirmed while its profile reload is pending or failed (1.056707ms)
+✔ late login, approval and logout results never redirect away from the current route (2.049166ms)
+✔ successful logout clears the own projection and anonymizes the community on its original route (0.690597ms)
+✔ successful logout preserves a foreign public-profile projection after navigation (1.136306ms)
+✔ successful logout preserves a captured readonly projection and its readonly guard (1.051829ms)
+✔ successful logout does not clear a public-profile projection while its read is pending (1.569968ms)
+✔ failed logout after navigation leaves foreign projection and authenticated authority unchanged (1.301053ms)
+✔ profile create and edit wishlist fields explain supported synthetic links (2.688036ms)
+✔ public route tree binds nav state, exposes accessible stable controls, and avoids inline styling (1.264879ms)
+✔ registration exposes the school cascade, password confirmation, Terms, and local approval (1.444619ms)
+✔ registration shows a contextual school lookup retry only while choices are unavailable (0.580281ms)
+✔ directory and contact reflect saved state, error/loading status, and remaining characters (0.876666ms)
+✔ profile error can retry and editable profile drafts survive renderer replacement (0.483606ms)
+✔ public profile formats structured school and scalar location fields without object coercion (0.542024ms)
+✔ Terms displays the complete captured section set and public profiles require an explicit wishlist choice (0.43293ms)
+✔ Teacher of the Day uses the captured Sarah profile and keeps it separate from runtime-owned demo profiles (0.485699ms)
+✔ Login content stays inside the single centered account card (0.343215ms)
+✔ forgot-password disclosure accurately describes the local preview before submission (0.463957ms)
+✔ partner and About renders expose source-shaped images and readable team text (0.562124ms)
+✔ Contact uses the captured local brand font glyphs and footer preview controls bind state (1.073852ms)
+✔ Logout is available in the authenticated account menu and absent anonymously (0.307362ms)
+✔ directory Results stays blank until an explicit search and then renders zero-result guidance (0.409345ms)
+ℹ tests 291
+ℹ suites 0
+ℹ pass 291
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 18218.979599
+
+
+Built Atlas import closure
+✔ built Atlas renderer resolves its complete local runtime import closure and separate identity (14.318084ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 77.716481
+
+Built 843 files; all 14 PxCube packages succeeded; fresh output siteBuildId 5be59257e9ce9253bd7c6f7c0d84cf2b26fab889e9f3a28bbbc2cb9546f46734

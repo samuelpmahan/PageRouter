@@ -1,0 +1,49 @@
+{
+  "job_id": "E2201",
+  "worker": "H1",
+  "record": "HH16 E2201 one-shot local-profile-edit boundary probe",
+  "authorizedBy": "Root actual-native epoch 00 E2201 assignment",
+  "repository": {
+    "path": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "expectedHead": "1d8f32657922f0f67cbde1719472f688060b4e94",
+    "expectedTree": "519253865a06aa60d651074db893fa0ae6428f07"
+  },
+  "scope": "One volatile synthetic fixture run against the existing fixture provider, service runtime, public controller, and renderPublicSite emitted tree. Exercise seeded-owner login, pre-save copy, delegated draft updates, save, public-alias reentry, and fresh provider/runtime/controller initialization over the same session storage. No product/source/Git edits.",
+  "expectedObservation": "The profile page discloses before save that changes are not sent to the public service. Saving emits localOnly=true and a local-only outcome; it changes only the controller's in-memory overlay, with zero provider-port calls, runtime Part/receipt changes, runtime snapshot changes, or fixture storage changes during save. The overlay remains visible through same-controller public-alias navigation, but a newly constructed controller/provider/runtime over the same fixture session storage shows the original seeded profile. This would falsify a concern that Save silently persists or publishes profile edits; it would not establish browser behavior or a retention defect.",
+  "falsifier": "The bounded local-only claim is falsified if the actual emitted pre-save tree lacks the local/no-public-service disclosure, the save result does not identify a local-only result, save calls a provider write/update port, runtime/provider state or storage changes during save, or the saved value survives a fresh controller/provider/runtime through fixture state rather than the current controller overlay. Any such mismatch stops interpretation and is reported without repair or retry.",
+  "sourceInspection": {
+    "appDelegation": "app.mjs delegated input calls controller.updateDraft(target.name,target.value); submit calls reportValidity then FormData and dispatches the named event. Probe mirrors only the non-secret draft delegation and direct controller dispatch; it does not execute DOM APIs.",
+    "controller": "public-controller.mjs owns profileOverlays in a closure; public:profile-edit validates ownership, updates that map and emitted state, returns localOnly, and does not call service(); public alias reads merge the current controller overlay. A newly constructed controller has a fresh overlay map.",
+    "renderer": "public-site.mjs renders the edit form and page-level copy: 'This is a locally rendered profile. Changes and sharing are not sent to the public service.'",
+    "provider": "The fixture provider advertises profileEdit:false and declares create/get-own/open-public profile ports, with no profile-update port. No TeacherProfile.updateProfile is invented or invoked.",
+    "existingCoverage": "Existing tests cover basic edit/save, render replacement draft values, alias access, and runtime unchanged; this probe targets the untested fresh controller/provider/runtime boundary and captures the pre-save rendered disclosure plus provider/runtime/storage deltas."
+  },
+  "fixturesAndControls": {
+    "fixtureIdentity": "seeded avery@fixture.test; no real account or email",
+    "credential": "random one-use string generated in memory only for fixture login and scanned for absence from output, state, runtime Parts, provider data, and storage; never printed or persisted",
+    "editedValues": "synthetic profile name/bio, not personal data",
+    "network": "none; no network/browser/backend/email call",
+    "executionCount": 1,
+    "failurePolicy": "First task/probe failure stops execution; retain originals, no automatic retry, overwrite, assertion weakening, source edit, or rerun."
+  },
+  "sourceSha256": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164",
+    "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a",
+    "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  },
+  "command": {
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+    "argv": ["bash", "/workspace/scratch/8528bb251845/hh-cycle16/H1/E2201/run-once.sh"],
+    "script": "/workspace/scratch/8528bb251845/hh-cycle16/H1/E2201/probe.mjs",
+    "scriptSha256": "d1737695b25d7edbcfa88fdb7faa8190259269aa782ecee288e2f28035ef31dc",
+    "runnerSha256": "d5640a85a16ee64ef89589d8139a94798dbc0b5b8c52058313d331eb4826c801",
+    "captureDirectory": "/workspace/scratch/8528bb251845/hh-cycle16/H1/E2201/captures/run-01",
+    "captures": ["stdout.raw", "stderr.raw", "start.utc", "end.utc", "exit.code"]
+  },
+  "outputPolicy": "Preserve prospective.json, probe.mjs, run-once.sh, and original stdout.raw/stderr.raw/exit.code/start.utc/end.utc through the exclusive capture paths. Do not interpret this emitted-tree/controller probe as browser DOM, native validation/FormData, backend persistence, production-service, or human evidence."
+}

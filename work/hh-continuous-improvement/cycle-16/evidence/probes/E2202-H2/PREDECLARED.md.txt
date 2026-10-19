@@ -1,0 +1,30 @@
+# E2202 preregistration — HH16 profile overlay lifecycle
+
+Worker: H2. Scope: one ordinary, volatile-fixture/controller/runtime/render-tree probe against the frozen HH16 source. No source, Git, native, test, build, browser/DOM, backend, real-account, or email operations.
+
+## Question and hypotheses
+
+Question: after an authenticated synthetic profile owner edits their profile, what is reachable through the own-profile view and public alias, and how does the edit relate to provider/runtime state, a fresh controller, and reset?
+
+H1 (expected): saving changes only the current controller's in-memory overlay. The owner view and public alias in that controller show the overlay after navigation; the fixture provider snapshot and provider call set do not change on save. A new controller over the same runtime sees base provider profile data, and `public:reset` clears the original controller's overlay. The UI/copy identifies the operation as local-only. This is not a claim that persistence is required or defective.
+
+Alternative/falsifier: any provider/runtime mutation or service invocation attributable to profile save; overlay absent from same-controller owner/alias reentry; overlay survives in a fresh controller despite a fresh overlay map; reset leaves edited data reachable; or emitted tree claims remote/public-service update. If any occurs, report it as observed rather than interpreting it away.
+
+## Predicted measurable signals
+
+- Exactly one `SchoolData.getStates` during the single `initialize('#/login')`; record the full port-count map and differences at each stage.
+- One seeded synthetic `Session.login`; password generated ephemerally in-process and never printed or retained in controller/provider/storage/Parts.
+- Edit draft and save use `updateDraft` + ordinary `dispatch('public:profile-edit', {})`; no `TeacherProfile.updateProfile` service exists or is called.
+- The edit result is local-only/remote false, the rendered own view and same-controller public alias show the edited fields, and fixture/runtime snapshot remains byte-equivalent to the post-login baseline.
+- A fresh controller over the same runtime sees unedited provider data; reset clears the overlay and returns the original controller to base fixture view.
+- The renderer's explicit local-profile disclaimer remains present; no visual/browser/DOM/FormData claims.
+
+## Method and stop conditions
+
+Use only the checked-in fixture provider with volatile in-memory storage, service-call counters around the actual fixture ports, the public controller, and `renderPublicSite` emitted tree. No browser or native APIs. Capture the exact source hashes, stdout, stderr, exit, and UTC boundaries in newly created exclusive files under this directory. Run exactly once. Any unexpected execution error or assertion failure is retained and terminates the probe; no retry or assertion rewrite. No automatic email, backend, production mutation, or real user data.
+
+## Source-derived flow and qualifications
+
+`src/app.mjs` delegates ordinary named input events to `controller.updateDraft` and submitted form data to controller dispatch. `src/public-controller.mjs` keeps `profileOverlays` in the controller closure; `public:profile-edit` checks auth/ownership/validation, stores the overlay, returns `localOnly:true`, and sets a local-only outcome without calling a provider. `syncRuntime` and public-profile loading project the overlay for the matching teacher. `public:reset` calls `Demo.reset` then clears that map. `services/fixture-provider.mjs` advertises `profileEdit:false` and implements profile create/read but no update port. `src/public-site.mjs` renders the own-profile edit form, save action, and explicit local-rendering disclaimer. Existing controller tests already cover basic local edit and owner alias; this probe addresses lifecycle and provider-boundary comparisons, not a presumed defect.
+
+The emitted tree is source-equivalent renderer output only. It is not mounted DOM, native input validity, `FormData`, a browser, a backend, external email, or human acceptance. No claim is made that local edit retention is required.

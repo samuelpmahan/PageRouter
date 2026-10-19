@@ -1,0 +1,105 @@
+{
+  "job_id": "R2205",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Independent read-only audit accepts the frozen HH16 package with one non-blocking editorial qualification. All 77 manifest-listed files match bytes, SHA-256, and full mode; the exact 79-file package set (including its two excluded envelopes), all raw-copy bindings, source/build bindings, and native chronology checks pass. No site output bodies were retained or independently rehashed.",
+  "package": {
+    "root": "/workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-16",
+    "manifest_sha256": "414eec12c7438e78c09ab81970af556b783486bd50d6c98c4ea18c7c28b22f15",
+    "manifest_bytes": 18016,
+    "listed_file_count": 77,
+    "listed_bytes": 824950,
+    "actual_regular_file_count": 79,
+    "excluded_envelopes": ["evidence/manifest.json", "evidence/E2205/result.json"],
+    "exact_set": true,
+    "file_mismatches": 0,
+    "unlisted_or_special_entries": 0,
+    "sha256_byte_length_and_full_mode_verified_for_every_listed_file": true,
+    "genuine_zero_byte_stderr_captures": 4,
+    "captured_mode_0555_files": [
+      "evidence/build/E2204-H1/fresh-output/site.log",
+      "evidence/build/E2204-H1/fresh-output/site.receipt.json"
+    ],
+    "scripts_archived_inert_txt_mode_0644": true,
+    "result_sha256": "3caf69ca2f4fad2ae6c6f5c4b0351274f37c851b94b1e1672a4ea22603931dcd"
+  },
+  "source_and_worktree": {
+    "branch": "codex/hh-continuous-improvement",
+    "head": "1d8f32657922f0f67cbde1719472f688060b4e94",
+    "tree": "519253865a06aa60d651074db893fa0ae6428f07",
+    "baseline_test_sha256": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164",
+    "current_test_sha256": "bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0",
+    "test_copy_in_package_byte_identical_to_current_source": true,
+    "diff": {"only_path":"checkpoint/vendor/hh/src/public-controller.test.mjs","added_lines":94,"deleted_lines":0},
+    "unchanged_production_hashes": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+      "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+      "checkpoint/vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a"
+    },
+    "staged_changes": 0,
+    "tracked_modified_paths": ["checkpoint/vendor/hh/src/public-controller.test.mjs"],
+    "untracked_count": {"actual":106,"expected":106,"exact":true},
+    "preserved_excluded_scratch": {"exact_paths":27,"present":27,"included_in_package":false},
+    "unexpected_dirty_or_untracked_paths": 0
+  },
+  "copies_and_receipts": {
+    "worker_runner_capture_native_and_build_copy_bindings_checked": 66,
+    "all_66_exact_byte_copies": true,
+    "root_receipts_exact_copy_count": 6,
+    "all_root_receipts_byte_identical": true,
+    "E2202_envelope": "The package's duplicated root envelope exactly matches the root receipt. It records confirmed_reuse from the one-shot exit 0; H2's original worker result (SHA-256 6931e10190860ee52d765a541f56eca0aacd1830e79f099f5706044e37729e0e) is separately preserved with its original accepted decision and was not rewritten as a native failure.",
+    "independent_review": "R2203 H2 accepted result is byte-identical to the root receipt and preserved raw review evidence."
+  },
+  "build_receipt": {
+    "path": "evidence/build/E2204-H1/fresh-output/site.receipt.json",
+    "sha256": "bcd95ee7f1ca1ef20a208e92591e26d43379aa359991c3791b8e00e3847e9aeb",
+    "mode": "0555",
+    "log_sha256": "1e625d06b3e7b1fe8765d3397640a38cde81400bc676882188ba4a8a722520cb",
+    "log_mode": "0555",
+    "receipt_matches_original_build_capture": true,
+    "log_matches_original_build_capture": true,
+    "source_inputs": {"count":1538,"actual_source_files_rehashed":1538,"mismatches":0},
+    "source_digest": "cf0a4382a8c8d22da2c95372d1a462fd65a1361d3c192b77b3cda5e41dcfe6a6",
+    "site_output_metadata": {"rows":843,"unique_safe_paths":true,"metadata_digest_recomputed":true},
+    "site_digest": "4210413ab0a0bba2dd84916879d87583ad936e17cd525e58d8621ced75a19a37",
+    "site_build_id": "5be59257e9ce9253bd7c6f7c0d84cf2b26fab889e9f3a28bbbc2cb9546f46734",
+    "digest_algorithms": {
+      "sourceDigest": "SHA-256(JSON.stringify(sorted sourceInputs[path,bytes,sha256])) from retained build-driver.mjs; independently recomputed and matched",
+      "siteDigest": "SHA-256(JSON.stringify(sorted output siteFiles[path,bytes,sha256])) from retained build-driver.mjs; independently recomputed and matched"
+    },
+    "recipe_binding": {"driver_sha256":"e3088879bd49ef401b66e2e9fa0083d25433416468ea5f7f0611f4c618e23acf","helpers_sha256":"6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c","matches_source":true},
+    "site_bodies_retained_or_rehashed": false,
+    "qualification": "Fresh receipt/log and output metadata support the captured 843-file build claim. The site tree is not in the package; this audit did not independently hash the 843 output bodies."
+  },
+  "native_chronology": {
+    "epochs_00_to_04_root_command_exits": [0,0,0,0,0],
+    "each_root_stdout_matches_saved_solve_json": true,
+    "timeline": [
+      {"epoch":0,"at":"2026-10-19T01:11:09.505106+00:00","assignments":{"H1":"E2201","H2":"E2202"}},
+      {"epoch":1,"at":"2026-10-19T01:22:41.045115+00:00","assignments":{"H1":"E2203","H2":"BENCH"}},
+      {"epoch":2,"at":"2026-10-19T01:27:00.127527+00:00","assignments":{"H1":"BENCH","H2":"R2203"}},
+      {"epoch":3,"at":"2026-10-19T01:27:22.272178+00:00","assignments":{"H1":"E2204","H2":"R2203"}},
+      {"epoch":4,"at":"2026-10-19T01:32:39.648974+00:00","assignments":{"H1":"E2205","H2":"BENCH"}}
+    ],
+    "epoch_5_captured_state": {"snapshot_epoch":5,"E2205_status_at_capture":"running","event_count":16,"interpretation":"historical snapshot, not live state; the later E2205 result records mixed_change"},
+    "copied_epoch_native_records": "All epoch-00–04 bundles, solve JSON and root-command JSON plus next-packets, registry, spec, state-policy and E2202 envelope copies were compared bytewise to available original captures; all matched.",
+    "H1_H2_boundary_qualification": "README and continuation distinguish H2's same-runtime new-controller probe from H1's new-provider/runtime case; the headline statement is collective and the precise limitation follows.",
+    "separate_lab": "No Lab files are in the exact package set; native policy records Lab as separate. No Lab state was changed or treated as current by this audit."
+  },
+  "wording_qualification": {
+    "file": "continuation.json",
+    "text": "No email-retention defect was proven and no persistence behavior or provider capability was added.",
+    "assessment": "Stale domain-specific phrase in a profile-edit cycle. The surrounding continuation and README correctly describe profile-edit persistence, and no email behavior is asserted elsewhere. Non-blocking editorial qualification; it does not invalidate source, evidence, or build bindings. Do not silently alter the frozen package; root may correct it only in a future revision if desired.",
+    "mandatory_amendment": false
+  },
+  "evidence_limits": [
+    "Synthetic fixture/controller/runtime and emitted-tree evidence only; no mounted DOM, native validity/FormData, backend, real account, email, screenshot, or human acceptance.",
+    "No site output tree was retained; siteDigest was recomputed from receipt metadata and is not a fresh body rehash.",
+    "Captured state/policy snapshots are epoch-time history, not current live-state assertions.",
+    "No tests, probes, builds, source edits, package edits, Git writes, or Lab operations were performed during this audit."
+  ],
+  "audit_artifacts": {
+    "prospective": {"path":"/workspace/scratch/8528bb251845/hh-cycle16/H2/R2205/prospective.md","sha256":"592234750c27ea185f874c5e05c8b217647610b78ef8be57e53300c52f4c3a7d"},
+    "audit_script": {"path":"/workspace/scratch/8528bb251845/hh-cycle16/H2/R2205/audit.mjs","sha256":"c32b1635530d62558da9f95f32301093864fe97bb55c67d0a6dbe6f7f2cf01c8"}
+  }
+}

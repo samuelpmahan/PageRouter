@@ -1,0 +1,75 @@
+{
+  "job_id": "E2205",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Prepared a lean cycle-16 review package containing the two bounded probe records, one lifecycle regression and full controller run, accepted independent review, one canonical build with fresh receipt/log, and epoch 00-04 native history. The package payload manifest lists 77 files (824950 bytes), with exact path, SHA-256, byte length, and full mode. Its manifest and this result are excluded from the manifest to avoid circularity. No product source, runtime behavior, Git index/history, or publication state was changed by packaging.",
+  "authorization": "Root native E2205/H1: assemble review checkpoint only; no source/build/test/Git/publication actions.",
+  "repository": {
+    "path": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "1d8f32657922f0f67cbde1719472f688060b4e94",
+    "tree": "519253865a06aa60d651074db893fa0ae6428f07",
+    "publishedPR8HeadAtCapturedStart": "7bbe664b4678fe66d073967c8d3e61566a02841f",
+    "productChange": "Only checkpoint/vendor/hh/src/public-controller.test.mjs, one 94-line test addition from E2203, SHA-256 bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0. No production behavior changed.",
+    "unchangedProductionBindings": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+      "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+      "checkpoint/vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a"
+    }
+  },
+  "package": {
+    "path": "work/hh-continuous-improvement/cycle-16",
+    "payloadManifest": "evidence/manifest.json",
+    "manifestSha256": "414eec12c7438e78c09ab81970af556b783486bd50d6c98c4ea18c7c28b22f15",
+    "manifestBytes": 18016,
+    "listedPayloadFiles": 77,
+    "listedPayloadBytes": 824950,
+    "totalFilesIncludingManifestAndThisResult": 79,
+    "manifestExcludes": ["evidence/manifest.json", "evidence/E2205/result.json"],
+    "verification": {
+      "method": "Read-only self-audit recomputed every listed file's bytes, SHA-256, and full mode against the generated manifest.",
+      "listedCountMatches": true,
+      "listedBytesMatch": true,
+      "fileMismatches": 0
+    },
+    "exactCaptureHandling": "Raw captures, native bundles, fresh site receipt/log, result/prospective records, and source snapshot were copied byte-exact with cp -p; manifest records full modes, including 0555 receipt/log and genuine empty stderr files. Probe/test/review/build runner scripts are archived with .txt suffixes and are inert evidence."
+  },
+  "evidenceIncluded": {
+    "nativeHistory": "Epoch 00-04 solve JSON, bundles, root-command records, receipts E2201-E2204/R2203, E2202 envelope, and captured spec/registry/state/next-packets/policy snapshots.",
+    "H1E2201": "Probe, prospective, runner archive, result, exact run-01 stdout/stderr/start/end/exit captures.",
+    "H2E2202": "Predeclaration, probe/runner archives, result, exact stdout/stderr/start/end/exit captures.",
+    "H1E2203": "Prospective, full-file test runner archive, result, and exact controller-test captures; full file had 61 tests, all passing.",
+    "H2R2203": "Independent accepted review, prospective/runner archive, result, and exact focused-run captures (1 test passed).",
+    "H1E2204": "One canonical build's prospective, wrapper archive, original stdout/stderr/UTC/exit/signal, result, and only fresh site.receipt.json plus site.log."
+  },
+  "buildBindings": {
+    "job": "E2204",
+    "commandRuns": 1,
+    "exitCode": 0,
+    "sourceDigest": "cf0a4382a8c8d22da2c95372d1a462fd65a1361d3c192b77b3cda5e41dcfe6a6",
+    "siteDigest": "4210413ab0a0bba2dd84916879d87583ad936e17cd525e58d8621ced75a19a37",
+    "siteBuildId": "5be59257e9ce9253bd7c6f7c0d84cf2b26fab889e9f3a28bbbc2cb9546f46734",
+    "receiptPath": "evidence/build/E2204-H1/fresh-output/site.receipt.json",
+    "logPath": "evidence/build/E2204-H1/fresh-output/site.log",
+    "verifiedSiteFiles": 843,
+    "pxcube": {"rebuilt": true, "packages": 14, "relocated": false},
+    "namedTestCounts": {
+      "buildHelpers": "2/2 passed",
+      "targetedHH": "136/136 passed",
+      "fullSuite": "291/291 passed",
+      "atlasImportClosure": "1/1 passed",
+      "overlap": "Targeted HH count overlaps full-suite count and is not additive."
+    },
+    "receiptSha256": "bcd95ee7f1ca1ef20a208e92591e26d43379aa359991c3791b8e00e3847e9aeb",
+    "logSha256": "1e625d06b3e7b1fe8765d3397640a38cde81400bc676882188ba4a8a722520cb"
+  },
+  "qualifications": [
+    "E2201/E2202 are synthetic fixture/controller/runtime/source-equivalent rendered-tree evidence, not mounted browser DOM, native reportValidity/FormData, backend, real account, external email, screenshot, or human acceptance.",
+    "Both probes observed the declared local-only profile preview behavior; no persistence requirement or retention defect was demonstrated, and no provider update capability was invented.",
+    "E2201 runtimePartsChanged compares address/kind inventory only. E2203 covers selected Part identities/references/values; provider/function internals are not JSON-serialized. H2 E2202 reused the runtime at its fresh-controller stage; H1 E2201/E2203 used fresh provider/runtime over same synthetic storage.",
+    "Native state and policy files are creation-time history and must not be treated as live after subsequent native epochs.",
+    "Exact 21 HH13 and six HH15 E2102 scratch paths remain untouched and excluded. Lab7 is separate and untouched.",
+    "No Git stage/commit/export/publication/deployment occurred. Package awaits independent file audit and root direction."
+  ],
+  "nextProposal": "Source-only inspect current tests and captured reference for empty-result recovery/keyboard affordances before deciding whether any gap exists; no new job or implementation is authorized by this package."
+}

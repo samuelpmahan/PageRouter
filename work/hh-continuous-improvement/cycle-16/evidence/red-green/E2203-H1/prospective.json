@@ -1,0 +1,39 @@
+{
+  "job_id": "E2203",
+  "worker": "H1",
+  "record": "HH16 one focused profile-overlay lifecycle regression",
+  "authorizedBy": "Root actual-native epoch 01 E2203 assignment",
+  "repository": {
+    "path": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "1d8f32657922f0f67cbde1719472f688060b4e94",
+    "tree": "519253865a06aa60d651074db893fa0ae6428f07"
+  },
+  "change": {
+    "onlyProductPath": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "beforeSha256": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164",
+    "currentSha256": "bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0",
+    "newTest": "profile edit overlay remains local to this controller and reset clears it",
+    "scope": "One test only; no production source, fixture/provider/runtime, renderer, app delegation, or Git change."
+  },
+  "flow": [
+    "Create real in-memory storage, fixture provider, counted provider wrappers that delegate unchanged, actual runtime/community/controller, and renderPublicSite callback.",
+    "Initialize and log in the seeded synthetic avery@fixture.test account with randomUUID ephemeral credentials; open the owner's profile and assert the actual emitted tree's local/no-public-service disclosure before save.",
+    "Open edit, use the controller updateDraft path for synthetic name/bio, then save. Compare all provider call counts, provider snapshot, runtime snapshot, full receipts, storage entries, and the actual PxC Part identities/value references plus serialized non-provider/non-function Part values across save.",
+    "Navigate through the same controller's public-profile alias and assert one actual public-profile fixture read merges the still-local overlay.",
+    "Create a fresh fixture provider/runtime/controller over the same storage; assert fixture session is restored but the original provider profile, not the overlay, is rendered. Then reset the original fixture and confirm reentry shows the original seed profile."
+  ],
+  "priorEvidenceQualification": {
+    "E2201": "The original runtimePartsChanged field compared only Part address/kind inventory and is not full Part-body equality; the original raw result/captures remain unchanged. This regression compares Part identity, value-reference identity, serializable value snapshots, provider/runtime snapshots, receipts, provider calls, and storage separately.",
+    "E2202": "H2's fresh-controller boundary reused the same runtime. This test creates a fresh provider and runtime over the same synthetic fixture storage, as distinct evidence."
+  },
+  "expectedBehavior": "First pass is expected: this protects intended preview behavior, not a product defect correction. No artificial RED run will be manufactured. A future behavior that writes profile data through a provider/runtime/storage path or changes the local-only disclosure should force review of this contract test.",
+  "proposedCommand": {
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+    "argv": ["bash", "/workspace/scratch/8528bb251845/hh-cycle16/H1/E2203/run-once.sh"],
+    "underlyingTestCommand": ["node", "--test", "--test-concurrency=2", "checkpoint/vendor/hh/src/public-controller.test.mjs"],
+    "captureDirectory": "/workspace/scratch/8528bb251845/hh-cycle16/H1/E2203/captures/focused-controller-01",
+    "status": "Prospective only; not executed pending root checkpoint GO."
+  },
+  "capturePolicy": "If root authorizes the focused test, preserve the first original stdout, stderr, start/end UTC, and exit captures exclusively. No automatic retry, test assertion weakening, extra test/build, or Git stage/commit/export/publication."
+}
