@@ -102,6 +102,24 @@ test('directory and contact reflect saved state, error/loading status, and remai
   assert.equal(text({children:[byId(contact,'hh-contact-counter')]}).trim(),'230 characters remaining');
 });
 
+test('contact message counter is associated with the bounded multiline draft',()=>{
+  for(const [length,remaining] of [[0,250],[7,243],[250,0]]){
+    const message='x'.repeat(length);
+    const tree=renderPublicSite({route:{page:'contact'},journey:{contact:{message}}});
+    const field=byId(tree,'hh-contact-message'),counter=byId(tree,'hh-contact-counter');
+    assert.ok(field,'contact message field is rendered');
+    assert.equal(field.tag,'textarea');
+    assert.equal(field.attrs['aria-label'],'Message');
+    assert.equal(field.attrs.maxlength,'250');
+    assert.equal(field.attrs.value,message,'contact message draft is preserved');
+    assert.ok(counter,'the referenced counter is rendered');
+    assert.equal(counter.attrs.id,'hh-contact-counter');
+    assert.equal(Object.hasOwn(counter.attrs,'hidden'),false,'the counter is not hidden');
+    assert.equal(field.attrs['aria-describedby'],counter.attrs.id,'the message field references its visible counter');
+    assert.equal(text(counter).trim(),`${remaining} characters remaining`);
+  }
+});
+
 test('profile error can retry and editable profile drafts survive renderer replacement',()=>{
   const failed=renderPublicSite({route:{page:'profile'},journey:{session:{status:'authenticated'},profile:{status:'error',error:'Temporary profile read failed'}}});
   assert.equal(byId(failed,'hh-profile-retry').attrs['data-event'],'public:retry');

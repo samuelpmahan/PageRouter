@@ -1,0 +1,34 @@
+{
+  "repository": {
+    "root": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "0cc687a0a30c647be9c771661a32b40d2c428a07"
+  },
+  "buildReceipt": {
+    "path": "fresh-site.receipt.json",
+    "sha256": "e1e43622b65f93e312828184bb2cc61b67c3e817848d174b815c004d462edd87",
+    "sourceDigest": "4f1bfefd0b10751e70ecd486d2b482f34faab3309c5d36081bcce5aa4c3f0624",
+    "siteDigest": "33fa2fad3e5ca70c66a85d9bcf99b5c0947469906263ed4352df4d1e5505d78f",
+    "siteBuildId": "4b1df19ed6ef0dbc53f79363a524a80e8cd246a4c181aaadf2a7f050eb109c98",
+    "freshSiteFiles": 843,
+    "pxcubePackages": 14
+  },
+  "sourceInputsRelativeToCheckpoint": {
+    "vendor/hh/src/public-controller.mjs": {
+      "bytes": 53532,
+      "sha256": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669"
+    },
+    "vendor/hh/src/public-site.mjs": {
+      "bytes": 29835,
+      "sha256": "be22a0bc0955f835a9b49bc0ae95c768cb4079f660e908deb27c8125276614c8"
+    },
+    "vendor/hh/src/public-site.test.mjs": {
+      "bytes": 20600,
+      "sha256": "c45569f36b623fcabcf08fe4247559b3fe278cfd24e73dd9d1af2da87bc440bc"
+    }
+  },
+  "buildLog": {
+    "path": "fresh-site.log",
+    "sha256": "d9a675bf991fe596085a2895be20bb5e1052d8223b5981654dafa964f7308b0c"
+  }
+}

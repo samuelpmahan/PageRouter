@@ -1,0 +1,25 @@
+{
+  "capture_type": "post-execution tool-transcript testimony",
+  "source_pins": {
+    "repo_HEAD": "0cc687a0a30c647be9c771661a32b40d2c428a07",
+    "public_site_sha256": "be22a0bc0955f835a9b49bc0ae95c768cb4079f660e908deb27c8125276614c8",
+    "public_site_test_sha256": "c45569f36b623fcabcf08fe4247559b3fe278cfd24e73dd9d1af2da87bc440bc"
+  },
+  "commands": [
+    {
+      "argv": ["node", "--test", "--test-name-pattern=contact message counter is associated with the bounded multiline draft", "src/public-site.test.mjs"],
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh",
+      "exit_code": 0,
+      "stdout": "✔ contact message counter is associated with the bounded multiline draft (2.086228ms)\nℹ tests 1\nℹ suites 0\nℹ pass 1\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 85.068951\n",
+      "stderr": ""
+    },
+    {
+      "argv": ["node", "probe.mjs"],
+      "cwd": "/workspace/scratch/86659bbafcce/hh19/H2/R2503",
+      "exit_code": 0,
+      "stdout": "{\n  \"probe\": \"R2503-H2-contact-controller-tree\",\n  \"scope\": \"volatile fixture-backed controller + renderer tree; no DOM/browser/screen-reader claim\",\n  \"association\": {\n    \"reference\": \"hh-contact-counter\",\n    \"resolves\": true,\n    \"counterText\": \"228 characters remaining\",\n    \"draftRetained\": true\n  },\n  \"invalidEmailSubmit\": {\n    \"code\": \"validation_failed\",\n    \"feedback\": \"Enter your name, a valid email, a subject, and a message.\",\n    \"draftRetained\": true\n  },\n  \"providerCalls\": {\n    \"SchoolData.getStates\": 0,\n    \"SchoolData.getCounties\": 0,\n    \"SchoolData.getDistricts\": 0,\n    \"SchoolData.getSchools\": 0,\n    \"Registration.getOwnStatus\": 0,\n    \"Session.getSession\": 0,\n    \"TeacherProfile.getOwnProfile\": 0,\n    \"Registration.registerTeacher\": 0,\n    \"Demo.simulateApproval\": 0,\n    \"Session.login\": 0,\n    \"Session.logout\": 0,\n    \"TeacherProfile.createProfile\": 0,\n    \"TeacherProfile.openPublicProfile\": 0,\n    \"Demo.reset\": 0\n  },\n  \"result\": {\n    \"job_id\": \"R2503\",\n    \"worker\": \"H2\",\n    \"outcome\": \"accepted\",\n    \"summary\": \"aria-describedby resolves to the live rendered counter as the draft changes; invalid-email feedback is unchanged, the draft remains, and no provider port runs.\"\n  }\n}\n",
+      "stderr": ""
+    }
+  ],
+  "capture_note": "Commands, cwd, exit codes, stdout and stderr copied from completed exec tool transcripts after each execution; no additional timing or environment claims."
+}

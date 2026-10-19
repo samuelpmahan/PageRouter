@@ -1,0 +1,11 @@
+{
+  "schema":"chainspot.rebalancer-spec/v1",
+  "service":{"name":"hh19-contact-feedback","source":"e56adfc756293444f45b309582e3bd6a9b7177e8","localSource":"0cc687a0a30c647be9c771661a32b40d2c428a07","scope":"Contact message counter and validation feedback association; synthetic volatile probes, bounded correction only if demonstrated, independent review, canonical source build and same draft PR8.","capacity":"Two real Luna/high contexts beneath one coordinator; global maximum six active workers. H1 sole PageRouter writer; H2 independent. Lab owners disjoint; no invented slots or background survival."},
+  "workers":["H1","H2"],
+  "review_policy":{"enabled":true,"review_prefix":"R","reviewer_must_differ_from_extractor":true},
+  "policy":{"extract_priority":100,"review_priority":200,"repair_priority":300},
+  "jobs":[
+    {"id":"E2501","kind":"extract","allow_workers":["H1"],"subject":"Read current source/build/continuation, prove or falsify reachable contact counter/validation feedback association gap through pure rendered tree+actual volatile helper/controller. No production code edits until demonstrated finding."},
+    {"id":"E2502","kind":"extract","allow_workers":["H2"],"subject":"Independent read-only/synthetic counter/validation association probe; verify field attributes/helper/app delegation and zero delivery side effects. Own packet only, no product or Git writes."}
+  ]
+}

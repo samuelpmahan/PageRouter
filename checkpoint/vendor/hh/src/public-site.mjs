@@ -93,7 +93,7 @@ function contact(j={}){
   field('Name','contact-name',c.name||'',{name:'name',required:true}),
   field('Email','contact-email',c.email||'',{name:'email',type:'email',required:true}),
   field('Subject','contact-subject',c.subject||'',{name:'subject',required:true}),
-  field('Message','contact-message',c.message||'',{name:'message',multiline:true,required:true,maxlength:'250'}),
+  field('Message','contact-message',c.message||'',{name:'message',multiline:true,required:true,maxlength:'250','aria-describedby':'hh-contact-counter'}),
   h('div',{class:'hh-counter',id:'hh-contact-counter'},`${Number.isFinite(contactState.remaining)?contactState.remaining:250-String(c.message||'').length} characters remaining`),
   h('p',{class:'hh-captcha-note'},'CAPTCHA is present in the captured public form. This local preview does not load or submit to the external CAPTCHA service.'),
   h('button',{id:'hh-contact-submit',type:'submit',class:'hh-button hh-full-button'},'Prepare note'));

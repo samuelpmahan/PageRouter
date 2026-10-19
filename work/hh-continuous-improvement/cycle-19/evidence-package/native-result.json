@@ -1,0 +1,42 @@
+{
+  "job_id": "E2504",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "The single canonical Bazel source build passed with exit 0. Fresh output contains 843 verified files and all 14 PxCube packages; the build receipt binds siteBuildId 4b1df19ed6ef0dbc53f79363a524a80e8cd246a4c181aaadf2a7f050eb109c98 and the changed HH renderer/test inputs. The fresh site log reports 138/138 targeted HH tests, 293/293 full-suite tests, and 1/1 built Atlas import test, all with zero failures/skips. The HH and full-suite layers overlap and are not additive. No deployment, browser QA, Git staging, or commit occurred.",
+  "command": "/usr/bin/env BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+  "argv": [
+    "/usr/bin/env",
+    "BAZEL=/workspace/scratch/8528bb251845/tools/bazel",
+    "bash",
+    "ci/bazel/run.sh"
+  ],
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+  "explicitEnvironmentAssignments": [
+    "BAZEL=/workspace/scratch/8528bb251845/tools/bazel"
+  ],
+  "invocationCount": 1,
+  "exit_code": 0,
+  "start_utc": "2026-10-19T06:31:23Z",
+  "end_utc": "2026-10-19T06:32:47Z",
+  "stdout": "build.stdout.raw",
+  "stderr": "build.stderr.raw",
+  "receipt": "fresh-site.receipt.json",
+  "site_log": "fresh-site.log",
+  "siteBuildId": "4b1df19ed6ef0dbc53f79363a524a80e8cd246a4c181aaadf2a7f050eb109c98",
+  "counts": {
+    "verifiedSiteFiles": 843,
+    "pxcubePackages": 14,
+    "targetedHH": {"passed": 138, "failed": 0, "skipped": 0},
+    "fullSuite": {"passed": 293, "failed": 0, "skipped": 0},
+    "builtAtlasImport": {"passed": 1, "failed": 0, "skipped": 0},
+    "warning": "Targeted HH and full-suite test layers overlap; do not add their counts."
+  },
+  "preflightCaptureNote": "An earlier shell wrapper did not launch env/Bazel because the requested external capture directory was missing. After creating it, this exact Bazel command was invoked once; no build retry occurred.",
+  "scope": {
+    "productChangesDuringBuild": 0,
+    "gitStageOrCommit": false,
+    "browserQA": false,
+    "deployment": false,
+    "siteEvidenceOrScreenshotsCopied": false
+  }
+}

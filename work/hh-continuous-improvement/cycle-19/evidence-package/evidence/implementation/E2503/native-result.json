@@ -1,0 +1,55 @@
+{
+  "job_id": "E2503",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "A focused renderer regression first failed on the old renderer because the message textarea had no aria-describedby reference. The bounded fix adds only aria-describedby='hh-contact-counter' to the existing message field. Focused GREEN passed 1/1; the complete renderer/controller suites passed 78/78, with zero skips. The test verifies the visible counter is referenced and reports 250, 243, and 0 remaining characters for message lengths 0, 7, and 250, while preserving the label, textarea type, maxlength, and draft. No generic validation-status link, aria-invalid behavior, controller change, build, browser, backend, email, account, geo, or auth change was made.",
+  "runs": [
+    {
+      "phase": "RED",
+      "command": "node --test --test-name-pattern='contact message counter is associated with the bounded multiline draft' src/public-site.test.mjs",
+      "workingDirectory": "/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh",
+      "stdout": "red.stdout.raw",
+      "stderr": "red.stderr.raw",
+      "exitCodeFile": "red.exit.code",
+      "exitCode": 1,
+      "observed": "One targeted test failed as expected: actual aria-describedby undefined; expected hh-contact-counter."
+    },
+    {
+      "phase": "focused-GREEN",
+      "command": "node --test --test-name-pattern='contact message counter is associated with the bounded multiline draft' src/public-site.test.mjs",
+      "workingDirectory": "/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh",
+      "stdout": "green.focused.stdout.raw",
+      "stderr": "green.focused.stderr.raw",
+      "exitCodeFile": "green.focused.exit.code",
+      "exitCode": 0,
+      "tests": 1,
+      "passed": 1,
+      "skipped": 0
+    },
+    {
+      "phase": "renderer-controller",
+      "command": "node --test src/public-site.test.mjs src/public-controller.test.mjs",
+      "workingDirectory": "/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh",
+      "stdout": "renderer-controller.stdout.raw",
+      "stderr": "renderer-controller.stderr.raw",
+      "exitCodeFile": "renderer-controller.exit.code",
+      "exitCode": 0,
+      "tests": 78,
+      "passed": 78,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "preChangeSource_sha256": {
+    "checkpoint/vendor/hh/src/public-site.mjs": "dfbbf6127c181b8818cf3071bdd02e5c32f799a8e8ceabc8755b4cb0ed79df6a"
+  },
+  "source_sha256": {
+    "checkpoint/vendor/hh/src/public-site.mjs": "be22a0bc0955f835a9b49bc0ae95c768cb4079f660e908deb27c8125276614c8",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "c45569f36b623fcabcf08fe4247559b3fe278cfd24e73dd9d1af2da87bc440bc",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669"
+  },
+  "productChange": "One aria-describedby attribute on the existing HH contact message textarea.",
+  "otherProductChanges": 0,
+  "fullBuild": false,
+  "browserOrRealAccountUse": false
+}
