@@ -2,7 +2,7 @@ import { initialDraft, flightFields, type Draft, type Depiction, type createExpe
 import { plasticGuides } from './plastics.ts';
 import { createDiscView } from './disc-view.ts';
 import { recipeFromDraft, validatePaintRecipe, renderDepiction } from './paint-recipe.ts';
-import { fuzzyMoldOptions } from './mold-search.ts';
+import { rankMoldOptions } from './mold-search.ts';
 
 export type PhotoCrop = { centerX: number; centerY: number; radiusX: number; radiusY: number };
 
@@ -109,7 +109,7 @@ function ensureAvailableSeeds() {
   return availableSeeds;
 }
 function renderSeedChoices(query = input('mold-search').value) {
-  visibleSeeds = fuzzyMoldOptions(ensureAvailableSeeds(), query, seedLabel);
+  visibleSeeds = rankMoldOptions(ensureAvailableSeeds(), query, ({ seed }) => ({ manufacturer: seed.manufacturer, mold: seed.name }));
   $('mold-options').replaceChildren(...visibleSeeds.map((row, index) => {
     const option = document.createElement('div'); option.id = `mold-option-${index}`; option.setAttribute('role', 'option'); option.setAttribute('aria-selected', 'false'); option.textContent = seedLabel(row);
     option.addEventListener('pointerdown', event => { event.preventDefault(); chooseSeed(row); }); return option;
