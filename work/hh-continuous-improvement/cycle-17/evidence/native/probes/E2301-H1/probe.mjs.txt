@@ -1,0 +1,247 @@
+import assert from 'node:assert/strict';
+import {createFixtureProvider, createServiceRuntime} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createPublicController} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+const FILTER_KEY = 'hh-public-directory-filters.v1';
+const EMPTY_QUERY = 'no-synthetic-teacher-matches-this-query';
+const RECOVERY_QUERY = 'avery';
+
+function memoryStorage() {
+  const values = new Map();
+  return {
+    values,
+    getItem(key) { return values.get(key) ?? null; },
+    setItem(key, value) { values.set(key, String(value)); },
+    removeItem(key) { values.delete(key); },
+  };
+}
+
+function findNode(tree, predicate) {
+  if (!tree || typeof tree !== 'object') return null;
+  if (predicate(tree)) return tree;
+  for (const child of tree.children || []) {
+    const found = findNode(child, predicate);
+    if (found) return found;
+  }
+  return null;
+}
+
+function byId(tree, id) {
+  return findNode(tree, node => node.attrs?.id === id);
+}
+
+function containsNode(root, target) {
+  if (!root || !target) return false;
+  if (root === target) return true;
+  return (root.children || []).some(child => containsNode(child, target));
+}
+
+function renderedText(tree) {
+  if (typeof tree === 'string' || typeof tree === 'number') return String(tree);
+  if (!tree || typeof tree !== 'object') return '';
+  return (tree.children || []).map(renderedText).filter(Boolean).join(' ');
+}
+
+function selectedValue(tree, id) {
+  const select = byId(tree, id);
+  const option = select?.children?.find(child => child?.attrs?.selected === true);
+  return option?.attrs?.value || '';
+}
+
+function sourceEquivalentFormPayload(tree) {
+  const query = byId(tree, 'hh-query');
+  return {
+    state: selectedValue(tree, 'hh-directory-state'),
+    county: selectedValue(tree, 'hh-directory-county'),
+    district: selectedValue(tree, 'hh-directory-district'),
+    school: selectedValue(tree, 'hh-directory-school'),
+    query: query?.attrs?.value || '',
+  };
+}
+
+function providerCounts(calls) {
+  return calls.reduce((counts, call) => {
+    counts[call.port] = (counts[call.port] || 0) + 1;
+    return counts;
+  }, {});
+}
+
+function captureDirectory(controller, tree) {
+  const journey = controller.state.journey;
+  const results = byId(tree, 'hh-directory-results');
+  const status = byId(tree, 'hh-directory-status');
+  const query = byId(tree, 'hh-query');
+  const form = byId(tree, 'hh-directory-form');
+  const advanced = findNode(form, node => node.tag === 'details');
+  return {
+    route: controller.route.page,
+    form: {id: form?.attrs?.id || null, submit: form?.attrs?.['data-submit'] || null},
+    query: {
+      value: query?.attrs?.value ?? null,
+      type: query?.attrs?.type ?? null,
+      label: query?.attrs?.['aria-label'] ?? null,
+      insideDetails: containsNode(advanced, query),
+      detailsOpen: advanced?.attrs?.open === true,
+    },
+    school: {...journey.school},
+    selectedOptions: {
+      state: selectedValue(tree, 'hh-directory-state'),
+      county: selectedValue(tree, 'hh-directory-county'),
+      district: selectedValue(tree, 'hh-directory-district'),
+      school: selectedValue(tree, 'hh-directory-school'),
+    },
+    searchPerformed: journey.searchPerformed,
+    matches: {
+      status: journey.matches.status,
+      count: journey.matches.items.length,
+      ids: journey.matches.items.map(item => item.id),
+      renderedTeacherHeadings: results ? (results.children || []).flatMap(child =>
+        (child.children || []).filter(grandchild => grandchild.tag === 'h3').map(grandchild => renderedText(grandchild))) : [],
+    },
+    statusText: status ? renderedText(status) : null,
+    statusRole: status?.attrs?.role ?? null,
+    statusLive: status?.attrs?.['aria-live'] ?? null,
+    resultsText: results ? renderedText(results) : null,
+    retryEvent: byId(tree, 'hh-directory-retry')?.attrs?.['data-event'] ?? null,
+    rememberedFilters: journey.rememberedFilters,
+  };
+}
+
+function captureNavigation(tree) {
+  const toggle = byId(tree, 'hh-public-nav-toggle');
+  const mobileNav = byId(tree, 'hh-mobile-nav');
+  return {
+    tag: toggle?.tag ?? null,
+    text: renderedText(toggle),
+    typeAttribute: toggle?.attrs?.type ?? null,
+    explicitAriaLabel: toggle?.attrs?.['aria-label'] ?? null,
+    ariaExpanded: toggle?.attrs?.['aria-expanded'] ?? null,
+    ariaControls: toggle?.attrs?.['aria-controls'] ?? null,
+    event: toggle?.attrs?.['data-event'] ?? null,
+    mobileNavHidden: mobileNav?.attrs?.hidden ?? null,
+    mobileNavLabel: mobileNav?.attrs?.['aria-label'] ?? null,
+  };
+}
+
+const storage = memoryStorage();
+const provider = createFixtureProvider({fixture: true, storage});
+const baseRuntime = createServiceRuntime(provider);
+const calls = [];
+const runtime = {
+  ready: baseRuntime.ready,
+  pxc: baseRuntime.pxc,
+  snapshot: () => baseRuntime.snapshot(),
+  inspect: () => baseRuntime.inspect(),
+  get capabilities() { return baseRuntime.capabilities; },
+  get fixture() { return baseRuntime.fixture; },
+  invoke(port, input, boundary) {
+    calls.push({port, input: structuredClone(input || {})});
+    return baseRuntime.invoke(port, input, boundary);
+  },
+};
+
+let tree = null;
+const controller = createPublicController({runtime, storage, onChange(state, route) {
+  tree = renderPublicSite({route, state, journey: state.journey});
+}});
+
+await controller.initialize('#/directory');
+await controller.selectSchool('state', 'Demo Washington');
+await controller.selectSchool('county', 'Demo King');
+await controller.selectSchool('district', 'Demo District');
+await controller.selectSchool('school', 'Demo Academy');
+const beforeSearchCounts = providerCounts(calls);
+
+assert.equal(controller.updateDraft('query', EMPTY_QUERY), true);
+const emptySearch = await controller.dispatch('public:directory-search', sourceEquivalentFormPayload(tree));
+assert.equal(emptySearch.ok, true);
+const afterEmptyCounts = providerCounts(calls);
+const empty = captureDirectory(controller, tree);
+const emptyStorage = JSON.parse(storage.getItem(FILTER_KEY));
+assert.equal(empty.matches.status, 'loaded');
+assert.equal(empty.matches.count, 0);
+assert.match(empty.resultsText, /No teachers found/);
+assert.match(empty.resultsText, /Try another school or search term/);
+assert.equal(empty.selectedOptions.school, 'Demo Academy');
+assert.equal(empty.searchPerformed, true);
+
+assert.equal(controller.updateDraft('query', RECOVERY_QUERY), true);
+const editedDraft = captureDirectory(controller, tree);
+const draftStorage = JSON.parse(storage.getItem(FILTER_KEY));
+assert.equal(editedDraft.query.value, RECOVERY_QUERY);
+assert.equal(editedDraft.matches.count, 0, 'typing does not silently submit a new search');
+assert.equal(draftStorage.query, EMPTY_QUERY, 'remembered filters change on explicit submit, not while typing');
+const recoveredSearch = await controller.dispatch('public:directory-search', sourceEquivalentFormPayload(tree));
+assert.equal(recoveredSearch.ok, true);
+const recovered = captureDirectory(controller, tree);
+const recoveredStorage = JSON.parse(storage.getItem(FILTER_KEY));
+assert.equal(recovered.matches.status, 'loaded');
+assert.equal(recovered.matches.count, 1);
+assert.deepEqual(recovered.matches.ids, ['demo-avery']);
+assert.equal(recovered.selectedOptions.school, 'Demo Academy');
+assert.equal(recoveredStorage.query, RECOVERY_QUERY);
+
+await controller.dispatch('public:fail-next');
+assert.equal(controller.updateDraft('query', RECOVERY_QUERY), true);
+const failedSearch = await controller.dispatch('public:directory-search', sourceEquivalentFormPayload(tree));
+assert.equal(failedSearch.ok, false);
+const failed = captureDirectory(controller, tree);
+assert.equal(failed.matches.status, 'error');
+assert.equal(failed.matches.count, 0);
+assert.equal(failed.retryEvent, 'public:retry');
+assert.match(failed.statusText, /Could not load results/);
+assert.equal(failed.selectedOptions.school, 'Demo Academy');
+const retried = await controller.dispatch('public:retry');
+assert.equal(retried.ok, true);
+const afterRetry = captureDirectory(controller, tree);
+assert.equal(afterRetry.matches.status, 'loaded');
+assert.deepEqual(afterRetry.matches.ids, ['demo-avery']);
+assert.equal(afterRetry.selectedOptions.school, 'Demo Academy');
+assert.equal(byId(tree, 'hh-directory-retry'), null, 'retry control disappears after successful read');
+
+await controller.dispatch('public:toggle-nav');
+const navigationOpen = captureNavigation(tree);
+await controller.dispatch('public:toggle-nav');
+const navigationClosed = captureNavigation(tree);
+
+const afterSearchCounts = providerCounts(calls);
+assert.deepEqual(afterSearchCounts, beforeSearchCounts,
+  'directory snapshot filtering, controlled error, and retry do not invoke provider services');
+assert.deepEqual(afterEmptyCounts, beforeSearchCounts,
+  'empty-result search does not invoke provider services');
+assert.deepEqual(Object.keys(beforeSearchCounts).sort(), [
+  'SchoolData.getCounties', 'SchoolData.getDistricts', 'SchoolData.getSchools', 'SchoolData.getStates',
+].sort());
+assert.deepEqual(beforeSearchCounts, {
+  'SchoolData.getStates': 1,
+  'SchoolData.getCounties': 1,
+  'SchoolData.getDistricts': 1,
+  'SchoolData.getSchools': 1,
+});
+assert.equal(navigationOpen.ariaExpanded, 'true');
+assert.equal(navigationOpen.ariaControls, 'hh-mobile-nav');
+assert.equal(navigationOpen.mobileNavHidden, false);
+assert.equal(navigationOpen.explicitAriaLabel, null);
+assert.equal(navigationOpen.text, '☰');
+assert.equal(navigationClosed.ariaExpanded, 'false');
+assert.equal(navigationClosed.mobileNavHidden, true);
+
+console.log(JSON.stringify({
+  schema: 'hh17-directory-recovery-source-equivalent-probe@1',
+  evidenceType: 'synthetic fixture controller plus emitted renderer tree',
+  boundary: 'No mounted DOM, native FormData, browser accessibility tree, keyboard event, backend, or human observation.',
+  sourceEquivalentSubmit: 'Payload was reconstructed from the emitted form/input/select values; app.mjs native FormData/reportValidity execution was not run.',
+  selectionSetupProviderCalls: calls.slice(0, Object.values(beforeSearchCounts).reduce((sum, count) => sum + count, 0)),
+  providerReadsBeforeSearch: beforeSearchCounts,
+  providerReadsAfterSearchAndRetry: afterSearchCounts,
+  emptySearch: {...empty, rememberedFilters: emptyStorage},
+  editedDraft: {...editedDraft, rememberedFilters: draftStorage},
+  recoveredSearch: {...recovered, rememberedFilters: recoveredStorage},
+  controlledReadFailure: failed,
+  explicitRetry: afterRetry,
+  navigationOpen,
+  navigationClosed,
+  keyboardHandling: 'Not executed. Source inspection found an app.mjs Escape handler that toggles nav closed and focuses the toggle; the emitted tree has no explicit aria-label and displays only ☰. No computed accessible-name or keyboard conformance is claimed.',
+  outcome: 'Expected behavior is falsifiable from this run; any failure in assertions should be reported as the actual first result without retry.',
+}, null, 2));

@@ -1,0 +1,35 @@
+{
+  "job_id": "E2302",
+  "worker": "H2",
+  "phase": "source-only probe construction; awaiting root readback and separate execution authorization",
+  "repository": {
+    "path": "/workspace/scratch/8528bb251845/PageRouter",
+    "local_head": "86301f84a9b08f40b76de9b64026befe6b0081a5",
+    "tree": "c685c5267235fc460c4147592a483dd40d44d3fd"
+  },
+  "hypothesis": "The directory may have a controller/render-tree integration gap in recovery from explicit empty results; source/test review already suggests the behavior works, so this is falsifiable characterization rather than a presumed defect.",
+  "predicted": {
+    "empty_query": "explicit no-result guidance appears and submitted query remains projected",
+    "known_teacher_resubmit": "Jordan returns exactly demo-jordan, query projection updates, empty guidance disappears",
+    "provider_calls": "no provider service invocation after initialization during directory searches; snapshots are not provider invokes",
+    "navigation_tree": "closed/open toggle emits literal ☰ with aria-expanded, aria-controls=hh-mobile-nav; target nav has explicit label and hidden toggles"
+  },
+  "falsifiers": [
+    "The no-result submission is not represented as empty guidance or the query is lost in the emitted form tree.",
+    "Submitting the known seeded Jordan query fails to replace the empty result with the expected profile card/link.",
+    "A provider service call occurs during either explicit directory search after the initialization baseline.",
+    "The explicit toggle state/control relationship does not track the controlled nav in the emitted tree."
+  ],
+  "source_critique": {
+    "recovery_existing_coverage": [
+      "public-controller.test.mjs test `cascades school filters, loads local directory matches and restores remembered filters` submits a match, submits `no match`, confirms zero items and restores remembered filters.",
+      "public-site.test.mjs test `directory Results stays blank until an explicit search and then renders zero-result guidance` distinguishes initial/background state, explicit empty guidance/status, loading and error.",
+      "public-site.test.mjs checks directory error retry; app.mjs delegates `[data-submit]` via FormData into controller dispatch."
+    ],
+    "navigation_tree": "public-site.mjs emits literal ☰ on button hh-public-nav-toggle, aria-expanded, aria-controls, and a separately labelled controlled nav; there is no explicit aria-label on the toggle. Source-equivalent tree cannot prove computed accessible name or keyboard/browser behavior.",
+    "scope": "Probe only connects repeat search recovery and navigation attributes to actual controller/render output. It does not identify an established defect or require a new feature."
+  },
+  "flow": "FLOW.md",
+  "probe": "probe.mjs",
+  "execution": "Not authorized or performed in this phase; no imports, syntax checks, tests, rendering, browser, or probe execution."
+}

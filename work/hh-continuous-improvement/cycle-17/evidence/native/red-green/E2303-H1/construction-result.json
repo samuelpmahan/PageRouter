@@ -1,0 +1,10 @@
+{
+  "job_id": "E2303",
+  "worker": "H1",
+  "status": "prepared_unrun",
+  "summary": "Added one focused renderer regression requiring a stable aria-label across closed/open and anonymous/authenticated states. The renderer remains unchanged. Exact before/after test and untouched renderer archives, diff, prospective command, FLOW, and capture wrapper are prepared for root review.",
+  "outcome": null,
+  "executed": false,
+  "test_or_import_run": false,
+  "next_gate": "Root full-reads exact test, archives, diff, prospective and wrapper, then separately authorizes one focused RED run. No renderer edit before actual RED and a separate root GO."
+}

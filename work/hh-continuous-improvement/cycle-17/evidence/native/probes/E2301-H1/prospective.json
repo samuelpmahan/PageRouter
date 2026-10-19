@@ -1,0 +1,58 @@
+{
+  "job_id": "E2301",
+  "worker": "H1",
+  "status": "prepared_unrun",
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+  "source_pins": {
+    "HEAD": "86301f84a9b08f40b76de9b64026befe6b0081a5",
+    "tree": "c685c5267235fc460c4147592a483dd40d44d3fd",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+    "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a",
+    "checkpoint/vendor/hh/src/teacher-journey.mjs": "dde771c3048fba787704f2fc62606d51065775afcc067d2f907a3bf9a78c5596",
+    "checkpoint/vendor/hh/services/fixtures.mjs": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+    "outputs/homeroom-parity/reference/BROWSER-EVIDENCE.json": "f943a4b185779c2f411c313557ba8c1696ad601d96a31e9c7a3b6808321a1926",
+    "outputs/homeroom-parity/reference/screenshots/directory-mobile.png": "2149cf9e51ed16f6ac70c51788da60363ada8441b1531c28fcd54ccf6b714676",
+    "outputs/homeroom-parity/reference/screenshots/home-mobile-menu-expanded.png": "c3032238f55414a08435496726f9816060c5a1a9a6e6aa9b036368ce187eb8c9"
+  },
+  "command": [
+    "bash",
+    "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2301/run-once.sh"
+  ],
+  "underlying_command": [
+    "node",
+    "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2301/probe.mjs"
+  ],
+  "run_count": 1,
+  "expected_provider_reads": {
+    "SchoolData.getStates": 1,
+    "SchoolData.getCounties": 1,
+    "SchoolData.getDistricts": 1,
+    "SchoolData.getSchools": 1,
+    "additional_reads_for_search_error_retry": 0
+  },
+  "output_capture_paths": {
+    "stdout": "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2301/captures/run-01/stdout.raw",
+    "stderr": "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2301/captures/run-01/stderr.raw",
+    "start_utc": "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2301/captures/run-01/start.utc",
+    "end_utc": "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2301/captures/run-01/end.utc",
+    "exit_code": "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2301/captures/run-01/exit.code"
+  },
+  "predeclared_expected": [
+    "Loaded zero results show zero-result guidance; query edit alone neither submits nor alters remembered filters.",
+    "Explicitly submitted avery query yields only synthetic demo-avery while Demo Academy remains selected.",
+    "Controlled directory read failure renders an error/retry state distinct from loaded empty results; explicit retry restores the same item.",
+    "Search, controlled failure and retry add no provider invoke calls beyond the four geography setup reads.",
+    "Nav aria-expanded and mobile-nav hidden states agree in both controller-emitted trees; toggle emits glyph text and no explicit aria-label."
+  ],
+  "limits": [
+    "No DOM/browser/native FormData/reportValidity/keyboard event/accessibility tree was executed.",
+    "No backend, real account, network, email, or human-use evidence.",
+    "Fixture and storage are synthetic and volatile in-memory objects."
+  ],
+  "first_failure_rule": "Preserve original capture streams and exit. Stop; no retry, assertion weakening, source edit or rerun without a separately scoped diagnosis/GO."
+}

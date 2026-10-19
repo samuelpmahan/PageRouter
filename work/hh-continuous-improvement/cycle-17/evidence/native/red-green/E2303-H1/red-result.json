@@ -1,0 +1,83 @@
+{
+  "job_id": "E2303",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "The single focused renderer test failed on its first anonymous/closed case because hh-public-nav-toggle has no explicit aria-label. Existing glyph and navigation-state assertions were not reached in this run; no browser, keyboard, screen-reader, human, backend, or deployed behavior was tested.",
+  "actual_execution": {
+    "command": [
+      "bash",
+      "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2303/run-focused-red-once.sh"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+    "underlying_command": [
+      "node",
+      "--test",
+      "--test-name-pattern=public mobile navigation toggle keeps a stable descriptive label across menu and session states",
+      "checkpoint/vendor/hh/src/public-site.test.mjs"
+    ],
+    "actual_exit_code": 1,
+    "underlying_test_exit_code": 1,
+    "test_counts": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "skipped": 0
+    },
+    "reached_case": "anonymous, navOpen=false; assertion at public-site.test.mjs:44",
+    "failure": {
+      "type": "AssertionError",
+      "actual": null,
+      "expected": "Toggle account and site navigation",
+      "operator": "strictEqual",
+      "message": "actual emitted tree attribute was undefined; expected explicit aria-label"
+    },
+    "unreached": "The remaining three anonymous/authenticated × closed/open cases were not reached because the first assertion failed.",
+    "timestamps_utc": {
+      "start_file": "captures/red-01/start.utc",
+      "start": "2026-10-19T03:19:20Z",
+      "end_file": "captures/red-01/end.utc",
+      "end": "2026-10-19T03:19:20Z"
+    },
+    "capture_files": {
+      "stdout": {
+        "path": "captures/red-01/stdout.raw",
+        "bytes": 1151,
+        "sha256": "f215d02a865c6c7b70f96f550b5e196526be1b9a7ca0ac5319c2d78d388227bd"
+      },
+      "stderr": {
+        "path": "captures/red-01/stderr.raw",
+        "bytes": 0,
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "exit_code": {
+        "path": "captures/red-01/exit.code",
+        "bytes": 2,
+        "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+      },
+      "start_utc": {
+        "path": "captures/red-01/start.utc",
+        "bytes": 21,
+        "sha256": "d705edc4e9cb3042500d4600a29af8cc3a7d9e82572cf1ec8b1e0ace194332a1"
+      },
+      "end_utc": {
+        "path": "captures/red-01/end.utc",
+        "bytes": 21,
+        "sha256": "d705edc4e9cb3042500d4600a29af8cc3a7d9e82572cf1ec8b1e0ace194332a1"
+      }
+    }
+  },
+  "source_pins": {
+    "base_head": "86301f84a9b08f40b76de9b64026befe6b0081a5",
+    "base_tree": "c685c5267235fc460c4147592a483dd40d44d3fd",
+    "renderer_sha256_unchanged": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+    "test_sha256_before": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a",
+    "test_sha256_after": "264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5",
+    "runner_sha256": "704a5b0892eff233bc367cf06b4baaa2c13c6692a2e254f8dc114c54534602b6"
+  },
+  "qualifications": [
+    "The wrapper records the streams, timestamps, and exit according to its implemented order; do not claim all capture file descriptors were opened before launch or that OS-level signal instrumentation was present.",
+    "Earlier construction had a scratch diff-marker/prospective omission and a later locator command referenced a missing prospective path. These were preserved as process/tool testimony; no old raw capture was reconstructed. Root authorized the corrected frozen prospective and this one execution.",
+    "This result establishes an absent explicit label in the emitted renderer tree only. It does not establish a browser-computed accessible name, keyboard behavior, or a broader accessibility defect."
+  ],
+  "next_step": "HOLD for root to read this actual RED and issue a separate authorization before any renderer edit or further test run."
+}

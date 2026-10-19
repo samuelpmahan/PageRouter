@@ -1,0 +1,50 @@
+{
+  "job_id": "E2303",
+  "worker": "H1",
+  "status": "prepared_unrun",
+  "base_head": "86301f84a9b08f40b76de9b64026befe6b0081a5",
+  "base_tree": "c685c5267235fc460c4147592a483dd40d44d3fd",
+  "source_pins": {
+    "public_site_before": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+    "public_site_after": "d9c17a350375633a53d0dc256be666bb0c82298c9ffa7b05bc6be08156141bfc",
+    "public_site_test_unchanged": "264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5",
+    "controller_test_unchanged": "bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0"
+  },
+  "exact_command": [
+    "bash",
+    "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2303/run-green-checks.sh"
+  ],
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+  "checks": [
+    {
+      "capture": "captures/green-01-focused",
+      "argv": [
+        "node",
+        "--test",
+        "--test-name-pattern=public mobile navigation toggle keeps a stable descriptive label across menu and session states",
+        "checkpoint/vendor/hh/src/public-site.test.mjs"
+      ],
+      "expected": "One named test passes; other tests are skipped by the name filter."
+    },
+    {
+      "capture": "captures/green-02-public-site",
+      "argv": [
+        "node",
+        "--test",
+        "checkpoint/vendor/hh/src/public-site.test.mjs"
+      ],
+      "expected": "Full public-site test file passes; actual count is authoritative."
+    },
+    {
+      "capture": "captures/green-03-controller",
+      "argv": [
+        "node",
+        "--test",
+        "checkpoint/vendor/hh/src/public-controller.test.mjs"
+      ],
+      "expected": "Controller regression suite passes; 61 prior tests are the expected count, actual count is authoritative."
+    }
+  ],
+  "first_failure_rule": "Stop at the first nonzero test command, preserve all raw captures, and do not retry, edit, or broaden validation without a new GO.",
+  "scope": "No build, Git operation, browser/UI mounting, keyboard execution, accessibility tree or screen-reader claim, backend, or deployment."
+}

@@ -34,6 +34,25 @@ test('public route tree binds nav state, exposes accessible stable controls, and
   assert.equal(inspect(community).find(node=>node.tag==='main')?.attrs.tabindex,'-1','skip-link target must accept programmatic focus');
 });
 
+test('public mobile navigation toggle keeps a stable descriptive label across menu and session states',()=>{
+  for(const sessionStatus of ['anonymous','authenticated']){
+    for(const navOpen of [false,true]){
+      const tree=renderPublicSite({route:{page:'home'},journey:{navOpen,session:{status:sessionStatus}}});
+      const toggle=byId(tree,'hh-public-nav-toggle'),mobileNav=byId(tree,'hh-mobile-nav');
+      assert.ok(toggle,`${sessionStatus} navigation toggle is rendered`);
+      assert.equal(toggle.tag,'button');
+      assert.equal(toggle.attrs['aria-label'],'Toggle account and site navigation');
+      assert.equal(toggle.children[0],'☰','the existing visual glyph is preserved');
+      assert.equal(toggle.attrs['aria-expanded'],String(navOpen));
+      assert.equal(toggle.attrs['aria-controls'],'hh-mobile-nav');
+      assert.equal(toggle.attrs['data-event'],'public:toggle-nav');
+      assert.ok(mobileNav);
+      assert.equal(mobileNav.attrs.id,'hh-mobile-nav');
+      assert.equal(mobileNav.attrs.hidden,!navOpen);
+    }
+  }
+});
+
 test('registration exposes the school cascade, password confirmation, Terms, and local approval',()=>{
   const state={journey:{lookups:{states:['WA'],counties:['King'],districts:['Seattle'],schools:['North']},school:{state:'WA',county:'King',district:'Seattle',school:'North'},terms:{open:true,accepted:true},registration:{status:'none'}}};
   const form=renderPublicSite({route:{page:'register'},...state});

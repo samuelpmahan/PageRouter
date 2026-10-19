@@ -1,0 +1,52 @@
+{
+  "job_id": "E2302",
+  "worker": "H2",
+  "outcome": "confirmed_reuse",
+  "summary": "One authorized synthetic controller/render-tree probe confirmed existing empty-result recovery: a direct explicit dispatch with a unique no-match query produced zero items and rendered guidance/query projection; a second direct dispatch with `Jordan` returned the seeded `demo-jordan` profile link and removed the empty guidance. Provider invocation counts did not change after initialization. The navigation tree emitted literal `☰`, no explicit toggle aria-label, aria-expanded/aria-controls, and the labelled controlled nav's matching hidden state. No concrete product defect was established; no source change is warranted from this evidence.",
+  "repository": {
+    "path": "/workspace/scratch/8528bb251845/PageRouter",
+    "head": "86301f84a9b08f40b76de9b64026befe6b0081a5",
+    "tree": "c685c5267235fc460c4147592a483dd40d44d3fd",
+    "command": "node /workspace/scratch/8528bb251845/hh-cycle17/H2/E2302/probe.mjs",
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint"
+  },
+  "capture": {
+    "start_utc": "2026-10-19T03:11:39Z",
+    "end_utc": "2026-10-19T03:11:39Z",
+    "exit_code": 0,
+    "signal": "none",
+    "stdout_sha256": "4c99f14b2daa6bd19a8189a90fddacbd10e08e36c20ac9bce342530769cabf3a",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "captured_prospective_sha256": "4ef226fd0d8d0982bf21f5489989c87b649eeedff5b85242b4cddfa974575e2f"
+  },
+  "source_hashes": {
+    "probe_pre_and_post": "daa0bb48a499f7705c94d1bb4670191cc783f8935bc433383e56a74fb4954899",
+    "modules_pre_and_post": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+      "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+      "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+      "checkpoint/vendor/hh/services/fixtures.mjs": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7"
+    },
+    "comparison_note": "The pre-run module hashes are the exact source bindings in the captured E2202 source result for this unchanged product-source checkpoint; post-run hashes were recomputed after E2302 and match. No application source was modified."
+  },
+  "observations": {
+    "directory": {
+      "after_initialization_provider_calls": {"SchoolData.getStates": 1, "all_other_provider_ports": 0},
+      "no_match_dispatch": {"ok": true, "result_item_count": 0, "query_projection": "__hh17_no_synthetic_match__", "empty_guidance_visible": true},
+      "known_query_resubmit": {"ok": true, "ids": ["demo-jordan"], "query_projection": "Jordan", "profile_link": "#/teachers/demo-jordan", "empty_guidance_visible": false},
+      "provider_calls_after_both_dispatches": {"SchoolData.getStates": 1, "all_other_provider_ports": 0},
+      "status_qualification": "The probe output reads controller.state.journey.matches.status after the second submission, so its `loaded` value is current post-recovery state, not a separately snapshotted historical no-match status. Zero result count and rendered empty guidance/query were captured from the first submission."
+    },
+    "navigation_emitted_tree": {
+      "closed": {"tag": "button", "literal_text": "☰", "explicit_aria_label": null, "aria_expanded": "false", "aria_controls": "hh-mobile-nav", "target_hidden": true},
+      "open": {"tag": "button", "literal_text": "☰", "explicit_aria_label": null, "aria_expanded": "true", "aria_controls": "hh-mobile-nav", "target_label": "Account and site navigation", "target_hidden": false}
+    }
+  },
+  "decision_basis": "Manual re-query via explicit controller dispatch recovered the expected fixture teacher. This confirms reuse of existing local capability; it does not prove native form editing/delegation or user/browser accessibility. The literal glyph and explicit attributes are renderer-tree evidence only and do not establish a computed accessible name or keyboard behavior.",
+  "limits": [
+    "The probe passed submitted values directly through controller.dispatch; it did not type into a DOM input or execute native FormData/reportValidity.",
+    "No selected-school filter, browser route event, mounted DOM, native keyboard, focus, assistive technology, computed accessible name, responsive visibility, screenshot, or visual QA was exercised.",
+    "Provider call counts measure wrapped fixture service invocations after initialization; synchronous runtime.snapshot() reads are not counted as provider calls.",
+    "No backend, real account, external email, user data, provider authority, product source, Git, build, test suite, or Lab operation was involved."
+  ]
+}

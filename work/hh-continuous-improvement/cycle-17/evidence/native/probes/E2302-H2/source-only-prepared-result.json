@@ -1,0 +1,20 @@
+{
+  "job_id": "E2302",
+  "worker": "H2",
+  "outcome": "probe_prepared",
+  "summary": "Completed the bounded source-only critique and prepared one falsifiable synthetic controller/render-tree probe. Existing tests already cover empty results, a later no-match submission, remembered-filter restoration, empty guidance, loading/error distinction, and retry. The prepared probe adds only one combined recovery characterization and literal emitted navigation attributes; execution remains blocked pending root readback and separate GO. No source/product/Git/build/test/probe/browser operations were performed.",
+  "source_review": {
+    "controller": "checkpoint/vendor/hh/src/public-controller.mjs: directorySearch records submitted filters, remembers them and calls local loadDirectory; loadDirectory filters runtime snapshot demo.publicProfiles; explicit retry is scoped to failed read.",
+    "renderer": "checkpoint/vendor/hh/src/public-site.mjs: explicit no-result guidance is rendered after a search; nav toggle is a button with literal ☰, aria-expanded and aria-controls; controlled nav has label and hidden state.",
+    "delegation": "checkpoint/vendor/hh/src/app.mjs: submit handler uses FormData and delegates event payload; click handler dispatches data-event. Not executed.",
+    "existing_tests": "checkpoint/vendor/hh/src/public-controller.test.mjs around 860-879 and checkpoint/vendor/hh/src/public-site.test.mjs around 215-230."
+  },
+  "prepared_files": ["FLOW.md", "probe.mjs", "prospective.json", "result.json"],
+  "execution_status": "not authorized; not executed",
+  "limits": [
+    "No mounted DOM, native FormData/reportValidity, browser keyboard activation, accessible-name computation, screen-reader, visual or responsive evidence.",
+    "No backend, external email, real account, real provider, or user data.",
+    "No defect presumption; manual re-query may fully recover and falsify the hypothesis.",
+    "No source edits, tests, imports, builds, Git, publication, or Lab work."
+  ]
+}

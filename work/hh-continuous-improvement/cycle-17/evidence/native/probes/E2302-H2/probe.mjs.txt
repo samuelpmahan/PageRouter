@@ -1,0 +1,116 @@
+import assert from 'node:assert/strict';
+import {createFixtureProvider, createServiceRuntime} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createCommunity} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+function memoryStorage() {
+  const values = new Map();
+  return {
+    values,
+    getItem(key) { return values.get(key) ?? null; },
+    setItem(key, value) { values.set(key, String(value)); },
+    removeItem(key) { values.delete(key); },
+  };
+}
+
+function findNode(tree, id) {
+  if (!tree || typeof tree !== 'object') return null;
+  if (tree.attrs?.id === id) return tree;
+  for (const child of tree.children || []) {
+    const found = findNode(child, id);
+    if (found) return found;
+  }
+  return null;
+}
+
+function strings(tree) {
+  if (typeof tree === 'string') return [tree];
+  if (!tree || typeof tree !== 'object') return [];
+  return (tree.children || []).flatMap(strings);
+}
+
+function findProfileLink(tree, id) {
+  if (!tree || typeof tree !== 'object') return null;
+  if (tree.attrs?.['data-profile-id'] === id) return tree;
+  for (const child of tree.children || []) {
+    const found = findProfileLink(child, id);
+    if (found) return found;
+  }
+  return null;
+}
+
+const storage = memoryStorage();
+const baseProvider = createFixtureProvider({fixture: true, storage});
+const providerCalls = Object.fromEntries(Object.keys(baseProvider.services).map(port => [port, 0]));
+const services = Object.fromEntries(Object.entries(baseProvider.services).map(([port, invoke]) => [port, async input => {
+  providerCalls[port] += 1;
+  return invoke(input);
+}]));
+const provider = {...baseProvider, services: Object.freeze(services)};
+const runtime = createServiceRuntime(provider);
+let tree = null;
+const controller = createPublicController({runtime, storage, community: createCommunity({storage}),
+  onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+});
+
+const initialized = await controller.initialize('#/find-teachers');
+assert.equal(initialized.route.page, 'directory');
+const providerCallsAfterInitialize = {...providerCalls};
+
+const emptyResult = await controller.dispatch('public:directory-search', {query: '__hh17_no_synthetic_match__'});
+assert.equal(emptyResult.ok, true);
+const emptyTree = tree;
+const emptyQuery = findNode(emptyTree, 'hh-query');
+assert.equal(emptyQuery?.attrs?.value, '__hh17_no_synthetic_match__');
+assert.match(strings(emptyTree).join(' '), /No teachers found/);
+assert.deepEqual(providerCalls, providerCallsAfterInitialize);
+
+const recoveredResult = await controller.dispatch('public:directory-search', {query: 'Jordan'});
+assert.equal(recoveredResult.ok, true);
+assert.deepEqual(recoveredResult.items.map(item => item.id), ['demo-jordan']);
+const recoveredTree = tree;
+const recoveredQuery = findNode(recoveredTree, 'hh-query');
+const resultLink = findProfileLink(recoveredTree, 'demo-jordan');
+assert.equal(recoveredQuery?.attrs?.value, 'Jordan');
+assert.match(strings(recoveredTree).join(' '), /Demo Jordan/);
+assert.doesNotMatch(strings(recoveredTree).join(' '), /No teachers found/);
+assert.deepEqual(providerCalls, providerCallsAfterInitialize);
+
+const navClosedBefore = findNode(recoveredTree, 'hh-public-nav-toggle');
+await controller.dispatch('public:toggle-nav');
+const navOpenTree = tree;
+const navOpen = findNode(navOpenTree, 'hh-public-nav-toggle');
+const navTargetOpen = findNode(navOpenTree, 'hh-mobile-nav');
+await controller.dispatch('public:toggle-nav');
+const navClosedTree = tree;
+const navClosed = findNode(navClosedTree, 'hh-public-nav-toggle');
+const navTargetClosed = findNode(navClosedTree, 'hh-mobile-nav');
+assert.equal(navOpen?.attrs?.['aria-expanded'], 'true');
+assert.equal(navOpen?.attrs?.['aria-controls'], 'hh-mobile-nav');
+assert.equal(navTargetOpen?.attrs?.hidden, false);
+assert.equal(navClosed?.attrs?.['aria-expanded'], 'false');
+assert.equal(navTargetClosed?.attrs?.hidden, true);
+
+console.log(JSON.stringify({
+  job_id: 'E2302',
+  worker: 'H2',
+  observations: {
+    initializationRoute: initialized.route.page,
+    initialProviderCalls: providerCallsAfterInitialize,
+    noMatch: {ok: emptyResult.ok, status: controller.state.journey.matches.status, count: emptyResult.items.length,
+      queryProjection: emptyQuery?.attrs?.value, guidanceVisible: strings(emptyTree).join(' ').includes('No teachers found')},
+    recovered: {ok: recoveredResult.ok, ids: recoveredResult.items.map(item => item.id),
+      queryProjection: recoveredQuery?.attrs?.value, profileLink: resultLink?.attrs?.href ?? null,
+      emptyGuidanceVisible: strings(recoveredTree).join(' ').includes('No teachers found')},
+    providerCallsAfterSearches: {...providerCalls},
+    navClosedBefore: navClosedBefore ? {tag: navClosedBefore.tag, text: strings(navClosedBefore).join(''),
+      ariaLabel: navClosedBefore.attrs?.['aria-label'] ?? null, ariaExpanded: navClosedBefore.attrs?.['aria-expanded'],
+      ariaControls: navClosedBefore.attrs?.['aria-controls']} : null,
+    navOpen: {tag: navOpen?.tag, text: strings(navOpen).join(''), ariaLabel: navOpen?.attrs?.['aria-label'] ?? null,
+      ariaExpanded: navOpen?.attrs?.['aria-expanded'], ariaControls: navOpen?.attrs?.['aria-controls'],
+      targetLabel: navTargetOpen?.attrs?.['aria-label'], targetHidden: navTargetOpen?.attrs?.hidden},
+    navClosed: {ariaExpanded: navClosed?.attrs?.['aria-expanded'], targetHidden: navTargetClosed?.attrs?.hidden},
+  },
+  limits: ['controller event and source-equivalent emitted tree only', 'no native FormData/reportValidity, mounted DOM, browser keyboard, screen reader, responsive visibility, or visual QA', 'no provider service calls after initialization; runtime snapshot reads are not counted as provider invokes'],
+}, null, 2));
