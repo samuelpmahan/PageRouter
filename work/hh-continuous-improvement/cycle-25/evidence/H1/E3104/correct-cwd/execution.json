@@ -1,0 +1,39 @@
+{
+  "job_id": "E3104",
+  "worker": "H1",
+  "attempt": "correct-cwd",
+  "command": "BAZEL=/workspace/scratch/86659bbafcce/hh25/tools/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/workspace/scratch/86659bbafcce/hh25/bazel-output bash ci/bazel/run.sh",
+  "working_directory": "/workspace/scratch/86659bbafcce/PageRouter/checkpoint",
+  "started_utc": "2026-10-19T13:32:29Z",
+  "ended_utc": "2026-10-19T13:34:05Z",
+  "exit_status": 0,
+  "runtime": "Node v24.19.0",
+  "bazel": {
+    "path": "/workspace/scratch/86659bbafcce/hh25/tools/bazel",
+    "version": "bazel 7.4.1",
+    "sha256": "c97f02133adce63f0c28678ac1f21d65fa8255c80429b588aeeba8a1fac6202b"
+  },
+  "streams": {
+    "stdout": {"file": "stdout.raw", "bytes": 1405, "sha256": "d53be76ef85e8585192db674a30977e049ad3e41ad335db962ce8012441920eb"},
+    "stderr": {"file": "stderr.raw", "bytes": 1377, "sha256": "065c70c09cbbfe9b34189193237e894686aea705037baa7a15b607fd61a605c4"}
+  },
+  "source_pins_before_file": "source-pins-before.json",
+  "source_pins_after": {
+    "vendor/hh/src/community.mjs": "713caf929cf685e1233e3a6a7368fe0810492f57683894f6063500563d518bf5",
+    "vendor/hh/src/public-controller.mjs": "5df1e0f71385b22976951dbf2127c8ab78aeb7ddc8dad3608eb7b96850539890",
+    "vendor/hh/src/community.test.mjs": "0d360fe2d9da7404218f4a1f952f6f1dfae101f2851a6a2ea0593e7169bc5125",
+    "vendor/hh/src/public-controller.test.mjs": "1f807f3fd4b617970107bdffcd9cd6a90d819850bdca3e6d27e774e85c80fa86"
+  },
+  "output": {
+    "site_receipt": {"file": "site.receipt.json", "source": "checkpoint/bazel-bin/site.receipt.json", "mode_octal": "555", "bytes": 467313, "sha256": "274f6869df96ea29804cb6721820d777a1b28eff52c1cb8d57c0b0a73c6099ad"},
+    "site_log": {"file": "site.log", "source": "checkpoint/bazel-bin/site.log", "mode_octal": "555", "bytes": 55312, "sha256": "7aeadbf5c8befdf5ed10b6d2cbe942c8d1cafce34bb89b9f79d1ffc76f59f70c"},
+    "site_build_id": "0bea1d97f801de6151d61dfb06d914f0c994bbbb5397b4a6ccbe3a42d1e8576c",
+    "verified_site_files": 843,
+    "pxcube_packages_succeeded": 14,
+    "targeted_hh_regressions": "passed (including moderator reported-items filter regression)",
+    "full_suite": {"tests": 310, "passed": 310, "failed": 0},
+    "built_atlas_import_closure": {"tests": 1, "passed": 1, "failed": 0},
+    "receipt_source_inputs_confirm_four_changed_hh_files": true
+  },
+  "prior_failed_launch": "../execution.json and sibling raw streams/status are preserved as the separate incorrect-cwd launch (status 127); no overwrite or relabeling"
+}

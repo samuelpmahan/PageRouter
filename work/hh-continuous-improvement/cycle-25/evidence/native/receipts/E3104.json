@@ -1,0 +1,20 @@
+{
+  "job_id": "E3104",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Implemented the moderator-only Reported items forum-index filter and verified the frozen candidate with the canonical configured build. The corrected-cwd run exited 0; fresh site receipt reports 843 verified files and all 14 PxCube packages succeeded. Targeted HH regressions, 310 full-suite tests, and the built Atlas import-closure test passed.",
+  "evidence": {
+    "execution": "correct-cwd/execution.json",
+    "receipt": "correct-cwd/site.receipt.json",
+    "build_log": "correct-cwd/site.log",
+    "stdout": "correct-cwd/stdout.raw",
+    "stderr": "correct-cwd/stderr.raw",
+    "exit_status": "correct-cwd/exit.status",
+    "source_pins_before": "correct-cwd/source-pins-before.json"
+  },
+  "scope": "Only vendor/hh/src/community.mjs, vendor/hh/src/public-controller.mjs, vendor/hh/src/community.test.mjs, and vendor/hh/src/public-controller.test.mjs changed. Source pins matched before and after build.",
+  "limitations": [
+    "Synthetic local fixture only; no backend, real accounts, browser, server, production, or deployment validation was performed.",
+    "No Git staging or commit was performed."
+  ]
+}

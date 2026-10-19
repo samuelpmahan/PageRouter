@@ -1,0 +1,32 @@
+{
+  "schema": "hh25-build-attempt@1",
+  "job_id": "E3104",
+  "worker": "H1",
+  "outcome": "blocked_before_build",
+  "intended_working_directory": "/workspace/scratch/86659bbafcce/PageRouter/checkpoint",
+  "actual_working_directory": "/workspace/scratch/86659bbafcce/PageRouter",
+  "invocation": "BAZEL=/workspace/scratch/86659bbafcce/hh25/tools/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/workspace/scratch/86659bbafcce/hh25/bazel-output bash ci/bazel/run.sh",
+  "capture_command": "date -u +%Y-%m-%dT%H:%M:%SZ > /workspace/scratch/86659bbafcce/hh25/H1/E3104/start.utc; BAZEL=/workspace/scratch/86659bbafcce/hh25/tools/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/workspace/scratch/86659bbafcce/hh25/bazel-output bash ci/bazel/run.sh > /workspace/scratch/86659bbafcce/hh25/H1/E3104/stdout.raw 2> /workspace/scratch/86659bbafcce/hh25/H1/E3104/stderr.raw; rc=$?; printf '%s\\n' \"$rc\" > /workspace/scratch/86659bbafcce/hh25/H1/E3104/exit.status; date -u +%Y-%m-%dT%H:%M:%SZ > /workspace/scratch/86659bbafcce/hh25/H1/E3104/end.utc; exit 0",
+  "start_utc": "2026-10-19T13:30:48Z",
+  "end_utc": "2026-10-19T13:30:48Z",
+  "build_exit_status": 127,
+  "stdout": {"bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+  "stderr": {"bytes": 49, "sha256": "c89d20be7a8e2c04b6b6e6807b446cba28107cf39e689ab65a042f10c2f8fb74", "text": "bash ci/bazel/run.sh: No such file or directory"},
+  "runner": {
+    "node": "v24.19.0",
+    "bazel": "bazel 7.4.1",
+    "bazelPath": "/workspace/scratch/86659bbafcce/hh25/tools/bazel",
+    "bazelSha256": "c97f02133adce63f0c28678ac1f21d65fa8255c80429b588aeeba8a1fac6202b"
+  },
+  "canonical_repo_commit": "a0a98f299ea77d2181fa6013df554af843aa0635",
+  "source_pins_before_and_after": {
+    "checkpoint/vendor/hh/src/community.mjs": "713caf929cf685e1233e3a6a7368fe0810492f57683894f6063500563d518bf5",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "5df1e0f71385b22976951dbf2127c8ab78aeb7ddc8dad3608eb7b96850539890",
+    "checkpoint/vendor/hh/src/community.test.mjs": "0d360fe2d9da7404218f4a1f952f6f1dfae101f2851a6a2ea0593e7169bc5125",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "1f807f3fd4b617970107bdffcd9cd6a90d819850bdca3e6d27e774e85c80fa86"
+  },
+  "fresh_build_receipt": null,
+  "fresh_build_log": null,
+  "blocker": "The shell could not find ci/bazel/run.sh because this single invocation used the repository root rather than checkpoint/ as its working directory. The bootstrap/build script did not start.",
+  "retry": "not attempted; awaiting root direction"
+}

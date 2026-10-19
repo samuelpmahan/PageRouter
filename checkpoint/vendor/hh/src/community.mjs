@@ -226,7 +226,8 @@ export function renderCommunity({route={page:'index'},state={},session={role:'an
     else content=postDetail(topic,session,state);
   } else {
     const normalizedQuery=String(query).slice(0,MAX_BODY).toLocaleLowerCase();
-    const matching=threads.filter(t=>!t.hidden||role==='moderator').filter(t=>(category==='All'||t.category===category)).filter(t=>!normalizedQuery||`${t.title} ${t.body} ${(t.replies||[]).filter(r=>!r.hidden||role==='moderator').map(r=>r.body).join(' ')}`.toLocaleLowerCase().includes(normalizedQuery));
+    const reportedOnly=role==='moderator'&&state.reportedOnly===true;
+    const matching=threads.filter(t=>!t.hidden||role==='moderator').filter(t=>(category==='All'||t.category===category)).filter(t=>!normalizedQuery||`${t.title} ${t.body} ${(t.replies||[]).filter(r=>!r.hidden||role==='moderator').map(r=>r.body).join(' ')}`.toLocaleLowerCase().includes(normalizedQuery)).filter(t=>!reportedOnly||t.reported===true||(t.replies||[]).some(reply=>reply.reported===true));
     const visible=matching.slice().sort(sort==='upvotes'?(a,b)=>(b.votes||[]).length-(a.votes||[]).length:sort==='date-oldest'?(a,b)=>String(a.createdAt).localeCompare(String(b.createdAt)):(a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));
     const shown=normalizedQuery?visible:visible.slice(0,pageSize);
     content=h('div',{},storageNotice(state),stateNotice(state),h('section',{class:'community-panel community-index'},
@@ -237,8 +238,9 @@ export function renderCommunity({route={page:'index'},state={},session={role:'an
         button('Date (Oldest)','forum-sort',{id:'sort-date-oldest',class:`community-sort-button ${sort==='date-oldest'?'active':''}`,'data-sort':'date-oldest','aria-pressed':sort==='date-oldest'?'true':'false'}),
         button('Upvotes','forum-sort',{id:'sort-upvotes',class:`community-sort-button ${sort==='upvotes'?'active':''}`,'data-sort':'upvotes','aria-pressed':sort==='upvotes'?'true':'false'}),
         h('a',{href:'#/create-post','data-event':'forum-compose-topic',id:'create-post-btn',class:'community-primary-button'},'+ New Post'))),
+      role==='moderator'?button('Reported items','forum-reported-only',{id:'forum-reported-only',class:'community-utility','aria-pressed':reportedOnly?'true':'false'}):null,
       state.composer==='topic'&&role==='teacher'?topicComposer(state.topicDraft):null,
-      h('div',{class:'community-results','aria-live':'polite'},shown.length?shown.map(t=>topicCard(t,session)):h('div',{class:'community-empty-state'},h('h3',{},normalizedQuery?'No discussions found':'No posts found'),p(normalizedQuery?'Try a different keyword!':'Be the first to start a discussion!'))),
+      h('div',{class:'community-results','aria-live':'polite'},shown.length?shown.map(t=>topicCard(t,session)):h('div',{class:'community-empty-state'},h('h3',{},normalizedQuery?'No discussions found':reportedOnly?'No reported items found':'No posts found'),p(normalizedQuery?'Try a different keyword!':reportedOnly?'No topics or replies are currently reported.':'Be the first to start a discussion!'))),
       shown.length<visible.length?button('Load 10 More Discussions','forum-load-more',{class:'community-load-more'}):null));
   }
   return h('div',{'data-community':'true','data-role':role},h('main',{class:'community-shell',id:'community-main',tabindex:'-1'},content),h('footer',{class:'community-footer'},h('span',{},'© 2024 Homeroom Heroes. All rights reserved.'),h('details',{class:'community-preview-controls'},h('summary',{},'Local preview controls'),p('Synthetic data only. Changes stay in this tab; no live service is connected.','community-preview-explanation'),rolePicker,categorySelect(category),role==='moderator'?button('Reset forum preview','forum-reset',{class:'community-utility'}):null,button('Export forum data','forum-export',{class:'community-utility'}))));

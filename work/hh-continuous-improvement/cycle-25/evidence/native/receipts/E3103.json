@@ -1,0 +1,31 @@
+{
+  "job_id": "E3103",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Added a moderator-only Reported items filter to the existing forum index. It includes a topic when the topic or any reply is reported, including hidden moderator-visible items; filtering occurs before the existing sort and page-size slice. The controller supports the app's generic rendered-button payload by toggling when enabled is omitted, accepts explicit booleans, rejects other supplied types and non-moderator calls, and clears the filter when moderator role exits.",
+  "source_commit": "a0a98f299ea77d2181fa6013df554af843aa0635",
+  "scope": [
+    "checkpoint/vendor/hh/src/community.mjs",
+    "checkpoint/vendor/hh/src/public-controller.mjs",
+    "checkpoint/vendor/hh/src/community.test.mjs",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs"
+  ],
+  "red_green": {
+    "initial_focused_red": "red-01/execution.json",
+    "app_payload_red": "red-02/execution.json",
+    "focused_green": "green-01-focused/execution.json",
+    "full_hh_source_suite": "green-02-hh-suite/execution.json"
+  },
+  "validation": {
+    "focused_tests": "3 passed, 0 failed; exit 0",
+    "hh_source_tests": "108 passed, 0 failed; exit 0",
+    "counting_note": "The focused three are included in the full 108-test source suite; counts are not additive.",
+    "stderr": "empty for both green runs",
+    "build": "not run; pending root review/canonical checkpoint"
+  },
+  "boundaries": [
+    "No routes, service ports, backend, storage schema, or moderation authority were added or changed.",
+    "Only synthetic fixture tests were run; no browser, backend, real-account, or production validation is claimed.",
+    "No Git staging, commit, or publication was performed."
+  ]
+}

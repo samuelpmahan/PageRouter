@@ -1,0 +1,34 @@
+{
+  "probe": "R3103 independent actual fixture-provider/controller lifecycle",
+  "fixture": {
+    "mode": "fixture",
+    "fixture": true,
+    "communityStorage": "memory_only"
+  },
+  "runtimeServiceReceipts": {
+    "before": 1,
+    "after": 1,
+    "servicePortCalls": 0
+  },
+  "filter": {
+    "actualGenericButtonPayloadToggled": true,
+    "queryRefilter": true,
+    "categoryRefilter": true,
+    "filteredBeforePageSlice": true,
+    "firstPage": 10,
+    "loadMorePage": 12,
+    "replyOnlyReportAdmitted": true,
+    "hiddenReportedReplyAndTopicAdmitted": true
+  },
+  "restoration": {
+    "replyOnlyReportRemovedOnRestore": true,
+    "mixedReportsClearIndependently": true,
+    "parentRetainedUntilLastReportRestored": true
+  },
+  "authority": {
+    "roleExitClearsFilter": true,
+    "nonModeratorEventRejected": true,
+    "forgedTeacherStateDoesNotFilterOrRenderControl": true
+  },
+  "assertions": "all passed"
+}

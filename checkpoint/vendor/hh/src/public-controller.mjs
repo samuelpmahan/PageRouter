@@ -71,7 +71,7 @@ export function normalizePublicRoute(value = '') {
 }
 
 function initialCommunity(community) {
-  return {...community.snapshot(), query: '', category: 'All', composer: null, sort: 'date-newest', pageSize: 10, message: '',
+  return {...community.snapshot(), query: '', category: 'All', composer: null, sort: 'date-newest', pageSize: 10, reportedOnly: false, message: '',
     editingPostId: null, editingReplyId: null, editingThreadId: null, topicDraft: null, postEditDraft: null};
 }
 
@@ -176,6 +176,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
       state.community.topicDraft = null;
       state.community.replyDraft = null;
     }
+    if (nextRole !== 'moderator') state.community.reportedOnly = false;
     state.journey.communityRole = nextRole;
     refreshCommunity();
   }
@@ -184,6 +185,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
     state.community = {...snapshot, query: state.community.query || '', category: state.community.category || 'All',
       composer: state.community.composer || null, sort: state.community.sort || 'date-newest',
       pageSize: Math.max(1, Math.min(100, Number(state.community.pageSize) || 10)),
+      reportedOnly: state.community.reportedOnly === true,
       message: state.community.message || '', editingPostId: state.community.editingPostId || null,
       editingReplyId: state.community.editingReplyId || null, editingThreadId: state.community.editingThreadId || null,
       topicDraft: state.community.topicDraft || null, replyDraft: state.community.replyDraft || null,
@@ -530,6 +532,12 @@ export function createPublicController({runtime, storage = null, onChange = () =
     if (event === 'forum-role' || event === 'community:role') {
       setCommunityRole(payload.role);
       return syncCommunityNotice({ok: true}, `Local forum preview role is now ${state.journey.communityRole}.`);
+    }
+    if (event === 'forum-reported-only') {
+      if (role !== 'moderator') return syncCommunityNotice({ok: false, error: 'moderator_required'}, 'Moderator access is required to filter reported items.');
+      if (payload.enabled !== undefined && typeof payload.enabled !== 'boolean') return syncCommunityNotice({ok: false, error: 'invalid_report_filter'}, 'Choose whether to show reported items only.');
+      state.community.reportedOnly = payload.enabled === undefined ? !state.community.reportedOnly : payload.enabled;
+      return syncCommunityNotice({ok: true}, state.community.reportedOnly ? 'Showing reported forum items.' : 'Showing all forum items.');
     }
     if (event === 'forum-search') { state.community.query = boundedDraft(payload.query ?? payload.value, 250); return syncCommunityNotice({ok: true}, 'Forum search updated locally.'); }
     if (event === 'forum-clear-search') { state.community.query = ''; return syncCommunityNotice({ok: true}, 'Forum search cleared.'); }

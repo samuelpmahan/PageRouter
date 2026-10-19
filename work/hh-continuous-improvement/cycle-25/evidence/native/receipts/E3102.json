@@ -1,0 +1,27 @@
+{
+  "job_id": "E3102",
+  "worker": "H2",
+  "outcome": "mixed_change",
+  "summary": "Actual HH community store, renderer, and public-controller event path passed teacher topic/reply reports, moderator hide/restore, role-projected visibility, stale hidden-topic blocking, and volatile/local-only feedback. Report markers are visible on topics in the moderator index, but no dedicated report queue exists; reply reports are found by opening topics, and restore clears the corresponding reported marker. This is a bounded workflow usability gap, not a failed authorization or recovery invariant.",
+  "source": {
+    "gitCommit": "a0a98f299ea77d2181fa6013df554af843aa0635",
+    "communitySha256": "311d598b6d6ffc675dc4ee5b07ac0005c55e6ce7a34f8acfac5384d5789288f4",
+    "controllerSha256": "97b5c17bf519b7fd05e2933a12dc55ff0e3e0c3e7939db4072368c070b4f67a0",
+    "testSha256": "f4f6a2103376e86aeb727a4ceb6d376d94278f811d3af3a22142c0486c2b464f"
+  },
+  "falsifierOrUsableGap": "Usable gap: moderator has no consolidated report queue or reply-report filter; reported replies require opening their parent topic. The probe confirms the existing moderator index/detail controls and recovery behavior.",
+  "boundaries": [
+    "Only synthetic volatile fixture data was used.",
+    "The controller runtime stub throws if any teacher service invocation is attempted; invocation count remained zero.",
+    "No browser DOM/visual, backend, real account, production, network, server, or external effects were exercised.",
+    "No repo, Git, build, or production changes were made."
+  ],
+  "evidence": {
+    "probe": "probe.mjs",
+    "execution": "execution.json",
+    "stdout": "stdout.raw",
+    "stderr": "stderr.raw",
+    "exitCode": "exit.code",
+    "sourcePins": "source-pins.json"
+  }
+}

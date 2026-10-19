@@ -2039,6 +2039,51 @@ test('successful logout clears a retained reply draft and leaving the thread cle
   assert.equal(env.controller.state.community.replyDraft, null, 'successful logout clears the retained body');
 });
 
+test('reported-items filter follows reply reports, restore, moderator exit, and role guards', async () => {
+  const env=communityDraftSetup(),threadId='topic-official-bug-forum',replyId='reply-bug-example-1';
+  await env.controller.initialize('#/forum');
+  await env.controller.dispatch('forum-role',{role:'teacher'});
+  assert.equal((await env.controller.dispatch('forum-flag-reply',{threadId,replyId})).ok,true);
+  await env.controller.dispatch('forum-role',{role:'moderator'});
+  const enabled=await env.controller.dispatch('forum-reported-only',{enabled:true});
+  assert.equal(enabled?.ok,true);
+  assert.equal(env.controller.state.community.reportedOnly,true);
+  const cardIds=()=>{const ids=[];const walk=node=>{if(!node||typeof node!=='object')return;if(node.attrs?.class?.includes('community-topic '))ids.push(node.attrs['data-thread-id']);for(const child of node.children||[])walk(child)};walk(env.tree);return ids};
+  assert.deepEqual(cardIds(),[threadId]);
+  assert.equal((await env.controller.dispatch('forum-hide-reply',{threadId,replyId})).ok,true);
+  assert.deepEqual(cardIds(),[threadId],'moderator-visible hidden reported replies keep their parent in the filtered index');
+  assert.equal((await env.controller.dispatch('forum-unhide-reply',{threadId,replyId})).ok,true);
+  assert.equal(env.community.getThread(threadId,{role:'moderator'}).replies.find(reply=>reply.id===replyId).reported,false);
+  assert.deepEqual(cardIds(),[],'restoring the only reported reply removes its parent from reported items');
+  await env.controller.dispatch('forum-role',{role:'teacher'});
+  assert.equal(env.controller.state.community.reportedOnly,false,'leaving moderator role clears the filter');
+  const unauthorized=await env.controller.dispatch('forum-reported-only',{enabled:true});
+  assert.equal(unauthorized?.ok,false);
+  assert.equal(unauthorized?.error,'moderator_required');
+  assert.equal(env.controller.state.community.reportedOnly,false);
+  const nodes=[];const walk=node=>{if(!node||typeof node!=='object')return;nodes.push(node);for(const child of node.children||[])walk(child)};walk(env.tree);
+  assert.ok(!nodes.some(node=>node.attrs?.['data-event']==='forum-reported-only'),'non-moderators receive no report-filter control');
+});
+
+test('reported-items index button toggles from the rendered data-event payload', async () => {
+  const env=communityDraftSetup();
+  await env.controller.initialize('#/forum');
+  await env.controller.dispatch('forum-role',{role:'moderator'});
+  const nodes=[];const walk=node=>{if(!node||typeof node!=='object')return;nodes.push(node);for(const child of node.children||[])walk(child)};walk(env.tree);
+  const button=nodes.find(node=>node.tag==='button'&&node.attrs?.id==='forum-reported-only');
+  assert.ok(button,'the moderator forum projection contains the filter button');
+  const dataset=Object.fromEntries(Object.entries(button.attrs).filter(([key])=>key.startsWith('data-')).map(([key,value])=>[key.slice(5).replace(/-([a-z])/g,(_,letter)=>letter.toUpperCase()),String(value)]));
+  const payload={...dataset,threadId:dataset.threadId||dataset.postId||dataset.threadId,
+    postId:dataset.postId||dataset.threadId,replyId:dataset.replyId||dataset.commentId,
+    commentId:dataset.commentId||dataset.replyId};
+  const result=await env.controller.dispatch(dataset.event,payload);
+  assert.equal(result?.ok,true,'the app-shaped payload from the actual button must enable the filter');
+  assert.equal(env.controller.state.community.reportedOnly,true);
+  nodes.length=0;walk(env.tree);
+  const updatedButton=nodes.find(node=>node.attrs?.id==='forum-reported-only');
+  assert.equal(updatedButton.attrs['aria-pressed'],'true');
+});
+
 test('wishlist handoff is invalidated before a foreign profile read and must be freshly prepared for that profile', async () => {
   const base = createFixtureProvider({fixture: true});
   let announceJordan, releaseJordan;

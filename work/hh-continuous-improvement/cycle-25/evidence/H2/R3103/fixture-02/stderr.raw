@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: reported filter precedes the existing 10-item page slice
+
+12 !== 10
+
+    at file:///workspace/scratch/86659bbafcce/hh25/H2/R3103/fixture-01-lifecycle/probe.mjs:72:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 12,
+  expected: 10,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0
