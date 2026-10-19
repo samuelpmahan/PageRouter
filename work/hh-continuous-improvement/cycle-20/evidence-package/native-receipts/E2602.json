@@ -1,0 +1,38 @@
+{
+  "job_id": "E2602",
+  "worker": "H2",
+  "outcome": "mixed_change",
+  "summary": "Existing registration/profile labels and the create/edit wishlist help references resolve; no orphaned help target was found. A separate concrete profile-bio limit gap is present: controller clips drafts to 500 characters, but create/edit textarea markup omits maxlength and visible limit guidance; a 501-character synthetic update rendered back as 500 with no request-port calls. No product source was changed.",
+  "source": {
+    "repo": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "172c9de23c2c3c2778d52a6aebf8b85ac3a6cd20",
+    "files": {
+      "checkpoint/vendor/hh/src/public-site.mjs": {
+        "blob": "0ceb1e2cbbd0bd06778916dc3d3458d043d5649e",
+        "sha256": "be22a0bc0955f835a9b49bc0ae95c768cb4079f660e908deb27c8125276614c8"
+      },
+      "checkpoint/vendor/hh/src/public-controller.mjs": {
+        "blob": "47bea695848d4ec39f30f377c8869804f234dea2",
+        "sha256": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669"
+      },
+      "checkpoint/vendor/hh/src/public-site.test.mjs": {
+        "blob": "ced43811cbb18b25a911c6f28fd5b568b83b5dfe",
+        "sha256": "c45569f36b623fcabcf08fe4247559b3fe278cfd24e73dd9d1af2da87bc440bc"
+      }
+    }
+  },
+  "commands": [
+    {
+      "command": "node --test vendor/hh/src/public-site.test.mjs",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+      "output": "tests 17, pass 17, fail 0, skipped 0"
+    },
+    {
+      "command": "node /workspace/scratch/afc0d51965a8/hh20/H2/probe.mjs",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+      "output": "registration labels: name/email/phone/password/confirm and state/county/district/school; consent has a wrapping label. Profile name/bio labels resolve. For both profile create and edit, wishlist aria-describedby=hh-profile-wishlist-help resolves to visible helper text. Profile bio maxlength is absent in both renderer states. Synthetic updateDraft input 501 chars rendered 500; requestPortsInvoked=0. Probe assertions passed."
+    }
+  ],
+  "boundaries": "Synthetic volatile rendered tree/controller only; no external service/provider/account/browser/backend/email activity. No product/Git edits."
+}

@@ -1,0 +1,15 @@
+Harness attempt 1 (before correction):
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
++ undefined
+- '#/contact'
+    at file:///workspace/scratch/afc0d51965a8/hh20/H2/R2603/probe.mjs:78:8
+The helper searched for the Contact link under hh-register-form; the link is in the page heading. Corrected traversal to start at the rendered page root.
+
+Harness attempt 2 (before correction):
+AssertionError [ERR_ASSERTION]: The input did not match the regular expression /prepare a local note/i.
+Input: approved registration state (“Demo approval complete”), because successful approval changed route state.
+    at file:///workspace/scratch/afc0d51965a8/hh20/H2/R2603/probe.mjs:80:8
+Moved the guidance assertion to the initial registration render before approval.
+
+No product test failed in R2603 review; these were probe-harness assertions, both corrected before final successful probe.

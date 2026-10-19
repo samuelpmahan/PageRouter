@@ -16,6 +16,28 @@ test('profile create and edit wishlist fields explain supported synthetic links'
   }
 });
 
+test('profile create and edit bio fields reference a visible 500-character limit',()=>{
+  for(const status of ['absent','present']){
+    const tree=renderPublicSite({route:{page:'profile'},journey:{session:{status:'authenticated'},profile:{status,editOpen:status==='present',value:{name:'Synthetic teacher'}}}});
+    const field=byId(tree,'hh-profile-bio'),guidance=byId(tree,'hh-profile-bio-help');
+    assert.equal(field.attrs.maxlength,'500');
+    assert.equal(field.attrs['aria-describedby'],'hh-profile-bio-help');
+    assert.ok(guidance,'the referenced bio limit guidance is rendered');
+    assert.equal(Object.hasOwn(guidance.attrs,'hidden'),false,'the bio guidance is visible');
+    assert.match(text(guidance),/up to 500 characters/i);
+  }
+});
+
+test('registration directs missing-school teachers to truthful local contact guidance',()=>{
+  const tree=renderPublicSite({route:{page:'register'},journey:{registration:{status:'none'},lookups:{states:[],counties:[],districts:[],schools:[]}}});
+  const contact=inspect(tree).find(node=>node.tag==='a'&&node.attrs?.['data-public-route']==='contact');
+  assert.ok(contact,'the existing Contact route remains available');
+  assert.equal(contact.attrs.href,'#/contact');
+  assert.match(text(tree),/prepare a local note/i);
+  assert.match(text(tree),/nothing is sent/i);
+  assert.doesNotMatch(text(tree),/send us a message/i);
+});
+
 test('public route tree binds nav state, exposes accessible stable controls, and avoids inline styling',()=>{
   const closed=renderPublicSite({route:{page:'home'},journey:{navOpen:false}});
   const open=renderPublicSite({route:{page:'home'},journey:{navOpen:true}});

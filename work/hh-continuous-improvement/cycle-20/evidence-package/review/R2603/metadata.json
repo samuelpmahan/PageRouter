@@ -1,0 +1,18 @@
+{
+  "captured_at_utc": "2026-10-19 08:05:27 UTC",
+  "repo": "/workspace/scratch/8528bb251845/PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "head": "172c9de23c2c3c2778d52a6aebf8b85ac3a6cd20",
+  "pins": {
+    "public-site.mjs": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d",
+    "public-site.test.mjs": "fd6725f339f1ba64614f6b82c42dc8d9d14c6d3147b7c12a3e2846c8b37c8eb5",
+    "public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "public-controller.test.mjs": "bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0"
+  },
+  "commands": [
+    "node --test --test-name-pattern='profile create and edit bio fields reference a visible 500-character limit|registration directs missing-school teachers to truthful local contact guidance' checkpoint/vendor/hh/src/public-site.test.mjs",
+    "node /workspace/scratch/afc0d51965a8/hh20/H2/R2603/probe.mjs",
+    "git diff --check"
+  ],
+  "raw_capture_notes": "Focused stdout is copied as emitted; focused stderr was empty. Probe stdout records counted fixture runtime calls; probe stderr was empty on final successful run. Two earlier probe-script assertion failures were harness-state bugs and are recorded in result.json; no product test failure occurred during this review."
+}

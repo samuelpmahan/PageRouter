@@ -1,0 +1,23 @@
+{
+  "job_id": "E2603",
+  "worker": "H1",
+  "outcome": "implemented",
+  "summary": "Renderer-only fix: registration still links to Contact but now accurately says the local preview prepares a note and sends nothing. Profile bio create/edit fields now expose the existing 500-character cap via maxlength and one visible aria-describedby helper. Controller, validation, backend, and Git state were not changed.",
+  "source_pins": {
+    "head": "172c9de23c2c3c2778d52a6aebf8b85ac3a6cd20",
+    "checkpoint/vendor/hh/src/public-site.mjs": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "fd6725f339f1ba64614f6b82c42dc8d9d14c6d3147b7c12a3e2846c8b37c8eb5",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0"
+  },
+  "commands": [
+    {"id": "red", "command": "node --test checkpoint/vendor/hh/src/public-site.test.mjs", "exit": 1, "result": "19 tests; 17 passed, 2 expected failures: bio maxlength missing and registration local-note guidance missing.", "raw_prefix": "E2603/red"},
+    {"id": "green-site", "command": "node --test checkpoint/vendor/hh/src/public-site.test.mjs", "exit": 0, "result": "19 passed, 0 failed.", "raw_prefix": "E2603/green-site"},
+    {"id": "green-renderer-controller", "command": "node --test checkpoint/vendor/hh/src/public-site.test.mjs checkpoint/vendor/hh/src/public-controller.test.mjs", "exit": 0, "result": "80 passed, 0 failed.", "raw_prefix": "E2603/green-renderer-controller"},
+    {"id": "diff-check", "command": "git diff --check", "exit": 0, "result": "clean.", "raw_prefix": "E2603/diff-check"},
+    {"id": "source-list", "command": "git diff --name-only", "exit": 0, "result": "Only public-site.mjs and public-site.test.mjs changed.", "raw_prefix": "E2603/source-list"},
+    {"id": "syntax-check", "command": "node --check checkpoint/vendor/hh/src/public-site.mjs", "exit": 0, "result": "clean.", "raw_prefix": "E2603/syntax-check"},
+    {"id": "test-syntax-check", "command": "node --check checkpoint/vendor/hh/src/public-site.test.mjs", "exit": 0, "result": "clean.", "raw_prefix": "E2603/test-syntax-check"}
+  ],
+  "raw_capture_directory": "/workspace/scratch/afc0d51965a8/hh20/H1/E2603"
+}

@@ -1,0 +1,71 @@
+✔ profile create and edit wishlist fields explain supported synthetic links (2.407462ms)
+✖ profile create and edit bio fields reference a visible 500-character limit (0.943831ms)
+✖ registration directs missing-school teachers to truthful local contact guidance (0.774089ms)
+✔ public route tree binds nav state, exposes accessible stable controls, and avoids inline styling (1.422751ms)
+✔ public mobile navigation toggle keeps a stable descriptive label across menu and session states (0.830172ms)
+✔ registration exposes the school cascade, password confirmation, Terms, and local approval (1.934561ms)
+✔ registration shows a contextual school lookup retry only while choices are unavailable (0.507253ms)
+✔ directory and contact reflect saved state, error/loading status, and remaining characters (0.854999ms)
+✔ contact message counter is associated with the bounded multiline draft (0.508164ms)
+✔ profile error can retry and editable profile drafts survive renderer replacement (0.43147ms)
+✔ public profile formats structured school and scalar location fields without object coercion (0.560402ms)
+✔ Terms displays the complete captured section set and public profiles require an explicit wishlist choice (0.485851ms)
+✔ Teacher of the Day uses the captured Sarah profile and keeps it separate from runtime-owned demo profiles (0.611597ms)
+✔ Login content stays inside the single centered account card (0.381546ms)
+✔ forgot-password disclosure accurately describes the local preview before submission (0.502125ms)
+✔ partner and About renders expose source-shaped images and readable team text (0.816552ms)
+✔ Contact uses the captured local brand font glyphs and footer preview controls bind state (1.142856ms)
+✔ Logout is available in the authenticated account menu and absent anonymously (0.298172ms)
+✔ directory Results stays blank until an explicit search and then renders zero-result guidance (0.481645ms)
+ℹ tests 19
+ℹ suites 0
+ℹ pass 17
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 118.702515
+
+✖ failing tests:
+
+test at checkpoint/vendor/hh/src/public-site.test.mjs:19:1
+✖ profile create and edit bio fields reference a visible 500-character limit (0.943831ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  undefined !== '500'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.test.mjs:23:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: '500',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at checkpoint/vendor/hh/src/public-site.test.mjs:31:1
+✖ registration directs missing-school teachers to truthful local contact guidance (0.774089ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /prepare a local note/i. Input:
+  
+  'Skip to content Home Donate Sign Up About Contact Partners ☰ Home Donate Sign Up About Contact Partners Login User Registration Please fill out the form below. If your school is not present in the list, go to the   and send us a message. Contact page Name: Email: Phone Number: Password: Confirm Password: State: Choose state County: Choose county School District: Choose school district School: Choose school Terms and Conditions I have read the Terms and Conditions This local preview does not create a production account. Submit Login © 2024 Homeroom Heroes. All rights reserved.'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.test.mjs:36:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Skip to content Home Donate Sign Up About Contact Partners ☰ Home Donate Sign Up About Contact Partners Login User Registration Please fill out the form below. If your school is not present in the list, go to the   and send us a message. Contact page Name: Email: Phone Number: Password: Confirm Password: State: Choose state County: Choose county School District: Choose school district School: Choose school Terms and Conditions I have read the Terms and Conditions This local preview does not create a production account. Submit Login © 2024 Homeroom Heroes. All rights reserved.',
+    expected: /prepare a local note/i,
+    operator: 'match',
+    diff: 'simple'
+  }

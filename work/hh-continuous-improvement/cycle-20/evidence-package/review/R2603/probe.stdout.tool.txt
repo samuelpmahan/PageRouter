@@ -1,0 +1,23 @@
+{
+  "fixtureMode": "fixture",
+  "setupCalls": {
+    "Demo.simulateApproval": 1,
+    "Registration.registerTeacher": 1,
+    "SchoolData.getCounties": 1,
+    "SchoolData.getDistricts": 1,
+    "SchoolData.getSchools": 1,
+    "SchoolData.getStates": 1,
+    "Session.login": 1
+  },
+  "results": [
+    {"stage":"create","attempted":500,"rendered":500,"helpText":"Up to 500 characters.","providerCallsDuringUpdate":0},
+    {"stage":"create","attempted":501,"rendered":500,"helpText":"Up to 500 characters.","providerCallsDuringUpdate":0},
+    {"stage":"edit","attempted":500,"rendered":500,"helpText":"Up to 500 characters.","providerCallsDuringUpdate":0},
+    {"stage":"edit","attempted":501,"rendered":500,"helpText":"Up to 500 characters.","providerCallsDuringUpdate":0}
+  ],
+  "createCallsAfterSetup": ["TeacherProfile.createProfile"],
+  "contact": {"ok":true,"remote":false,"providerCallsDuringDispatch":0,"requestPortsBefore":8,"requestPortsAfter":8},
+  "registrationGuidance": "Contact route retained; ‘prepare a local note. Nothing is sent by this preview.’",
+  "totalFixturePortCalls": 8,
+  "providerMode": "fixture"
+}

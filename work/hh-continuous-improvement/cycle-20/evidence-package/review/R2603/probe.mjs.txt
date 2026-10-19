@@ -1,0 +1,97 @@
+import assert from 'node:assert/strict';
+import {createFixtureProvider, createServiceRuntime} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createCommunity} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+const values = new Map();
+const storage = {getItem:key=>values.get(key)??null, setItem:(key,value)=>values.set(key,String(value)), removeItem:key=>values.delete(key)};
+const baseRuntime = createServiceRuntime(createFixtureProvider({fixture:true,storage}));
+const calls = [];
+const runtime = {
+  get ready(){return baseRuntime.ready;},
+  snapshot:(...args)=>baseRuntime.snapshot(...args),
+  invoke:(port,input,boundary)=>{calls.push({port,input});return baseRuntime.invoke(port,input,boundary);},
+  get capabilities(){return baseRuntime.capabilities;},
+  get pxc(){return baseRuntime.pxc;},
+  inspect:(...args)=>baseRuntime.inspect(...args),
+};
+let tree = null;
+const controller = createPublicController({runtime,storage,community:createCommunity({storage}),
+  onChange:(state,route)=>{tree=renderPublicSite({route,state,journey:state.journey});}});
+function byId(id){
+  const visit=value=>{if(!value||typeof value!=='object')return null;if(value.attrs?.id===id)return value;for(const child of value.children||[]){const found=visit(child);if(found)return found;}return null;};
+  return visit(tree);
+}
+function text(node){if(!node||typeof node!=='object')return typeof node==='string'?node:'';return (node.children||[]).map(text).join(' ');}
+function countSnapshot(){return Object.fromEntries([...new Set(calls.map(call=>call.port))].sort().map(port=>[port,calls.filter(call=>call.port===port).length]));}
+function verifyBio(stage,attempted,expected){
+  const before=calls.length;
+  assert.equal(controller.updateDraft('bio','x'.repeat(attempted)),true,`${stage}: updateDraft accepted`);
+  assert.equal(calls.length,before,`${stage}: updateDraft delivered no provider port`);
+  const field=byId('hh-profile-bio'),help=byId('hh-profile-bio-help');
+  assert.equal(field?.attrs?.maxlength,'500',`${stage}: maxlength exposed`);
+  assert.equal(field?.attrs?.['aria-describedby'],'hh-profile-bio-help',`${stage}: help reference bound`);
+  assert.ok(help,`${stage}: help node exists`);
+  assert.equal(Object.hasOwn(help.attrs,'hidden'),false,`${stage}: help is visible`);
+  assert.match(text(help),/up to 500 characters/i);
+  assert.equal(controller.state.journey.profile[stage==='create'?'createDraft':'editDraft'].bio.length,expected);
+  assert.equal(field.attrs.value.length,expected,`${stage}: clipped/preserved draft remains visible`);
+  return {stage,attempted,rendered:field.attrs.value.length,helpText:text(help),providerCallsDuringUpdate:0};
+}
+
+await controller.initialize('#/register');
+const contactLink=(()=>{const visit=value=>{if(!value||typeof value!=='object')return null;if(value.tag==='a'&&value.attrs?.['data-public-route']==='contact')return value;for(const child of value.children||[]){const found=visit(child);if(found)return found;}return null;};return visit(tree);})();
+assert.equal(contactLink?.attrs?.href,'#/contact');
+const registerText=text(tree);
+assert.match(registerText,/prepare a local note/i);
+assert.match(registerText,/nothing is sent/i);
+assert.doesNotMatch(registerText,/send us a message/i);
+for(const [key,value] of Object.entries({state:'Demo Washington',county:'Demo King',district:'Demo District',school:'Demo Academy'})) await controller.selectSchool(key,value);
+await controller.dispatch('public:terms-consent',{accepted:true});
+const password='R2603 synthetic volatile credential';
+const email='h2-r2603@example.invalid';
+assert.equal((await controller.dispatch('public:register',{name:'R2603 Synthetic Teacher',email,password,confirmPassword:password})).ok,true);
+assert.equal((await controller.dispatch('public:approve')).ok,true);
+assert.equal((await controller.dispatch('public:login',{email,password})).ok,true);
+await controller.navigate('#/profile');
+assert.equal(controller.state.journey.session.status,'authenticated');
+assert.equal(controller.state.journey.profile.status,'absent');
+const setupCalls=countSnapshot();
+
+const results=[];
+results.push(verifyBio('create',500,500));
+results.push(verifyBio('create',501,500));
+const beforeCreate=calls.length;
+assert.equal((await controller.dispatch('public:profile-create',{})).ok,true);
+assert.equal(calls.length,beforeCreate+1);
+assert.equal(calls.at(-1).port,'TeacherProfile.createProfile');
+assert.equal(controller.state.journey.profile.status,'present');
+assert.equal(controller.state.journey.profile.value.bio.length,500);
+await controller.dispatch('public:edit-profile');
+assert.equal(controller.state.journey.profile.editOpen,true);
+results.push(verifyBio('edit',500,500));
+results.push(verifyBio('edit',501,500));
+const beforeEdit=calls.length;
+const editResult=await controller.dispatch('public:profile-edit',{});
+assert.equal(editResult.ok,true);
+assert.equal(editResult.localOnly,true);
+assert.equal(calls.length,beforeEdit,'profile edit remains local-only');
+assert.equal(controller.state.journey.profile.value.bio.length,500);
+
+await controller.navigate('#/contact');
+controller.updateDraft('name','Local Synthetic Guest');
+controller.updateDraft('email','guest@example.invalid');
+controller.updateDraft('subject','Missing school request');
+controller.updateDraft('message','Please add Demo School.');
+const beforeContact=calls.length;
+const contactResult=await controller.dispatch('public:contact',controller.state.journey.contact);
+assert.equal(contactResult.ok,true);
+assert.equal(contactResult.remote,false);
+assert.equal(calls.length,beforeContact,'contact preparation delivered no provider port');
+
+console.log(JSON.stringify({fixtureMode:runtime.capabilities?.mode||'fixture',setupCalls,results,
+  createCallsAfterSetup:calls.slice(Object.values(setupCalls).reduce((a,b)=>a+b,0)).map(call=>call.port),
+  contact:{ok:contactResult.ok,remote:contactResult.remote,providerCallsDuringDispatch:0,requestPortsBefore:beforeContact,requestPortsAfter:calls.length},
+  registrationGuidance:'Contact route retained; “prepare a local note. Nothing is sent by this preview.”',
+  totalFixturePortCalls:calls.length,providerMode:baseRuntime.capabilities?.mode||baseRuntime.snapshot()?.mode||'fixture'},null,2));
