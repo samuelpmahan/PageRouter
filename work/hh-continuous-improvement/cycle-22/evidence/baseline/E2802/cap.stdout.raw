@@ -1,0 +1,40 @@
+{
+  "setup": {
+    "mode": "fixture, volatile memory only",
+    "initialReplies": 2,
+    "setupRepliesAdded": 498,
+    "limit": 500,
+    "totalBeforeSubmit": 500
+  },
+  "submit": {
+    "body": "A valid bounded teacher reply rejected only because the fixture is at capacity.",
+    "bodyLength": 79,
+    "updateDraftAccepted": false,
+    "result": {
+      "ok": false,
+      "error": "reply_limit_reached"
+    },
+    "totalAfterSubmit": 500,
+    "zeroNewReplies": true,
+    "retainedControllerDraft": null,
+    "emittedTextareaValue": "",
+    "replyComposerPresent": true,
+    "separateReplyFormOnThreadDetail": true,
+    "route": {
+      "page": "community",
+      "path": "/posts/topic-official-bug-forum",
+      "communityRoute": {
+        "page": "post",
+        "threadId": "topic-official-bug-forum"
+      }
+    },
+    "routePage": "post"
+  },
+  "authority": {
+    "communityStorageStatus": "memory_only",
+    "serviceReceiptsBefore": 2,
+    "serviceReceiptsAfter": 2,
+    "noForumStorageProvided": true,
+    "network": "none"
+  }
+}

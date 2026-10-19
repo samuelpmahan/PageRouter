@@ -1,0 +1,11 @@
+# R2803 — H2 independent review
+
+Decision: accepted, with the volatile-probe correction limitation recorded in `result.json`.
+
+The exact three-file diff is confined to reply-draft controller state/lifecycle, thread-and-teacher-gated rendering, and four focused regression tests. `community.reply` remains the authority and is called before any draft is retained. `app.mjs` and the keystroke path are unchanged. The draft is bounded to 10,001 characters; the whitespace-padded 10,001-trimmed-character case remains invalid on repeat instead of truncating into an accepted reply. Same-thread alias projection, other-thread isolation, role exit, logout, forum reset, and app reset are covered.
+
+The exact four focused tests passed 4/4. The volatile probe confirmed cap-rejection retention, no reply mutation, memory-only storage, no account-receipt delta, and no cross-thread leakage. Its attempted correction did not free the slot because setup used author ID `review-fixture` while deletion used persona `demo-teacher`; do not treat that stage as a product failure or successful-retry observation. The focused cap regression test uses the matching author/persona and verifies one explicit corrected reply, then draft clearing. Also, the first probe's `sameThreadAlias.route` and `explicitCorrection.replyDraftAfter` fields were evaluated after switching to the other thread; they are late snapshots, not stage-time evidence. The raw is preserved unchanged.
+
+No unrelated event behavior was accepted as a requirement: drafts do not persist across reload, and no production/authentication claim is inferred from the synthetic teacher-preview role. No browser, server, network, service port, full-suite run, build, or Git mutation was performed by H2.
+
+Evidence qualification from H1's checkpoint: the earlier broad-pattern RED was truncated and an intermediate exact-pattern raw was overwritten; the final exact four-test RED is retained. The whitespace-padded overlength subcase was added after that authoritative RED, so its first run is GREEN only. H2's `probe-review-v2.mjs` was constructed before the stop instruction but never executed; it is not evidence and did not replace the original probe/raw.

@@ -1,0 +1,47 @@
+{
+  "job_id": "E2805",
+  "worker": "H1",
+  "argv": [
+    "/usr/bin/env",
+    "BAZEL=/workspace/scratch/8528bb251845/tools/bazel",
+    "bash",
+    "ci/bazel/run.sh"
+  ],
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+  "startedUtc": "2026-10-19T10:39:42Z",
+  "endedUtc": "2026-10-19T10:41:03Z",
+  "exitCode": 0,
+  "stdout": {
+    "path": "canonical-build.stdout.raw",
+    "bytes": 1297,
+    "sha256": "8b7fca40ef6dbe3d8e891a26dac3e2a24740e35b1d7e8242bc08ce7bc8d45f24"
+  },
+  "stderr": {
+    "path": "canonical-build.stderr.raw",
+    "bytes": 1037,
+    "sha256": "881a8b80b944d5526577156581ff7a84b20b39adc9b9456ec532dc3cda14d73f"
+  },
+  "freshReceipt": {
+    "path": "site.receipt.json",
+    "bytes": 467223,
+    "sha256": "f5bff6748cb82093cba2b7f9d0f63504f7f1875ec531092997a378559901e0cd",
+    "sourceInputCount": 1538,
+    "siteBuildId": "76adde7e5bf9bc6b168fc3ad6482c51417c3920529a4a5df4d68db4f34c71703",
+    "reviewedSourcePinsMatch": true
+  },
+  "freshSiteLog": {
+    "path": "site.log",
+    "bytes": 54078,
+    "sha256": "905627d9cda7b31ba8cbff053cf0eb449d8a70b77afa7789c3b8b1ce9ae4bdd9"
+  },
+  "buildSummary": {
+    "helperTests": "2/2",
+    "targetedHhTests": "149/149",
+    "fullTests": "304/304",
+    "atlasImportTests": "1/1",
+    "note": "Test groups overlap; all reported zero failures and zero skips.",
+    "builtSiteFiles": 843,
+    "pxcubePackages": "14/14"
+  },
+  "provenance": "This is a new E2805 attempt after recoverable relocation of only the failed E2804 staging directory. E2804 remains an earlier failed attempt; this does not replace or erase it."
+}

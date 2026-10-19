@@ -1,0 +1,12 @@
+✔ rejected teacher reply at aggregate capacity stays in its thread composer and explicit retry clears it (83.712186ms)
+✔ overlength rejected teacher reply retains one over the cap and cannot become valid through truncation (3.769108ms)
+✔ reply draft is thread-bound, teacher-only, and cleared on role exit or forum/app reset (6.660193ms)
+✔ successful logout clears a retained reply draft and leaving the thread clears it (6.784699ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 213.843944

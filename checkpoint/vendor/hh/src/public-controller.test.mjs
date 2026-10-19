@@ -81,6 +81,33 @@ async function openTeacherTopicComposer(env) {
   assert.ok(topicComposerFields(env.tree), 'teacher sees the topic composer');
 }
 
+function replyComposerFields(tree) {
+  const nodes = [];
+  const walk = node => {
+    if (!node || typeof node !== 'object') return;
+    nodes.push(node);
+    for (const child of node.children || []) walk(child);
+  };
+  walk(tree);
+  const form = nodes.find(node => node.tag === 'form' && node.attrs?.['data-submit'] === 'forum-reply');
+  if (!form) return null;
+  const formNodes = [];
+  const walkForm = node => {
+    if (!node || typeof node !== 'object') return;
+    formNodes.push(node);
+    for (const child of node.children || []) walkForm(child);
+  };
+  walkForm(form);
+  const textarea = formNodes.find(node => node.tag === 'textarea' && node.attrs?.name === 'content');
+  return {threadId: form.attrs['data-thread-id'], content: textarea?.children?.join('') ?? textarea?.attrs?.value ?? ''};
+}
+
+async function openTeacherReplyComposer(env, threadId = 'topic-official-bug-forum') {
+  await env.controller.initialize(`#/posts/${threadId}`);
+  await env.controller.dispatch('forum-role', {role: 'teacher'});
+  assert.equal(replyComposerFields(env.tree)?.threadId, threadId, 'teacher sees the reply composer on the selected thread');
+}
+
 function loginDraftFailureSetup() {
   const storage = memoryStorage();
   const base = createFixtureProvider({fixture: true, storage});
@@ -1735,6 +1762,131 @@ test('topic draft clears when teacher role leaves, on forum reset, logout, and a
   assert.equal((await env.controller.dispatch('public:reset')).ok, true);
   assert.equal(env.controller.state.community.topicDraft, null);
   assert.equal(env.controller.state.journey.communityRole, 'anonymous');
+});
+
+test('rejected teacher reply at aggregate capacity stays in its thread composer and explicit retry clears it', async () => {
+  const env = communityDraftSetup();
+  const threadId = 'topic-official-bug-forum';
+  await openTeacherReplyComposer(env, threadId);
+  for (let index = 0; index < 498; index += 1) {
+    const added = env.community.reply(threadId, {body: `Synthetic capacity setup ${index}`, role: 'teacher', authorId: 'demo-teacher'});
+    assert.equal(added.ok, true);
+  }
+  const body = 'A meaningful teacher reply to preserve while the fixture reply limit is reached.';
+  const beforeCount = env.community.snapshot().threads.reduce((total, thread) => total + thread.replies.length, 0);
+  const beforeStorage = env.storage.getItem('hh-forum-v1');
+  const beforeReceipts = env.runtime.inspect().receipts.length;
+  assert.equal(beforeCount, 500);
+  assert.equal(env.controller.updateDraft('content', body), false, 'reply typing remains DOM-local');
+
+  const rejected = await env.controller.dispatch('forum-reply', {threadId, content: body});
+  assert.equal(rejected.ok, false);
+  assert.equal(rejected.error, 'reply_limit_reached');
+  assert.deepEqual(env.controller.state.community.replyDraft, {threadId, content: body});
+  assert.deepEqual(replyComposerFields(env.tree), {threadId, content: body});
+  assert.equal(env.community.snapshot().threads.reduce((total, thread) => total + thread.replies.length, 0), beforeCount);
+  assert.equal(env.storage.getItem('hh-forum-v1'), beforeStorage, 'a rejected reply does not write forum storage');
+  assert.equal(env.runtime.inspect().receipts.length, beforeReceipts, 'forum submit does not call an HH account service');
+
+  const setupReply = env.community.getThread(threadId, {role: 'teacher'}).replies.at(-1);
+  assert.equal(env.community.deleteReply(threadId, setupReply.id, {role: 'teacher', personaId: 'demo-teacher'}).ok, true,
+    'make one local fixture slot available without resetting the reply draft');
+  const created = await env.controller.dispatch('forum-reply', {threadId, content: body});
+  assert.equal(created.ok, true);
+  assert.equal(created.value.body, body);
+  const thread = env.community.getThread(threadId, {role: 'teacher'});
+  assert.equal(thread.replies.filter(reply => reply.body === body).length, 1);
+  assert.equal(env.controller.state.community.replyDraft, null);
+  assert.deepEqual(replyComposerFields(env.tree), {threadId, content: ''});
+  assert.equal(env.runtime.inspect().receipts.length, beforeReceipts);
+});
+
+test('overlength rejected teacher reply retains one over the cap and cannot become valid through truncation', async () => {
+  const env = communityDraftSetup();
+  const threadId = 'topic-official-bug-forum';
+  await openTeacherReplyComposer(env, threadId);
+  const content = 'x'.repeat(10_001);
+  const beforeCount = env.community.snapshot().threads.reduce((total, thread) => total + thread.replies.length, 0);
+  const rejected = await env.controller.dispatch('forum-reply', {threadId, content});
+  assert.equal(rejected.ok, false);
+  assert.equal(rejected.error, 'input_too_long');
+  assert.deepEqual(env.controller.state.community.replyDraft, {threadId, content});
+  assert.equal(replyComposerFields(env.tree).content.length, 10_001);
+  assert.equal(env.community.snapshot().threads.reduce((total, thread) => total + thread.replies.length, 0), beforeCount);
+  const repeated = await env.controller.dispatch('forum-reply', {threadId, content: replyComposerFields(env.tree).content});
+  assert.equal(repeated.ok, false);
+  assert.equal(repeated.error, 'input_too_long');
+  assert.equal(env.community.snapshot().threads.reduce((total, thread) => total + thread.replies.length, 0), beforeCount);
+
+  const paddedOverlength = `${' '.repeat(10_000)}${'x'.repeat(10_001)}`;
+  const paddedRejected = await env.controller.dispatch('forum-reply', {threadId, content: paddedOverlength});
+  assert.equal(paddedRejected.ok, false);
+  assert.equal(paddedRejected.error, 'input_too_long');
+  assert.equal(env.controller.state.community.replyDraft?.content, 'x'.repeat(10_001),
+    'normalizing surrounding whitespace must not truncate a meaningful oversized body into an accepted retry');
+  const paddedRetry = await env.controller.dispatch('forum-reply', {threadId, content: env.controller.state.community.replyDraft.content});
+  assert.equal(paddedRetry.ok, false);
+  assert.equal(paddedRetry.error, 'input_too_long');
+  assert.equal(env.community.snapshot().threads.reduce((total, thread) => total + thread.replies.length, 0), beforeCount);
+});
+
+test('reply draft is thread-bound, teacher-only, and cleared on role exit or forum/app reset', async () => {
+  const env = communityDraftSetup();
+  const firstThread = 'topic-official-bug-forum';
+  const otherThread = 'topic-teachers-lounge-open';
+  await openTeacherReplyComposer(env, firstThread);
+  const firstBody = `Private teacher reply draft ${'x'.repeat(10_001)}`;
+  assert.equal((await env.controller.dispatch('forum-reply', {threadId: firstThread, content: '   '})).ok, false);
+  assert.deepEqual(replyComposerFields(env.tree), {threadId: firstThread, content: '   '});
+  await env.controller.navigate(`#/community/thread/${firstThread}`);
+  assert.deepEqual(replyComposerFields(env.tree), {threadId: firstThread, content: '   '}, 'same-thread alias navigation preserves its draft');
+  await env.controller.navigate(`#/posts/${otherThread}`);
+  assert.equal(env.controller.state.community.replyDraft, null, 'changing thread clears the old draft');
+  assert.deepEqual(replyComposerFields(env.tree), {threadId: otherThread, content: ''}, 'another thread never inherits the body');
+
+  const rejectedLongBody = await env.controller.dispatch('forum-reply', {threadId: otherThread, content: firstBody});
+  assert.equal(rejectedLongBody.ok, false);
+  assert.equal(rejectedLongBody.error, 'input_too_long');
+  assert.equal(env.controller.state.community.replyDraft?.threadId, otherThread);
+  assert.equal(env.controller.state.community.replyDraft?.content.length, 10_001);
+  await env.controller.dispatch('forum-role', {role: 'moderator'});
+  assert.equal(env.controller.state.community.replyDraft, null, 'leaving teacher role clears retained content');
+  assert.deepEqual(replyComposerFields(env.tree), {threadId: otherThread, content: ''}, 'moderator does not see the teacher draft');
+  const moderatorReply = await env.controller.dispatch('forum-reply', {threadId: otherThread, content: 'Moderator must not retain this.'});
+  assert.equal(moderatorReply.ok, false);
+  assert.equal(env.controller.state.community.replyDraft, null);
+  await env.controller.dispatch('forum-role', {role: 'anonymous'});
+  const anonymousReply = await env.controller.dispatch('forum-reply', {threadId: otherThread, content: 'Anonymous must not retain this.'});
+  assert.equal(anonymousReply.ok, false);
+  assert.equal(env.controller.state.community.replyDraft, null);
+
+  await env.controller.dispatch('forum-role', {role: 'teacher'});
+  assert.equal((await env.controller.dispatch('forum-reply', {threadId: otherThread, content: '   '})).ok, false);
+  assert.ok(env.controller.state.community.replyDraft);
+  await env.controller.dispatch('forum-reset');
+  assert.equal(env.controller.state.community.replyDraft, null, 'forum reset clears the retained body');
+
+  assert.equal((await env.controller.dispatch('forum-reply', {threadId: otherThread, content: '   '})).ok, false);
+  assert.ok(env.controller.state.community.replyDraft);
+  assert.equal((await env.controller.dispatch('public:reset')).ok, true);
+  assert.equal(env.controller.state.community.replyDraft, null, 'app reset clears the retained body');
+});
+
+test('successful logout clears a retained reply draft and leaving the thread clears it', async () => {
+  const env = communityDraftSetup();
+  assert.equal((await env.controller.dispatch('public:login', {email: 'avery@fixture.test', password: 'synthetic-only'})).ok, true);
+  const threadId = 'topic-official-bug-forum';
+  await env.controller.navigate(`#/posts/${threadId}`);
+  assert.equal(env.controller.state.journey.communityRole, 'teacher');
+  assert.equal((await env.controller.dispatch('forum-reply', {threadId, content: '   '})).ok, false);
+  assert.ok(env.controller.state.community.replyDraft);
+  await env.controller.navigate('#/forum');
+  assert.equal(env.controller.state.community.replyDraft, null, 'leaving the reply thread clears its draft');
+  await env.controller.navigate(`#/posts/${threadId}`);
+  assert.equal((await env.controller.dispatch('forum-reply', {threadId, content: '   '})).ok, false);
+  assert.ok(env.controller.state.community.replyDraft);
+  assert.equal((await env.controller.dispatch('public:logout')).ok, true);
+  assert.equal(env.controller.state.community.replyDraft, null, 'successful logout clears the retained body');
 });
 
 test('wishlist handoff is invalidated before a foreign profile read and must be freshly prepared for that profile', async () => {

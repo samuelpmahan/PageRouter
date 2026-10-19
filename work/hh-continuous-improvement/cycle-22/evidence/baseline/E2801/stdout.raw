@@ -1,0 +1,51 @@
+{
+  "job_id": "E2801",
+  "baseline": {
+    "route": {
+      "page": "community",
+      "path": "/posts/topic-official-bug-forum",
+      "communityRoute": {
+        "page": "post",
+        "threadId": "topic-official-bug-forum"
+      }
+    },
+    "role": "teacher",
+    "replies": 2,
+    "storage": null,
+    "receipts": 2,
+    "form": true,
+    "inputValue": ""
+  },
+  "invalid": {
+    "ok": false,
+    "error": "reply_required",
+    "message": "reply_required",
+    "replyDraft": null,
+    "replyCount": 2,
+    "storageUnchanged": true,
+    "form": true,
+    "inputValue": "",
+    "receiptsUnchanged": true
+  },
+  "corrected": {
+    "ok": true,
+    "error": null,
+    "createdBody": "A corrected synthetic teacher reply.",
+    "replyCount": 3,
+    "storageChanged": true,
+    "inputValue": "",
+    "receiptsUnchanged": true
+  },
+  "draftBeforeRoleExit": null,
+  "afterRoleExit": {
+    "role": "anonymous",
+    "replyDraft": null,
+    "replies": 3
+  },
+  "afterRoleReentry": {
+    "role": "teacher",
+    "replyDraft": null,
+    "inputValue": "",
+    "replies": 3
+  }
+}

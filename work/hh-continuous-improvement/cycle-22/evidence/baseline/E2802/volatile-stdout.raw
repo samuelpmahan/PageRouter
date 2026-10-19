@@ -1,0 +1,25 @@
+{
+  "route": {
+    "page": "community",
+    "path": "/posts/topic-official-bug-forum",
+    "communityRoute": {
+      "page": "post",
+      "threadId": "topic-official-bug-forum"
+    }
+  },
+  "role": "teacher",
+  "replyCountBefore": 500,
+  "replyCountAfter": 500,
+  "typed": "A meaningful reply typed before a cap rejection.",
+  "updateDraftAccepted": false,
+  "rejection": {
+    "ok": false,
+    "error": "reply_limit_reached"
+  },
+  "renderedReplyDraft": "",
+  "replyFormRendered": true,
+  "accountReceiptsBefore": 2,
+  "accountReceiptsAfter": 2,
+  "retainedControllerDraft": null,
+  "sourceAuthority": "community.reply validates teacher/thread/body/limits; controller has no reply draft state; fixture only"
+}

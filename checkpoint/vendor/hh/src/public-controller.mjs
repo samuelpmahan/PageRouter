@@ -7,6 +7,11 @@ const FILTER_KEY = 'hh-public-directory-filters.v1';
 const GRADES = Object.freeze(['Pre-K', 'Kindergarten', '1st Grade', '2nd Grade', '3rd Grade', '4th Grade', '5th Grade', '6th Grade', '7th Grade', '8th Grade', 'High School']);
 const clean = (value, max) => typeof value === 'string' ? value.trim().slice(0, max) : '';
 const boundedDraft = (value, max) => typeof value === 'string' ? value.slice(0, max) : '';
+const boundedReplyDraft = value => {
+  if (typeof value !== 'string') return '';
+  const source = value.length > COMMUNITY_LIMITS.body + 1 ? value.trim() : value;
+  return boundedDraft(source, COMMUNITY_LIMITS.body + 1);
+};
 const emailKey = value => clean(value, 254).toLowerCase();
 const validEmail = value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 const routeKey = value => String(value || '').replace(/^#/, '').split(/[?#]/, 1)[0] || '/';
@@ -158,7 +163,10 @@ export function createPublicController({runtime, storage = null, onChange = () =
   }
   function setCommunityRole(role) {
     const nextRole = ['anonymous', 'teacher', 'moderator'].includes(role) ? role : 'anonymous';
-    if (state.journey.communityRole === 'teacher' && nextRole !== 'teacher') state.community.topicDraft = null;
+    if (state.journey.communityRole === 'teacher' && nextRole !== 'teacher') {
+      state.community.topicDraft = null;
+      state.community.replyDraft = null;
+    }
     state.journey.communityRole = nextRole;
     refreshCommunity();
   }
@@ -169,7 +177,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
       pageSize: Math.max(1, Math.min(100, Number(state.community.pageSize) || 10)),
       message: state.community.message || '', editingPostId: state.community.editingPostId || null,
       editingReplyId: state.community.editingReplyId || null, editingThreadId: state.community.editingThreadId || null,
-      topicDraft: state.community.topicDraft || null};
+      topicDraft: state.community.topicDraft || null, replyDraft: state.community.replyDraft || null};
   }
   function clearMutationStatus() { setRequest('idle', ''); state.journey.error = ''; }
   function activeWishlistProfileId(route = state.route, projection = state.journey.profile) {
@@ -308,7 +316,11 @@ export function createPublicController({runtime, storage = null, onChange = () =
     schoolEpoch += 1;
     const epoch = routeEpoch;
     state.journey.loading = false;
-    state.route = normalizePublicRoute(hash);
+    const nextRoute = normalizePublicRoute(hash);
+    const replyDraftRoute = nextRoute.page === 'community' && nextRoute.communityRoute?.page === 'post'
+      ? nextRoute.communityRoute.threadId : null;
+    if (state.community.replyDraft && replyDraftRoute !== state.community.replyDraft.threadId) state.community.replyDraft = null;
+    state.route = nextRoute;
     const targetWishlistProfileId = activeWishlistProfileId();
     if (state.journey.wishlist.intent && state.journey.wishlist.profileId !== targetWishlistProfileId) clearWishlistHandoff();
     const targetShareProfileId = state.route.page === 'profile'
@@ -534,7 +546,15 @@ export function createPublicController({runtime, storage = null, onChange = () =
     }
     if (event === 'forum-open-thread') return requestNavigation(`/posts/${encodeURIComponent(postId)}`);
     if (event === 'forum-reply' || event === 'forum-comment') {
-      result = community.reply(postId, {body: payload.body ?? payload.content, author: state.journey.registration.identity.name || 'Preview Teacher', role, authorId: 'demo-teacher'});
+      const content = payload.body ?? payload.content;
+      result = community.reply(postId, {body: content, author: state.journey.registration.identity.name || 'Preview Teacher', role, authorId: 'demo-teacher'});
+      if (result?.ok) {
+        if (state.community.replyDraft?.threadId === postId) state.community.replyDraft = null;
+      } else if (role === 'teacher' && ['reply_required', 'input_too_long', 'reply_limit_reached'].includes(result?.error)) {
+        state.community.replyDraft = {threadId: postId, content: boundedReplyDraft(content)};
+      } else if (state.community.replyDraft?.threadId === postId) {
+        state.community.replyDraft = null;
+      }
       return syncCommunityNotice(result);
     }
     if (event === 'forum-flag-thread') result = community.flag(postId, {role});
@@ -565,6 +585,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
     }
     else if (event === 'forum-reset') {
       state.community.topicDraft = null;
+      state.community.replyDraft = null;
       result = community.reset();
     }
     else if (event === 'forum-export') {
@@ -858,6 +879,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
         state.journey.share = {intent: false, url: ''};
         state.journey.communityRole = 'anonymous';
         state.community.topicDraft = null;
+        state.community.replyDraft = null;
         state.journey.profile = {status: 'absent', value: null, editOpen: false, source: 'runtime'};
         try { storage?.removeItem(FILTER_KEY); } catch {}
         await community.reset(); refreshCommunity();

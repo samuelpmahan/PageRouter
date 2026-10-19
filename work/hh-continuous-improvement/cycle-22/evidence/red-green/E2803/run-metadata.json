@@ -1,0 +1,41 @@
+{
+  "job_id": "E2803",
+  "working_directory": "/workspace/scratch/8528bb251845/PageRouter",
+  "pre_run_checkpoint": "root authorized GREEN after reading actual three-file diff and authoritative RED",
+  "runs": [
+    {
+      "name": "focused-four",
+      "argv": [
+        "node",
+        "--test",
+        "--test-name-pattern=^(rejected teacher reply at aggregate capacity stays in its thread composer and explicit retry clears it|overlength rejected teacher reply retains one over the cap and cannot become valid through truncation|reply draft is thread-bound, teacher-only, and cleared on role exit or forum/app reset|successful logout clears a retained reply draft and leaving the thread clears it)$",
+        "checkpoint/vendor/hh/src/public-controller.test.mjs"
+      ],
+      "exit_code": 0,
+      "raw_stdout": "green-focused.stdout.raw",
+      "raw_stdout_sha256": "a6719b2f6ed6672b0b0c4adae7ca3965dd0407103735ddd4d122c4f1e448b8a6",
+      "raw_stderr": "green-focused.stderr.raw",
+      "raw_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tap": {"tests": 4, "pass": 4, "fail": 0, "skipped": 0, "duration_ms": 213.843944},
+      "time_window_utc": "between adjacent clock observations 10:28:19 and 10:28:27 on 2026-10-19; exact process timestamps were not captured"
+    },
+    {
+      "name": "hh-source-suite",
+      "argv": [
+        "node",
+        "--test",
+        "checkpoint/vendor/hh/src/community.test.mjs",
+        "checkpoint/vendor/hh/src/public-controller.test.mjs",
+        "checkpoint/vendor/hh/src/public-site.test.mjs"
+      ],
+      "exit_code": 0,
+      "raw_stdout": "hh-source-suite.stdout.raw",
+      "raw_stdout_sha256": "dac4dd087caca9f016de8421ee340f4d93045fc13f2316120291c5b745138c46",
+      "raw_stderr": "hh-source-suite.stderr.raw",
+      "raw_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "tap": {"tests": 102, "pass": 102, "fail": 0, "skipped": 0, "duration_ms": 364.636916},
+      "time_window_utc": "between adjacent clock observations 10:28:27 and 10:28:31 on 2026-10-19; exact process timestamps were not captured"
+    }
+  ],
+  "note": "The whitespace-padded overlength case was added after authoritative RED in response to root review. Its first execution is included in focused-four GREEN and the HH source suite; no baseline RED is claimed for that subcase. The earlier broad-filter run had truncated tool output; an intermediate exact run's output was later replaced by the final exact-name authoritative RED capture. These are qualified in red-command.txt."
+}

@@ -1,0 +1,63 @@
+{
+  "job_id": "R2803",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "The three-file change meets the scoped in-memory reply-recovery contract by source review and 4/4 focused tests. The one volatile probe independently confirmed valid-body cap rejection retention, 0 new replies, memory_only storage, 0 account-receipt delta, same-thread rendered body and other-thread isolation. Its attempted correction phase is not evidence: synthetic setup replies were authored as review-fixture, but the probe tried deleting one as demo-teacher, so the slot was not freed. The focused regression test uses matching demo-teacher authorship and confirms explicit retry creates exactly one reply and clears the draft. No product defect found; preserve this probe qualification.",
+  "repo": {
+    "head": "c4c4ce782fc2669a5c73dcd2a98572e430344124",
+    "changedPaths": [
+      "checkpoint/vendor/hh/src/community.mjs",
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ]
+  },
+  "sourceSha256": {
+    "checkpoint/vendor/hh/src/community.mjs": "3613ec5676623cc3bee9905ab68e5dbeac090effea36ebb0e6069c785f1581db",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "8e70652af3ffe9ac40825b8132321febf7ee0dc6c7748008f3492ee5a57efcab",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "a2bb6f73d053ccc14c3c0deafe72a2f6af20ccf642f4ce418c73d010f9a86959"
+  },
+  "focusedTests": {
+    "argv": [
+      "node",
+      "--test",
+      "--test-name-pattern=^(rejected teacher reply at aggregate capacity stays in its thread composer and explicit retry clears it|overlength rejected teacher reply retains one over the cap and cannot become valid through truncation|reply draft is thread-bound, teacher-only, and cleared on role exit or forum/app reset|successful logout clears a retained reply draft and leaving the thread clears it)$",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "exit_code": 0,
+    "passed": 4,
+    "failed": 0,
+    "stdout": "focused.stdout.raw",
+    "stdoutSha256": "c26493062261cc880fba09d5001dbe938fb610da3fd12ac93bef6159ef459feb",
+    "stderr": "focused.stderr.raw",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "volatileProbe": {
+    "argv": ["node", "/workspace/scratch/86659bbafcce/hh22/H2/R2803/probe-review.mjs"],
+    "exit_code": 0,
+    "scriptSha256": "010f68fe717f4f0aa7c36b13bac6bc5d3fa4f79649015e9cc9f6586b8ada518c",
+    "stdout": "volatile.stdout.raw",
+    "stdoutSha256": "c311fe81550522cfba7aa1e588d4e298d9a1ca6e2172f013f726ef44f0e6da46",
+    "stderr": "volatile.stderr.raw",
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evidence": {
+      "validCapBodyRetained": true,
+      "zeroNewRepliesOnRejection": true,
+      "accountReceiptDelta": 0,
+      "forumStorage": "memory_only",
+      "otherThreadLeak": false,
+      "correctionAttempt": "not verified: the fixture authored setup replies with review-fixture, then attempted delete as demo-teacher; slotFreed=false and the retry remained capacity-rejected",
+      "lateSnapshotQualification": "sameThreadAlias.route and explicitCorrection.replyDraftAfter were read at final JSON construction after changing to the other thread; do not interpret those fields as stage-time values. Stage-time rendered form snapshots are captured separately."
+    }
+  },
+  "review": {
+    "serviceAuthority": "community.reply remains the unchanged teacher/thread/body/capacity validation, mutation, and persistence authority; the controller stores only semantic-failure draft data after that call.",
+    "boundedness": "replyDraft content is capped at COMMUNITY_LIMITS.body + 1. Oversized padded content is trimmed only when raw length exceeds that bound, then bounded; 10,001 meaningful characters remain over limit on repeat rather than silently becoming a valid 10,000-character reply.",
+    "lifecycle": "Draft is thread-keyed; renderer projects only when visible teacher role and thread ID match. Same-thread aliases retain; thread change, role exit, logout, forum reset, and app reset clear. Anonymous/moderator rejected content is not retained.",
+    "unchanged": "app.mjs keystroke/FormData wiring, community.reply rules/limits/storage authority, and fixture-service ports are unchanged.",
+    "declined": [
+      "No persistence across reload: this is a bounded, memory-only draft and forum storage remains authoritative for accepted forum data only.",
+      "No browser or production behavior claim: no browser, server, network, account, email, or production service was used.",
+      "No draft for an invalid thread/unknown error: only reply_required, input_too_long, and reply_limit_reached for teacher submissions are retained; other failures clear a matching stale draft."
+    ]
+  }
+}
