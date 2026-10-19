@@ -1,0 +1,99 @@
+{
+  "job_id": "E2103",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Corrected only the forgot-password renderer disclosure and added one renderer regression preserving the form controls. The expected RED failed on the old email-send promise; focused GREEN, all 15 public-site tests, and all 60 controller tests passed. No Git staging, commit, export, build, deployment, backend, real email, or browser interaction occurred.",
+  "authorization": "Root native E2103/H1 assignment; sole PageRouter source owner for public-site.mjs and public-site.test.mjs only.",
+  "workspace": "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2103",
+  "preservedBeforeRed": [
+    {
+      "file": "PageRouter/checkpoint/vendor/hh/src/public-site.mjs",
+      "snapshot": "source-before/public-site.mjs",
+      "sha256": "5f1135c95fdb3baefb64e49d755e45a87b9eb1b17ff363ed91eb5b516812031b",
+      "cmp": "identical"
+    },
+    {
+      "file": "PageRouter/checkpoint/vendor/hh/src/public-site.test.mjs",
+      "snapshot": "source-before/public-site.test.mjs",
+      "sha256": "87f74df3c31eca7388c701deb4ac1fd40ec874f9ce17c971582983124762b213",
+      "cmp": "identical"
+    }
+  ],
+  "redGreen": [
+    {
+      "phase": "R1 expected RED",
+      "command": "node --test --test-name-pattern='forgot-password disclosure accurately describes the local preview before submission' vendor/hh/src/public-site.test.mjs",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+      "captureDirectory": "captures/R1-red",
+      "startedAt": "2026-10-18T23:44:07Z",
+      "finishedAt": "2026-10-18T23:44:07Z",
+      "exit": 1,
+      "counts": {"tests": 1, "pass": 0, "fail": 1, "skipped": 0},
+      "failure": "Expected exact preview/no-email disclosure; actual rendered TREE contained the old promise to send reset instructions. Failure was the intended assertion, not setup. Later test assertions were unreached.",
+      "stdout": {"path": "captures/R1-red/stdout.raw", "sha256": "38ddd29a7ca0dbafd91b3b31c616d6707474f2a12e14590ecd0d2cc24b568700"},
+      "stderr": {"path": "captures/R1-red/stderr.raw", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "exitCaptureSha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+    },
+    {
+      "phase": "R2 focused GREEN",
+      "command": "node --test --test-name-pattern='forgot-password disclosure accurately describes the local preview before submission' vendor/hh/src/public-site.test.mjs",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+      "captureDirectory": "captures/R2-focused-green",
+      "startedAt": "2026-10-18T23:44:55Z",
+      "finishedAt": "2026-10-18T23:44:55Z",
+      "exit": 0,
+      "counts": {"tests": 1, "pass": 1, "fail": 0, "skipped": 0},
+      "stdout": {"path": "captures/R2-focused-green/stdout.raw", "sha256": "7652166adf13150edc71d8e0580011b1c877a4297553db33e4fe70d4d105ca3c"},
+      "stderr": {"path": "captures/R2-focused-green/stderr.raw", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "exitCaptureSha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "phase": "R3 full public-site suite",
+      "command": "node --test vendor/hh/src/public-site.test.mjs",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+      "captureDirectory": "captures/R3-public-site-suite",
+      "startedAt": "2026-10-18T23:45:04Z",
+      "finishedAt": "2026-10-18T23:45:04Z",
+      "exit": 0,
+      "counts": {"tests": 15, "pass": 15, "fail": 0, "skipped": 0},
+      "stdout": {"path": "captures/R3-public-site-suite/stdout.raw", "sha256": "bf7335714ef4ad88cc56452f8ad3df0afd83806d2db239c56896aadc1c39f00f"},
+      "stderr": {"path": "captures/R3-public-site-suite/stderr.raw", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "exitCaptureSha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    },
+    {
+      "phase": "R4 controller regression suite",
+      "command": "node --test vendor/hh/src/public-controller.test.mjs",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+      "captureDirectory": "captures/R4-controller-suite",
+      "startedAt": "2026-10-18T23:45:10Z",
+      "finishedAt": "2026-10-18T23:45:10Z",
+      "exit": 0,
+      "counts": {"tests": 60, "pass": 60, "fail": 0, "skipped": 0},
+      "stdout": {"path": "captures/R4-controller-suite/stdout.raw", "sha256": "d742afe331dceb6626cf04d6c741efb039bb115087f3c6cac8aa18c9bca1476e"},
+      "stderr": {"path": "captures/R4-controller-suite/stderr.raw", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "exitCaptureSha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  ],
+  "diff": {
+    "files": {
+      "PageRouter/checkpoint/vendor/hh/src/public-site.mjs": {
+        "sha256": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+        "change": "Only the forgot intro changed to: Password recovery is not connected in this preview. No email will be sent."
+      },
+      "PageRouter/checkpoint/vendor/hh/src/public-site.test.mjs": {
+        "sha256": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a",
+        "change": "Added one focused forgot disclosure renderer regression; asserts the new copy, rejects the previous promise, and preserves the required email field, public:forgot submit, Submit button, and #/login back link. Existing login coverage retained as its own test."
+      }
+    },
+    "stat": {"files": 2, "insertions": 13, "deletions": 4},
+    "diffCheck": "passed"
+  },
+  "boundaries": {
+    "controllerAppProvider": "unchanged",
+    "draftRetention": "not implemented or claimed",
+    "browserDomFormData": "not run",
+    "buildDeployPublication": "not run",
+    "gitStageCommitExport": "not run",
+    "untrackedCycleScratch": "preserved and excluded"
+  }
+}

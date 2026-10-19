@@ -1,0 +1,5 @@
+# E2102 path/cwd erratum
+
+H2's original command used paths relative to the PageRouter working directory, so six scratch artifacts landed under `PageRouter/hh-cycle15/H2/E2102/` rather than the requested root scratch location. Those originals remain untouched, excluded from product content, and are not relocated or relabeled as root-path originals. Root made byte-exact `COPYFILE_EXCL` copies (including the truly empty stderr and original modes) under `evidence/probes/E2102-H2-original-copies/`; the copies are explicitly copies, not original capture paths. Their source-equivalent probe imports still resolve relative to the original location, so the archived copies are not a portability or rerun claim.
+
+The six excluded original paths are `PREDECLARED-PROBE.md`, `exit-code.txt`, `probe.mjs`, `result.json`, `stderr.log`, and `stdout.log`. E2102 used ordinary shell redirection after a path precheck, not a demonstrated atomic exclusive-open capture. Do not claim race-proof capture creation. No retries or product edits followed. The separate set of 21 older HH13 scratch paths is likewise preserved and excluded.

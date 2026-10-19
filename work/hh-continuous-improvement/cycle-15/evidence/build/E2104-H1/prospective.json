@@ -1,0 +1,43 @@
+{
+  "job_id": "E2104",
+  "worker": "H1",
+  "authorization": "Root native E2104/H1 assignment; one exact canonical source-build command, no source or Git publication changes.",
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+  "argv": [
+    "/usr/bin/env",
+    "BAZEL=/workspace/scratch/8528bb251845/tools/bazel",
+    "bash",
+    "ci/bazel/run.sh"
+  ],
+  "bazelIdentityPreflight": {
+    "command": "/workspace/scratch/8528bb251845/tools/bazel --version",
+    "output": "bazel 7.4.1",
+    "configuredVersion": "7.4.1",
+    "realPath": "/workspace/scratch/8528bb251845/tools/bazel",
+    "sha256": "c97f02133adce63f0c28678ac1f21d65fa8255c80429b588aeeba8a1fac6202b",
+    "fileIdentity": "ELF 64-bit LSB executable; executable mode; inspected read-only"
+  },
+  "wrapper": {
+    "path": "ci/bazel/run.sh",
+    "sha256": "2a1a6fc5bc919f67b424d6fed92e4e888bf3767b634b1ad9544604067fbe072c"
+  },
+  "sourceBindingsBeforeRun": {
+    "vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+    "vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a",
+    "vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669"
+  },
+  "wrapperFlowObservedFromSource": [
+    "Resolve checkpoint root and change directory there.",
+    "Run ci/bazel/bootstrap.py; it validates Node against .nvmrc, copies/hash-records declared host tools, installs exact locked npm dependencies only if toolchain inputs are missing/stale, and writes the private build-tools toolchain record.",
+    "Select BAZEL from the explicitly supplied absolute path, read .bazelversion, and require exact version equality.",
+    "Run the build-helper Node test file.",
+    "Run Bazel in batch mode for //:site with the wrapper's configured output-user-root.",
+    "Run ci/bazel/verify-output.mjs against bazel-bin/site.site and bazel-bin/site.receipt.json."
+  ],
+  "measurementPredictionOnly": {
+    "namedSummariesMayInclude": ["targeted HH 135", "full npm 290", "helpers 2", "Atlas import closure 1"],
+    "interpretation": "Predictions only; actual named summary from the fresh receipt/log is authoritative. The HH count overlaps full npm and must not be summed into an independent total."
+  },
+  "captureDirectory": "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2104/captures",
+  "stopPolicy": "Execute the canonical command once. Preserve first unexpected failure, raw output, exit and signal; no retry, cache reenactment, source change, assertion weakening, environment override, extra Bazel flag, or publication action."
+}

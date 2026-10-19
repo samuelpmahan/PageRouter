@@ -145,7 +145,7 @@ test('Teacher of the Day uses the captured Sarah profile and keeps it separate f
   assert.equal(byId(profile,'hh-profile-edit'),undefined,'captured reference profile is read-only');
 });
 
-test('Login and password-help content stays inside the single centered account card',()=>{
+test('Login content stays inside the single centered account card',()=>{
   const login=renderPublicSite({route:{page:'login'},journey:{session:{status:'anonymous'}}});
   const loginCard=inspect(login).find(node=>node.attrs?.class==='hh-card');
   assert.ok(loginCard);
@@ -154,12 +154,21 @@ test('Login and password-help content stays inside the single centered account c
   assert.equal(byId(login,'hh-login-submit').children[0],'Submit');
   assert.ok(byId(login,'hh-login-forgot'));
   assert.match(text(login),/Register/);
+});
+
+test('forgot-password disclosure accurately describes the local preview before submission',()=>{
   const forgot=renderPublicSite({route:{page:'forgot'},journey:{}});
   const forgotCard=inspect(forgot).find(node=>node.attrs?.class==='hh-card');
   assert.ok(inspect(forgotCard).some(node=>node.tag==='h1'&&node.children?.includes('Forgot Your Password?')));
-  assert.match(text(forgot),/we'll send you instructions on how to reset your password/);
+  assert.match(text(forgot),/Password recovery is not connected in this preview\. No email will be sent\./);
+  assert.doesNotMatch(text(forgot),/we'll send you instructions on how to reset your password/i);
+  assert.equal(byId(forgot,'hh-forgot-form').attrs['data-submit'],'public:forgot');
+  assert.equal(byId(forgot,'hh-forgot-email').attrs.name,'email');
+  assert.equal(byId(forgot,'hh-forgot-email').attrs.type,'email');
+  assert.equal(byId(forgot,'hh-forgot-email').attrs.required,true);
   assert.equal(byId(forgot,'hh-forgot-submit').children[0],'Submit');
-  assert.match(text(forgot),/Back to Login/);
+  const backToLogin=inspect(forgot).find(node=>node.tag==='a'&&node.children?.includes('Back to Login'));
+  assert.equal(backToLogin.attrs.href,'#/login');
 });
 
 test('partner and About renders expose source-shaped images and readable team text',()=>{

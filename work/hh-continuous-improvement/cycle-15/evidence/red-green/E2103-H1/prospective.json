@@ -1,0 +1,30 @@
+{
+  "job_id": "E2103",
+  "worker": "H1",
+  "authorization": "Root native E2103 H1 assignment; bounded renderer copy fix only",
+  "scope": {
+    "productFiles": [
+      "PageRouter/checkpoint/vendor/hh/src/public-site.mjs",
+      "PageRouter/checkpoint/vendor/hh/src/public-site.test.mjs"
+    ],
+    "preservedUntracked": ["PageRouter/hh-cycle13/", "PageRouter/hh-cycle15/"],
+    "nonGoals": ["controller/app/provider edits", "draft-state or retention feature", "auth/validation changes", "browser/DOM QA", "backend/email/account", "build/deploy/publication", "Git stage/commit/export"]
+  },
+  "change": {
+    "onlyRendererCopy": "Password recovery is not connected in this preview. No email will be sent.",
+    "retain": ["required type=email named email field", "public:forgot submit event", "Submit button", "Back to Login route", "existing local controller outcome"]
+  },
+  "testFirst": {
+    "testName": "forgot-password disclosure accurately describes the local preview before submission",
+    "redCommand": "node --test --test-name-pattern='forgot-password disclosure accurately describes the local preview before submission' vendor/hh/src/public-site.test.mjs",
+    "expectedRed": "The new exact disclosure assertion fails against the old renderer because the current TREE promises an email will be sent; no fixture/setup error.",
+    "greenCommands": [
+      "node --test --test-name-pattern='forgot-password disclosure accurately describes the local preview before submission' vendor/hh/src/public-site.test.mjs",
+      "node --test vendor/hh/src/public-site.test.mjs",
+      "node --test vendor/hh/src/public-controller.test.mjs"
+    ]
+  },
+  "stopPolicy": "Each command runs once into a unique capture directory. Stop at any unexpected failure; no automatic retries, capture overwrites, assertion weakening, or broad canonical build.",
+  "sourcePreservation": "Exact source and test byte snapshots are copied before editing the test and before RED. Original stdout/stderr/exit/UTC captures remain immutable.",
+  "acceptedCheckpoint": "Root asked for test-written actual-flow checkpoint before RED; routine validation may proceed while user reads it."
+}

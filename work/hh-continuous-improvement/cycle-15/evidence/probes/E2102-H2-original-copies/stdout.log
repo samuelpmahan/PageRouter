@@ -1,0 +1,147 @@
+{
+  "probe": "E2102-H2-forgot-password-source-tree-controller-runtime",
+  "provider": {
+    "mode": "fixture",
+    "fixture": true,
+    "persistence": "volatile-memory",
+    "realMail": false,
+    "productionAuthority": false
+  },
+  "baseline": {
+    "serviceCallCount": 0,
+    "runtimeReceiptCount": 1
+  },
+  "afterInitialize": {
+    "snapshot": {
+      "route": {
+        "page": "forgot",
+        "path": "/forgot-password"
+      },
+      "form": {
+        "id": "hh-forgot-form",
+        "submitEvent": "public:forgot"
+      },
+      "input": {
+        "id": "hh-forgot-email",
+        "name": "email",
+        "type": "email",
+        "required": true,
+        "autocomplete": "email",
+        "value": ""
+      },
+      "visibleCopy": "Skip to contentHomeDonateSign UpAboutContactPartners☰HomeDonateSign UpAboutContactPartnersLoginForgot Your Password?Enter your email address below, and we'll send you instructions on how to reset your password.Email:SubmitBack to Login© 2024 Homeroom Heroes. All rights reserved.",
+      "safeEmailDrafts": {
+        "forgot": null,
+        "login": {
+          "email": null
+        },
+        "registrationEmail": "",
+        "contactEmail": ""
+      }
+    },
+    "serviceCalls": [
+      {
+        "port": "SchoolData.getStates",
+        "inputKeys": []
+      }
+    ],
+    "serviceCallCount": 1,
+    "runtimeReceiptCount": 2
+  },
+  "afterInput": {
+    "updateDraftAccepted": false,
+    "snapshot": {
+      "route": {
+        "page": "forgot",
+        "path": "/forgot-password"
+      },
+      "form": {
+        "id": "hh-forgot-form",
+        "submitEvent": "public:forgot"
+      },
+      "input": {
+        "id": "hh-forgot-email",
+        "name": "email",
+        "type": "email",
+        "required": true,
+        "autocomplete": "email",
+        "value": ""
+      },
+      "visibleCopy": "Skip to contentHomeDonateSign UpAboutContactPartners☰HomeDonateSign UpAboutContactPartnersLoginForgot Your Password?Enter your email address below, and we'll send you instructions on how to reset your password.Email:SubmitBack to Login© 2024 Homeroom Heroes. All rights reserved.",
+      "safeEmailDrafts": {
+        "forgot": null,
+        "login": {
+          "email": null
+        },
+        "registrationEmail": "",
+        "contactEmail": ""
+      }
+    },
+    "serviceCallCount": 1
+  },
+  "afterInvalid": {
+    "result": {
+      "ok": false,
+      "error": {
+        "code": "validation_failed",
+        "message": "Enter a valid email address."
+      }
+    },
+    "serviceCalls": [],
+    "serviceCallCount": 1
+  },
+  "afterValid": {
+    "result": {
+      "ok": true,
+      "remote": false,
+      "message": "Password recovery is not connected. No email was sent."
+    },
+    "outcome": {
+      "kind": "local-simulation",
+      "message": "Password recovery is not connected. No email was sent.",
+      "remote": false
+    },
+    "serviceCalls": [],
+    "serviceCallCount": 1
+  },
+  "afterLoginNavigation": {
+    "route": {
+      "page": "login",
+      "path": "/login"
+    }
+  },
+  "afterReentry": {
+    "route": {
+      "page": "forgot",
+      "path": "/forgot-password"
+    },
+    "form": {
+      "id": "hh-forgot-form",
+      "submitEvent": "public:forgot"
+    },
+    "input": {
+      "id": "hh-forgot-email",
+      "name": "email",
+      "type": "email",
+      "required": true,
+      "autocomplete": "email",
+      "value": ""
+    },
+    "visibleCopy": "Skip to contentHomeDonateSign UpAboutContactPartners☰HomeDonateSign UpAboutContactPartnersLoginForgot Your Password?Enter your email address below, and we'll send you instructions on how to reset your password.Password recovery is not connected. No email was sent.Email:SubmitBack to Login© 2024 Homeroom Heroes. All rights reserved.",
+    "safeEmailDrafts": {
+      "forgot": null,
+      "login": {
+        "email": null
+      },
+      "registrationEmail": "",
+      "contactEmail": ""
+    }
+  },
+  "finalServiceCalls": [
+    {
+      "port": "SchoolData.getStates",
+      "inputKeys": []
+    }
+  ],
+  "finalRuntimeReceiptCount": 2
+}

@@ -1,0 +1,153 @@
+import {createHash} from 'node:crypto';
+import {createFixtureProvider, createServiceRuntime, HH_PORTS} from '../../../PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createCommunity} from '../../../PageRouter/checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '../../../PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '../../../PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+const syntheticEmail = 'hh15-probe@example.test';
+const malformedEmail = 'not-an-email';
+const digest = value => createHash('sha256').update(typeof value === 'string' ? value : JSON.stringify(value)).digest('hex');
+const counts = Object.fromEntries(HH_PORTS.map(port => [port, 0]));
+let tree = null;
+const provider = createFixtureProvider({fixture: true});
+const countedProvider = {
+  ...provider,
+  services: Object.freeze(Object.fromEntries(Object.entries(provider.services).map(([port, invoke]) => [port, async input => {
+    counts[port] = (counts[port] || 0) + 1;
+    return invoke(input);
+  }]))),
+};
+const runtime = createServiceRuntime(countedProvider);
+const community = createCommunity();
+const controller = createPublicController({runtime, community,
+  onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+});
+
+function nodes(root) {
+  if (!root || typeof root !== 'object') return [];
+  return [root, ...(root.children || []).flatMap(nodes)];
+}
+function nodeById(root, id) { return nodes(root).find(node => node.attrs?.id === id) || null; }
+function text(root) {
+  if (root == null) return '';
+  if (typeof root === 'string' || typeof root === 'number') return String(root);
+  if (typeof root !== 'object') return '';
+  return (root.children || []).map(text).filter(Boolean).join(' ');
+}
+function inputProjection(root) {
+  return nodes(root).filter(node => node.tag === 'input' || node.tag === 'textarea' || node.tag === 'select')
+    .map(node => ({tag: node.tag, id: node.attrs?.id ?? null, name: node.attrs?.name ?? null,
+      type: node.attrs?.type ?? null, value: node.attrs?.value ?? '', required: node.attrs?.required ?? false,
+      autocomplete: node.attrs?.autocomplete ?? null}));
+}
+function currentForgotView() {
+  const main = nodeById(tree, 'hh-main');
+  const form = nodeById(tree, 'hh-forgot-form');
+  return {page: tree?.attrs?.['data-public-page'] ?? null, mainText: text(main),
+    form: form ? {id: form.attrs?.id, submit: form.attrs?.['data-submit'], controls: inputProjection(form),
+      buttons: nodes(form).filter(node => node.tag === 'button').map(node => ({type: node.attrs?.type ?? null,
+        id: node.attrs?.id ?? null, text: text(node)}))} : null};
+}
+function partProjection() {
+  return runtime.pxc.entries().map(([address, part]) => ({address,
+    kind: typeof part.value === 'function' ? 'functionPart' : address === 'hh.provider' ? 'providerPart' : 'valuePart'}));
+}
+function storageProjection() {
+  const snap = runtime.snapshot();
+  return {injectedStorage: false, browserSessionStorageAvailable: typeof globalThis.sessionStorage !== 'undefined',
+    fixturePersistence: snap.diagnostics?.persistence ?? null,
+    communityPersistence: community.snapshot().storageStatus,
+    storageKeys: []};
+}
+function stateProjection() {
+  const state = controller.state;
+  return {route: state.route, request: state.request, journeyKeys: Object.keys(state.journey).sort(),
+    forgotDraft: state.journey.forgotDraft ?? null, outcome: state.journey.outcome,
+    loginDraft: state.journey.loginDraft, registrationIdentity: state.journey.registration?.identity,
+    contact: state.journey.contact};
+}
+function runtimeProjection() {
+  const snapshot = runtime.snapshot();
+  const inspected = runtime.inspect();
+  return {snapshotDigest: digest(snapshot), mode: snapshot.mode, fixture: snapshot.fixture,
+    persistence: snapshot.diagnostics?.persistence ?? null, sessionStatus: snapshot.session.status,
+    registrationStatus: snapshot.registration.status,
+    parts: partProjection(), receiptCount: inspected.receipts.length,
+    receipts: inspected.receipts.map((receipt, index) => ({index: index + 1, status: receipt.status,
+      into: receipt.into, inputNames: receipt.inputNames}))};
+}
+function countSnapshot() { return {...counts}; }
+function delta(before, after) {
+  return Object.fromEntries(HH_PORTS.map(port => [port, after[port] - before[port]]));
+}
+function hasAnyDelta(value) { return Object.values(value).some(number => number !== 0); }
+
+const results = {record: 'HH15 E2101 H1 one-shot synthetic forgotten-password flow',
+  startedAt: new Date().toISOString(),
+  instrumentedServiceBoundary: 'Each actual fixture provider service is wrapped only to count calls, then delegated unchanged to that same provider function.',
+  externalNetworkEnabledByProbe: false,
+  initial: {},
+  stages: [],
+};
+
+await controller.initialize('#/forgot-password');
+const baselineCounts = countSnapshot();
+const baselineReceipts = runtime.inspect().receipts.length;
+results.initial = {view: currentForgotView(), state: stateProjection(), runtime: runtimeProjection(),
+  storage: storageProjection(), providerCapabilities: runtime.capabilities,
+  providerPortInventory: Object.keys(provider.services).sort(), declaredPorts: [...HH_PORTS],
+  postInitializationPerPortCounts: baselineCounts, postInitializationReceiptCount: baselineReceipts};
+
+const beforeDraftCounts = countSnapshot();
+const beforeDraftRuntime = runtimeProjection();
+const initialTree = tree;
+const draftAccepted = controller.updateDraft('email', syntheticEmail);
+results.stages.push({name: 'delegated-input-equivalent-updateDraft', operation: "controller.updateDraft('email', syntheticEmail)",
+  returnValue: draftAccepted, treeObjectUnchangedFromInitialEmission: tree === initialTree,
+  interpretation: 'A false return means this controller path did not notify/rerender; the snapshot records the prior emitted blank tree, not a mounted DOM value or a typed DOM input.',
+  view: currentForgotView(), state: stateProjection(), runtime: runtimeProjection(),
+  storage: storageProjection(), perPortCallDelta: delta(beforeDraftCounts, countSnapshot()),
+  receiptDelta: runtime.inspect().receipts.length - beforeDraftRuntime.receiptCount});
+
+const beforeNavigationCounts = countSnapshot();
+const beforeNavigationRuntime = runtimeProjection();
+await controller.navigate('#/login');
+const loginRoute = controller.route;
+await controller.navigate('#/forgot-password');
+results.stages.push({name: 'navigation-reentry', routes: [loginRoute, controller.route], view: currentForgotView(),
+  state: stateProjection(), runtime: runtimeProjection(), storage: storageProjection(),
+  perPortCallDelta: delta(beforeNavigationCounts, countSnapshot()),
+  receiptDelta: runtime.inspect().receipts.length - beforeNavigationRuntime.receiptCount});
+
+const beforeValidCounts = countSnapshot();
+const beforeValidRuntime = runtimeProjection();
+const validResult = await controller.dispatch('public:forgot', {email: syntheticEmail});
+results.stages.push({name: 'valid-controller-payload', payloadClassification: 'synthetic nonsecret .test address',
+  result: validResult, view: currentForgotView(), state: stateProjection(), runtime: runtimeProjection(),
+  storage: storageProjection(), perPortCallDelta: delta(beforeValidCounts, countSnapshot()),
+  receiptDelta: runtime.inspect().receipts.length - beforeValidRuntime.receiptCount});
+
+const beforeMalformedCounts = countSnapshot();
+const beforeMalformedRuntime = runtimeProjection();
+const malformedResult = await controller.dispatch('public:forgot', {email: malformedEmail});
+results.stages.push({name: 'malformed-controller-payload', payloadClassification: 'synthetic malformed nonsecret string',
+  result: malformedResult, view: currentForgotView(), state: stateProjection(), runtime: runtimeProjection(),
+  storage: storageProjection(), perPortCallDelta: delta(beforeMalformedCounts, countSnapshot()),
+  receiptDelta: runtime.inspect().receipts.length - beforeMalformedRuntime.receiptCount});
+
+const beforeBlankCounts = countSnapshot();
+const beforeBlankRuntime = runtimeProjection();
+const blankResult = await controller.dispatch('public:forgot', {email: ''});
+results.stages.push({name: 'blank-direct-controller-control', payloadClassification: 'empty string sent directly to controller; browser reportValidity is not exercised',
+  result: blankResult, view: currentForgotView(), state: stateProjection(), runtime: runtimeProjection(),
+  storage: storageProjection(), perPortCallDelta: delta(beforeBlankCounts, countSnapshot()),
+  receiptDelta: runtime.inspect().receipts.length - beforeBlankRuntime.receiptCount});
+
+results.final = {finishedAt: new Date().toISOString(), providerPortInventory: Object.keys(provider.services).sort(),
+  providerCounts: countSnapshot(), runtimeReceiptCount: runtime.inspect().receipts.length,
+  finalRuntime: runtimeProjection(), finalState: stateProjection(), finalView: currentForgotView(), storage: storageProjection(),
+  sourceLevelExpectedControl: 'Actual app.mjs submit delegate checks reportValidity() before new FormData(form), then dispatches Object.fromEntries(data.entries()); this probe did not call browser APIs.',
+  noServiceDeltaOnForgotControls: results.stages.filter(stage => stage.name !== 'navigation-reentry')
+    .every(stage => !hasAnyDelta(stage.perPortCallDelta) && stage.receiptDelta === 0)};
+
+process.stdout.write(`${JSON.stringify(results, null, 2)}\n`);

@@ -1,0 +1,33 @@
+{
+  "schema": "hh-continuous-improvement-continuation@1",
+  "cycle": "cycle-15",
+  "current_job": "E2105",
+  "current_worker": "H1",
+  "worker_state": "package assembled; awaiting independent audit and root decision",
+  "entrypoint": "README.md",
+  "next": "NEXT.md",
+  "manifest": "evidence/manifest.json",
+  "native_result": "evidence/E2105/result.json",
+  "next_gate": "independent package audit, then root decision",
+  "source_freeze": {
+    "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a"
+  },
+  "build": {
+    "job": "E2104",
+    "source_digest": "5877a1d6685dcb25d8f2e614217d6c70da2a09fe07cabdf56e7c34a5f639ed75",
+    "site_digest": "72970ad3b9663f24f1acae43e54c3d38926f4b65f6bfa5702340f108d47bd5c7",
+    "site_build_id": "354979f0d61832de23c74cd99a99305498804b797f25b61ea76ebc4a322ec17c",
+    "receipt": "evidence/build/E2104-H1/bazel-output/site.receipt.json",
+    "log": "evidence/build/E2104-H1/bazel-output/site.log",
+    "counts": "2 helpers; 135 targeted HH (overlaps full suite); 290 full-suite; 1 Atlas; 843 files"
+  },
+  "limits": [
+    "Synthetic volatile fixture/controller/runtime/source-equivalent emitted-tree evidence only; not mounted/browser DOM, native validation/FormData, backend, real account, screenshot, or human acceptance.",
+    "No real email was sent; backend/email capability is not established. No email-retention defect was proven and no retention feature was added.",
+    "E2104 raw worker outcome completed is preserved; the separate root envelope corrects schema to mixed_change and does not claim a native rejection event.",
+    "Archived scripts and tests are inert evidence; do not execute from package.",
+    "No Git stage/commit/export/publication/deployment or further test/build is authorized before independent review and root decision.",
+    "The 21 old HH13 and six H2 E2102 accidental scratch paths remain outside the package and excluded; Lab7 remains separate."
+  ]
+}

@@ -1,0 +1,30 @@
+✖ forgot-password disclosure accurately describes the local preview before submission (2.095725ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 86.160599
+
+✖ failing tests:
+
+test at vendor/hh/src/public-site.test.mjs:159:1
+✖ forgot-password disclosure accurately describes the local preview before submission (2.095725ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Password recovery is not connected in this preview\. No email will be sent\./. Input:
+  
+  "Skip to content Home Donate Sign Up About Contact Partners ☰ Home Donate Sign Up About Contact Partners Login Forgot Your Password? Enter your email address below, and we'll send you instructions on how to reset your password. Email: Submit Back to Login © 2024 Homeroom Heroes. All rights reserved."
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.test.mjs:163:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: "Skip to content Home Donate Sign Up About Contact Partners ☰ Home Donate Sign Up About Contact Partners Login Forgot Your Password? Enter your email address below, and we'll send you instructions on how to reset your password. Email: Submit Back to Login © 2024 Homeroom Heroes. All rights reserved.",
+    expected: /Password recovery is not connected in this preview\. No email will be sent\./,
+    operator: 'match',
+    diff: 'simple'
+  }

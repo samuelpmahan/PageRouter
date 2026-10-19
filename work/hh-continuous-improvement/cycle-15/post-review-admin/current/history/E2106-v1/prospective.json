@@ -1,0 +1,97 @@
+{
+  "schema": "hh-cycle15-stage-commit-export-prospective@1",
+  "status": "construction only; no execution authorization",
+  "job": "E2106",
+  "worker": "H1",
+  "repository": "/workspace/scratch/8528bb251845/PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "expectedParent": "77420532395984874536d6e10373fe76970e92a4",
+  "expectedParentTree": "c4e04221e776e3c15c24efe804993af7146b18d3",
+  "canonicalParentReportedOnly": "01512524bb4387f06471a927d6657f8486de579d",
+  "preparedArtifacts": {
+    "precommit-gate.mjs": "5e0dfb96db0f0ca9e880cc80b963ca2b3b5ba0d2e4b91d01c910bd8c1a187b83",
+    "verify-staged-allowlist.mjs": "e734092c2ddfe84b7bd79d1ff2401c803fc02b39beb7aac12331e94cf1d43ec7",
+    "export-once.mjs": "4988279114a4a2bc993ddfa09624208924f94de7189ee9b8c185802ec08b8b73",
+    "FLOW.md": "3e6e2c40e325834404de6b2da02befca83f9e884b78b5e74e4cc6e6fd3447b33"
+  },
+  "sourceHashes": {
+    "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4baf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a"
+  },
+  "frozenPackage": {
+    "root": "work/hh-continuous-improvement/cycle-15",
+    "manifest": "work/hh-continuous-improvement/cycle-15/evidence/manifest.json",
+    "manifestSha256": "ef30d3251b256aba162ebbf2fd50b6367cff6816b04d27e37e6c3ef268c4f914",
+    "payloadFiles": 105,
+    "declaredEnvelopes": [
+      "work/hh-continuous-improvement/cycle-15/evidence/manifest.json",
+      "work/hh-continuous-improvement/cycle-15/evidence/E2105/result.json"
+    ],
+    "resultSha256": "5b22f485243c0f981b8e5bb0043fb478d22c706d9c8ea8f6c2104eaf173c5022",
+    "totalFrozenFiles": 107
+  },
+  "excludedScratch": {
+    "exactPathCount": 27,
+    "HH13OldPaths": 21,
+    "HH15E2102AccidentalPaths": [
+      "hh-cycle15/H2/E2102/PREDECLARED-PROBE.md",
+      "hh-cycle15/H2/E2102/exit-code.txt",
+      "hh-cycle15/H2/E2102/probe.mjs",
+      "hh-cycle15/H2/E2102/result.json",
+      "hh-cycle15/H2/E2102/stderr.log",
+      "hh-cycle15/H2/E2102/stdout.log"
+    ],
+    "HH13ExactPaths": [
+      "hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.end.utc",
+      "hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.exit",
+      "hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.start.utc",
+      "hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.stderr.raw",
+      "hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.stdout.raw",
+      "hh-cycle13/H1/E1803-PROPOSAL/green-01-test-source-reconstructed-after-green02.mjs.txt",
+      "hh-cycle13/H1/E1803-PROPOSAL/green-01.end.utc",
+      "hh-cycle13/H1/E1803-PROPOSAL/green-01.exit",
+      "hh-cycle13/H1/E1803-PROPOSAL/green-01.start.utc",
+      "hh-cycle13/H1/E1803-PROPOSAL/green-01.stderr.raw",
+      "hh-cycle13/H1/E1803-PROPOSAL/green-01.stdout.raw",
+      "hh-cycle13/H1/E1803-PROPOSAL/green-02.end.utc",
+      "hh-cycle13/H1/E1803-PROPOSAL/green-02.exit",
+      "hh-cycle13/H1/E1803-PROPOSAL/green-02.start.utc",
+      "hh-cycle13/H1/E1803-PROPOSAL/green-02.stderr.raw",
+      "hh-cycle13/H1/E1803-PROPOSAL/green-02.stdout.raw",
+      "hh-cycle13/H1/E1803-PROPOSAL/site-full-01.end.utc",
+      "hh-cycle13/H1/E1803-PROPOSAL/site-full-01.exit",
+      "hh-cycle13/H1/E1803-PROPOSAL/site-full-01.start.utc",
+      "hh-cycle13/H1/E1803-PROPOSAL/site-full-01.stderr.raw",
+      "hh-cycle13/H1/E1803-PROPOSAL/site-full-01.stdout.raw"
+    ],
+    "rule": "preserve these exact 27 untracked names only; no prefix/general dirty-tree waiver; never stage or export them"
+  },
+  "futureAdmin": {
+    "path": "work/hh-continuous-improvement/cycle-15/post-review-admin/current",
+    "status": "must be created separately after actual R2105 acceptance",
+    "rule": "admin manifest plus exactly its enumerated entries; no extras; root must review full bytes and final allowlist literals before GO"
+  },
+  "commands": {
+    "precommitGate": ["node", "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/precommit-gate.mjs", "<root-admitted-plan-path>", "<plan-sha256>"],
+    "stage": ["git", "add", "--pathspec-from-file=/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/stage-paths.nul", "--pathspec-file-nul"],
+    "stagedWhitespace": ["git", "diff", "--cached", "--check"],
+    "verifyStaged": ["node", "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/verify-staged-allowlist.mjs", "<root-admitted-plan-path>", "<plan-sha256>"],
+    "commit": ["git", "commit", "-m", "HH cycle 15: disclose local-only password recovery"],
+    "export": ["node", "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/export-once.mjs", "<root-admitted-export-plan-path>", "<plan-sha256>", "<immutable-40-hex-commit>"]
+  },
+  "phases": [
+    {"phase": 1, "name": "construct and root-review code/flow", "status": "current; no syntax or gate execution"},
+    {"phase": 2, "name": "R2105 package audit and separate admin closure", "status": "pending; no files authorized yet"},
+    {"phase": 3, "name": "root final read of admin manifest/allowlist/literals", "status": "pending"},
+    {"phase": 4, "name": "precommit gate and exact path-plan admission", "status": "requires separate root GO"},
+    {"phase": 5, "name": "stage once, whitespace diagnostic, exact staged verification", "status": "requires separate root GO"},
+    {"phase": 6, "name": "one local commit", "status": "requires separate root GO"},
+    {"phase": 7, "name": "one immutable local Git-object export", "status": "requires exact commit admission and separate root GO"}
+  ],
+  "boundaries": [
+    "No test/build/probe rerun, source change, package rewrite, chmod, normalization, or broad-clean claim.",
+    "No stage, commit, export, remote operation, publication, deployment, reset, or force in this construction phase.",
+    "E2104 raw worker outcome completed remains unchanged; root-only envelope is a separate qualification.",
+    "No browser/backend/human acceptance or email-retention defect is claimed; no real email was sent."
+  ]
+}

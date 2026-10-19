@@ -1,0 +1,169 @@
+// PREPARED ONLY. Run once after R2105, exact commit, root export GO, and immutable plan admission.
+// Reads immutable local Git objects and writes one exclusive scratch transport directory only.
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {mkdir, readFile, writeFile} from 'node:fs/promises';
+import {join, resolve} from 'node:path';
+
+const repo = '/workspace/scratch/8528bb251845/PageRouter';
+const scratch = '/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106';
+const outputParent = join(scratch, 'export');
+const planPath = process.argv[2], planSha = process.argv[3], commit = process.argv[4];
+if (!planPath || !/^[0-9a-f]{64}$/.test(planSha ?? '') || !/^[0-9a-f]{40}$/.test(commit ?? '')) {
+  throw new Error('usage: node export-once.mjs <root-admitted-plan-path> <plan-sha256> <immutable-commit-40-hex>');
+}
+const sha256 = b => createHash('sha256').update(b).digest('hex');
+const blobSha1 = b => createHash('sha1').update(`blob ${b.length}\0`).update(b).digest('hex');
+const git = (...a) => execFileSync('git', a, {cwd: repo, maxBuffer: 64 * 1024 * 1024});
+const planBytes = await readFile(planPath);
+if (sha256(planBytes) !== planSha) throw new Error('prospective plan hash mismatch');
+const plan = JSON.parse(planBytes.toString('utf8'));
+if (plan.schema !== 'hh-cycle15-export-plan/v1' || plan.status !== 'root-admitted-export') throw new Error('plan is not root-admitted for export');
+if (plan.expectedParent !== '77420532395984874536d6e10373fe76970e92a4' ||
+    plan.expectedParentTree !== 'c4e04221e776e3c15c24efe804993af7146b18d3' ||
+    plan.canonicalParentReportedOnly !== '01512524bb4387f06471a927d6657f8486de579d') {
+  throw new Error('frozen cycle-15 Git provenance changed');
+}
+const parent = git('rev-parse', `${commit}^`).toString('utf8').trim();
+const parentTree = git('rev-parse', `${parent}^{tree}`).toString('utf8').trim();
+const tree = git('rev-parse', `${commit}^{tree}`).toString('utf8').trim();
+if (parent !== plan.expectedParent || parentTree !== plan.expectedParentTree) throw new Error('commit parent/tree differs from frozen source baseline');
+const records = git('ls-tree', '-r', '-z', '--full-tree', commit).toString('utf8').split('\0').filter(Boolean);
+const treeEntries = new Map(records.map(record => {
+  const tab = record.indexOf('\t'), [mode, type, oid] = record.slice(0, tab).split(' ');
+  return [record.slice(tab + 1), {mode, type, oid}];
+}));
+const readBlob = p => {
+  const entry = treeEntries.get(p);
+  if (!entry || entry.type !== 'blob') throw new Error(`missing committed blob: ${p}`);
+  const bytes = git('cat-file', 'blob', entry.oid);
+  if (blobSha1(bytes) !== entry.oid) throw new Error(`Git blob identity mismatch: ${p}`);
+  return {entry, bytes};
+};
+const changed = git('diff-tree', '--no-commit-id', '--name-only', '-r', parent, commit)
+  .toString('utf8').trimEnd().split('\n').filter(Boolean).sort();
+const planned = new Map((plan.files ?? []).map(item => [item.path, item]));
+if (!Array.isArray(plan.files) || planned.size !== plan.files.length || planned.size !== plan.allowlistCount) {
+  throw new Error('frozen exact allowlist is missing, duplicated, or count-mismatched');
+}
+const exactPaths = [...planned.keys()].sort();
+const reviewedSourcePaths = [
+  'checkpoint/vendor/hh/src/public-site.mjs',
+  'checkpoint/vendor/hh/src/public-site.test.mjs',
+];
+for (const p of reviewedSourcePaths) if (!planned.has(p)) throw new Error(`admitted plan omits reviewed source: ${p}`);
+if (JSON.stringify(changed) !== JSON.stringify(exactPaths)) throw new Error(`commit changed paths differ from admitted allowlist: ${JSON.stringify(changed)}`);
+const packageRoot = 'work/hh-continuous-improvement/cycle-15';
+const manifestPath = `${packageRoot}/evidence/manifest.json`;
+const resultPath = `${packageRoot}/evidence/E2105/result.json`;
+const manifestBytes = readBlob(manifestPath).bytes;
+if (sha256(manifestBytes) !== plan.package.manifestSha256) throw new Error('immutable cycle-15 manifest hash changed');
+const manifest = JSON.parse(manifestBytes.toString('utf8'));
+if (manifest.listedFileCount !== 105 || manifest.files?.length !== 105 || manifest.totalPackageFileCount !== 107) {
+  throw new Error('cycle-15 package is not exact 105 payload + 2 envelopes');
+}
+if (sha256(readBlob(resultPath).bytes) !== plan.package.resultSha256) throw new Error('immutable E2105 result hash changed');
+const expectedPackage = new Set([manifestPath, resultPath]);
+for (const item of manifest.files) {
+  if (typeof item.path !== 'string' || item.path.startsWith('/') || item.path.split('/').includes('..')) throw new Error(`unsafe package path: ${String(item.path)}`);
+  const p = `${packageRoot}/${item.path}`, {entry, bytes} = readBlob(p);
+  if (bytes.length !== item.bytes || sha256(bytes) !== item.sha256) throw new Error(`manifest payload mismatch: ${p}`);
+  const gitModeProjection = item.mode && (Number.parseInt(item.mode, 8) & 0o111) ? '100755' : '100644';
+  if (entry.mode !== gitModeProjection) throw new Error(`Git mode projection mismatch: ${p}`);
+  expectedPackage.add(p);
+}
+if (expectedPackage.size !== 107) throw new Error(`manifest closure has ${expectedPackage.size} paths, expected 107`);
+
+const adminRoot = `${packageRoot}/post-review-admin/current`;
+const adminManifestPath = `${adminRoot}/manifest.json`;
+const adminBytes = readBlob(adminManifestPath).bytes;
+if (sha256(adminBytes) !== plan.admin.manifestSha256) throw new Error('accepted post-review admin manifest hash changed');
+const admin = JSON.parse(adminBytes.toString('utf8'));
+if (!Array.isArray(admin.entries)) throw new Error('admin manifest has no entries[]');
+const expectedAdmin = new Set([adminManifestPath]);
+for (const item of admin.entries) {
+  if (typeof item.path !== 'string' || item.path.startsWith('/') || item.path.split('/').includes('..')) throw new Error(`unsafe admin path: ${String(item.path)}`);
+  const p = `${adminRoot}/${item.path}`, {entry, bytes} = readBlob(p);
+  if (bytes.length !== item.bytes || sha256(bytes) !== item.sha256) throw new Error(`admin manifest payload mismatch: ${p}`);
+  const gitModeProjection = item.mode && (Number.parseInt(item.mode, 8) & 0o111) ? '100755' : '100644';
+  if (entry.mode !== gitModeProjection) throw new Error(`admin Git mode projection mismatch: ${p}`);
+  expectedAdmin.add(p);
+}
+for (const p of [...expectedPackage, ...expectedAdmin]) if (!planned.has(p)) throw new Error(`admitted plan omits package closure path: ${p}`);
+for (const p of planned.keys()) if (![...expectedPackage, ...expectedAdmin].includes(p) &&
+    p !== 'checkpoint/vendor/hh/src/public-site.mjs' && p !== 'checkpoint/vendor/hh/src/public-site.test.mjs') {
+  throw new Error(`unexpected path in admitted export plan: ${p}`);
+}
+for (const [p, item] of planned) {
+  const {entry, bytes} = readBlob(p);
+  if (entry.mode !== item.mode || bytes.length !== item.bytes || sha256(bytes) !== item.sha256 || blobSha1(bytes) !== item.gitBlobSha1) {
+    throw new Error(`commit blob differs from exact admitted plan: ${p}`);
+  }
+}
+const sourceHashes = new Map([
+  ['checkpoint/vendor/hh/src/public-site.mjs', '1159a5883839107df5655b4baf3857f9f59b98e9daaa2ab5c8d011af9b6409b7'],
+  ['checkpoint/vendor/hh/src/public-site.test.mjs', '12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a'],
+]);
+for (const [p, expected] of sourceHashes) if (sha256(readBlob(p).bytes) !== expected) throw new Error(`reviewed source mismatch: ${p}`);
+const packageTree = [...treeEntries.keys()].filter(p => p === packageRoot || p.startsWith(`${packageRoot}/`));
+const expectedTree = new Set([...expectedPackage, ...expectedAdmin]);
+for (const p of packageTree) if (!expectedTree.has(p)) throw new Error(`unmanifested committed package path: ${p}`);
+for (const p of expectedTree) if (!treeEntries.has(p)) throw new Error(`missing committed package path: ${p}`);
+
+const segmentLimit = 60_000, indexLimit = 190_000;
+const output = resolve(join(outputParent, commit));
+await mkdir(outputParent, {recursive: false});
+await mkdir(output, {recursive: false});
+const segments = [], sourceFiles = [];
+const writeSegment = async (name, object) => {
+  const bytes = Buffer.from(JSON.stringify(object, null, 2) + '\n', 'utf8');
+  if (bytes.length > segmentLimit) throw new Error(`${name} exceeds segment cap`);
+  await writeFile(join(output, name), bytes, {flag: 'wx'});
+  segments.push({path: name, bytes: bytes.length, sha256: sha256(bytes)});
+};
+let sequence = 0;
+for (const path of exactPaths) {
+  const {entry, bytes} = readBlob(path);
+  const identity = {path, mode: entry.mode, gitBlobSha1: entry.oid, sha256: sha256(bytes), byteLength: bytes.length};
+  let chars = null;
+  try {
+    const text = new TextDecoder('utf-8', {fatal: true, ignoreBOM: true}).decode(bytes);
+    if (Buffer.from(text, 'utf8').equals(bytes)) chars = Array.from(text);
+  } catch {}
+  sequence++;
+  const chunks = [];
+  if (chars !== null) {
+    const size = 4000, count = Math.max(1, Math.ceil(chars.length / size));
+    for (let i = 0; i < count; i++) {
+      const name = `text-${String(sequence).padStart(4, '0')}-${String(i + 1).padStart(4, '0')}.json`;
+      await writeSegment(name, {kind: 'utf8-text-segment', ...identity, segmentIndex: i + 1, segmentCount: count,
+        content: chars.slice(i * size, (i + 1) * size).join('')});
+      chunks.push(name);
+    }
+  } else {
+    const size = 36_000, count = Math.max(1, Math.ceil(bytes.length / size));
+    for (let i = 0; i < count; i++) {
+      const name = `binary-${String(sequence).padStart(4, '0')}-${String(i + 1).padStart(4, '0')}.json`;
+      const part = bytes.subarray(i * size, Math.min(bytes.length, (i + 1) * size));
+      await writeSegment(name, {kind: 'binary-base64-segment', ...identity, segmentIndex: i + 1, segmentCount: count,
+        chunkByteLength: part.length, chunkSha256: sha256(part), base64: part.toString('base64')});
+      chunks.push(name);
+    }
+  }
+  sourceFiles.push({...identity, encoding: chars === null ? 'binary-base64-segments' : 'utf8-text-segments', chunks});
+}
+const index = {schema: 'hh-cycle15-readonly-git-export/v1', repository: 'PageRouter', branch: plan.branch,
+  localCommit: commit, localParent: parent, localParentTree: parentTree, localTree: tree,
+  canonicalParentReportedOnly: plan.canonicalParentReportedOnly,
+  cycleManifestSha256: plan.package.manifestSha256, adminManifestSha256: plan.admin.manifestSha256,
+  changedPaths: exactPaths, sourceFiles, segmentFiles: segments,
+  limits: {maxSegmentJsonBytes: segmentLimit, maxTransportIndexBytes: indexLimit},
+  note: 'Read-only local Git-object transport; no remote identity/authentication or publication is claimed.'};
+const indexBytes = Buffer.from(JSON.stringify(index, null, 2) + '\n', 'utf8');
+if (indexBytes.length > indexLimit) throw new Error('transport index exceeds 190000-byte cap');
+await writeFile(join(output, 'transport.json'), indexBytes, {flag: 'wx'});
+console.log(JSON.stringify({localCommit: commit, localParent: parent, localParentTree: parentTree, localTree: tree,
+  canonicalParentReportedOnly: plan.canonicalParentReportedOnly, frozenPackagePaths: expectedPackage.size,
+  acceptedAdminPaths: expectedAdmin.size, changedBlobs: sourceFiles.length, segments: segments.length,
+  maxSegmentBytes: Math.max(0, ...segments.map(s => s.bytes)), indexBytes: indexBytes.length,
+  indexSha256: sha256(indexBytes), output, gitMutation: 'none; reads immutable local commit objects only'}, null, 2));

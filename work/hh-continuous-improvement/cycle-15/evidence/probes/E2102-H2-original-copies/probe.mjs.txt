@@ -1,0 +1,116 @@
+import {createCommunity} from '../../../checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '../../../checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '../../../checkpoint/vendor/hh/src/public-site.mjs';
+import {createFixtureProvider, createServiceRuntime} from '../../../checkpoint/vendor/hh/services/index.mjs';
+
+function nodeById(tree, id) {
+  if (!tree || typeof tree !== 'object') return null;
+  if (tree.attrs?.id === id) return tree;
+  for (const child of tree.children || []) {
+    const found = nodeById(child, id);
+    if (found) return found;
+  }
+  return null;
+}
+
+function visibleText(tree) {
+  if (tree == null) return '';
+  if (typeof tree !== 'object') return String(tree);
+  return (tree.children || []).map(visibleText).join('');
+}
+
+function forgotSnapshot(controller) {
+  const tree = renderPublicSite({route: controller.route, state: controller.state, journey: controller.state.journey});
+  const form = nodeById(tree, 'hh-forgot-form');
+  const input = nodeById(tree, 'hh-forgot-email');
+  return {
+    route: {page: controller.route.page, path: controller.route.path},
+    form: form ? {id: form.attrs?.id, submitEvent: form.attrs?.['data-submit']} : null,
+    input: input ? {
+      id: input.attrs?.id,
+      name: input.attrs?.name,
+      type: input.attrs?.type,
+      required: input.attrs?.required,
+      autocomplete: input.attrs?.autocomplete,
+      value: input.attrs?.value ?? null,
+    } : null,
+    visibleCopy: visibleText(tree),
+    safeEmailDrafts: {
+      forgot: controller.state.journey.forgotDraft ?? null,
+      login: controller.state.journey.loginDraft ?? null,
+      registrationEmail: controller.state.journey.registration?.identity?.email ?? null,
+      contactEmail: controller.state.journey.contact?.email ?? null,
+    },
+  };
+}
+
+const base = createFixtureProvider({fixture: true});
+const serviceCalls = [];
+const wrappedServices = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+  serviceCalls.push({port, inputKeys: Object.keys(input || {}).sort()});
+  return invoke(input);
+}]));
+const runtime = createServiceRuntime({...base, services: Object.freeze(wrappedServices)});
+await runtime.ready;
+const controller = createPublicController({
+  runtime,
+  community: createCommunity({storage: null}),
+});
+
+const baseline = {serviceCallCount: serviceCalls.length, runtimeReceiptCount: runtime.inspect().receipts.length};
+await controller.initialize('#/forgot-password');
+const afterInitialize = {
+  snapshot: forgotSnapshot(controller),
+  serviceCalls: serviceCalls.slice(baseline.serviceCallCount),
+  serviceCallCount: serviceCalls.length,
+  runtimeReceiptCount: runtime.inspect().receipts.length,
+};
+
+const typedEmail = 'e2102-probe@example.test';
+const updateDraftAccepted = controller.updateDraft('email', typedEmail);
+const afterInput = {
+  updateDraftAccepted,
+  snapshot: forgotSnapshot(controller),
+  serviceCallCount: serviceCalls.length,
+};
+
+const beforeInvalid = serviceCalls.length;
+const invalidResult = await controller.dispatch('public:forgot', {email: 'not-an-email'});
+const afterInvalid = {
+  result: invalidResult,
+  serviceCalls: serviceCalls.slice(beforeInvalid),
+  serviceCallCount: serviceCalls.length,
+};
+
+const beforeValid = serviceCalls.length;
+const validResult = await controller.dispatch('public:forgot', {email: typedEmail});
+const afterValid = {
+  result: validResult,
+  outcome: {
+    kind: controller.state.journey.outcome?.kind ?? null,
+    message: controller.state.journey.outcome?.message ?? null,
+    remote: controller.state.journey.outcome?.remote ?? null,
+  },
+  serviceCalls: serviceCalls.slice(beforeValid),
+  serviceCallCount: serviceCalls.length,
+};
+
+await controller.navigate('#/login');
+const afterLoginNavigation = {route: {page: controller.route.page, path: controller.route.path}};
+await controller.navigate('#/forgot-password');
+const afterReentry = forgotSnapshot(controller);
+
+process.stdout.write(`${JSON.stringify({
+  probe: 'E2102-H2-forgot-password-source-tree-controller-runtime',
+  provider: {mode: runtime.mode, fixture: runtime.fixture, persistence: runtime.capabilities.persistence,
+    realMail: runtime.capabilities.realMail, productionAuthority: runtime.capabilities.productionAuthority},
+  baseline,
+  afterInitialize,
+  afterInput,
+  afterInvalid,
+  afterValid,
+  afterLoginNavigation,
+  afterReentry,
+  finalServiceCalls: serviceCalls,
+  finalRuntimeReceiptCount: runtime.inspect().receipts.length,
+}, null, 2)}\n`);

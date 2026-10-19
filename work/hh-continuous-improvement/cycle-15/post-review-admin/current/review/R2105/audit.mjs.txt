@@ -1,0 +1,199 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import crypto from 'node:crypto';
+
+const checkout = '/workspace/scratch/8528bb251845/PageRouter';
+const pkg = path.join(checkout, 'work/hh-continuous-improvement/cycle-15');
+const manifestPath = path.join(pkg, 'evidence/manifest.json');
+const resultPath = path.join(pkg, 'evidence/E2105/result.json');
+const manifestBytes = fs.readFileSync(manifestPath);
+const resultBytes = fs.readFileSync(resultPath);
+const manifest = JSON.parse(manifestBytes);
+const result = JSON.parse(resultBytes);
+const sha = b => crypto.createHash('sha256').update(b).digest('hex');
+const modeOf = s => (s.mode & 0o777).toString(8).padStart(4, '0');
+
+async function walk(dir, prefix = '') {
+  const out = [];
+  for (const entry of fs.readdirSync(dir, {withFileTypes: true}).sort((a, b) => a.name.localeCompare(b.name))) {
+    const rel = prefix ? `${prefix}/${entry.name}` : entry.name;
+    const full = path.join(dir, entry.name);
+    const st = fs.lstatSync(full);
+    if (st.isSymbolicLink()) out.push({path: rel, type: 'symlink', mode: modeOf(st)});
+    else if (st.isDirectory()) out.push(...await walk(full, rel));
+    else if (st.isFile()) out.push({path: rel, type: 'file', bytes: st.size, mode: modeOf(st), sha256: sha(fs.readFileSync(full))});
+    else out.push({path: rel, type: 'other', mode: modeOf(st)});
+  }
+  return out;
+}
+
+const actual = await walk(pkg);
+const actualFiles = actual.filter(x => x.type === 'file');
+const entries = manifest.files;
+const expectedPaths = entries.map(x => x.path);
+const excluded = manifest.excludedEnvelopeFiles;
+const expectedActual = new Set([...expectedPaths, ...excluded]);
+const actualSet = new Set(actual.map(x => x.path));
+const duplicatePaths = expectedPaths.filter((p, i) => expectedPaths.indexOf(p) !== i);
+const missing = [...expectedActual].filter(p => !actualSet.has(p)).sort();
+const extras = [...actualSet].filter(p => !expectedActual.has(p)).sort();
+const badTypes = actual.filter(x => x.type !== 'file');
+const payloadMismatches = [];
+for (const item of entries) {
+  const found = actual.find(x => x.path === item.path);
+  if (!found || found.type !== 'file') continue;
+  for (const key of ['bytes', 'sha256', 'mode']) if (found[key] !== item[key]) {
+    payloadMismatches.push({path: item.path, field: key, expected: item[key], actual: found[key]});
+  }
+}
+
+const actualManifestHash = sha(manifestBytes);
+const actualResultHash = sha(resultBytes);
+const envelopeHashes = Object.fromEntries(excluded.map(p => [p, {
+  bytes: fs.statSync(path.join(pkg, p)).size,
+  sha256: sha(fs.readFileSync(path.join(pkg, p))),
+  mode: modeOf(fs.statSync(path.join(pkg, p))),
+}]));
+
+const originalDirs = [
+  '/workspace/scratch/8528bb251845/hh-cycle15/H2/E2102-ORIGINAL-CAPTURES',
+  '/workspace/scratch/8528bb251845/PageRouter/hh-cycle15/H2/E2102',
+];
+const copiedDir = path.join(pkg, 'evidence/probes/E2102-H2-original-copies');
+const copyPairs = [
+  ['PREDECLARED-PROBE.md', 'PREDECLARED-PROBE.md'],
+  ['exit-code.txt', 'exit-code.txt'],
+  ['probe.mjs.txt', 'probe.mjs'],
+  ['result.json', 'result.json'],
+  ['stderr.log', 'stderr.log'],
+  ['stdout.log', 'stdout.log'],
+];
+const copyChecks = [];
+for (const [packName, originalName] of copyPairs) {
+  const packPath = path.join(copiedDir, packName);
+  const packBytes = fs.readFileSync(packPath);
+  const packStat = fs.statSync(packPath);
+  const counterparts = originalDirs.map(dir => {
+    const p = path.join(dir, originalName);
+    const b = fs.readFileSync(p);
+    const s = fs.statSync(p);
+    return {path: p, bytes: b.length, sha256: sha(b), mode: modeOf(s), byteIdentical: b.equals(packBytes), modeIdentical: modeOf(s) === modeOf(packStat)};
+  });
+  copyChecks.push({packagePath: `evidence/probes/E2102-H2-original-copies/${packName}`,
+    originalName, packageBytes: packBytes.length, packageSha256: sha(packBytes), packageMode: modeOf(packStat), counterparts});
+}
+
+const sourceExpectations = {
+  'checkpoint/vendor/hh/src/public-site.mjs': '1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7',
+  'checkpoint/vendor/hh/src/public-site.test.mjs': '12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a',
+  'checkpoint/vendor/hh/src/app.mjs': 'bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3',
+  'checkpoint/vendor/hh/src/public-controller.mjs': 'd730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669',
+  'checkpoint/vendor/hh/src/public-controller.test.mjs': '9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164',
+  'checkpoint/vendor/hh/services/fixture-provider.mjs': '99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d',
+  'checkpoint/vendor/hh/services/runtime.mjs': '1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e',
+};
+const sourceChecks = Object.fromEntries(Object.entries(sourceExpectations).map(([rel, expected]) => {
+  const b = fs.readFileSync(path.join(checkout, rel));
+  const actualHash = sha(b);
+  const manifestHash = manifest.sourceFreeze?.[rel] ?? null;
+  return [rel, {expected, actual: actualHash, manifestSourceFreeze: manifestHash, matchesExpected: actualHash === expected,
+    matchesManifestWhenListed: manifestHash === null || manifestHash === actualHash}];
+}));
+
+const receiptRel = manifest.buildReceipt.path;
+const receiptPath = path.join(pkg, receiptRel);
+const receiptBytes = fs.readFileSync(receiptPath);
+const receipt = JSON.parse(receiptBytes);
+const uniqueInputs = new Set(receipt.sourceInputs.map(x => x.path));
+const sourceInputMismatches = [];
+for (const input of receipt.sourceInputs) {
+  if (input.path.startsWith('/') || input.path.split('/').includes('..')) {
+    sourceInputMismatches.push({path: input.path, issue: 'unsafe-relative-path'});
+    continue;
+  }
+  const p = path.join(checkout, 'checkpoint', input.path);
+  let b;
+  try { b = fs.readFileSync(p); }
+  catch { sourceInputMismatches.push({path: input.path, issue: 'missing'}); continue; }
+  if (b.length !== input.bytes || sha(b) !== input.sha256) sourceInputMismatches.push({path: input.path,
+    expectedBytes: input.bytes, actualBytes: b.length, expectedSha256: input.sha256, actualSha256: sha(b)});
+}
+const siteFiles = receipt.siteFiles;
+const sitePaths = siteFiles.map(x => x.path);
+const uniqueSitePaths = new Set(sitePaths);
+const siteBadRows = siteFiles.filter(x => typeof x.path !== 'string' || !Number.isInteger(x.bytes) || !/^[a-f0-9]{64}$/.test(x.sha256));
+const receiptChecks = {
+  packagePath: receiptRel,
+  bytes: receiptBytes.length,
+  sha256: sha(receiptBytes),
+  mode: modeOf(fs.statSync(receiptPath)),
+  sourceInputCount: receipt.sourceInputs.length,
+  uniqueSourceInputCount: uniqueInputs.size,
+  sourceInputMismatches,
+  recomputedSourceDigest: sha(Buffer.from(JSON.stringify(receipt.sourceInputs))),
+  declaredSourceDigest: receipt.sourceDigest,
+  siteFileCount: siteFiles.length,
+  uniqueSiteFilePathCount: uniqueSitePaths.size,
+  invalidSiteRows: siteBadRows.length,
+  recomputedSiteDigest: sha(Buffer.from(JSON.stringify(siteFiles))),
+  declaredSiteDigest: receipt.siteDigest,
+  siteBuildId: receipt.siteBuildId,
+  pxcube: receipt.pxcube,
+  sourceBindings: receipt.sourceInputs.filter(x => Object.hasOwn(sourceExpectations, `checkpoint/${x.path}`)),
+};
+
+const buildResultPath = path.join(pkg, 'evidence/build/E2104-H1/result.json');
+const buildResultBytes = fs.readFileSync(buildResultPath);
+const buildResult = JSON.parse(buildResultBytes);
+const logPath = path.join(pkg, manifest.buildReceipt.retainedLog);
+const logBytes = fs.readFileSync(logPath);
+const zeroByteFiles = entries.filter(x => x.bytes === 0).map(x => x.path);
+const nativeDir = path.join(pkg, 'evidence/native');
+const nativeState = JSON.parse(fs.readFileSync(path.join(nativeDir, 'state.json')));
+const rootSnapshot = JSON.parse(fs.readFileSync(path.join(nativeDir, 'ROOT-CURRENT.json')));
+const nativeEpochs = [];
+for (let epoch = 0; epoch <= 4; epoch++) {
+  const v = JSON.parse(fs.readFileSync(path.join(nativeDir, `solves/epoch-${String(epoch).padStart(2, '0')}.json`)));
+  const bundlePath = path.join(nativeDir, `solves/epoch-${String(epoch).padStart(2, '0')}.bundle`);
+  const commandPath = path.join(nativeDir, `solves/epoch-${String(epoch).padStart(2, '0')}.root-command.json`);
+  nativeEpochs.push({epoch: v.epoch, at: v.at, assignments: v.assignments, pinned_workers: v.pinned_workers,
+    bundleBytes: fs.statSync(bundlePath).size, bundleSha256: sha(fs.readFileSync(bundlePath)),
+    rootCommandBytes: fs.statSync(commandPath).size, rootCommandSha256: sha(fs.readFileSync(commandPath))});
+}
+
+process.stdout.write(JSON.stringify({
+  packageRoot: pkg,
+  expected: {listedFileCount: manifest.listedFileCount, totalPackageFileCount: manifest.totalPackageFileCount,
+    listedEntries: entries.length, excludedEnvelopeFiles: excluded},
+  actual: {allPaths: actual.length, regularFiles: actualFiles.length, actualFilesIncludingEnvelopes: actualFiles.length,
+    actualManifestHash, actualResultHash, envelopeHashes, badTypes, duplicatePaths, missing, extras, payloadMismatches},
+  canonicalE2102Copies: copyChecks,
+  currentSources: sourceChecks,
+  build: {
+    expected: manifest.buildReceipt,
+    receiptChecks,
+    buildWorkerOutcome: buildResult.outcome,
+    buildResultSha256: sha(buildResultBytes),
+    buildResultCounts: buildResult.actualBuildMeasurements,
+    buildCapturePaths: buildResult.retainedFreshBazelOutputs,
+    buildLogBytes: logBytes.length,
+    buildLogSha256: sha(logBytes),
+    buildLogTextMentions: {
+      inputs1538: /1538/.test(logBytes.toString()),
+      site843: /843/.test(logBytes.toString()),
+      packages14: /14/.test(logBytes.toString()),
+    },
+  },
+  zeroBytePayloadFiles: zeroByteFiles,
+  nativeSnapshot: {
+    rootSnapshot: {stateCounter: rootSnapshot.stateCounter, acceptedEpoch: rootSnapshot.acceptedEpoch,
+      actualWorkers: rootSnapshot.actualWorkers, actualStartedFollowups: rootSnapshot.actualStartedFollowups,
+      sourceOwner: rootSnapshot.sourceOwner},
+    copiedNativeStateEpoch: nativeState.epoch,
+    copiedNativeJobStates: Object.fromEntries(Object.entries(nativeState.jobs || {}).map(([id, j]) => [id, {status: j.status, worker: j.worker, outcome: j.outcome}])),
+    nativeEpochs,
+  },
+  packageManifest: {schema: manifest.schema, listedFileCount: manifest.listedFileCount, totalPackageFileCount: manifest.totalPackageFileCount,
+    manifestSelfHash: manifest.manifestSelfHash, manifestBytes: manifestBytes.length, manifestSha256: actualManifestHash,
+    E2105Result: {job_id: result.job_id, worker: result.worker, outcome: result.outcome, manifestSha256: result.manifest.sha256}},
+}, null, 2));

@@ -1,0 +1,234 @@
+// PREPARED ONLY. Run only after R2105 acceptance, root review, and phase-specific GO.
+// Exact pre-stage gate for the two product files, frozen package, and later admin closure.
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {lstat, readFile, readdir} from 'node:fs/promises';
+import {join, relative, sep} from 'node:path';
+
+const repo = '/workspace/scratch/8528bb251845/PageRouter';
+const cycle = 'work/hh-continuous-improvement/cycle-15';
+const packageRoot = join(repo, cycle);
+const expectedParent = '77420532395984874536d6e10373fe76970e92a4';
+const expectedParentTree = 'c4e04221e776e3c15c24efe804993af7146b18d3';
+const canonicalParentReportedOnly = '01512524bb4387f06471a927d6657f8486de579d';
+const sourceHashes = new Map([
+  ['checkpoint/vendor/hh/src/public-site.mjs', '1159a5883839107df5655b4baf3857f9f59b98e9daaa2ab5c8d011af9b6409b7'],
+  ['checkpoint/vendor/hh/src/public-site.test.mjs', '12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a'],
+]);
+const exactExcludedScratch = new Set([
+  'hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.end.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.exit',
+  'hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.start.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.stderr.raw',
+  'hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.stdout.raw',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-01-test-source-reconstructed-after-green02.mjs.txt',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-01.end.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-01.exit',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-01.start.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-01.stderr.raw',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-01.stdout.raw',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-02.end.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-02.exit',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-02.start.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-02.stderr.raw',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-02.stdout.raw',
+  'hh-cycle13/H1/E1803-PROPOSAL/site-full-01.end.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/site-full-01.exit',
+  'hh-cycle13/H1/E1803-PROPOSAL/site-full-01.start.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/site-full-01.stderr.raw',
+  'hh-cycle13/H1/E1803-PROPOSAL/site-full-01.stdout.raw',
+  'hh-cycle15/H2/E2102/PREDECLARED-PROBE.md',
+  'hh-cycle15/H2/E2102/exit-code.txt',
+  'hh-cycle15/H2/E2102/probe.mjs',
+  'hh-cycle15/H2/E2102/result.json',
+  'hh-cycle15/H2/E2102/stderr.log',
+  'hh-cycle15/H2/E2102/stdout.log',
+]);
+const args = process.argv.slice(2), planPath = args[0], planSha = args[1];
+if (!planPath || !/^[0-9a-f]{64}$/.test(planSha ?? '')) {
+  throw new Error('usage: node precommit-gate.mjs <root-admitted-plan-path> <plan-sha256>');
+}
+const sha256 = b => createHash('sha256').update(b).digest('hex');
+const git = (...a) => execFileSync('git', a, {cwd: repo, maxBuffer: 64 * 1024 * 1024});
+const failures = [];
+const planBytes = await readFile(planPath);
+if (sha256(planBytes) !== planSha) throw new Error('prospective plan hash mismatch');
+const plan = JSON.parse(planBytes.toString('utf8'));
+if (plan.schema !== 'hh-cycle15-export-plan/v1' || plan.status !== 'root-admitted-precommit') {
+  throw new Error('plan is not a root-admitted precommit plan');
+}
+if (plan.repository !== repo || plan.branch !== 'codex/hh-continuous-improvement' ||
+    plan.expectedParent !== expectedParent || plan.expectedParentTree !== expectedParentTree) {
+  throw new Error('repository, branch, or base differs from frozen cycle-15 checkpoint');
+}
+if (plan.canonicalParentReportedOnly !== canonicalParentReportedOnly) {
+  throw new Error('reported canonical parent qualification changed');
+}
+const head = git('rev-parse', 'HEAD').toString('utf8').trim();
+const tree = git('rev-parse', `${head}^{tree}`).toString('utf8').trim();
+const branch = git('branch', '--show-current').toString('utf8').trim();
+if (head !== expectedParent || tree !== expectedParentTree || branch !== plan.branch) {
+  failures.push(`base mismatch: branch=${branch} HEAD=${head} tree=${tree}`);
+}
+if (git('diff', '--cached', '--quiet', '--exit-code', '--').length !== 0) {
+  failures.push('index must be empty before stage phase');
+}
+
+const readRegular = async (p, label) => {
+  const abs = join(repo, p), st = await lstat(abs);
+  if (st.isSymbolicLink() || !st.isFile()) throw new Error(`${label} must be a regular non-symlink file: ${p}`);
+  return {bytes: await readFile(abs), mode: (st.mode & 0o7777).toString(8).padStart(4, '0')};
+};
+const manifestPath = `${cycle}/evidence/manifest.json`;
+const resultPath = `${cycle}/evidence/E2105/result.json`;
+const manifestFile = await readRegular(manifestPath, 'cycle manifest');
+if (sha256(manifestFile.bytes) !== plan.package.manifestSha256) failures.push('frozen E2105 manifest digest changed');
+const manifest = JSON.parse(manifestFile.bytes.toString('utf8'));
+if (manifest.schema !== 'hh-cycle-evidence-manifest/v2' || manifest.cycle !== 'cycle-15' ||
+    manifest.listedFileCount !== 105 || manifest.files?.length !== 105 || manifest.totalPackageFileCount !== 107) {
+  failures.push('cycle-15 manifest is not the frozen 105 + 2 envelope package');
+}
+const sourceEntries = [...sourceHashes];
+if (manifest.sourceFreeze?.[sourceEntries[0][0]] !== sourceEntries[0][1] ||
+    manifest.sourceFreeze?.[sourceEntries[1][0]] !== sourceEntries[1][1]) {
+  failures.push('manifest source freeze differs from reviewed two-file checkpoint');
+}
+const expectedCycle = new Set([manifestPath, resultPath]);
+const safeRel = p => typeof p === 'string' && !p.startsWith('/') && !p.split('/').includes('..') && !p.includes('\\');
+for (const item of manifest.files ?? []) {
+  if (!safeRel(item.path)) { failures.push(`unsafe manifest path: ${String(item.path)}`); continue; }
+  const p = `${cycle}/${item.path}`;
+  try {
+    const f = await readRegular(p, 'manifest payload');
+    if (f.bytes.length !== item.bytes || sha256(f.bytes) !== item.sha256 || f.mode !== item.mode) {
+      failures.push(`frozen payload bytes/hash/mode mismatch: ${p}`);
+    }
+  } catch (e) { failures.push(e.message); }
+  expectedCycle.add(p);
+}
+const resultFile = await readRegular(resultPath, 'E2105 result');
+if (sha256(resultFile.bytes) !== plan.package.resultSha256) failures.push('E2105 result envelope hash changed');
+const result = JSON.parse(resultFile.bytes.toString('utf8'));
+if (result.job_id !== 'E2105' || result.worker !== 'H1' || result.outcome !== 'mixed_change') {
+  failures.push('E2105 native result envelope fields do not match handback');
+}
+const packageFiles = new Set();
+async function walkPackage(dir) {
+  for (const name of (await readdir(dir)).sort()) {
+    const full = join(dir, name), st = await lstat(full);
+    if (st.isSymbolicLink()) failures.push(`symlink forbidden in frozen package: ${relative(packageRoot, full).split(sep).join('/')}`);
+    else if (st.isDirectory()) await walkPackage(full);
+    else if (st.isFile()) packageFiles.add(`${cycle}/${relative(packageRoot, full).split(sep).join('/')}`);
+    else failures.push(`non-regular package item: ${relative(packageRoot, full).split(sep).join('/')}`);
+  }
+}
+await walkPackage(packageRoot);
+for (const p of expectedCycle) if (!packageFiles.has(p)) failures.push(`missing frozen package path: ${p}`);
+for (const p of packageFiles) if (!expectedCycle.has(p)) failures.push(`unmanifested frozen package path: ${p}`);
+if (packageFiles.size !== 107) failures.push(`package inventory count ${packageFiles.size}, expected 107`);
+
+const adminRoot = `${cycle}/post-review-admin/current`;
+const adminManifestPath = `${adminRoot}/manifest.json`;
+const adminFile = await readRegular(adminManifestPath, 'accepted post-review admin manifest');
+if (sha256(adminFile.bytes) !== plan.admin.manifestSha256) failures.push('post-review admin manifest hash changed');
+const admin = JSON.parse(adminFile.bytes.toString('utf8'));
+if (!Array.isArray(admin.entries)) failures.push('post-review admin manifest lacks entries[]');
+const expectedAdmin = new Set([adminManifestPath]);
+for (const item of admin.entries ?? []) {
+  if (!safeRel(item.path)) { failures.push(`unsafe admin path: ${String(item.path)}`); continue; }
+  const p = `${adminRoot}/${item.path}`;
+  try {
+    const f = await readRegular(p, 'post-review admin payload');
+    if (f.bytes.length !== item.bytes || sha256(f.bytes) !== item.sha256 || f.mode !== item.mode) {
+      failures.push(`admin bytes/hash/mode mismatch: ${p}`);
+    }
+  } catch (e) { failures.push(e.message); }
+  expectedAdmin.add(p);
+}
+const adminFiles = new Set();
+async function walkAdmin(dir) {
+  for (const name of (await readdir(dir)).sort()) {
+    const full = join(dir, name), st = await lstat(full);
+    if (st.isSymbolicLink()) failures.push(`symlink forbidden in admin closure: ${relative(join(repo, adminRoot), full).split(sep).join('/')}`);
+    else if (st.isDirectory()) await walkAdmin(full);
+    else if (st.isFile()) adminFiles.add(`${adminRoot}/${relative(join(repo, adminRoot), full).split(sep).join('/')}`);
+    else failures.push(`non-regular admin item: ${relative(join(repo, adminRoot), full).split(sep).join('/')}`);
+  }
+}
+await walkAdmin(join(repo, adminRoot));
+for (const p of expectedAdmin) if (!adminFiles.has(p)) failures.push(`missing admin path: ${p}`);
+for (const p of adminFiles) if (!expectedAdmin.has(p)) failures.push(`unmanifested admin path: ${p}`);
+
+const planned = new Map((plan.files ?? []).map(x => [x.path, x]));
+if (!Array.isArray(plan.files) || planned.size !== plan.files.length || planned.size !== plan.allowlistCount) {
+  failures.push('plan path list missing, duplicated, or count-mismatched');
+}
+const exactExpected = new Set([...sourceHashes.keys(), ...expectedCycle, ...expectedAdmin]);
+if (planned.size !== exactExpected.size || [...exactExpected].some(p => !planned.has(p))) {
+  failures.push('plan files are not the exact sources + package + accepted-admin closure');
+}
+for (const [p, sha] of sourceHashes) {
+  const f = await readRegular(p, 'product source');
+  if (sha256(f.bytes) !== sha) failures.push(`product source hash mismatch: ${p}`);
+}
+for (const [p, item] of planned) {
+  if (!safeRel(p) || !/^(100644|100755)$/.test(item.mode ?? '') ||
+      !Number.isInteger(item.bytes) || !/^[0-9a-f]{64}$/.test(item.sha256 ?? '') ||
+      !/^[0-9a-f]{40}$/.test(item.gitBlobSha1 ?? '')) {
+    failures.push(`invalid plan file record: ${p}`); continue;
+  }
+  const f = await readRegular(p, 'planned file');
+  if (f.bytes.length !== item.bytes || sha256(f.bytes) !== item.sha256) failures.push(`planned bytes/hash mismatch: ${p}`);
+  const projectedMode = (Number.parseInt(f.mode, 8) & 0o111) ? '100755' : '100644';
+  if (projectedMode !== item.mode) failures.push(`Git mode projection mismatch: ${p}`);
+  const blob = createHash('sha1').update(`blob ${f.bytes.length}\0`).update(f.bytes).digest('hex');
+  if (blob !== item.gitBlobSha1) failures.push(`planned Git blob id mismatch: ${p}`);
+}
+
+const statusRaw = git('status', '--porcelain=v1', '-z', '--untracked-files=all').toString('utf8');
+const observed = new Map();
+for (const rec of statusRaw.split('\0').filter(Boolean)) {
+  const xy = rec.slice(0, 2), p = rec.slice(3);
+  if (/[RCU]/.test(xy)) { failures.push(`rename/copy/unmerged status forbidden: ${xy} ${p}`); continue; }
+  observed.set(p, xy);
+}
+const excludedObserved = new Set();
+for (const [p, xy] of observed) {
+  if (exactExcludedScratch.has(p) && xy === '??') { excludedObserved.add(p); continue; }
+  if (!exactExpected.has(p)) failures.push(`changed path outside exact allowlist: ${xy} ${p}`);
+  else if (sourceHashes.has(p) ? xy !== ' M' : xy !== '??') failures.push(`unexpected pre-stage status ${xy} for ${p}`);
+}
+for (const p of exactExpected) if (!observed.has(p)) failures.push(`planned path absent from pre-stage status: ${p}`);
+for (const p of exactExcludedScratch) if (!excludedObserved.has(p)) failures.push(`excluded scratch path missing or modified: ${p}`);
+if (excludedObserved.size !== 27) failures.push(`excluded scratch count ${excludedObserved.size}, expected exactly 27`);
+
+const authoredPaths = new Set([...sourceHashes.keys(), ...(plan.authoredPaths ?? [])]);
+const rawEvidence = /(?:\.raw(?:\.txt)?|\.stdout\.raw|\.stderr\.raw|\.exit(?:\.code)?|\.utc|\.log)$/;
+for (const p of authoredPaths) {
+  if (!planned.has(p) || !safeRel(p)) failures.push(`authored-text path is not in exact allowlist: ${p}`);
+  if (rawEvidence.test(p)) failures.push(`raw capture cannot be classified as authored whitespace input: ${p}`);
+  const b = await readFile(join(repo, p));
+  let text;
+  try { text = new TextDecoder('utf-8', {fatal: true}).decode(b); }
+  catch { failures.push(`authored file is not strict UTF-8: ${p}`); continue; }
+  for (const [i, line] of text.split('\n').entries()) {
+    if (/[\t ]+$/.test(line.replace(/\r$/, ''))) failures.push(`${p}:${i + 1} trailing whitespace`);
+    if (line.includes('\r')) failures.push(`${p}:${i + 1} CR character`);
+  }
+}
+let diffCheck = {exit: 0, stdout: '', stderr: ''};
+try {
+  const stdout = git('diff', '--check', '--', ...authoredPaths).toString('utf8');
+  diffCheck.stdout = stdout;
+} catch (e) {
+  diffCheck = {exit: e.status ?? 1, stdout: e.stdout?.toString('utf8') ?? '', stderr: e.stderr?.toString('utf8') ?? e.message};
+  failures.push(`git diff --check failed with exit ${diffCheck.exit}; diagnostics retained in this output`);
+}
+const report = {gate: 'hh-cycle15-precommit-exact-closure/v1', status: failures.length ? 'FAIL' : 'PASS',
+  branch, expectedParent, expectedParentTree, canonicalParentReportedOnly,
+  sourceHashes: Object.fromEntries(sourceHashes), packageManifestSha256: sha256(manifestFile.bytes),
+  packageFiles: packageFiles.size, adminEntries: admin.entries?.length ?? 0,
+  exactAllowlistCount: planned.size, excludedScratch: [...excludedObserved].sort(),
+  rawEvidence: 'exact bytes/hash/full modes; never whitespace-normalized', diffCheck, failures};
+console.log(JSON.stringify(report, null, 2));
+if (failures.length) process.exitCode = diffCheck.exit || 1;

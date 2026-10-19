@@ -1,0 +1,38 @@
+{
+  "job_id": "E2105",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Assembled the lean cycle-15 review package from preserved evidence only. The package freezes the independently accepted two-file renderer correction, exact source hashes, red/green and full-suite captures, accepted R2103 review, one canonical E2104 build receipt/log and captures, native epochs 00–04, and the E2102 cwd erratum. No probe, test, build, source edit, Git operation, export, publication, or deployment was performed in this packaging task.",
+  "package": "PageRouter/work/hh-continuous-improvement/cycle-15",
+  "manifest": {
+    "path": "evidence/manifest.json",
+    "sha256": "ef30d3251b256aba162ebbf2fd50b6367cff6816b04d27e37e6c3ef268c4f914",
+    "listed_payload_files": 105,
+    "total_package_files_including_manifest_and_result": 107,
+    "manifest_excludes": [
+      "evidence/manifest.json",
+      "evidence/E2105/result.json"
+    ]
+  },
+  "frozen_sources": {
+    "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a"
+  },
+  "evidence_summary": {
+    "E2101": "One H1 volatile source-equivalent render-tree/controller/runtime probe; no mounted browser DOM or email/backend interaction.",
+    "E2102": "One H2 independent probe; canonical root copies of six accidental cwd originals are included, and those originals remain untouched outside this package.",
+    "E2103": "Expected exact-copy RED, focused GREEN 1/1, public-site 15/15, controller 60/60; renderer and renderer-test only.",
+    "R2103": "Independent H2 review accepted exact two-file source checkpoint; focused test and changed-source fixture probe passed.",
+    "E2104": "One canonical command, exit 0; 135 targeted HH (overlaps full suite), 290 full suite, 2 helpers, 1 Atlas, 843 site files; fresh receipt/log and original captures retained.",
+    "native": "Exact spec/registry/state, epochs 00–04 records/bundles/root commands, receipts, and E2101/E2102/E2104 root qualifications copied into package.",
+    "E2104_outcome_qualification": "Unchanged worker result says invalid native outcome completed; separate root envelope corrects schema to mixed_change. This package does not claim a native rejection/finish event."
+  },
+  "capture_method": "Evidence files were copied with exclusive-create semantics and source modes preserved. Empty captures remain exact zero-byte files. Runnable scripts/source snapshots are archived with inert .txt suffixes; no archived script was executed.",
+  "scope_limits": [
+    "Source-equivalent emitted tree is not mounted/browser DOM, native reportValidity/FormData, backend, production service, or human acceptance evidence.",
+    "No email-retention defect was proven or fixed; no real email was sent.",
+    "The 21 old HH13 and six H2 E2102 accidental scratch paths remain preserved outside the package and excluded; Lab7 remains separate.",
+    "No Git stage/commit/export/publication/deployment is authorized before independent audit and root decision."
+  ],
+  "native_finish_note": "Worker handback only. Root owns native task completion/state mutation; no native state or receipt was written by this package operation."
+}
