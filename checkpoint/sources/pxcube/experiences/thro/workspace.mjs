@@ -102,6 +102,19 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
     editBattle(edit) {
       return serial({ operation: 'edit-battle', edit }, candidate => candidate.editCompetition(edit));
     },
+    existingCapture(result) {
+      const design = result.design ?? model.value(result.designAddress);
+      for (const address of [...model.context.graphics].reverse()) {
+        const capture = model.value(address), source = capture.source;
+        const sameOrigin = result.materialAddress
+          ? source.material === result.materialAddress && !source.disc
+          : source.disc === result.discAddress && !source.material;
+        if (sameOrigin && capture.graphic.svg === result.graphic.svg && JSON.stringify(capture.design) === JSON.stringify(design)) {
+          return { address, capture };
+        }
+      }
+      return null;
+    },
     keep(result) {
       const design = result.design ?? model.value(result.designAddress);
       return serial({ operation: 'keep', discAddress: result.discAddress, materialAddress: result.materialAddress, design }, async candidate => {

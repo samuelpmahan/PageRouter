@@ -26,6 +26,7 @@ function setBusy(next) {
   busy = next;
   root.setAttribute('aria-busy', String(next));
   document.querySelectorAll('[data-needs-ready]').forEach(button => { button.disabled = next || hasConflict() || !currentGraphic(); });
+  if ($('retry-export')) $('retry-export').disabled = next || hasConflict();
   $('reload-latest').disabled = next;
   if (hasConflict()) root.querySelectorAll('button,input,select').forEach(control => { control.disabled = true; });
 }
@@ -145,7 +146,55 @@ function paint() {
   root.innerHTML = `<section class="workspace-heading"><div><span class="eyebrow">GOOD TO GO</span><h1>Your discs. Your next video.</h1></div><nav class="mode-nav" aria-label="Graphic type">${[['single', 'Single'], ['battle', 'Battle'], ['bag', 'Bag lineup']].map(([mode, label]) => `<button type="button" data-mode="${mode}" aria-pressed="${ui.mode === mode}">${label}</button>`).join('')}</nav></section><div class="studio-grid">${shelfMarkup()}<section class="preview-column" aria-labelledby="preview-title"><div class="preview-heading"><div><span class="eyebrow">THE ACTUAL GRAPHIC</span><h2 id="preview-title">${capturedPreview ? 'A kept version' : ui.mode === 'single' ? 'One disc. Ready for its moment.' : ui.mode === 'battle' ? 'Set the scene.' : 'Your selected lineup.'}</h2></div><button id="return-live" type="button" class="text-button" hidden>Back to current image</button></div><div class="preview-shell"><div class="preview-toolbar"><span id="preview-dimensions"></span><div class="background-switch" aria-label="Preview background">${[['checker', 'Checkerboard'], ['light', 'Light'], ['dark', 'Dark']].map(([v, label]) => `<button type="button" data-preview-background="${v}" aria-label="${label} preview background" aria-pressed="${ui.background === v}" title="${label}"><span class="swatch swatch-${v}" aria-hidden="true"></span></button>`).join('')}</div></div><div id="graphic-preview" data-testid="graphic-preview" class="graphic-preview"></div><div class="preview-bottom"><span class="transparency-dot" aria-hidden="true"></span><strong id="preview-kind"></strong><span>SVG → exact PNG</span></div></div><p id="preview-note" class="preview-note"></p><div class="export-bar"><div><span class="eyebrow">TAKE IT TO YOUR VIDEO</span><p>Download keeps this exact version.</p></div><div class="export-actions"><button id="keep-graphic" type="button" data-needs-ready class="button-secondary">Keep version</button><button id="download-png" type="button" data-needs-ready class="button-primary">Download PNG <span aria-hidden="true">↓</span></button><button id="download-svg" type="button" data-needs-ready class="svg-button" aria-label="Download editable SVG">SVG</button></div></div></section>${controlsMarkup()}</div>${capturesMarkup()}`;
   paintPreview();
   bind();
+  paintExportFailure();
   diagnostics();
+}
+
+function lastExportFailure() {
+  const address = context().exports?.at(-1);
+  if (!address) return null;
+  const record = value(address);
+  return record.status === 'Failed' ? record : null;
+}
+
+function failedCapture(record) {
+  if (!record || !['png', 'svg'].includes(record.format)) return null;
+  try {
+    const capture = value(record.capture);
+    return capture?.graphic?.svg ? { address: record.capture, capture } : null;
+  } catch { return null; }
+}
+
+function paintExportFailure({ focus = false } = {}) {
+  const bar = root.querySelector('.export-bar');
+  if (!bar) return;
+  let notice = $('export-failure');
+  if (!notice) {
+    notice = document.createElement('section');
+    notice.id = 'export-failure';
+    notice.className = 'export-failure';
+    notice.setAttribute('role', 'alert');
+    notice.setAttribute('tabindex', '-1');
+    notice.setAttribute('aria-labelledby', 'export-failure-title');
+    bar.append(notice);
+  }
+  const record = lastExportFailure(), held = failedCapture(record);
+  notice.hidden = !record;
+  bar.classList.toggle('has-export-failure', Boolean(record));
+  const currentHeld = capturedPreview ?? (currentResult ? workspace.existingCapture?.(currentResult) : null);
+  const retryCurrentPng = record?.format === 'png' && held && currentHeld && held.address === currentHeld.address;
+  $('download-png').innerHTML = `${retryCurrentPng ? 'Retry PNG' : 'Download PNG'} <span aria-hidden="true">&#8595;</span>`;
+  if (!record) { notice.replaceChildren(); return; }
+  const format = record.format === 'svg' ? 'SVG' : 'PNG';
+  notice.innerHTML = `<div><strong id="export-failure-title">Last ${format} export failed</strong><p>${text(record.error || 'The image could not be converted.')} Your kept graphic is unchanged.</p></div>${held ? `<button id="retry-export" type="button" class="button-secondary">Retry ${format}</button>` : '<p>Open a kept graphic to choose another export.</p>'}`;
+  if ($('retry-export')) {
+    $('retry-export').disabled = busy || hasConflict();
+    $('retry-export').onclick = () => run(() => download(record.format, held), { kind: 'retry-export', capture: held.address, format: record.format });
+  }
+  if (focus) {
+    notice.focus({ preventScroll: true });
+    notice.scrollIntoView({ block: 'center', behavior: 'auto' });
+  }
 }
 
 function readDesign() {
@@ -162,6 +211,10 @@ async function keepCurrent(explicit = false) {
   if (!currentResult) throw Error('Choose a disc or a 2–4-disc lineup first.');
   const key = resultKey(currentResult);
   if (!explicit && keptResults.has(key)) return keptResults.get(key);
+  if (!explicit) {
+    const existing = workspace.existingCapture(currentResult);
+    if (existing) { keptResults.set(key, existing); return existing; }
+  }
   const held = await workspace.keep(currentResult);
   const normalized = typeof held === 'string' ? { address: held, capture: value(held) } : held;
   if (!normalized?.address || !normalized?.capture?.graphic) throw Error('The saved graphic did not return its retained capture.');
@@ -169,8 +222,8 @@ async function keepCurrent(explicit = false) {
   return normalized;
 }
 
-async function download(format) {
-  const held = await keepCurrent(), capture = held.capture;
+async function download(format, retainedCapture = null) {
+  const held = retainedCapture ?? await keepCurrent(), capture = held.capture;
   let record;
   try {
     const blob = format === 'png' ? await pngFromSvg(capture.graphic.svg, capture.graphic.width, capture.graphic.height) : new Blob([capture.graphic.svg], { type: 'image/svg+xml' });
@@ -183,8 +236,21 @@ async function download(format) {
     message(`${format.toUpperCase()} ready · ${capture.graphic.width} × ${capture.graphic.height}. Download requested.`);
   } catch (error) {
     if (!hasConflict() && !record) { try { await workspace.recordExport({ status: 'Failed', capture: held.address, svgHash: capture.hash, format, error: String(error) }); } catch { /* Preserve the original failure and any workspace conflict. */ } }
+    refreshCaptures();
+    paintExportFailure({ focus: true });
     throw error;
   }
+}
+
+function bindCaptureChoices() {
+  document.querySelectorAll('[data-capture]').forEach(button => button.onclick = () => { capturedPreview = { address: button.dataset.capture, capture: value(button.dataset.capture) }; paint(); $('preview-title').focus?.(); });
+}
+
+function refreshCaptures() {
+  const section = root.querySelector('.captures');
+  if (!section) return;
+  section.outerHTML = capturesMarkup();
+  bindCaptureChoices();
 }
 
 function bind() {
@@ -212,7 +278,7 @@ function bind() {
   $('download-png').onclick = () => run(() => download('png'), { kind: 'download', format: 'png', ui });
   $('download-svg').onclick = () => run(() => download('svg'), { kind: 'download', format: 'svg', ui });
   $('return-live').onclick = () => { capturedPreview = null; paint(); };
-  document.querySelectorAll('[data-capture]').forEach(button => button.onclick = () => { capturedPreview = { address: button.dataset.capture, capture: value(button.dataset.capture) }; paint(); $('preview-title').focus?.(); });
+  bindCaptureChoices();
   const edit = data => run(async () => { capturedPreview = null; await workspace.editBattle(data); await renderCurrent(); paint(); message('Saved. This image has your updated turn and points.'); }, { kind: 'battle-edit', edit: data, ui });
   if ($('battle-turn')) $('battle-turn').onchange = event => edit({ kind: 'turn', id: event.target.value || null });
   document.querySelector('[data-battle-equal]')?.addEventListener('click', () => edit({ kind: 'equal' }));

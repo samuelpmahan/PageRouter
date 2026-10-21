@@ -41,3 +41,10 @@ Runtime build identity is in `dist/BUILD_INFO.json`. It identifies the generated
 Experience artifact, not a verified canonical PageRouter deployment. Fixture
 photo hashes and preparation geometry are in `prepared-fixture.json`; visual
 acceptance remains pending. The historical standalone 6.6.0 source is unchanged.
+
+A failed image conversion retains its capture and displays a retry notice after
+reload. Retry uses that exact capture even if the current preview has changed.
+Implicit downloads reuse the latest capture with the same physical disc or
+lineup origin, design, and SVG bytes. Explicit Keep creates another version.
+Browser download cancellation cannot be observed by this page; export receipts
+record prepared bytes, and the UI says only that a download was requested.

@@ -103,4 +103,26 @@ test('Battle reuses exact lineup material, keeps points and retains preview byte
   assert.equal(kept.capture.graphic.svg, preview.graphic.svg);
   const reopened = await openWorkspace({ storage: backing, locks: lock, fixture });
   assert.equal(reopened.model.value(kept.address).graphic.svg, preview.graphic.svg);
+  const rebuilt = await reopened.battle(selection);
+  assert.equal(reopened.existingCapture(rebuilt)?.address, kept.address);
+  assert.equal(reopened.existingCapture({ ...rebuilt, materialAddress: 'another-lineup' }), null);
+});
+
+test('existing kept capture survives reload without collapsing different physical origins', async () => {
+  const backing = storage(), lock = locks();
+  const workspace = await openWorkspace({ storage: backing, locks: lock, fixture });
+  const preview = await workspace.single(workspace.model.context.selectedDisc);
+  const kept = await workspace.keep(preview);
+  const reopened = await openWorkspace({ storage: backing, locks: lock, fixture });
+  const rebuilt = await reopened.single(reopened.model.context.selectedDisc);
+  const retained = reopened.existingCapture?.(rebuilt);
+  assert.equal(retained?.address, kept.address, 'a repeated implicit export can reuse its exact retained source/design/bytes');
+  assert.equal(retained.capture.hash, kept.capture.hash);
+  const other = reopened.model.experience.shelf()[1].address;
+  assert.equal(reopened.existingCapture({ ...rebuilt, discAddress: other }), null, 'identical output bytes cannot collapse another physical copy');
+  assert.equal(reopened.existingCapture({ ...rebuilt, design: { ...rebuilt.design, title: 'different intent' } }), null, 'changed design intent remains distinct');
+  assert.equal(reopened.model.context.graphics.length, 1, 'lookup never creates another retained version');
+  const explicit = await reopened.keep(rebuilt);
+  assert.notEqual(explicit.address, kept.address, 'an explicit Keep still creates a version');
+  assert.equal(reopened.existingCapture(rebuilt).address, explicit.address, 'lookup prefers the most recently kept exact version');
 });
