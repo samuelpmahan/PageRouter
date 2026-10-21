@@ -1,0 +1,93 @@
+{
+  "schema": "thro-prepared-fixture@1",
+  "fixtureId": "thro-prepared-samples-v1",
+  "fixtureOnly": true,
+  "label": "Prepared sample bag",
+  "visualAcceptance": "pending Sam review",
+  "discs": [
+    {
+      "id": "sample-servo",
+      "mold": "mvp--servo",
+      "name": "Servo",
+      "manufacturer": "MVP",
+      "plastic": "Neutron",
+      "weight": null,
+      "original": "servo.jpg",
+      "file": "assets/discs/sample-servo.webp",
+      "sha256": "b720aca1a38562e5ccba1e1ea5f82d4429d790fde1a983fad2b773b7b0c5ef2e",
+      "width": 1013,
+      "height": 1013,
+      "originalSha256": "1d6c7ad370b2fe8896a0bf10d0b31f83df6c3c03d2540ccc8350b67ec075ec27",
+      "preparation": {
+        "sourceBuild": "a9ba3f6b86f5fb1e",
+        "refit": {
+          "version": 2,
+          "kind": "ellipse",
+          "width": 1152,
+          "height": 1517,
+          "centerX": 589.8240000000001,
+          "centerY": 761.288,
+          "radiusX": 506.88,
+          "radiusY": 506.88,
+          "axisAngle": 0,
+          "rotation": 0.05235987755982988
+        },
+        "visualAcceptance": "pending"
+      }
+    },
+    {
+      "id": "sample-buzzz-ss",
+      "mold": "discraft--buzzz-ss",
+      "name": "Buzzz SS",
+      "manufacturer": "Discraft",
+      "plastic": "Z FLX",
+      "weight": null,
+      "original": "buzzz-ss.jpg",
+      "file": "assets/discs/sample-buzzz-ss.webp",
+      "sha256": "d1d03b92c8102ce6f91fda9f5441830770f090d74777793bcc641532cf154120",
+      "width": 1290,
+      "height": 1290,
+      "originalSha256": "cc82666da67b91e4d74c938cb5b6377ecd2f1c9bb0c9eef00bcb91289b9bbada",
+      "preparation": {
+        "sourceBuild": "a9ba3f6b86f5fb1e",
+        "refit": {
+          "version": 1,
+          "width": 1536,
+          "height": 1932,
+          "centerX": 809.6914285714283,
+          "centerY": 967.9771428571426,
+          "radius": 645.1199999999998,
+          "rotation": 0
+        },
+        "visualAcceptance": "pending"
+      }
+    },
+    {
+      "id": "sample-anchor",
+      "mold": "latitude-64--anchor",
+      "name": "Anchor",
+      "manufacturer": "Latitude 64",
+      "plastic": "Opto",
+      "weight": null,
+      "original": "anchor.jpg",
+      "file": "assets/discs/sample-anchor.webp",
+      "sha256": "24a20b2b1c43886e52c3de6aac04e38fa4f72216b9b973d9921929fd1b54df72",
+      "width": 1039,
+      "height": 1039,
+      "originalSha256": "d1f149a9cabd30c144105f9eafe92c1b7f88b2a631df2a97315be712d4dcb4d0",
+      "preparation": {
+        "sourceBuild": "a9ba3f6b86f5fb1e",
+        "refit": {
+          "version": 1,
+          "width": 1152,
+          "height": 1516,
+          "centerX": 594.1028571428569,
+          "centerY": 779.8171428571427,
+          "radius": 519.7823999999998,
+          "rotation": 0
+        },
+        "visualAcceptance": "pending"
+      }
+    }
+  ]
+}

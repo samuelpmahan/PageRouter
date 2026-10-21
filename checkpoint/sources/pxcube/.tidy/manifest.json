@@ -248,6 +248,35 @@
       "clean": "clean",
       "experiments": "exp",
       "tests": []
+    },
+    "pxcube-thro": {
+      "version": "0.1.0",
+      "root": "experiences/thro",
+      "clean": "clean",
+      "experiments": "exp",
+      "tests": [
+        "cd experiences/thro && node build.mjs && node --test --test-concurrency=2 locked-storage.test.mjs archive-codec.test.mjs workspace.test.mjs"
+      ],
+      "experience": {
+        "id": "thro",
+        "version": "0.1.0",
+        "title": "thro",
+        "description": "Generate video graphics from a prepared fixture shelf.",
+        "entry": "index.html",
+        "mounts": ["studio"],
+        "build": "node build.mjs",
+        "outDir": "dist",
+        "sandbox": [
+          "allow-scripts",
+          "allow-same-origin",
+          "allow-downloads",
+          "allow-modals",
+          "allow-forms"
+        ],
+        "demo": {
+          "mode": "create"
+        }
+      }
     }
   }
 }
