@@ -18,11 +18,11 @@ export const repoRoot = path.resolve(here, '..');
 const CACHE_SCHEMA = 'pxcube-package-inputs-v2';
 
 const ignore = new Set(['.git', '.crisp', 'dist', 'node_modules', '.pxcube']);
-const studioApps = new Set(['upload-disc-to-shelf', 'explore-shelf', 'your-shelf', 'build-bag', 'on-course']);
+const studioApps = new Set(['upload-disc-to-shelf', 'explore-shelf', 'your-shelf', 'build-bag', 'on-course', 'thro']);
 // These experiences are thin typed manifests over the shared Studio demo
 // cartridge. Their package keys must move whenever the shared UI/renderer
 // changes, otherwise a cache hit can quietly ship yesterday's screen.
-const demoApps = new Set(['build-bag', 'create-graphics', 'export-graphics', 'on-course']);
+const demoApps = new Set(['build-bag', 'create-graphics', 'export-graphics', 'on-course', 'thro']);
 const connect4PxcApps = new Set(['connect4-pxc']);
 
 function sha(parts) {
@@ -77,7 +77,9 @@ function packageInputs(root, id) {
   if (studioApps.has(id)) {
     inputs.push('local/build-studio.mjs', 'local/studio-sandbox', 'local/mock-mounts.mjs', 'local/experience-mount.mjs', 'local/scenarios.mjs', 'vendor/studio');
   }
-  if (demoApps.has(id)) inputs.push('local/studio-demo', 'vendor/studio-renderer');
+  if (demoApps.has(id)) {
+    inputs.push('local/studio-demo', 'local/scene-host.mjs', 'local/scenes/discstudio-photo-card.mjs', 'vendor/studio-renderer');
+  }
   if (connect4PxcApps.has(id)) inputs.push('experiences/connect4/rules.mjs', '../../vendor/hh/services/pxc.mjs');
   const base = raw.base;
   if (base) {
@@ -173,7 +175,7 @@ function affectedFromFiles(root, files) {
       for (const id of studioApps) affect(id, `Studio build dependency changed: ${file}`);
       continue;
     }
-    if (/^(local\/studio-demo\/|vendor\/studio-renderer\/)/.test(file)) {
+    if (/^(local\/studio-demo\/|local\/scene-host\.mjs$|local\/scenes\/discstudio-photo-card\.mjs$|vendor\/studio-renderer\/)/.test(file)) {
       for (const id of demoApps) affect(id, `Studio demo build dependency changed: ${file}`);
     }
   }

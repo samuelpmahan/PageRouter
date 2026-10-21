@@ -1,8 +1,10 @@
 # thro Experience
 
 This additive PageRouter Experience prepares a fixture shelf for making video
-graphics. Its manifest is initially self-contained; shared tidy registration and
-PageRouter catalog wiring are separate integration work.
+graphics. Its effective manifest is registered as `pxcube-thro` in
+`../../.tidy/manifest.json`. PageRouter assembles the freshly compiled package
+as the independent `thro` project, with `#/thro/run` and
+`compiled/thro/index.html` entry points.
 
 Run `node build.mjs` from this directory when all runtime and fixture files are
 present. The adapter first requires the authored entry point, workspace modules,
@@ -19,15 +21,21 @@ novice usability, human acceptance, or production readiness.
 
 The canonical PageRouter build remains `bash ci/bazel/run.sh` from `checkpoint/`
 on Linux x86_64 with Node 24.19.0, Python 3, npm, and Bazel 7.4.1. At this
-implementation checkpoint, the available Ubuntu environment lacks the required
-Node 24.19.0 and Bazel 7.4.1 toolchain, so aggregate canonical verification is
-blocked. A standalone Experience build does not replace that verification.
+implementation checkpoint, those exact tools are installed user-locally in
+Ubuntu. Canonical verification is pending approval for its lockfile dependency
+preparation. A standalone Experience build does not replace that verification.
 
 Focused checks after `node build.mjs`:
 
 ```
 node --test locked-storage.test.mjs archive-codec.test.mjs workspace.test.mjs
 ```
+
+From the PxCube source root, `node --test local/test/affected-targets.test.mjs`
+checks typed registration and complete shared dependency invalidation. The
+aggregate test list also includes `scripts/thro-built.test.mjs`, which requires
+fresh assembled output and verifies the independent catalog mount, exact
+snapshot/package bytes, local module closure, fixture photos and build identity.
 
 The new storage namespace uses an exclusive browser Web Lock. A scratch owning
 model is promoted only after its archive is confirmed saved. A stale or failed
