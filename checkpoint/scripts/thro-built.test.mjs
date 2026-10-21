@@ -65,15 +65,30 @@ test('assembled thro keeps its self-contained runtime imports and original prepa
   for (const disc of fixture.discs) assert.equal(sha(fs.readFileSync(path.join(leaf, disc.file))), disc.sha256, `prepared crop must retain exact bytes: ${disc.id}`);
 });
 
-test('thro build identity covers output bytes and retains honest fixture/auth status', () => {
+test('thro builder payload identity and package receipts retain honest fixture/auth status', () => {
   const info = json(path.join(leaf, 'BUILD_INFO.json'));
   assert.equal(info.product, 'thro');
   assert.equal(info.fixtureOnly, true);
   assert.equal(info.authentication, 'not-configured');
   assert.equal(info.humanAcceptance, 'pending');
   assert.match(info.sourceId, /^[a-f0-9]{64}$/);
+  // local/run.mjs appends these two packaging receipts after the Experience
+  // builder hashes its payload and writes BUILD_INFO. The crisp chunks name
+  // every builder file, including BUILD_INFO; the snapshot above covers all
+  // packaged files, including both receipts.
+  const packagingFiles = new Set(['receipt.json', 'pxcube-receipt.json']);
+  const receipt = json(path.join(leaf, 'receipt.json'));
+  const builderFiles = files(leaf).filter(name => !packagingFiles.has(name));
+  assert.equal(receipt.build.exitCode, 0);
+  assert.equal(receipt.build.timedOut, false);
+  assert.deepEqual(receipt.chunks.map(chunk => chunk.path).sort(), [...builderFiles].sort());
+  for (const chunk of receipt.chunks) assert.equal(chunk.sha256, sha(fs.readFileSync(path.join(leaf, chunk.path))), `crisp receipt must cover ${chunk.path}`);
+  assert.equal(receipt.entryChunk, sha(fs.readFileSync(path.join(leaf, 'index.html'))));
+  const extended = json(path.join(leaf, 'pxcube-receipt.json'));
+  assert.deepEqual(extended.chunks, receipt.chunks);
+  for (const name of builderFiles) assert.equal(extended.outputHashes[name], sha(fs.readFileSync(path.join(leaf, name))), `extended receipt must cover ${name}`);
   const hash = createHash('sha256');
-  for (const name of files(leaf).filter(name => name !== 'BUILD_INFO.json')) hash.update(name).update('\0').update(fs.readFileSync(path.join(leaf, name))).update('\0');
+  for (const name of builderFiles.filter(name => name !== 'BUILD_INFO.json')) hash.update(name).update('\0').update(fs.readFileSync(path.join(leaf, name))).update('\0');
   assert.equal(info.artifactId, hash.digest('hex'));
   const html = fs.readFileSync(path.join(leaf, 'index.html'), 'utf8');
   assert.match(html, /class="wordmark"[^>]*aria-label="thro"/);

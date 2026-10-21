@@ -22,8 +22,9 @@ novice usability, human acceptance, or production readiness.
 The canonical PageRouter build remains `bash ci/bazel/run.sh` from `checkpoint/`
 on Linux x86_64 with Node 24.19.0, Python 3, npm, and Bazel 7.4.1. At this
 implementation checkpoint, those exact tools are installed user-locally in
-Ubuntu. Canonical verification is pending approval for its lockfile dependency
-preparation. A standalone Experience build does not replace that verification.
+Ubuntu. The canonical invocation prepares the integrity-pinned lockfile
+dependencies with lifecycle scripts disabled. A standalone Experience build
+does not replace canonical verification.
 
 Focused checks after `node build.mjs`:
 
