@@ -1,0 +1,20 @@
+{
+  "id": "thro",
+  "version": "0.1.0",
+  "title": "thro",
+  "description": "Generate video graphics from a prepared fixture shelf.",
+  "entry": "index.html",
+  "mounts": ["studio"],
+  "build": "node build.mjs",
+  "outDir": "dist",
+  "sandbox": [
+    "allow-scripts",
+    "allow-same-origin",
+    "allow-downloads",
+    "allow-modals",
+    "allow-forms"
+  ],
+  "demo": {
+    "mode": "create"
+  }
+}

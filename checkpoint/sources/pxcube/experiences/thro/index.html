@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111915">
+  <title>thro — your graphics, ready</title>
+  <link rel="stylesheet" href="./thro.css">
+</head>
+<body>
+  <header class="app-header">
+    <a class="wordmark" href="./index.html" aria-label="thro workspace">thro<span aria-hidden="true">↗</span></a>
+    <div class="header-copy"><span class="eyebrow">YOUR PREPARED WORKSPACE</span><span>From your bag to your video.</span></div>
+    <span class="demo-badge" data-testid="fixture-badge"><span aria-hidden="true"></span>Prepared fixture demo</span>
+  </header>
+  <main id="workspace" aria-busy="true"><div class="opening"><span class="opening-disc" aria-hidden="true"></span><h1>Getting your discs ready.</h1><p>Your prepared workspace is opening.</p></div></main>
+  <section id="conflict" class="conflict-banner" role="alert" hidden>
+    <div><strong id="conflict-title">Saving stopped. Your pending draft is retained.</strong><p id="conflict-copy">Your controls have been preserved. Download the pending draft before choosing to reload the saved workspace.</p></div>
+    <div class="conflict-actions"><button id="download-draft" type="button">Download pending draft</button><button id="reload-latest" class="button-light" type="button">Reload latest saved workspace</button></div>
+  </section>
+  <div id="status" class="app-status" role="status" aria-live="polite">Opening your workspace…</div>
+  <details id="diagnostics" class="diagnostics" hidden><summary>Build &amp; Parts diagnostics</summary><pre id="diagnostic-values"></pre></details>
+  <script type="module" src="./thro-app.mjs"></script>
+</body>
+</html>
