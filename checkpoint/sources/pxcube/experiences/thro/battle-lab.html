@@ -146,7 +146,7 @@
     get holes() { return this.holeList.slice(0, this.holeCount); }
     /** The same for every format: total, sort with the format's compare, share places on 0. */
     standings() {
-      const rows = this.format.totals(this.holes, this.n).map((row, i) => ({ ...row, i, entry: this.entries[i] }));
+      const totals = this.format.totals(this.holes, this.n), rows = totals.map((row, i) => ({ ...row, i, entry: this.entries[i] }));
       const order = (a, b) => (b.played > 0) - (a.played > 0) || this.format.compare(a, b) || a.i - b.i;
       const sorted = [...rows].sort(order);
       for (const row of sorted) {
@@ -155,7 +155,7 @@
         row.pos = row.played ? `${tied ? 'T' : ''}${first + 1}` : '–';
         row.leads = Boolean(row.played) && first === 0;
       }
-      sorted.carry = rows.carry; return sorted;
+      sorted.carry = totals.carry ?? 0; return sorted;
     }
     get playedHoles() { return Math.max(0, ...this.format.totals(this.holes, this.n).map(r => r.played)); }
     toData() { return { format: this.format.constructor.id, holeCount: this.holeCount, entries: this.entries, holes: this.holes.map(h => ({ par: h.par, strokes: h.strokes.slice(0, this.n), ...(h.winner !== undefined ? { winner: h.winner } : {}) })) }; }
