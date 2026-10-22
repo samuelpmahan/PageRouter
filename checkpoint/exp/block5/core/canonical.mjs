@@ -45,3 +45,24 @@ export function cloneJson(value) {
   validateJson(value);
   return structuredClone(value);
 }
+
+/** Freeze a JSON tree in place, children first. Was deepFreeze (composed.mjs) and freezeJson (pixel-cache.mjs). */
+export function deepFreeze(value) {
+  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
+    for (const child of Object.values(value)) deepFreeze(child);
+    Object.freeze(value);
+  }
+  return value;
+}
+
+/** Structural equality of JSON values (key order does not matter). Was a copy in composed.mjs and runtime.mjs. */
+export function equalJson(left, right) {
+  if (left === right) return true;
+  if (left === null || right === null || typeof left !== 'object' || typeof right !== 'object') return false;
+  if (Array.isArray(left) || Array.isArray(right)) {
+    return Array.isArray(left) && Array.isArray(right) && left.length === right.length && left.every((value, index) => equalJson(value, right[index]));
+  }
+  const leftKeys = Object.keys(left);
+  if (leftKeys.length !== Object.keys(right).length) return false;
+  return leftKeys.every(key => Object.hasOwn(right, key) && equalJson(left[key], right[key]));
+}

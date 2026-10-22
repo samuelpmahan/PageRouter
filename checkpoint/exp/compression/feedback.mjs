@@ -1,18 +1,10 @@
-import {canonical, clone} from './canonical.mjs';
+import {canonical, clone, freezeTree} from './canonical.mjs';
 import {buildEventGraph} from './graph.mjs';
 import {discoverPatterns} from './discovery.mjs';
 import {resolveProvider} from '../block5/core/providers.mjs';
 
 const FEEDBACK_FORMAT = 'pagerouter.composed-calculation.v1';
 const MAX_PROGRAMS = 128;
-
-function freezeTree(value) {
-  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
-    for (const child of Object.values(value)) freezeTree(child);
-    Object.freeze(value);
-  }
-  return value;
-}
 
 function providerIdentityOf(events) {
   const providerIdentity = events[0]?.provider;

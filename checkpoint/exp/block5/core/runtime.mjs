@@ -1,5 +1,5 @@
 import { Part, PxC } from '../../../vendor/hh/services/pxc.mjs';
-import { canonicalJson, cloneJson, hashState, validateJson } from './canonical.mjs';
+import { canonicalJson, cloneJson, equalJson, hashState, validateJson } from './canonical.mjs';
 import { executeComposedCalculation, prepareComposedCalculation } from './composed.mjs';
 import { validateTickStream } from './events.mjs';
 import { createPixelCache } from './pixel-cache.mjs';
@@ -19,17 +19,6 @@ function atomicCacheScope(calculation) {
 
 function activeRules(recipe) {
   return recipe.rules.filter(rule => rule.enabled !== false);
-}
-
-function equalJson(left, right) {
-  if (left === right) return true;
-  if (left === null || right === null || typeof left !== 'object' || typeof right !== 'object') return false;
-  if (Array.isArray(left) || Array.isArray(right)) {
-    return Array.isArray(left) && Array.isArray(right) && left.length === right.length && left.every((value, index) => equalJson(value, right[index]));
-  }
-  const leftKeys = Object.keys(left);
-  if (leftKeys.length !== Object.keys(right).length) return false;
-  return leftKeys.every(key => Object.hasOwn(right, key) && equalJson(left[key], right[key]));
 }
 
 function matchingProgramAt(program, rules, start, inputByPort) {

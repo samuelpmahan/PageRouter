@@ -1,12 +1,4 @@
-import {canonical, clone} from './canonical.mjs';
-
-function freezeTree(value) {
-  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
-    for (const child of Object.values(value)) freezeTree(child);
-    Object.freeze(value);
-  }
-  return value;
-}
+import {canonical, clone, freezeTree} from './canonical.mjs';
 
 function readCollection(stream, name, required, rank) {
   if (!Object.hasOwn(stream, name)) {

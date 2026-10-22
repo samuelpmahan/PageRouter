@@ -1,12 +1,4 @@
-import { canonicalJson, validateJson } from './canonical.mjs';
-
-function freezeJson(value) {
-  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
-    for (const child of Object.values(value)) freezeJson(child);
-    Object.freeze(value);
-  }
-  return value;
-}
+import { canonicalJson, deepFreeze, validateJson } from './canonical.mjs';
 
 export function createPixelCache() {
   const scopes = new Map();
@@ -26,7 +18,7 @@ export function createPixelCache() {
 
   function storeCanonical(key, value) {
     if (typeof key !== 'string') throw new TypeError('Canonical cache key must be a string.');
-    canonicalEntries.set(key, freezeJson(structuredClone(validateJson(value, 'cache output'))));
+    canonicalEntries.set(key, deepFreeze(structuredClone(validateJson(value, 'cache output'))));
     return value;
   }
 
@@ -47,7 +39,7 @@ export function createPixelCache() {
     if (typeof scope !== 'string') throw new TypeError('Cache scope must be a canonical string.');
     if (typeof key !== 'string') throw new TypeError('Canonical scoped cache key must be a string.');
     if (!scopes.has(scope)) scopes.set(scope, new Map());
-    scopes.get(scope).set(key, freezeJson(structuredClone(validateJson(value, 'cache output'))));
+    scopes.get(scope).set(key, deepFreeze(structuredClone(validateJson(value, 'cache output'))));
     return value;
   }
 

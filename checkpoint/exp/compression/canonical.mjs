@@ -67,3 +67,12 @@ export function clone(value) {
 export function byteLength(value) {
   return new TextEncoder().encode(canonical(value)).byteLength;
 }
+
+/** Freeze a JSON tree in place, children first. Was a copy in feedback.mjs and graph.mjs. */
+export function freezeTree(value) {
+  if (value && typeof value === 'object' && !Object.isFrozen(value)) {
+    for (const child of Object.values(value)) freezeTree(child);
+    Object.freeze(value);
+  }
+  return value;
+}
