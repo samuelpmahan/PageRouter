@@ -111,9 +111,55 @@ function bagMarkup() {
   return `<section class="bag-controls"><h3>Keep this named bag</h3><p class="subtle">This image shows a selected 2–4-disc lineup. Saved bags retain their exact copies and order.</p><label>Bag name<input id="bag-name" maxlength="80" value="${text(ui.bagName)}" placeholder="My video lineup"></label><button type="button" id="save-bag" class="button-secondary">Save bag</button>${bags.length ? `<label>Open saved bag<select id="saved-bag"><option value="">Choose a bag</option>${bags.map(({ address, bag }) => option(address, `${bag.name} · ${bag.discIds.length} copies`, '')).join('')}</select></label>` : ''}</section>`;
 }
 
+// Accent swatches: one sampled from the disc on screen, then a fixed palette. Tapping beats a system colour picker on a phone.
+const palette = [['#a6edda', 'Mint'], ['#c8f49d', 'Lime'], ['#ffd166', 'Gold'], ['#ff7a45', 'Orange'], ['#ff4d6d', 'Red'], ['#c77dff', 'Violet'], ['#4cc9f0', 'Sky'], ['#f6f3e9', 'Chalk']];
+let discColour = null; // { disc, colour }
+function swatchMarkup(chosen) {
+  const sampled = discColour && discColour.disc === (ui.mode === 'single' ? ui.selectedDisc : ui.selection[0]) ? discColour.colour : null;
+  const same = (a, b) => String(a).toLowerCase() === String(b).toLowerCase();
+  return `<button type="button" class="swatch-choice swatch-match" data-accent="${text(sampled ?? '')}" aria-pressed="${Boolean(sampled && same(sampled, chosen))}" ${sampled ? '' : 'disabled'} title="Match the disc colour"><span style="background:${text(sampled ?? '#556052')}"></span>Match disc</button>${palette.map(([value, name]) => `<button type="button" class="swatch-choice" data-accent="${value}" aria-pressed="${same(value, chosen)}" aria-label="${name}" title="${name}"><span style="background:${value}"></span></button>`).join('')}`;
+}
+function sampleDiscColour() {
+  const disc = ui.mode === 'single' ? ui.selectedDisc : ui.selection[0];
+  const img = document.querySelector(`[data-disc="${CSS.escape(disc ?? '')}"] img`);
+  if (!img || discColour?.disc === disc) return;
+  const read = () => {
+    try {
+      const size = 48, canvas = document.createElement('canvas'); canvas.width = canvas.height = size;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true }); ctx.drawImage(img, 0, 0, size, size);
+      const data = ctx.getImageData(0, 0, size, size).data, bins = Array.from({ length: 24 }, () => ({ weight: 0, pixels: [] }));
+      for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+        const dx = x - size / 2, dy = y - size / 2; if (dx * dx + dy * dy > (size * .42) ** 2) continue; // inside the rim only
+        const i = (y * size + x) * 4, R = data[i], G = data[i + 1], B = data[i + 2], A = data[i + 3];
+        const max = Math.max(R, G, B), min = Math.min(R, G, B), sat = max ? (max - min) / max : 0;
+        if (A < 200 || max < 60 || sat < .3) continue; // skip shadows, glare and grey stamp ink
+        const d = max - min, hue = max === R ? ((G - B) / d + 6) % 6 : max === G ? (B - R) / d + 2 : (R - G) / d + 4;
+        const bin = bins[Math.floor(hue / 6 * 24) % 24]; bin.weight += sat * max; bin.pixels.push([R, G, B, max]);
+      }
+      const top = bins.reduce((best, bin) => bin.weight > best.weight ? bin : best);
+      if (top.pixels.length < 12) return;
+      // The plastic's own colour: the brightest third of the dominant hue, so shadows don't muddy it.
+      const bright = top.pixels.sort((a, b) => b[3] - a[3]).slice(0, Math.max(6, Math.ceil(top.pixels.length / 3)));
+      let r = 0, g = 0, b = 0; for (const [R, G, B] of bright) { r += R; g += G; b += B; }
+      const n = bright.length, lift = Math.min(1.6, 235 / Math.max(1, r / n, g / n, b / n)); // indoor photos read darker than the plastic looks on screen
+      const hex = v => Math.min(255, Math.round(v / n * lift)).toString(16).padStart(2, '0');
+      discColour = { disc, colour: `#${hex(r)}${hex(g)}${hex(b)}` };
+      const group = document.querySelector('.swatches'); if (group) { group.innerHTML = swatchMarkup(ui.design.accent); bindSwatches(); }
+    } catch { /* A cross-origin or unreadable photo simply leaves Match disc disabled. */ }
+  };
+  if (img.complete && img.naturalWidth) read(); else img.addEventListener('load', read, { once: true });
+}
+function bindSwatches() {
+  document.querySelectorAll('[data-accent]').forEach(button => button.onclick = () => {
+    if (!button.dataset.accent) return;
+    $('accent').value = button.dataset.accent;
+    ui.design = readDesign(); change({ design: structuredClone(ui.design) }, `Accent set to ${button.getAttribute('aria-label') ?? 'the disc colour'}. Your graphic is ready.`);
+  });
+}
+
 function controlsMarkup() {
   const design = ui.design;
-  return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">YOUR TREATMENT</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}"><div class="composition-picker" role="radiogroup" aria-label="Composition">${compositionStudies.map(study => `<button type="button" role="radio" class="composition-choice" data-study="${text(study.id)}" aria-checked="${study.id === design.study}" title="${text(study.note ?? study.name)}"><span class="composition-thumb" data-study-thumb="${text(study.id)}"></span><span class="composition-name">${text(study.name)}</span></button>`).join('')}</div></fieldset><div class="field-pair placement-fields"><fieldset class="placement-field"><legend>Placement <span class="optional" id="placement-name">${text(({ 'bottom-left': 'Bottom left', 'bottom-center': 'Bottom center', 'bottom-right': 'Bottom right', 'top-left': 'Top left', 'top-right': 'Top right' })[design.placement] ?? '')}</span></legend><input type="hidden" id="placement" value="${text(design.placement)}"><div class="placement-frame" role="radiogroup" aria-label="Where the graphic sits in the video frame">${[['top-left', 'Top left'], ['top-right', 'Top right'], ['bottom-left', 'Bottom left'], ['bottom-center', 'Bottom center'], ['bottom-right', 'Bottom right']].map(([v, name]) => `<button type="button" role="radio" class="placement-spot spot-${v}" data-placement="${v}" aria-checked="${v === design.placement}" aria-label="${name}" title="${name}"><span aria-hidden="true"></span></button>`).join('')}</div></fieldset><label>Width<select id="composition-size">${compositionSizeStudies.map(size => option(size.id, size.id === 'balanced' ? 'Preferred' : size.id === 'full-width' ? 'Maximum' : 'Compact', design.compositionSize)).join('')}</select></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation">${option('landscape', 'Landscape', design.orientation)}${option('portrait', 'Portrait', design.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><label>Title <span class="optional">optional</span><input id="graphic-title" maxlength="80" value="${text(design.title)}" placeholder="For the next shot"></label><details class="fine-tuning"><summary>More control</summary><div class="field-pair"><label>Background<input id="background" type="color" value="${text(design.background)}"></label><label>Text<input id="foreground" type="color" value="${text(design.foreground)}"></label></div><label>Canvas background<select id="frame">${option('none', 'Transparent', design.frame)}${option('filled', 'Solid', design.frame)}</select></label><div class="field-pair"><label>X offset <span class="optional">px</span><input id="offset-x" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetX) || 0}"></label><label>Y offset <span class="optional">px</span><input id="offset-y" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetY) || 0}"></label></div></details></form>${battleMarkup()}${bagMarkup()}</aside>`;
+  return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">YOUR TREATMENT</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}"><div class="composition-picker" role="radiogroup" aria-label="Composition">${compositionStudies.map(study => `<button type="button" role="radio" class="composition-choice" data-study="${text(study.id)}" aria-checked="${study.id === design.study}" title="${text(study.note ?? study.name)}"><span class="composition-thumb" data-study-thumb="${text(study.id)}"></span><span class="composition-name">${text(study.name)}</span></button>`).join('')}</div></fieldset><div class="field-pair placement-fields"><fieldset class="placement-field"><legend>Placement <span class="optional" id="placement-name">${text(({ 'bottom-left': 'Bottom left', 'bottom-center': 'Bottom center', 'bottom-right': 'Bottom right', 'top-left': 'Top left', 'top-right': 'Top right' })[design.placement] ?? '')}</span></legend><input type="hidden" id="placement" value="${text(design.placement)}"><div class="placement-frame" role="radiogroup" aria-label="Where the graphic sits in the video frame">${[['top-left', 'Top left'], ['top-right', 'Top right'], ['bottom-left', 'Bottom left'], ['bottom-center', 'Bottom center'], ['bottom-right', 'Bottom right']].map(([v, name]) => `<button type="button" role="radio" class="placement-spot spot-${v}" data-placement="${v}" aria-checked="${v === design.placement}" aria-label="${name}" title="${name}"><span aria-hidden="true"></span></button>`).join('')}</div></fieldset><label>Width<select id="composition-size">${compositionSizeStudies.map(size => option(size.id, size.id === 'balanced' ? 'Preferred' : size.id === 'full-width' ? 'Maximum' : 'Compact', design.compositionSize)).join('')}</select></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation">${option('landscape', 'Landscape', design.orientation)}${option('portrait', 'Portrait', design.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div><label>Title <span class="optional">optional</span><input id="graphic-title" maxlength="80" value="${text(design.title)}" placeholder="For the next shot"></label><details class="fine-tuning"><summary>More control</summary><div class="field-pair"><label>Background<input id="background" type="color" value="${text(design.background)}"></label><label>Text<input id="foreground" type="color" value="${text(design.foreground)}"></label></div><label>Canvas background<select id="frame">${option('none', 'Transparent', design.frame)}${option('filled', 'Solid', design.frame)}</select></label><div class="field-pair"><label>X offset <span class="optional">px</span><input id="offset-x" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetX) || 0}"></label><label>Y offset <span class="optional">px</span><input id="offset-y" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetY) || 0}"></label></div></details></form>${battleMarkup()}${bagMarkup()}</aside>`;
 }
 
 function capturesMarkup() {
@@ -208,6 +254,8 @@ function paint() {
   paintPreview();
   bind();
   paintCompositionThumbs();
+  bindSwatches();
+  sampleDiscColour();
   paintExportFailure();
   diagnostics();
 }

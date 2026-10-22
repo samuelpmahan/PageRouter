@@ -82,3 +82,12 @@
 .downloaded-file{font-family:ui-monospace,monospace;font-size:10px;color:#d6e6c9;overflow-wrap:anywhere}
 @media(max-width:760px){.downloaded{padding:8px 10px}.downloaded p{font-size:10.5px!important}}
 @media(max-width:1180px){.export-bar>div.downloaded{display:flex}.export-bar>div.export-copy{display:none}}
+
+/* Accent swatches */
+.swatches{display:flex;flex-wrap:wrap;gap:6px;margin-top:-6px}
+.swatch-choice{min-height:32px;min-width:32px;width:32px;height:32px;padding:3px;border-radius:50%;border:1px solid #405043;background:#111a14;display:grid;place-items:center}
+.swatch-choice>span{display:block;width:100%;height:100%;border-radius:50%}
+.swatch-choice[aria-pressed=true]{border-color:var(--ink);box-shadow:0 0 0 2px var(--accent)}
+.swatch-match{width:auto;border-radius:16px;padding:3px 10px 3px 3px;display:flex;gap:7px;font-size:11px;font-weight:600;color:#d6dfd2}
+.swatch-match>span{width:24px;height:24px;flex:0 0 24px}
+@media(max-width:760px){.swatch-choice{min-height:40px;min-width:40px;width:40px;height:40px}.swatch-match{width:auto}.swatch-match>span{width:32px;height:32px;flex-basis:32px}}
