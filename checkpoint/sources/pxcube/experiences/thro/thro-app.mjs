@@ -246,6 +246,7 @@ async function renderCurrent() {
 
 function downloadedMarkup() {
   if (!lastDownload || Date.now() - lastDownload.at > 9000) return '';
+  if (lastDownload.kind === 'keep') return `<div class="downloaded" role="status"><span class="downloaded-mark" aria-hidden="true">✓</span><div><strong>${lastDownload.already ? 'Already kept' : 'Kept this exact version'}</strong><p>It stays in this browser after reload. <a href="#captures-title" class="jump-kept">Show kept graphics</a></p></div></div>`;
   const d = lastDownload, next = d.format === 'png' ? (d.transparent ? 'Drop it on the track above your footage; the checkerboard areas stay see-through.' : 'Drop it on the track above your footage.') : 'Open it in your editor or design tool to change any part.';
   return `<div class="downloaded" role="status"><span class="downloaded-mark" aria-hidden="true">✓</span><div><strong>Downloaded ${d.format.toUpperCase()} · ${d.width} × ${d.height}</strong><p><span class="downloaded-file">${text(d.filename)}</span> ${next}</p></div></div>`;
 }
@@ -419,7 +420,13 @@ function bind() {
     document.querySelectorAll('[data-study]').forEach(item => item.setAttribute('aria-checked', String(item === button)));
     ui.design = readDesign(); change({ design: structuredClone(ui.design) }, `${button.querySelector('.composition-name').textContent} applied. Your graphic is ready.`);
   });
-  $('keep-graphic').onclick = () => run(async () => { await keepCurrent(true); paint(); message('Kept. This exact version is ready below, even after reload.'); }, { kind: 'keep', ui });
+  $('keep-graphic').onclick = () => run(async () => {
+    const existing = currentResult ? workspace.existingCapture(currentResult) : null; // keeping the same graphic twice adds nothing
+    const held = existing ? (typeof existing === 'string' ? { address: existing } : existing) : await keepCurrent(true);
+    lastDownload = { kind: 'keep', already: Boolean(existing), address: held?.address, at: Date.now() };
+    paint(); message(existing ? 'Already kept. That exact version is in Kept graphics.' : 'Kept. This exact version is in Kept graphics, even after reload.');
+    const shown = lastDownload.at; setTimeout(() => { if (lastDownload?.at === shown) { lastDownload = null; document.querySelector('.downloaded')?.remove(); } }, 9000);
+  }, { kind: 'keep', ui });
   $('download-png').onclick = () => run(() => download('png'), { kind: 'download', format: 'png', ui });
   $('download-svg').onclick = () => run(() => download('svg'), { kind: 'download', format: 'svg', ui });
   $('return-live').onclick = () => { capturedPreview = null; paint(); };
