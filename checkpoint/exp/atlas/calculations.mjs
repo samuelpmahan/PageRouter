@@ -1,5 +1,6 @@
 // Browser-native port of the provisional Python atlas calculations.
 // No dynamic code execution. This module's exported registry is the only executable family.
+import {canonicalJson} from '../canonical-json/canonical-json.mjs';
 export const GRID = Object.freeze([0,-2,-1,1,2]);
 export const MODEL_ASSUMPTION='conditionally independent Bernoulli cases with one shared pass probability';
 export function number(value,name='value') {
@@ -12,13 +13,7 @@ function object(value,name='value') {
 }
 function integer(value,name){if(!Number.isSafeInteger(value)||value<0)throw new TypeError(`${name} must be a nonnegative safe integer`);return value;}
 export function clone(value){return JSON.parse(canonical(value));}
-export function canonical(value){
-  if(value===null||typeof value==='boolean'||typeof value==='string')return JSON.stringify(value);
-  if(typeof value==='number')return JSON.stringify(number(value));
-  if(Array.isArray(value))return '['+value.map(canonical).join(',')+']';
-  object(value);
-  return '{'+Object.keys(value).sort().map(key=>JSON.stringify(key)+':'+canonical(value[key])).join(',')+'}';
-}
+export function canonical(value){return canonicalJson(value);}
 function rows(source,target=false){
   object(source);const records=source.transitions;
   if(!Array.isArray(records)||!records.length)throw new TypeError('transitions must be a nonempty list');

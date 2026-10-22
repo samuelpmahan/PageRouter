@@ -10,6 +10,7 @@ import {relocateHhServiceImports} from './relocate-hh-imports.mjs';
 const root=path.resolve(import.meta.dirname,'..'),dist=path.join(root,'dist');
 fs.mkdirSync(dist,{recursive:true});
 for(const f of ['index.html','app.mjs','session-repl.mjs','justin-site-ide.mjs','styles.css','static-compiler.mjs','compiled-patch.mjs','project-router.mjs','local-store.mjs','sw.js'])fs.copyFileSync(path.join(root,'src',f),path.join(dist,f));
+fs.writeFileSync(path.join(dist,'compiled-patch.mjs'),fs.readFileSync(path.join(dist,'compiled-patch.mjs'),'utf8').replace("'../exp/canonical-json/","'./exp/canonical-json/"));
 const atlasViewSource=fs.readFileSync(path.join(root,'src/atlas-view.mjs'),'utf8');
 let builtAtlasView=atlasViewSource;
 for(const module of ['atlas-session.mjs','cross-language.mjs']){
@@ -26,6 +27,7 @@ for(const folder of ['block5/core','compression']){
 }
 fs.writeFileSync(path.join(dist,'block5-view.mjs'),builtBlock5View);
 fs.cpSync(path.join(root,'exp/atlas'),path.join(dist,'exp/atlas'),{recursive:true});
+fs.cpSync(path.join(root,'exp/canonical-json'),path.join(dist,'exp/canonical-json'),{recursive:true});
 fs.cpSync(path.join(root,'exp/block5'),path.join(dist,'exp/block5'),{recursive:true});
 fs.cpSync(path.join(root,'exp/compression'),path.join(dist,'exp/compression'),{recursive:true});
 fs.cpSync(path.join(root,'exp/cooperative'),path.join(dist,'exp/cooperative'),{recursive:true});
@@ -107,7 +109,7 @@ const proof={kind:'actual-HH-C6-compiled-byte-delta',baseDigest:base.digest,targ
 fs.writeFileSync(path.join(root,'evidence/hh-delta-proof.json'),JSON.stringify(proof,null,2));fs.writeFileSync(path.join(dist,'data/delta-proof.json'),JSON.stringify(proof));
 const neat=pxcEvidence.report.results.map(r=>({id:r.id,ok:r.ok,error:r.error??null,build:r.build,sourceHash:r.sourceHash,receipt:r.receipt}));
 const packageRecord=JSON.parse(fs.readFileSync(path.join(root,'package.json')));
-const sourceDigests={};for(const folder of ['src','scripts','exp/cooperative','exp/atlas','exp/block5','exp/compression','vendor/hh-geography-review'])for(const [f,v]of Object.entries(files(path.join(root,folder))))sourceDigests[folder+'/'+f]=await hash(Buffer.from(v.data,'base64'));const siteBuildId=await hash(canonical({package:packageRecord,sourceDigests,projectPins:catalog.map(p=>({id:p.id,pin:p.pin,digest:p.digest})),auditFiles:fs.existsSync(auditSource)?Object.fromEntries(await Promise.all(Object.entries(files(auditSource)).map(async([p,v])=>[p,await hash(Buffer.from(v.data,'base64'))]))):null}));
+const sourceDigests={};for(const folder of ['src','scripts','exp/cooperative','exp/atlas','exp/canonical-json','exp/block5','exp/compression','vendor/hh-geography-review'])for(const [f,v]of Object.entries(files(path.join(root,folder))))sourceDigests[folder+'/'+f]=await hash(Buffer.from(v.data,'base64'));const siteBuildId=await hash(canonical({package:packageRecord,sourceDigests,projectPins:catalog.map(p=>({id:p.id,pin:p.pin,digest:p.digest})),auditFiles:fs.existsSync(auditSource)?Object.fromEntries(await Promise.all(Object.entries(files(auditSource)).map(async([p,v])=>[p,await hash(Buffer.from(v.data,'base64'))]))):null}));
 // A deployed review must not keep executing the browser's previous root module.
 const entryPath=path.join(dist,'index.html'),entryHtml=fs.readFileSync(entryPath,'utf8');
 if(entryHtml.split('src="app.mjs"').length!==2)throw Error('Unexpected PageRouter module entry');

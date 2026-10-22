@@ -14,13 +14,20 @@ export function fail(message, code, detail) {
   throw new KernelError(message, code, detail);
 }
 
+const INDEX = /^(0|[1-9]\d*)$/;
+
 function isPlainObject(value) {
   if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
   const proto = Object.getPrototypeOf(value);
   return proto === Object.prototype || proto === null;
 }
 
-/** Canonical JSON: sorted keys, finite numbers only, -0 folded to 0, no cycles. */
+/**
+ * canonical-json@1. Sorted keys (UTF-16 code unit order), finite numbers only, -0 folded to 0, no cycles,
+ * depth <= 256. Refused rather than coerced: undefined, functions, symbols, BigInt, Date, Map, Set, typed
+ * arrays, class instances, holes, array properties that are not elements, symbol keys, accessors and
+ * non-enumerable fields (JSON.stringify would drop or rewrite each of these, silently changing the hash).
+ */
 export function canonical(value, path = '$', depth = 0, seen = new Set()) {
   if (depth > 256) fail(`${path} exceeds depth 256`, 'VALUE_DEPTH');
   if (value === null) return 'null';
@@ -37,18 +44,33 @@ export function canonical(value, path = '$', depth = 0, seen = new Set()) {
   seen.add(value);
   let out;
   if (Array.isArray(value)) {
+    if (Object.getPrototypeOf(value) !== Array.prototype) fail(`${path} is not a plain array`, 'NOT_JSON');
+    for (const key of Reflect.ownKeys(value)) {
+      if (key !== 'length' && !(typeof key === 'string' && INDEX.test(key) && Number(key) < value.length)) {
+        fail(`${path} has a property that is not an element (${String(key)})`, 'NOT_JSON');
+      }
+    }
     const items = [];
     for (let i = 0; i < value.length; i += 1) {
       if (!(i in value)) fail(`${path}[${i}] is a hole`, 'SPARSE_ARRAY');
+      if (!('value' in Object.getOwnPropertyDescriptor(value, i))) fail(`${path}[${i}] is an accessor`, 'NOT_JSON');
       items.push(canonical(value[i], `${path}[${i}]`, depth + 1, seen));
     }
     out = `[${items.join(',')}]`;
   } else {
     if (!isPlainObject(value)) fail(`${path} is not a plain object`, 'NOT_JSON');
-    const keys = Object.keys(value).sort();
+    const descriptors = Object.getOwnPropertyDescriptors(value);
+    for (const key of Reflect.ownKeys(descriptors)) {
+      const d = descriptors[key];
+      if (typeof key === 'symbol') fail(`${path} has a symbol key`, 'NOT_JSON');
+      if (!d.enumerable) fail(`${path}.${key} is not enumerable`, 'NOT_JSON');
+      if (!('value' in d)) fail(`${path}.${key} is an accessor`, 'NOT_JSON');
+    }
+    const keys = Object.keys(descriptors).sort();
     out = `{${keys.map((k) => {
-      if (value[k] === undefined) fail(`${path}.${k} is undefined`, 'NOT_JSON');
-      return `${JSON.stringify(k)}:${canonical(value[k], `${path}.${k}`, depth + 1, seen)}`;
+      const field = descriptors[k].value;
+      if (field === undefined) fail(`${path}.${k} is undefined`, 'NOT_JSON');
+      return `${JSON.stringify(k)}:${canonical(field, `${path}.${k}`, depth + 1, seen)}`;
     }).join(',')}}`;
   }
   seen.delete(value);

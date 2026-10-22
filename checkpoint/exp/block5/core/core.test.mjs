@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -217,17 +217,45 @@ test('provider identity changes when only a copied grid-engine lexical helper ch
   const sourceDir = fileURLToPath(new URL('.', import.meta.url));
   const temporaryDir = mkdtempSync(join(tmpdir(), 'block5-provider-pin-'));
   try {
+    // Same layout as exp/: core imports ../../canonical-json, so the probe copy keeps block5/core beside canonical-json.
+    const coreDir = join(temporaryDir, 'block5', 'core');
+    const sharedDir = join(temporaryDir, 'canonical-json');
+    mkdirSync(coreDir, { recursive: true });
+    mkdirSync(sharedDir, { recursive: true });
+    writeFileSync(join(sharedDir, 'canonical-json.mjs'), readFileSync(join(sourceDir, '..', '..', 'canonical-json', 'canonical-json.mjs')));
     for (const filename of ['canonical.mjs', 'world.mjs', 'providers.mjs']) {
-      writeFileSync(join(temporaryDir, filename), readFileSync(join(sourceDir, filename)));
+      writeFileSync(join(coreDir, filename), readFileSync(join(sourceDir, filename)));
     }
     const originalEngine = readFileSync(join(sourceDir, 'grid-engine.mjs'), 'utf8');
     const helperOnlyEdit = originalEngine.replace("const nouns = new Set(['BABA', 'WALL', 'ROCK', 'FLAG']);", "const nouns = new Set(['BABA', 'WALL', 'ROCK', 'FLAG', 'DOOR']);");
     assert.notEqual(helperOnlyEdit, originalEngine, 'probe must change only the lexical noun helper');
-    writeFileSync(join(temporaryDir, 'grid-engine.mjs'), helperOnlyEdit);
-    const changed = await import(pathToFileURL(join(temporaryDir, 'providers.mjs')).href);
+    writeFileSync(join(coreDir, 'grid-engine.mjs'), helperOnlyEdit);
+    const changed = await import(pathToFileURL(join(coreDir, 'providers.mjs')).href);
 
     assert.notEqual(changed.PROVIDER_IDENTITY.implementationId, PROVIDER_IDENTITY.implementationId);
     assert.throws(() => changed.resolveProvider(changed.CALCULATIONS.gridStep, PROVIDER_IDENTITY), /identity mismatch/i);
+  } finally {
+    rmSync(temporaryDir, { recursive: true, force: true });
+  }
+});
+
+test('provider identity changes when only the shared canonical-json implementation changes', async () => {
+  const sourceDir = fileURLToPath(new URL('.', import.meta.url));
+  const temporaryDir = mkdtempSync(join(tmpdir(), 'block5-canonical-pin-'));
+  try {
+    const coreDir = join(temporaryDir, 'block5', 'core');
+    const sharedDir = join(temporaryDir, 'canonical-json');
+    mkdirSync(coreDir, { recursive: true });
+    mkdirSync(sharedDir, { recursive: true });
+    const shared = readFileSync(join(sourceDir, '..', '..', 'canonical-json', 'canonical-json.mjs'), 'utf8');
+    const probe = shared.replace("case 'boolean': return value ? 'true' : 'false';", "case 'boolean': return value ? 'true' : 'false'; // probe");
+    assert.notEqual(probe, shared, 'probe must edit a function body, not a constant');
+    writeFileSync(join(sharedDir, 'canonical-json.mjs'), probe);
+    for (const filename of ['canonical.mjs', 'world.mjs', 'providers.mjs', 'grid-engine.mjs']) {
+      writeFileSync(join(coreDir, filename), readFileSync(join(sourceDir, filename)));
+    }
+    const changed = await import(pathToFileURL(join(coreDir, 'providers.mjs')).href);
+    assert.notEqual(changed.PROVIDER_IDENTITY.implementationId, PROVIDER_IDENTITY.implementationId);
   } finally {
     rmSync(temporaryDir, { recursive: true, force: true });
   }

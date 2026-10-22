@@ -1,3 +1,5 @@
+import { canonicalJson as canonicalize } from '../../canonical-json/canonical-json.mjs';
+
 const plainObject = value => {
   if (value === null || typeof value !== 'object' || Array.isArray(value)) return false;
   const prototype = Object.getPrototypeOf(value);
@@ -26,11 +28,9 @@ export function validateJson(value, label = 'value', seen = new Set()) {
   return value;
 }
 
+/** canonical-json@1 (exp/canonical-json). Was a copy here that re-validated the whole tree at every level. */
 export function canonicalJson(value) {
-  validateJson(value);
-  if (value === null || typeof value !== 'object') return JSON.stringify(value);
-  if (Array.isArray(value)) return `[${value.map(canonicalJson).join(',')}]`;
-  return `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(',')}}`;
+  return canonicalize(value);
 }
 
 export function hashState(value) {

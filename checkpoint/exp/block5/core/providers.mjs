@@ -1,4 +1,5 @@
 import { cloneJson, canonicalJson, validateJson } from './canonical.mjs';
+import { CANONICAL_JSON_FUNCTIONS } from '../../canonical-json/canonical-json.mjs';
 import { validateWorld, createInitialWorld, WORLD_IMPLEMENTATION_SOURCE } from './world.mjs';
 import { step as gridStep } from './grid-engine.mjs';
 
@@ -124,6 +125,7 @@ const implementationFunctions = [
   neighborhoodForce, integrateBounds, energyDecay, gridStepCalculation,
   finiteParameter, reflect, validateWorld, createInitialWorld,
   cloneJson, validateJson, canonicalJson, gridStep,
+  ...CANONICAL_JSON_FUNCTIONS,
 ];
 const implementationSource = `${GRID_ENGINE_SHA256}\n${canonicalJson(CALCULATIONS)}\n${WORLD_IMPLEMENTATION_SOURCE}\n${implementationFunctions.map(fn => fn.toString()).join('\n')}`;
 const implementationHex = await sha256TextHex(implementationSource);
