@@ -9,7 +9,7 @@ const debug = new URLSearchParams(location.search).get('debug') === '1';
 const root = $('workspace');
 let workspace, rows = [], currentResult = null, capturedPreview = null;
 let queue = Promise.resolve(), busy = false, failedIntent = null, recoveredDraft = null, buildInfo = null;
-let ui = { mode: 'single', selectedDisc: null, selection: [], design: { ...defaultDesign }, bagName: '', background: 'checker' };
+let ui = { mode: 'single', selectedDisc: null, selection: [], design: { ...defaultDesign }, bagName: '', background: 'checker', view: 'closeup' };
 const keptResults = new Map();
 const text = value => esc(String(value ?? ''));
 const message = (value, error = false) => { $('status').textContent = value; $('status').classList.toggle('is-error', error); };
@@ -120,15 +120,44 @@ function capturesMarkup() {
   return `<section class="captures panel" aria-labelledby="captures-title"><div class="section-heading"><div><span class="eyebrow">READY WHEN YOU ARE</span><h2 id="captures-title">Kept graphics <span class="inline-count">${captures.length}</span></h2></div><span class="subtle">Exact saved versions</span></div>${captures.length ? `<div class="capture-list">${captures.slice().reverse().map(address => { const capture = value(address); return `<button type="button" class="capture-choice ${capturedPreview?.address === address ? 'is-selected' : ''}" data-capture="${text(address)}" aria-pressed="${capturedPreview?.address === address}"><span class="capture-thumbnail"><img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(capture.graphic.svg)}" alt="" loading="lazy"></span><span><strong>${text(capture.title)}</strong><small>${capture.graphic.width} × ${capture.graphic.height}</small></span><span class="capture-arrow" aria-hidden="true">↗</span></button>`; }).join('')}</div>` : '<p class="empty-note">Keep a graphic to come back to its exact version.</p>'}</section>`;
 }
 
+// Close-up: frame the preview on the graphic itself instead of the whole canvas.
+// Only the on-screen preview changes; downloads always use the exact full canvas.
+function closeUp(holder, graphic) {
+  const svg = holder.querySelector('svg');
+  if (!svg || ui.view !== 'closeup') return;
+  const frame = svg.getBoundingClientRect();
+  if (!frame.width || !frame.height) return;
+  let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity;
+  for (const child of svg.children) {
+    if (['defs', 'style', 'title', 'desc'].includes(child.tagName.toLowerCase())) continue;
+    const box = child.getBoundingClientRect();
+    if (!box.width || !box.height) continue;
+    left = Math.min(left, box.left); top = Math.min(top, box.top); right = Math.max(right, box.right); bottom = Math.max(bottom, box.bottom);
+  }
+  if (!Number.isFinite(left)) return;
+  const scale = graphic.width / frame.width;
+  let x = (left - frame.left) * scale, y = (top - frame.top) * scale, w = (right - left) * scale, h = (bottom - top) * scale;
+  if (w > graphic.width * .9 && h > graphic.height * .9) return; // already fills the canvas
+  const pad = Math.max(w, h) * .06;
+  x = Math.max(0, x - pad); y = Math.max(0, y - pad);
+  w = Math.min(graphic.width - x, w + pad * 2); h = Math.min(graphic.height - y, h + pad * 2);
+  svg.setAttribute('viewBox', `${x.toFixed(1)} ${y.toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)}`);
+  holder.style.aspectRatio = `${w.toFixed(1)} / ${h.toFixed(1)}`;
+  holder.classList.add('is-closeup');
+}
+
 function paintPreview() {
   const graphic = currentGraphic(), holder = $('graphic-preview');
   if (!holder) return;
   holder.innerHTML = graphic?.svg ?? '<div class="empty-preview"><span aria-hidden="true">↗</span><h3>Build your lineup.</h3><p>Choose 2–4 prepared discs to see your graphic.</p></div>';
   holder.style.aspectRatio = graphic ? `${graphic.width} / ${graphic.height}` : '16 / 9';
   holder.className = `graphic-preview preview-${ui.background}`;
+  if (graphic) closeUp(holder, graphic);
+  document.querySelectorAll('[data-preview-view]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.previewView === ui.view)));
   $('preview-dimensions').textContent = graphic ? `${graphic.width} × ${graphic.height}` : '1920 × 1080';
   $('preview-kind').textContent = graphic ? (capturedPreview?.capture.design.frame ?? ui.design.frame) === 'none' ? 'Transparent PNG' : 'Solid background' : 'Choose your lineup';
-  $('preview-note').textContent = capturedPreview ? 'Kept version · your current design stays available.' : 'The background below is preview only. Your exported graphic uses its exact canvas.';
+  const framing = graphic && ui.view === 'closeup' && holder.classList.contains('is-closeup') ? ` Close-up shows the graphic larger; your download is the full ${graphic.width} × ${graphic.height} frame.` : '';
+  $('preview-note').textContent = (capturedPreview ? 'Kept version · your current design stays available.' : 'The background is preview only.') + framing;
   $('return-live').hidden = !capturedPreview;
   $('keep-graphic').hidden = Boolean(capturedPreview);
   $('download-png').disabled = busy || hasConflict() || !graphic;
@@ -143,7 +172,7 @@ async function renderCurrent() {
 }
 
 function paint() {
-  root.innerHTML = `<section class="workspace-heading"><div><span class="eyebrow">GOOD TO GO</span><h1>Your discs. Your next video.</h1></div><nav class="mode-nav" aria-label="Graphic type">${[['single', 'Single'], ['battle', 'Battle'], ['bag', 'Bag lineup']].map(([mode, label]) => `<button type="button" data-mode="${mode}" aria-pressed="${ui.mode === mode}">${label}</button>`).join('')}</nav></section><div class="studio-grid">${shelfMarkup()}<section class="preview-column" aria-labelledby="preview-title"><div class="preview-heading"><div><span class="eyebrow">THE ACTUAL GRAPHIC</span><h2 id="preview-title">${capturedPreview ? 'A kept version' : ui.mode === 'single' ? 'One disc. Ready for its moment.' : ui.mode === 'battle' ? 'Set the scene.' : 'Your selected lineup.'}</h2></div><button id="return-live" type="button" class="text-button" hidden>Back to current image</button></div><div class="preview-shell"><div class="preview-toolbar"><span id="preview-dimensions"></span><div class="background-switch" aria-label="Preview background">${[['checker', 'Checkerboard'], ['light', 'Light'], ['dark', 'Dark']].map(([v, label]) => `<button type="button" data-preview-background="${v}" aria-label="${label} preview background" aria-pressed="${ui.background === v}" title="${label}"><span class="swatch swatch-${v}" aria-hidden="true"></span></button>`).join('')}</div></div><div id="graphic-preview" data-testid="graphic-preview" class="graphic-preview"></div><div class="preview-bottom"><span class="transparency-dot" aria-hidden="true"></span><strong id="preview-kind"></strong><span>SVG → exact PNG</span></div></div><p id="preview-note" class="preview-note"></p><div class="export-bar"><div><span class="eyebrow">TAKE IT TO YOUR VIDEO</span><p>Download keeps this exact version.</p></div><div class="export-actions"><button id="keep-graphic" type="button" data-needs-ready class="button-secondary">Keep version</button><button id="download-png" type="button" data-needs-ready class="button-primary">Download PNG <span aria-hidden="true">↓</span></button><button id="download-svg" type="button" data-needs-ready class="svg-button" aria-label="Download editable SVG">SVG</button></div></div></section>${controlsMarkup()}</div>${capturesMarkup()}`;
+  root.innerHTML = `<section class="workspace-heading"><div><span class="eyebrow">GOOD TO GO</span><h1>Your discs. Your next video.</h1></div><nav class="mode-nav" aria-label="Graphic type">${[['single', 'Single'], ['battle', 'Battle'], ['bag', 'Bag lineup']].map(([mode, label]) => `<button type="button" data-mode="${mode}" aria-pressed="${ui.mode === mode}">${label}</button>`).join('')}</nav></section><div class="studio-grid">${shelfMarkup()}<section class="preview-column" aria-labelledby="preview-title"><div class="preview-heading"><div><span class="eyebrow">THE ACTUAL GRAPHIC</span><h2 id="preview-title">${capturedPreview ? 'A kept version' : ui.mode === 'single' ? 'One disc. Ready for its moment.' : ui.mode === 'battle' ? 'Set the scene.' : 'Your selected lineup.'}</h2></div><button id="return-live" type="button" class="text-button" hidden>Back to current image</button></div><div class="preview-shell"><div class="preview-toolbar"><div class="view-switch" role="group" aria-label="Preview framing">${[['closeup', 'Close-up'], ['frame', 'Whole frame']].map(([v, label]) => `<button type="button" data-preview-view="${v}" aria-pressed="${ui.view === v}">${label}</button>`).join('')}</div><span id="preview-dimensions" class="preview-dimensions"></span><div class="background-switch" aria-label="Preview background">${[['checker', 'Checkerboard'], ['light', 'Light'], ['dark', 'Dark']].map(([v, label]) => `<button type="button" data-preview-background="${v}" aria-label="${label} preview background" aria-pressed="${ui.background === v}" title="${label}"><span class="swatch swatch-${v}" aria-hidden="true"></span></button>`).join('')}</div></div><div id="graphic-preview" data-testid="graphic-preview" class="graphic-preview"></div><div class="preview-bottom"><span class="transparency-dot" aria-hidden="true"></span><strong id="preview-kind"></strong><span>SVG → exact PNG</span></div></div><p id="preview-note" class="preview-note"></p><div class="export-bar"><div><span class="eyebrow">TAKE IT TO YOUR VIDEO</span><p>Download keeps this exact version.</p></div><div class="export-actions"><button id="keep-graphic" type="button" data-needs-ready class="button-secondary">Keep version</button><button id="download-png" type="button" data-needs-ready class="button-primary">Download PNG <span aria-hidden="true">↓</span></button><button id="download-svg" type="button" data-needs-ready class="svg-button" aria-label="Download editable SVG">SVG</button></div></div></section>${controlsMarkup()}</div>${capturesMarkup()}`;
   paintPreview();
   bind();
   paintExportFailure();
@@ -274,6 +303,7 @@ function bind() {
   $('design-form').onsubmit = event => event.preventDefault();
   $('design-form').onchange = () => { ui.design = readDesign(); change({ design: structuredClone(ui.design) }); };
   document.querySelectorAll('[data-preview-background]').forEach(button => button.onclick = () => { ui.background = button.dataset.previewBackground; paintPreview(); });
+  document.querySelectorAll('[data-preview-view]').forEach(button => button.onclick = () => { ui.view = button.dataset.previewView; paintPreview(); });
   $('keep-graphic').onclick = () => run(async () => { await keepCurrent(true); paint(); message('Kept. This exact version is ready below, even after reload.'); }, { kind: 'keep', ui });
   $('download-png').onclick = () => run(() => download('png'), { kind: 'download', format: 'png', ui });
   $('download-svg').onclick = () => run(() => download('svg'), { kind: 'download', format: 'svg', ui });

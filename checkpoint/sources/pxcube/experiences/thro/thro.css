@@ -41,3 +41,11 @@
 
 /* Exact pinned ChainSpot C1/C2 header mark, used as the O in thro. */
 .wordmark-mark{display:inline-block;width:.58em;height:.58em;vertical-align:-.025em;letter-spacing:normal}
+
+/* Preview framing: Close-up frames the graphic itself; Whole frame shows the full export canvas. */
+.preview-toolbar{gap:10px}.view-switch{display:flex;gap:2px;padding:2px;border:1px solid #3a493b;border-radius:8px;background:#162019;font-family:Inter,"Segoe UI",Arial,sans-serif}
+.view-switch button{min-height:30px;padding:4px 10px;font-size:11px;font-weight:600;border-color:transparent;background:transparent;color:#a7b6a1;border-radius:6px}
+.view-switch button[aria-pressed=true]{background:#33452f;color:var(--ink);border-color:transparent}
+.preview-dimensions{margin-left:auto}
+.graphic-preview.is-closeup{max-height:70vh}
+@media(max-width:760px){.view-switch button{min-height:40px;padding:4px 10px}.preview-dimensions{display:none}}
