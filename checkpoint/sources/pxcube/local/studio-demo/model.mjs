@@ -11,7 +11,7 @@ export const captureIdentity=capture=>JSON.stringify([capture.source.mount,captu
 const frozen=value=>Object.freeze(structuredClone(value));
 const install=pxc=>{for(const [name,fn] of Object.entries({...calculations,...competitionCalculations})) if(!pxc.entries().some(([address])=>address===name))pxc.set(name,new Part(fn));};
 
-export async function openDemo(storage) {
+export async function openDemo(storage,{renderGraphic}={}) {
   const known=createExperience(()=>{}); install(known.pxc);
   const raw=storage.getItem('');
   let savedState=raw===null?null:await restore(raw,known.pxc,{mode:'working',immutableCalculations:['fn.studio.capture','fn.studio.competitionCapture']});
@@ -52,11 +52,20 @@ export async function openDemo(storage) {
     }
     return displayArts.get(discAddress);
   }
-  async function render(discAddress,design) {
-    const key=JSON.stringify([discAddress,design]);if(rendered.has(key))return rendered.get(key);
+  async function render(discAddress,design,{purpose='single'}={}) {
+    const key=JSON.stringify([discAddress,design,purpose]);if(rendered.has(key))return rendered.get(key);
     const disc=value(discAddress),base=fresh();
     const request=put(base+'design',design);
     const resolved=await compose(base+'resolved','fn.read',{base:disc.mold,own:discAddress});
+    const supplied=await renderGraphic?.({discAddress,disc:value(discAddress),design,designAddress:request,resolvedAddress:resolved,resolved:value(resolved),purpose});
+    if(supplied!=null) {
+      if(purpose!=='single')throw Error('This graphic renderer supports Single only. Choose a lineup composition.');
+      const {svg,width,height,provenance}=supplied;
+      if(typeof svg!=='string'||!Number.isInteger(width)||!Number.isInteger(height)||width<1||height<1||width>4096||height>4096)throw Error('Graphic renderer returned invalid material.');
+      const address=put(base+'graphic',{svg,width,height,...(provenance?{provenance}:{})});
+      const result={address,discAddress,designAddress:request,resolvedAddress:resolved,graphic:value(address)};
+      rendered.set(key,result);return result;
+    }
     const fields=await compose(base+'fields','fn.studio.canvasFields',{disc:discAddress,resolved,design:request});
     const art=await displayArt(discAddress);
     const baseDefinition=await compose(base+'definition','fn.studio.canvasDesign',{design:request});
@@ -120,7 +129,7 @@ export async function openDemo(storage) {
       const entryId=put(fresh()+'entryId',e.id);
       const appearance=await compose(fresh()+'appearance','fn.studio.competitionAppearance',{design:request,material:materialAddress,entryId});
       const entryDesign=await compose(fresh()+'entryDesign','fn.studio.competitionDesign',{appearance});
-      const rendered=await render(e.address,value(entryDesign));frame??=rendered.frameAddress;
+      const rendered=await render(e.address,value(entryDesign),{purpose:'competition'});frame??=rendered.frameAddress;
       const entry=await compose(fresh()+'entry','fn.battle.entry',{standings,battle:materialAddress,entryId,stateId:put(fresh()+'stateId',material.currentStateId)});
       const preset=await compose(fresh()+'competitionPreset','fn.studio.competitionPresetPanel',{card:rendered.cardAddress,entry,appearance});
       const fields=await compose(fresh()+'competitionFields','fn.studio.competitionFields',{fields:rendered.fieldsAddress,entry});

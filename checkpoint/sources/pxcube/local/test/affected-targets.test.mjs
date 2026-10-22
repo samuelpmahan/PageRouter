@@ -136,3 +136,30 @@ test('thro typed definition changes invalidate its package and preserve an unrel
     assert.equal(targets.get('hello').affected, false);
   } finally { fs.rmSync(root, { recursive: true, force: true }); }
 });
+
+test('DiscStudio global vendor changes invalidate only thro and retain every unrelated package key', async t => {
+  const root = fixture();
+  try {
+    const before = new Map((await resolveTargets(root)).map(target => [target.id, target]));
+    for (const relative of [
+      'vendor/discstudio-cards/card-renderer-core.js',
+      'vendor/discstudio-cards/fonts/DejaVuSans.woff2',
+      'vendor/discstudio-cards/SOURCE-PIN.json',
+    ]) {
+      await t.test(relative, async () => {
+        const file = path.join(root, relative), original = fs.readFileSync(file);
+        try {
+          fs.appendFileSync(file, '\nDiscStudio package input mutation\n');
+          const targets = new Map((await resolveTargets(root)).map(target => [target.id, target]));
+          assert.notEqual(targets.get('thro').packageKey, before.get('thro').packageKey, 'changed external vendor bytes must invalidate thro');
+          assert.equal(targets.get('thro').affected, true);
+          assert.ok(targets.get('thro').inputs.includes('vendor/discstudio-cards'));
+          for (const [id, target] of targets) if (id !== 'thro') {
+            assert.equal(target.packageKey, before.get(id).packageKey, `${id} does not consume this card vendor`);
+            assert.equal(target.affected, false, `${id} remains unaffected`);
+          }
+        } finally { fs.writeFileSync(file, original); }
+      });
+    }
+  } finally { fs.rmSync(root, { recursive: true, force: true }); }
+});

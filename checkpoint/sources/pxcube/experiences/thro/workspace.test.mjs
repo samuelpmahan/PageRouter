@@ -126,3 +126,134 @@ test('existing kept capture survives reload without collapsing different physica
   assert.notEqual(explicit.address, kept.address, 'an explicit Keep still creates a version');
   assert.equal(reopened.existingCapture(rebuilt).address, explicit.address, 'lookup prefers the most recently kept exact version');
 });
+
+// A synthetic plain graphic exercises dispatch and durable ownership without a
+// browser Canvas or a claim about the native renderer's visual quality.
+const nativeWorkspaceGraphic = {
+  svg: '<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><rect x="12" y="12" width="400" height="160" fill="#305e52"/></svg>',
+  width: 1920,
+  height: 1080,
+  provenance: { schema: 'synthetic-native-workspace-fixture@1', rendererBuild: '28ac2b39fab85255', style: 'b01', fixtureOnly: true },
+};
+async function renderWorkspaceGraphic({ design }) {
+  if (!design.study.startsWith('discstudio:')) return null;
+  return structuredClone(nativeWorkspaceGraphic);
+}
+const nativeWorkspaceDesign = workspace => ({ ...workspace.model.context.design, study: 'discstudio:b01', rendererBuild: '28ac2b39fab85255', orientation: 'landscape' });
+async function nativePreview(workspace, discAddress = workspace.model.context.selectedDisc) {
+  let result;
+  await assert.doesNotReject(async () => { result = await workspace.single(discAddress); }, 'the owning workspace must forward its native renderer into the model');
+  assert.deepEqual(result.graphic, nativeWorkspaceGraphic);
+  return result;
+}
+
+test('Single to Battle to Single restores remembered native and compatible legacy designs', async () => {
+  const workspace = await openWorkspace({ storage: storage(), locks: locks(), fixture, renderGraphic: renderWorkspaceGraphic });
+  const legacy = { ...workspace.model.context.design, study: 'number-plate', title: 'Remembered legacy treatment', accent: '#11aa88' };
+  await workspace.change({ design: legacy });
+  const native = nativeWorkspaceDesign(workspace);
+  await workspace.change({ design: native });
+  assert.deepEqual(workspace.model.context.singleDesign, native);
+  assert.deepEqual(workspace.model.context.legacyDesign, legacy);
+  await nativePreview(workspace);
+
+  await workspace.change({ throMode: 'battle' });
+  assert.deepEqual(workspace.model.context.design, legacy, 'Battle receives the remembered compatible legacy treatment');
+  assert.deepEqual(workspace.model.context.singleDesign, native, 'switching mode does not replace the native Single treatment');
+  const battle = await workspace.battle(workspace.model.context.selection.slice(0, 2));
+  assert.equal(typeof battle.materialAddress, 'string');
+  assert.notEqual(battle.graphic.svg, nativeWorkspaceGraphic.svg);
+
+  await workspace.change({ throMode: 'single' });
+  assert.deepEqual(workspace.model.context.design, native);
+  assert.deepEqual(workspace.model.context.legacyDesign, legacy);
+  await nativePreview(workspace);
+});
+
+test('Battle rejects an explicit native design before changing lineup or stored bytes', async () => {
+  const backing = storage(), lock = locks();
+  const workspace = await openWorkspace({ storage: backing, locks: lock, fixture, renderGraphic: renderWorkspaceGraphic });
+  const native = nativeWorkspaceDesign(workspace);
+  await workspace.change({ design: native });
+  const before = { head: workspace.model.contextAddress, context: structuredClone(workspace.model.context), bytes: backing.getItem(archiveKey) };
+  const rows = workspace.model.experience.shelf();
+  await assert.rejects(workspace.battle([rows[1].address, rows[0].address], native));
+  assert.equal(workspace.model.contextAddress, before.head);
+  assert.deepEqual(workspace.model.context, before.context);
+  assert.equal(backing.getItem(archiveKey), before.bytes, 'rejected native Battle cannot durably start a replacement lineup');
+});
+
+test('native capture and failed export receipt reload with the renderer and exact capture reuse', async () => {
+  const backing = storage(), lock = locks();
+  const workspace = await openWorkspace({ storage: backing, locks: lock, fixture, renderGraphic: renderWorkspaceGraphic });
+  const native = nativeWorkspaceDesign(workspace);
+  await workspace.change({ design: native });
+  const preview = await nativePreview(workspace);
+  let kept;
+  await assert.doesNotReject(async () => { kept = await workspace.keep(preview); }, 'candidate capture rendering retains the injected native renderer');
+  const failed = { status: 'Failed', capture: kept.address, svgHash: kept.capture.hash, format: 'png', error: 'Synthetic conversion failure' };
+  await workspace.recordExport(failed);
+
+  const { workspace: reopened } = await workspace.reload();
+  assert.deepEqual(reopened.model.context.design, native);
+  const retained = reopened.model.value(kept.address);
+  assert.deepEqual(retained.graphic, nativeWorkspaceGraphic);
+  assert.deepEqual(reopened.model.value(reopened.model.context.exports.at(-1)), failed);
+  const rebuilt = await nativePreview(reopened);
+  assert.equal(reopened.existingCapture(rebuilt)?.address, kept.address, 'reload preserves the injected renderer and the exact retained capture');
+  assert.equal(reopened.model.context.graphics.length, 1);
+});
+
+test('stale native Keep preserves the newer archive and the complete pending capture intent', async () => {
+  const backing = storage(), lock = locks();
+  const first = await openWorkspace({ storage: backing, locks: lock, fixture, renderGraphic: renderWorkspaceGraphic });
+  const native = nativeWorkspaceDesign(first);
+  await first.change({ design: native });
+  const stale = await openWorkspace({ storage: backing, locks: lock, fixture, renderGraphic: renderWorkspaceGraphic });
+  const newer = await openWorkspace({ storage: backing, locks: lock, fixture, renderGraphic: renderWorkspaceGraphic });
+  const preview = await nativePreview(stale), oldHead = stale.model.contextAddress;
+  await newer.change({ name: 'Newer native workspace' });
+  const winningBytes = backing.getItem(archiveKey);
+
+  await assert.rejects(stale.keep(preview), { code: 'THRO_STORAGE_CONFLICT' });
+  assert.equal(backing.getItem(archiveKey), winningBytes);
+  assert.equal(stale.model.contextAddress, oldHead);
+  assert.equal(stale.model.context.graphics.length, 0);
+  assert.equal(stale.draft.operation, 'keep');
+  assert.equal(stale.draft.discAddress, preview.discAddress);
+  assert.deepEqual(stale.draft.design, native);
+  assert.equal(stale.conflict.code, 'THRO_STORAGE_CONFLICT');
+});
+
+test('a rejected native design preserves committed state and permits a corrected save', async () => {
+  const backing = storage(), lock = locks();
+  const renderGraphic = async input => {
+    if (input.design.study === 'discstudio:b01' && input.design.nativeScale === 1.5) throw Error('Synthetic native geometry failure');
+    return renderWorkspaceGraphic(input);
+  };
+  const workspace = await openWorkspace({ storage: backing, locks: lock, fixture, renderGraphic });
+  const valid = { ...nativeWorkspaceDesign(workspace), nativeScale: 1 };
+  await workspace.change({ design: valid });
+  const before = { head: workspace.model.contextAddress, context: structuredClone(workspace.model.context), bytes: backing.getItem(archiveKey) };
+  const bad = { ...valid, nativeScale: 1.5 };
+
+  await assert.rejects(workspace.change({ design: bad }), /Synthetic native geometry failure/);
+  assert.equal(workspace.model.contextAddress, before.head, 'failed rendering cannot promote the candidate model');
+  assert.deepEqual(workspace.model.context, before.context);
+  assert.equal(backing.getItem(archiveKey), before.bytes, 'failed rendering cannot persist the unsupported design');
+  assert.deepEqual(workspace.draft, { operation: 'change', context: { design: bad } });
+  assert.equal(workspace.conflict, null, 'a geometry rejection does not latch a storage conflict');
+
+  const reopened = await openWorkspace({ storage: backing, locks: lock, fixture, renderGraphic });
+  assert.deepEqual(reopened.model.context.design, valid, 'ordinary reopening retains the last renderable native design');
+  await nativePreview(reopened);
+
+  const corrected = { ...valid, nativeScale: 1.25 };
+  await workspace.change({ design: corrected });
+  assert.deepEqual(workspace.model.context.design, corrected);
+  assert.equal(workspace.draft, null, 'the next valid save clears the rejected intent');
+  assert.notEqual(backing.getItem(archiveKey), before.bytes);
+  const afterCorrection = await openWorkspace({ storage: backing, locks: lock, fixture, renderGraphic });
+  assert.deepEqual(afterCorrection.model.context.design, corrected);
+  await nativePreview(afterCorrection);
+});

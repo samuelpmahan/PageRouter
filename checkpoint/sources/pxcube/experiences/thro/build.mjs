@@ -13,6 +13,7 @@ const runtimeFiles = [
   'workspace.mjs',
   'locked-storage.mjs',
   'archive-codec.mjs',
+  'native-cards.mjs',
   'prepared-fixture.mjs',
   'prepared-fixture.json',
 ];
@@ -30,6 +31,34 @@ function regularFile(relative) {
   return file;
 }
 for (const file of runtimeFiles) regularFile(file);
+
+const cardVendor = 'vendor/discstudio-cards';
+const cardVendorRoot = path.resolve(root, '../..', cardVendor);
+function cardVendorFile(relative) {
+  const file = path.join(cardVendorRoot, relative);
+  if (!fs.existsSync(file) || !fs.lstatSync(file).isFile()) {
+    throw Error(`Missing regular DiscStudio card vendor file: ${relative}`);
+  }
+  return file;
+}
+const sourcePin = JSON.parse(fs.readFileSync(cardVendorFile('SOURCE-PIN.json'), 'utf8'));
+if (sourcePin.schema !== 'thro-discstudio-vendor-pin@1' || sourcePin.nativeFiles?.length !== 15 || sourcePin.adapter?.path !== 'thro-adapter.mjs') {
+  throw Error('Invalid DiscStudio card vendor source pin.');
+}
+const pinnedCardFiles = [...sourcePin.nativeFiles, sourcePin.adapter];
+const vendorNames = new Set();
+for (const item of pinnedCardFiles) {
+  if (typeof item.path !== 'string' || item.path.includes('\\') || item.path.startsWith('/') || item.path.split('/').some(part => !part || part === '..') || vendorNames.has(item.path)) {
+    throw Error('Invalid or repeated DiscStudio card vendor path.');
+  }
+  vendorNames.add(item.path);
+  const bytes = fs.readFileSync(cardVendorFile(item.path));
+  if (bytes.length !== item.bytes || createHash('sha256').update(bytes).digest('hex') !== item.sha256) {
+    throw Error(`DiscStudio card vendor pin mismatch: ${item.path}`);
+  }
+}
+const cardVendorFiles = ['SOURCE-PIN.json', 'README.md', ...vendorNames].sort();
+for (const file of cardVendorFiles) cardVendorFile(file);
 
 const discs = path.join(root, 'assets', 'discs');
 if (!fs.existsSync(discs) || !fs.lstatSync(discs).isDirectory()) {
@@ -50,6 +79,11 @@ await buildDemo();
 for (const file of runtimeFiles) {
   fs.copyFileSync(path.join(root, file), path.join(output, file));
 }
+for (const file of cardVendorFiles) {
+  const target = path.join(output, cardVendor, file);
+  fs.mkdirSync(path.dirname(target), { recursive: true });
+  fs.copyFileSync(cardVendorFile(file), target);
+}
 fs.mkdirSync(path.join(output, 'assets', 'discs'), { recursive: true });
 for (const name of imageFiles) {
   fs.copyFileSync(path.join(discs, name), path.join(output, 'assets', 'discs', name));
@@ -60,7 +94,7 @@ const digest = files => {
   for (const [name, bytes] of files) hash.update(name).update('\0').update(bytes).update('\0');
   return hash.digest('hex');
 };
-const authored = [...runtimeFiles, 'experience.json', 'build.mjs', ...imageFiles.map(name => `assets/discs/${name}`)].sort();
+const authored = [...runtimeFiles, ...cardVendorFiles.map(name => `../../${cardVendor}/${name}`), 'experience.json', 'build.mjs', ...imageFiles.map(name => `assets/discs/${name}`)].sort();
 const sourceId = digest(authored.map(name => [name, fs.readFileSync(path.join(root, name))]));
 const built = [];
 function walk(directory, prefix = '') {

@@ -80,6 +80,7 @@ function packageInputs(root, id) {
   if (demoApps.has(id)) {
     inputs.push('local/studio-demo', 'local/scene-host.mjs', 'local/scenes/discstudio-photo-card.mjs', 'vendor/studio-renderer');
   }
+  if (id === 'thro') inputs.push('vendor/discstudio-cards');
   if (connect4PxcApps.has(id)) inputs.push('experiences/connect4/rules.mjs', '../../vendor/hh/services/pxc.mjs');
   const base = raw.base;
   if (base) {
@@ -177,6 +178,9 @@ function affectedFromFiles(root, files) {
     }
     if (/^(local\/studio-demo\/|local\/scene-host\.mjs$|local\/scenes\/discstudio-photo-card\.mjs$|vendor\/studio-renderer\/)/.test(file)) {
       for (const id of demoApps) affect(id, `Studio demo build dependency changed: ${file}`);
+    }
+    if (/^vendor\/discstudio-cards\//.test(file)) {
+      affect('thro', `DiscStudio card vendor changed: ${file}`);
     }
   }
   const expanded = expandComposition(root, reasons.keys());

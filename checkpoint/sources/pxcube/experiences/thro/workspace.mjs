@@ -4,6 +4,8 @@ import { createExperience, initialDraft } from './studio/upload-disc-to-shelf/mo
 import { pack, unpack } from './archive-storage.mjs';
 import { openLockedArchive } from './locked-storage.mjs';
 import { createArchiveCodec } from './archive-codec.mjs';
+import { defaultDesign } from './graphics.mjs';
+import { createNativeRenderer, isNativeStudy, workspaceDesignChange } from './native-cards.mjs';
 
 const codec = createArchiveCodec({ pack, unpack });
 
@@ -17,7 +19,7 @@ const failure = (code, message) => Object.assign(Error(message), { code });
 
 // Collection heads in the legacy Experience are mutable. A candidate world
 // isolates those mutations until the complete archive has durably committed.
-export async function openWorkspace({ storage = globalThis.localStorage, locks = globalThis.navigator?.locks, fixture, key = archiveKey } = {}) {
+export async function openWorkspace({ storage = globalThis.localStorage, locks = globalThis.navigator?.locks, fixture, key = archiveKey, renderGraphic = createNativeRenderer() } = {}) {
   const retained = await openLockedArchive(storage, key, { locks, pack: codec.packArchive, unpack: codec.unpackArchive });
   let committedRaw = retained.getItem(''), model, conflict = null, draft = null, queue = Promise.resolve();
   if (committedRaw === null) {
@@ -30,14 +32,14 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
       await seed.save({ ...initialDraft(), mold: mold.address, nickname: '', plastic: item.plastic, weight: item.weight }, item.depiction);
     }
     const staged = memory(archive(seededState));
-    model = await openDemo(staged);
+    model = await openDemo(staged, { renderGraphic });
     await model.patch({ name: 'Prepared sample bag', selection: model.experience.shelf().map(row => row.address), throMode: 'single' });
     committedRaw = staged.raw;
     retained.setItem('', committedRaw);
     await retained.flush();
   } else {
     const staged = memory(committedRaw);
-    model = await openDemo(staged);
+    model = await openDemo(staged, { renderGraphic });
     if (staged.raw !== committedRaw) {
       retained.setItem('', staged.raw);
       await retained.flush();
@@ -52,7 +54,7 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
       const staged = memory(committedRaw);
       let candidate;
       try {
-        candidate = await openDemo(staged);
+        candidate = await openDemo(staged, { renderGraphic });
         const result = await action(candidate);
         retained.setItem('', staged.raw);
         await retained.flush();
@@ -78,7 +80,16 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
     get key() { return key; },
     settled: () => queue,
     change(changes) {
-      return serial({ operation: 'change', context: changes }, candidate => candidate.patch(changes));
+      return serial({ operation: 'change', context: changes }, async candidate => {
+        const next = await candidate.patch(workspaceDesignChange(candidate.context, changes, defaultDesign));
+        if (isNativeStudy(next.design?.study) && (next.throMode ?? 'single') === 'single'
+          && ['design', 'selectedDisc', 'throMode'].some(key => Object.hasOwn(changes, key))) {
+          // patch() wrote only the private staging store. A native geometry,
+          // photo or renderer failure must precede the outer durable flush.
+          await candidate.render(next.selectedDisc, next.design);
+        }
+        return next;
+      });
     },
     createBag(name, selection) {
       return serial({ operation: 'create-bag', name, selection }, async candidate => {
@@ -91,6 +102,7 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
       return { ...result, design: clone(design) };
     },
     async battle(selection, design = model.context.design) {
+      if (isNativeStudy(design?.study)) throw failure('THRO_NATIVE_SINGLE_ONLY', 'DiscStudio card layouts are available in Single. Choose a lineup composition for Battle or Bag.');
       const current = model.context.competitionAddress;
       const addresses = current ? model.value(current).entries.map(entry => entry.address) : [];
       if (JSON.stringify(addresses) !== JSON.stringify(selection)) {
@@ -133,7 +145,7 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
     async reload() {
       await queue;
       const recovery = draft && clone(draft);
-      const next = await openWorkspace({ storage, locks, fixture, key });
+      const next = await openWorkspace({ storage, locks, fixture, key, renderGraphic });
       // Caller receives the old draft explicitly; no automatic merge or save.
       return { workspace: next, recovery };
     },

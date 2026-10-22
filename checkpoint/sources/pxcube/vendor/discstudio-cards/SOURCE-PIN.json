@@ -1,0 +1,58 @@
+{
+  "schema": "thro-discstudio-vendor-pin@1",
+  "upstream": {
+    "repository": "samuelpmahan/DiscStudio-demo",
+    "commit": "885dca7cf8254d1a9e3f4ad656f459ff89df855d",
+    "sourcePath": "demo-scratch/new-ship/upload-disc-to-shelf",
+    "version": "6.6.1",
+    "buildId": "28ac2b39fab85255",
+    "sourceId": "0f64682bd12c55632c5b56894573a2913e14616d9095e4c4cf7948bceda0a664",
+    "outputId": "1262cc7d00231566a41b6f136ef3fb69e55f92b767e047c330ac18bdbe93cda3",
+    "pagesArchive": {
+      "file": "thro-cards-6.6.1-28ac2b39fab85255-pages.zip",
+      "bytes": 1509736,
+      "sha256": "8fb0e20d7fac7937578bbf341a966050722792b924572058a803bfdd136ea042"
+    }
+  },
+  "handoff": {
+    "file": "discstudio-cards-for-thro-28ac2b39.zip",
+    "bytes": 122784,
+    "sha256": "f49a2a586732ba37ed689aa087b4e3593b3dd302ea9d55ffd7a471b345743139",
+    "files": 17,
+    "proofPage": {
+      "path": "discstudio-cards-check.html",
+      "sha256": "e72d2c5672d257ba07365ff4c48e49117781d3cb45798c41ddfa350f4efca2c7",
+      "includedInProduction": false,
+      "originalPassCriterion": "maximum channel difference <= 1"
+    }
+  },
+  "nativeFiles": [
+    { "path": "mold-runtime-index.js", "bytes": 18287, "sha256": "4643b370e48d0e97f1b2fe9dbd31f5d259c85276c10bcde6ceef0f9bece2ce95" },
+    { "path": "browser-card-renderer.js", "bytes": 6095, "sha256": "67df9768ab74f63d27ea41aef17fefc39ab84627aa5175e2231ea45ccc539c35" },
+    { "path": "sticker-raster.mjs", "bytes": 3560, "sha256": "077b78dc9e031a4eb3d5022fdf4a4bad026d2e91470256e91c0a60aa7ac770b7" },
+    { "path": "card-renderer-core.js", "bytes": 42432, "sha256": "27f8876f3d387bcfa0e918079464a381256e247426a9d7573424831cec11cdc4" },
+    { "path": "mold-wildcard-trie.js", "bytes": 16210, "sha256": "cd1b2ba424a65d0c0d23dbf136a4973a596bb7c563f231065eb259dc5c6aee1d" },
+    { "path": "transform-geometry.mjs", "bytes": 4501, "sha256": "82818c2b09bc12eb9caadce7b3c8c54fa37b970a8ed085215b3eaee47d00705b" },
+    { "path": "mold-runtime.bin", "bytes": 45688, "sha256": "03fd92167969f79398119f0917fb52c683908a9bcca25dba1615dabeae25c1fc" },
+    { "path": "export-queue-core.js", "bytes": 11261, "sha256": "51ffbd7f5bc7baa4f99d9a6e577c665e506aea4a70fc0e1e5a894ab2482fff49" },
+    { "path": "fonts/DEJAVU-LICENSE.txt", "bytes": 3859, "sha256": "63d3ba759d12804c5b31a9d5940d855c1820d1f5999e6b0872eb1c7ff045fbc9" },
+    { "path": "fonts/DejaVuSans.woff2", "bytes": 23436, "sha256": "fc03bf96b7e8723d8cc022c17339b73b763277df3ad7217b1446d610d03dc1b6" },
+    { "path": "fonts/DejaVuSans-Bold.woff2", "bytes": 21716, "sha256": "31600fc95c6849491dce6edf920e2b9451235e21fdd3a6e89680ded846164a9e" },
+    { "path": "fonts/DejaVuSansCondensed-Bold.woff2", "bytes": 13120, "sha256": "74c79084c300ea189d2faf6a5b7488074646add2f67a0d368a7d1b6948b0a5e0" },
+    { "path": "mold-runtime-manifest.js", "bytes": 729, "sha256": "2734659ddef0549d92c590e41dcff92398857a50fabcb80af3e11ed72479818e" },
+    { "path": "mold-library.js", "bytes": 1016, "sha256": "fc37e74e6c70c1134fed11e595b01cef889b5fbe1f4821840c09f789bccea056" },
+    { "path": "frame-seek.mjs", "bytes": 3242, "sha256": "8cdfa3dc52a0f966262143b96f93f3cebae96eda2df56f67acacb6ae971e4625" }
+  ],
+  "adapter": {
+    "path": "thro-adapter.mjs",
+    "upstreamSha256": "4594bf5f0a3f31aa16677e4b899f3bbd4b49ffe3e2c26c1f93b157d5197438be",
+    "bytes": 6478,
+    "sha256": "74d93de1023ef1838eb929f9f203a095253b1d4e1415a3aa45b8a20c05c76dfe",
+    "upstreamGitCorrespondence": "The adapter was supplied in the handoff ZIP; it is not part of the native Git checkpoint above.",
+    "localChanges": [
+      "Do not prefix an already addressed ds.px.seed. mold ID again.",
+      "Keep null, undefined and blank flight values unknown; preserve finite numbers and numeric strings including zero; reject invalid or nonfinite known values.",
+      "Allow finite panel-default scale from 0.5 to 1.5 through the unchanged native anchored placement calculation; omitted scale remains 0.66."
+    ]
+  }
+}

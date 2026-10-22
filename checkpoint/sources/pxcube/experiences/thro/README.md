@@ -30,6 +30,7 @@ Focused checks after `node build.mjs`:
 
 ```
 node --test locked-storage.test.mjs archive-codec.test.mjs workspace.test.mjs
+node --test ../../local/test/thro-native-cards.test.mjs ../../local/studio-demo/native-dispatch.test.mjs
 ```
 
 From the PxCube source root, `node --test local/test/affected-targets.test.mjs`
@@ -57,3 +58,21 @@ Implicit downloads reuse the latest capture with the same physical disc or
 lineup origin, design, and SVG bytes. Explicit Keep creates another version.
 Browser download cancellation cannot be observed by this page; export receipts
 record prepared bytes, and the UI says only that a download was requested.
+
+Single also offers the pinned DiscStudio 6.6.1 native card layouts. The native
+browser renderer is imported only for a `discstudio:<preset>` study. Its exact
+prepared-photo pixels travel in a self-contained PNG-backed SVG, with physical
+disc/version, requested-design, resolved-fact and renderer-build provenance.
+The prepared-photo hash identifies decoded file bytes, matching fixture assets.
+The PNG Blob remains transient; captured material contains only plain data.
+The SVG download is labeled as an image because its card content is raster.
+
+Native layout selection sets the correct portrait or landscape canvas. Native
+size changes retain the renderer's authored anchor. Battle and Bag continue
+through the existing lineup renderer; mode changes keep separate Single and
+legacy designs and restore the Single choice when returning. Native rendering
+is checked in the candidate model before a changed native design, disc choice
+or mode can commit, so a failed render cannot replace the last valid archive.
+Changing native layout uses that layout's own side/highlight defaults while
+keeping size and accent intent. Editing controls within one layout retains
+the explicitly selected side and highlight.

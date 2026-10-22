@@ -1,4 +1,5 @@
 import { openWorkspace } from './workspace.mjs';
+import { nativeStudies, isNativeStudy, nativeStudy, nativeControlDesign } from './native-cards.mjs';
 import { loadFixture } from './prepared-fixture.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
 import { esc } from './renderer/src/presentation.js';
@@ -112,7 +113,12 @@ function bagMarkup() {
 
 function controlsMarkup() {
   const design = ui.design;
-  return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">YOUR TREATMENT</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><label>Composition<select id="composition">${compositionStudies.map(study => option(study.id, study.name, design.study)).join('')}</select></label><div class="field-pair placement-fields"><label>Placement<select id="placement">${[['bottom-left', 'Bottom left'], ['bottom-center', 'Bottom center'], ['bottom-right', 'Bottom right'], ['top-left', 'Top left'], ['top-right', 'Top right']].map(([v, name]) => option(v, name, design.placement)).join('')}</select></label><label>Width<select id="composition-size">${compositionSizeStudies.map(size => option(size.id, size.id === 'balanced' ? 'Preferred' : size.id === 'full-width' ? 'Maximum' : 'Compact', design.compositionSize)).join('')}</select></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation">${option('landscape', 'Landscape', design.orientation)}${option('portrait', 'Portrait', design.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><label>Title <span class="optional">optional</span><input id="graphic-title" maxlength="80" value="${text(design.title)}" placeholder="For the next shot"></label><details class="fine-tuning"><summary>More control</summary><div class="field-pair"><label>Background<input id="background" type="color" value="${text(design.background)}"></label><label>Text<input id="foreground" type="color" value="${text(design.foreground)}"></label></div><label>Canvas background<select id="frame">${option('none', 'Transparent', design.frame)}${option('filled', 'Solid', design.frame)}</select></label><div class="field-pair"><label>X offset <span class="optional">px</span><input id="offset-x" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetX) || 0}"></label><label>Y offset <span class="optional">px</span><input id="offset-y" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetY) || 0}"></label></div></details></form>${battleMarkup()}${bagMarkup()}</aside>`;
+  const picker = `${ui.mode === 'single' ? `<optgroup label="DiscStudio cards">${nativeStudies.map(study => option(study.id, study.name, design.study)).join('')}</optgroup>` : ''}<optgroup label="Lineup compositions">${compositionStudies.map(study => option(study.id, study.name, design.study)).join('')}</optgroup>`;
+  if (isNativeStudy(design.study)) {
+    const selected = nativeStudy(design.study), scale = design.nativeScale ?? .66;
+    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">YOUR TREATMENT</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><label>Composition<select id="composition">${picker}</select></label><p class="subtle">DiscStudio card pixels, kept with this exact disc. Placement stays anchored to the layout.</p><label>Card size <output id="native-scale-value">${Math.round(scale * 100)}%</output><input id="native-scale" type="range" min="0.5" max="1.5" step="0.01" value="${scale}" aria-label="Native card size"></label><div class="field-pair canvas-fields"><label>Canvas<select id="orientation" disabled>${option(selected.orientation, selected.orientation === 'portrait' ? 'Portrait' : 'Landscape', selected.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><p class="subtle">Canvas dimensions follow the selected card layout.</p><div class="field-pair"><label>Disc side<select id="native-side">${option('left', 'Left', design.nativeSide ?? selected.side)}${option('right', 'Right', design.nativeSide ?? selected.side)}</select></label><label>Highlight<select id="native-highlight">${option('digits', 'Digits', design.nativeHighlight ?? selected.highlight)}${option('tiles', 'Tile blocks', design.nativeHighlight ?? selected.highlight)}</select></label></div></form></aside>`;
+  }
+  return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">YOUR TREATMENT</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><label>Composition<select id="composition">${picker}</select></label><div class="field-pair placement-fields"><label>Placement<select id="placement">${[['bottom-left', 'Bottom left'], ['bottom-center', 'Bottom center'], ['bottom-right', 'Bottom right'], ['top-left', 'Top left'], ['top-right', 'Top right']].map(([v, name]) => option(v, name, design.placement)).join('')}</select></label><label>Width<select id="composition-size">${compositionSizeStudies.map(size => option(size.id, size.id === 'balanced' ? 'Preferred' : size.id === 'full-width' ? 'Maximum' : 'Compact', design.compositionSize)).join('')}</select></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation">${option('landscape', 'Landscape', design.orientation)}${option('portrait', 'Portrait', design.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><label>Title <span class="optional">optional</span><input id="graphic-title" maxlength="80" value="${text(design.title)}" placeholder="For the next shot"></label><details class="fine-tuning"><summary>More control</summary><div class="field-pair"><label>Background<input id="background" type="color" value="${text(design.background)}"></label><label>Text<input id="foreground" type="color" value="${text(design.foreground)}"></label></div><label>Canvas background<select id="frame">${option('none', 'Transparent', design.frame)}${option('filled', 'Solid', design.frame)}</select></label><div class="field-pair"><label>X offset <span class="optional">px</span><input id="offset-x" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetX) || 0}"></label><label>Y offset <span class="optional">px</span><input id="offset-y" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetY) || 0}"></label></div></details></form>${battleMarkup()}${bagMarkup()}</aside>`;
 }
 
 function capturesMarkup() {
@@ -134,6 +140,10 @@ function paintPreview() {
   $('download-png').disabled = busy || hasConflict() || !graphic;
   $('keep-graphic').disabled = busy || hasConflict() || !graphic;
   $('download-svg').disabled = busy || hasConflict() || !graphic;
+  const raster = graphic?.provenance?.rasterOnly === true;
+  $('download-svg').textContent = raster ? 'SVG image' : 'SVG';
+  $('download-svg').setAttribute('aria-label', raster ? 'Download SVG containing raster image' : 'Download editable SVG');
+  if (raster) $('preview-note').textContent = capturedPreview ? 'Kept native card pixels. Your current design stays available.' : 'Native card pixels on a transparent canvas. The SVG contains this raster image.';
   document.querySelectorAll('[data-preview-background]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.previewBackground === ui.background)));
 }
 
@@ -198,12 +208,17 @@ function paintExportFailure({ focus = false } = {}) {
 }
 
 function readDesign() {
-  return { ...ui.design, study: $('composition').value, placement: $('placement').value, compositionSize: $('composition-size').value, orientation: $('orientation').value, accent: $('accent').value, title: $('graphic-title').value, background: $('background').value, foreground: $('foreground').value, frame: $('frame').value, compositionOffsetX: Number($('offset-x').value), compositionOffsetY: Number($('offset-y').value) };
+  const study = $('composition').value;
+  if (isNativeStudy(study)) {
+    return nativeControlDesign(ui.design, { study, scale: $('native-scale') ? Number($('native-scale').value) : undefined, side: $('native-side')?.value, highlight: $('native-highlight')?.value, accent: $('accent')?.value });
+  }
+  if (isNativeStudy(ui.design.study)) return { ...defaultDesign, ...context().legacyDesign, study };
+  return { ...ui.design, study, placement: $('placement').value, compositionSize: $('composition-size').value, orientation: $('orientation').value, accent: $('accent').value, title: $('graphic-title').value, background: $('background').value, foreground: $('foreground').value, frame: $('frame').value, compositionOffsetX: Number($('offset-x').value), compositionOffsetY: Number($('offset-y').value) };
 }
 
 function change(patch, note = 'Saved. Your graphic is ready.') {
   capturedPreview = null;
-  return run(async () => { await workspace.change(patch); await renderCurrent(); paint(); message(note); }, { kind: 'change', patch, ui });
+  return run(async () => { await workspace.change(patch); ui.design = { ...defaultDesign, ...context().design }; await renderCurrent(); paint(); message(note); }, { kind: 'change', patch, ui });
 }
 
 async function keepCurrent(explicit = false) {
@@ -257,7 +272,8 @@ function bind() {
   document.querySelectorAll('[data-mode]').forEach(button => button.onclick = () => {
     ui.mode = button.dataset.mode;
     if (ui.mode !== 'single' && ui.selection.length === 0) ui.selection = rows.slice(0, 2).map(row => row.address);
-    change({ throMode: ui.mode, graphicsPurpose: ui.mode === 'single' ? 'spotlight' : 'competition', selection: [...ui.selection] });
+    const remembered = isNativeStudy(ui.design.study) || isNativeStudy(context().singleDesign?.study);
+    change({ throMode: ui.mode, graphicsPurpose: ui.mode === 'single' ? 'spotlight' : 'competition', selection: [...ui.selection] }, remembered ? ui.mode === 'single' ? 'Saved. Your Single card treatment is restored.' : 'Saved. This lineup uses its own composition; your native Single treatment is kept.' : 'Saved. Your graphic is ready.');
   });
   document.querySelectorAll('[data-disc]').forEach(button => button.onclick = () => {
     const address = button.dataset.disc;
@@ -273,6 +289,7 @@ function bind() {
   });
   $('design-form').onsubmit = event => event.preventDefault();
   $('design-form').onchange = () => { ui.design = readDesign(); change({ design: structuredClone(ui.design) }); };
+  if ($('native-scale')) $('native-scale').oninput = event => { $('native-scale-value').textContent = `${Math.round(Number(event.target.value) * 100)}%`; };
   document.querySelectorAll('[data-preview-background]').forEach(button => button.onclick = () => { ui.background = button.dataset.previewBackground; paintPreview(); });
   $('keep-graphic').onclick = () => run(async () => { await keepCurrent(true); paint(); message('Kept. This exact version is ready below, even after reload.'); }, { kind: 'keep', ui });
   $('download-png').onclick = () => run(() => download('png'), { kind: 'download', format: 'png', ui });
