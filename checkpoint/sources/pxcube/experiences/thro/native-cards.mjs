@@ -5,7 +5,14 @@ export const nativeBuild = '28ac2b39fab85255';
 // A design without nativeRevision draws exactly as DiscStudio 6.6.1. A saved design keeps its revision until a
 // person chooses the fixed card; a layout picked fresh starts at its latest revision.
 export const cardRevisions = Object.freeze({ b01: 2, u04: 2 });
-export const latestCardRevision = study => (isNativeStudy(study) ? cardRevisions[nativeStudy(study).preset] : undefined);
+// The site decides which revision new cards start at (thro-world.mjs, 'thro.card.revision'): 1 draws every new card
+// exactly as DiscStudio 6.6.1; 2 starts new B01 and U04 cards at revision 2. A saved design keeps its own either way.
+let siteCardRevision = 2;
+export function useSiteCardRevision(revision) {
+  if (revision !== 1 && revision !== 2) throw Error(`Card revision ${revision} is not one the site can choose.`);
+  siteCardRevision = revision;
+}
+export const latestCardRevision = study => (isNativeStudy(study) && siteCardRevision >= 2 ? cardRevisions[nativeStudy(study).preset] : undefined);
 const definitions = [
   ['u01', 'Compact scorebug'], ['u02', 'Stacked poster'],
   ['u03-front', 'Disc in front'], ['u03-behind', 'Disc behind'],
@@ -48,7 +55,7 @@ export function nativeDesign(previous, study) {
     nativePlate: wasNative ? previous.nativePlate ?? 'see-through' : 'see-through',
     nativeNudge: same && previous.nativeNudge ? { ...previous.nativeNudge } : { x: 0, y: 0 } };
   delete design.nativeRevision;
-  const revision = same ? previous.nativeRevision : cardRevisions[selected.preset];
+  const revision = same ? previous.nativeRevision : latestCardRevision(study);
   if (revision !== undefined) design.nativeRevision = revision;
   return design;
 }

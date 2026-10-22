@@ -1,5 +1,5 @@
 import { openWorkspace } from './workspace.mjs';
-import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, cardLayout, latestCardRevision } from './native-cards.mjs';
+import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, cardLayout, latestCardRevision, useSiteCardRevision } from './native-cards.mjs';
 import { attachCardEditor, detachCardEditor } from './card-editor.mjs';
 import { createThroWorld, decide, SITE_FILL } from './thro-world.mjs';
 import { alphaBounds, fitArtwork } from './preview-frame.mjs';
@@ -590,6 +590,7 @@ function viewerFill() { try { return { ...SITE_FILL, ...(JSON.parse(localStorage
 let decided;
 try { decided = decide(throWorld, viewerFill()); } catch { decided = decide(throWorld, SITE_FILL); } // a stale switch never stops the site
 const site = decided.site;
+useSiteCardRevision(site.revision); // new cards start at the decided revision; saved ones keep their own
 window.__thro = { world: throWorld, fill: viewerFill(), decided, verdict: null };
 const studiesFor = mode => mode === 'single' ? (site.single === 'cards' ? nativeStudies : compositionStudies)
   : mode === 'bag' ? (site.bag === 'lineups' ? lineupStudies : compositionStudies) : compositionStudies;

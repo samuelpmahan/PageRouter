@@ -361,3 +361,20 @@ test('a card renderer that does not confirm the asked revision is refused (a sta
   const saved = { ...design }; delete saved.nativeRevision;
   await stale({ disc, resolved, design: saved });
 });
+
+test("the site's card revision decides what new cards start at; saved cards keep their own", async () => {
+  const { nativeDesign, useSiteCardRevision, latestCardRevision } = await import(new URL('native-cards.mjs', runtime));
+  const manifest = JSON.parse(fs.readFileSync(new URL('prepared-fixture.json', runtime)));
+  const fixture = manifest.discs.map(disc => ({ ...disc, depiction: { kind: 'photo', name: disc.name, src: `data:image/webp;base64,${fs.readFileSync(new URL(disc.file, runtime)).toString('base64')}` } }));
+  const start = (await openWorkspace({ storage: storage(), locks, fixture })).model.context.design;
+  try {
+    useSiteCardRevision(1);
+    assert.ok(!Object.hasOwn(nativeDesign(start, 'discstudio:b01'), 'nativeRevision'), 'site at revision 1: a new B01 draws as 6.6.1');
+    assert.equal(latestCardRevision('discstudio:u04'), undefined, 'site at revision 1: the editor offers no fixed card');
+    const saved = { ...nativeDesign(start, 'discstudio:b01'), nativeRevision: 2 };
+    assert.equal(nativeDesign(saved, 'discstudio:b01').nativeRevision, 2, 'a saved revision-2 card keeps revision 2');
+    assert.throws(() => useSiteCardRevision(3), /not one the site can choose/);
+  } finally { useSiteCardRevision(2); }
+  assert.equal(nativeDesign(start, 'discstudio:b01').nativeRevision, 2);
+  assert.equal(latestCardRevision('discstudio:u04'), 2);
+});
