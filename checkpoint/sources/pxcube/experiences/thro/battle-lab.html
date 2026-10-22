@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>thro battle lab</title>
+<style>
+  :root { --bg: #0d140f; --panel: #16201a; --panel2: #1d2a22; --ink: #eef3ea; --muted: #9fb0a3; --lime: #c8f49d; --mint: #a6edda; --bad: #ff8a6b; --line: #2a3a30; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 system-ui, sans-serif; }
+  main { max-width: 1240px; margin: 0 auto; padding: 20px 16px 64px; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  .lead { color: var(--muted); margin: 0 0 16px; max-width: 72ch; }
+  .tabs { display: flex; gap: 6px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 5px; width: fit-content; margin-bottom: 16px; }
+  .tabs button { min-height: 44px; padding: 0 18px; border-radius: 9px; border: 0; background: transparent; color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
+  .tabs button[aria-pressed="true"] { background: var(--lime); color: #10180f; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 16px; align-items: start; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+  section.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  h2 { font-size: 17px; margin: 0 0 10px; }
+  h3 { font-size: 14px; margin: 14px 0 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .frame { width: 100%; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; background: repeating-conic-gradient(#26302a 0% 25%, #1c241f 0% 50%) 0 0 / 24px 24px; }
+  .frame img { width: 100%; height: 100%; display: block; }
+  .meta { color: var(--muted); font-size: 13px; margin: 8px 0 0; }
+  .meta b.ok { color: var(--lime); } .meta b.no { color: var(--bad); }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin: 6px 0; }
+  button.b, select, input { min-height: 44px; border-radius: 9px; border: 1px solid var(--line); background: var(--panel2); color: var(--ink); font: inherit; padding: 0 12px; }
+  button.b { cursor: pointer; font-weight: 600; }
+  button.primary { background: var(--lime); color: #10180f; border-color: var(--lime); }
+  button.b:disabled { opacity: .45; cursor: default; }
+  input[type="text"] { width: 100%; }
+  input.num { width: 64px; text-align: center; padding: 0; }
+  .entry { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin: 6px 0; }
+  .hole { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: var(--panel2); border-radius: 10px; padding: 8px 10px; margin: 6px 0; }
+  .hole strong { font-size: 18px; }
+  .winners { display: grid; gap: 6px; }
+  .winners button { justify-content: space-between; display: flex; align-items: center; width: 100%; text-align: left; }
+  .tally { font-variant-numeric: tabular-nums; color: var(--lime); }
+  .history { color: var(--muted); font-size: 13px; margin: 8px 0 0; max-height: 7.5em; overflow: auto; }
+  .player { display: grid; grid-template-columns: 1fr auto auto auto; gap: 6px; align-items: center; margin: 6px 0; }
+  .player .name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .topar { font-variant-numeric: tabular-nums; min-width: 3ch; text-align: right; color: var(--muted); }
+  .note { color: var(--muted); font-size: 13px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Battle, prototype</h1>
+  <p class="lead">Two kinds of Battle, each with its own editor. The graphic updates as you score. Prototype only: it keeps its state in this browser and isn't wired into the main screen yet.</p>
+  <div class="tabs" role="group" aria-label="Battle kind">
+    <button type="button" data-kind="ctp" aria-pressed="true">Closest to the pin</button>
+    <button type="button" data-kind="round" aria-pressed="false">Round</button>
+  </div>
+  <div class="grid">
+    <section class="panel">
+      <div class="frame"><img id="graphic" alt="Battle graphic"></div>
+      <p class="meta" id="meta">Drawing…</p>
+      <div class="row"><button type="button" class="b primary" id="download">Download PNG</button></div>
+    </section>
+    <section class="panel" id="ctp-editor">
+      <h2>Closest to the pin</h2>
+      <p class="note">Each hole, the disc closest to the pin gets one point.</p>
+      <h3>Discs (2–5)</h3>
+      <div id="ctp-entries"></div>
+      <div class="row"><button type="button" class="b" id="ctp-add">Add a disc</button><button type="button" class="b" id="ctp-remove">Remove last</button></div>
+      <h3 id="ctp-hole-title">Hole 1</h3>
+      <div class="winners" id="ctp-winners"></div>
+      <div class="row"><button type="button" class="b" id="ctp-nobody">Nobody hit the green</button><button type="button" class="b" id="ctp-undo">Undo last hole</button><button type="button" class="b" id="ctp-reset">Start over</button></div>
+      <div class="history" id="ctp-history"></div>
+    </section>
+    <section class="panel" id="round-editor" hidden>
+      <h2>Round</h2>
+      <p class="note">Normal stroke play. Score to par; lowest total wins.</p>
+      <h3>Course</h3>
+      <div class="row"><label>Holes <select id="round-holes"><option>9</option><option>18</option></select></label><button type="button" class="b" id="round-reset">Start over</button></div>
+      <h3>Players (2–5)</h3>
+      <div id="round-players"></div>
+      <div class="row"><button type="button" class="b" id="round-add">Add a player</button><button type="button" class="b" id="round-remove">Remove last</button></div>
+      <div class="hole"><button type="button" class="b" id="round-prev" aria-label="Previous hole">‹</button><strong id="round-hole-title">Hole 1</strong><label>Par <input class="num" id="round-par" type="number" min="2" max="6" value="3"></label><button type="button" class="b" id="round-next" aria-label="Next hole">›</button></div>
+      <div id="round-strokes"></div>
+    </section>
+  </div>
+</main>
+<script type="module">
+  const A = await import('./vendor/discstudio-cards/thro-adapter.mjs');
+  const { ensureCardFonts } = await import('./vendor/discstudio-cards/browser-card-renderer.js?v=28ac2b39fab85255');
+  const { resolveCardDisc } = await import('./vendor/discstudio-cards/card-renderer-core.js?v=28ac2b39fab85255');
+  const { getMoldDetails } = await import('./vendor/discstudio-cards/mold-library.js?v=28ac2b39fab85255');
+  await ensureCardFonts();
+  const W = 1920, H = 1080, M = 48, ACCENT = '#c8f23d';
+  const SANS = '"DS Card Sans", system-ui, sans-serif', COND = '"DS Card Sans Condensed", "DS Card Sans", system-ui, sans-serif';
+
+  // ---- Sample discs, with flight numbers exactly as thro shows them ----
+  const fixture = await (await fetch('./prepared-fixture.json')).json();
+  const discs = [];
+  for (const d of fixture.discs) {
+    const disc = { id: d.id, mold: d.mold, name: d.name, manufacturer: d.manufacturer, plastic: d.plastic ?? null, weight: d.weight ?? null };
+    const catalogue = (await resolveCardDisc({ getMoldDetails, loadImage: async () => null }, A.cardFromThroDisc(disc, { photoSrc: d.file }))).flights ?? [null, null, null, null];
+    discs.push({ id: d.id, label: `${d.manufacturer} ${d.name}`, disc, photoSrc: d.file, flights: ['speed', 'glide', 'turn', 'fade'].map((f, i) => d.flightOverrides?.[f] ?? catalogue[i]) });
+  }
+  const discById = id => discs.find(d => d.id === id) ?? discs[0];
+
+  // ---- State (this browser only) ----
+  const load = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
+  const save = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* storage unavailable */ } };
+  let kind = load('battle-lab-kind', 'ctp');
+  let ctp = load('battle-lab-ctp', { entries: discs.map(d => d.id), holes: [] });          // holes: [entryIndex | null]
+  let round = load('battle-lab-round', { holes: 9, par: Array(18).fill(3), hole: 0,
+    players: [['Sam', discs[0].id], ['Dab', discs[1].id], ['Boone', discs[2].id], ['Ivy', discs[0].id]].map(([name, disc]) => ({ name, disc, strokes: Array(18).fill(null) })) });
+
+  // ---- Shared drawing helpers ----
+  const canvas = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+  const blobOf = c => new Promise(r => c.toBlob(r, 'image/png'));
+  const imageOf = blob => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(blob); });
+  function alphaBox(img) {
+    const c = canvas(img.width, img.height), x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(img, 0, 0);
+    const d = x.getImageData(0, 0, c.width, c.height).data; let l = c.width, t = c.height, r = 0, b = 0;
+    for (let y = 0; y < c.height; y++) for (let i = 0; i < c.width; i++) if (d[(y * c.width + i) * 4 + 3]) { if (i < l) l = i; if (i >= r) r = i + 1; if (y < t) t = y; if (y >= b) b = y + 1; }
+    return { x: l, y: t, w: r - l, h: b - t };
+  }
+  function roundRect(x, X, Y, w, h, r) { x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + w, Y, X + w, Y + h, r); x.arcTo(X + w, Y + h, X, Y + h, r); x.arcTo(X, Y + h, X, Y, r); x.arcTo(X, Y, X + w, Y, r); x.closePath(); }
+  const cardCache = new Map();
+  async function nativeCard(id) {            // the exact Single card (U05 Glass drawer), full size, cropped to its pixels
+    if (!cardCache.has(id)) cardCache.set(id, (async () => {
+      const d = discById(id);
+      const r = await A.renderDiscStudioCard({ disc: d.disc, photoSrc: d.photoSrc, flights: d.flights, preset: 'u05', placement: 'native', appearance: { discSide: 'left', highlightTarget: 'digits', accentColor: ACCENT } });
+      const img = await imageOf(r.png); return { img, box: alphaBox(img), layout: r.layout };
+    })());
+    return cardCache.get(id);
+  }
+  const photoCache = new Map();
+  const photo = id => { if (!photoCache.has(id)) photoCache.set(id, new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = discById(id).photoSrc; })); return photoCache.get(id); };
+
+  // ---- Closest to the pin: every disc is its own card; one point per hole to the closest ----
+  const ctpScores = () => ctp.entries.map((_, i) => ctp.holes.filter(w => w === i).length);
+  async function drawCtp() {
+    const cards = await Promise.all(ctp.entries.map(nativeCard)), scores = ctpScores(), best = Math.max(...scores);
+    const gap = 36, plateGap = 14;
+    const numbersPx = Math.min(...cards.map(c => c.layout.numbers?.size ?? 40));     // flight-number size at 100%
+    const sumW = cards.reduce((t, c) => t + c.box.w, 0), maxH = Math.max(...cards.map(c => c.box.h));
+    // Score plate height is part of the stack, so solve the shared scale with it included.
+    const plateAt = s => Math.round(numbersPx * s * 1.9);
+    let s = Math.min(1.5, (W - M * 2 - gap * (cards.length - 1)) / sumW);
+    while (s > 0.3 && maxH * s + plateGap + plateAt(s) > H - M * 2 - 40) s -= 0.01;
+    const out = canvas(W, H), x = out.getContext('2d'); x.imageSmoothingQuality = 'high';
+    const row = sumW * s + gap * (cards.length - 1); let cx = (W - row) / 2;
+    const plateH = plateAt(s), bottom = H - M, cardBottom = bottom - plateH - plateGap;
+    const checks = [];
+    // A small heading: everything-else tier.
+    const headPx = Math.round(numbersPx * s * 0.62);
+    x.font = `600 ${headPx}px ${SANS}`; x.fillStyle = 'rgba(255,255,255,0.86)'; x.textAlign = 'left'; x.textBaseline = 'alphabetic';
+    const holesPlayed = ctp.holes.length;
+    const heading = `CLOSEST TO THE PIN · ${holesPlayed ? `AFTER ${holesPlayed} HOLE${holesPlayed === 1 ? '' : 'S'}` : 'FIRST HOLE'}`;
+    for (const [i, card] of cards.entries()) {
+      const w = card.box.w * s, h = card.box.h * s, top = cardBottom - h;
+      x.drawImage(card.img, card.box.x, card.box.y, card.box.w, card.box.h, cx, top, w, h);
+      if (i === 0) x.fillText(heading, cx, top - Math.round(headPx * 0.6));
+      // Score plate under the card: the score is smaller than the flight numbers (Sam's rule).
+      const lead = scores[i] === best && best > 0;
+      const scorePx = Math.round(numbersPx * s * 0.9), labelPx = Math.round(numbersPx * s * 0.5);
+      roundRect(x, cx, bottom - plateH, w, plateH, 14);
+      x.fillStyle = lead ? ACCENT : 'rgba(10,14,12,0.86)'; x.fill();
+      x.fillStyle = lead ? '#10180f' : '#ffffff'; x.textAlign = 'center';
+      x.font = `700 ${scorePx}px ${SANS}`; const sw = x.measureText(String(scores[i])).width;
+      x.font = `600 ${labelPx}px ${SANS}`; const lw = x.measureText(scores[i] === 1 ? 'POINT' : 'POINTS').width;
+      const gapT = labelPx * 0.5, startX = cx + w / 2 - (sw + gapT + lw) / 2, base = bottom - plateH / 2 + scorePx * 0.36;
+      x.textAlign = 'left'; x.font = `700 ${scorePx}px ${SANS}`; x.fillText(String(scores[i]), startX, base);
+      x.font = `600 ${labelPx}px ${SANS}`; x.fillText(scores[i] === 1 ? 'POINT' : 'POINTS', startX + sw + gapT, base);
+      const L = card.layout, d = (L.photo?.w ?? 0) * s, n = (L.name?.size ?? 0) * s, f = (L.numbers?.size ?? 0) * s, o = Math.max(scorePx, labelPx, headPx, ...L.other.map(t => t.size * s));
+      checks.push({ name: discById(ctp.entries[i]).disc.name, pass: d > n && n > f && f > o, d, n, f, o });
+      cx += w + gap;
+    }
+    return { canvas: out, checks, note: `${ctp.entries.length} discs · card scale ${Math.round(s * 100)}%` };
+  }
+
+  // ---- Round: stroke play to par, lowest total wins ----
+  function standings() {
+    const rows = round.players.map(p => {
+      let toPar = 0, total = 0, thru = 0;
+      for (let h = 0; h < round.holes; h++) if (Number.isFinite(p.strokes[h])) { total += p.strokes[h]; toPar += p.strokes[h] - round.par[h]; thru++; }
+      return { ...p, toPar, total, thru };
+    }).sort((a, b) => (b.thru > 0) - (a.thru > 0) || a.toPar - b.toPar || a.name.localeCompare(b.name));
+    rows.forEach((r, i) => { const tied = rows.filter(o => o.thru && o.toPar === r.toPar).length > 1; const first = rows.findIndex(o => o.toPar === r.toPar && o.thru); r.pos = r.thru ? `${tied ? 'T' : ''}${first + 1}` : '–'; });
+    return rows;
+  }
+  const parText = n => n === 0 ? 'E' : n > 0 ? `+${n}` : `−${-n}`;
+  async function drawRound() {
+    const rows = standings(), out = canvas(W, H), x = out.getContext('2d'); x.imageSmoothingQuality = 'high';
+    // Sizes follow the same order as a card: disc photo > name > score > everything else.
+    const rowH = 132, photoD = 112, namePx = 64, scorePx = 56, smallPx = 32, headPx = 30, panelW = 1040;
+    const panelH = 70 + rows.length * rowH + 16, X = M, Y = H - M - panelH;
+    roundRect(x, X, Y, panelW, panelH, 22); x.fillStyle = 'rgba(8,11,9,0.86)'; x.fill();
+    x.fillStyle = ACCENT; x.fillRect(X, Y + 22, 6, panelH - 44);
+    const played = Math.max(0, ...rows.map(r => r.thru)), parTotal = round.par.slice(0, round.holes).reduce((t, v) => t + v, 0);
+    x.font = `600 ${headPx}px ${SANS}`; x.fillStyle = 'rgba(255,255,255,0.78)'; x.textAlign = 'left'; x.textBaseline = 'alphabetic';
+    x.fillText(`ROUND · ${played ? `THRU ${played}` : 'FIRST TEE'} OF ${round.holes} · PAR ${parTotal}`, X + 40, Y + 50);
+    const leader = rows[0]?.thru ? rows[0].toPar : null;
+    x.font = `600 ${smallPx}px ${SANS}`;
+    const smallColumn = Math.max(x.measureText(`${9 * 15} · THRU ${round.holes}`).width, ...rows.map(r => x.measureText(`${r.total} · THRU ${r.thru}`).width));
+    for (const [i, r] of rows.entries()) {
+      const top = Y + 70 + i * rowH, mid = top + rowH / 2;
+      x.font = `700 ${smallPx}px ${SANS}`; x.fillStyle = 'rgba(255,255,255,0.7)'; x.textAlign = 'center'; x.fillText(r.pos, X + 70, mid + smallPx * 0.36);
+      const img = await photo(r.disc); const pcx = X + 160, r0 = photoD / 2;
+      x.save(); x.beginPath(); x.arc(pcx, mid, r0, 0, Math.PI * 2); x.clip();
+      const k = Math.max(photoD / img.width, photoD / img.height); x.drawImage(img, pcx - img.width * k / 2, mid - img.height * k / 2, img.width * k, img.height * k); x.restore();
+      x.strokeStyle = r.thru && r.toPar === leader ? ACCENT : 'rgba(255,255,255,0.5)'; x.lineWidth = 5; x.beginPath(); x.arc(pcx, mid, r0, 0, Math.PI * 2); x.stroke();
+      x.textAlign = 'left'; x.fillStyle = '#ffffff'; x.font = `800 ${namePx}px ${COND}`;
+      let name = r.name.toUpperCase(); while (x.measureText(name).width > 440 && name.length > 2) name = name.slice(0, -2) + '…';
+      x.fillText(name, X + 240, mid + namePx * 0.36);
+      // Right column: strokes and holes played; the score to par sits in its own column left of it.
+      x.textAlign = 'right'; x.font = `600 ${smallPx}px ${SANS}`; x.fillStyle = 'rgba(255,255,255,0.7)';
+      x.fillText(r.thru ? `${r.total} · ${r.thru === round.holes ? 'F' : `THRU ${r.thru}`}` : '', X + panelW - 36, mid + smallPx * 0.36);
+      x.font = `700 ${scorePx}px ${SANS}`; x.fillStyle = !r.thru ? 'rgba(255,255,255,0.45)' : r.toPar < 0 ? ACCENT : r.toPar > 0 ? '#ff9e80' : '#ffffff';
+      x.fillText(r.thru ? parText(r.toPar) : '–', X + panelW - 36 - smallColumn - 36, mid + scorePx * 0.36);
+    }
+    const pass = photoD > namePx && namePx > scorePx && scorePx > Math.max(smallPx, headPx);
+    return { canvas: out, checks: [{ name: 'Leaderboard', pass, d: photoD, n: namePx, f: scorePx, o: Math.max(smallPx, headPx) }], note: `${rows.length} players · ${round.holes} holes` };
+  }
+
+  // ---- Editors ----
+  const $ = id => document.getElementById(id), esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  const discOptions = selected => discs.map(d => `<option value="${d.id}"${d.id === selected ? ' selected' : ''}>${esc(d.label)}</option>`).join('');
+  function paintCtp() {
+    const scores = ctpScores();
+    $('ctp-entries').innerHTML = ctp.entries.map((id, i) => `<div class="entry"><select data-ctp-entry="${i}" aria-label="Disc ${i + 1}">${discOptions(id)}</select><span class="tally">${scores[i]} pt</span></div>`).join('');
+    $('ctp-add').disabled = ctp.entries.length >= 5; $('ctp-remove').disabled = ctp.entries.length <= 2;
+    $('ctp-hole-title').textContent = `Hole ${ctp.holes.length + 1}: who was closest?`;
+    $('ctp-winners').innerHTML = ctp.entries.map((id, i) => `<button type="button" class="b" data-ctp-win="${i}"><span>${esc(discById(id).disc.name)}</span><span class="tally">${scores[i]}</span></button>`).join('');
+    $('ctp-undo').disabled = !ctp.holes.length;
+    $('ctp-history').innerHTML = ctp.holes.map((w, h) => `Hole ${h + 1}: ${w === null ? 'nobody' : esc(discById(ctp.entries[w]).disc.name)}`).reverse().join('<br>');
+    document.querySelectorAll('[data-ctp-entry]').forEach(el => el.onchange = () => { ctp.entries[+el.dataset.ctpEntry] = el.value; commit(); });
+    document.querySelectorAll('[data-ctp-win]').forEach(el => el.onclick = () => { ctp.holes.push(+el.dataset.ctpWin); commit(); });
+  }
+  function paintRound() {
+    $('round-holes').value = String(round.holes);
+    const roster = JSON.stringify(round.players.map(p => [p.name, p.disc]));
+    if ($('round-players').dataset.roster !== roster) { $('round-players').dataset.roster = roster; $('round-players').innerHTML = round.players.map((p, i) => `<div class="entry"><input type="text" data-round-name="${i}" value="${esc(p.name)}" aria-label="Player ${i + 1} name" maxlength="24"><select data-round-disc="${i}" aria-label="Player ${i + 1} disc">${discOptions(p.disc)}</select></div>`).join(''); }
+    $('round-add').disabled = round.players.length >= 5; $('round-remove').disabled = round.players.length <= 2;
+    $('round-hole-title').textContent = `Hole ${round.hole + 1} of ${round.holes}`; $('round-par').value = round.par[round.hole];
+    $('round-prev').disabled = round.hole === 0; $('round-next').disabled = round.hole >= round.holes - 1;
+    const shape = JSON.stringify([round.hole, round.players.map(p => p.name)]);
+    if ($('round-strokes').dataset.shape === shape) {
+      round.players.forEach((p, i) => { const box = document.querySelector(`[data-strokes="${i}"]`); if (box && box !== document.activeElement) box.value = p.strokes[round.hole] ?? ''; });
+      document.querySelector('#round-strokes .note').textContent = `Totals: ${standings().map(r => `${r.name} ${r.thru ? parText(r.toPar) : '–'}`).join(' · ')}`;
+      return;
+    }
+    $('round-strokes').dataset.shape = shape;
+    $('round-strokes').innerHTML = round.players.map((p, i) => { const s = p.strokes[round.hole];
+      return `<div class="player"><span class="name">${esc(p.name)}</span><button type="button" class="b" data-stroke="${i}" data-delta="-1" aria-label="${esc(p.name)} one fewer">−</button><input class="num" type="number" min="1" max="15" data-strokes="${i}" value="${s ?? ''}" placeholder="–" aria-label="${esc(p.name)} strokes on hole ${round.hole + 1}"><button type="button" class="b" data-stroke="${i}" data-delta="1" aria-label="${esc(p.name)} one more">+</button></div>`; }).join('')
+      + `<p class="note">Totals: ${standings().map(r => `${esc(r.name)} ${r.thru ? parText(r.toPar) : '–'}`).join(' · ')}</p>`;
+    document.querySelectorAll('[data-round-name]').forEach(el => el.onchange = () => { round.players[+el.dataset.roundName].name = el.value.trim() || `Player ${+el.dataset.roundName + 1}`; commit(); });
+    document.querySelectorAll('[data-round-disc]').forEach(el => el.onchange = () => { round.players[+el.dataset.roundDisc].disc = el.value; commit(); });
+    document.querySelectorAll('[data-strokes]').forEach(el => el.onchange = () => { const v = Number(el.value); round.players[+el.dataset.strokes].strokes[round.hole] = el.value === '' ? null : Math.max(1, Math.min(15, Math.round(v))); commit(); });
+    document.querySelectorAll('[data-stroke]').forEach(el => el.onclick = () => { const p = round.players[+el.dataset.stroke], cur = p.strokes[round.hole] ?? round.par[round.hole]; p.strokes[round.hole] = Math.max(1, Math.min(15, cur + (p.strokes[round.hole] == null ? 0 : +el.dataset.delta))); commit(); });
+  }
+  $('ctp-add').onclick = () => { if (ctp.entries.length < 5) { ctp.entries.push(discs[ctp.entries.length % discs.length].id); commit(); } };
+  $('ctp-remove').onclick = () => { if (ctp.entries.length > 2) { const gone = ctp.entries.length - 1; ctp.entries.pop(); ctp.holes = ctp.holes.map(w => w === gone ? null : w); commit(); } };
+  $('ctp-nobody').onclick = () => { ctp.holes.push(null); commit(); };
+  $('ctp-undo').onclick = () => { ctp.holes.pop(); commit(); };
+  $('ctp-reset').onclick = () => { ctp.holes = []; commit(); };
+  $('round-holes').onchange = () => { round.holes = +$('round-holes').value; round.hole = Math.min(round.hole, round.holes - 1); commit(); };
+  $('round-par').onchange = () => { round.par[round.hole] = Math.max(2, Math.min(6, Math.round(+$('round-par').value || 3))); commit(); };
+  $('round-prev').onclick = () => { round.hole = Math.max(0, round.hole - 1); commit(); };
+  $('round-next').onclick = () => { round.hole = Math.min(round.holes - 1, round.hole + 1); commit(); };
+  $('round-add').onclick = () => { if (round.players.length < 5) { round.players.push({ name: `Player ${round.players.length + 1}`, disc: discs[round.players.length % discs.length].id, strokes: Array(18).fill(null) }); commit(); } };
+  $('round-remove').onclick = () => { if (round.players.length > 2) { round.players.pop(); commit(); } };
+  $('round-reset').onclick = () => { round.players.forEach(p => p.strokes = Array(18).fill(null)); round.hole = 0; commit(); };
+  document.querySelectorAll('[data-kind]').forEach(el => el.onclick = () => { kind = el.dataset.kind; commit(); });
+
+  // ---- Render loop: newest request wins ----
+  let token = 0, lastBlob = null;
+  async function commit() {
+    save('battle-lab-kind', kind); save('battle-lab-ctp', ctp); save('battle-lab-round', round);
+    document.querySelectorAll('[data-kind]').forEach(el => el.setAttribute('aria-pressed', String(el.dataset.kind === kind)));
+    $('ctp-editor').hidden = kind !== 'ctp'; $('round-editor').hidden = kind !== 'round';
+    kind === 'ctp' ? paintCtp() : paintRound();
+    const mine = ++token, t = performance.now();
+    const result = kind === 'ctp' ? await drawCtp() : await drawRound();
+    if (mine !== token) return;
+    lastBlob = await blobOf(result.canvas); if (mine !== token) return;
+    const img = $('graphic'), old = img.src; img.src = URL.createObjectURL(lastBlob); if (old.startsWith('blob:')) URL.revokeObjectURL(old);
+    $('meta').innerHTML = `1920 × 1080 · ${result.note} · ${Math.round(performance.now() - t)} ms<br>Rule (disc image &gt; name &gt; numbers &gt; everything else): ${result.checks.map(c => `${esc(c.name)} <b class="${c.pass ? 'ok' : 'no'}">${c.pass ? 'pass' : 'fail'}</b>`).join(' · ')}`;
+    document.body.dataset.done = 'true'; document.body.dataset.rule = String(result.checks.every(c => c.pass));
+  }
+  $('download').onclick = () => { if (!lastBlob) return; const a = document.createElement('a'); a.href = URL.createObjectURL(lastBlob); a.download = `thro-battle-${kind}.png`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); };
+  await commit();
+</script>
+</body>
+</html>

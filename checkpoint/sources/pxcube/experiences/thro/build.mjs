@@ -22,6 +22,7 @@ const runtimeFiles = [
   'prepared-fixture.mjs',
   'prepared-fixture.json',
   'lineup-lab.html',
+  'battle-lab.html',
 ];
 
 if (path.resolve(process.cwd()) !== root) {
