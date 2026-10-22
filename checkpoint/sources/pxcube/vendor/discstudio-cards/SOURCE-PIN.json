@@ -46,15 +46,16 @@
   "adapter": {
     "path": "thro-adapter.mjs",
     "upstreamSha256": "4594bf5f0a3f31aa16677e4b899f3bbd4b49ffe3e2c26c1f93b157d5197438be",
-    "bytes": 18149,
-    "sha256": "45f9d0d9f360c54d58927cb7d6563f0e1e87dae3d4427677517c0643b7026201",
+    "bytes": 18659,
+    "sha256": "0bf442df977cac2e132cf27439de1680b7a231f211f4f238df84220bb3c184bb",
     "upstreamGitCorrespondence": "The adapter was supplied in the handoff ZIP; it is not part of the native Git checkpoint above.",
     "localChanges": [
       "Do not prefix an already addressed ds.px.seed. mold ID again.",
       "Keep null, undefined and blank flight values unknown; preserve finite numbers and numeric strings including zero; reject invalid or nonfinite known values.",
       "Allow finite panel-default scale from 0.5 to 1.5 through the unchanged native anchored placement calculation; omitted scale remains 0.66.",
       "Draw the native card once and reuse its PNG for panel-default placement (the same DiscStudio sizing and placement calls as renderPlacedCardBlob), and record where the disc photo, mold name and flight numbers were drawn as a layout beside the pixels; card pixels are unchanged.",
-      "Add renderDiscStudioLineup: 2-4 native cards, each drawn exactly as a Single card, sized by the DiscStudio sticker step at one shared scale and set in a row by the DiscStudio frame renderer."
+      "Add renderDiscStudioLineup: 2-4 native cards, each drawn exactly as a Single card, sized by the DiscStudio sticker step at one shared scale and set in a row by the DiscStudio frame renderer.",
+      "Accept an optional panel-default nudge {x, y} in canvas pixels, applied from the native corner anchor through the native clampTransform; an omitted nudge leaves placement unchanged."
     ]
   }
 }

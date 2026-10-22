@@ -1,5 +1,6 @@
 import { openWorkspace } from './workspace.mjs';
-import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy } from './native-cards.mjs';
+import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, cardLayout } from './native-cards.mjs';
+import { attachCardEditor } from './card-editor.mjs';
 import { alphaBounds, fitArtwork } from './preview-frame.mjs';
 import { loadFixture } from './prepared-fixture.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
@@ -212,7 +213,7 @@ function thumbDesign(id) {
 // Rendered thumbnails are cached by everything that changes how they look, so a repaint
 // never blanks the picker; a stale thumbnail stays visible (dimmed) while its new one renders.
 const thumbCache = new Map(), lastThumb = new Map();
-const thumbKey = (disc, id) => { const d = thumbDesign(id); return JSON.stringify([disc, id, isLineupStudy(id) ? [ui.selection, context().competitionAddress] : null, d.accent, d.foreground, d.background, d.nativeSide ?? null, d.nativeHighlight ?? null, d.nativeScale ?? null]); };
+const thumbKey = (disc, id) => { const d = thumbDesign(id); return JSON.stringify([disc, id, isLineupStudy(id) ? [ui.selection, context().competitionAddress] : null, d.accent, d.foreground, d.background, d.nativeSide ?? null, d.nativeHighlight ?? null, d.nativeScale ?? null, d.nativePlate ?? null]); };
 async function paintCompositionThumbs() {
   const token = ++thumbToken, disc = ui.mode === 'single' ? ui.selectedDisc : (ui.selection[0] ?? ui.selectedDisc);
   if (!disc) return;
@@ -304,13 +305,13 @@ function downloadedMarkup() {
 function controlsMarkup() {
   const design = ui.design;
   const choice = study => `<button type="button" role="radio" class="composition-choice" data-study="${text(study.id)}" aria-checked="${study.id === design.study}" title="${text(study.note ?? study.name)}"><span class="composition-thumb" data-study-thumb="${text(study.id)}" aria-hidden="true"></span><span class="composition-name">${text(shortStudyName(study))}</span></button>`;
-  const picker = `<fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}">${ui.mode === 'single' ? `<div class="composition-picker" role="radiogroup" aria-label="Card layouts">${nativeStudies.map(choice).join('')}</div>` : `<p class="composition-group">${ui.mode === 'bag' ? 'DiscStudio lineups' : 'Lineup layouts'}</p><div class="composition-picker" role="radiogroup" aria-label="Lineup layouts">${studiesFor(ui.mode).map(choice).join('')}</div>`}</fieldset>`;
+  const picker = `<fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}">${ui.mode === 'single' ? `<div class="composition-picker" role="radiogroup" aria-label="Card layouts">${nativeStudies.map(choice).join('')}</div>` : `<p class="composition-group">${ui.mode === 'bag' ? 'Thro lineups' : 'Lineup layouts'}</p><div class="composition-picker" role="radiogroup" aria-label="Lineup layouts">${studiesFor(ui.mode).map(choice).join('')}</div>`}</fieldset>`;
   if (isLineupStudy(design.study)) {
-    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form">${picker}<p class="subtle">Each disc is its exact DiscStudio card, set side by side in one 1920 × 1080 frame.</p><div class="field-pair canvas-fields"><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div></form>${battleMarkup()}${bagMarkup()}</aside>`;
+    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form">${picker}<p class="subtle">Each disc is its exact Thro card, set side by side in one 1920 × 1080 frame.</p><div class="field-pair canvas-fields"><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div></form>${battleMarkup()}${bagMarkup()}</aside>`;
   }
   if (isNativeStudy(design.study)) {
     const selected = nativeStudy(design.study), scale = design.nativeScale ?? .66;
-    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><div class="native-primary-controls">${picker}<p class="subtle">DiscStudio card pixels, kept with this exact disc. Placement stays anchored to the layout.</p><label>Card size <output id="native-scale-value">${Math.round(scale * 100)}%</output><input id="native-scale" type="range" min="0.5" max="1.5" step="0.01" value="${scale}" aria-label="Native card size"></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation" disabled>${option(selected.orientation, selected.orientation === 'portrait' ? 'Portrait' : 'Landscape', selected.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div><p class="subtle">Canvas dimensions follow the selected card layout.</p><div class="field-pair"><label>Disc side<select id="native-side">${option('left', 'Left', design.nativeSide ?? selected.side)}${option('right', 'Right', design.nativeSide ?? selected.side)}</select></label><label>Highlight<select id="native-highlight">${option('digits', 'Digits', design.nativeHighlight ?? selected.highlight)}${option('tiles', 'Tile blocks', design.nativeHighlight ?? selected.highlight)}</select></label></div></form></aside>`;
+    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><div class="native-primary-controls">${picker}<p class="subtle">Drag the card to move it, pull its red knob to size it, and tap Side, Colour or Plate on the card. These are the card's own pixels, kept with this exact disc.</p><label>Card size <output id="native-scale-value">${Math.round(scale * 100)}%</output><input id="native-scale" type="range" min="0.5" max="1.5" step="0.01" value="${scale}" aria-label="Native card size"></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation" disabled>${option(selected.orientation, selected.orientation === 'portrait' ? 'Portrait' : 'Landscape', selected.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div><p class="subtle">Canvas dimensions follow the selected card layout.</p><div class="field-pair"><label>Disc side<select id="native-side">${option('left', 'Left', design.nativeSide ?? selected.side)}${option('right', 'Right', design.nativeSide ?? selected.side)}</select></label><label>Highlight<select id="native-highlight">${option('digits', 'Digits', design.nativeHighlight ?? selected.highlight)}${option('tiles', 'Tile blocks', design.nativeHighlight ?? selected.highlight)}</select></label></div></form></aside>`;
   }
   return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form">${picker}<div class="field-pair placement-fields"><fieldset class="placement-field"><legend>Placement <span class="optional">${text(({ 'bottom-left': 'Bottom left', 'bottom-center': 'Bottom center', 'bottom-right': 'Bottom right', 'top-left': 'Top left', 'top-right': 'Top right' })[design.placement] ?? '')}</span></legend><input type="hidden" id="placement" value="${text(design.placement)}"><div class="placement-frame" role="radiogroup" aria-label="Where the graphic sits in the video frame">${[['top-left', 'Top left'], ['top-right', 'Top right'], ['bottom-left', 'Bottom left'], ['bottom-center', 'Bottom center'], ['bottom-right', 'Bottom right']].map(([v, name]) => `<button type="button" role="radio" class="placement-spot spot-${v}" data-placement="${v}" aria-checked="${v === design.placement}" aria-label="${name}" title="${name}"><span aria-hidden="true"></span></button>`).join('')}</div></fieldset><label>Width<select id="composition-size">${compositionSizeStudies.map(size => option(size.id, size.id === 'balanced' ? 'Preferred' : size.id === 'full-width' ? 'Maximum' : 'Compact', design.compositionSize)).join('')}</select></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation">${option('landscape', 'Landscape', design.orientation)}${option('portrait', 'Portrait', design.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div><label>Title <span class="optional">optional</span><input id="graphic-title" maxlength="80" value="${text(design.title)}" placeholder="For the next shot"></label><details class="fine-tuning"><summary>More control</summary><div class="field-pair"><label>Background<input id="background" type="color" value="${text(design.background)}"></label><label>Text<input id="foreground" type="color" value="${text(design.foreground)}"></label></div><label>Canvas background<select id="frame">${option('none', 'Transparent', design.frame)}${option('filled', 'Solid', design.frame)}</select></label><div class="field-pair"><label>X offset <span class="optional">px</span><input id="offset-x" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetX) || 0}"></label><label>Y offset <span class="optional">px</span><input id="offset-y" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetY) || 0}"></label></div></details></form>${battleMarkup()}${bagMarkup()}</aside>`;
 }
@@ -431,6 +432,21 @@ function schedulePortraitFrame() {
 addEventListener('resize', schedulePortraitFrame);
 window.visualViewport?.addEventListener('resize', schedulePortraitFrame);
 
+// On-card editing (the Constraint Lab, merged into Thro): only on the live Single card, never on a kept version.
+function editCard(holder, graphic) {
+  const editable = ui.mode === 'single' && !capturedPreview && !hasConflict() && isNativeStudy(ui.design.study) && graphic?.provenance?.rasterOnly === true;
+  if (!editable) return;
+  const svg = holder.querySelector('svg'), design = { ...nativeDesign(ui.design, ui.design.study), ...ui.design };
+  // The card's own pixel bounds (plate included) are the drag target; the renderer's layout places the taps.
+  rasterBounds(graphic.svg).then(bounds => {
+    if (holder.querySelector('svg') !== svg || graphic !== currentGraphic()) return;
+    attachCardEditor(holder, { graphic, layout: cardLayout(graphic.svg), bounds: bounds && { x: bounds.x, y: bounds.y, w: bounds.width, h: bounds.height }, design, onChange: (controls, note) => {
+      ui.design = nativeControlDesign(ui.design, { study: ui.design.study, ...controls });
+      change({ design: structuredClone(ui.design) }, `${note}. Your graphic is ready.`);
+    } });
+  });
+}
+
 function paintPreview() {
   const graphic = currentGraphic(), holder = $('graphic-preview');
   if (!holder) return;
@@ -439,6 +455,7 @@ function paintPreview() {
   holder.className = `graphic-preview preview-${ui.background}`;
   if (graphic) {
     closeUp(holder, graphic);
+    editCard(holder, graphic);
     holder.setAttribute('role', 'img');
     const disc = rows.find(row => row.address === ui.selectedDisc);
     holder.setAttribute('aria-label', `${ui.mode === 'single' && disc ? `${disc.seed.manufacturer} ${rowName(disc)}` : 'Lineup'} graphic, ${studyName(ui.design.study) ?? 'custom'} layout, ${graphic.width} by ${graphic.height}`);

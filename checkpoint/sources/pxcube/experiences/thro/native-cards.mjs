@@ -9,7 +9,7 @@ const definitions = [
   ['b04', 'Peak mark'], ['b05', 'Stamp macro'],
 ];
 export const nativeStudies = Object.freeze(definitions.map(([preset, name]) => Object.freeze({
-  id: `discstudio:${preset}`, preset, name: `DiscStudio ${preset.toUpperCase()} - ${name}`,
+  id: `discstudio:${preset}`, preset, name: `${preset.toUpperCase()} · ${name}`,
   orientation: preset.startsWith('u') ? 'portrait' : 'landscape',
   side: ['u02', 'u04', 'u05'].includes(preset) ? 'left' : 'right',
   highlight: preset === 'u01' || preset === 'u02' || preset.startsWith('b') ? 'digits' : 'tiles',
@@ -23,13 +23,13 @@ export const lineupStudies = Object.freeze(lineupDefinitions.map(([preset, name]
 export const isLineupStudy = study => typeof study === 'string' && study.startsWith('discstudio-lineup:');
 export function lineupStudy(study) {
   const result = lineupStudies.find(item => item.id === study);
-  if (!result) throw Error('Choose a known DiscStudio lineup layout.');
+  if (!result) throw Error('Choose a known Thro lineup layout.');
   return result;
 }
 export const isNativeStudy = study => typeof study === 'string' && study.startsWith('discstudio:');
 export function nativeStudy(study) {
   const result = nativeStudies.find(item => item.id === study);
-  if (!result) throw Error('Choose a known DiscStudio card layout.');
+  if (!result) throw Error('Choose a known Thro card layout.');
   return result;
 }
 export function nativeDesign(previous, study) {
@@ -38,13 +38,19 @@ export function nativeDesign(previous, study) {
     accent: wasNative ? previous.accent : selected.accent,
     nativeScale: wasNative ? previous.nativeScale ?? 0.66 : 0.66,
     nativeSide: same ? previous.nativeSide ?? selected.side : selected.side,
-    nativeHighlight: same ? previous.nativeHighlight ?? selected.highlight : selected.highlight };
+    nativeHighlight: same ? previous.nativeHighlight ?? selected.highlight : selected.highlight,
+    // Plate carries across layouts like the accent; a nudge belongs to one layout's geometry.
+    nativePlate: wasNative ? previous.nativePlate ?? 'see-through' : 'see-through',
+    nativeNudge: same && previous.nativeNudge ? { ...previous.nativeNudge } : { x: 0, y: 0 } };
 }
+const nudgeLimit = 1920;
+export const validNudge = nudge => nudge && Number.isFinite(nudge.x) && Number.isFinite(nudge.y) && Math.abs(nudge.x) <= nudgeLimit && Math.abs(nudge.y) <= nudgeLimit;
 export function nativeControlDesign(previous, controls) {
   const design = nativeDesign(previous, controls.study);
   if (isNativeStudy(previous.study)) {
     if (controls.scale !== undefined) design.nativeScale = controls.scale;
     if (controls.accent !== undefined) design.accent = controls.accent;
+    if (controls.plate !== undefined) design.nativePlate = controls.plate === 'solid' ? 'solid' : 'see-through';
   }
   // A new layout takes its own side/highlight defaults. The controls still
   // belong to the previous layout until the next paint, so read them only
@@ -52,6 +58,7 @@ export function nativeControlDesign(previous, controls) {
   if (previous.study === controls.study) {
     if (controls.side !== undefined) design.nativeSide = controls.side;
     if (controls.highlight !== undefined) design.nativeHighlight = controls.highlight;
+    if (controls.nudge !== undefined) design.nativeNudge = validNudge(controls.nudge) ? { x: Math.round(controls.nudge.x), y: Math.round(controls.nudge.y) } : { x: 0, y: 0 };
   }
   return design;
 }
@@ -76,14 +83,19 @@ export function nativeCardRequest({ disc, resolved, design }) {
   if (design.rendererBuild !== nativeBuild) throw Error('This native card design requires another renderer build.');
   if (disc?.depiction?.kind !== 'photo' || !/^data:image\/(?:png|jpeg|webp);base64,/.test(disc.depiction.src)) throw Error('A native card requires the retained prepared photo.');
   const scale = design.nativeScale ?? 0.66;
-  if (!Number.isFinite(scale) || scale < 0.5 || scale > 1.5) throw Error('Choose a native card size between 50% and 150%.');
+  if (!Number.isFinite(scale) || scale < 0.5 || scale > 1.5) throw Error('Choose a card size between 50% and 150%.');
+  const nudge = design.nativeNudge ?? { x: 0, y: 0 };
+  if (!validNudge(nudge)) throw Error('Card position is out of range.');
+  const appearance = { discSide: design.nativeSide ?? selected.side, highlightTarget: design.nativeHighlight ?? selected.highlight, accentColor: design.accent ?? selected.accent };
+  if (design.nativePlate === 'solid') appearance.plate = 'solid';
   return {
     disc: { id: disc.id, mold: disc.mold, name: resolved.name, manufacturer: resolved.manufacturer,
       plastic: disc.plastic ?? null, weight: disc.weight ?? null, depiction: { ...disc.depiction } },
     photoSrc: disc.depiction.src,
     flights: ['speed', 'glide', 'turn', 'fade'].map(field => resolved[field] ?? null),
-    preset: selected.preset, placement: 'panel-default', scale,
-    appearance: { discSide: design.nativeSide ?? selected.side, highlightTarget: design.nativeHighlight ?? selected.highlight, accentColor: design.accent ?? selected.accent },
+    preset: selected.preset, placement: 'panel-default', scale, appearance,
+    // The card keeps its own corner anchor; a nudge moves it from there (canvas pixels).
+    ...(nudge.x || nudge.y ? { nudge: { x: nudge.x, y: nudge.y } } : {}),
   };
 }
 async function preparedPhotoDigest(source) {
@@ -104,7 +116,7 @@ export function createNativeRenderer(renderCard = async request => {
 }) {
   const single = async input => {
     if (!isNativeStudy(input.design?.study)) return null;
-    if (input.purpose && input.purpose !== 'single') throw Error('DiscStudio card layouts are available in Single. Choose a lineup composition for Battle or Bag.');
+    if (input.purpose && input.purpose !== 'single') throw Error('Thro card layouts are available in Single. Choose a lineup composition for Battle or Bag.');
     const request = nativeCardRequest(input), result = await renderCard(request);
     const portrait = nativeStudy(input.design.study).orientation === 'portrait';
     if (result.build !== nativeBuild) throw Error('Native renderer build does not match this saved design.');

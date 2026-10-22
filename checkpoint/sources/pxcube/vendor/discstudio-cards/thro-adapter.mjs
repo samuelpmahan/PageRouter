@@ -8,7 +8,7 @@ import { getMoldDetails } from './mold-library.js?v=28ac2b39fab85255';
 import { alphaBounds as rasterAlphaBounds, cardRasterIdentity, stickerOrigin } from './sticker-raster.mjs?v=28ac2b39fab85255';
 import { imageLayer } from './frame-seek.mjs?v=28ac2b39fab85255';
 import { defaultCardAppearance, validateCardAppearance } from './export-queue-core.js?v=28ac2b39fab85255';
-import { anchoredDefaultPlacement } from './transform-geometry.mjs?v=28ac2b39fab85255';
+import { anchoredDefaultPlacement, clampTransform } from './transform-geometry.mjs?v=28ac2b39fab85255';
 
 export const build = '28ac2b39fab85255';
 export const version = '6.6.1';
@@ -144,11 +144,15 @@ function validatePanelScale(scale) {
 
 /** Resolve the existing native geometry without changing explicit transforms.
  *  scale applies only to panel-default; other placement modes retain their own scale. */
-export function resolveCardPlacement(placement, footprint, scale = DEFAULT_CARD_SCALE) {
+export function resolveCardPlacement(placement, footprint, scale = DEFAULT_CARD_SCALE, nudge = null) {
   if (placement === 'native') return { scale: 1, dx: 0, dy: 0 };
   if (placement !== 'panel-default') return placement;
   validatePanelScale(scale);
-  return anchoredDefaultPlacement({ ...footprint, scale });
+  const anchored = anchoredDefaultPlacement({ ...footprint, scale });
+  if (!nudge || (!nudge.x && !nudge.y)) return anchored;
+  // A nudge moves the card from its own corner anchor, in canvas pixels. DiscStudio's clamp keeps every card pixel inside the frame.
+  if (![nudge.x, nudge.y].every(Number.isFinite)) throw Error('Invalid card nudge; expected finite canvas pixels.');
+  return clampTransform({ ...footprint, scale, dx: anchored.dx + nudge.x / footprint.width, dy: anchored.dy + nudge.y / footprint.height });
 }
 
 /** Render one card. placement: 'panel-default' (the export panel's untouched card: 66%,
@@ -178,11 +182,11 @@ const stickerFor = async (native, scale) => sizeBrowserSticker(await blobImage(n
 const toSticker = (native, sticker, origin) => new DOMMatrix([sticker.scale, 0, 0, sticker.scale, origin.x - native.bounds[0] * sticker.scale - sticker.cropOffset.x, origin.y - native.bounds[1] * sticker.scale - sticker.cropOffset.y]);
 const svgFor = async (png, width, height) => `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><image width="${width}" height="${height}" href="${await toDataUrl(png)}"/></svg>`;
 
-export async function renderDiscStudioCard({ disc, photoSrc, flights, preset = 'b01', appearance, placement = 'panel-default', scale = DEFAULT_CARD_SCALE }) {
+export async function renderDiscStudioCard({ disc, photoSrc, flights, preset = 'b01', appearance, placement = 'panel-default', scale = DEFAULT_CARD_SCALE, nudge = null }) {
   if (placement === 'panel-default') validatePanelScale(scale);
   const native = await drawNativeCard({ disc, photoSrc, flights, preset, appearance }), { width, height } = native;
   const footprint = placement === 'panel-default' ? { width, height, alphaBounds: [...native.bounds] } : undefined;
-  const transform = resolveCardPlacement(placement, footprint, scale);
+  const transform = resolveCardPlacement(placement, footprint, scale, nudge);
   let png = native.png, toPlaced = new DOMMatrix();
   if (!(transform.scale === 1 && transform.dx === 0 && transform.dy === 0)) {
     // DiscStudio's renderPlacedCardBlob, from the PNG already made: size the sticker, then place it.
