@@ -25,6 +25,10 @@ const runtimeFiles = [
   'battle-lab.html',
   'dtree.mjs',
   'dtree.json',
+  'thro-world.mjs',
+  'pxc/kernel.mjs',
+  'pxc/canonical.mjs',
+  'pxc/schema.mjs',
 ];
 
 if (path.resolve(process.cwd()) !== root) {
@@ -86,6 +90,7 @@ for (const name of imageFiles) {
 // the entry surface and add the thro workspace/fixture modules.
 await buildDemo();
 for (const file of runtimeFiles) {
+  fs.mkdirSync(path.dirname(path.join(output, file)), { recursive: true });
   fs.copyFileSync(path.join(root, file), path.join(output, file));
 }
 for (const file of cardVendorFiles) {

@@ -42,6 +42,8 @@
   details { margin-top: 12px; } summary { cursor: pointer; color: var(--muted); font-size: 13px; }
   pre { background: #0a100c; border-radius: 8px; padding: 10px; font-size: 12px; overflow: auto; max-height: 260px; }
   [hidden] { display: none !important; }
+  body.embedded main > h1, body.embedded .lead { display: none; }
+  body.embedded main { padding-top: 12px; }
 </style>
 </head>
 <body>
@@ -313,6 +315,10 @@
   $('remove').onclick = () => { if (data.entries.length > 2) { const gone = data.entries.length - 1; data.entries.pop(); data.holeList.forEach(h => { h.strokes[gone] = null; if (h.winner === gone) h.winner = undefined; }); commit(); } };
   $('reset').onclick = () => { data.holeList = blankHoles(); ui.hole = 0; commit(); };
 
+  const embedded = new URLSearchParams(location.search).has('embedded');
+  if (embedded) document.body.classList.add('embedded');
+  const reportHeight = () => { if (embedded && parent !== window) parent.postMessage({ throBattleHeight: document.documentElement.scrollHeight }, location.origin); };
+  addEventListener('resize', reportHeight);
   let token = 0, lastBlob = null;
   async function commit() {
     battle = new Battle(data); save('battle-lab-v2', data); save('battle-lab-v2-ui', ui); paint();
@@ -322,7 +328,7 @@
     lastBlob = await blobOf(result.canvas); if (mine !== token) return;
     const img = $('graphic'), old = img.src; img.src = URL.createObjectURL(lastBlob); if (old.startsWith('blob:')) URL.revokeObjectURL(old);
     $('meta').innerHTML = `1920 × 1080 · ${esc(battle.format.constructor.label)} · ${result.note} · ${Math.round(performance.now() - t)} ms<br>Rule (disc image &gt; name &gt; numbers &gt; everything else): ${result.checks.map(c => `${esc(c.name)} <b class="${c.pass ? 'ok' : 'no'}">${c.pass ? 'pass' : 'fail'}</b>`).join(' · ')}`;
-    document.body.dataset.done = 'true'; document.body.dataset.rule = String(result.checks.every(c => c.pass));
+    document.body.dataset.done = 'true'; document.body.dataset.rule = String(result.checks.every(c => c.pass)); reportHeight();
   }
   $('download').onclick = () => { if (!lastBlob) return; const a = document.createElement('a'); a.href = URL.createObjectURL(lastBlob); a.download = `thro-battle-${data.format}.png`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); };
   window.__battle = () => ({ data: battle.toData(), standings: battle.standings().map(r => ({ name: r.entry.name, pos: r.pos, total: r.total, toPar: r.toPar, played: r.played, show: battle.format.show(r) })), carry: battle.standings().carry });

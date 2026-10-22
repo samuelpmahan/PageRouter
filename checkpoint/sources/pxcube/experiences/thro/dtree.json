@@ -1,65 +1,225 @@
 {
-  "schema": "thro-dtree@1",
-  "about": "Thro's decision tree. Each node is a decision held in place by its parent. Active: composed into this site. Open: waiting on a choice; alternatives listed. Subsumed: no longer in the site; kept with the iteration where it was live. Previews: https://iter-N.thro.pages.dev",
-  "nodes": [
-    { "id": "rule", "parent": null, "status": "active", "by": "Sam", "date": "2026-10-22",
-      "question": "What matters most on a card?",
-      "choice": "DISC IMAGE > MOLD NAME > FLIGHT NUMBERS > everything else. Flight numbers carry no labels: written like a score, 6.5 · 5 · −1 · 2.",
-      "affects": ["#graphic-preview"], "checks": ["local/test/thro-card-hierarchy-browser.mjs"] },
-
-    { "id": "base-a", "parent": "rule", "status": "subsumed", "subsumedBy": "base-b", "by": "claude-ed", "iters": [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      "question": "Which build do the Single-screen improvements sit on?", "choice": "The original thro build (f4667ee)." },
-    { "id": "base-b", "parent": "rule", "status": "active", "by": "dab · claude-ed", "iters": [10], "commits": ["9eeb1eb"],
-      "question": "Which build is thro built on?", "choice": "Dab's native-card build (4bd0214), with iterations 1–9 replayed onto it." },
-
-    { "id": "closeup", "parent": "base-b", "status": "active", "iters": [1, 10], "by": "claude-ed",
-      "question": "How should the preview frame the graphic?", "choice": "Close-up by default, Whole frame one tap away.", "affects": [".view-switch"] },
-    { "id": "thumbs", "parent": "base-b", "status": "active", "iters": [3, 10, 13], "commits": ["c55ff7d"], "by": "claude-ed",
-      "question": "How do you choose a layout?", "choice": "Rendered thumbnails with your disc in them, cached so they never blank.", "affects": [".composition-field"] },
-    { "id": "download-note", "parent": "base-b", "status": "active", "iters": [5, 10], "by": "claude-ed",
-      "question": "Where does a download say it worked?", "choice": "Right at the button, with the file name.", "affects": [".export-bar"] },
-    { "id": "match-disc", "parent": "base-b", "status": "active", "iters": [6, 10], "by": "claude-ed",
-      "question": "Where does the accent colour come from?", "choice": "Match disc: sampled from the plastic, or a fixed palette.", "affects": [".swatches"] },
-    { "id": "first-tap", "parent": "base-b", "status": "active", "iters": [7, 10], "by": "claude-ed",
-      "question": "Can a tap be lost while the graphic redraws?", "choice": "No: Download and Keep stay live while it redraws.", "affects": [".export-bar"], "checks": ["local/test/thro-app-regressions-browser.mjs first-tap-download"] },
-    { "id": "keep-once", "parent": "base-b", "status": "active", "iters": [8, 10, 11], "commits": ["12758ba"], "by": "claude-ed",
-      "question": "What happens when you keep the same version twice?", "choice": "It says Already kept; kept graphics show cropped to the graphic.", "affects": [".captures"], "checks": ["local/test/thro-app-regressions-browser.mjs keep-once"] },
-    { "id": "remember-preview", "parent": "base-b", "status": "active", "iters": [12], "commits": ["97e1067"], "by": "claude-ed",
-      "question": "Does the preview remember how you like to see it?", "choice": "Yes: background and framing come back after reload.", "affects": [".preview-toolbar"] },
-    { "id": "dab-fixes", "parent": "base-b", "status": "active", "iters": [14], "commits": ["7d0ca4c"], "by": "dab (found) · claude-ed (fixed)",
-      "question": "Dab's three findings on iter-10", "choice": "Framing keeps focus; a failed module can't hang startup; recovery buttons clear the export bar." },
-
-    { "id": "one-renderer", "parent": "base-b", "status": "active", "iters": [15], "commits": ["a3319df"], "by": "Sam",
-      "question": "How are Single cards composed?", "choice": "One renderer: every Single card is a DiscStudio card, composed the same way.", "affects": [".composition-field"], "checks": ["local/test/thro-app-regressions-browser.mjs single-one-engine"] },
-    { "id": "vector-single", "parent": "one-renderer", "status": "subsumed", "subsumedBy": "one-renderer", "iters": [3, 4, 10, 14], "by": "claude-ed",
-      "question": "Vector compositions in Single (placement grid, title field)", "choice": "Retired from Single; still used by Battle until Battle moves." },
-    { "id": "draw-once", "parent": "one-renderer", "status": "active", "iters": [16], "commits": ["131edd6"], "by": "claude-ed",
-      "question": "How fast is a card, and can the rule be checked?", "choice": "Each card draws once (0.7 s → 0.12 s, pixel-identical) and reports where the disc, name and numbers landed.", "checks": ["local/test/thro-card-hierarchy-browser.mjs"] },
-    { "id": "lineup-lab", "parent": "draw-once", "status": "subsumed", "subsumedBy": "bag-lineup", "iters": [17], "commits": ["bc9462a"], "by": "claude-ed",
-      "question": "Can lineups use the same cards?", "choice": "Yes: the lab showed 2–4 exact cards in one frame.", "links": [{ "label": "Lineup lab", "href": "lineup-lab.html" }] },
-    { "id": "bag-lineup", "parent": "draw-once", "status": "active", "iters": [18, 20], "commits": ["a6ddc8b", "daddc1d"], "by": "Sam (no points) · claude-ed",
-      "question": "What does a Bag lineup look like?", "choice": "Each disc is its exact card; no points or UP NOW; one disc can be featured.", "mode": "bag", "affects": [".composition-field", ".battle-controls"], "checks": ["local/test/thro-app-regressions-browser.mjs bag-lineup"] },
-    { "id": "card-editor", "parent": "one-renderer", "status": "active", "iters": [19, 20], "commits": ["f1525a4", "2213cc3", "4a46d5c"], "by": "claude-a9",
-      "question": "How do you adjust a card?", "choice": "On the card: drag to move, knob to size; Side, Accent and Plate in a strip under the preview, never on the card.", "affects": [".ce-strip", ".card-editor"], "checks": ["local/test/thro-app-regressions-browser.mjs card-editor"] },
-
-    { "id": "battle", "parent": "draw-once", "status": "open", "by": "Sam", "iters": [21, 22], "commits": ["ce81a93", "76e98a8"],
-      "question": "How does Battle work?", "choice": "Its own editor. One model: entries × holes; each format is a class with compare(a, b) → int.",
-      "mode": "battle", "affects": [".composition-field", ".battle-controls"],
-      "waitingOn": "dab: the saved-data shape (proposal in the mailbox, 17:27)",
-      "alternatives": [{ "label": "Today: Battle layouts with points", "current": true }, { "label": "Battle lab: Round · Closest to the pin · Skins", "href": "battle-lab.html" }] },
-    { "id": "battle-ctp-round", "parent": "battle", "status": "subsumed", "subsumedBy": "battle", "iters": [21], "commits": ["ce81a93"], "by": "Sam · claude-ed",
-      "question": "Battle, first prototype", "choice": "Two separate editors: closest to the pin, and a scored round." },
-    { "id": "u04", "parent": "draw-once", "status": "open", "by": "dab (assigned) · claude-a9", "commits": ["6814a4d"],
-      "question": "U04 draws the manufacturer bigger than the flight numbers", "choice": "Card revision 2 moves it below the numbers.",
-      "waitingOn": "claude-a9 to hand over claude/thro-renderer-r2; then Sam picks",
-      "alternatives": [{ "label": "Revision 1 (pinned DiscStudio card)", "current": true }, { "label": "Revision 2 (Thro fix)" }] },
-    { "id": "b01-tilt", "parent": "draw-once", "status": "open", "by": "dab (assigned) · claude-a9", "commits": ["6814a4d"],
-      "question": "B01 tilts the disc photo 12°", "choice": "Card revision 2 stands the disc upright.",
-      "waitingOn": "claude-a9 to hand over claude/thro-renderer-r2; then Sam picks",
-      "alternatives": [{ "label": "Revision 1: tilted", "current": true }, { "label": "Revision 2: upright" }] },
-
-    { "id": "ship", "parent": "rule", "status": "open", "by": "Sam",
-      "question": "Ship claude/thro-iterations-v2 to main and thro.pages.dev?", "choice": "Not yet decided.",
-      "waitingOn": "Sam (and dab's sign-off)" }
-  ]
+ "schema": "thro-dtree@1",
+ "about": "Decisions made before thro's PxC world existed, kept until each becomes a contract in thro-world.mjs. Decisions already in the world (the rule, Single layouts, Bag layouts, Battle engine, card revision) are read from the world itself.",
+ "nodes": [
+  {
+   "id": "base-a",
+   "parent": null,
+   "status": "subsumed",
+   "subsumedBy": "base-b",
+   "by": "claude-ed",
+   "iters": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "question": "Which build do the Single-screen improvements sit on?",
+   "choice": "The original thro build (f4667ee)."
+  },
+  {
+   "id": "base-b",
+   "parent": null,
+   "status": "active",
+   "by": "dab · claude-ed",
+   "iters": [
+    10
+   ],
+   "commits": [
+    "9eeb1eb"
+   ],
+   "question": "Which build is thro built on?",
+   "choice": "Dab's native-card build (4bd0214), with iterations 1–9 replayed onto it."
+  },
+  {
+   "id": "closeup",
+   "parent": "base-b",
+   "status": "active",
+   "iters": [
+    1,
+    10
+   ],
+   "by": "claude-ed",
+   "question": "How should the preview frame the graphic?",
+   "choice": "Close-up by default, Whole frame one tap away.",
+   "affects": [
+    ".view-switch"
+   ]
+  },
+  {
+   "id": "thumbs",
+   "parent": "base-b",
+   "status": "active",
+   "iters": [
+    3,
+    10,
+    13
+   ],
+   "commits": [
+    "c55ff7d"
+   ],
+   "by": "claude-ed",
+   "question": "How do you choose a layout?",
+   "choice": "Rendered thumbnails with your disc in them, cached so they never blank.",
+   "affects": [
+    ".composition-field"
+   ]
+  },
+  {
+   "id": "download-note",
+   "parent": "base-b",
+   "status": "active",
+   "iters": [
+    5,
+    10
+   ],
+   "by": "claude-ed",
+   "question": "Where does a download say it worked?",
+   "choice": "Right at the button, with the file name.",
+   "affects": [
+    ".export-bar"
+   ]
+  },
+  {
+   "id": "match-disc",
+   "parent": "base-b",
+   "status": "active",
+   "iters": [
+    6,
+    10
+   ],
+   "by": "claude-ed",
+   "question": "Where does the accent colour come from?",
+   "choice": "Match disc: sampled from the plastic, or a fixed palette.",
+   "affects": [
+    ".swatches"
+   ]
+  },
+  {
+   "id": "first-tap",
+   "parent": "base-b",
+   "status": "active",
+   "iters": [
+    7,
+    10
+   ],
+   "by": "claude-ed",
+   "question": "Can a tap be lost while the graphic redraws?",
+   "choice": "No: Download and Keep stay live while it redraws.",
+   "affects": [
+    ".export-bar"
+   ],
+   "checks": [
+    "local/test/thro-app-regressions-browser.mjs first-tap-download"
+   ]
+  },
+  {
+   "id": "keep-once",
+   "parent": "base-b",
+   "status": "active",
+   "iters": [
+    8,
+    10,
+    11
+   ],
+   "commits": [
+    "12758ba"
+   ],
+   "by": "claude-ed",
+   "question": "What happens when you keep the same version twice?",
+   "choice": "It says Already kept; kept graphics show cropped to the graphic.",
+   "affects": [
+    ".captures"
+   ],
+   "checks": [
+    "local/test/thro-app-regressions-browser.mjs keep-once"
+   ]
+  },
+  {
+   "id": "remember-preview",
+   "parent": "base-b",
+   "status": "active",
+   "iters": [
+    12
+   ],
+   "commits": [
+    "97e1067"
+   ],
+   "by": "claude-ed",
+   "question": "Does the preview remember how you like to see it?",
+   "choice": "Yes: background and framing come back after reload.",
+   "affects": [
+    ".preview-toolbar"
+   ]
+  },
+  {
+   "id": "dab-fixes",
+   "parent": "base-b",
+   "status": "active",
+   "iters": [
+    14
+   ],
+   "commits": [
+    "7d0ca4c"
+   ],
+   "by": "dab (found) · claude-ed (fixed)",
+   "question": "Dab's three findings on iter-10",
+   "choice": "Framing keeps focus; a failed module can't hang startup; recovery buttons clear the export bar."
+  },
+  {
+   "id": "draw-once",
+   "parent": "base-b",
+   "status": "active",
+   "iters": [
+    16
+   ],
+   "commits": [
+    "131edd6"
+   ],
+   "by": "claude-ed",
+   "question": "How fast is a card, and can the rule be checked?",
+   "choice": "Each card draws once (0.7 s → 0.12 s, pixel-identical) and reports where the disc, name and numbers landed.",
+   "checks": [
+    "local/test/thro-card-hierarchy-browser.mjs"
+   ]
+  },
+  {
+   "id": "card-editor",
+   "parent": "base-b",
+   "status": "active",
+   "iters": [
+    19,
+    20
+   ],
+   "commits": [
+    "f1525a4",
+    "2213cc3",
+    "4a46d5c"
+   ],
+   "by": "claude-a9",
+   "question": "How do you adjust a card?",
+   "choice": "On the card: drag to move, knob to size; Side, Accent and Plate in a strip under the preview, never on the card.",
+   "affects": [
+    ".ce-strip",
+    ".card-editor"
+   ],
+   "checks": [
+    "local/test/thro-app-regressions-browser.mjs card-editor"
+   ]
+  },
+  {
+   "id": "ship",
+   "parent": null,
+   "status": "open",
+   "by": "Sam",
+   "question": "Ship claude/thro-iterations-v2 to main and thro.pages.dev?",
+   "choice": "Not yet decided.",
+   "waitingOn": "Sam (and dab's sign-off)"
+  }
+ ]
 }

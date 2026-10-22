@@ -1,6 +1,7 @@
 import { openWorkspace } from './workspace.mjs';
 import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, cardLayout } from './native-cards.mjs';
 import { attachCardEditor, detachCardEditor } from './card-editor.mjs';
+import { createThroWorld, decide, SITE_FILL } from './thro-world.mjs';
 import { alphaBounds, fitArtwork } from './preview-frame.mjs';
 import { loadFixture } from './prepared-fixture.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
@@ -305,7 +306,7 @@ function downloadedMarkup() {
 function controlsMarkup() {
   const design = ui.design;
   const choice = study => `<button type="button" role="radio" class="composition-choice" data-study="${text(study.id)}" aria-checked="${study.id === design.study}" title="${text(study.note ?? study.name)}"><span class="composition-thumb" data-study-thumb="${text(study.id)}" aria-hidden="true"></span><span class="composition-name">${text(shortStudyName(study))}</span></button>`;
-  const picker = `<fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}">${ui.mode === 'single' ? `<div class="composition-picker" role="radiogroup" aria-label="Card layouts">${nativeStudies.map(choice).join('')}</div>` : `<p class="composition-group">${ui.mode === 'bag' ? 'Thro lineups' : 'Lineup layouts'}</p><div class="composition-picker" role="radiogroup" aria-label="Lineup layouts">${studiesFor(ui.mode).map(choice).join('')}</div>`}</fieldset>`;
+  const picker = `<fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}">${ui.mode === 'single' && site.single === 'cards' ? `<div class="composition-picker" role="radiogroup" aria-label="Card layouts">${nativeStudies.map(choice).join('')}</div>` : `<p class="composition-group">${ui.mode === 'bag' ? 'Thro lineups' : 'Lineup layouts'}</p><div class="composition-picker" role="radiogroup" aria-label="Lineup layouts">${studiesFor(ui.mode).map(choice).join('')}</div>`}</fieldset>`;
   if (isLineupStudy(design.study)) {
     return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form">${picker}<p class="subtle">Each disc is its exact Thro card, set side by side in one 1920 × 1080 frame.</p><div class="field-pair canvas-fields"><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div></form>${battleMarkup()}${bagMarkup()}</aside>`;
   }
@@ -497,6 +498,11 @@ function focusToken() {
 function paint() {
   const keepBar = root.querySelector('.export-bar'), refocus = focusToken();
   root.innerHTML = `<section class="workspace-heading"><div><span class="eyebrow">GOOD TO GO</span><h1>Your discs. Your next video.</h1></div><nav class="mode-nav" aria-label="Graphic type">${[['single', 'Single'], ['battle', 'Battle'], ['bag', 'Bag lineup']].map(([mode, label]) => `<button type="button" data-mode="${mode}" aria-pressed="${ui.mode === mode}">${label}</button>`).join('')}</nav></section><div class="studio-grid">${shelfMarkup()}<section class="preview-column" aria-labelledby="preview-title"><div class="preview-heading"><div><span class="eyebrow">YOUR GRAPHIC</span><h2 id="preview-title">${capturedPreview ? 'A kept version' : ui.mode === 'single' ? 'One disc. Ready for its moment.' : ui.mode === 'battle' ? 'Set the scene.' : 'Your selected lineup.'}</h2></div><button id="return-live" type="button" class="text-button" hidden>Back to current image</button></div><div class="preview-shell"><div class="preview-toolbar"><div class="view-switch" role="group" aria-label="Preview framing">${[['closeup', 'Close-up'], ['frame', 'Whole frame']].map(([v, label]) => `<button type="button" data-preview-view="${v}" aria-pressed="${ui.view === v}">${label}</button>`).join('')}</div><span id="preview-dimensions" class="preview-dimensions"></span><button id="preview-framing" type="button" class="preview-framing-toggle" aria-label="Toggle artwork detail and full canvas preview" hidden>Full canvas</button><div class="background-switch" aria-label="Preview background">${[['checker', 'Checkerboard'], ['light', 'Light'], ['dark', 'Dark']].map(([v, label]) => `<button type="button" data-preview-background="${v}" aria-label="${label} preview background" aria-pressed="${ui.background === v}" title="${label}"><span class="swatch swatch-${v}" aria-hidden="true"></span></button>`).join('')}</div></div><div id="graphic-preview" data-testid="graphic-preview" class="graphic-preview"></div><div class="preview-bottom"><span class="transparency-dot" aria-hidden="true"></span><strong id="preview-kind"></strong></div></div><p id="preview-note" class="preview-note"></p><div class="export-bar">${downloadedMarkup()}<div class="export-copy"><span class="eyebrow">STEP 3 · TAKE IT TO YOUR VIDEO</span><p>Download keeps this exact version.</p></div><div class="export-actions"><button id="keep-graphic" type="button" data-needs-ready class="button-secondary">Keep version</button><button id="download-png" type="button" data-needs-ready class="button-primary">Download PNG <span aria-hidden="true">↓</span></button><button id="download-svg" type="button" data-needs-ready class="svg-button" aria-label="Download editable SVG">SVG</button></div></div></section>${controlsMarkup()}</div>${capturesMarkup()}`;
+  if (ui.mode === 'battle' && site.battle === 'formats') { // the decided Battle engine: one model, formats as classes
+    root.querySelector('.studio-grid').outerHTML = `<section class="battle-formats panel"><iframe src="./battle-lab.html?embedded=1" title="Battle: Round, Closest to the pin, Skins"></iframe></section>`;
+    root.querySelector('.captures')?.remove();
+    bindModes(); diagnostics(); return;
+  }
   if (keepBar) { // the same buttons stay under the finger even if a save repaints mid-tap
     const fresh = root.querySelector('.export-bar');
     keepBar.querySelector('.downloaded')?.remove();
@@ -577,7 +583,21 @@ function readDesign() {
 // still names a legacy composition (saved before this change) moves to the B01 card once.
 // Bag lineups come from the same renderer (DiscStudio lineups). Battle keeps its own layouts until
 // the scoring design is settled, and never inherits a lineup study.
-const studiesFor = mode => mode === 'single' ? nativeStudies : mode === 'bag' ? lineupStudies : compositionStudies;
+// What each mode offers is decided in the PxC world (thro-world.mjs): run 'thro.site' under the fill.
+// The fill is the site's decisions; a viewer can switch an alternative from the DTree (this browser only).
+const throWorld = createThroWorld();
+function viewerFill() { try { return { ...SITE_FILL, ...(JSON.parse(localStorage.getItem('thro-fill')) ?? {}) }; } catch { return { ...SITE_FILL }; } }
+let decided;
+try { decided = decide(throWorld, viewerFill()); } catch { decided = decide(throWorld, SITE_FILL); } // a stale switch never stops the site
+const site = decided.site;
+window.__thro = { world: throWorld, fill: viewerFill(), decided, verdict: null };
+const studiesFor = mode => mode === 'single' ? (site.single === 'cards' ? nativeStudies : compositionStudies)
+  : mode === 'bag' ? (site.bag === 'lineups' ? lineupStudies : compositionStudies) : compositionStudies;
+const offers = (mode, study) => studiesFor(mode).some(item => item.id === study);
+addEventListener('message', event => { // the embedded Battle reports its height so the page scrolls as one
+  if (event.origin !== location.origin || !Number.isFinite(event.data?.throBattleHeight)) return;
+  const frame = document.querySelector('.battle-formats iframe'); if (frame) frame.style.height = `${Math.ceil(event.data.throBattleHeight)}px`;
+});
 // The last lineup layout chosen in Bag comes back after a trip to Battle (this browser only).
 function rememberedLineup() {
   try { const id = localStorage.getItem('thro-lineup'); if (lineupStudies.some(study => study.id === id)) return id; } catch { /* storage unavailable */ }
@@ -586,9 +606,11 @@ function rememberedLineup() {
 async function ensureOneEngine() {
   if (isLineupStudy(ui.design.study)) { try { localStorage.setItem('thro-lineup', ui.design.study); } catch { /* storage unavailable */ } }
   let next = null;
-  if (ui.mode === 'single' && !isNativeStudy(ui.design.study)) next = nativeDesign(ui.design, 'discstudio:b01');
-  else if (ui.mode === 'bag' && !isLineupStudy(ui.design.study)) next = { ...ui.design, study: rememberedLineup() };
-  else if (ui.mode === 'battle' && isLineupStudy(ui.design.study)) next = { ...ui.design, study: compositionStudies[0].id };
+  if (offers(ui.mode, ui.design.study)) return;
+  if (ui.mode === 'single' && site.single === 'cards') next = nativeDesign(ui.design, 'discstudio:b01');
+  else if (ui.mode === 'bag' && site.bag === 'lineups') next = { ...ui.design, study: rememberedLineup() };
+  else if (isNativeStudy(ui.design.study)) next = { ...defaultDesign, ...context().legacyDesign, study: compositionStudies[0].id };
+  else next = { ...ui.design, study: compositionStudies[0].id };
   if (!next) return;
   ui.design = next;
   await workspace.change({ design: structuredClone(ui.design) });
@@ -649,13 +671,16 @@ function refreshCaptures() {
   paintKeptThumbs();
 }
 
-function bind() {
+function bindModes() {
   document.querySelectorAll('[data-mode]').forEach(button => button.onclick = () => {
     ui.mode = button.dataset.mode;
     if (ui.mode !== 'single' && ui.selection.length === 0) ui.selection = rows.slice(0, 2).map(row => row.address);
     const remembered = isNativeStudy(ui.design.study) || isNativeStudy(context().singleDesign?.study);
     change({ throMode: ui.mode, graphicsPurpose: ui.mode === 'single' ? 'spotlight' : 'competition', selection: [...ui.selection] }, remembered ? ui.mode === 'single' ? 'Saved. Your Single card treatment is restored.' : ui.mode === 'bag' ? 'Saved. Each disc in the lineup is its own card. Your Single card stays as you left it.' : 'Saved. Battle has its own layouts for now. Your Single card stays as you left it.' : 'Saved. Your graphic is ready.');
   });
+}
+function bind() {
+  bindModes();
   document.querySelectorAll('[data-disc]').forEach(button => button.onclick = () => {
     const address = button.dataset.disc;
     if (ui.mode === 'single') { ui.selectedDisc = address; change({ selectedDisc: address }); }
