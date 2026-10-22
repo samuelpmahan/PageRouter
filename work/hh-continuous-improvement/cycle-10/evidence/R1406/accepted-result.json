@@ -1,0 +1,32 @@
+{
+  "job_id": "R1406",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Independent package audit passed: all 120 manifest entries match byte size and SHA-256; all 48 JSON files parse; package tree is exact; candidate source hashes bind to the build receipt. Historical R1403/R1405/E1404/native evidence is internally consistent with the recorded qualifications. One wording caveat is recorded below; it does not invalidate synthetic-only scope.",
+  "manifest_sha256": "5bd2ac96ad95f5f9e41047bc41976cbd4188e48b4c751bbecb6ab30c800ea3ec",
+  "source_hashes": {
+    "controller": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "test": "dfe05ff98c859f926c839d8b0e5bffbd17c96e58444400d6e108744e8111e389",
+    "build_receipt": "99eb0d566822d87552ec9d9df178a14cb64f27ec15d9f4704c764b7cff576ea7"
+  },
+  "checks": {
+    "manifest_entries_verified": 120,
+    "package_files_including_manifest": 121,
+    "json_files_parsed": 48,
+    "discoverable_archived_test_files": 0,
+    "historical_site_evidence_files": 0,
+    "build_source_inputs": 1538,
+    "build_site_files": 843,
+    "build_site_id": "8166fe07df91c79fb3dd8d0ddcc659a4d9aa756379e81e07861f5ced46dbb2e8",
+    "reported_checks": "2/2 helpers, 129/129 targeted HH, 284/284 full npm, 1/1 Atlas; overlapping suites, not 416 distinct tests",
+    "history": "R1403 AMEND retained; R1405 accepted; E1404 original worker result fresh_source_build and normalized native receipt mixed_change; root canonical command exit 0 was a cache hit, not a fresh suite; epoch06 empty dispatch and epoch07 E1406 dispatch documented"
+  },
+  "wording_caveat": "E1402 synthetic display addresses include @example.invalid, while README describes synthetic identities as .test. Both are reserved synthetic domains; a separately indexed final note should say .test and .invalid. Package was not modified.",
+  "audit_harness_history": "Earlier raw audit attempts failed on harness syntax or overly literal wording/property assumptions, not package payload mismatches. Those logs remain preserved; the final semantic audit command is recorded in run-audit-final-review.sh with raw stdout and exit status.",
+  "limits": [
+    "No source, package, Git, or native state was modified.",
+    "No browser or production/backend behavior is claimed.",
+    "The review validates packaged evidence and provenance, not a new product test/build run."
+  ],
+  "final_audit_exit_code": 0
+}

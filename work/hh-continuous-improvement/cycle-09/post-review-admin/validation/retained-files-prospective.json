@@ -1,0 +1,15 @@
+{
+  "job_id": "E1307",
+  "worker": "H1",
+  "status": "prospective_not_run",
+  "recorded_at_utc": "2026-10-18 15:37:00 UTC",
+  "command": "node /workspace/scratch/8528bb251845/hh-cycle09/E1307/verify-retained-package-files.mjs /workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-09",
+  "script_sha256": "55c8a34b49bf684b747b457aac4bb15c5df04de23e5d7be8341d7c2deb42a1c3",
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+  "assertions": [
+    "Copied original manifest remains byte-identical at its preserved post-review path.",
+    "All 111 old manifest-listed files other than the renamed source snapshot remain byte-identical at their original paths.",
+    "Old executable .test.mjs archive path is absent; replacement .mjs.txt has exact old-manifest hash and byte length."
+  ],
+  "scope": "Read-only bytes/path validation only; does not execute any archived test source or mutate product files."
+}

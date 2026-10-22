@@ -1,0 +1,30 @@
+{
+  "job_id": "E1903",
+  "worker": "H1",
+  "scope": "One focused test-first regression for held successful synthetic login with a distinct newer email draft and route away/reentry. The expected emitted login tree must use authenticated identity A after success. No product code may change until the expected RED is observed.",
+  "source_binding_at_start": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "06b6da36e326758ccd14cda021bc0a15cfd00817",
+    "controller_sha256": "308c876e8bbfeb20a3e8ee92a4065549f5ca815bec0aa6979bf39c61fa4dc07c",
+    "controller_test_pre_red_sha256": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164"
+  },
+  "test_source_snapshot": {
+    "path": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1903/controller-test.pre-red-run.mjs.txt",
+    "bytes": 100173,
+    "sha256": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164"
+  },
+  "unchanged_controller_snapshot": {
+    "path": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1903/controller.pre-red.mjs.txt",
+    "bytes": 53520,
+    "sha256": "308c876e8bbfeb20a3e8ee92a4065549f5ca815bec0aa6979bf39c61fa4dc07c"
+  },
+  "expected_red": "The synthetic account registers and is approved; exactly one held login request is made for email A; the draft changes to B; navigation goes away and back before release; login succeeds with runtime/session authority A and controller loginDraft cleared to null; route remains login; ephemeral password is absent from inspected surfaces. The final assertion on the emitted tree expects A and should fail on current behavior by observing B.",
+  "red_command": ["node", "--test", "--test-name-pattern=held successful login projects authenticated email after route reentry", "checkpoint/vendor/hh/src/public-controller.test.mjs"],
+  "red_stdout": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1903/red.stdout.raw",
+  "red_stderr": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1903/red.stderr.raw",
+  "red_started_utc": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1903/red.start.utc",
+  "red_exited_utc": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1903/red.exit.utc",
+  "red_exit_code": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1903/red.exit.code",
+  "run_policy": "One red invocation only. Capture original stdout/stderr byte-for-byte, UTC start/end, and exit code. If red is not the predeclared tree assertion after all preceding checks, stop without changing product code or silently weakening assertions."
+}

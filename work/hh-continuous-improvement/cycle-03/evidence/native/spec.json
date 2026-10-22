@@ -1,0 +1,41 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "hh-cycle03",
+    "scope": "profile-owner-ui-and-dispatch",
+    "repo": "samuelpmahan/PageRouter",
+    "base": "83aa35c29abdbca71b64c7a8dbdfb656834a095b",
+    "baseTree": "598c2d839b39e6dbece16dfbffbdd61407e0d78e",
+    "capacity": "2 actual cheap-first workers; labpool4+root1 =7total"
+  },
+  "workers": [
+    "H1",
+    "H2"
+  ],
+  "jobs": [
+    {
+      "id": "E401",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "SolePageRouterintegrationowner: reproduce authenticated nonownerpublicprofile edit dispatch, fixtureonly; freeze beforeafter, boundedfixplan; noimplementationuntilnativeE402guardrelease."
+    },
+    {
+      "id": "E403",
+      "kind": "extract",
+      "allow_workers": [
+        "H2"
+      ],
+      "subject": "Read-only independent UI/controller/provider ownership inspection and actualsyntheticreproduction; preservecapturedreference, ownprofilepositivecontrols; no sourcechanges."
+    }
+  ],
+  "review_policy": {
+    "enabled": false
+  },
+  "policy": {
+    "extract_priority": 100,
+    "review_priority": 200,
+    "repair_priority": 300
+  }
+}

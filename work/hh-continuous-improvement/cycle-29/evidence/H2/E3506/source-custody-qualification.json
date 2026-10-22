@@ -1,0 +1,18 @@
+{
+  "job_id": "E3506",
+  "worker": "H2",
+  "scope": "Metadata-only custody qualification for the R3503 harness repair; no new validation or product-source review.",
+  "initial_probe_source": {
+    "exact_body_retained_as_separate_artifact": false,
+    "qualification": "The exact pre-repair probe body is unavailable as a retained file. The initial source hash is retained in R3503-pins.json, and its failed execution's stdout, stderr, exit code, and timestamps are retained in probe.*. Do not reconstruct the body or claim that an independently preserved diff proves the sole repair was the receipt-count expectation."
+  },
+  "repaired_probe_source": {
+    "sha256": "40353204387d395f252ed80a62569f01d32b357f905980e368831c04d42e9e8c",
+    "measurement_timing": "This hash was measured after the harness correction and before the repaired probe execution; it was also recomputed after that execution with the same value.",
+    "status": "The repaired source hash and repaired execution raws remain retained."
+  },
+  "limits": [
+    "This qualification does not alter or invalidate the R3503 review or outcome.",
+    "No probe reconstruction, rerun, product-source inspection, or product write was performed for E3506."
+  ]
+}

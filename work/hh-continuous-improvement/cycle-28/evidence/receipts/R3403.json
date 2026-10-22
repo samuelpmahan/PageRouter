@@ -1,0 +1,67 @@
+{
+  "job_id": "R3403",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Accepted the exact four-file directory recovery change. Source hashes match H1's receipt; an independent volatile-fixture probe consumed the actual rendered school and results retry event values, verified their separate ownership and recovery, confirmed selection/route invalidation, measured actual read ports and runtime receipts, and observed an unchanged account/profile receipt.",
+  "repository": {
+    "path": "/workspace/scratch/86659bbafcce/PageRouter",
+    "baseline_commit": "6e58a206bb30deb967f81cfe6214d6ffb581a84b",
+    "baseline_tree": "0446ad99d770c61f99ddb1acf8ec53534875dcf1",
+    "head_commit": "6e58a206bb30deb967f81cfe6214d6ffb581a84b",
+    "modified_files": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "checkpoint/vendor/hh/src/public-site.mjs",
+      "checkpoint/vendor/hh/src/public-site.test.mjs"
+    ],
+    "git_diff_check": "passed"
+  },
+  "provenance": {
+    "implementation_receipt": "/workspace/scratch/afc0d51965a8/hh28/H1/E3403/receipt.json",
+    "implementation_receipt_sha256": "7dfb5187455bca38b81513aa2c2e9f002e6ed57f4e42b00e21633bc20622e439",
+    "review_patch": "/workspace/scratch/afc0d51965a8/hh28/review-diff.patch",
+    "review_patch_sha256": "78d3bc12862ce3488f849dd8e03cf6684d87f9c2f5ad55272ddb563ab4131fb8",
+    "source_sha256": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "9c9276c93b4ab9f1afc3263c601588e97af6a7182ff337df55baaa472c0c2481",
+      "checkpoint/vendor/hh/src/public-site.mjs": "524df4132426814cc9621246a4cba548d54c0c537dd840b3997e375e78c9ad4d",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "1a290586620e47f7c5a04460c4375416b966e7997f8519b95577a550db2120dc",
+      "checkpoint/vendor/hh/src/public-site.test.mjs": "e2ed463e7c37b7431a2767579e41f90e2df055893a6362e8690597571707ea1e"
+    }
+  },
+  "probe": {
+    "command": "node /workspace/scratch/afc0d51965a8/hh28/H2/R3403/probe.mjs",
+    "started_utc": "2026-10-19T16:18:07Z",
+    "ended_utc": "2026-10-19T16:18:07Z",
+    "exit_code": 0,
+    "stdout": "/workspace/scratch/afc0d51965a8/hh28/H2/R3403/stdout.raw",
+    "stderr": "/workspace/scratch/afc0d51965a8/hh28/H2/R3403/stderr.raw",
+    "fixture": "volatile-memory; productionAuthority=false",
+    "rendered_events": {
+      "school_choices": "public:retry-school-lookup",
+      "directory_results": "public:retry"
+    },
+    "observed_port_calls_before": {
+      "SchoolData.getStates": 1
+    },
+    "observed_port_calls_after": {
+      "SchoolData.getStates": 1,
+      "SchoolData.getCounties": 2
+    },
+    "runtime_receipts_before": 2,
+    "runtime_receipts_after": 4,
+    "school_retry_read_delta": {
+      "SchoolData.getCounties": 1
+    },
+    "stale_selection_retry_read_delta": {
+      "SchoolData.getCounties": 1
+    },
+    "stale_route_retry_read_delta": {},
+    "account_profile_receipt_unchanged": true,
+    "mutating_or_authentication_ports_called": []
+  },
+  "set_aside": [
+    "No build, package, staging, commit, or publication was authorized.",
+    "No browser/server automation or broad test matrix; actual rendered-tree attributes and controller dataset-shaped dispatch were used for the narrow integration probe.",
+    "The authored focused post-change run is not repeated; H1 reports 114/114 full HH source tests after correction of a fixture-name literal, and the independent probe covers the risky coexistence path."
+  ]
+}

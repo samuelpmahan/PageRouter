@@ -1,0 +1,48 @@
+{
+  "job_id": "E1904",
+  "worker": "H1",
+  "scope": "Exactly one authorized canonical local source build. No product edits, Git mutation, publication, deployment, browser or production activity. Stop at the first actual child failure; no retry or log rewrite.",
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+  "canonical_child": {
+    "executable": "/usr/bin/env",
+    "argv": ["BAZEL=/workspace/scratch/8528bb251845/tools/bazel", "bash", "ci/bazel/run.sh"]
+  },
+  "wrapper": {
+    "path": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1904/run-captured.mjs",
+    "sha256": "bc3c96569ee890a7824cb4c8316509b2214ac4c035a2d5e2e76d9a01416bc84b"
+  },
+  "command_record": {
+    "path": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1904/prospective-command.json",
+    "sha256": "1dad4d9aafcf5a960accc7d7c52eab9ce75ddc1b2e33e3f93e937a6586dc2131"
+  },
+  "tool_binding": {
+    "node": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node v24.19.0",
+    "bazel": "/workspace/scratch/8528bb251845/tools/bazel v7.4.1",
+    "bazel_sha256": "c97f02133adce63f0c28678ac1f21d65fa8255c80429b588aeeba8a1fac6202b"
+  },
+  "source_binding": {
+    "git_head": "06b6da36e326758ccd14cda021bc0a15cfd00817",
+    "controller_sha256": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "controller_test_sha256": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164",
+    "untracked_exclusion": "PageRouter/hh-cycle13/ remains preserved and excluded."
+  },
+  "expected_build": {
+    "expected_effect": "Source-driven Bazel build should ingest the updated controller and test, stage inputs in isolation, execute declared build-helper/HH/full-source tests, assemble and verify the fresh site outputs, and write current site.receipt.json and site.log.",
+    "prior_receipt_not_current": {
+      "path": "checkpoint/bazel-bin/site.receipt.json",
+      "sha256": "cdcdd6cb71f1e051cf62f948c9f6b59dedab12337ba300acdd3af279db1207d0",
+      "sourceDigest": "f28be39fc1cd2acbd8e2433bb349b6086ead8f26b3a6f660049e0a69f18dcfee",
+      "siteDigest": "9df3572f7ef26044872aa89612a5bfc3929902a03cb1671c428001e6b26464bd",
+      "siteBuildId": "3b0d0b8ca23975b945f9294432ee7fa0c6da893cbf636438e365a0bfe801c877"
+    },
+    "copy_policy": "Only after child exit 0, copy fresh site.receipt.json and site.log byte-for-byte if present and changed since invocation start. Never copy site.evidence, PNG/screenshots, or site bundle."
+  },
+  "exclusive_captures": {
+    "stdout": "stdout.raw",
+    "stderr": "stderr.raw",
+    "process_result": "exit.json",
+    "start_utc": "start.utc",
+    "end_utc": "end.utc"
+  },
+  "nonretry_policy": "The wrapper starts the declared child once, captures direct stdout/stderr file descriptors, records its process result and UTC bounds, and never retries. Any child nonzero status ends this task at the first actual failure."
+}

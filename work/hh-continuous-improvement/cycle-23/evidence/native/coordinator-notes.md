@@ -1,0 +1,6 @@
+# HH23 coordinator notes
+
+- E2901 first finish stopped in `native-cycle-admin.mjs` validation before canonical receipt copy or native `finish`: the worker's original `outcome: defect_reproduced` is outside the wrapper enum. Original worker result remains frozen. The actual helper error was observed in the root tool output, not separately file-captured raw stderr.
+- E2903 was admitted pending after that pre-native stop, before E2901 completion. Epoch 1 recommended no dispatch and pinned both actually running baseline workers; no implementation was started. A corrected separate native envelope and a new solve are required before dispatch. This is not a product failure or native rejected assignment.
+- E2901 then finished using its separate valid envelope; epoch 2 dispatched E2903. Independent R2903 and the canonical E2904 build subsequently completed successfully. The early note above describes that point in time, not the final state.
+- R2903's original JSON has a duplicate `verification.H1_E2903.result` key (path then prose). The native review envelope remained valid. H2's separate `review-amendment.json` records the intended path without rewriting the accepted original or rerunning tests; this is coordinator-requested metadata clarification, not a new solver-assigned test packet.

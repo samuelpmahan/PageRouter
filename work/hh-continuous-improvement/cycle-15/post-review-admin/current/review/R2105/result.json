@@ -1,0 +1,96 @@
+{
+  "job_id": "R2105",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Independent file-only audit accepted the frozen cycle-15 package for exact integrity and provenance. All 105 manifest payloads and the two declared envelopes are present as 107 regular files with exact modes, byte lengths, and SHA-256; there are no missing/extra paths or payload mismatches. Source/build/native claims are bounded below; this is not release, browser, backend, or human acceptance.",
+  "actual_counts": {
+    "manifest_payloads": 105,
+    "manifest_plus_two_envelopes": 107,
+    "actual_regular_files": 107,
+    "missing_paths": 0,
+    "extra_paths": 0,
+    "symlinks_or_nonregular": 0,
+    "byte_length_mismatches": 0,
+    "mode_mismatches": 0,
+    "sha256_mismatches": 0,
+    "duplicate_manifest_paths": 0,
+    "e2102_original_copy_files": 6,
+    "e2102_copy_comparisons": 12,
+    "e2102_copy_mismatches": 0,
+    "zero_byte_payload_captures": 8,
+    "e2104_receipt_source_inputs": 1538,
+    "e2104_verified_source_input_mismatches": 0,
+    "e2104_receipt_site_file_records": 843,
+    "e2104_unique_site_paths": 843,
+    "e2104_site_digest_record_rows_invalid": 0,
+    "native_solve_epochs_present": 5,
+    "additional_tests_probes_builds": 0
+  },
+  "package_hashes": {
+    "manifest_sha256": "ef30d3251b256aba162ebbf2fd50b6367cff6816b04d27e37e6c3ef268c4f914",
+    "e2105_result_sha256": "5b22f485243c0f981b8e5bb0043fb478d22c706d9c8ea8f6c2104eaf173c5022",
+    "manifest_envelope_mode": "0644",
+    "e2105_result_envelope_mode": "0644"
+  },
+  "source_bindings": {
+    "frozen_sources_match_current_checkout_and_manifest": true,
+    "public_site_mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+    "public_site_test_mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a",
+    "unchanged_app_controller_provider_runtime_hashes_match_E2104_receipt": true,
+    "e2104_source_digest": "5877a1d6685dcb25d8f2e614217d6c70da2a09fe07cabdf56e7c34a5f639ed75"
+  },
+  "e2104_build_evidence": {
+    "receipt_path": "evidence/build/E2104-H1/bazel-output/site.receipt.json",
+    "receipt_sha256": "ceade7f38e472a182c43ce9f31ed933ac0643bb4bfa2acb214e01dfbe7876203",
+    "receipt_mode": "0555",
+    "receipt_bytes": 467223,
+    "log_path": "evidence/build/E2104-H1/bazel-output/site.log",
+    "log_sha256": "b1e4b5c30f7d196a7f5e7a9e36b5972626fe90bb26d3d1e8d0d5f6e39db04338",
+    "log_mode": "0555",
+    "log_bytes": 51203,
+    "recomputed_source_digest": "5877a1d6685dcb25d8f2e614217d6c70da2a09fe07cabdf56e7c34a5f639ed75",
+    "recomputed_site_digest_from_receipt_records": "72970ad3b9663f24f1acae43e54c3d38926f4b65f6bfa5702340f108d47bd5c7",
+    "site_build_id": "354979f0d61832de23c74cd99a99305498804b797f25b61ea76ebc4a322ec17c",
+    "named_counts": {"helpers": "2/2", "targeted_hh": "135/135", "full_suite": "290/290", "atlas_import_closure": "1/1", "pxcube_packages": 14},
+    "count_qualification": "The 135 targeted HH cases overlap the 290 full-suite count; the counts are not additive.",
+    "raw_outcome_qualification": "The unchanged E2104 worker result says completed. A separate byte-identical root receipt/envelope maps this schema-invalid worker outcome to mixed_change; no actual native rejection event is claimed.",
+    "site_tree_limit": "The package retains only the receipt and log, not the 843-file site tree. The 843 receipt rows and their aggregate digest were independently recomputed; individual output bytes were not independently rehashed from a retained tree."
+  },
+  "native_phase_qualification": {
+    "epoch_records": "Epoch solve records 00–04, bundles, root commands, receipts, and root qualification files are present and manifest-verified.",
+    "root_current_snapshot": "ROOT-CURRENT.json is an older captured snapshot (stateCounter 1, acceptedEpoch 0; E2101/E2102 listed as started), not live worker ownership.",
+    "state_snapshot": "Copied state.json is epoch 5 and records E2105 running at capture; that is historical snapshot state, not live status or a native completion/rejection for E2105.",
+    "e2104_schema": "Actual worker result remains completed; separate root envelope says mixed_change and explicitly does not represent an actual native finish rejection.",
+    "no_native_mutation": true
+  },
+  "commands": [
+    "Read-only review of cycle-15 README.md, NEXT.md, continuation.json, evidence/manifest.json, and the complete actual evidence/E2105/result.json.",
+    "node /workspace/scratch/8528bb251845/hh-cycle15/H2/R2105/audit.mjs",
+    "Read-only Node checks compared E2101/E2102/E2104 receipt/root-envelope bytes and checked E2105 result-to-manifest binding.",
+    "sha256sum over the R2105 prospective/audit/raw record, package manifest/result, captured build receipt/log, source files, and preserved E2102 copies. No archived package script was executed."
+  ],
+  "audit_capture": {
+    "path": "/workspace/scratch/8528bb251845/hh-cycle15/H2/R2105/audit.stdout.raw",
+    "bytes": 19099,
+    "sha256": "74cf90be64a801a7cf88f84faa13728908e386f3b17d64a3b2f40b4ad3ecea76",
+    "stderr_bytes": 0,
+    "exit_code": 0,
+    "start_utc": "2026-10-19T00:01:09Z",
+    "end_utc": "2026-10-19T00:01:09Z"
+  },
+  "audit_record": {
+    "prospective_path": "/workspace/scratch/8528bb251845/hh-cycle15/H2/R2105/prospective.json",
+    "prospective_sha256": "b37bed864586bc2d37a1152f242a600d559153de36b0f0a36a697ba80cd7132a",
+    "audit_path": "/workspace/scratch/8528bb251845/hh-cycle15/H2/R2105/audit.json",
+    "audit_sha256": "dd4c9c136885d00c89ea3d276f2857d2595042eb8394ebbab4300cde1fc5327b",
+    "auditor_sha256": "dc3769b1e469aa0cd5bc68cea40711859f94a9de258401cbbc64df0a6d2f4563"
+  },
+  "limitations": [
+    "File-only audit; no archived tests, probes, or build scripts were rerun, and there was no browser, DOM, backend, or email interaction.",
+    "The site output tree is explicitly excluded, so individual site-output bytes cannot be independently recalculated from retained output; the receipt's complete site-file list and aggregate digest were verified internally.",
+    "Native ownership/state is reported only as captured snapshots. H2 did not mutate native state or claim live worker status.",
+    "E2105 worker summary and H1 chat are not treated as authority over byte-level findings; actual source files, manifest, captures, receipts, and full E2105 result were inspected and hashed.",
+    "The prior six accidental H2 E2102 originals and the separate 21-file HH13 scratch set remain preserved and excluded; no cleanup or threshold waiver occurred.",
+    "No source/package payload changes, Git operation, build, export, publication, deployment, or Lab change was performed."
+  ]
+}

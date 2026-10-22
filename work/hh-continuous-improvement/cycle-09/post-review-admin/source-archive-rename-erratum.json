@@ -1,0 +1,30 @@
+{
+  "schema": "hh-cycle09-source-archive-rename-erratum/v1",
+  "status": "superseding package correction; prior R1305 decision preserved as AMEND",
+  "finding_source": "H2 R1305 independently reproduced Node test auto-discovery and import failure for the archived source snapshot.",
+  "original_package": {
+    "manifest_path": "post-review-admin/original-manifest.json",
+    "manifest_sha256": "9cd5ba3824b50ebc064f361d6998c60c2024c562943ea7ab86d22237ae67dc42",
+    "source_archive_path": "evidence/source-candidate/public-controller.test.mjs",
+    "source_archive_sha256": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9",
+    "source_archive_bytes": 67386
+  },
+  "replacement": {
+    "source_archive_path": "evidence/source-candidate/public-controller.test.mjs.txt",
+    "sha256": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9",
+    "bytes": 67386,
+    "byte_identical_to_live_candidate": true
+  },
+  "product_source_scope": {
+    "public_controller_test_sha256": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9",
+    "controller_sha256": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+    "application_or_test_source_changed_by_E1307": false
+  },
+  "native_review": {
+    "job_id": "R1305",
+    "decision": "amend",
+    "result_sha256": "28064a89f6b02405295b4abdce1e749c3bbab5a48da8e54adeaf8032d94f671e",
+    "commands_sha256": "4602ad26e4511389861ae2b772a78ceb25f28fe5198bfdb6f133475a65df0a97",
+    "historical_decision_not_relabelled": true
+  }
+}

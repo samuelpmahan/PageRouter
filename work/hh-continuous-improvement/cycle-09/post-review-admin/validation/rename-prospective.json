@@ -1,0 +1,46 @@
+{
+  "job_id": "E1307",
+  "worker": "H1",
+  "status": "prospective_not_run",
+  "recorded_at_utc": "2026-10-18 15:36:10 UTC",
+  "archive_precondition": {
+    "verified": true,
+    "archive_sha256": "deafbd9e09bd52692cbc5bc742ec72ba53cab0689937559fb2b397b38e5587e6",
+    "member_stream_verifier_sha256": "79596d995b7494d4fbe13d7e12f0f23102c96e76312b74943c720339261f903b",
+    "old_manifest_sha256": "9cd5ba3824b50ebc064f361d6998c60c2024c562943ea7ab86d22237ae67dc42",
+    "archived_regular_files": 113,
+    "old_manifest_entries": 112,
+    "streamed_hash_mismatches": 0
+  },
+  "candidate_mapping": {
+    "old_path": "evidence/source-candidate/public-controller.test.mjs",
+    "new_path": "evidence/source-candidate/public-controller.test.mjs.txt",
+    "sha256_before_and_after": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9",
+    "parent_directory_mode": "755",
+    "old_file_mode": "644",
+    "writable_preflight": true
+  },
+  "prospective_commands": [
+    {
+      "command": "mv -- evidence/source-candidate/public-controller.test.mjs evidence/source-candidate/public-controller.test.mjs.txt; move_exit=$?; printf 'mv_exit=%s\\n' \"$move_exit\"; exit \"$move_exit\"",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-09",
+      "expected": "Exit 0; same-file-content rename only. No chmod, overwrite, or source/test edit."
+    },
+    {
+      "command": "set -o pipefail; node --test 2>&1 | tee /workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-09/post-review-admin/validation/package-discovery.stdout.log; run_status=(\"${PIPESTATUS[@]}\"); printf 'node_exit=%s\\ntee_exit=%s\\n' \"${run_status[0]}\" \"${run_status[1]}\"; exit \"${run_status[0]}\"",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-09",
+      "interpretation": "Expected 0 discovered tests after removal of the .test.mjs archive suffix. This validates non-discovery only; it is not a product test pass, green suite, or behavior verification."
+    },
+    {
+      "command": "cmp -s evidence/source-candidate/public-controller.test.mjs.txt /workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs; cmp_exit=$?; printf 'cmp_exit=%s\\n' \"$cmp_exit\"; exit \"$cmp_exit\"",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-09",
+      "expected": "Exit 0 confirms renamed archive bytes match exact current test candidate."
+    },
+    {
+      "command": "git diff --check",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+      "expected": "Exit 0; whitespace gate only."
+    }
+  ],
+  "scope": "No application source/test edits, canonical build rerun, Git commit, export, push, PR/main update, publication, or deployment."
+}

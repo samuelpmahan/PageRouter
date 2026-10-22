@@ -1,0 +1,16 @@
+{
+  "job_id": "R2603",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Exact diff is limited to renderer and its tests, with no controller change. H1's two RED failures are the intended missing bio limit association and inaccurate registration guidance; H1's 19/19 site and 80/80 renderer/controller runs pass. Independent focused tests pass 2/2. A real volatile fixture controller flow confirms create/edit bio drafts retain 500, bound 501 to 500 with visible maxlength/helper in both states, and updateDraft makes no provider calls. Fixture profile creation uses one expected TeacherProfile.createProfile call. Registration still links Contact; actual contact dispatch returns remote:false and makes no additional provider call.",
+  "raw_stdout": ["focused.stdout.raw", "probe.stdout.raw"],
+  "raw_stderr": ["focused.stderr.raw", "probe.stderr.raw"],
+  "harness_failures_raw": "probe-harness-failures.raw",
+  "metadata": "metadata.json",
+  "boundaries": "Fixture runtime and volatile in-memory/session storage only. No production provider, browser, backend, email, payment, or external network. No source/Git edits by H2.",
+  "limitations": "maxlength presence is verified in the renderer tree; no browser enforcement or assistive-technology announcement behavior is claimed.",
+  "harness_failures": [
+    "First fixture-probe attempt searched for Contact under the form instead of the page root; fixed probe traversal.",
+    "Second fixture-probe attempt checked registration guidance after local approval had changed the route state; moved the guidance assertion to the initial registration render."
+  ]
+}

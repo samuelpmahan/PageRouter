@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -u
+cd /workspace/scratch/8528bb251845 || exit 90
+date -u +%Y-%m-%dT%H:%M:%S.%NZ > /workspace/scratch/8528bb251845/hh-cycle14/H2/R1903/replay.start.utc
+set +e
+node --unhandled-rejections=strict /workspace/scratch/8528bb251845/hh-cycle14/H2/E1902/probe.mjs > /workspace/scratch/8528bb251845/hh-cycle14/H2/R1903/replay.stdout.raw 2> /workspace/scratch/8528bb251845/hh-cycle14/H2/R1903/replay.stderr.raw
+run_status=$?
+set -e
+printf '%s\n' "$run_status" > /workspace/scratch/8528bb251845/hh-cycle14/H2/R1903/replay.exit
+date -u +%Y-%m-%dT%H:%M:%S.%NZ > /workspace/scratch/8528bb251845/hh-cycle14/H2/R1903/replay.end.utc
+exit "$run_status"

@@ -1,0 +1,147 @@
+{
+  "schema": "hh-cycle03-independent-review/v1",
+  "job_id": "R402",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Independently accepted E402. Both frozen product files match the report and canonical Bazel receipt; the focused controller suite passes 31/31; five actual fixture-runtime adversarial cases confirm owner matching, fail-closed identity handling, captured-readonly precedence, payload identity non-authority, and owned public-alias controller edits. Rejected nonowner operations leave the tab-local profile overlay and provider runtime snapshot unchanged.",
+  "commands": [
+    "sha256sum vendor/hh/src/public-controller.mjs vendor/hh/src/public-controller.test.mjs bazel-bin/site.receipt.json (cwd: PageRouter/checkpoint)",
+    "node --test vendor/hh/src/public-controller.test.mjs (cwd: PageRouter/checkpoint; 31 passed, 0 failed)",
+    "node /workspace/scratch/8528bb251845/hh-cycle03/H2/review-R402/probe.mjs > /workspace/scratch/8528bb251845/hh-cycle03/H2/review-R402/probe-result.json",
+    "sha256sum /workspace/scratch/8528bb251845/hh-cycle03/H1/focused-controller.log /workspace/scratch/8528bb251845/hh-cycle03/H1/E402-result.json (verify H1 evidence identities)"
+  ],
+  "sourcefreeze": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "baseCommit": "a156bae0873ba4207bd48d79359d96103cb74f30",
+    "baseTree": "598c2d839b39e6dbece16dfbffbdd61407e0d78e",
+    "H1_report": "/workspace/scratch/8528bb251845/hh-cycle03/H1/E402-result.json",
+    "H1_report_sha256": "1344415b9e830ad606458fd674cedfbce6e60b1965f70dafe12fd0a816353cf0",
+    "productFiles": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": {
+        "reportedSha256": "c5d31f45140397536e22e6ac744e689d06fdec09c8b7e4c1a43167548adad4d1",
+        "currentSha256": "c5d31f45140397536e22e6ac744e689d06fdec09c8b7e4c1a43167548adad4d1",
+        "receiptSha256": "c5d31f45140397536e22e6ac744e689d06fdec09c8b7e4c1a43167548adad4d1",
+        "bytes": 49712,
+        "matches": true
+      },
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": {
+        "reportedSha256": "9eda3ffc8e7553d16845ef1eb25fbdd2420981274f67b49bcb61649618099ea0",
+        "currentSha256": "9eda3ffc8e7553d16845ef1eb25fbdd2420981274f67b49bcb61649618099ea0",
+        "receiptSha256": "9eda3ffc8e7553d16845ef1eb25fbdd2420981274f67b49bcb61649618099ea0",
+        "bytes": 32681,
+        "matches": true
+      }
+    },
+    "canonicalBuild": {
+      "status": "passed",
+      "siteBuildId": "1d6a3300b185019346bd1cf340a77d98f21954604e9fa2c832cd1a23e28254bf",
+      "siteDigest": "ab2e5df284ad329152b8d2c5ef217197d4a3aaea78348c2f62ccbc7b7e046f90",
+      "receiptSha256": "bb0ee56b7daa98addb9bc61d22c86b37d7191a6bb8d0ba5de0ccc22b20ad1a93",
+      "receiptSourceHashesMatch": true,
+      "fullSuite": {
+        "passed": 260,
+        "failed": 0
+      },
+      "targetedHH": {
+        "passed": 105,
+        "failed": 0
+      }
+    },
+    "focused": {
+      "passed": 31,
+      "failed": 0,
+      "H1LogSha256": "4d1044f904135ec3b03e05874fac7ba132cdb780013e7abe090d194b72ab14fc",
+      "independentCommandRerun": true
+    },
+    "currentRepoChangesObserved": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "reviewerSourceEdits": false
+  },
+  "percases": [
+    {
+      "case": "authenticated A views B; toggle and submit with forged owner fields",
+      "actualSessionTeacherId": "demo-seed-avery",
+      "loadedProfileTeacherId": "demo-seed-jordan",
+      "renderedEditButtonAndForm": false,
+      "toggle": "profile_owner_mismatch",
+      "submit": "profile_owner_mismatch",
+      "controllerProfileUnchanged": true,
+      "afterReopenName": "Demo Jordan",
+      "afterReopenSource": "runtime",
+      "providerRuntimeSnapshotUnchanged": true,
+      "forgedPayloadFields": [
+        "teacherId=demo-seed-avery",
+        "profileId=demo-avery"
+      ],
+      "authoritySource": "loaded controller session/profile state only"
+    },
+    {
+      "case": "anonymous toggle and submit",
+      "actualSessionStatus": "anonymous",
+      "actualSessionTeacherId": null,
+      "loadedProfileTeacherId": "demo-seed-jordan",
+      "toggle": "authentication_required",
+      "submit": "authentication_required",
+      "controllerProfileUnchanged": true,
+      "providerRuntimeSnapshotUnchanged": true,
+      "renderedEditButtonAndForm": false
+    },
+    {
+      "case": "missing session teacher identity",
+      "actualSessionStatus": "authenticated",
+      "actualSessionTeacherId": "",
+      "loadedProfileTeacherId": "demo-seed-avery",
+      "toggle": "profile_owner_mismatch",
+      "submit": "profile_owner_mismatch",
+      "editOpenRemainsFalse": true,
+      "profileUnchanged": true,
+      "providerRuntimeSnapshotUnchanged": true,
+      "method": "Cleared only controller projection session.teacherId after authenticating; provider fixture identity remains valid."
+    },
+    {
+      "case": "captured readonly precedence under forged owner payload",
+      "actualSessionTeacherId": "demo-seed-avery",
+      "loadedReference": {
+        "profileId": "reference-sarah",
+        "teacherId": null,
+        "source": "captured-readonly",
+        "readOnly": true
+      },
+      "toggle": "read_only_reference",
+      "submit": "read_only_reference",
+      "capturedNameUnchanged": true,
+      "providerRuntimeSnapshotUnchanged": true
+    },
+    {
+      "case": "owned public-profile alias with forged other-owner payload",
+      "actualSessionTeacherId": "demo-seed-avery",
+      "loadedProfileTeacherId": "demo-seed-avery",
+      "toggle": "ok",
+      "submit": "ok_localOnly",
+      "overlayNameAfterReopen": "Demo Avery edited via public alias",
+      "providerOwnProfileUnchanged": true,
+      "renderedEditButtonAndForm": false
+    }
+  ],
+  "findings": {
+    "controllerGate": "Both handlers compare session.teacherId against the loaded profile.teacherId; toggle additionally requires authenticated status. Submit has an earlier authentication guard. Captured readonly rejection remains earlier than owner matching.",
+    "UI": "Rendered AST/DOM-shaped tree confirms Edit and edit form remain absent on other public-profile routes after rejected actions. An owned /teachers/demo-avery alias also has no rendered Edit affordance because existing renderer uses authenticated && !route.profileId. Controller direct toggle/save still succeeds for the matching owner. This is rendered markup inspection only, not browser visual QA.",
+    "providerVsOverlay": "All rejected cases preserve provider/runtime snapshots and controller profile value. The successful owner edit changes only the in-memory controller overlay; provider-owned profile remains unchanged.",
+    "truthyIdentityContract": "Valid fixture records require string IDs beginning demo-; a stored profile teacherId must equal its record ID; session teacherId is derived from the validated record ID or null. Missing empty identity was explicitly exercised and failed closed. Malformed non-string truthy IDs cannot be produced through the checked fixture provider and were not treated as valid real-runtime cases."
+  },
+  "limits": [
+    "Only volatile synthetic fixture accounts and captured reference data were used.",
+    "Provider/runtime has no profile-update operation; successful edits remain tab-local overlays. No production/backend authorization or remote data mutation was tested.",
+    "Rendered AST/markup checks are not browser DOM mounting or visual QA.",
+    "Canonical build report/receipt were verified by identities; no second full canonical build was run."
+  ],
+  "probe": {
+    "path": "/workspace/scratch/8528bb251845/hh-cycle03/H2/review-R402/probe.mjs",
+    "sha256": "b1e7c76c81ec571290488b5bdecd5790a6ceac4aac548be32daf1d0ef0c6b0e8",
+    "resultPath": "/workspace/scratch/8528bb251845/hh-cycle03/H2/review-R402/probe-result.json",
+    "resultSha256": "274abdfb2d84a98bbc682128f0080adf89b62dd13b127efac625c93dabeda63c"
+  }
+}

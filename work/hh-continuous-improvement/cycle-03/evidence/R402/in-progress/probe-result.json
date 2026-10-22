@@ -1,0 +1,433 @@
+{
+  "cases": [
+    {
+      "case": "authenticated_A_view_B_toggle_submit_forged_owner_fields",
+      "owner": {
+        "sessionStatus": "authenticated",
+        "teacherId": "demo-seed-avery"
+      },
+      "requestedSubject": {
+        "profileId": "demo-jordan",
+        "teacherId": "demo-seed-jordan"
+      },
+      "ui": {
+        "editButton": false,
+        "editForm": false
+      },
+      "results": {
+        "toggle": {
+          "ok": false,
+          "error": {
+            "code": "profile_owner_mismatch",
+            "message": "You can only edit your own local profile."
+          }
+        },
+        "submit": {
+          "ok": false,
+          "error": {
+            "code": "profile_owner_mismatch",
+            "message": "You can only edit your own local profile."
+          }
+        }
+      },
+      "controllerBefore": {
+        "status": "present",
+        "value": {
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "displayName": "Demo Jordan",
+          "bio": "Synthetic arts teacher profile.",
+          "subjects": [
+            "Art"
+          ],
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN",
+          "school": {
+            "state": "Demo California",
+            "county": "Demo Alameda",
+            "district": "Demo Bay District",
+            "school": "Demo Bay School"
+          },
+          "seeded": true,
+          "name": "Demo Jordan"
+        },
+        "editOpen": false,
+        "source": "runtime"
+      },
+      "controllerAfterSubmit": {
+        "status": "present",
+        "value": {
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "displayName": "Demo Jordan",
+          "bio": "Synthetic arts teacher profile.",
+          "subjects": [
+            "Art"
+          ],
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN",
+          "school": {
+            "state": "Demo California",
+            "county": "Demo Alameda",
+            "district": "Demo Bay District",
+            "school": "Demo Bay School"
+          },
+          "seeded": true,
+          "name": "Demo Jordan"
+        },
+        "editOpen": false,
+        "source": "runtime"
+      },
+      "controllerAfterReopen": {
+        "status": "present",
+        "value": {
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "displayName": "Demo Jordan",
+          "bio": "Synthetic arts teacher profile.",
+          "subjects": [
+            "Art"
+          ],
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN",
+          "school": {
+            "state": "Demo California",
+            "county": "Demo Alameda",
+            "district": "Demo Bay District",
+            "school": "Demo Bay School"
+          },
+          "seeded": true,
+          "name": "Demo Jordan"
+        },
+        "editOpen": false,
+        "source": "runtime"
+      },
+      "uiAfter": {
+        "editButton": false,
+        "editForm": false
+      },
+      "runtimeSnapshotUnchanged": true
+    },
+    {
+      "case": "anonymous_toggle_and_submit",
+      "owner": {
+        "sessionStatus": "anonymous",
+        "teacherId": null
+      },
+      "requestedSubject": {
+        "profileId": "demo-jordan",
+        "teacherId": "demo-seed-jordan"
+      },
+      "ui": {
+        "editButton": false,
+        "editForm": false
+      },
+      "results": {
+        "toggle": {
+          "ok": false,
+          "error": {
+            "code": "authentication_required"
+          }
+        },
+        "submit": {
+          "ok": false,
+          "error": {
+            "code": "authentication_required"
+          }
+        }
+      },
+      "controllerBefore": {
+        "status": "present",
+        "value": {
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "displayName": "Demo Jordan",
+          "bio": "Synthetic arts teacher profile.",
+          "subjects": [
+            "Art"
+          ],
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN",
+          "school": {
+            "state": "Demo California",
+            "county": "Demo Alameda",
+            "district": "Demo Bay District",
+            "school": "Demo Bay School"
+          },
+          "seeded": true,
+          "name": "Demo Jordan"
+        },
+        "editOpen": false,
+        "source": "runtime"
+      },
+      "controllerAfter": {
+        "status": "present",
+        "value": {
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "displayName": "Demo Jordan",
+          "bio": "Synthetic arts teacher profile.",
+          "subjects": [
+            "Art"
+          ],
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN",
+          "school": {
+            "state": "Demo California",
+            "county": "Demo Alameda",
+            "district": "Demo Bay District",
+            "school": "Demo Bay School"
+          },
+          "seeded": true,
+          "name": "Demo Jordan"
+        },
+        "editOpen": false,
+        "source": "runtime"
+      },
+      "uiAfter": {
+        "editButton": false,
+        "editForm": false
+      },
+      "runtimeSnapshotUnchanged": true
+    },
+    {
+      "case": "authenticated_missing_session_teacher_identity",
+      "owner": {
+        "status": "authenticated",
+        "teacherId": ""
+      },
+      "requestedSubject": {
+        "profileId": "demo-avery",
+        "teacherId": "demo-seed-avery"
+      },
+      "results": {
+        "toggle": {
+          "ok": false,
+          "error": {
+            "code": "profile_owner_mismatch",
+            "message": "You can only edit your own local profile."
+          }
+        },
+        "submit": {
+          "ok": false,
+          "error": {
+            "code": "profile_owner_mismatch",
+            "message": "You can only edit your own local profile."
+          }
+        }
+      },
+      "controllerBefore": {
+        "status": "present",
+        "value": {
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "displayName": "Demo Avery",
+          "bio": "Synthetic science teacher profile.",
+          "subjects": [
+            "Science"
+          ],
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "school": {
+            "state": "Demo Washington",
+            "county": "Demo King",
+            "district": "Demo District",
+            "school": "Demo Academy"
+          },
+          "seeded": true,
+          "name": "Demo Avery"
+        },
+        "editOpen": false,
+        "source": "runtime"
+      },
+      "controllerAfter": {
+        "status": "present",
+        "value": {
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "displayName": "Demo Avery",
+          "bio": "Synthetic science teacher profile.",
+          "subjects": [
+            "Science"
+          ],
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "school": {
+            "state": "Demo Washington",
+            "county": "Demo King",
+            "district": "Demo District",
+            "school": "Demo Academy"
+          },
+          "seeded": true,
+          "name": "Demo Avery"
+        },
+        "editOpen": false,
+        "source": "runtime"
+      },
+      "runtimeSnapshotUnchanged": true,
+      "method": "Cleared controller projection identity after authenticating; fixture provider identity remains intact."
+    },
+    {
+      "case": "captured_readonly_precedence_even_with_forged_owner_fields",
+      "owner": {
+        "sessionStatus": "authenticated",
+        "teacherId": "demo-seed-avery"
+      },
+      "requestedSubject": {
+        "profileId": "reference-sarah",
+        "source": "captured-readonly",
+        "readOnly": true
+      },
+      "results": {
+        "toggle": {
+          "ok": false,
+          "error": {
+            "code": "read_only_reference",
+            "message": "Captured public reference profiles are read-only."
+          }
+        },
+        "submit": {
+          "ok": false,
+          "error": {
+            "code": "read_only_reference",
+            "message": "Captured public reference profiles are read-only."
+          }
+        }
+      },
+      "controllerBefore": {
+        "status": "present",
+        "value": {
+          "id": "reference-sarah",
+          "name": "Sarah Endsley",
+          "displayName": "Sarah Endsley",
+          "image": "homepage/teacher-of-day.jpg",
+          "school": {
+            "school": "Rochester Primary School",
+            "county": "Thurston County",
+            "state": "Washington"
+          },
+          "bio": "I am a Kindergarten teacher in the dual language program at Rochester Primary School. I teach 40 students each year, 20 come from primarily English speaking households and 20 come from primarily Spanish speaking households. Our students spend 3 hours each day in full English immersion and 3 hours each day in full Spanish immersion learning. Thank you so much for your consideration!",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20",
+          "readOnly": true,
+          "provenance": {
+            "kind": "captured public reference snapshot; local preview",
+            "page": "https://www.helpteachers.net/pages/homepage.html",
+            "profilePage": "https://www.helpteachers.net/pages/teacher.html",
+            "evidence": "PUBLIC-JOURNEY-EVIDENCE.json",
+            "imageSha256": "5e736f5b64a103dc18f2aa570061fc43d0e2219fe8a6b6dd1f94297fe14b04bd",
+            "scope": "Read-only display data from an anonymous captured page. No account, wishlist, share, or service authority is included."
+          }
+        },
+        "editOpen": false,
+        "editDraft": {
+          "name": "",
+          "bio": "",
+          "wishlistUrl": ""
+        },
+        "createDraft": {
+          "name": "",
+          "bio": "",
+          "wishlistUrl": ""
+        },
+        "readOnly": true,
+        "source": "captured-readonly"
+      },
+      "controllerAfter": {
+        "status": "present",
+        "value": {
+          "id": "reference-sarah",
+          "name": "Sarah Endsley",
+          "displayName": "Sarah Endsley",
+          "image": "homepage/teacher-of-day.jpg",
+          "school": {
+            "school": "Rochester Primary School",
+            "county": "Thurston County",
+            "state": "Washington"
+          },
+          "bio": "I am a Kindergarten teacher in the dual language program at Rochester Primary School. I teach 40 students each year, 20 come from primarily English speaking households and 20 come from primarily Spanish speaking households. Our students spend 3 hours each day in full English immersion and 3 hours each day in full Spanish immersion learning. Thank you so much for your consideration!",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20",
+          "readOnly": true,
+          "provenance": {
+            "kind": "captured public reference snapshot; local preview",
+            "page": "https://www.helpteachers.net/pages/homepage.html",
+            "profilePage": "https://www.helpteachers.net/pages/teacher.html",
+            "evidence": "PUBLIC-JOURNEY-EVIDENCE.json",
+            "imageSha256": "5e736f5b64a103dc18f2aa570061fc43d0e2219fe8a6b6dd1f94297fe14b04bd",
+            "scope": "Read-only display data from an anonymous captured page. No account, wishlist, share, or service authority is included."
+          }
+        },
+        "editOpen": false,
+        "editDraft": {
+          "name": "",
+          "bio": "",
+          "wishlistUrl": ""
+        },
+        "createDraft": {
+          "name": "",
+          "bio": "",
+          "wishlistUrl": ""
+        },
+        "readOnly": true,
+        "source": "captured-readonly"
+      },
+      "runtimeSnapshotUnchanged": true
+    },
+    {
+      "case": "owned_public_profile_alias_with_forged_other_owner_fields",
+      "owner": {
+        "sessionStatus": "authenticated",
+        "teacherId": "demo-seed-avery"
+      },
+      "requestedSubject": {
+        "profileId": "demo-avery",
+        "teacherId": "demo-seed-avery"
+      },
+      "ui": {
+        "editButton": false,
+        "editForm": false
+      },
+      "toggle": {
+        "ok": true
+      },
+      "submit": {
+        "ok": true,
+        "localOnly": true,
+        "profile": {
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "displayName": "Demo Avery",
+          "bio": "Synthetic science teacher profile.",
+          "subjects": [
+            "Science"
+          ],
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "school": {
+            "state": "Demo Washington",
+            "county": "Demo King",
+            "district": "Demo District",
+            "school": "Demo Academy"
+          },
+          "seeded": true,
+          "name": "Demo Avery edited via public alias"
+        }
+      },
+      "controllerAfterReopen": {
+        "status": "present",
+        "value": {
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "displayName": "Demo Avery",
+          "bio": "Synthetic science teacher profile.",
+          "subjects": [
+            "Science"
+          ],
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "school": {
+            "state": "Demo Washington",
+            "county": "Demo King",
+            "district": "Demo District",
+            "school": "Demo Academy"
+          },
+          "seeded": true,
+          "name": "Demo Avery edited via public alias"
+        },
+        "editOpen": false,
+        "source": "local-overlay"
+      },
+      "providerOwnProfileUnchanged": true
+    }
+  ]
+}

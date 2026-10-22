@@ -83,9 +83,9 @@ test('pending login, separate approval, actual credential boundary, profile edit
  assert.equal((await c.dispatch('public:login',{email:identity.email,password})).ok,false);assert.equal(runtime.snapshot().session.status,'anonymous');
  assert.equal((await c.dispatch('public:approve')).ok,true);assert.equal(runtime.snapshot().session.status,'anonymous');
  assert.equal((await c.dispatch('public:login',{email:identity.email,password})).ok,true);assert.equal(runtime.snapshot().session.status,'authenticated');
- assert.equal((await c.dispatch('public:profile-create',{name:identity.name,bio:'Independent classroom introduction.',wishlistUrl:'https://www.amazon.com/hz/wishlist/ls/INDEPENDENT'})).ok,true);
+ assert.equal((await c.dispatch('public:profile-create',{name:identity.name,bio:'Independent classroom introduction.',wishlistUrl:'https://www.amazon.com/hz/wishlist/ls/DEMO-INDEPENDENT'})).ok,true);
  const own=c.state.journey.profile.value;assert.ok(own.id);const id=own.id;
- assert.equal((await c.dispatch('public:profile-edit',{name:'Jordan Edited',bio:'Changed public introduction.',wishlistUrl:'https://www.amazon.com/hz/wishlist/ls/INDEPENDENT'})).ok,true);
+ assert.equal((await c.dispatch('public:profile-edit',{name:'Jordan Edited',bio:'Changed public introduction.',wishlistUrl:'https://www.amazon.com/hz/wishlist/ls/DEMO-INDEPENDENT'})).ok,true);
  await c.navigate(`#/teachers/${id}`);assert.equal(c.state.journey.profile.value.name,'Jordan Edited');assert.equal(c.state.journey.profile.value.bio,'Changed public introduction.');
  await c.dispatch('public:wishlist');assert.equal(c.state.journey.wishlist.remote,false);assert.equal(c.state.journey.wishlist.intent,true);
  await c.dispatch('public:share');assert.equal(c.state.journey.share.intent,true);

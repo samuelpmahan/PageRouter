@@ -1,0 +1,49 @@
+{
+  "job_id": "R3203",
+  "worker": "H2",
+  "decision": "accepted",
+  "spec_verdict": "accepted",
+  "quality_verdict": "accepted",
+  "summary": "Independent review accepts E3203's projection-only change. The source diff derives current vote from the active teacher persona's existing vote arrays, adds teacher-only detail text and string aria-pressed states, and marks the teacher index upvote control without changing vote operations, aggregate counts, sort, controller, persistence, services, or authority. One actual fixture-runtime probe verified No vote → Downvote → same-choice removal → Upvote, back/reopen state recovery, another persona's projection, anonymous/moderator guards, hidden-topic refusal, unchanged seed row counts, and no runtime receipts beyond the two created at initialization. The focused independent tests passed 2/2.",
+  "source_checkpoint": {
+    "repo": "/workspace/scratch/86659bbafcce/PageRouter",
+    "base_commit": "ce139be6b26a56736efb3f1981af3c3aa2cd8b5e",
+    "base_tree": "8a3ca1921e69c8e34b374d0ed674489191c76d01",
+    "source_hashes_match_h1_checkpoint": true,
+    "repo_status_after_review": "only the three authorized E3203 files remain dirty; no reviewer repo writes"
+  },
+  "probe": {
+    "path": "attempt-02",
+    "exit_code": 0,
+    "runtime": "createFixtureProvider({fixture:true,storage:null}) + createServiceRuntime",
+    "controller": "createPublicController + initialize('#/forum')",
+    "initialization_receipts": 2,
+    "final_receipts": 2,
+    "initial_and_final_counts": {"threads": 3, "replies": 2},
+    "storage": "memory_only",
+    "sort": "date-newest unchanged",
+    "results": "teacher projection follows No vote / Downvote / No vote / Upvote; state persists across back/reopen; alternate persona sees No vote; anonymous/moderator state remains absent and vote actions are rejected; hidden topic is unavailable and vote is rejected"
+  },
+  "independent_test_run": {
+    "path": "focused-tests",
+    "command": "node --test --test-name-pattern='projects the current teacher vote on index|rendered teacher vote state follows actual index' src/community.test.mjs src/public-controller.test.mjs",
+    "exit_code": 0,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0
+  },
+  "attempts": [
+    {"path": "attempt-01", "exit_code": 1, "note": "Stopped at initial seed assertion: downvotes is optional and absent until the first vote; retained unchanged."},
+    {"path": "attempt-02", "exit_code": 0, "note": "Separate immutable attempt after authorized harness-only change to normalize absent seed downvotes to an empty list; product code unchanged."}
+  ],
+  "evidence_paths": [
+    "attempt-01/probe.mjs", "attempt-01/stdout.raw", "attempt-01/stderr.raw", "attempt-01/exit-code.txt", "attempt-01/timestamp.txt", "attempt-01/source-pins.json",
+    "attempt-02/probe.mjs", "attempt-02/stdout.raw", "attempt-02/stderr.raw", "attempt-02/exit-code.txt", "attempt-02/timestamp.txt", "attempt-02/source-pins.json",
+    "focused-tests/command.txt", "focused-tests/stdout.raw", "focused-tests/stderr.raw", "focused-tests/exit-code.txt", "focused-tests/timestamp.txt", "focused-tests/source-pins.json"
+  ],
+  "declined_to_judge": [
+    "No browser DOM, visual, screen-reader, or accessibility audit was performed.",
+    "No canonical build, staging, commit, push, deployment, production, or external-service claims are made."
+  ],
+  "boundaries": "Read-only review; no repository/native/Git writes. All probe interactions were local synthetic fixture/runtime operations; no browser, server, or network was used."
+}

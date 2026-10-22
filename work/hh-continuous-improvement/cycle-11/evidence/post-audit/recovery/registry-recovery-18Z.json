@@ -1,0 +1,23 @@
+{
+  "schema": "actual-worker-registry@1",
+  "observedAt": "2026-10-18T18:12:16.067Z",
+  "coordinator": "/root",
+  "workers": [
+    {
+      "id": "H1",
+      "agent": "/root/hh11_recover_h1",
+      "model": "gpt-6-luna",
+      "reasoning": "high",
+      "registered": true
+    },
+    {
+      "id": "H2",
+      "agent": "/root/hh11_recover_h2",
+      "model": "gpt-6-luna",
+      "reasoning": "high",
+      "registered": true
+    }
+  ],
+  "oldRegistryPreserved": true,
+  "reason": "Actual fresh spawn acknowledgments, not assumed worker survival"
+}

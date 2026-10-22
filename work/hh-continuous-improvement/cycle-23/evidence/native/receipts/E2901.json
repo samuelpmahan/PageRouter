@@ -1,0 +1,10 @@
+{
+  "job_id": "E2901",
+  "worker": "H1",
+  "outcome": "insufficient_evidence",
+  "summary": "The read-only baseline probe reproduced an author-owned post edit loss: submitting a whitespace-only title with a meaningful changed body was rejected as title_and_body_required, and the open editor rerendered the saved title/body, losing the changed body. Rejected save left storage and runtime receipts unchanged; explicit corrected submission succeeded; cancel closed edit mode without changing saved data. This is evidence of a source defect, not an accepted reusable implementation. Probe scope does not establish reply-edit or browser-native behavior.",
+  "original_result": {
+    "path": "/workspace/scratch/afc0d51965a8/hh23/H1/E2901/result.json",
+    "sha256": "6e07ba7b72a0f382d0bd991f81cdf87195341458b1baba55c766cedd39eaae9d"
+  }
+}

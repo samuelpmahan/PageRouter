@@ -1,0 +1,8 @@
+node --test --test-name-pattern='^(rejected teacher reply at aggregate capacity stays in its thread composer and explicit retry clears it|overlength rejected teacher reply retains one over the cap and cannot become valid through truncation|reply draft is thread-bound, teacher-only, and cleared on role exit or forum/app reset|successful logout clears a retained reply draft and leaving the thread clears it)$' checkpoint/vendor/hh/src/public-controller.test.mjs
+
+Working directory: /workspace/scratch/8528bb251845/PageRouter
+Exit: 1
+Raw stdout: red.stdout.raw
+Raw stderr: red.stderr.raw (empty)
+
+This is the authoritative exact-name baseline RED after correcting the lifecycle test setup to use an actual input_too_long rejection instead of expecting a valid reply to fail. It ran before the later whitespace-padded overlength subcase was added to the overlength test; that subcase has no separately captured baseline execution. Earlier broad-filter attempts are not being represented as raw files; the first tool output was truncated and included an unrelated similarly named passing test.

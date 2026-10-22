@@ -1,0 +1,28 @@
+{
+  "schema": "actual-worker-registry@1",
+  "workers": {
+    "H1": {
+      "agent": "/root/hh15_h1",
+      "model": "gpt-6-luna",
+      "reasoning": "high",
+      "context": "Existing actual completed HH15 context; reactivation requires native start then followup_task",
+      "role": "scratch probe first; eventual sole PageRouter source/Git integrator only after separate admission"
+    },
+    "H2": {
+      "agent": "/root/hh15_h2",
+      "model": "gpt-6-luna",
+      "reasoning": "high",
+      "context": "Existing actual completed HH15 context; reactivation requires native start then followup_task",
+      "role": "independent scratch-only probe/reviewer"
+    }
+  },
+  "separateLab": {
+    "registered": 4,
+    "actualCurrentPackets": [
+      "S1 E2024 phase2 one-copy admission"
+    ],
+    "sourceOwner": "S1 sole Lab source/Git owner; all discovery-cycle07 frozen writers quiescent"
+  },
+  "globalWorkerMaximum": 6,
+  "authority": "Actual collaboration list and completed HH15 handbacks refreshed. Registration is not continuous activity. Native solve/start and real followup before each packet."
+}

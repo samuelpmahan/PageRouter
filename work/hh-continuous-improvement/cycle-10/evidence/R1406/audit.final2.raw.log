@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The input did not match the regular expression /not proof of the exact executed shell command/. Input:
+
+"H1 functions.exec tool-call text as visible in this transcript, not a separately captured raw command file. Root's literal-ledger quoting diagnostic found the recorded nested quoting did not parse as expected, so this string is not treated as proof of the exact executed shell command. The successful build is supported by the raw wrapper output, receipt, and exit record; original command bytes remain unresolved."
+
+    at file:///workspace/scratch/8528bb251845/hh-cycle10/H2/R1406/audit.mjs:130:8 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: "H1 functions.exec tool-call text as visible in this transcript, not a separately captured raw command file. Root's literal-ledger quoting diagnostic found the recorded nested quoting did not parse as expected, so this string is not treated as proof of the exact executed shell command. The successful build is supported by the raw wrapper output, receipt, and exit record; original command bytes remain unresolved.",
+  expected: /not proof of the exact executed shell command/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

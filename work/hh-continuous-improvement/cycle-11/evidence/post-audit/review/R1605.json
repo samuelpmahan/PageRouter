@@ -1,0 +1,24 @@
+{
+  "job_id": "R1605",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Accepted after receipt-field erratum. The original audit result and frozen 82-file payload are preserved unchanged; this envelope corrects only the manifest SHA-256 recorded in the review receipt.",
+  "corrected_field": {
+    "pointer": "/package/manifest_sha256",
+    "value": "37913417c6ea344c76e08d769609c948025299a43bb679181397e660a96784bc",
+    "length": 64,
+    "computed_from": "PageRouter/work/hh-continuous-improvement/cycle-11/evidence/manifest.json"
+  },
+  "bindings": {
+    "original_result_path": "hh-cycle11/H2/R1605/result.json",
+    "original_result_sha256": "a7e5bf513f40ad4b24de03843dd87c470857f1a044bb63b27422bfc63f32e745",
+    "erratum_path": "hh-cycle11/H2/R1605/erratum.json",
+    "erratum_sha256": "4700401bda9289b2e1a92470c54c067fbdca8f5ab7004978e03890d9ba5a0169",
+    "frozen_manifest_sha256": "37913417c6ea344c76e08d769609c948025299a43bb679181397e660a96784bc"
+  },
+  "limits": [
+    "Receipt correction only; no product finding or product-file change.",
+    "No tests, build, probes, or audit rerun were performed.",
+    "The 82-file frozen payload and original result.json bytes remain unchanged."
+  ]
+}

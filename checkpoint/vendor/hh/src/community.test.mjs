@@ -161,6 +161,65 @@ test('matches captured public forum titles, newest/oldest/upvote ordering, and v
   assert.equal(new Set(ids).size,ids.length,'every focus-restorable forum control ID is unique on the index');
 });
 
+test('projects the current teacher vote on index and detail without exposing it to other roles', () => {
+  const forum=createCommunity({storage:null}),topicId='topic-official-bug-forum',personaId='teacher-7';
+  const nodes=tree=>{const all=[];const walk=node=>{if(!node||typeof node!=='object')return;all.push(node);for(const child of node.children||[])walk(child)};walk(tree);return all};
+  const find=(tree,id)=>nodes(tree).find(node=>node.attrs?.id===id);
+  const indexVote=tree=>nodes(tree).find(node=>node.attrs?.['data-event']==='forum-vote'&&node.attrs?.['data-post-id']===topicId);
+  const voteText=tree=>nodes(tree).find(node=>node.attrs?.class==='community-current-vote')?.children?.join('')||null;
+  const detail=()=>renderCommunity({route:{page:'post',threadId:topicId},state:forum.snapshot(),session:{role:'teacher',personaId}});
+  const index=()=>renderCommunity({route:{page:'forum'},state:forum.snapshot(),session:{role:'teacher',personaId}});
+
+  let tree=detail();
+  assert.equal(voteText(tree),'Your vote: No vote');
+  assert.equal(find(tree,'upvote-btn').attrs['aria-pressed'],'false');
+  assert.equal(find(tree,'downvote-btn').attrs['aria-pressed'],'false');
+  assert.equal(indexVote(index())?.attrs['aria-pressed'],'false');
+
+  assert.equal(forum.vote(topicId,{role:'teacher',personaId,direction:'upvote'}).value.voted,'upvote');
+  tree=detail();
+  assert.equal(voteText(tree),'Your vote: Upvote');
+  assert.equal(find(tree,'upvote-btn').attrs['aria-pressed'],'true');
+  assert.equal(find(tree,'downvote-btn').attrs['aria-pressed'],'false');
+  assert.equal(indexVote(index())?.attrs['aria-pressed'],'true');
+
+  assert.equal(forum.vote(topicId,{role:'teacher',personaId,direction:'downvote'}).value.voted,'downvote');
+  tree=detail();
+  assert.equal(voteText(tree),'Your vote: Downvote');
+  assert.equal(find(tree,'upvote-btn').attrs['aria-pressed'],'false');
+  assert.equal(find(tree,'downvote-btn').attrs['aria-pressed'],'true');
+  assert.equal(indexVote(index())?.attrs['aria-pressed'],'false');
+
+  const otherTeacher=renderCommunity({route:{page:'post',threadId:topicId},state:forum.snapshot(),session:{role:'teacher',personaId:'teacher-8'}});
+  assert.equal(voteText(otherTeacher),'Your vote: No vote','current vote belongs to the active persona');
+  const visitor=renderCommunity({route:{page:'post',threadId:topicId},state:forum.snapshot(),session:{role:'anonymous'}});
+  assert.equal(voteText(visitor),null,'anonymous users do not receive teacher vote status');
+  assert.equal(find(visitor,'upvote-btn').attrs['aria-pressed'],undefined,'non-teacher control semantics remain unchanged');
+  const moderator=renderCommunity({route:{page:'post',threadId:topicId},state:forum.snapshot(),session:{role:'moderator'}});
+  assert.equal(voteText(moderator),null,'moderators do not receive teacher-persona vote status');
+  assert.equal(find(moderator,'upvote-btn').attrs['aria-pressed'],undefined,'moderator vote controls remain unchanged');
+});
+
+test('moderator reported-items filter includes hidden reports before paging and is role-gated', () => {
+  const base=createCommunity({storage:null}).snapshot(),seed=base.threads[0],seedReply={id:'reply-reported-hidden',body:'Hidden reported reply',author:'Teacher',authorId:'teacher-1',createdAt:'2026-10-01T00:00:00.000Z',hidden:true,reported:true};
+  const makeTopic=(id,createdAt,extra={})=>({...seed,id,title:id,body:`Body for ${id}`,createdAt,votes:[],downvotes:[],hidden:false,reported:false,replies:[],...extra});
+  const reportedTopic=makeTopic('topic-reported-topic','2026-10-17T00:00:00.000Z',{reported:true});
+  const reportedReply=makeTopic('topic-reported-reply','2026-10-16T00:00:00.000Z',{replies:[seedReply]});
+  const hiddenReportedTopic=makeTopic('topic-hidden-reported','2026-10-15T00:00:00.000Z',{hidden:true,reported:true});
+  const newestOrdinary=makeTopic('topic-ordinary-newest','2026-10-18T00:00:00.000Z');
+  const state={...base,threads:[newestOrdinary,reportedTopic,reportedReply,hiddenReportedTopic],reportedOnly:true,pageSize:2};
+  const idsFor=(role,projection=state)=>{const tree=renderCommunity({route:{page:'forum'},state:projection,session:{role}}),ids=[],nodes=[];const walk=node=>{if(!node||typeof node!=='object')return;nodes.push(node);if(node.attrs?.class?.includes('community-topic '))ids.push(node.attrs['data-thread-id']);for(const child of node.children||[])walk(child)};walk(tree);return {ids,nodes}};
+  const moderator=idsFor('moderator');
+  assert.deepEqual(moderator.ids,['topic-reported-topic','topic-reported-reply']);
+  assert.ok(moderator.nodes.some(node=>node.attrs?.['data-event']==='forum-load-more'),'remaining reported items are paged after filtering');
+  const toggle=moderator.nodes.find(node=>node.attrs?.['data-event']==='forum-reported-only');
+  assert.ok(toggle,'moderators can see the reported-items control');
+  assert.equal(toggle.attrs['aria-pressed'],'true');
+  const teacher=idsFor('teacher');
+  assert.deepEqual(teacher.ids,['topic-ordinary-newest','topic-reported-topic'],'crafted reportedOnly state cannot filter a teacher projection');
+  assert.ok(!teacher.nodes.some(node=>node.attrs?.['data-event']==='forum-reported-only'));
+});
+
 test('keeps the full local post while rendering the source-length forum excerpt and icon controls', () => {
   const forum=createCommunity({storage:null}),body='Local synthetic excerpt text. '.repeat(12);
   const created=forum.createThread({title:'Local long excerpt fixture',body,category:'Community',role:'teacher'});

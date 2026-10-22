@@ -1,0 +1,83 @@
+{
+  "setup": {
+    "mode": "fixture / volatile memory only",
+    "seededReplies": 2,
+    "setupRepliesAdded": 498,
+    "cap": 500,
+    "totalAtFirstSubmit": 500,
+    "storageStatus": "memory_only"
+  },
+  "rejection": {
+    "ok": false,
+    "error": "reply_limit_reached",
+    "bodyLength": 74,
+    "replyDraft": {
+      "threadId": "topic-official-bug-forum",
+      "content": "Valid reviewer reply retained at cap; explicit retry after one slot opens."
+    },
+    "renderedForm": {
+      "threadId": "topic-official-bug-forum",
+      "content": "Valid reviewer reply retained at cap; explicit retry after one slot opens.",
+      "present": true
+    },
+    "totalRepliesAfter": 500
+  },
+  "sameThreadAlias": {
+    "route": {
+      "page": "community",
+      "path": "/posts/topic-teachers-lounge-open",
+      "communityRoute": {
+        "page": "post",
+        "threadId": "topic-teachers-lounge-open"
+      }
+    },
+    "renderedForm": {
+      "threadId": "topic-official-bug-forum",
+      "content": "Valid reviewer reply retained at cap; explicit retry after one slot opens.",
+      "present": true
+    },
+    "retainedExactBody": true
+  },
+  "explicitCorrection": {
+    "slotFreed": false,
+    "ok": false,
+    "createdMatches": 0,
+    "replyDraftAfter": null,
+    "renderedFormAfter": {
+      "threadId": "topic-official-bug-forum",
+      "content": "Valid reviewer reply retained at cap; explicit retry after one slot opens.",
+      "present": true
+    },
+    "totalReplies": 500
+  },
+  "otherThreadIsolation": {
+    "secondRejection": "reply_limit_reached",
+    "draftBeforeSwitch": {
+      "threadId": "topic-official-bug-forum",
+      "content": "A second valid body rejected at capacity should not migrate threads."
+    },
+    "routeAfterSwitch": {
+      "page": "community",
+      "path": "/posts/topic-teachers-lounge-open",
+      "communityRoute": {
+        "page": "post",
+        "threadId": "topic-teachers-lounge-open"
+      }
+    },
+    "renderedForm": {
+      "threadId": "topic-teachers-lounge-open",
+      "content": "",
+      "present": true
+    },
+    "draftAfterSwitch": null,
+    "noLeak": true
+  },
+  "authority": {
+    "role": "synthetic teacher preview",
+    "serviceReceiptCountBefore": 2,
+    "serviceReceiptCountAfter": 2,
+    "serviceReceiptDelta": 0,
+    "forumStorageStatus": "memory_only",
+    "network": "none"
+  }
+}

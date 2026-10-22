@@ -1,0 +1,7 @@
+# HH17 process qualifications
+
+- Root's first E2302 finish helper stopped at copyFile ENOENT because the new receipts directory did not exist. This was before any receipt copy or native finish call. Root created that ordinary directory and performed one actual native finish. This is tool testimony, not a native rejection or product/test failure.
+- H2 preserved the source-only prepared result and authored a separate actual-result. The source-only `probe_prepared` outcome was never submitted as a native finish receipt.
+- H2's actual-prospective.json is a byte copy of its source-only prospective, including historical awaiting-GO wording. The later explicit root GO and genuine captures govern actual execution; the copied text does not itself assert execution.
+- H2's stdout `noMatch.status` was read after recovery, not separately snapshotted. The zero count and first render's guidance/query are actual first-submission evidence. Its module prehash bindings reuse an earlier captured unchanged source checkpoint; posthashes were fresh. Do not describe that as fresh prelaunch hashing or race-free execution authentication.
+- H1's one read-only reference locator used absent `BROWSER-EVIDENCE.pages` and failed; correction inspected the actual `results` array. No source write or probe run occurred at that locator failure. Root also tried nonexistent workflow filename pages.yml before reading actual deploy-pages.yml; no mutation.

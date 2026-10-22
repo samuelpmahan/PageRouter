@@ -1,0 +1,18 @@
+{
+  "base_commit": "128876031737d853303bbee9906dd7f8d618094d",
+  "head_before_review": "128876031737d853303bbee9906dd7f8d618094d",
+  "source_sha256": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "b1523381ce4845dd95afc3650a9eceabfa2ff6e4f8cd0a86eec2f88c0e224be2",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "2dcced44f31127fb78c367419fab76ded170e74e072a8b8fde21a2b32f240993",
+    "checkpoint/vendor/hh/src/public-site.mjs": "524df4132426814cc9621246a4cba548d54c0c537dd840b3997e375e78c9ad4d",
+    "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "checkpoint/vendor/hh/services/fixtures.mjs": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  },
+  "probe_sha256_initial": "e9f15ba54321111b4e4aecef9ca67739fbaf858bd22c701c3e285870cf6aa160",
+  "probe_sha256_repaired_once": "40353204387d395f252ed80a62569f01d32b357f905980e368831c04d42e9e8c",
+  "probe_repair_reason": "The first run correctly found four provider calls; runtime.inspect().receipts also includes the single service-binding composition receipt. Harness assertions were amended to account for that receipt, with provider wrappers still delegating to every actual fixture service.",
+  "focused_test": "node --test --test-name-pattern='breaks last-directory-subset wrong pool for rendered Home random teacher action' checkpoint/vendor/hh/src/public-controller.test.mjs",
+  "probe_command": "node /workspace/scratch/86659bbafcce/hh29/H2scratch/R3503-probe.mjs"
+}

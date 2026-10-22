@@ -1,0 +1,43 @@
+{
+  "schema": "hh-cycle06-worker-result/v1",
+  "job_id": "E901",
+  "worker": "H1",
+  "allowed_outcome": "mixed_change",
+  "observed_at": "2026-10-18T12:18:36.794Z",
+  "repository": "PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "head": "a5b141816ffb871110e541ef00ecf9527674137e",
+  "tree": "5eb00395e85afeb357be11b6add395ef5fbb6b68",
+  "source": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "a5deede267691459429f8bc404ba9cbc8e07d18f8120047281cf773d5cdaf558",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "8716ff6cd19f8ca56312ba143062d59f5a18dc0677b020d4aa75a356b985025f",
+    "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "probe.mjs": "7c3f012d2e884dc45d9ab585c234ca61b61b8762d22c02d6c828da5eaae033df"
+  },
+  "summary": "Held Session.logout is reachable in the mounted fixture runtime. Successful completion after navigation to /public-profile/demo-jordan logs out as expected and leaves the route unchanged, but unconditionally clears the foreign profile projection: Demo Jordan becomes a generic fallback profile and edit reports profile_unavailable. Injected logout failure preserves the foreign projection and edit rejects profile_owner_mismatch. On captured Sarah reference, the controller projection is cleared and edit reports profile_unavailable, while the public-site renderer independently continues displaying the captured read-only content; no edit authority is gained. Ordinary same-route logout succeeds, clears the own projection and navigates to /login.",
+  "cases": {
+    "normal_positive_control": "success; anonymous; /login; own projection cleared",
+    "foreign_success_race": "success; anonymous; /public-profile/demo-jordan retained; Demo Jordan projection lost; generic fallback rendered; edit denied profile_unavailable",
+    "foreign_failure_control": "denied; authenticated session unchanged; /public-profile/demo-jordan retained with Demo Jordan; edit denied profile_owner_mismatch",
+    "captured_readonly_success_race": "success; anonymous; route retained; captured-readonly controller projection lost; Sarah still visibly rendered by special captured-reference renderer; edit denied profile_unavailable"
+  },
+  "guards_and_limits": {
+    "runtime": {"mode":"fixture","fixture":true,"productionAuthority":false,"persistence":"per-tab-sessionStorage"},
+    "synthetic_inputs_only": true,
+    "http_or_network": false,
+    "production_or_real_accounts": false,
+    "edit_authority_gain": false,
+    "geography_review_modified_or_executed": false,
+    "product_source_modified": false,
+    "git_status_clean_after_probe": true
+  },
+  "evidence": {
+    "script": "probe.mjs",
+    "command": "COMMAND.txt",
+    "stdout": "stdout.json",
+    "stdout_note": "Byte-for-byte copy of successful stdout from the timestamped final rerun. Earlier interactive probe output was not saved as a raw file and is not represented as one. Two interim harness-only assertion mismatches were corrected before this final run; they did not alter product files."
+  },
+  "next": "Wait for fresh native authorization before any source correction."
+}

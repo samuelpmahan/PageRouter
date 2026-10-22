@@ -1,0 +1,7 @@
+# Next
+
+The E1005 evidence package is frozen for independent H2 package audit. H1 must not change package contents or the two frozen product files during that audit. No commit, publication payload, push, merge, main update, deployment, or human acceptance is implied. Root decides any later landing/publication step after review and a fresh authorization packet.
+
+The selected next hypothesis is **unexecuted**: prepare `public:share` on synthetic Demo Avery, navigate to Demo Jordan without preparing a new share route, and inspect the current route/profile, actual `renderPublicSite()` share-route field, and direct `public:share` dispatch for whether the previously prepared Avery route persists under Jordan. This is source-derived only; do not describe it as a reproduced bug. Use volatile fixture data, include same-profile alias and captured Sarah priority controls, and do not externally copy/share/open anything. Require a fresh native assignment and reproduction before correction.
+
+The captured Sarah renderer remains a separate static read-only reference. Preserve user choice and synthetic wishlist URL validation. This package claims no backend, production-account, real-teacher-data, or exposure-workaround use. Browser visual QA was unavailable and remains unverified; it was not performed in this cycle. The copied native `state-at-freeze.json` is a point-in-time snapshot, not a live service or future dispatch authority. A fresh native assignment is the next execution gate under the existing authorization; it does not imply a new user-approval request.

@@ -1,5 +1,5 @@
 import {SCHOOL_FIXTURES, FIXTURE_WISHLIST_URL} from '../services/index.mjs';
-import {createCommunity} from './community.mjs';
+import {createCommunity, COMMUNITY_CATEGORIES, COMMUNITY_LIMITS} from './community.mjs';
 import {teacherOfDayReference} from './site-data.mjs';
 
 const clone = value => value == null ? value : structuredClone(value);
@@ -7,6 +7,16 @@ const FILTER_KEY = 'hh-public-directory-filters.v1';
 const GRADES = Object.freeze(['Pre-K', 'Kindergarten', '1st Grade', '2nd Grade', '3rd Grade', '4th Grade', '5th Grade', '6th Grade', '7th Grade', '8th Grade', 'High School']);
 const clean = (value, max) => typeof value === 'string' ? value.trim().slice(0, max) : '';
 const boundedDraft = (value, max) => typeof value === 'string' ? value.slice(0, max) : '';
+const boundedPostEditTitle = value => {
+  if (typeof value !== 'string') return '';
+  const source = value.length > COMMUNITY_LIMITS.title + 1 ? value.trim() : value;
+  return boundedDraft(source, COMMUNITY_LIMITS.title + 1);
+};
+const boundedReplyDraft = value => {
+  if (typeof value !== 'string') return '';
+  const source = value.length > COMMUNITY_LIMITS.body + 1 ? value.trim() : value;
+  return boundedDraft(source, COMMUNITY_LIMITS.body + 1);
+};
 const emailKey = value => clean(value, 254).toLowerCase();
 const validEmail = value => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 const routeKey = value => String(value || '').replace(/^#/, '').split(/[?#]/, 1)[0] || '/';
@@ -61,8 +71,8 @@ export function normalizePublicRoute(value = '') {
 }
 
 function initialCommunity(community) {
-  return {...community.snapshot(), query: '', category: 'All', composer: null, sort: 'date-newest', pageSize: 10, message: '',
-    editingPostId: null, editingReplyId: null, editingThreadId: null};
+  return {...community.snapshot(), query: '', category: 'All', composer: null, sort: 'date-newest', pageSize: 10, reportedOnly: false, message: '',
+    editingPostId: null, editingReplyId: null, editingThreadId: null, topicDraft: null, postEditDraft: null};
 }
 
 /**
@@ -84,18 +94,20 @@ export function createPublicController({runtime, storage = null, onChange = () =
       loading: false,
       error: '',
       lookupError: '',
+      lookupRetryable: false,
       filters: {query: '', sort: 'date-newest', limit: 50},
       rememberedFilters: null,
       searchPerformed: false,
       matches: {status: 'idle', items: [], error: ''},
       registration: {status: runtime.snapshot().registration.status, identity: {name: '', email: '', phone: ''}},
+      loginDraft: {email: null},
       terms: {open: false, accepted: false},
       session: {...clone(runtime.snapshot().session), email: ''},
       profile: {status: runtime.snapshot().ownProfile.status === 'present' ? 'present' : 'absent', value: null,
         editOpen: false, editDraft: {name: '', bio: '', wishlistUrl: ''},
         createDraft: {name: '', bio: '', wishlistUrl: ''}, source: 'runtime'},
-      wishlist: {intent: false, remote: false, destination: null},
-      share: {intent: false, url: ''},
+      wishlist: {intent: false, remote: false, destination: null, profileId: null},
+      share: {intent: false, url: '', profileId: null, remote: false, copied: false},
       contact: {name: '', email: '', subject: '', message: ''},
       outcome: null,
       communityRole: 'anonymous',
@@ -111,7 +123,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
   let syntheticAccount = 0;
   let randomIndex = 0;
   let lastRetry = null;
-  let lastLookup = null;
+  let schoolLookupRetry = null;
   const aliasToFixtureEmail = new Map();
   const identityByFixtureEmail = new Map();
   const profileOverlays = new Map();
@@ -136,16 +148,18 @@ export function createPublicController({runtime, storage = null, onChange = () =
     state.journey.session = {...clone(raw.session), email: selectedEmail};
     const own = raw.ownProfile?.profile;
     if (raw.ownProfile?.status === 'present' && own) {
-      const overlay = profileOverlays.get(own.teacherId);
-      state.journey.profile = {
-        status: 'present',
-        value: {...clone(own), name: overlay?.name || own.displayName, bio: overlay?.bio ?? own.bio,
-          wishlistUrl: overlay?.wishlistUrl ?? own.wishlistUrl},
-        editOpen: state.journey.profile.editOpen === true,
-        editDraft: state.journey.profile.editDraft || {name: '', bio: '', wishlistUrl: ''},
-        createDraft: state.journey.profile.createDraft || {name: '', bio: '', wishlistUrl: ''},
-        source: overlay ? 'local-overlay' : 'runtime',
-      };
+      if (!state.route.profileId || state.route.profileId === own.id) {
+        const overlay = profileOverlays.get(own.teacherId);
+        state.journey.profile = {
+          status: 'present',
+          value: {...clone(own), name: overlay?.name || own.displayName, bio: overlay?.bio ?? own.bio,
+            wishlistUrl: overlay?.wishlistUrl ?? own.wishlistUrl},
+          editOpen: state.journey.profile.editOpen === true,
+          editDraft: state.journey.profile.editDraft || {name: '', bio: '', wishlistUrl: ''},
+          createDraft: state.journey.profile.createDraft || {name: '', bio: '', wishlistUrl: ''},
+          source: overlay ? 'local-overlay' : 'runtime',
+        };
+      }
     } else if (!state.route.profileId) {
       state.journey.profile = {status: raw.session.status === 'authenticated' ? 'absent' : 'unknown', value: null,
         editOpen: false, editDraft: {name: '', bio: '', wishlistUrl: ''},
@@ -153,7 +167,17 @@ export function createPublicController({runtime, storage = null, onChange = () =
     }
   }
   function setCommunityRole(role) {
-    state.journey.communityRole = ['anonymous', 'teacher', 'moderator'].includes(role) ? role : 'anonymous';
+    const nextRole = ['anonymous', 'teacher', 'moderator'].includes(role) ? role : 'anonymous';
+    if (state.journey.communityRole !== nextRole) {
+      state.community.postEditDraft = null;
+      state.community.editingPostId = null;
+    }
+    if (state.journey.communityRole === 'teacher' && nextRole !== 'teacher') {
+      state.community.topicDraft = null;
+      state.community.replyDraft = null;
+    }
+    if (nextRole !== 'moderator') state.community.reportedOnly = false;
+    state.journey.communityRole = nextRole;
     refreshCommunity();
   }
   function refreshCommunity() {
@@ -161,12 +185,29 @@ export function createPublicController({runtime, storage = null, onChange = () =
     state.community = {...snapshot, query: state.community.query || '', category: state.community.category || 'All',
       composer: state.community.composer || null, sort: state.community.sort || 'date-newest',
       pageSize: Math.max(1, Math.min(100, Number(state.community.pageSize) || 10)),
+      reportedOnly: state.community.reportedOnly === true,
       message: state.community.message || '', editingPostId: state.community.editingPostId || null,
-      editingReplyId: state.community.editingReplyId || null, editingThreadId: state.community.editingThreadId || null};
+      editingReplyId: state.community.editingReplyId || null, editingThreadId: state.community.editingThreadId || null,
+      topicDraft: state.community.topicDraft || null, replyDraft: state.community.replyDraft || null,
+      postEditDraft: state.community.postEditDraft || null};
   }
   function clearMutationStatus() { setRequest('idle', ''); state.journey.error = ''; }
+  function activeWishlistProfileId(route = state.route, projection = state.journey.profile) {
+    if (route.page !== 'profile' || projection.status !== 'present') return null;
+    const profile = projection.value;
+    if (!profile || projection.readOnly || profile.readOnly || projection.source === 'captured-readonly') return null;
+    if (route.profileId) return profile.id === route.profileId ? profile.id : null;
+    return state.journey.session.status === 'authenticated' && profile.teacherId === state.journey.session.teacherId
+      ? profile.id : null;
+  }
+  function clearWishlistHandoff() {
+    state.journey.wishlist = {intent: false, remote: false, destination: null, profileId: null};
+  }
+  function clearShareHandoff() {
+    state.journey.share = {intent: false, url: '', profileId: null, remote: false, copied: false};
+  }
 
-  async function service(port, input = {}, boundary = {}, {retry = false, after = null} = {}) {
+  async function service(port, input = {}, boundary = {}, {retry = false, beforeSync = null, after = null} = {}) {
     if (mutation) return {ok: false, ignored: true, error: {code: 'request_in_flight', message: 'A preview request is already running.'}};
     const startRouteEpoch = routeEpoch;
     mutation = true;
@@ -176,7 +217,13 @@ export function createPublicController({runtime, storage = null, onChange = () =
     try { result = await runtime.invoke(port, input, boundary); }
     catch { result = {ok: false, error: {code: 'runtime_failure', message: 'The local preview request failed.'}, message: 'The local preview request failed.'}; }
     mutation = false;
+    if (beforeSync) beforeSync(result);
+    const registrationDraft = port === 'Registration.registerTeacher' && state.route.page === 'register'
+      ? clone(state.journey.registration.identity) : null;
     syncRuntime();
+    if (!result.ok && registrationDraft && state.route.page === 'register') {
+      state.journey.registration.identity = registrationDraft;
+    }
     if (result.ok) {
       setRequest('completed', result.message || 'Local preview updated.');
       setOutcome('local-simulation', result.message || 'Local preview updated.');
@@ -193,9 +240,13 @@ export function createPublicController({runtime, storage = null, onChange = () =
   }
 
   async function loadLookup(port, input, target, epoch = schoolEpoch) {
+    const priorLookupError = state.journey.lookupError;
+    if (state.journey.lookupError && state.journey.outcome?.kind === 'local-error') state.journey.outcome = null;
     state.journey.loading = true;
     state.journey.lookupError = '';
-    lastLookup = () => loadLookup(port, input, target, schoolEpoch);
+    state.journey.lookupRetryable = false;
+    const retryInput = clone(input);
+    const retryLookup = () => loadLookup(port, retryInput, target, epoch);
     notify();
     const failNext = state.journey.failNext === true;
     if (failNext) state.journey.failNext = false;
@@ -207,11 +258,14 @@ export function createPublicController({runtime, storage = null, onChange = () =
     if (result.ok) {
       state.journey.lookups[target] = clone(result.data.values || []);
       state.journey.lookupError = '';
-      lastRetry = null;
+      state.journey.lookupRetryable = false;
+      if (state.journey.error === priorLookupError) state.journey.error = '';
+      if (schoolLookupRetry?.epoch === epoch) schoolLookupRetry = null;
     } else {
       state.journey.lookupError = result.message || result.error?.message || 'School choices are unavailable.';
+      state.journey.lookupRetryable = result.error?.retryable === true && result.error?.outcomeKnown !== false;
       state.journey.error = state.journey.lookupError;
-      lastRetry = result.error?.retryable ? lastLookup : null;
+      schoolLookupRetry = state.journey.lookupRetryable ? {epoch, run: retryLookup} : null;
       setOutcome('local-error', state.journey.lookupError, {code: result.error?.code || 'lookup_failed'});
     }
     notify();
@@ -255,27 +309,61 @@ export function createPublicController({runtime, storage = null, onChange = () =
     await runtime.ready;
     syncRuntime();
     readRememberedFilters();
-    schoolEpoch += 1;
-    await loadLookup('SchoolData.getStates', {}, 'states', schoolEpoch);
     await navigate(hash || '#/');
+    if (state.route.page !== 'register' && !state.journey.lookups.states.length) {
+      await loadLookup('SchoolData.getStates', {}, 'states', schoolEpoch);
+    }
     return state;
+  }
+
+  async function loadRegistrationChoices() {
+    const school = state.journey.school;
+    if (!state.journey.lookups.states.length) return loadLookup('SchoolData.getStates', {}, 'states', schoolEpoch);
+    if (school.state && !state.journey.lookups.counties.length) return loadLookup('SchoolData.getCounties', school, 'counties', schoolEpoch);
+    if (school.county && !state.journey.lookups.districts.length) return loadLookup('SchoolData.getDistricts', school, 'districts', schoolEpoch);
+    if (school.district && !state.journey.lookups.schools.length) return loadLookup('SchoolData.getSchools', school, 'schools', schoolEpoch);
+    return {ok: true, local: true};
   }
 
   async function navigate(hash = '#/') {
     routeEpoch += 1;
     schoolEpoch += 1;
     const epoch = routeEpoch;
-    state.route = normalizePublicRoute(hash);
+    state.journey.loading = false;
+    const nextRoute = normalizePublicRoute(hash);
+    const replyDraftRoute = nextRoute.page === 'community' && nextRoute.communityRoute?.page === 'post'
+      ? nextRoute.communityRoute.threadId : null;
+    if (state.community.replyDraft && replyDraftRoute !== state.community.replyDraft.threadId) state.community.replyDraft = null;
+    const nextPostId = replyDraftRoute;
+    if (state.community.editingPostId && state.community.editingPostId !== nextPostId) {
+      state.community.editingPostId = null;
+      state.community.postEditDraft = null;
+    } else if (state.community.postEditDraft && nextPostId !== state.community.postEditDraft.postId) {
+      state.community.postEditDraft = null;
+    }
+    state.route = nextRoute;
+    const targetWishlistProfileId = activeWishlistProfileId();
+    if (state.journey.wishlist.intent && state.journey.wishlist.profileId !== targetWishlistProfileId) clearWishlistHandoff();
+    const targetShareProfileId = state.route.page === 'profile'
+      ? state.route.profileId || state.journey.runtime?.ownProfile?.profile?.id || null
+      : null;
+    if (state.journey.share.intent && state.journey.share.profileId !== targetShareProfileId) clearShareHandoff();
     state.journey.navOpen = false;
     state.journey.error = '';
     state.journey.terms = {...state.journey.terms, open: state.route.termsOpen === true};
+    if (state.journey.lookupError && state.journey.outcome?.kind === 'local-error') state.journey.outcome = null;
+    state.journey.lookupError = '';
+    state.journey.lookupRetryable = false;
     lastRetry = null;
+    schoolLookupRetry = null;
     if (state.route.page === 'directory') {
       await loadDirectory(state.journey.filters.query, state.journey.school, epoch);
     } else if (state.route.page === 'profile' && state.route.profileId) {
       await loadPublicProfile(state.route.profileId, epoch);
     } else if (state.route.page === 'profile') {
       syncRuntime();
+    } else if (state.route.page === 'register') {
+      await loadRegistrationChoices();
     }
     notify();
     return {ok: true, route: clone(state.route)};
@@ -292,6 +380,8 @@ export function createPublicController({runtime, storage = null, onChange = () =
     const keys = ['state', 'county', 'district', 'school'];
     const index = keys.indexOf(key);
     if (index < 0) throw new Error('Unknown school selection.');
+    lastRetry = null;
+    schoolLookupRetry = null;
     schoolEpoch += 1;
     const epoch = schoolEpoch;
     state.journey.school[key] = clean(value, 100);
@@ -300,7 +390,9 @@ export function createPublicController({runtime, storage = null, onChange = () =
       const lookupKey = {state: 'states', county: 'counties', district: 'districts', school: 'schools'}[keys[i]];
       state.journey.lookups[lookupKey] = [];
     }
+    if (state.journey.lookupError && state.journey.outcome?.kind === 'local-error') state.journey.outcome = null;
     state.journey.lookupError = '';
+    state.journey.lookupRetryable = false;
     state.journey.error = '';
     clearMutationStatus();
     notify();
@@ -443,6 +535,12 @@ export function createPublicController({runtime, storage = null, onChange = () =
       setCommunityRole(payload.role);
       return syncCommunityNotice({ok: true}, `Local forum preview role is now ${state.journey.communityRole}.`);
     }
+    if (event === 'forum-reported-only') {
+      if (role !== 'moderator') return syncCommunityNotice({ok: false, error: 'moderator_required'}, 'Moderator access is required to filter reported items.');
+      if (payload.enabled !== undefined && typeof payload.enabled !== 'boolean') return syncCommunityNotice({ok: false, error: 'invalid_report_filter'}, 'Choose whether to show reported items only.');
+      state.community.reportedOnly = payload.enabled === undefined ? !state.community.reportedOnly : payload.enabled;
+      return syncCommunityNotice({ok: true}, state.community.reportedOnly ? 'Showing reported forum items.' : 'Showing all forum items.');
+    }
     if (event === 'forum-search') { state.community.query = boundedDraft(payload.query ?? payload.value, 250); return syncCommunityNotice({ok: true}, 'Forum search updated locally.'); }
     if (event === 'forum-clear-search') { state.community.query = ''; return syncCommunityNotice({ok: true}, 'Forum search cleared.'); }
     if (event === 'forum-category') { state.community.category = clean(payload.category ?? payload.value, 80) || 'All'; return syncCommunityNotice({ok: true}, 'Forum category updated.'); }
@@ -458,14 +556,32 @@ export function createPublicController({runtime, storage = null, onChange = () =
       return requestNavigation('/create-post');
     }
     if (event === 'forum-topic' || event === 'forum-submit-topic') {
-      result = community.createThread({title: payload.title, body: payload.body ?? payload.content, category: payload.category,
+      const content = payload.body ?? payload.content;
+      result = community.createThread({title: payload.title, body: content, category: payload.category,
         author: state.journey.registration.identity.name || 'Preview Teacher', role, authorId: 'demo-teacher'});
-      if (result.ok) requestNavigation(`/posts/${encodeURIComponent(result.value.id)}`);
+      if (result.ok) {
+        state.community.topicDraft = null;
+        requestNavigation(`/posts/${encodeURIComponent(result.value.id)}`);
+      } else if (role === 'teacher') {
+        state.community.topicDraft = {
+          title: boundedDraft(payload.title, COMMUNITY_LIMITS.title + 1),
+          category: boundedDraft(payload.category, COMMUNITY_LIMITS.category),
+          content: boundedDraft(content, COMMUNITY_LIMITS.body + 1),
+        };
+      }
       return syncCommunityNotice(result);
     }
     if (event === 'forum-open-thread') return requestNavigation(`/posts/${encodeURIComponent(postId)}`);
     if (event === 'forum-reply' || event === 'forum-comment') {
-      result = community.reply(postId, {body: payload.body ?? payload.content, author: state.journey.registration.identity.name || 'Preview Teacher', role, authorId: 'demo-teacher'});
+      const content = payload.body ?? payload.content;
+      result = community.reply(postId, {body: content, author: state.journey.registration.identity.name || 'Preview Teacher', role, authorId: 'demo-teacher'});
+      if (result?.ok) {
+        if (state.community.replyDraft?.threadId === postId) state.community.replyDraft = null;
+      } else if (role === 'teacher' && ['reply_required', 'input_too_long', 'reply_limit_reached'].includes(result?.error)) {
+        state.community.replyDraft = {threadId: postId, content: boundedReplyDraft(content)};
+      } else if (state.community.replyDraft?.threadId === postId) {
+        state.community.replyDraft = null;
+      }
       return syncCommunityNotice(result);
     }
     if (event === 'forum-flag-thread') result = community.flag(postId, {role});
@@ -475,13 +591,27 @@ export function createPublicController({runtime, storage = null, onChange = () =
     else if (event === 'forum-vote') result = community.vote(postId, {...roleArgs(), direction: payload.direction || 'upvote'});
     else if (event === 'forum-edit-post') {
       if (payload.title === undefined && payload.body === undefined && payload.content === undefined) {
+        if (state.community.editingPostId !== postId) state.community.postEditDraft = null;
         state.community.editingPostId = postId;
         return syncCommunityNotice({ok: true}, 'Edit this local post in the forum editor.');
       }
+      const saved = state.community.threads.find(thread => thread.id === postId);
+      const title = payload.title === undefined ? saved?.title : payload.title;
+      const body = payload.body ?? payload.content ?? saved?.body;
       result = community.updatePost(postId, {title: payload.title, body: payload.body ?? payload.content, ...roleArgs()});
+      if (result?.ok) {
+        state.community.postEditDraft = null;
+      } else if (role === 'teacher' && state.community.editingPostId === postId &&
+          ['title_and_body_required', 'input_too_long'].includes(result?.error)) {
+        state.community.postEditDraft = {postId, title: boundedPostEditTitle(title), content: boundedReplyDraft(body)};
+      } else if (state.community.postEditDraft?.postId === postId) {
+        state.community.postEditDraft = null;
+      }
     } else if (event === 'forum-delete-post') result = community.deletePost(postId, roleArgs());
     else if (event === 'forum-edit-comment') {
       if (payload.body === undefined && payload.content === undefined) {
+        state.community.postEditDraft = null;
+        state.community.editingPostId = null;
         state.community.editingReplyId = replyId;
         state.community.editingThreadId = postId;
         return syncCommunityNotice({ok: true}, 'Edit this local comment in the forum editor.');
@@ -489,18 +619,26 @@ export function createPublicController({runtime, storage = null, onChange = () =
       result = community.updateReply(postId, replyId, {body: payload.body ?? payload.content, ...roleArgs()});
     } else if (event === 'forum-delete-comment') result = community.deleteReply(postId, replyId, roleArgs());
     else if (event === 'forum-cancel-edit') {
+      state.community.postEditDraft = null;
       state.community.editingPostId = null;
       state.community.editingReplyId = null;
       state.community.editingThreadId = null;
       return syncCommunityNotice({ok: true}, 'Forum edit cancelled.');
     }
-    else if (event === 'forum-reset') result = community.reset();
+    else if (event === 'forum-reset') {
+      state.community.topicDraft = null;
+      state.community.replyDraft = null;
+      state.community.postEditDraft = null;
+      state.community.editingPostId = null;
+      result = community.reset();
+    }
     else if (event === 'forum-export') {
       const data = community.exportData();
       state.community.exportData = data;
       return syncCommunityNotice({ok: true, value: data}, 'Local forum data is ready to copy; no data was uploaded.');
     } else return null;
     if (result?.ok) {
+      state.community.postEditDraft = null;
       state.community.editingPostId = null;
       state.community.editingReplyId = null;
       state.community.editingThreadId = null;
@@ -559,21 +697,35 @@ export function createPublicController({runtime, storage = null, onChange = () =
       return {ok: true};
     }
     if (event === 'public:random-teacher') {
-      const items = state.journey.matches.items.length ? state.journey.matches.items : (runtime.snapshot().demo?.publicProfiles || []);
+      const items = runtime.snapshot().demo?.publicProfiles || [];
       if (!items.length) return {ok: false, error: {code: 'no_profiles', message: 'No synthetic teacher profiles are available.'}};
       const picked = items[randomIndex++ % items.length];
       return requestNavigation(`/public-profile/${encodeURIComponent(picked.id)}`);
     }
     if (event === 'public:wishlist') {
       const profile = state.journey.profile.value;
+      if (state.route.page === 'profile' && (state.journey.profile.readOnly || profile?.readOnly || state.journey.profile.source === 'captured-readonly')) {
+        return {ok: false, error: {code: 'read_only_reference', message: 'Captured public reference profiles do not use the synthetic wishlist handoff.'}};
+      }
+      const profileId = activeWishlistProfileId();
+      if (state.route.page === 'profile' && !profileId) {
+        return {ok: false, error: {code: 'profile_unavailable', message: 'Load the current profile before preparing its wishlist handoff.'}};
+      }
       const destination = profile?.wishlistUrl || FIXTURE_WISHLIST_URL;
-      state.journey.wishlist = {intent: true, remote: false, destination, choiceRequired: true, opened: false};
+      state.journey.wishlist = {intent: true, remote: false, destination, profileId, choiceRequired: true, opened: false};
       setOutcome('handoff-ready', 'This synthetic wishlist is an external handoff. Choose whether to open the displayed fixture destination; this preview has not opened it.');
       notify();
       return {ok: true, handoff: clone(state.journey.wishlist)};
     }
     if (event === 'public:confirm-wishlist') {
       if (!state.journey.wishlist.intent) return {ok: false, error: {code: 'no_wishlist_handoff'}};
+      if (state.route.page === 'profile' && (state.journey.profile.readOnly || state.journey.profile.value?.readOnly || state.journey.profile.source === 'captured-readonly')) {
+        return {ok: false, error: {code: 'read_only_reference'}};
+      }
+      const activeProfileId = activeWishlistProfileId();
+      if ((state.route.page === 'profile' && !activeProfileId) || state.journey.wishlist.profileId !== activeProfileId) {
+        return {ok: false, error: {code: 'wishlist_profile_changed', message: 'Prepare a new handoff from the profile currently shown.'}};
+      }
       state.journey.wishlist = {...state.journey.wishlist, choiceRequired: false, confirmed: true};
       setOutcome('handoff-confirmed', 'Wishlist handoff confirmed. Open the displayed link only if you choose to leave this local preview.');
       notify();
@@ -588,7 +740,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
     if (event === 'public:share') {
       const id = state.route.profileId || state.journey.profile.value?.id || 'demo-avery';
       const url = `#/public-profile/${encodeURIComponent(id)}`;
-      state.journey.share = {intent: true, url, remote: false, copied: false};
+      state.journey.share = {intent: true, url, profileId: id, remote: false, copied: false};
       setOutcome('local-handoff', 'A local preview route is ready to copy. No public sharing service was called.');
       notify();
       return {ok: true, share: clone(state.journey.share)};
@@ -598,6 +750,9 @@ export function createPublicController({runtime, storage = null, onChange = () =
       if (state.journey.profile.readOnly || state.journey.profile.value?.readOnly) {
         return {ok: false, error: {code: 'read_only_reference', message: 'Captured public reference profiles are read-only.'}};
       }
+      if (state.journey.session.status !== 'authenticated') return {ok: false, error: {code: 'authentication_required'}};
+      const ownershipError = profileOwnerError(state.journey.profile.value);
+      if (ownershipError) return ownershipError;
       state.journey.profile.editOpen = !state.journey.profile.editOpen;
       state.journey.profile.editDraft = state.journey.profile.editOpen
         ? {name: state.journey.profile.value.name || '', bio: state.journey.profile.value.bio || '', wishlistUrl: state.journey.profile.value.wishlistUrl || ''}
@@ -611,11 +766,15 @@ export function createPublicController({runtime, storage = null, onChange = () =
       if (state.journey.profile.readOnly || profile.readOnly || state.journey.profile.source === 'captured-readonly') {
         return {ok: false, error: {code: 'read_only_reference', message: 'Captured public reference profiles are read-only.'}};
       }
+      const ownershipError = profileOwnerError(profile);
+      if (ownershipError) return ownershipError;
       const draft = state.journey.profile.editDraft || {};
       const name = clean(payload.name ?? draft.name ?? profile.name, 100);
       const bio = clean(payload.bio ?? draft.bio ?? profile.bio, 500);
-      const wishlistUrl = clean(payload.wishlistUrl ?? draft.wishlistUrl ?? profile.wishlistUrl, 512);
+      const wishlistInput = payload.wishlistUrl ?? draft.wishlistUrl ?? profile.wishlistUrl;
+      const wishlistUrl = typeof wishlistInput === 'string' ? wishlistInput.trim() : '';
       if (!name) return localValidation('Enter a display name.');
+      if (wishlistUrl && !safeWishlist(wishlistUrl)) return localValidation('Use a synthetic preview wishlist URL such as https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM, or leave it blank to keep the current link.');
       const overlay = {name, bio, wishlistUrl: safeWishlist(wishlistUrl) ? wishlistUrl : profile.wishlistUrl};
       profileOverlays.set(profile.teacherId, overlay);
       state.journey.profile = {...state.journey.profile, value: {...profile, ...overlay}, editOpen: false,
@@ -644,15 +803,18 @@ export function createPublicController({runtime, storage = null, onChange = () =
       state.journey.registration.identity = {name, email: clean(payload.email, 254), phone};
       state.journey.school = {...state.journey.school, ...school, grade: clean(payload.grade, 40) || state.journey.school.grade};
       const fixtureEmail = `public-teacher-${++syntheticAccount}@fixture.test`;
-      aliasToFixtureEmail.set(email, fixtureEmail);
-      identityByFixtureEmail.set(fixtureEmail, {name, email: clean(payload.email, 254), phone});
       const internalName = `Demo ${name.replace(/[^A-Za-z0-9 ]/g, ' ').trim().slice(0, 60) || 'Teacher'}`;
       lastRetry = null;
       return service('Registration.registerTeacher', {
         teacher: {name: internalName, email: fixtureEmail, phoneNumber: 'DEMO'},
         school: {state: school.state, county: school.county, district: school.district, school: school.school},
         termsAccepted: true, demoAccount: true,
-      }, {credentials: {password, confirmPassword}}, {after: async () => {
+      }, {credentials: {password, confirmPassword}}, {beforeSync: result => {
+        if (result.ok) {
+          aliasToFixtureEmail.set(email, fixtureEmail);
+          identityByFixtureEmail.set(fixtureEmail, {name, email: clean(payload.email, 254), phone});
+        }
+      }, after: async () => {
         state.journey.session.email = clean(payload.email, 254);
         state.journey.terms.open = false;
         setCommunityRole('anonymous');
@@ -673,21 +835,25 @@ export function createPublicController({runtime, storage = null, onChange = () =
       if (!validEmail(email) || !password) return localValidation('Enter the demo email and password field to continue. The preview does not verify passwords.');
       const fixtureEmail = aliasToFixtureEmail.get(email) || email;
       const startRouteEpoch = routeEpoch;
-      const result = await service('Session.login', {email: fixtureEmail, demoAccount: true}, {credentials: {password, confirmPassword: password}});
-      if (result.ok) {
+      const result = await service('Session.login', {email: fixtureEmail, demoAccount: true}, {credentials: {password, confirmPassword: password}}, {after: async () => {
         const identity = identityByFixtureEmail.get(emailKey(fixtureEmail));
+        state.journey.loginDraft = {email: null};
         state.journey.session.email = identity?.email || clean(payload.email, 254);
         setCommunityRole('teacher');
-        if (routeEpoch === startRouteEpoch) requestNavigation('/profile');
-      }
+      }});
+      if (result.ok && routeEpoch === startRouteEpoch) requestNavigation('/profile');
       return result;
     }
     if (event === 'public:logout') {
       const startRouteEpoch = routeEpoch;
+      const ownProfileId = runtime.snapshot().ownProfile?.profile?.id || null;
       const result = await service('Session.logout');
       if (result.ok) {
+        state.journey.loginDraft = {email: null};
         setCommunityRole('anonymous');
-        state.journey.profile = {status: 'unknown', value: null, editOpen: false, source: 'runtime'};
+        if (!state.route.profileId || state.route.profileId === ownProfileId) {
+          state.journey.profile = {status: 'unknown', value: null, editOpen: false, source: 'runtime'};
+        }
         if (routeEpoch === startRouteEpoch) requestNavigation('/login');
       }
       return result;
@@ -698,7 +864,9 @@ export function createPublicController({runtime, storage = null, onChange = () =
       const createDraft = state.journey.profile.createDraft || {};
       const name = clean(payload.name ?? createDraft.name, 100) || identity?.name || 'Demo Teacher';
       const bio = clean(payload.bio ?? createDraft.bio, 500);
-      const wishlistUrl = clean(payload.wishlistUrl ?? createDraft.wishlistUrl, 512);
+      const wishlistInput = payload.wishlistUrl ?? createDraft.wishlistUrl;
+      const wishlistUrl = typeof wishlistInput === 'string' ? wishlistInput.trim() : '';
+      if (wishlistUrl && !safeWishlist(wishlistUrl)) return localValidation('Use a synthetic preview wishlist URL such as https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM, or leave it blank to use the default link.');
       const internalName = `Demo ${name.replace(/[^A-Za-z0-9 ]/g, ' ').trim().slice(0, 60) || 'Teacher'}`;
       const result = await service('TeacherProfile.createProfile', {
         displayName: internalName, bio: 'Synthetic local preview profile.', subjects: [], wishlistUrl: FIXTURE_WISHLIST_URL,
@@ -708,12 +876,15 @@ export function createPublicController({runtime, storage = null, onChange = () =
         profileOverlays.set(profile.teacherId, {name, bio: bio || profile.bio,
           wishlistUrl: safeWishlist(wishlistUrl) ? wishlistUrl : profile.wishlistUrl});
         syncRuntime({email: identity?.email || state.journey.session.email});
-        state.journey.profile.editOpen = false;
-        state.journey.profile.createDraft = {name: '', bio: '', wishlistUrl: ''};
-        state.journey.profile.source = 'local-overlay';
-        state.journey.profile.value.name = name;
-        state.journey.profile.value.bio = bio || profile.bio;
-        state.journey.profile.value.wishlistUrl = safeWishlist(wishlistUrl) ? wishlistUrl : profile.wishlistUrl;
+        if (state.route.page === 'profile' && (!state.route.profileId || state.route.profileId === profile.id) &&
+            state.journey.profile.status === 'present' && state.journey.profile.value?.id === profile.id) {
+          state.journey.profile.editOpen = false;
+          state.journey.profile.createDraft = {name: '', bio: '', wishlistUrl: ''};
+          state.journey.profile.source = 'local-overlay';
+          state.journey.profile.value.name = name;
+          state.journey.profile.value.bio = bio || profile.bio;
+          state.journey.profile.value.wishlistUrl = safeWishlist(wishlistUrl) ? wishlistUrl : profile.wishlistUrl;
+        }
         notify();
       }
       return result;
@@ -746,11 +917,16 @@ export function createPublicController({runtime, storage = null, onChange = () =
         state.journey.searchPerformed = false;
         state.journey.matches = {status: 'idle', items: [], error: ''};
         state.journey.registration.identity = {name: '', email: '', phone: ''};
+        state.journey.loginDraft = {email: null};
         state.journey.terms = {open: false, accepted: false};
         state.journey.contact = {name: '', email: '', subject: '', message: ''};
-        state.journey.wishlist = {intent: false, remote: false, destination: null};
+        clearWishlistHandoff();
         state.journey.share = {intent: false, url: ''};
         state.journey.communityRole = 'anonymous';
+        state.community.topicDraft = null;
+        state.community.replyDraft = null;
+        state.community.postEditDraft = null;
+        state.community.editingPostId = null;
         state.journey.profile = {status: 'absent', value: null, editOpen: false, source: 'runtime'};
         try { storage?.removeItem(FILTER_KEY); } catch {}
         await community.reset(); refreshCommunity();
@@ -759,8 +935,13 @@ export function createPublicController({runtime, storage = null, onChange = () =
       }
       return result;
     }
+    if (event === 'public:retry-school-lookup') {
+      if (schoolLookupRetry?.epoch === schoolEpoch) return schoolLookupRetry.run();
+      return {ok: false, error: {code: 'nothing_to_retry', message: 'There is no safe school-lookup read to retry.'}};
+    }
     if (event === 'public:retry' || event === 'retry') {
       if (lastRetry) return lastRetry();
+      if (schoolLookupRetry?.epoch === schoolEpoch) return schoolLookupRetry.run();
       return {ok: false, error: {code: 'nothing_to_retry', message: 'There is no safe read operation to retry.'}};
     }
     if (event === 'public:fail-next') {
@@ -777,6 +958,11 @@ export function createPublicController({runtime, storage = null, onChange = () =
     notify();
     return {ok: false, error: {code: 'validation_failed', message}};
   }
+  function profileOwnerError(profile) {
+    const teacherId = state.journey.session.teacherId;
+    if (teacherId && profile?.teacherId === teacherId) return null;
+    return {ok: false, error: {code: 'profile_owner_mismatch', message: 'You can only edit your own local profile.'}};
+  }
   function safeWishlist(value) {
     if (typeof value !== 'string' || value.length > 512) return false;
     try {
@@ -789,6 +975,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
     if (typeof name !== 'string' || /password|confirmPassword/i.test(name)) return false;
     if (name === 'query' && state.route.page === 'community') state.community.query = boundedDraft(value, 250);
     else if (name === 'query') state.journey.filters.query = boundedDraft(value, 100);
+    else if (name === 'email' && state.route.page === 'login') state.journey.loginDraft = {email: boundedDraft(value, 254)};
     else if (name === 'name' && state.route.page === 'register') state.journey.registration.identity.name = boundedDraft(value, 80);
     else if (name === 'email' && state.route.page === 'register') state.journey.registration.identity.email = boundedDraft(value, 254);
     else if ((name === 'phone' || name === 'phone_number') && state.route.page === 'register') state.journey.registration.identity.phone = boundedDraft(value, 32);
@@ -812,7 +999,7 @@ export function createPublicController({runtime, storage = null, onChange = () =
   return Object.freeze({
     state,
     get route() { return state.route; },
-    get canRetry() { return typeof lastRetry === 'function'; },
+    get canRetry() { return typeof lastRetry === 'function' || schoolLookupRetry?.epoch === schoolEpoch; },
     initialize, navigate, selectSchool, dispatch, updateDraft,
     community,
   });

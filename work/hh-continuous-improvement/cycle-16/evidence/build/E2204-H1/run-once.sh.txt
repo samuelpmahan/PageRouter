@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -u
+set -o noclobber
+capture_dir=/workspace/scratch/8528bb251845/hh-cycle16/H1/E2204/captures
+output_dir=/workspace/scratch/8528bb251845/hh-cycle16/H1/E2204/build-output
+for name in stdout.raw stderr.raw exit.code signal.txt start.utc end.utc; do
+  if [ -e "$capture_dir/$name" ]; then
+    printf 'Refusing to overwrite existing capture: %s\n' "$capture_dir/$name" >&2
+    exit 73
+  fi
+done
+for name in site.receipt.json site.log; do
+  if [ -e "$output_dir/$name" ]; then
+    printf 'Refusing to overwrite existing build output capture: %s\n' "$output_dir/$name" >&2
+    exit 73
+  fi
+done
+cd /workspace/scratch/8528bb251845/PageRouter/checkpoint || exit 74
+date -u +%Y-%m-%dT%H:%M:%SZ > "$capture_dir/start.utc"
+/usr/bin/env BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh > "$capture_dir/stdout.raw" 2> "$capture_dir/stderr.raw"
+build_status=$?
+printf '%s\n' "$build_status" > "$capture_dir/exit.code"
+if [ "$build_status" -gt 128 ]; then
+  signal_number=$((build_status - 128))
+  signal_name=$(kill -l "$signal_number" 2>/dev/null || printf 'unknown')
+  printf 'possible-signal-%s:%s\n' "$signal_number" "$signal_name" > "$capture_dir/signal.txt"
+else
+  printf 'none\n' > "$capture_dir/signal.txt"
+fi
+date -u +%Y-%m-%dT%H:%M:%SZ > "$capture_dir/end.utc"
+if [ "$build_status" -eq 0 ]; then
+  cp -p -- /workspace/scratch/8528bb251845/PageRouter/checkpoint/bazel-bin/site.receipt.json "$output_dir/site.receipt.json" || exit 74
+  cp -p -- /workspace/scratch/8528bb251845/PageRouter/checkpoint/bazel-bin/site.log "$output_dir/site.log" || exit 74
+fi
+exit "$build_status"

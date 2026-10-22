@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'newer-443b7c12-affb-446c-b8bb-a8429740aa26@example.invalid'
+- 'avery@fixture.test'
+
+    at file:///workspace/scratch/8528bb251845/hh-cycle14/H2/E1902/probe.mjs:79:8 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'newer-443b7c12-affb-446c-b8bb-a8429740aa26@example.invalid',
+  expected: 'avery@fixture.test',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

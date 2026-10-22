@@ -1,0 +1,65 @@
+{
+  "job_id": "E1004",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "Canonical checkpoint Bazel build passed without threshold changes. The generated receipt binds both current HH controller source files to their recorded SHA-256 inputs and reports crisp compiled/source equality, 843 verified site files, 14 successful PxCube packages, and siteBuildId b7d30601db9f5e774f55016bf5359cdd7aedb9620cfc3f92c8a3e8a668022bd0. No source edits, commit, package, publication, or deployment occurred during this packet.",
+  "execution": {
+    "working_directory": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "command": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "capture_command": "set -o pipefail; BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle07/H1/E1004/build.log",
+    "exit_code": 0,
+    "capture": "Actual run stdout and stderr combined through tee; pipeline used pipefail, and exit code is from the canonical wrapper.",
+    "started_at_utc_approx": "2026-10-18T13:23:00Z",
+    "finished_at_utc": "2026-10-18T13:25:52Z",
+    "elapsed_seconds": 72.491,
+    "toolchain_preflight": "node v24.19.0; declared host tools verified by wrapper"
+  },
+  "receipt": {
+    "path": "site.receipt.json",
+    "sha256": "1beb8ba7974dd28d92a99c53c18bdb2c54dddd3baec50de15a9da8b7acb5c2d2",
+    "siteBuildId": "b7d30601db9f5e774f55016bf5359cdd7aedb9620cfc3f92c8a3e8a668022bd0",
+    "siteDigest": "f0cf4e8d50e30cd39f72dd2b3951a0d60cd38346c69a699614fc16e3fcd1d737",
+    "sourceDigest": "5dad652773d03bbcba82e253c11de1b8e09d9d3237a66798695cbf4cbb8109d8",
+    "sourceInputCount": 1538,
+    "verifiedSiteFiles": 843,
+    "crispExactCompiledEquality": true,
+    "pxcube": {"rebuilt": true, "packages": 14, "relocated": false},
+    "sourceInputs": [
+      {"path": "vendor/hh/src/public-controller.mjs", "bytes": 52287, "sha256": "df2765c4b8eee83236d90e9c4380222561956252a0c2cc9a3d63a8a870be046c"},
+      {"path": "vendor/hh/src/public-controller.test.mjs", "bytes": 57862, "sha256": "9732658d1e0eaca0d7344d4ba3626540b72e954b55424ec5f1a01572e1028f04"}
+    ]
+  },
+  "test_summary": {
+    "canonical_wrapper_tests": "276 passed, 0 failed; Atlas import-closure test 1 passed, 0 failed",
+    "pxcube": "14 packages succeeded",
+    "evidence": "VERIFICATION.json"
+  },
+  "artifacts": {
+    "build_log": {"path": "build.log", "sha256": "efccc4eb93b00807f6b0b797eb0656a300eb03b5a65010ea64f5fea26dedd00d"},
+    "site_log": {"path": "site.log", "sha256": "4c2cc24c3ce423f6ef36a7eb545ea54b165eaf715d1eae2e13726cc39c287f35"},
+    "verification": {"path": "VERIFICATION.json", "sha256": "7f952108063118fcb3b304da03a61ce90a5af1e5830f8e809c2a0054f0dfb75d", "provenance": "Historical embedded artifact copied from canonical build output; not current-cycle executed verification and not current-cycle browser acceptance."},
+    "hh_suite": {"path": "hh-original-suite.tap", "sha256": "25dbf7fcd0de6db5280cea5dfbf403cee8c2c65269306f0724ab1621841a33b3"},
+    "source_input_projection": {"path": "source-input-bindings.json", "sha256": "dd7abfc8c43ddb83365ee28106ca83718e8de286ad9dd6fe88947d4396ad04d", "derived_from": "site.receipt.json; original receipt preserved byte-identically"}
+  },
+  "source": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "7feded8819db87026a8f35f6aa515bda513ab541",
+    "tree": "1cdcf9bfb34b680ed198eb7e750486ecfd1887cc",
+    "changed_paths": ["checkpoint/vendor/hh/src/public-controller.mjs", "checkpoint/vendor/hh/src/public-controller.test.mjs"],
+    "product_sha256": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "df2765c4b8eee83236d90e9c4380222561956252a0c2cc9a3d63a8a870be046c",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "9732658d1e0eaca0d7344d4ba3626540b72e954b55424ec5f1a01572e1028f04"
+    },
+    "worktree_status_after_build": "Only the two listed product files modified; no generated distribution files staged or edited."
+  },
+  "boundaries": {
+    "acceptance_threshold_reduced": false,
+    "canonical_thresholds_changed": false,
+    "commit_or_package": false,
+    "published_or_deployed": false,
+    "live_site_or_external_service": false,
+    "browser_visual_qa_claimed": false
+  },
+  "next_unexecuted_hypothesis": "On Demo Avery prepare public:share, navigate to Demo Jordan without new preparation, and inspect renderPublicSite share-route field plus direct public:share dispatch for whether an Avery route persists under Jordan. This remains source-inspection-only and unexecuted; preserve captured reference behavior and do not externally copy/share."
+}

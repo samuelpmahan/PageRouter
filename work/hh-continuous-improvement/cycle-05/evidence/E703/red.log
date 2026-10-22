@@ -1,0 +1,252 @@
+✖ delayed profile creation preserves the current other-teacher route and edit authority (24.509451ms)
+✖ delayed profile creation preserves a captured read-only reference projection (4.643005ms)
+✖ delayed profile creation leaves an in-flight public-profile read projection intact (3.896489ms)
+✖ failed profile creation service sync preserves a captured reference when an own profile exists (3.682907ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 176.268855
+
+✖ failing tests:
+
+test at PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:82:1
+✖ delayed profile creation preserves the current other-teacher route and edit authority (24.509451ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   createDraft: {
+  +     bio: '',
+  +     name: '',
+  +     wishlistUrl: ''
+  +   },
+  +   editDraft: {
+  +     bio: '',
+  +     name: '',
+  +     wishlistUrl: ''
+  +   },
+      editOpen: false,
+  +   source: 'local-overlay',
+  -   source: 'runtime',
+      status: 'present',
+      value: {
+  +     bio: 'Synthetic local preview profile.',
+  +     displayName: 'Demo Synthetic Owner Profile',
+  +     id: 'profile-demo-teacher-1',
+  +     name: 'Synthetic Owner Profile',
+  -     bio: 'Synthetic science teacher profile.',
+  -     displayName: 'Demo Avery',
+  -     id: 'demo-avery',
+  -     name: 'Demo Avery',
+        school: {
+          county: 'Demo King',
+          district: 'Demo District',
+          school: 'Demo Academy',
+          state: 'Demo Washington'
+        },
+  +     seeded: false,
+  +     subjects: [],
+  +     teacherId: 'demo-teacher-1',
+  +     wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW'
+  -     seeded: true,
+  -     subjects: [
+  -       'Science'
+  -     ],
+  -     teacherId: 'demo-seed-avery',
+  -     wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY'
+      }
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:98:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'present', value: { id: 'profile-demo-teacher-1', teacherId: 'demo-teacher-1', displayName: 'Demo Synthetic Owner Profile', bio: 'Synthetic local preview profile.', subjects: [], wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW', school: [Object], seeded: false, name: 'Synthetic Owner Profile' }, editOpen: false, editDraft: { name: '', bio: '', wishlistUrl: '' }, createDraft: { name: '', bio: '', wishlistUrl: '' }, source: 'local-overlay' },
+    expected: { status: 'present', value: { id: 'demo-avery', teacherId: 'demo-seed-avery', displayName: 'Demo Avery', bio: 'Synthetic science teacher profile.', subjects: [Array], wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY', school: [Object], seeded: true, name: 'Demo Avery' }, editOpen: false, source: 'runtime' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:109:1
+✖ delayed profile creation preserves a captured read-only reference projection (4.643005ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      createDraft: {
+        bio: '',
+        name: '',
+        wishlistUrl: ''
+  ...
+      editOpen: false,
+  +   source: 'local-overlay',
+  -   readOnly: true,
+  -   source: 'captured-readonly',
+      status: 'present',
+      value: {
+  +     bio: 'Synthetic local preview profile.',
+  +     displayName: 'Demo Synthetic Reference Control',
+  +     id: 'profile-demo-teacher-1',
+  +     name: 'Synthetic Reference Control',
+  -     bio: 'I am a Kindergarten teacher in the dual language program at Rochester Primary School. I teach 40 students each year, 20 come from primarily English speaking households and 20 come from primarily Spanish speaking households. Our students spend 3 hours each day in full English immersion and 3 hours each day in full Spanish immersion learning. Thank you so much for your consideration!',
+  -     displayName: 'Sarah Endsley',
+  -     id: 'reference-sarah',
+  -     image: 'homepage/teacher-of-day.jpg',
+  -     name: 'Sarah Endsley',
+  -     provenance: {
+  -       evidence: 'PUBLIC-JOURNEY-EVIDENCE.json',
+  -       imageSha256: '5e736f5b64a103dc18f2aa570061fc43d0e2219fe8a6b6dd1f94297fe14b04bd',
+  -       kind: 'captured public reference snapshot; local preview',
+  -       page: 'https://www.helpteachers.net/pages/homepage.html',
+  -       profilePage: 'https://www.helpteachers.net/pages/teacher.html',
+  -       scope: 'Read-only display data from an anonymous captured page. No account, wishlist, share, or service authority is included.'
+  -     },
+  -     readOnly: true,
+        school: {
+  +       county: 'Demo King',
+  +       district: 'Demo District',
+  +       school: 'Demo Academy',
+  +       state: 'Demo Washington'
+  -       county: 'Thurston County',
+  -       school: 'Rochester Primary School',
+  -       state: 'Washington'
+        },
+  +     seeded: false,
+  +     subjects: [],
+  +     teacherId: 'demo-teacher-1',
+  +     wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW'
+  -     wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20'
+      }
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:123:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'present', value: { id: 'profile-demo-teacher-1', teacherId: 'demo-teacher-1', displayName: 'Demo Synthetic Reference Control', bio: 'Synthetic local preview profile.', subjects: [], wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW', school: [Object], seeded: false, name: 'Synthetic Reference Control' }, editOpen: false, editDraft: { name: '', bio: '', wishlistUrl: '' }, createDraft: { name: '', bio: '', wishlistUrl: '' }, source: 'local-overlay' },
+    expected: { status: 'present', value: { id: 'reference-sarah', name: 'Sarah Endsley', displayName: 'Sarah Endsley', image: 'homepage/teacher-of-day.jpg', school: [Object], bio: 'I am a Kindergarten teacher in the dual language program at Rochester Primary School. I teach 40 students each year, 20 come from primarily English speaking households and 20 come from primarily Spanish speaking households. Our students spend 3 hours each day in full English immersion and 3 hours each day in full Spanish immersion learning. Thank you so much for your consideration!', wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20', readOnly: true, provenance: [Object] }, editOpen: false, editDraft: { name: '', bio: '', wishlistUrl: '' }, createDraft: { name: '', bio: '', wishlistUrl: '' }, readOnly: true, source: 'captured-readonly' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:129:1
+✖ delayed profile creation leaves an in-flight public-profile read projection intact (3.896489ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   createDraft: {
+  +     bio: '',
+  +     name: '',
+  +     wishlistUrl: ''
+  +   },
+  +   editDraft: {
+  +     bio: '',
+  +     name: '',
+  +     wishlistUrl: ''
+  +   },
+      editOpen: false,
+  +   source: 'local-overlay',
+  +   status: 'present',
+  +   value: {
+  +     bio: 'Synthetic local preview profile.',
+  +     displayName: 'Demo Synthetic Pending Read Control',
+  +     id: 'profile-demo-teacher-1',
+  +     name: 'Synthetic Pending Read Control',
+  +     school: {
+  +       county: 'Demo King',
+  +       district: 'Demo District',
+  +       school: 'Demo Academy',
+  +       state: 'Demo Washington'
+  +     },
+  +     seeded: false,
+  +     subjects: [],
+  +     teacherId: 'demo-teacher-1',
+  +     wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW'
+  +   }
+  -   source: 'runtime',
+  -   status: 'loading',
+  -   value: null
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:145:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'present', value: { id: 'profile-demo-teacher-1', teacherId: 'demo-teacher-1', displayName: 'Demo Synthetic Pending Read Control', bio: 'Synthetic local preview profile.', subjects: [], wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW', school: [Object], seeded: false, name: 'Synthetic Pending Read Control' }, editOpen: false, editDraft: { name: '', bio: '', wishlistUrl: '' }, createDraft: { name: '', bio: '', wishlistUrl: '' }, source: 'local-overlay' },
+    expected: { status: 'loading', value: null, editOpen: false, source: 'runtime' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:154:1
+✖ failed profile creation service sync preserves a captured reference when an own profile exists (3.682907ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  ... Skipped lines
+  
+    {
+      createDraft: {
+        bio: '',
+        name: '',
+        wishlistUrl: ''
+  ...
+      editOpen: false,
+  +   source: 'local-overlay',
+  -   readOnly: true,
+  -   source: 'captured-readonly',
+      status: 'present',
+      value: {
+  +     bio: 'Synthetic local preview profile.',
+  +     displayName: 'Demo Existing Synthetic Owner',
+  +     id: 'profile-demo-teacher-1',
+  +     name: 'Existing Synthetic Owner',
+  -     bio: 'I am a Kindergarten teacher in the dual language program at Rochester Primary School. I teach 40 students each year, 20 come from primarily English speaking households and 20 come from primarily Spanish speaking households. Our students spend 3 hours each day in full English immersion and 3 hours each day in full Spanish immersion learning. Thank you so much for your consideration!',
+  -     displayName: 'Sarah Endsley',
+  -     id: 'reference-sarah',
+  -     image: 'homepage/teacher-of-day.jpg',
+  -     name: 'Sarah Endsley',
+  -     provenance: {
+  -       evidence: 'PUBLIC-JOURNEY-EVIDENCE.json',
+  -       imageSha256: '5e736f5b64a103dc18f2aa570061fc43d0e2219fe8a6b6dd1f94297fe14b04bd',
+  -       kind: 'captured public reference snapshot; local preview',
+  -       page: 'https://www.helpteachers.net/pages/homepage.html',
+  -       profilePage: 'https://www.helpteachers.net/pages/teacher.html',
+  -       scope: 'Read-only display data from an anonymous captured page. No account, wishlist, share, or service authority is included.'
+  -     },
+  -     readOnly: true,
+        school: {
+  +       county: 'Demo King',
+  +       district: 'Demo District',
+  +       school: 'Demo Academy',
+  +       state: 'Demo Washington'
+  -       county: 'Thurston County',
+  -       school: 'Rochester Primary School',
+  -       state: 'Washington'
+        },
+  +     seeded: false,
+  +     subjects: [],
+  +     teacherId: 'demo-teacher-1',
+  +     wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW'
+  -     wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20'
+      }
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:166:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'present', value: { id: 'profile-demo-teacher-1', teacherId: 'demo-teacher-1', displayName: 'Demo Existing Synthetic Owner', bio: 'Synthetic local preview profile.', subjects: [], wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW', school: [Object], seeded: false, name: 'Existing Synthetic Owner' }, editOpen: false, editDraft: { name: '', bio: '', wishlistUrl: '' }, createDraft: { name: '', bio: '', wishlistUrl: '' }, source: 'local-overlay' },
+    expected: { status: 'present', value: { id: 'reference-sarah', name: 'Sarah Endsley', displayName: 'Sarah Endsley', image: 'homepage/teacher-of-day.jpg', school: [Object], bio: 'I am a Kindergarten teacher in the dual language program at Rochester Primary School. I teach 40 students each year, 20 come from primarily English speaking households and 20 come from primarily Spanish speaking households. Our students spend 3 hours each day in full English immersion and 3 hours each day in full Spanish immersion learning. Thank you so much for your consideration!', wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20', readOnly: true, provenance: [Object] }, editOpen: false, editDraft: { name: '', bio: '', wishlistUrl: '' }, createDraft: { name: '', bio: '', wishlistUrl: '' }, readOnly: true, source: 'captured-readonly' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

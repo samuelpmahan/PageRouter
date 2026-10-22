@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+
+'forum' !== 'index'
+
+    at file:///workspace/scratch/afc0d51965a8/hh26/H1/E3201/baseline-01/probe.mjs:98:8 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'forum',
+  expected: 'index',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

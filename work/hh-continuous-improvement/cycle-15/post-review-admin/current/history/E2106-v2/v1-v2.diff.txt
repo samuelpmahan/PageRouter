@@ -1,0 +1,189 @@
+--- v1/precommit-gate.mjs
++++ v2/precommit-gate.v2.mjs
+@@ -1,4 +1,4 @@
+-// PREPARED ONLY. Run only after R2105 acceptance, root review, and phase-specific GO.
++// V2 PREPARED ONLY. Run only after R2105 acceptance, root review, and phase-specific GO.
+ // Exact pre-stage gate for the two product files, frozen package, and later admin closure.
+ import {execFileSync} from 'node:child_process';
+ import {createHash} from 'node:crypto';
+@@ -12,7 +12,7 @@
+ const expectedParentTree = 'c4e04221e776e3c15c24efe804993af7146b18d3';
+ const canonicalParentReportedOnly = '01512524bb4387f06471a927d6657f8486de579d';
+ const sourceHashes = new Map([
+-  ['checkpoint/vendor/hh/src/public-site.mjs', '1159a5883839107df5655b4baf3857f9f59b98e9daaa2ab5c8d011af9b6409b7'],
++  ['checkpoint/vendor/hh/src/public-site.mjs', '1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7'],
+   ['checkpoint/vendor/hh/src/public-site.test.mjs', '12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a'],
+ ]);
+ const exactExcludedScratch = new Set([
+@@ -46,7 +46,7 @@
+ ]);
+ const args = process.argv.slice(2), planPath = args[0], planSha = args[1];
+ if (!planPath || !/^[0-9a-f]{64}$/.test(planSha ?? '')) {
+-  throw new Error('usage: node precommit-gate.mjs <root-admitted-plan-path> <plan-sha256>');
++  throw new Error('usage: node precommit-gate.v2.mjs <root-admitted-plan-path> <plan-sha256>');
+ }
+ const sha256 = b => createHash('sha256').update(b).digest('hex');
+ const git = (...a) => execFileSync('git', a, {cwd: repo, maxBuffer: 64 * 1024 * 1024});
+@@ -113,9 +113,15 @@
+   failures.push('E2105 native result envelope fields do not match handback');
+ }
+ const packageFiles = new Set();
++const separatelyIndexedAdminSubtree = join(packageRoot, 'post-review-admin', 'current');
+ async function walkPackage(dir) {
+   for (const name of (await readdir(dir)).sort()) {
+     const full = join(dir, name), st = await lstat(full);
++    // Exclude only this exact separately indexed subtree; the admin closure is walked below.
++    if (full === separatelyIndexedAdminSubtree) {
++      if (st.isSymbolicLink() || !st.isDirectory()) failures.push('separately indexed admin subtree must be a real directory');
++      continue;
++    }
+     if (st.isSymbolicLink()) failures.push(`symlink forbidden in frozen package: ${relative(packageRoot, full).split(sep).join('/')}`);
+     else if (st.isDirectory()) await walkPackage(full);
+     else if (st.isFile()) packageFiles.add(`${cycle}/${relative(packageRoot, full).split(sep).join('/')}`);
+
+--- v1/verify-staged-allowlist.mjs
++++ v2/verify-staged-allowlist.v2.mjs
+@@ -1,4 +1,4 @@
+-// PREPARED ONLY. Run after exact allowlist staging and before the one commit, with root GO.
++// V2 PREPARED ONLY. Run after exact allowlist staging and before the one commit, with root GO.
+ import {execFileSync} from 'node:child_process';
+ import {createHash} from 'node:crypto';
+ import {readFile} from 'node:fs/promises';
+
+--- v1/export-once.mjs
++++ v2/export-once.v2.mjs
+@@ -1,4 +1,4 @@
+-// PREPARED ONLY. Run once after R2105, exact commit, root export GO, and immutable plan admission.
++// V2 PREPARED ONLY. Run once after R2105, exact commit, root export GO, and immutable plan admission.
+ // Reads immutable local Git objects and writes one exclusive scratch transport directory only.
+ import {execFileSync} from 'node:child_process';
+ import {createHash} from 'node:crypto';
+@@ -10,7 +10,7 @@
+ const outputParent = join(scratch, 'export');
+ const planPath = process.argv[2], planSha = process.argv[3], commit = process.argv[4];
+ if (!planPath || !/^[0-9a-f]{64}$/.test(planSha ?? '') || !/^[0-9a-f]{40}$/.test(commit ?? '')) {
+-  throw new Error('usage: node export-once.mjs <root-admitted-plan-path> <plan-sha256> <immutable-commit-40-hex>');
++  throw new Error('usage: node export-once.v2.mjs <root-admitted-plan-path> <plan-sha256> <immutable-commit-40-hex>');
+ }
+ const sha256 = b => createHash('sha256').update(b).digest('hex');
+ const blobSha1 = b => createHash('sha1').update(`blob ${b.length}\0`).update(b).digest('hex');
+@@ -101,7 +101,7 @@
+   }
+ }
+ const sourceHashes = new Map([
+-  ['checkpoint/vendor/hh/src/public-site.mjs', '1159a5883839107df5655b4baf3857f9f59b98e9daaa2ab5c8d011af9b6409b7'],
++  ['checkpoint/vendor/hh/src/public-site.mjs', '1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7'],
+   ['checkpoint/vendor/hh/src/public-site.test.mjs', '12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a'],
+ ]);
+ for (const [p, expected] of sourceHashes) if (sha256(readBlob(p).bytes) !== expected) throw new Error(`reviewed source mismatch: ${p}`);
+
+--- v1/FLOW.md
++++ v2/FLOW.v2.md
+@@ -1,6 +1,6 @@
+-# E2106 — prospective stage/commit/export flow
++# E2106 v2 — prospective stage/commit/export flow
+ 
+-**Written in:** `/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/` — `precommit-gate.mjs`, `verify-staged-allowlist.mjs`, `export-once.mjs`, and `prospective.json`. These are preparation-only files. Nothing has been syntax-checked or executed; no Git index/ref, source, frozen package, or post-review admin content has been changed.
++**Written in:** `/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/` — `precommit-gate.v2.mjs`, `verify-staged-allowlist.v2.mjs`, `export-once.v2.mjs`, and `prospective.v2.json`. These are preparation-only files. Nothing has been syntax-checked or executed; no Git index/ref, source, frozen package, or post-review admin content has been changed.
+ 
+ ## Entry point
+ 
+@@ -8,12 +8,12 @@
+ 
+ ## Execution order if separately authorized
+ 
+-1. **Pre-stage gate.** `node /workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/precommit-gate.mjs <root-admitted-plan-path> <plan-sha256>` checks the pinned branch, local parent/tree, the exact two source hashes, the immutable E2105 manifest/result and every payload's bytes/hash/full mode, exact package inventory, the separately admitted admin manifest and entries, and every planned path's Git mode/SHA-256/blob ID. It compares complete porcelain status with the explicit allowlist and literal 27-path exclusion set. Only those exact old HH13/H2 scratch files may remain as untracked; missing, changed, or extra paths fail closed. A source path must be modified and every planned new package/admin path untracked. Existing staged changes fail. Authored text gets UTF-8/trailing-whitespace diagnostics; raw captures are hash/mode checked and never normalized. The script records any `git diff --check` exit/diagnostics rather than claiming a pass on diagnostic output.
++1. **Pre-stage gate.** `node /workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/precommit-gate.v2.mjs <root-admitted-plan-path> <plan-sha256>` checks the pinned branch, local parent/tree, the exact two source hashes, the immutable E2105 manifest/result and every payload's bytes/hash/full mode, exact package inventory, the separately admitted admin manifest and entries, and every planned path's Git mode/SHA-256/blob ID. It compares complete porcelain status with the explicit allowlist and literal 27-path exclusion set. Only those exact old HH13/H2 scratch files may remain as untracked; missing, changed, or extra paths fail closed. The frozen-package inventory excludes only the exact `post-review-admin/current` subtree, which is separately walked against its own exact manifest; other package-root extras remain fatal. A source path must be modified and every planned new package/admin path untracked. Existing staged changes fail. Authored text gets UTF-8/trailing-whitespace diagnostics; raw captures are hash/mode checked and never normalized. The script records any `git diff --check` exit/diagnostics rather than claiming a pass on diagnostic output.
+ 2. **Stage exactly once.** Only after a passing pre-stage gate and separate stage GO, stage using a NUL-delimited literal path list generated from the root-admitted plan: `git add --pathspec-from-file=/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/stage-paths.nul --pathspec-file-nul`. Do not use a broad `git add` or glob.
+ 3. **Full staged whitespace diagnostic.** Run `git diff --cached --check` once and preserve its true stdout/stderr/exit, including a possible exit 2. A nonzero diagnostic is a stop, not an invitation to normalize raw evidence or weaken checks.
+-4. **Verify index exactly.** `node /workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/verify-staged-allowlist.mjs <root-admitted-plan-path> <plan-sha256>` requires the exact staged path set, mode, bytes, SHA-256 and Git blob SHA-1 from the admitted plan; verifies index/worktree equality; confirms the explicit 27 excluded paths remain the only untracked exceptions; and fails on any unstaged/other status.
++4. **Verify index exactly.** `node /workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/verify-staged-allowlist.v2.mjs <root-admitted-plan-path> <plan-sha256>` requires the exact staged path set, mode, bytes, SHA-256 and Git blob SHA-1 from the admitted plan; verifies index/worktree equality; confirms the explicit 27 excluded paths remain the only untracked exceptions; and fails on any unstaged/other status.
+ 5. **One local commit only.** After root reads the verification result and grants a separate commit GO, commit once with `git commit -m "HH cycle 15: disclose local-only password recovery"`. Do not amend, retry, push, fetch, reset, or force. Record the immutable resulting full commit ID and all raw command outcomes.
+-6. **One read-only export.** Only after root admits that exact commit and grants export GO, run `node /workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/export-once.mjs <root-admitted-export-plan-path> <plan-sha256> <immutable-40-hex-commit>`. It rechecks parent/tree, exact changed paths, frozen package/admin closures, sources, Git modes and object hashes, then writes a segmented transport under a new exclusive `hh-cycle15/H1/E2106/export/<commit>/`. It reads immutable local Git objects only; it does not contact or authenticate a remote or publish anything.
++6. **One read-only export.** Only after root admits that exact commit and grants export GO, run `node /workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/export-once.v2.mjs <root-admitted-export-plan-path> <plan-sha256> <immutable-40-hex-commit>`. It rechecks parent/tree, exact changed paths, frozen package/admin closures, sources, Git modes and object hashes, then writes a segmented transport under a new exclusive `hh-cycle15/H1/E2106/export/<commit>/`. It reads immutable local Git objects only; it does not contact or authenticate a remote or publish anything.
+ 
+ ## Data and shared machinery
+ 
+@@ -21,11 +21,12 @@
+ 
+ ## Explicit boundaries and known handling
+ 
+-- The reviewed sources remain exactly `public-site.mjs` `1159a588…6409b7` and `public-site.test.mjs` `12e8b851…66fb1a`. The package remains exactly 105 manifest payload files plus `manifest.json` and E2105 `result.json` (107 total), manifest SHA-256 `ef30d325…68c4f914`; its bytes/modes are frozen.
++- The reviewed sources remain exactly `public-site.mjs` `1159a588…6409b7` and `public-site.test.mjs` `12e8b851…66fb1a`. The package remains exactly 105 manifest payload files plus `manifest.json` and E2105 `result.json` (107 total), manifest SHA-256 `ef30d325…68c4f914`; its bytes/modes are frozen. The exact full site hash is `1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7`.
+ - The exact excluded untracked set is 21 enumerated HH13 files plus six enumerated H2 E2102 originals. It is not a directory-prefix waiver. Every other changed/staged path is fatal.
+ - E2104 raw `completed` is preserved; only the separate root envelope contains the native schema correction. No unsupported native rejection is claimed.
+ - Package evidence remains synthetic source-equivalent emitted-tree evidence, not browser DOM/backend/human acceptance. No retention defect was proven; no real email was sent.
+-- No current admin folder, allowlist plan, NUL path file, gate run, whitespace run, stage, commit, or export has been created/performed by this E2106 phase. The future admitted plan and path list must be written after R2105 acceptance and reviewed by root before execution.
++- The separately indexed post-review admin folder is created after actual R2105 acceptance, outside the frozen 107-file audit closure. The draft plan/path file remain root scratch artifacts and are not self-admitted; root must read them before any execution. No gate, whitespace run, stage, commit, or export has occurred.
++- Captured native snapshot state records accepted epoch 06 with state counter 7 and H1/E2106 assigned at its capture. It is historical, not a live ownership assertion; raw-capture timestamps describe capture creation time only.
+ - The exporter ends by logging `localCommit: commit` (not an undefined local identifier). It remains unexecuted; this is a code inspection statement, not a runtime verification claim.
+ 
+ ## Review checkpoint
+
+--- v1/prospective.json
++++ v2/prospective.v2.json
+@@ -1,6 +1,6 @@
+ {
+-  "schema": "hh-cycle15-stage-commit-export-prospective@1",
+-  "status": "construction only; no execution authorization",
++  "schema": "hh-cycle15-stage-commit-export-prospective@2",
++  "status": "draft pending root review/admission; no execution authorization",
+   "job": "E2106",
+   "worker": "H1",
+   "repository": "/workspace/scratch/8528bb251845/PageRouter",
+@@ -9,13 +9,13 @@
+   "expectedParentTree": "c4e04221e776e3c15c24efe804993af7146b18d3",
+   "canonicalParentReportedOnly": "01512524bb4387f06471a927d6657f8486de579d",
+   "preparedArtifacts": {
+-    "precommit-gate.mjs": "5e0dfb96db0f0ca9e880cc80b963ca2b3b5ba0d2e4b91d01c910bd8c1a187b83",
+-    "verify-staged-allowlist.mjs": "e734092c2ddfe84b7bd79d1ff2401c803fc02b39beb7aac12331e94cf1d43ec7",
+-    "export-once.mjs": "4988279114a4a2bc993ddfa09624208924f94de7189ee9b8c185802ec08b8b73",
+-    "FLOW.md": "3e6e2c40e325834404de6b2da02befca83f9e884b78b5e74e4cc6e6fd3447b33"
++    "precommit-gate.v2.mjs": "8c0a14585723d1ea273ff78f0fa98b92ac8208cd77731bebffde1fc5d2c91e9e",
++    "verify-staged-allowlist.v2.mjs": "86e902864ee80758bf2cd9a933c8a052a37b960db01c6bcf9847b0d7ac7c6883",
++    "export-once.v2.mjs": "5fe0a40cbf845fe7616c455434e06f826f56d9171e6e08f8a94d106555d12284",
++    "FLOW.v2.md": "9ecb00efcc10379feaf19db405839b918382bb90d4a6b866e10b5d49126004ae"
+   },
+   "sourceHashes": {
+-    "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4baf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
++    "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+     "checkpoint/vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a"
+   },
+   "frozenPackage": {
+@@ -71,19 +71,31 @@
+     "status": "must be created separately after actual R2105 acceptance",
+     "rule": "admin manifest plus exactly its enumerated entries; no extras; root must review full bytes and final allowlist literals before GO"
+   },
++  "acceptedReview": {
++    "job": "R2105",
++    "worker": "H2",
++    "decision": "accepted",
++    "resultSha256": "d36d8b0472a06ce19653a99613b3cab4e54e854f943fd38cce115ed0384b5708",
++    "scope": "file-only audit of frozen package; not browser/backend/human acceptance or review of later admin closure"
++  },
++  "capturedNativeSnapshot": {
++    "captureScope": "read-only source files copied during this E2106 admin preparation",
++    "solveRecords": "epochs 00-06; current captured state is solve epoch 7 with E2106 running at capture",
++    "interpretation": "historical evidence only, not a live worker-ownership assertion"
++  },
+   "commands": {
+-    "precommitGate": ["node", "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/precommit-gate.mjs", "<root-admitted-plan-path>", "<plan-sha256>"],
++    "precommitGate": ["node", "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/precommit-gate.v2.mjs", "<root-admitted-plan-path>", "<plan-sha256>"],
+     "stage": ["git", "add", "--pathspec-from-file=/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/stage-paths.nul", "--pathspec-file-nul"],
+     "stagedWhitespace": ["git", "diff", "--cached", "--check"],
+-    "verifyStaged": ["node", "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/verify-staged-allowlist.mjs", "<root-admitted-plan-path>", "<plan-sha256>"],
++    "verifyStaged": ["node", "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/verify-staged-allowlist.v2.mjs", "<root-admitted-plan-path>", "<plan-sha256>"],
+     "commit": ["git", "commit", "-m", "HH cycle 15: disclose local-only password recovery"],
+-    "export": ["node", "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/export-once.mjs", "<root-admitted-export-plan-path>", "<plan-sha256>", "<immutable-40-hex-commit>"]
++    "export": ["node", "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/export-once.v2.mjs", "<root-admitted-export-plan-path>", "<plan-sha256>", "<immutable-40-hex-commit>"]
+   },
+   "phases": [
+     {"phase": 1, "name": "construct and root-review code/flow", "status": "current; no syntax or gate execution"},
+-    {"phase": 2, "name": "R2105 package audit and separate admin closure", "status": "pending; no files authorized yet"},
++    {"phase": 2, "name": "R2105 package audit and separate admin closure", "status": "R2105 accepted; admin closure being constructed, separate from frozen package"},
+     {"phase": 3, "name": "root final read of admin manifest/allowlist/literals", "status": "pending"},
+-    {"phase": 4, "name": "precommit gate and exact path-plan admission", "status": "requires separate root GO"},
++    {"phase": 4, "name": "precommit gate and exact path-plan admission", "status": "draft only; requires separate root GO"},
+     {"phase": 5, "name": "stage once, whitespace diagnostic, exact staged verification", "status": "requires separate root GO"},
+     {"phase": 6, "name": "one local commit", "status": "requires separate root GO"},
+     {"phase": 7, "name": "one immutable local Git-object export", "status": "requires exact commit admission and separate root GO"}

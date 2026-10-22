@@ -1,0 +1,32 @@
+{
+  "schema": "hh25-green-capture@1",
+  "job_id": "E3103",
+  "worker": "H1",
+  "phase": "full-HH-source-suite",
+  "command": "node --test checkpoint/vendor/hh/src/*.test.mjs > /workspace/scratch/86659bbafcce/hh25/H1/E3103/green-02-hh-suite/stdout.raw 2> /workspace/scratch/86659bbafcce/hh25/H1/E3103/green-02-hh-suite/stderr.raw; rc=$?; printf '%s\\n' \"$rc\" > /workspace/scratch/86659bbafcce/hh25/H1/E3103/green-02-hh-suite/exit.status; exit 0",
+  "cwd": "/workspace/scratch/86659bbafcce/PageRouter",
+  "runtime": "Node v24.19.0",
+  "process_exit_status": 0,
+  "tests": {"count": 108, "passed": 108, "failed": 0},
+  "stdout": {"bytes": 10898, "sha256": "9b588879322766b91ad3299fc2c57a54775b8a7d8edc3654d5119234f0daebce"},
+  "stderr": {"bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+  "canonical_repo_commit": "a0a98f299ea77d2181fa6013df554af843aa0635",
+  "source_pins_before": {
+    "checkpoint/vendor/hh/src/community.mjs": "713caf929cf685e1233e3a6a7368fe0810492f57683894f6063500563d518bf5",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "5df1e0f71385b22976951dbf2127c8ab78aeb7ddc8dad3608eb7b96850539890",
+    "checkpoint/vendor/hh/src/community.test.mjs": "0d360fe2d9da7404218f4a1f952f6f1dfae101f2851a6a2ea0593e7169bc5125",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "1f807f3fd4b617970107bdffcd9cd6a90d819850bdca3e6d27e774e85c80fa86"
+  },
+  "source_pins_after": {
+    "checkpoint/vendor/hh/src/community.mjs": "713caf929cf685e1233e3a6a7368fe0810492f57683894f6063500563d518bf5",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "5df1e0f71385b22976951dbf2127c8ab78aeb7ddc8dad3608eb7b96850539890",
+    "checkpoint/vendor/hh/src/community.test.mjs": "0d360fe2d9da7404218f4a1f952f6f1dfae101f2851a6a2ea0593e7169bc5125",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "1f807f3fd4b617970107bdffcd9cd6a90d819850bdca3e6d27e774e85c80fa86"
+  },
+  "worktree_scope": [
+    "checkpoint/vendor/hh/src/community.mjs",
+    "checkpoint/vendor/hh/src/public-controller.mjs",
+    "checkpoint/vendor/hh/src/community.test.mjs",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs"
+  ]
+}

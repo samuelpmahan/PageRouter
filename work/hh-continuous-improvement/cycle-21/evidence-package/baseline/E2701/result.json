@@ -1,0 +1,6 @@
+{
+  "job_id": "E2701",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "In the real fixture/controller/renderer flow, a whitespace-only title with a meaningful body is rejected with visible status; no thread or forum-storage change occurs, but the re-emitted compose form has no submitted values and updateDraft accepts none of title/category/content. Correcting only the title and explicitly retrying creates one local topic and opens its detail. No browser-native constraint-validation claim: browser execution was unavailable."
+}

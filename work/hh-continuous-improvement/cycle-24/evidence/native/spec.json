@@ -1,0 +1,14 @@
+{
+  "schema":"chainspot.rebalancer-spec/v1",
+  "service":{"name":"hh24-search-recovery","source":"92f6da67b6d69b3bd8de5e25e2eceabc5cb09118","localSource":"26cd17bd2eb3fe24682a920395edfae8a9dff9d2","scope":"Teacher-community search/filter to discussion/back/clear/empty recovery; no presumed defect"},
+  "workers":["H1","H2"],
+  "policy":{"extract_priority":100,"review_priority":200,"repair_priority":300},
+  "review_policy":{"enabled":false,"review_prefix":"R","reviewer_must_differ_from_extractor":true},
+  "jobs":[
+    {"id":"E3001","kind":"extract","allow_workers":["H1"],"subject":"Source-pin and execute actual volatile-fixture search/filter/recovery baseline; no product edits yet"},
+    {"id":"E3002","kind":"extract","allow_workers":["H2"],"subject":"Independent source/volatile search recovery falsifier and visibility/sort/loadmore controls; read-only"}
+  ],
+  "coordinator_guards":["Demonstrated usable gap -> minimal RED/correction -> different-worker review -> canonical build -> scoped ordinary commit/publication.","No gap -> preserve falsifier, no speculative changes or duplicate completed flow.","One H1 source/Git owner; H2 read-only repo/disjoint scratch. Native capacity/eligibility/pins/objective distinct from coordinator readiness and dispatch.","No production/backend/realaccounts/main/deploy/browser-origin-server workaround. Preserve old27untracked. Lab14 owns separate repo."],
+  "worker_context":{"H1":{"agent":"/root/hh24_h1","model":"gpt-6-luna","reasoning":"high","capacity":1},"H2":{"agent":"/root/hh24_h2","model":"gpt-6-luna","reasoning":"high","capacity":1}},
+  "capacity_note":"Two actual HH contexts plus currently active Lab reviewer/render contexts fit global six slots; no invented third HH stream/reserve/service."
+}

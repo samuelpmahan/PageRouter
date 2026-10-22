@@ -1,0 +1,101 @@
+{
+  "schema": "hh.cycle02-observation/v1",
+  "source": "58bac45ff9096a1f1a3347eb89b6e87e1843416b",
+  "scope": "Synthetic fixture execution; no Python backend or browser execution",
+  "reloadHypothesis": {
+    "claim": "Reload loses the persisted profile record",
+    "verdict": "falsified",
+    "before": {
+      "view": {
+        "id": "profile-demo-teacher-1",
+        "teacherId": "demo-teacher-1",
+        "displayName": "Demo Synthetic Classroom",
+        "bio": "A tab-local synthetic introduction",
+        "subjects": [],
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW",
+        "school": {
+          "state": "Demo Washington",
+          "county": "Demo King",
+          "district": "Demo District",
+          "school": "Demo Academy"
+        },
+        "seeded": false,
+        "name": "Synthetic Classroom"
+      },
+      "runtime": {
+        "id": "profile-demo-teacher-1",
+        "teacherId": "demo-teacher-1",
+        "displayName": "Demo Synthetic Classroom",
+        "bio": "Synthetic local preview profile.",
+        "subjects": [],
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW",
+        "school": {
+          "state": "Demo Washington",
+          "county": "Demo King",
+          "district": "Demo District",
+          "school": "Demo Academy"
+        },
+        "seeded": false
+      },
+      "session": {
+        "status": "authenticated",
+        "role": "teacher",
+        "teacherId": "demo-teacher-1"
+      }
+    },
+    "after": {
+      "view": {
+        "id": "profile-demo-teacher-1",
+        "teacherId": "demo-teacher-1",
+        "displayName": "Demo Synthetic Classroom",
+        "bio": "Synthetic local preview profile.",
+        "subjects": [],
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW",
+        "school": {
+          "state": "Demo Washington",
+          "county": "Demo King",
+          "district": "Demo District",
+          "school": "Demo Academy"
+        },
+        "seeded": false,
+        "name": "Demo Synthetic Classroom"
+      },
+      "runtime": {
+        "id": "profile-demo-teacher-1",
+        "teacherId": "demo-teacher-1",
+        "displayName": "Demo Synthetic Classroom",
+        "bio": "Synthetic local preview profile.",
+        "subjects": [],
+        "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW",
+        "school": {
+          "state": "Demo Washington",
+          "county": "Demo King",
+          "district": "Demo District",
+          "school": "Demo Academy"
+        },
+        "seeded": false
+      },
+      "session": {
+        "status": "authenticated",
+        "role": "teacher",
+        "teacherId": "demo-teacher-1"
+      }
+    },
+    "explanation": "Fixture record and authenticated session survive recreation; controller identity aliases and display overrides are explicitly memory-local."
+  },
+  "validationDefect": {
+    "claim": "A nonempty unsupported wishlist is silently replaced while create/edit return success",
+    "verdict": "demonstrated",
+    "requested": "https://example.invalid/wishlist",
+    "createOk": true,
+    "createShown": "https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW",
+    "editOk": true,
+    "editShown": "https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW",
+    "outcome": {
+      "kind": "local-only",
+      "message": "Profile changes are shown in this tab only. The provider has no profile-update operation.",
+      "remote": false
+    }
+  },
+  "passwordPersisted": false
+}

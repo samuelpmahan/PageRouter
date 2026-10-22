@@ -1,0 +1,144 @@
+diff --git a/checkpoint/exp/cooperative/hh-parity-public.test.mjs b/checkpoint/exp/cooperative/hh-parity-public.test.mjs
+index 63d3513..a6f25b9 100644
+--- a/checkpoint/exp/cooperative/hh-parity-public.test.mjs
++++ b/checkpoint/exp/cooperative/hh-parity-public.test.mjs
+@@ -83,9 +83,9 @@ test('pending login, separate approval, actual credential boundary, profile edit
+  assert.equal((await c.dispatch('public:login',{email:identity.email,password})).ok,false);assert.equal(runtime.snapshot().session.status,'anonymous');
+  assert.equal((await c.dispatch('public:approve')).ok,true);assert.equal(runtime.snapshot().session.status,'anonymous');
+  assert.equal((await c.dispatch('public:login',{email:identity.email,password})).ok,true);assert.equal(runtime.snapshot().session.status,'authenticated');
+- assert.equal((await c.dispatch('public:profile-create',{name:identity.name,bio:'Independent classroom introduction.',wishlistUrl:'https://www.amazon.com/hz/wishlist/ls/INDEPENDENT'})).ok,true);
++ assert.equal((await c.dispatch('public:profile-create',{name:identity.name,bio:'Independent classroom introduction.',wishlistUrl:'https://www.amazon.com/hz/wishlist/ls/DEMO-INDEPENDENT'})).ok,true);
+  const own=c.state.journey.profile.value;assert.ok(own.id);const id=own.id;
+- assert.equal((await c.dispatch('public:profile-edit',{name:'Jordan Edited',bio:'Changed public introduction.',wishlistUrl:'https://www.amazon.com/hz/wishlist/ls/INDEPENDENT'})).ok,true);
++ assert.equal((await c.dispatch('public:profile-edit',{name:'Jordan Edited',bio:'Changed public introduction.',wishlistUrl:'https://www.amazon.com/hz/wishlist/ls/DEMO-INDEPENDENT'})).ok,true);
+  await c.navigate(`#/teachers/${id}`);assert.equal(c.state.journey.profile.value.name,'Jordan Edited');assert.equal(c.state.journey.profile.value.bio,'Changed public introduction.');
+  await c.dispatch('public:wishlist');assert.equal(c.state.journey.wishlist.remote,false);assert.equal(c.state.journey.wishlist.intent,true);
+  await c.dispatch('public:share');assert.equal(c.state.journey.share.intent,true);
+diff --git a/checkpoint/vendor/hh/src/public-controller.mjs b/checkpoint/vendor/hh/src/public-controller.mjs
+index 1f73260..21f6588 100644
+--- a/checkpoint/vendor/hh/src/public-controller.mjs
++++ b/checkpoint/vendor/hh/src/public-controller.mjs
+@@ -640,8 +640,10 @@ export function createPublicController({runtime, storage = null, onChange = () =
+       const draft = state.journey.profile.editDraft || {};
+       const name = clean(payload.name ?? draft.name ?? profile.name, 100);
+       const bio = clean(payload.bio ?? draft.bio ?? profile.bio, 500);
+-      const wishlistUrl = clean(payload.wishlistUrl ?? draft.wishlistUrl ?? profile.wishlistUrl, 512);
++      const wishlistInput = payload.wishlistUrl ?? draft.wishlistUrl ?? profile.wishlistUrl;
++      const wishlistUrl = typeof wishlistInput === 'string' ? wishlistInput.trim() : '';
+       if (!name) return localValidation('Enter a display name.');
++      if (wishlistUrl && !safeWishlist(wishlistUrl)) return localValidation('Use a synthetic preview wishlist URL such as https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM, or leave it blank to keep the current link.');
+       const overlay = {name, bio, wishlistUrl: safeWishlist(wishlistUrl) ? wishlistUrl : profile.wishlistUrl};
+       profileOverlays.set(profile.teacherId, overlay);
+       state.journey.profile = {...state.journey.profile, value: {...profile, ...overlay}, editOpen: false,
+@@ -724,7 +726,9 @@ export function createPublicController({runtime, storage = null, onChange = () =
+       const createDraft = state.journey.profile.createDraft || {};
+       const name = clean(payload.name ?? createDraft.name, 100) || identity?.name || 'Demo Teacher';
+       const bio = clean(payload.bio ?? createDraft.bio, 500);
+-      const wishlistUrl = clean(payload.wishlistUrl ?? createDraft.wishlistUrl, 512);
++      const wishlistInput = payload.wishlistUrl ?? createDraft.wishlistUrl;
++      const wishlistUrl = typeof wishlistInput === 'string' ? wishlistInput.trim() : '';
++      if (wishlistUrl && !safeWishlist(wishlistUrl)) return localValidation('Use a synthetic preview wishlist URL such as https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM, or leave it blank to use the default link.');
+       const internalName = `Demo ${name.replace(/[^A-Za-z0-9 ]/g, ' ').trim().slice(0, 60) || 'Teacher'}`;
+       const result = await service('TeacherProfile.createProfile', {
+         displayName: internalName, bio: 'Synthetic local preview profile.', subjects: [], wishlistUrl: FIXTURE_WISHLIST_URL,
+diff --git a/checkpoint/vendor/hh/src/public-controller.test.mjs b/checkpoint/vendor/hh/src/public-controller.test.mjs
+index c419751..44a4101 100644
+--- a/checkpoint/vendor/hh/src/public-controller.test.mjs
++++ b/checkpoint/vendor/hh/src/public-controller.test.mjs
+@@ -23,6 +23,54 @@ function setup() {
+   return {controller, runtime, storage, community};
+ }
+ 
++async function registeredProfileSetup() {
++  const env = setup(), {controller} = env;
++  await controller.initialize('#/register');
++  for (const [key, value] of Object.entries({state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'})) await controller.selectSchool(key, value);
++  await controller.dispatch('public:terms-consent', {accepted: true});
++  assert.equal((await controller.dispatch('public:register', {name: 'Synthetic Wishlist', email: 'wishlist@example.invalid', password: 'Volatile-Only-17', confirm_password: 'Volatile-Only-17'})).ok, true);
++  assert.equal((await controller.dispatch('public:approve')).ok, true);
++  assert.equal((await controller.dispatch('public:login', {email: 'wishlist@example.invalid', password: 'Volatile-Only-17'})).ok, true);
++  await controller.navigate('#/profile');
++  return env;
++}
++
++for (const action of ['create', 'edit']) {
++  for (const [label, invalidUrl] of [['unsupported', 'https://example.invalid/wishlist'], ['overlength', 'https://www.amazon.com/hz/wishlist/ls/DEMO-' + 'A'.repeat(513)]]) test(`profile ${action} rejects ${label} wishlist before mutation and retains draft`, async () => {
++    const {controller, runtime} = await registeredProfileSetup();
++    if (action === 'edit') {
++      assert.equal((await controller.dispatch('public:profile-create', {name: 'Saved name', wishlistUrl: ''})).ok, true);
++      await controller.dispatch('public:edit-profile');
++    }
++    const draftKey = action === 'create' ? 'createDraft' : 'editDraft';
++    controller.updateDraft('name', 'Typed name');
++    controller.updateDraft('bio', 'Typed introduction');
++    controller.updateDraft('wishlistUrl', invalidUrl);
++    const retainedWishlistDraft = controller.state.journey.profile[draftKey].wishlistUrl;
++    const beforeProfile = structuredClone(controller.state.journey.profile);
++    const beforeRuntime = runtime.snapshot(), beforeParts = runtime.pxc.entries().length;
++    const result = await controller.dispatch(`public:profile-${action}`, {wishlistUrl: invalidUrl});
++    assert.equal(result.ok, false);
++    assert.equal(result.error.code, 'validation_failed');
++    assert.match(result.error.message, /synthetic.*DEMO/i);
++    assert.deepEqual(runtime.snapshot(), beforeRuntime);
++    assert.equal(runtime.pxc.entries().length, beforeParts, 'invalid URL must not invoke a provider operation');
++    assert.deepEqual(controller.state.journey.profile, beforeProfile, 'profile, open form and draft remain intact');
++    assert.equal(controller.state.journey.profile[draftKey].wishlistUrl, retainedWishlistDraft);
++    assert.equal(controller.state.journey.outcome.kind, 'validation-error');
++  });
++  for (const wishlistUrl of ['', 'https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM']) {
++    test(`profile ${action} preserves ${wishlistUrl ? 'valid synthetic' : 'blank'} wishlist compatibility`, async () => {
++      const {controller, runtime} = await registeredProfileSetup();
++      if (action === 'edit') assert.equal((await controller.dispatch('public:profile-create', {name: 'Saved name', wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-SAVED'})).ok, true);
++      const existing = controller.state.journey.profile.value?.wishlistUrl;
++      assert.equal((await controller.dispatch(`public:profile-${action}`, {name: 'Typed name', wishlistUrl})).ok, true);
++      assert.equal(controller.state.journey.profile.value.wishlistUrl, wishlistUrl || existing || 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW');
++      assert.equal(runtime.snapshot().ownProfile.profile.wishlistUrl, 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW', 'provider retains synthetic fixture data');
++    });
++  }
++}
++
+ function deferredRuntime(portToDelay) {
+   const storage = memoryStorage();
+   const base = createServiceRuntime(createFixtureProvider({fixture: true, storage}));
+diff --git a/checkpoint/vendor/hh/src/public-site.mjs b/checkpoint/vendor/hh/src/public-site.mjs
+index 776e38e..98065a4 100644
+--- a/checkpoint/vendor/hh/src/public-site.mjs
++++ b/checkpoint/vendor/hh/src/public-site.mjs
+@@ -4,6 +4,7 @@ import {termsSections,teamMembers,teacherOfDayReference} from './site-data.mjs';
+ 
+ const img=(src,alt,cls='')=>h('img',{src:`./assets/reference/static/images/${src}`,alt,class:cls,loading:'lazy'});
+ const field=(label,name,value='',attrs={})=>h('label',{class:'hh-field',for:`hh-${name}`},h('span',{},label),h(attrs.multiline?'textarea':'input',{id:`hh-${name}`,name,value,...attrs,rows:attrs.multiline?'5':undefined,'aria-label':label}));
++const wishlistField=(value,creating=false)=>h('div',{},field('Wishlist URL','profile-wishlist-url',value,{name:'wishlistUrl',type:'url','aria-describedby':'hh-profile-wishlist-help'}),h('p',{id:'hh-profile-wishlist-help',class:'hh-subtle'},`Use a synthetic preview link such as https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM. Leave blank to ${creating?'use the default':'keep the current'} link.`));
+ const button=(label,event,attrs={})=>h('button',{type:'button','data-event':event,...attrs},label);
+ const status=(text,kind='info')=>text?h('p',{class:`hh-status ${kind}`,role:'status','aria-live':'polite'},text):null;
+ const routeLink=(label,page,attrs={})=>h('a',{href:`#/${page==='home'?'':page}`,...attrs,'data-public-route':page},label);
+@@ -111,7 +112,7 @@ function profileSchool(schoolValue,countyValue,stateValue){
+  const state=structured?(typeof structured.state==='string'?structured.state:''):typeof stateValue==='string'?stateValue:'';
+  return {name,location:[county,state].filter(value=>value.trim()).join(', ')};
+ }
+-function profile(j={},route={}){if(route.profileId===teacherOfDayReference.id)return capturedTeacherProfile(j);const p=j.profile?.value||j.profile||{},draft=j.profile?.editDraft||{},own=j.session?.status==='authenticated'&&!route.profileId,school=profileSchool(p.school,p.county,p.state);return h('main',{id:'hh-main',class:'hh-main hh-narrow'},j.profile?.status==='loading'?card(h1({},'Loading profile…'),intro('Loading the selected teacher profile.')):j.profile?.status==='error'?card(h1({},'Profile unavailable'),intro(j.profile.error||'This profile could not be loaded in the local preview.'),button('Retry profile load','public:retry',{id:'hh-profile-retry',class:'hh-button'})):card(h('div',{class:'hh-profile-head'},img(p.image||'apple.jpg',safe(p.name,'Teacher'),'hh-profile-avatar'),h('div',{},h('p',{class:'hh-kicker'},own?'Your local profile':'Teacher profile'),h1({},safe(p.name,'Teacher profile')),h('p',{},safe(school.name,'Homeroom Heroes community'),p.grade?` · ${p.grade}`:''),school.location?h('p',{class:'hh-profile-location'},school.location):null)),h2('About the classroom'),intro(safe(p.bio,'This public profile is part of the local preview.')),h2('Classroom wishlist'),p.wishlistUrl?h('p',{class:'hh-wishlist-url'},`Wishlist: ${p.wishlistUrl}`):h('p',{},'No wishlist link has been shared.'),h('div',{class:'hh-actions'},button(j.wishlist?.intent?'Wishlist handoff prepared':'Prepare wishlist handoff','public:wishlist',{id:'hh-profile-wishlist','aria-pressed':!!j.wishlist?.intent}),j.wishlist?.intent&&j.wishlist?.choiceRequired?button('Confirm wishlist destination','public:confirm-wishlist',{id:'hh-profile-wishlist-confirm',class:'hh-button hh-button-quiet'}):null,j.wishlist?.intent&&!j.wishlist?.choiceRequired&&/^https:\/\//i.test(j.wishlist?.destination||'')?h('a',{id:'hh-profile-wishlist-open',class:'hh-button',href:j.wishlist.destination,target:'_blank',rel:'noopener noreferrer'},'Continue to synthetic wishlist'):null,button('Share profile','public:share',{id:'hh-profile-share'}),j.share?.intent?h('div',{class:'hh-share-handoff','data-testid':'hh-share-handoff'},h('p',{},'Local profile route ready to copy; no public share was sent.'),field('Share route','share-route',j.share.url||'',{readonly:true,autocomplete:'off'})):null,own&&p.id?routeLink('View public profile',`public-profile/${encodeURIComponent(p.id)}`,{id:'hh-profile-public-view',class:'hh-button hh-button-quiet'}):null,own?button('Edit profile','public:edit-profile',{id:'hh-profile-edit'}):null),own&&j.profile?.status==='absent'?h('form',{id:'hh-profile-create-form','data-submit':'public:profile-create'},field('Display name','profile-name',j.profile?.createDraft?.name||p.name||'',{name:'name',required:true}),field('Classroom introduction','profile-bio',j.profile?.createDraft?.bio||p.bio||'',{name:'bio',multiline:true}),field('Wishlist URL','profile-wishlist-url',j.profile?.createDraft?.wishlistUrl||p.wishlistUrl||'',{name:'wishlistUrl',type:'url'}),h('button',{type:'submit',class:'hh-button'},'Create profile')):own&&j.profile?.editOpen?h('form',{id:'hh-profile-edit-form','data-submit':'public:profile-edit'},field('Display name','profile-name',draft.name??p.name??'',{name:'name'}),field('Classroom introduction','profile-bio',draft.bio??p.bio??'',{name:'bio',multiline:true}),field('Wishlist URL','profile-wishlist-url',draft.wishlistUrl??p.wishlistUrl??'',{name:'wishlistUrl',type:'url'}),h('button',{type:'submit',class:'hh-button'},'Save profile')):null,status(j.outcome?.message|| (j.wishlist?.choiceRequired?'Choose whether to continue to the synthetic wishlist.':j.wishlist?.intent?'Wishlist intent is recorded locally; no external wishlist was changed.':''),j.outcome?.kind),h('p',{class:'hh-subtle'},'This is a locally rendered profile. Changes and sharing are not sent to the public service.')));}
++function profile(j={},route={}){if(route.profileId===teacherOfDayReference.id)return capturedTeacherProfile(j);const p=j.profile?.value||j.profile||{},draft=j.profile?.editDraft||{},own=j.session?.status==='authenticated'&&!route.profileId,school=profileSchool(p.school,p.county,p.state);return h('main',{id:'hh-main',class:'hh-main hh-narrow'},j.profile?.status==='loading'?card(h1({},'Loading profile…'),intro('Loading the selected teacher profile.')):j.profile?.status==='error'?card(h1({},'Profile unavailable'),intro(j.profile.error||'This profile could not be loaded in the local preview.'),button('Retry profile load','public:retry',{id:'hh-profile-retry',class:'hh-button'})):card(h('div',{class:'hh-profile-head'},img(p.image||'apple.jpg',safe(p.name,'Teacher'),'hh-profile-avatar'),h('div',{},h('p',{class:'hh-kicker'},own?'Your local profile':'Teacher profile'),h1({},safe(p.name,'Teacher profile')),h('p',{},safe(school.name,'Homeroom Heroes community'),p.grade?` · ${p.grade}`:''),school.location?h('p',{class:'hh-profile-location'},school.location):null)),h2('About the classroom'),intro(safe(p.bio,'This public profile is part of the local preview.')),h2('Classroom wishlist'),p.wishlistUrl?h('p',{class:'hh-wishlist-url'},`Wishlist: ${p.wishlistUrl}`):h('p',{},'No wishlist link has been shared.'),h('div',{class:'hh-actions'},button(j.wishlist?.intent?'Wishlist handoff prepared':'Prepare wishlist handoff','public:wishlist',{id:'hh-profile-wishlist','aria-pressed':!!j.wishlist?.intent}),j.wishlist?.intent&&j.wishlist?.choiceRequired?button('Confirm wishlist destination','public:confirm-wishlist',{id:'hh-profile-wishlist-confirm',class:'hh-button hh-button-quiet'}):null,j.wishlist?.intent&&!j.wishlist?.choiceRequired&&/^https:\/\//i.test(j.wishlist?.destination||'')?h('a',{id:'hh-profile-wishlist-open',class:'hh-button',href:j.wishlist.destination,target:'_blank',rel:'noopener noreferrer'},'Continue to synthetic wishlist'):null,button('Share profile','public:share',{id:'hh-profile-share'}),j.share?.intent?h('div',{class:'hh-share-handoff','data-testid':'hh-share-handoff'},h('p',{},'Local profile route ready to copy; no public share was sent.'),field('Share route','share-route',j.share.url||'',{readonly:true,autocomplete:'off'})):null,own&&p.id?routeLink('View public profile',`public-profile/${encodeURIComponent(p.id)}`,{id:'hh-profile-public-view',class:'hh-button hh-button-quiet'}):null,own?button('Edit profile','public:edit-profile',{id:'hh-profile-edit'}):null),own&&j.profile?.status==='absent'?h('form',{id:'hh-profile-create-form','data-submit':'public:profile-create'},field('Display name','profile-name',j.profile?.createDraft?.name||p.name||'',{name:'name',required:true}),field('Classroom introduction','profile-bio',j.profile?.createDraft?.bio||p.bio||'',{name:'bio',multiline:true}),wishlistField(j.profile?.createDraft?.wishlistUrl||p.wishlistUrl||'',true),h('button',{type:'submit',class:'hh-button'},'Create profile')):own&&j.profile?.editOpen?h('form',{id:'hh-profile-edit-form','data-submit':'public:profile-edit'},field('Display name','profile-name',draft.name??p.name??'',{name:'name'}),field('Classroom introduction','profile-bio',draft.bio??p.bio??'',{name:'bio',multiline:true}),wishlistField(draft.wishlistUrl??p.wishlistUrl??''),h('button',{type:'submit',class:'hh-button'},'Save profile')):null,status(j.outcome?.message|| (j.wishlist?.choiceRequired?'Choose whether to continue to the synthetic wishlist.':j.wishlist?.intent?'Wishlist intent is recorded locally; no external wishlist was changed.':''),j.outcome?.kind),h('p',{class:'hh-subtle'},'This is a locally rendered profile. Changes and sharing are not sent to the public service.')));}
+ function footer(){return h('footer',{id:'hh-footer',class:'hh-footer'},h('p',{},'© 2024 Homeroom Heroes. All rights reserved.'));}
+ export function renderPreviewControls({journey={}}={}){
+  const readFailure=journey.matches?.status==='error'||!!journey.lookupError||journey.profile?.status==='error';
+diff --git a/checkpoint/vendor/hh/src/public-site.test.mjs b/checkpoint/vendor/hh/src/public-site.test.mjs
+index fbff4c6..3c0ba53 100644
+--- a/checkpoint/vendor/hh/src/public-site.test.mjs
++++ b/checkpoint/vendor/hh/src/public-site.test.mjs
+@@ -6,6 +6,16 @@ function inspect(tree){const nodes=[];const visit=value=>{if(!value||typeof valu
+ function byId(tree,id){return inspect(tree).find(node=>node.attrs?.id===id);}
+ function text(tree){return inspect(tree).flatMap(node=>node.children||[]).filter(value=>typeof value==='string').join(' ');}
+ 
++test('profile create and edit wishlist fields explain supported synthetic links',()=>{
++  for(const status of ['absent','present']){
++    const tree=renderPublicSite({route:{page:'profile'},journey:{session:{status:'authenticated'},profile:{status,editOpen:status==='present',value:{name:'Synthetic teacher'}}}});
++    const field=byId(tree,'hh-profile-wishlist-url'),guidance=byId(tree,'hh-profile-wishlist-help');
++    assert.equal(field.attrs['aria-describedby'],'hh-profile-wishlist-help');
++    assert.match(text(guidance),/https:\/\/www\.amazon\.com\/hz\/wishlist\/ls\/DEMO-CLASSROOM/);
++    assert.match(text(guidance),status==='absent'?/blank.*default/i:/blank.*current/i);
++  }
++});
++
+ test('public route tree binds nav state, exposes accessible stable controls, and avoids inline styling',()=>{
+   const closed=renderPublicSite({route:{page:'home'},journey:{navOpen:false}});
+   const open=renderPublicSite({route:{page:'home'},journey:{navOpen:true}});

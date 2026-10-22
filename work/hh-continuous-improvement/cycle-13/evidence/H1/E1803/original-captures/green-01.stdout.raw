@@ -1,0 +1,31 @@
+✔ login draft retains typed, newer, and explicit blank email through held failures (12.865469ms)
+✖ login draft keeps existing fallback order and clears only after authority changes (3.141423ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 1
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 122.968119
+
+✖ failing tests:
+
+test at vendor/hh/src/public-controller.test.mjs:227:1
+✖ login draft keeps existing fallback order and clears only after authority changes (3.141423ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + ''
+  - 'avery@fixture.test'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:245:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: '',
+    expected: 'avery@fixture.test',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

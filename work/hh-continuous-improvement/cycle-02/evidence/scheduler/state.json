@@ -1,0 +1,400 @@
+{
+  "schema": "chainspot.rebalancer-state/v1",
+  "service": {
+    "name": "hh-continuous-improvement",
+    "scope": "cycle02-current-journey-evidence",
+    "repository": "samuelpmahan/PageRouter",
+    "source": "58bac45ff9096a1f1a3347eb89b6e87e1843416b",
+    "capacity": "Six Sol workers currently leased to discovery swarm. Only root coordinator available for bounded read-only HH hypothesis check; implementation/review packets admitted after actual workers free.",
+    "active_execution": false
+  },
+  "workers": {
+    "COORD": {
+      "job": null,
+      "agent": null
+    },
+    "W2": {
+      "job": null,
+      "agent": null
+    }
+  },
+  "jobs": {
+    "E201": {
+      "id": "E201",
+      "kind": "extract",
+      "subject": "Execute synthetic HH register -> approve -> login -> profile -> reload; distinguish fixture persistence from tab overlays; verify next profile form validation hypothesis without editing source.",
+      "status": "done",
+      "worker": "COORD",
+      "started_at": "2026-10-18T08:11:22.766373+00:00",
+      "finished_at": "2026-10-18T08:12:02.756402+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle02/receipts/E201.json"
+    },
+    "E202": {
+      "id": "E202",
+      "kind": "extract",
+      "subject": "Reject nonempty unsupported synthetic wishlist URLs explicitly before profile create/edit; preserve drafts and ownership/geography/fixture data. Source-owned bounded PageRouter correction with red/green regressions and canonical build.",
+      "allow_workers": [
+        "W1"
+      ],
+      "status": "done",
+      "worker": "W1",
+      "started_at": "2026-10-18T08:13:48.495875+00:00",
+      "finished_at": "2026-10-18T08:23:25.069665+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle02/receipts/E202.json"
+    },
+    "R202": {
+      "id": "R202",
+      "kind": "review",
+      "depends_on": "E202",
+      "allow_workers": [
+        "COORD"
+      ],
+      "status": "done",
+      "worker": "COORD",
+      "started_at": "2026-10-18T08:23:25.264471+00:00",
+      "finished_at": "2026-10-18T08:23:39.027420+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle02/receipts/R202.json"
+    },
+    "E203": {
+      "id": "E203",
+      "kind": "extract",
+      "semantic_kind": "review",
+      "subject": "Independent read-only review of final five-file frozen HH wishlist candidate while owner canonical build runs; cannot accept own code, preserve fixture/backend distinction.",
+      "allow_workers": [
+        "W2"
+      ],
+      "status": "done",
+      "worker": "W2",
+      "started_at": "2026-10-18T08:21:31.532366+00:00",
+      "finished_at": "2026-10-18T08:24:31.680492+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle02/receipts/E203.json"
+    }
+  },
+  "events": [
+    {
+      "type": "solve",
+      "epoch": 0,
+      "at": "2026-10-18T08:11:22.673034+00:00",
+      "ready_jobs": [
+        "E201"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "COORD": "E201"
+      },
+      "dispatch": {
+        "COORD": "E201"
+      },
+      "native_seconds": 0.0030835379984637257,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 1 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E201": 1,
+        "BENCH": 1
+      },
+      "eligible": {
+        "E201": [
+          "COORD"
+        ]
+      },
+      "weights": {
+        "E201": 100
+      },
+      "agent_by_worker": {
+        "COORD": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:11:22.766373+00:00",
+      "worker": "COORD",
+      "job": "E201",
+      "agent": "/root"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:12:02.756402+00:00",
+      "worker": "COORD",
+      "job": "E201"
+    },
+    {
+      "type": "actual_worker_available",
+      "worker": "W1",
+      "basis": "Discovery E202 completed with result and receipt; paused there for HH implementation. Other5 workers remain discovery-only."
+    },
+    {
+      "type": "solve",
+      "epoch": 1,
+      "at": "2026-10-18T08:13:48.394617+00:00",
+      "ready_jobs": [
+        "E202"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "W1": "E202",
+        "COORD": "BENCH"
+      },
+      "dispatch": {
+        "W1": "E202"
+      },
+      "native_seconds": 0.0034027950023300946,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E201": 0,
+        "E202": 1,
+        "R202": 0,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E202": [
+          "W1"
+        ]
+      },
+      "weights": {
+        "E202": 100
+      },
+      "agent_by_worker": {
+        "COORD": null,
+        "W1": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:13:48.495875+00:00",
+      "worker": "W1",
+      "job": "E202",
+      "agent": "/root/discovery_w1"
+    },
+    {
+      "type": "conditional_ready",
+      "job": "E203",
+      "basis": "Owner final five product files frozen after overlength repair; source hashes in PageRouter/work/hh-continuous-improvement/cycle-02/evidence/product-freeze.json; review is independent of ongoing canonical execution."
+    },
+    {
+      "type": "solve",
+      "epoch": 2,
+      "at": "2026-10-18T08:21:31.419354+00:00",
+      "ready_jobs": [
+        "E203"
+      ],
+      "pinned_workers": [
+        "W1"
+      ],
+      "assignments": {
+        "W2": "E203",
+        "COORD": "BENCH",
+        "W1": "E202"
+      },
+      "dispatch": {
+        "W2": "E203"
+      },
+      "native_seconds": 0.0031132300027820747,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 3 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 1 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E201": 0,
+        "E202": 1,
+        "R202": 0,
+        "E203": 1,
+        "BENCH": 3
+      },
+      "eligible": {
+        "E203": [
+          "W2"
+        ]
+      },
+      "weights": {
+        "E203": 100
+      },
+      "agent_by_worker": {
+        "COORD": null,
+        "W1": "/root/discovery_w1",
+        "W2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:21:31.532366+00:00",
+      "worker": "W2",
+      "job": "E203",
+      "agent": "/root/discovery_w2"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:23:25.069665+00:00",
+      "worker": "W1",
+      "job": "E202"
+    },
+    {
+      "type": "release_external_worker",
+      "worker": "W1",
+      "reason": "Implementation complete/frozen, returns discovery eligibility. Gitowner remains available for final commit only."
+    },
+    {
+      "type": "solve",
+      "epoch": 3,
+      "at": "2026-10-18T08:23:25.174208+00:00",
+      "ready_jobs": [
+        "R202"
+      ],
+      "pinned_workers": [
+        "W2"
+      ],
+      "assignments": {
+        "COORD": "R202",
+        "W2": "E203"
+      },
+      "dispatch": {
+        "COORD": "R202"
+      },
+      "native_seconds": 0.0032389529987995047,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 1 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 200,
+      "native_score": 200,
+      "caps": {
+        "E201": 0,
+        "E202": 0,
+        "R202": 1,
+        "E203": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "R202": [
+          "COORD"
+        ]
+      },
+      "weights": {
+        "R202": 200
+      },
+      "agent_by_worker": {
+        "COORD": null,
+        "W2": "/root/discovery_w2"
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T08:23:25.264471+00:00",
+      "worker": "COORD",
+      "job": "R202",
+      "agent": "/root"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:23:39.027420+00:00",
+      "worker": "COORD",
+      "job": "R202"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T08:24:31.680492+00:00",
+      "worker": "W2",
+      "job": "E203"
+    },
+    {
+      "type": "cycle-ready-for-checkpoint",
+      "basis": "E201hypothesis/E202implementation/E203independentreview/R202canonicalreview allcomplete; source frozen5hashes; publicationpendingownercommit/rootconnector."
+    }
+  ],
+  "epoch": 4,
+  "policy": {
+    "extract_priority": 100,
+    "review_priority": 200,
+    "repair_priority": 300
+  }
+}

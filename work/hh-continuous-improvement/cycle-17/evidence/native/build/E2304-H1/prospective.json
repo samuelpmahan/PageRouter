@@ -1,0 +1,53 @@
+{
+  "job_id": "E2304",
+  "worker": "H1",
+  "status": "phase1_capture_preparation_only_unrun",
+  "authorization": "Prepare a minimal prospective and wrapper only. Canonical build execution requires the root-state-policy.v2.json gate and a separate root GO after accepted R2303 review and root full-read of these exact files.",
+  "repository": "/workspace/scratch/8528bb251845/PageRouter",
+  "expected_head": "86301f84a9b08f40b76de9b64026befe6b0081a5",
+  "expected_tree_before_uncommitted_cycle17_changes": "c685c5267235fc460c4147592a483dd40d44d3fd",
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+  "argv": [
+    "/usr/bin/env",
+    "BAZEL=/workspace/scratch/8528bb251845/tools/bazel",
+    "bash",
+    "ci/bazel/run.sh"
+  ],
+  "changed_product_source_bindings": {
+    "checkpoint/vendor/hh/src/public-site.mjs": "d9c17a350375633a53d0dc256be666bb0c82298c9ffa7b05bc6be08156141bfc",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5"
+  },
+  "capture_wrapper": {
+    "path": "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2304/run-once.sh",
+    "raw_capture_directory": "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2304/captures",
+    "fresh_build_output_directory": "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2304/build-output",
+    "captures": [
+      "stdout.raw",
+      "stderr.raw",
+      "exit.code",
+      "signal.txt",
+      "start.utc",
+      "end.utc"
+    ],
+    "copy_only_if_command_exit_zero": [
+      "checkpoint/bazel-bin/site.receipt.json",
+      "checkpoint/bazel-bin/site.log"
+    ],
+    "copy_exclusions": [
+      "site output tree",
+      "historical site.evidence",
+      "screenshots or PNGs",
+      "old-cycle build artifacts"
+    ],
+    "signal_qualification": "possible-signal classification is inferred from shell exit status >128; this is not independent OS-level signal instrumentation."
+  },
+  "build_flow_from_previously_reviewed_runner": [
+    "Resolve checkpoint as canonical build root and run bootstrap.",
+    "Validate configured Node and pinned Bazel versions.",
+    "Run node --test --test-concurrency=2 ci/bazel/build-helpers.test.mjs.",
+    "Invoke the configured absolute Bazel executable in batch mode to build //:site.",
+    "Run node ci/bazel/verify-output.mjs bazel-bin/site.site bazel-bin/site.receipt.json."
+  ],
+  "count_interpretation": "Historical named helper/targeted/full groups may overlap. Historical counts are not E2304 predictions or observations and must not be summed. Report only fresh actual named summaries from the authorized run.",
+  "stop_policy": "After a distinct execution GO, run the wrapper once. Preserve original stdout/stderr, actual UTC bounds, actual exit, and qualified possible-signal classification. Stop on the first unexpected failure; no retry, cache reenactment, source/test edits, assertion weakening, environment/flag/config changes, permission changes, Git, or publication. This prospective is unrun."
+}

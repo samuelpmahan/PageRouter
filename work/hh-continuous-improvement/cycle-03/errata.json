@@ -1,0 +1,40 @@
+{
+  "schema": "hh-cycle03-coordinator-errata/v1",
+  "classification": "preserved-coordinator-history",
+  "items": [
+    {
+      "id": "E402-start-ack-state-discrepancy",
+      "observed": "The root start tool returned E402 as running at about 09:18, while the 09:22 native state snapshot still showed E402 pending and had no dispatch event.",
+      "cause": "unknown",
+      "reconciliation": "Root preserved the pre-repair snapshot, recorded the current acknowledgement against the then-current native E402 assignment at 09:24, and did not backdate the acknowledgement. Root reported no concurrent HH implementation and no native solve during H1's actual source mutation. Failed finish/review/admin start calls were rejected before tool-agent dispatch.",
+      "nativeEvidence": [
+        "evidence/native/state-before-E402-ack-repair.json",
+        "evidence/native/state.json",
+        "evidence/native/solves/epoch-01.json",
+        "evidence/native/solves/epoch-02.json",
+        "evidence/native/solves/epoch-03.json"
+      ]
+    },
+    {
+      "id": "E402-worker-outcome-enum-normalization",
+      "observed": "H1's raw E402 report used `fixed_verified`, which is outside the native receipt enum `confirmed_reuse | mixed_change | not_reuse | insufficient_evidence`; the native finish rejected that original envelope.",
+      "reconciliation": "The coordinator preserved the original worker report and rejected envelope, then normalized only the coordinator/native envelope to `mixed_change` with `rawWorkerOutcome: fixed_verified`. This records an implemented bounded change and does not claim scientific validation or human acceptance.",
+      "nativeEvidence": [
+        "evidence/E402/H1/E402-result.json",
+        "evidence/native/receipts/E402-rejected-outcome-envelope.json",
+        "evidence/native/receipts/E402.json"
+      ]
+    },
+    {
+      "id": "review-and-admin-starts",
+      "observed": "R402 and E404 start attempts made before E402 had a valid native finish were rejected before tool-agent dispatch.",
+      "reconciliation": "After the valid E402 finish and native epoch-03 solve, H2/R402 and H1/E404 were dispatched. R402 later completed and was accepted; the final native state contains its dispatch and completion events. Earlier package notes were updated when the final receipt arrived.",
+      "nativeEvidence": [
+        "evidence/native/solves/epoch-03.json",
+        "evidence/native/state.json",
+        "evidence/native/receipts/R402.json"
+      ]
+    }
+  ],
+  "timingPolicy": "Use only observed native timestamps; do not backdate tool acknowledgements or infer worker throughput from the discrepancy."
+}

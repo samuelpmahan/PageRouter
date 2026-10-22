@@ -1,0 +1,32 @@
+{
+  "schema": "hh-native-probe-execution@1",
+  "job_id": "E3101",
+  "worker": "H1",
+  "command": "node probe.mjs > stdout.raw 2> stderr.raw; probe_exit=$?; printf '%s\\n' \"$probe_exit\" > exit.status; exit 0",
+  "cwd": "/workspace/scratch/86659bbafcce/hh25/H1",
+  "runtime": "Node v24.19.0",
+  "probe_exit_status": 0,
+  "stdout_bytes": 2057,
+  "stdout_sha256": "3e7b2f0622e8ebb995df36020f96c8f4f741d99b3c7466edd249aa91a8df3e0a",
+  "stderr_bytes": 0,
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "repo": {
+    "branch": "codex/hh-continuous-improvement",
+    "commit": "a0a98f299ea77d2181fa6013df554af843aa0635",
+    "status": "clean"
+  },
+  "source_pins_before": {
+    "checkpoint/vendor/hh/src/community.mjs": "311d598b6d6ffc675dc4ee5b07ac0005c55e6ce7a34f8acfac5384d5789288f4",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "97b5c17bf519b7fd05e2933a12dc55ff0e3e0c3e7939db4072368c070b4f67a0",
+    "checkpoint/vendor/hh/src/public-site.mjs": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  },
+  "source_pins_after": {
+    "checkpoint/vendor/hh/src/community.mjs": "311d598b6d6ffc675dc4ee5b07ac0005c55e6ce7a34f8acfac5384d5789288f4",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "97b5c17bf519b7fd05e2933a12dc55ff0e3e0c3e7939db4072368c070b4f67a0",
+    "checkpoint/vendor/hh/src/public-site.mjs": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  }
+}

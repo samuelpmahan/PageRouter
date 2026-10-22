@@ -1,0 +1,31 @@
+{
+  "job_id": "E3204",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "The single canonical Bazel site build completed successfully against the three frozen E3203 changes. Fresh output verification passed for 843 files, all 14 PxCube packages were rebuilt successfully, the site build ID was 66c11d9dfe1ed61d25beea5cf2273efa9aa0fb159ddf72fec02a160458dc400c, and all captured Node test groups passed.",
+  "command": "BAZEL=/workspace/scratch/86659bbafcce/hh25/tools/bazel PAGEROUTER_BAZEL_OUTPUT_ROOT=/workspace/scratch/afc0d51965a8/hh26/bazel-output bash ci/bazel/run.sh",
+  "cwd": "/workspace/scratch/86659bbafcce/PageRouter/checkpoint",
+  "status": 0,
+  "started_at_utc": "2026-10-19 14:32:48 UTC",
+  "ended_at_utc": "2026-10-19 14:34:18 UTC",
+  "counts": {
+    "build_helper_tests": { "tests": 2, "passed": 2, "failed": 0 },
+    "targeted_hh_controller_community": { "tests": 157, "passed": 157, "failed": 0 },
+    "fresh_site_npm_suite": { "tests": 312, "passed": 312, "failed": 0 },
+    "built_atlas_import_closure": { "tests": 1, "passed": 1, "failed": 0 }
+  },
+  "outputs": {
+    "stdout": { "path": "stdout.raw", "sha256": "b4e7d393b6ea20a7f281dea01b1d4421c228bdcd9ad5127ca4a65229e3fc0c21" },
+    "stderr": { "path": "stderr.raw", "sha256": "f9a7f1bf7526721ecf03c9cf63c028302cf740ad6be92f2b9bfd175f0237b67d" },
+    "site_receipt": { "path": "site.receipt.json", "mode": "0555", "bytes": 467313, "sha256": "1c1c59376e12edc3f567abc8ba80a3bf2ff45698e4d1fea28a9caa39d1760d6e" },
+    "site_log": { "path": "site.log", "mode": "0555", "bytes": 55751, "sha256": "39ee01825c1092cc860211192ce288f9d89f765170ef6c3a6bb1047fc49149ee" },
+    "site_build_id": "66c11d9dfe1ed61d25beea5cf2273efa9aa0fb159ddf72fec02a160458dc400c",
+    "site_files": 843,
+    "pxcube_packages": 14,
+    "pxcube_rebuilt": true,
+    "pxcube_relocated": false,
+    "crisp_exact_compiled_equality": true
+  },
+  "source_pins": "source-pins.json",
+  "packaging_staging_commit": "not_performed"
+}

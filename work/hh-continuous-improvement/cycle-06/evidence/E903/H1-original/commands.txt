@@ -1,0 +1,37 @@
+E903 H1 validation record
+
+Product repo: /workspace/scratch/8528bb251845/PageRouter
+Branch/head/tree: codex/hh-continuous-improvement / a5b141816ffb871110e541ef00ecf9527674137e / 5eb00395e85afeb357be11b6add395ef5fbb6b68
+
+First-red run (before controller correction)
+Working directory: PageRouter
+Command: node --test --test-name-pattern='successful logout|failed logout after navigation' checkpoint/vendor/hh/src/public-controller.test.mjs
+Outcome: exit 1; 2 passed, 3 failed (foreign, captured, and pending projections lost to unknown/null).
+Log: red.stdout.txt
+
+Focused-green run
+Working directory: PageRouter
+Command: node --test --test-name-pattern='successful logout|failed logout after navigation' checkpoint/vendor/hh/src/public-controller.test.mjs
+Outcome: exit 0; 5 passed, 0 failed.
+Log: focused-green.stdout.txt
+
+Complete public controller source tests
+Working directory: PageRouter
+Command: node --test checkpoint/vendor/hh/src/public-controller.test.mjs
+Outcome: exit 0; 42 passed, 0 failed.
+Log: controller-green.stdout.txt
+
+Relevant HH source tests, excluding the unavailable dependency-dependent style test
+Working directory: PageRouter/checkpoint
+Command: node --test --test-concurrency=2 exp/cooperative/hh-geography-review.test.mjs exp/cooperative/hh-parity-community.test.mjs exp/cooperative/hh-parity-public.test.mjs exp/cooperative/hh-workbench.test.mjs vendor/hh/src/*.test.mjs
+Outcome: exit 0; 109 passed, 0 failed. The geography review test exercised only its mounted fixture check; no Python/backend execution.
+Log: hh-green.stdout.txt
+
+Attempt of all HH cooperative and source tests, including style
+Working directory: PageRouter/checkpoint
+Command: node --test --test-concurrency=2 exp/cooperative/hh-*.test.mjs vendor/hh/src/*.test.mjs
+Outcome: exit 1; 109 passed; hh-style.test.mjs could not import package fast-check (ERR_MODULE_NOT_FOUND). No dependency installation was attempted.
+Log: hh-all-including-style.stdout.txt
+
+Validation packaging timestamp: 2026-10-18 12:26:48 UTC
+No commit, push, PR update, main update, or deployment.

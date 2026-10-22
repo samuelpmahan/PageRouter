@@ -1,0 +1,77 @@
+{
+  "job_id": "R1405",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "The repair is confirmed on the exact recorded candidate. Focused (4/4) and full controller (55/55) TAP pass. The unchanged R1403 adversarial script now retains the newer draft after a held registration fails following navigation away/back, while preserving committed-success projection, approved aliases after known and unknown failures, and foreign/captured profile authority. A real fixture persistence failure induced by Storage.setItem throwing only at registration returns storage_unavailable, retains the form draft and school/terms, and leaves no account/session/storage value or credential trace.",
+  "sourcehashes": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "9853c03e1f7458526528d2b350b8bad0c5e3c990",
+    "tree": "3e23395038495c7e1ff025ce885b91d9201025d8",
+    "controller_before": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "controller_after": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "test_before": "dfe05ff98c859f926c839d8b0e5bffbd17c96e58444400d6e108744e8111e389",
+    "test_after": "dfe05ff98c859f926c839d8b0e5bffbd17c96e58444400d6e108744e8111e389",
+    "unchanged_R1403_adversarial_script": "b6749a232ce9f5025b263247214a17f2d18fbb57919254ac7f0fbbe81e183c09",
+    "diff_check": "git diff --check passed"
+  },
+  "commands": [
+    {
+      "invocation": "bash /workspace/scratch/8528bb251845/hh-cycle10/H2/R1405/run-checks.sh",
+      "exit": 0,
+      "results": [
+        {"command": "node --test --test-concurrency=1 --test-name-pattern='registration transport failure retains|registration unknown outcome retains|registration retains the current draft after navigation away and back|failed re-registration preserves' vendor/hh/src/public-controller.test.mjs", "exit": 0, "tests": 4, "pass": 4, "fail": 0, "raw_stdout": "focused.tap", "raw_exit": "focused.exit", "sha256": "d2a564ff8b74a132fc295bd43c73eee8bb639835961af673d802a26e049eb8b1"},
+        {"command": "node --test --test-concurrency=1 vendor/hh/src/public-controller.test.mjs", "exit": 0, "tests": 55, "pass": 55, "fail": 0, "raw_stdout": "controller.tap", "raw_exit": "controller.exit", "sha256": "201f46a71381b4df4c4a129e694971b8b3e501fc4c81961f8bb8b7e7c4ab7e24"}
+      ]
+    },
+    {
+      "invocation": "bash /workspace/scratch/8528bb251845/hh-cycle10/H2/R1405/run-adversarial.sh",
+      "inner_command": "node /workspace/scratch/8528bb251845/hh-cycle10/H2/R1403/adversarial.mjs",
+      "exit": 0,
+      "script_sha256_before_and_after": "b6749a232ce9f5025b263247214a17f2d18fbb57919254ac7f0fbbe81e183c09",
+      "raw_stdout": "adversarial.raw.log",
+      "raw_exit": "adversarial.exit",
+      "stdout_sha256": "e973548dbbe41dc3ac2335fa5a888a1f84ae92ab3fbe26fbca706eb0a0ff1063"
+    },
+    {
+      "invocation": "bash /workspace/scratch/8528bb251845/hh-cycle10/H2/R1405/run-storage-probe.sh",
+      "inner_command": "node /workspace/scratch/8528bb251845/hh-cycle10/H2/R1405/storage-failure.mjs",
+      "exit": 0,
+      "raw_stdout": "storage-failure.raw.log",
+      "raw_exit": "storage-failure.exit",
+      "stdout_sha256": "7ad373e6257defeff06461ec4d501783645c606773d427c87031e45bd18a202c"
+    },
+    {"command": "git diff --check", "exit": 0}
+  ],
+  "evidence": {
+    "unchanged_adversarial": {
+      "navigate_away_back_failure": {"result": "transport_failure", "retained_newer_name_email_phone": true, "retry_available": false, "registration_calls": 1},
+      "success_while_edits_pending": {"committed_identity_projected": true, "status": "pending"},
+      "approved_alias_known_failure": {"failure": "transport_failure", "login_ok": true, "alias_index": 1, "runtime_status": "approved"},
+      "approved_alias_unknown_failure": {"failure": "outcome_unknown", "login_ok": true, "alias_index": 1, "runtime_status": "approved"},
+      "foreign_runtime_profile": {"id": "demo-jordan", "present_and_authority_preserved": true},
+      "captured_readonly_profile": {"id": "reference-sarah", "present_and_authority_preserved": true}
+    },
+    "actual_fixture_storage_failure": {
+      "method": "Storage.setItem throws only after lookups and form preparation, at the registration persist boundary; no failWith injection or fabricated runtime result.",
+      "service_error": "storage_unavailable",
+      "request_status": "failed",
+      "rendered_nonsecret_draft_retained": true,
+      "school_and_terms_retained": true,
+      "provider_account_and_session_absent": true,
+      "retry_available": false,
+      "public_retry": "nothing_to_retry",
+      "no_second_write": true,
+      "storage_write_attempts": 1,
+      "persisted_entries": 0,
+      "credentials_absent_from_state_runtime_parts_storage": true
+    },
+    "credential_handling": "Ephemeral credentials were generated at runtime and checked only for absence in serialized surfaces. No credential values were printed or saved in evidence."
+  },
+  "limits": [
+    "The approved-alias check is a direct public-controller dispatch regression; the rendered approved registration route presents an approval panel, not a visible re-registration form. This is not a claim of UI re-registration coverage.",
+    "Evidence is fixture-provider/controller/render-tree only, not mounted-browser visual QA.",
+    "No production/backend behavior was tested.",
+    "Repository source and Git state remained read-only; all H2 writes are confined to hh-cycle10/H2/R1405."
+  ]
+}

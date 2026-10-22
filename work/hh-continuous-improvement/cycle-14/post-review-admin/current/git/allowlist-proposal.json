@@ -1,0 +1,48 @@
+{
+  "schema": "hh-cycle14-git-allowlist-proposal@1",
+  "status": "proposal only; root review and separate Git GO required",
+  "repository": "/workspace/scratch/8528bb251845/PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "expectedParent": "06b6da36e326758ccd14cda021bc0a15cfd00817",
+  "expectedParentTree": "eb7136f80b1bdfd08c771f519a626a1e508bb1a9",
+  "reportedCanonicalRemoteParentOnly": "a2b2c45631c14e5f5cb22c3cc2c74fa6bf88d153",
+  "sourcePaths": [
+    {"path": "checkpoint/vendor/hh/src/public-controller.mjs", "sha256": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669"},
+    {"path": "checkpoint/vendor/hh/src/public-controller.test.mjs", "sha256": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164"}
+  ],
+  "frozenPackage": {
+    "root": "work/hh-continuous-improvement/cycle-14",
+    "manifest": "work/hh-continuous-improvement/cycle-14/evidence/manifest.json",
+    "manifestSha256": "0534667e8c1960ba8a8562fafe3a0cfc365942945a3852c0eb982d97c326d2bb",
+    "listedPayloadCount": 95,
+    "declaredEnvelopePaths": [
+      "work/hh-continuous-improvement/cycle-14/evidence/manifest.json",
+      "work/hh-continuous-improvement/cycle-14/evidence/E1905/result.json"
+    ],
+    "resultSha256": "413f929414b8cb0a7b6a55b4138e7ede4fc77f4bb49a11f8192d34df018ef819",
+    "rule": "exactly the 95 paths enumerated in the immutable manifest plus its two declared envelope paths; no extras"
+  },
+  "adminClosure": {
+    "manifest": "work/hh-continuous-improvement/cycle-14/post-review-admin/current/manifest.json",
+    "rule": "manifest path plus exactly the entries[] paths in that manifest; no extras",
+    "pathListRecord": "work/hh-continuous-improvement/cycle-14/post-review-admin/current/git/allowlist-paths.json"
+  },
+  "proposedExactChangedPathCount": 127,
+  "excluded": [
+    {"pathPrefix": "hh-cycle13/", "expectedKnownFileCount": 21, "rule": "preserve exact root-verified names; never stage or export"},
+    {"pathPrefix": "other", "rule": "all unlisted paths fatal; no general dirty-tree waiver"}
+  ],
+  "prospectiveCommands": {
+    "stage": ["git", "add", "--pathspec-from-file=/workspace/scratch/8528bb251845/hh-cycle14/H1/E1906/stage-paths.nul", "--pathspec-file-nul"],
+    "stagedWhitespace": ["git", "diff", "--cached", "--check"],
+    "verifyStaged": ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1906/verify-staged-allowlist-hh14.mjs", "<root-admitted-plan-path>", "<plan-sha256>"],
+    "commit": ["git", "commit", "-m", "HH cycle 14: synchronize successful login projection before notify"],
+    "export": ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1906/prepare-export-hh14.mjs", "<immutable-admitted-40-hex-commit>"]
+  },
+  "limits": [
+    "Commands above are prospective and were not run.",
+    "The path count is a proposal derived from 2 sources + 97 frozen package files + 28 current-admin files; verify against the final current admin manifest and its exact path list.",
+    "Root must read actual admin bytes and final prospective plan before separate stage/commit/export GO.",
+    "One local commit only; no push, fetch, reset, force, deployment, or publication authorized here."
+  ]
+}

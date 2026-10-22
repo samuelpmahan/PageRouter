@@ -1,0 +1,40 @@
+{
+  "job_id": "E2802",
+  "worker": "H2",
+  "outcome": "not_reuse",
+  "summary": "Confirmed a distinct rejected teacher-reply draft loss in the current cycle21 source. The prior topic-draft recovery is present, but reply submission has no corresponding controller draft or render projection. Primary meaningful case: a valid 79-character reply at the 500-reply fixture cap returns reply_limit_reached; reply count stays 500 and the visible thread-detail reply form rerenders empty. No account-service receipts or network activity; no repo files changed.",
+  "repo": {
+    "head": "c4c4ce782fc2669a5c73dcd2a98572e430344124",
+    "canonical": "fb89d37513654a84637cf4fa469bdba867f44d34"
+  },
+  "sourceSha256": {
+    "checkpoint/vendor/hh/src/community.mjs": "d5f4bf9b416fd53eb66fe4d983f08865c532b9982519e73735be88a0eaf1a964",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "2ffc11a0b694d752930eb8ef93abe1d045a3811096b8ac81fc429b60a49c91e9",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "88385bec51b14da0bd6f6e586e591d5198759892b4f697ce7c46517738ab2e7f",
+    "checkpoint/vendor/hh/src/public-site.mjs": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d",
+    "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d"
+  },
+  "findings": {
+    "rejectedWhitespaceReply": "reply_required; updateDraft(content) returned false; replyDraft absent; emitted reply textarea blank; reply count remained 2.",
+    "explicitCorrection": "Succeeded on explicit second dispatch; reply count 2 to 3; one corrected body stored; composer blank after success.",
+    "replyCap": "At 500 aggregate replies (2 seeds + 498 fixture setup replies), valid 79-character body returned reply_limit_reached; count remained 500; separate reply form on the visible /posts/topic-official-bug-forum detail route remained present but blank.",
+    "authority": "community.reply is the validation/storage authority: role must be teacher; target thread must be accessible; trimmed body must be nonempty and <=10000 chars; aggregate reply limit is 500. Public controller supplies synthetic authorId demo-teacher. HH account/session service is not invoked by forum replies.",
+    "lifecycle": "Current reply composer holds no draft state. app.mjs submits FormData then controller dispatch synchronously rerenders onChange, replacing DOM. Community role exit hides teacher actions; logout sets community role anonymous and navigates to login; forum reset resets fixture data; app reset sets anonymous, resets forum and navigates home. Topic-only topicDraft clearing does not cover reply content.",
+    "storage": "Probe used createCommunity({storage:null}); no forum key is written and no draft persistence is claimed. Production/backend/browser behavior was not tested."
+  },
+  "smallestAcceptanceCases": [
+    "Teacher submits whitespace-only reply: reply_required, zero new replies, exact bounded body/category equivalent remains projected in the same thread composer for correction.",
+    "Teacher corrects retained reply explicitly: exactly one reply is created, then that thread's reply draft clears; no auto-retry or account-service receipt.",
+    "Teacher reply over aggregate cap: valid bounded body remains available for correction; no reply is created.",
+    "Reply draft is not exposed to anonymous/moderator; clear it on teacher-role exit, logout, forum reset, app reset, and leaving/changing thread; unrelated thread state must not inherit it."
+  ],
+  "probes": {
+    "focused": {"argv": ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", "--input-type=module", "-e", "see focused-stdout.raw and focused-stderr.raw"], "exit_code": 0, "stdout": "focused-stdout.raw", "stderr": "focused-stderr.raw"},
+    "cap": {"argv": ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", "/workspace/scratch/86659bbafcce/hh22/H2/E2802/probe-cap.mjs"], "exit_code": 0, "stdout": "cap.stdout.raw", "stderr": "cap.stderr.raw", "exit": "cap.exit", "scriptSha256": "pending", "stdoutSha256": "pending"},
+    "whitespaceCorrectionSecondary": {"argv": ["/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node", "--input-type=module", "-e", "inline probe captured in focused-stdout.raw"], "exit_code": 0, "stdout": "focused-stdout.raw", "stderr": "focused-stderr.raw"}
+  },
+  "network": "none; direct local imports only",
+  "browserQA": "not performed",
+  "repoWrites": false
+}

@@ -1,0 +1,9 @@
+{
+  "capture_type": "post-execution tool-transcript testimony",
+  "argv": ["node", "probe.mjs"],
+  "cwd": "/workspace/scratch/86659bbafcce/hh19/H2",
+  "exit_code": 0,
+  "stdout": "{\n  \"probe\": \"E2502-H2-contact-counter-validation-feedback\",\n  \"scope\": \"synthetic fixture, rendered tree/controller only; no browser or assistive-technology claims\",\n  \"message\": {\n    \"id\": \"hh-contact-message\",\n    \"tag\": \"textarea\",\n    \"maxlength\": \"250\",\n    \"draftRetained\": true,\n    \"describedBy\": null\n  },\n  \"counter\": {\n    \"id\": \"hh-contact-counter\",\n    \"text\": \"231 characters remaining\"\n  },\n  \"invalidSubmit\": {\n    \"ok\": false,\n    \"code\": \"validation_failed\",\n    \"requestStatus\": \"failed\",\n    \"outcome\": \"validation-error\",\n    \"feedback\": \"Enter your name, a valid email, a subject, and a message.\",\n    \"draftRetainedAfterValidation\": true\n  },\n  \"result\": {\n    \"job_id\": \"E2502\",\n    \"worker\": \"H2\",\n    \"outcome\": \"mixed_change\",\n    \"summary\": \"Counter is reachable but not associated through aria-describedby; draft value and invalid-submit feedback remain in the local tree.\"\n  }\n}\n",
+  "stderr": "",
+  "capture_note": "Values copied from the completed exec tool transcript after execution; no preopened-FD, UTC, or duration claims."
+}

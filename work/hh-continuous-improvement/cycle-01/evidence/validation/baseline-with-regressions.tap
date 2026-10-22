@@ -1,0 +1,174 @@
+✔ normalizes captured public route aliases and forum paths (2.729077ms)
+✔ captured Teacher of the Day opens as a read-only snapshot without invoking teacher services (5.326345ms)
+✔ cascades school filters, loads local directory matches and restores remembered filters (3.053764ms)
+✖ school lookup retry stays bound to the failed current selection (2.084799ms)
+✔ school lookup retry recovers the same current selection (0.938178ms)
+✖ navigating away invalidates a failed registration school lookup retry (0.861854ms)
+✖ initial school choices remain retryable when the states read fails (0.582725ms)
+✖ returning to registration reloads states after an invalidated initial lookup failure (0.894523ms)
+✖ successful initial school-data read does not erase a directory retry (0.661223ms)
+✖ returning to registration reloads a failed county cascade (0.670967ms)
+✔ school lookup retry remains available from directory when no directory retry owns it (0.971748ms)
+✔ distinguishes an explicit empty-filter search from the initial background directory load (0.861604ms)
+✔ bounded text drafts keep spaces while typing and normalize only on submit (1.20577ms)
+✔ rejects stored school selections whose individual values do not form one fixture row (0.574443ms)
+✔ registration keeps passwords ephemeral, approval and login stay separate, and edits remain local (4.51ms)
+✔ Terms checkbox consent tracks both checking and unchecking without opening the modal (0.529595ms)
+✔ seeded UI login, local contact and reset never claim remote effects (1.638449ms)
+✔ wishlist and community actions are explicit local preview handoffs (1.341984ms)
+✔ late login, approval and logout results never redirect away from the current route (3.473333ms)
+✔ public route tree binds nav state, exposes accessible stable controls, and avoids inline styling (3.362978ms)
+✔ registration exposes the school cascade, password confirmation, Terms, and local approval (1.386932ms)
+✖ registration shows a contextual school lookup retry only while choices are unavailable (1.040783ms)
+✔ directory and contact reflect saved state, error/loading status, and remaining characters (1.498009ms)
+✔ profile error can retry and editable profile drafts survive renderer replacement (0.728784ms)
+✔ public profile formats structured school and scalar location fields without object coercion (0.438338ms)
+✔ Terms displays the complete captured section set and public profiles require an explicit wishlist choice (0.522864ms)
+✔ Teacher of the Day uses the captured Sarah profile and keeps it separate from runtime-owned demo profiles (0.558278ms)
+✔ Login and password-help content stays inside the single centered account card (0.417396ms)
+✔ partner and About renders expose source-shaped images and readable team text (0.627011ms)
+✔ Contact uses the captured local brand font glyphs and footer preview controls bind state (0.943305ms)
+✔ Logout is available in the authenticated account menu and absent anonymously (0.203756ms)
+✔ directory Results stays blank until an explicit search and then renders zero-result guidance (0.637607ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 25
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 129.795604
+
+✖ failing tests:
+
+test at hh-red-baseline/src/public-controller.test.mjs:130:1
+✖ school lookup retry stays bound to the failed current selection (2.084799ms)
+  AssertionError [ERR_ASSERTION]: a retry for an invalidated selection must be unavailable
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/hh-red-baseline/src/public-controller.test.mjs:142:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at hh-red-baseline/src/public-controller.test.mjs:161:1
+✖ navigating away invalidates a failed registration school lookup retry (0.861854ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'Simulated local school-data failure; no state changed.'
+  - ''
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/hh-red-baseline/src/public-controller.test.mjs:170:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Simulated local school-data failure; no state changed.',
+    expected: '',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at hh-red-baseline/src/public-controller.test.mjs:174:1
+✖ initial school choices remain retryable when the states read fails (0.582725ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/hh-red-baseline/src/public-controller.test.mjs:179:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at hh-red-baseline/src/public-controller.test.mjs:186:1
+✖ returning to registration reloads states after an invalidated initial lookup failure (0.894523ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + []
+  - [
+  -   'Demo California',
+  -   'Demo Washington'
+  - ]
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/hh-red-baseline/src/public-controller.test.mjs:193:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [],
+    expected: [ 'Demo California', 'Demo Washington' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at hh-red-baseline/src/public-controller.test.mjs:198:1
+✖ successful initial school-data read does not erase a directory retry (0.661223ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'loaded' !== 'error'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/hh-red-baseline/src/public-controller.test.mjs:202:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'loaded',
+    expected: 'error',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at hh-red-baseline/src/public-controller.test.mjs:209:1
+✖ returning to registration reloads a failed county cascade (0.670967ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - true
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/hh-red-baseline/src/public-controller.test.mjs:214:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at hh-red-baseline/src/public-site.test.mjs:39:1
+✖ registration shows a contextual school lookup retry only while choices are unavailable (1.040783ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /School choices are unavailable\./. Input:
+  
+  'Skip to content Home Donate Sign Up About Contact Partners ☰ Home Donate Sign Up About Contact Partners Login User Registration Please fill out the form below. If your school is not present in the list, go to the   and send us a message. Contact page Name: Email: Phone Number: Password: Confirm Password: State: Choose state Demo Washington County: Choose county School District: Choose school district School: Choose school Terms and Conditions I have read the Terms and Conditions This local preview does not create a production account. Submit Login © 2024 Homeroom Heroes. All rights reserved.'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/hh-red-baseline/src/public-site.test.mjs:47:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Skip to content Home Donate Sign Up About Contact Partners ☰ Home Donate Sign Up About Contact Partners Login User Registration Please fill out the form below. If your school is not present in the list, go to the   and send us a message. Contact page Name: Email: Phone Number: Password: Confirm Password: State: Choose state Demo Washington County: Choose county School District: Choose school district School: Choose school Terms and Conditions I have read the Terms and Conditions This local preview does not create a production account. Submit Login © 2024 Homeroom Heroes. All rights reserved.',
+    expected: /School choices are unavailable\./,
+    operator: 'match',
+    diff: 'simple'
+  }

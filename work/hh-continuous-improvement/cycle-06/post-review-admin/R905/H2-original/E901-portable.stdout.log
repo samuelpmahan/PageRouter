@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'present'
+- 'unknown'
+
+    at file:///workspace/scratch/8528bb251845/hh-cycle06/H2/R905/replay/E901-portable.mjs:91:8 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'present',
+  expected: 'unknown',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

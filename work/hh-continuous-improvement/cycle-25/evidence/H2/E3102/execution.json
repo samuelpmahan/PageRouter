@@ -1,0 +1,23 @@
+{
+  "schema": "hh25-h2-execution@1",
+  "job_id": "E3102",
+  "worker": "H2",
+  "command": "node /workspace/scratch/86659bbafcce/hh25/H2/E3102/probe.mjs > /workspace/scratch/86659bbafcce/hh25/H2/E3102/stdout.raw 2> /workspace/scratch/86659bbafcce/hh25/H2/E3102/stderr.raw; rc=$?; printf '%s\\n' \"$rc\" > /workspace/scratch/86659bbafcce/hh25/H2/E3102/exit.code; printf 'exit=%s\\n' \"$rc\"; wc -c /workspace/scratch/86659bbafcce/hh25/H2/E3102/stdout.raw /workspace/scratch/86659bbafcce/hh25/H2/E3102/stderr.raw",
+  "runtime": "Node v24.19.0",
+  "exitCode": 0,
+  "stdout": {
+    "path": "stdout.raw",
+    "bytes": 1503,
+    "sha256": "e411e93ccc3f0d3f61eb24c67b5e5494e83b1a699480131bfb1ffe1773491c02"
+  },
+  "stderr": {
+    "path": "stderr.raw",
+    "bytes": 0,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  "probe": {
+    "path": "probe.mjs",
+    "sha256": "3fd5e9e70a4f041bc330707743582e69aedbf2f0a304cb4890235d77aab4428f"
+  },
+  "boundary": "Synthetic volatile in-memory community fixture and a no-op teacher-service runtime guard; no browser DOM, backend, account, production, server, or network evidence."
+}

@@ -1,0 +1,51 @@
+{
+  "job_id": "R2303B",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "The corrected-cwd independent focused verification passed: one test, one pass, zero failures, zero skipped, exit 0. The renderer and test source hashes matched the declared pins after execution, as did the previously reviewed controller/app/provider/runtime hashes. This accepts the bounded renderer-test checkpoint only; it is not browser accessibility evidence, a full validation rerun, a build, or publication approval.",
+  "review_basis": {
+    "independent_review": "Reuses the R2303 H2 source/evidence review by reference; R2303B does not claim a repeated full review.",
+    "renderer_diff": "One added aria-label attribute on the existing navigation toggle.",
+    "test_diff": "One pure-renderer test checks the explicit label and preserved button/glyph/expanded/control/event/target-hidden contract across anonymous/authenticated × closed/open states.",
+    "prior_failure": "R2303's wrong-cwd attempt is preserved as a separate AMEND, with zero tests registered. It was a harness path error, not an assertion RED or product regression; it was not retried in R2303."
+  },
+  "execution": {
+    "attempts": 1,
+    "argv": [
+      "node",
+      "--test",
+      "--test-name-pattern=public mobile navigation toggle keeps a stable descriptive label across menu and session states",
+      "checkpoint/vendor/hh/src/public-site.test.mjs"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+    "start_utc": "2026-10-19T03:30:44Z",
+    "end_utc": "2026-10-19T03:30:45Z",
+    "exit_code": 0,
+    "signal": "OS-level signal instrumentation not used",
+    "test_counts": {"tests": 1, "pass": 1, "fail": 0, "skipped": 0},
+    "capture_directory": "/workspace/scratch/8528bb251845/hh-cycle17/H2/R2303B/captures/focused-01",
+    "stdout": {"bytes": 226, "sha256": "3679d030485b90ecb9fcf3899ec02fadb3def12ccf6d4d4df54020da45da16df"},
+    "stderr": {"bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "exit_capture_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "actual_prospective_sha256": "6ed642cd4733a5ee241622c4c160f1988344e7d1a74322a3c1f5b04ec215e777"
+  },
+  "source_hashes": {
+    "declared_and_actual_after": {
+      "checkpoint/vendor/hh/src/public-site.mjs": "d9c17a350375633a53d0dc256be666bb0c82298c9ffa7b05bc6be08156141bfc",
+      "checkpoint/vendor/hh/src/public-site.test.mjs": "264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5"
+    },
+    "unchanged_reviewed_dependencies_after": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+      "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+      "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+      "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+    },
+    "pin_status": "Renderer/test hashes equal R2303B declared expected pins; unchanged dependencies equal values reviewed during R2303. No source edits were made by H2."
+  },
+  "qualifications": [
+    "The copied actual-prospective.json is an exact pre-run snapshot; its statement that execution was pending is historical. Root issued the separate GO after authorizing readback and before this single attempt.",
+    "Evidence is Node test output against a pure emitted renderer tree. It does not establish browser-computed accessible name, keyboard behavior, screen-reader output, visual focus, responsive visibility, human acceptance, or a broader accessibility defect.",
+    "H1's independent full public-site/controller green outputs remain separate evidence and were not rerun by H2. H1's green prospective predicted skipped tests, while actual H1 raw output recorded zero skipped.",
+    "No full-suite/build/Git/publication/deployment/browser/DOM/backend/real data/Lab operation was performed. Exact 27 old scratch paths remain preserved and excluded."
+  ]
+}

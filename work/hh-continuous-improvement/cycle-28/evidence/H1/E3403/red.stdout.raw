@@ -1,0 +1,58 @@
+✖ directory renders a distinct school-choice retry and clears only its recovered error (12.302012ms)
+✖ directory school-choice retry does not consume a coexisting directory-results retry (1.918285ms)
+✖ school-choice retry event rejects a lookup closure invalidated by a new selection (1.279802ms)
+✖ directory shows a school-choice retry only for a retryable lookup failure (3.083764ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 0
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 133.984602
+
+✖ failing tests:
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:1081:1
+✖ directory renders a distinct school-choice retry and clears only its recovered error (12.302012ms)
+  AssertionError [ERR_ASSERTION]: retryable school choice failure has a visible directory recovery action
+      at TestContext.<anonymous> (file:///workspace/scratch/86659bbafcce/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:1087:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:1100:1
+✖ directory school-choice retry does not consume a coexisting directory-results retry (1.918285ms)
+  TypeError: Cannot read properties of null (reading 'attrs')
+      at TestContext.<anonymous> (file:///workspace/scratch/86659bbafcce/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:1109:63)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:1120:1
+✖ school-choice retry event rejects a lookup closure invalidated by a new selection (1.279802ms)
+  TypeError: Cannot read properties of null (reading 'ok')
+      at TestContext.<anonymous> (file:///workspace/scratch/86659bbafcce/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:1128:27)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at checkpoint/vendor/hh/src/public-site.test.mjs:127:1
+✖ directory shows a school-choice retry only for a retryable lookup failure (3.083764ms)
+  AssertionError [ERR_ASSERTION]: retryable lookup failure has a rendered recovery action
+      at TestContext.<anonymous> (file:///workspace/scratch/86659bbafcce/PageRouter/checkpoint/vendor/hh/src/public-site.test.mjs:133:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

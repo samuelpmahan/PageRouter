@@ -1,0 +1,53 @@
+{
+  "job_id": "R2303B",
+  "worker": "H2",
+  "phase": "corrected prospective construction only; HOLD for root readback and separate GO",
+  "authorization_boundary": "No command has been run for R2303B. This prospective does not authorize execution.",
+  "prior_attempt": {
+    "job_id": "R2303",
+    "result_path": "/workspace/scratch/8528bb251845/hh-cycle17/H2/R2303/actual-result.json",
+    "result_sha256": "5ea226dc629081a5e012e729e9eff26cf34d0ba8fe8423ffd2ca6df11efb1662",
+    "outcome": "amend",
+    "reason": "The focused test did not load because H2 used the checkpoint directory as cwd while the command's test path was repo-root-relative; Node registered zero tests and exited 1. All original R2303 prospective/raw captures remain preserved and will not be overwritten or retried in that packet."
+  },
+  "review_basis": {
+    "scope": "Reuses the completed R2303 independent source/evidence review by reference; this is not a claim of a repeated full review.",
+    "renderer_sha256": "d9c17a350375633a53d0dc256be666bb0c82298c9ffa7b05bc6be08156141bfc",
+    "test_sha256": "264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5",
+    "assertion_scope": "One pure render-tree test: explicit stable label, button tag, existing glyph, expanded state, controls/event/target ID and hidden state across anonymous/authenticated × closed/open inputs.",
+    "interpretation_limit": "A renderer-tree regression only; it cannot establish browser-computed accessible name, keyboard behavior, screen-reader behavior, visual focus, responsive visibility, or a broader accessibility defect.",
+    "prior_author_green": "H1's full raw GREEN evidence remains separate. Focused test 1/1, public-site 16/16, controller 61/61; the prepared GREEN skip prediction was inaccurate because actual captures say 0 skipped. R2303B does not re-run or independently re-claim the full suites."
+  },
+  "exact_command": {
+    "argv": [
+      "node",
+      "--test",
+      "--test-name-pattern=public mobile navigation toggle keeps a stable descriptive label across menu and session states",
+      "checkpoint/vendor/hh/src/public-site.test.mjs"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+    "rationale": "Use the exact authored node argv with its repository-root-relative checkpoint path from the required repository-root cwd. This fixes only the harness/cwd mismatch that prevented the R2303 command from loading any test; it does not change source, argv, assertions, or test scope."
+  },
+  "capture_plan": {
+    "directory": "/workspace/scratch/8528bb251845/hh-cycle17/H2/R2303B/captures/focused-01",
+    "exclusive_files": ["actual-prospective.json", "stdout.raw", "stderr.raw", "start.utc", "end.utc", "exit.code", "signal.txt"],
+    "first_failure_rule": "If the single authorized attempt fails, preserve all original captures and stop. No retry, fallback, assertion change, source edit, suite expansion, or build without new direction.",
+    "signal_limit": "Record that OS-level signal instrumentation is not provided; retain the actual process exit code rather than inferring a signal."
+  },
+  "source_pin_expectations": {
+    "only_expected_worktree_source_paths": ["checkpoint/vendor/hh/src/public-site.mjs", "checkpoint/vendor/hh/src/public-site.test.mjs"],
+    "renderer_sha256": "d9c17a350375633a53d0dc256be666bb0c82298c9ffa7b05bc6be08156141bfc",
+    "test_sha256": "264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5",
+    "unchanged_paths_reviewed_in_R2303": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+      "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+      "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+      "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+    }
+  },
+  "limits": [
+    "No new source review claim beyond the recorded R2303 review basis; current expected source pins are explicit.",
+    "No test command, syntax/import check, build, Git mutation, browser, DOM, keyboard, accessibility tree, backend, real data, or Lab operation has occurred for R2303B.",
+    "The exact old 27 scratch paths remain preserved/excluded; R2303 is preserved unchanged."
+  ]
+}

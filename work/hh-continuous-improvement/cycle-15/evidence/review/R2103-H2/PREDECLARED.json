@@ -1,0 +1,36 @@
+{
+  "job_id": "R2103",
+  "worker": "H2",
+  "phase": "independent-review-predeclared-before-validation",
+  "scope": "Review only the authorized two-file forgot-copy change against H1's frozen pre-change source snapshots, then run one focused renderer test and the one unchanged E2102 script because the renderer source changed.",
+  "source_review": {
+    "baseline": "H1 E2103 source-before snapshots with baseline hashes public-site.mjs 5f1135c95fdb3baefb64e49d755e45a87b9eb1b17ff363ed91eb5b516812031b and public-site.test.mjs 87f74df3c31eca7388c701deb4ac1fd40ec874f9ce17c971582983124762b213",
+    "expected_current": {
+      "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+      "checkpoint/vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a"
+    },
+    "expected_change": "One forgot intro string becomes explicit local-preview/no-email disclosure; one focused emitted-tree regression asserts that copy, rejects the prior promise, and retains email name/type/required/form event/submit button/back link. Existing login projection coverage remains separate. Controller, app, and provider must remain unchanged."
+  },
+  "predeclared_flow": [
+    "1. Confirm the exact two source hashes against the assigned review target and inspect the complete two-file diff against H1's byte snapshots. No additional tests/probes are run during review.",
+    "2. Run once from /workspace/scratch/8528bb251845/PageRouter/checkpoint: node --test --test-name-pattern='forgot-password disclosure accurately describes the local preview before submission' vendor/hh/src/public-site.test.mjs. Capture stdout, stderr, exit code, and UTC start/end into unique absolute R2103 paths.",
+    "3. Only if step 2 passes, run once: node /workspace/scratch/8528bb251845/PageRouter/hh-cycle15/H2/E2102/probe.mjs. Capture stdout, stderr, exit code, and UTC start/end into separate unique absolute R2103 paths. Do not edit or replace the original script.",
+    "4. Read captures and hash the exact review/source/capture records. Do not run full suites/build, retry, browser/DOM, backend/email, reset, source, Git, native, or Lab operations."
+  ],
+  "predictions": {
+    "focused_renderer_test": "1 test, pass 1, fail 0, skipped 0, exit 0; disclosure and required form/backlink assertions hold.",
+    "unchanged_probe": "Output now shows the new disclosure in the fresh forgot tree and still has local behavior: initialization only calls SchoolData.getStates; invalid payload is local; valid payload returns remote:false with explicit no-email-sent message and no provider-call delta; email draft remains unsupported and fresh render/reentry value remains default-empty.",
+    "qualification": "The probe is controller/render-tree level only. Empty fresh projection is not a reproduction of typed browser DOM loss; no draft-retention feature is implied."
+  },
+  "falsifiers": [
+    "Unexpected file/hash/diff outside the two authorized paths or changed controller/app/provider blocks review acceptance.",
+    "Focused test fails, has unexpected counts, or expected behavior is absent: preserve capture and STOP without running step 3.",
+    "Old probe fails or reports changed capability/provider behavior, missing disclosure, any remote outcome/provider call from forgot dispatch, or other unexpected behavior: preserve first capture and STOP without retry."
+  ],
+  "capture_directory": "/workspace/scratch/8528bb251845/hh-cycle15/H2/R2103",
+  "limits": [
+    "No browser DOM, FormData/reportValidity execution, mounted UI, screenshot, or visual QA.",
+    "No real account, backend, email, password, reset, or external effect.",
+    "No source edits, Git mutations, build/deployment/publication, native/Lab writes, or changes to the six accidental E2102 originals or root copies."
+  ]
+}

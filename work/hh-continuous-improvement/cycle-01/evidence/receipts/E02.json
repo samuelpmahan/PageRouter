@@ -1,0 +1,9 @@
+{
+  "job_id": "E02",
+  "worker": "W3",
+  "outcome": "confirmed_reuse",
+  "summary": "Reused existing fail-next/runtime/controller harness to reproduce stale retry: failed Demo Washington county lookup, clearing state, retry restored Demo King for blank state. Baseline controller suite 11 passed; no source edits.",
+  "agent": "/root/hh_regression",
+  "finding": "stale retry captures old input and live schoolEpoch",
+  "source": "7adf7e74a85c4310a5704a4c42808e85a1a82d71"
+}

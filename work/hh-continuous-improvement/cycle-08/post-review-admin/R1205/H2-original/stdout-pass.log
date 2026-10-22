@@ -1,0 +1,8 @@
+file:///workspace/scratch/8528bb251845/hh-cycle08/H2/R1205/audit.mjs:195
+await writeFile(resolve('/workspace/scratch/8528bb251845/hh-cycle08/H2/R1205/result.json'), `${JSON.stringify(result, null, 2)}\n`);
+^
+
+ReferenceError: writeFile is not defined
+    at file:///workspace/scratch/8528bb251845/hh-cycle08/H2/R1205/audit.mjs:195:1
+
+Node.js v24.19.0

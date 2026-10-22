@@ -1,0 +1,65 @@
+{
+  "schema": "hh-cycle05-worker-result/v1",
+  "job_id": "E704",
+  "worker": "H1",
+  "summary": "Canonical PageRouter source build completed successfully for the independently accepted E703 two-file freeze; receipt source hashes match the reviewed controller and test exactly.",
+  "outcome": "confirmed_reuse",
+  "native_assignment": {
+    "epoch": 3,
+    "start_readback": "running",
+    "completion": "canonical build and receipt verification complete"
+  },
+  "scope": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "bf27246beebd03d673c92c7152fd26124a58b40b",
+    "product_source_mutation_during_build": false,
+    "commit_or_push": false,
+    "browser_visual_qa": "not performed; not claimed"
+  },
+  "build": {
+    "command": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "working_directory": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "node": "v24.19.0",
+    "exit_code": 0,
+    "elapsed_seconds": 71.312,
+    "critical_path_seconds": 69.26,
+    "actions": {"total": 2, "processes": 2},
+    "targeted_hh_controller_community": {"passed": 111, "failed": 0},
+    "full_npm_suite": {"passed": 266, "failed": 0},
+    "built_atlas_import_closure": {"passed": 1, "failed": 0},
+    "helper_tests": {"passed": 2, "failed": 0},
+    "pxcube_packages": {"passed": 14, "failed": 0},
+    "verified_site_files": 843,
+    "receipt_source_input_entries": 1538,
+    "site_build_id": "14f8afa0adde85fdefad575487d4992c9c373c5244663fd64f5b3b4a0d8c84b0",
+    "site_digest": "d89776561978a5c35e5c2c9609f9d96cc998892f9c14f05e1678647fceb426e0",
+    "crisp_exact_compiled_equality": true,
+    "pxcube_rebuilt": true,
+    "pxcube_relocated": false
+  },
+  "reviewed_source_inputs": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": {
+      "expected_sha256": "a5deede267691459429f8bc404ba9cbc8e07d18f8120047281cf773d5cdaf558",
+      "receipt_sha256": "a5deede267691459429f8bc404ba9cbc8e07d18f8120047281cf773d5cdaf558",
+      "bytes": 50091,
+      "match": true
+    },
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": {
+      "expected_sha256": "8716ff6cd19f8ca56312ba143062d59f5a18dc0677b020d4aa75a356b985025f",
+      "receipt_sha256": "8716ff6cd19f8ca56312ba143062d59f5a18dc0677b020d4aa75a356b985025f",
+      "bytes": 42149,
+      "match": true
+    }
+  },
+  "evidence": {
+    "invocation_log": "/workspace/scratch/8528bb251845/hh-cycle05/H1/E704/build.log",
+    "invocation_log_sha256": "505af41863df58a9e0276ae4a6191b8e6744efad1866b30a068703f4ddd3c719",
+    "source_build_log": "/workspace/scratch/8528bb251845/PageRouter/checkpoint/bazel-bin/site.log",
+    "source_build_log_sha256": "3ca13de2c305cecdad83c6071ac688c582e57e639d59947af168a7d15753977f",
+    "site_receipt": "/workspace/scratch/8528bb251845/PageRouter/checkpoint/bazel-bin/site.receipt.json",
+    "site_receipt_sha256": "7d8f3a18497f79d6935da393f61f9cb5ccae93b80a9ccb7e0f31f9e363025b5d",
+    "receipt_source_hash_validation": "Both reviewed E703 product-source hashes occur as exact matching sourceInputs in site.receipt.json.",
+    "worktree_status": "Exactly the two E703 controller/test files remain modified; no build-time product source changes."
+  }
+}

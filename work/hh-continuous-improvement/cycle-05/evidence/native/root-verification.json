@@ -1,0 +1,26 @@
+{
+  "scope": "Root inspected actual two-file source diff, original red, complete green summaries, accepted independent R703 result/eight-case stdout and canonical receipt/build logs",
+  "baselineControllerSHA256": "908c4fa0aa1c0d809c804b83d680f45c2775cf1919e5244a58af769d2bb8d70f",
+  "controllerSHA256": "a5deede267691459429f8bc404ba9cbc8e07d18f8120047281cf773d5cdaf558",
+  "testsSHA256": "8716ff6cd19f8ca56312ba143062d59f5a18dc0677b020d4aa75a356b985025f",
+  "originalRed": {"tests": 4, "passed": 0, "failed": 4, "source": "H1/E703/red.log", "reconstructed": false},
+  "green": {"focused": 4, "controller": 37, "allHH": 64, "failures": 0},
+  "actualFlow": "Runtime/session/registration still refresh. Public profile projections survive own-profile synchronization unless explicit route ID matches own profile ID. Creation stores own overlay, but mutates current projection only on matching present own-profile routes.",
+  "meaning": "Fixture provider creates the owner profile correctly; the defect was a current-route display/authority-projection overwrite. Edits after overwrite affected the owner's local overlay, not the other teacher or captured source data.",
+  "visualQA": "unverified: fresh connected browser attempt unavailable without originating browser context; no inspected browser screenshot",
+  "backendOrHumanAcceptance": "not claimed",
+  "independentReview": "R703 accepted exact source, four focused/37 controller rerun plus eight actual independent adversarial fixture cases",
+  "canonicalBuild": {
+    "exit": "build log reports success; 843 emitted files/14 packages verified",
+    "HH": 111, "full": 266, "Atlas": 1, "helpers": 2,
+    "siteBuildId": "14f8afa0adde85fdefad575487d4992c9c373c5244663fd64f5b3b4a0d8c84b0",
+    "siteDigest": "d89776561978a5c35e5c2c9609f9d96cc998892f9c14f05e1678647fceb426e0",
+    "receiptSHA256": "7d8f3a18497f79d6935da393f61f9cb5ccae93b80a9ccb7e0f31f9e363025b5d",
+    "bothReviewedSourceInputsMatch": true,
+    "mountedCompiledController": {
+      "path": "compiled/hh/public-controller.mjs",
+      "sha256": "cb8c044fc6caf8064a6aad4e4a7408b38e7954ad9e031107db7a4543c9b1993a",
+      "sourceDifferenceInspected": "Exactly the existing compiler import relocation ../services/index.mjs -> ./services/index.mjs; controller body is otherwise unchanged. app.mjs imports this compiled controller and public-site renderer. This is source/derived-output inspection, not browser execution."
+    }
+  }
+}

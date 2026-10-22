@@ -1,0 +1,120 @@
+{
+  "job_id": "R1605",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Independent read-only audit accepts the frozen cycle-11 package. The manifest is the exact expected SHA-256, all 82 payload entries match declared byte lengths and hashes, there are no unlisted or missing package files, and source/build/native receipt copies bind to their original bytes. The test-only source, unchanged controller/renderer, canonical build receipt/log/counts, and native independent assignment/capacity receipts are consistent with the bounded compatibility claim. No product defect or correction, browser/backend/human acceptance, or portable execution claim is established.",
+  "package": {
+    "root": "PageRouter/work/hh-continuous-improvement/cycle-11",
+    "manifest": "evidence/manifest.json",
+    "manifest_sha256": "37913417c6ea344c76c08d769609c948025299a43bb679181397e660a96784bc",
+    "manifest_file_count": 82,
+    "manifest_bytes": 14788,
+    "package_files_including_manifest": 83,
+    "verification": {
+      "entry_count_matches": true,
+      "all_82_payload_byte_lengths_match": true,
+      "all_82_payload_sha256_match": true,
+      "missing_listed_files": [],
+      "unlisted_files": [],
+      "manifest_exclusions_respected": true
+    },
+    "copied_originals": [
+      {
+        "package": "evidence/source/public-controller.test.mjs.txt",
+        "original": "PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs",
+        "sha256": "e11885f0f55e56094bed3e865d9acfcb57fc995097d5be627f9ebed3631d89a3",
+        "byte_identical": true
+      },
+      {
+        "package": "evidence/E1604/E1604/site.receipt.json",
+        "original": "hh-cycle11/H1/E1604/site.receipt.json",
+        "sha256": "2259bac91520afae521a4ede11b110942139ead50c30f7e87540bc2508764404",
+        "byte_identical": true
+      },
+      {
+        "package": "evidence/E1604/E1604/site.log",
+        "original": "hh-cycle11/H1/E1604/site.log",
+        "sha256": "bf5637eb203d00c7fca9bfd6caab730b778e19666481f017b7a24c74c17b860a",
+        "byte_identical": true
+      },
+      {
+        "package": "evidence/native/receipts/{E1601,E1602,E1603,E1604,R1603}.json",
+        "originals": "hh-cycle11/receipts/{E1601,E1602,E1603,E1604,R1603}.json and matching worker result.json files",
+        "byte_identical": true
+      }
+    ],
+    "nested_evidence": "E1601/E1601 path duplication is intentional and matches the exact manifest; E1602/E1603/E1604 and R1603 nested paths also resolve as listed."
+  },
+  "source_binding": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "b9eff6a0c4385ed2648e97b30d15366910b7b58b",
+    "tree_before_test_edit": "a5c871c0e8b8373bb7010ffce57249f245443846",
+    "test_path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "test_sha256": "e11885f0f55e56094bed3e865d9acfcb57fc995097d5be627f9ebed3631d89a3",
+    "unchanged_controller_sha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "unchanged_renderer_sha256": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "sourceDigest": "c7f2947f7ce36b1f4e51d3ad195915f8dadfa2ed7ac37f2eb01e6c33b606a565",
+    "git_commit": null
+  },
+  "build_audit": {
+    "receipt_sha256": "2259bac91520afae521a4ede11b110942139ead50c30f7e87540bc2508764404",
+    "log_sha256": "bf5637eb203d00c7fca9bfd6caab730b778e19666481f017b7a24c74c17b860a",
+    "build_stdout_sha256": "6c811d38d6907078e95125ca6b8bda74d800b19c4b8130c40cbd8ccd90da57f3",
+    "build_stderr_sha256": "1da8ac89c98c6873728b7b909ef5cdd4c2237f0235fb0bd9b219a3de1d6b7915",
+    "cache": "fresh processwrapper-sandbox build action; not a cache hit",
+    "buildHelpers": {"passed": 2, "failed": 0},
+    "targetedHHControllerCommunity": {"passed": 130, "failed": 0},
+    "fullNpmSuite": {"passed": 285, "failed": 0},
+    "builtAtlasImport": {"passed": 1, "failed": 0},
+    "count_note": "Suite counts overlap; not distinct-test arithmetic.",
+    "pxcubePackagesRebuilt": 14,
+    "verifiedSiteFiles": 843,
+    "siteDigest": "439c3dea926aa4cf6f7b1f9a40b68f416a0e98233c8649adf9762826b00195bd",
+    "siteBuildId": "d492bba4e7d38e22b73950358dd4a432b4a47848b2c1ba9eeaf614fa506e81d1"
+  },
+  "native_assignment_audit": {
+    "current_state_epoch": 9,
+    "current_unfinished_jobs": ["R1605", "E1606"],
+    "current_assignments": {"H2": "R1605", "H1": "E1606"},
+    "historical_E1605_running_snapshot_not_current": true,
+    "recovery_event_preserved_old_state_and_requeued_only_unfinished_review_admin": true,
+    "new_registry_records_actual_contexts": true,
+    "epoch8_rebalancer": {
+      "solve": "hh-cycle11/solves/epoch-08.root-command.json",
+      "exit": 0,
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "independent_review_constraint_value": 0,
+      "pin_in_flight_constraint_value": 0,
+      "ready_packet_capacity_constraint_value": 0,
+      "assignments": {"H2": "R1605", "H1": "E1606"},
+      "eligible_workers": {"R1605": ["H2"], "E1606": ["H1"]}
+    },
+    "independence_basis": "R1605 is restricted to H2; E1606 is restricted to H1; the fresh recovery registry identifies distinct current contexts and the persisted solve records both checks and all zero-valued constraints."
+  },
+  "claim_review": {
+    "decision_basis": "README/NEXT/continuation and included E1601/E1602/E1603/R1603/E1604 evidence agree that the regression is test-only compatibility coverage. E1601's post-validation requestStatus/outcomeKind are explicitly qualified; result and completedRoute.feedback are authoritative for registration completion. The first test pass is described as expected, not red-before-fix. Shared route-global feedback, including success, remains unresolved and is not asserted to be a defect.",
+    "portable_execution_claim": false,
+    "limitations": [
+      "Probe wrappers and some paths are workspace-bound/relative; package preservation is established, not portable standalone execution.",
+      "No mounted-browser QA or UI reachability claim.",
+      "No production backend, real account, human acceptance, deployment, commit, or publication evidence.",
+      "The 130/285/1 and helper counts were audited from E1604 receipt/log; this reviewer did not rerun full tests, probes, or build.",
+      "No test, build, probe, browser, or backend action was performed during this package audit."
+    ]
+  },
+  "audit_harness_notes": [
+    "An initial read-only copy-mapping check incorrectly assumed E1602 had an H1 result path; it does not. The corrected map verified H2/E1602 and all five native receipts byte-identical. No package or source was changed.",
+    "An initial read-only state-inspection snippet treated the jobs object as an array; corrected inspection confirmed jobs is keyed by ID and current epoch 9. No state was changed.",
+    "An initial broad file discovery exceeded output limits; subsequent checks were scoped to the frozen package and cycle-11 evidence."
+  ],
+  "audit_result": {
+    "manifest_validation": "passed",
+    "source_and_build_binding": "passed",
+    "copy_original_mapping": "passed",
+    "native_capacity_and_independence": "passed",
+    "scope_and_claim_limits": "passed",
+    "substantive_findings": []
+  }
+}

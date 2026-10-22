@@ -1,0 +1,21 @@
+{
+  "job_id": "R3103",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Independent review accepts the bounded moderator-only Reported items filter. The four-file diff keeps the projection role-gated, admits a topic if its own flag or any reply flag is true (including hidden moderator-visible items), composes conjunctively with query/category, then sorts and paginates; exiting moderator clears state. Controller rejects non-moderator events and nonboolean supplied values while the actual no-enabled generic button payload toggles. Focused 3/3 and independent actual fixture lifecycle assertions passed.",
+  "findings": [],
+  "severity": "No blocker found within the reviewed bounded contract.",
+  "declinedToJudge": ["Browser DOM/visual/accessibility behavior", "backend or production authorization", "durable/shared report queues"],
+  "scopeNotes": [
+    "The fixture provider and real service runtime were instantiated, but no service port was invoked (receipt count remained 1 before and after). Community data was memory-only.",
+    "For a nonempty query, the existing renderer intentionally shows all matches instead of applying page-size slicing; no pagination defect is inferred. Empty-query reported results were tested at 10 then 12 after Load More, with query/category refiltering verified separately.",
+    "Two preserved early independent-probe attempts failed due to harness assumptions (detail route after creation, then search bypasses pagination); the corrected third run passed. These are not product failures."
+  ],
+  "evidence": {
+    "sourcePins": "source-pins.json",
+    "execution": "execution.json",
+    "focusedRaw": "green-01-focused/",
+    "fixtureRaw": "fixture-03-lifecycle/",
+    "retainedHarnessAttempts": ["fixture-01-lifecycle/", "fixture-02-lifecycle/"]
+  }
+}

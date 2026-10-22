@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ 'R1405 accepted exact source; result SHA-256 055f24470d7713fca1f16bc6bbabe2b464b79130c89a027979b93f290ad588a9'
+- 'R1405 accepted exact source; result SHA-256 055f24470d7713fca1f16bc6bbabe2b464b79130c89a027979b93f290ad588a9.'
+
+    at file:///workspace/scratch/8528bb251845/hh-cycle10/H2/R1406/audit.mjs:76:8 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: 'R1405 accepted exact source; result SHA-256 055f24470d7713fca1f16bc6bbabe2b464b79130c89a027979b93f290ad588a9',
+  expected: 'R1405 accepted exact source; result SHA-256 055f24470d7713fca1f16bc6bbabe2b464b79130c89a027979b93f290ad588a9.',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

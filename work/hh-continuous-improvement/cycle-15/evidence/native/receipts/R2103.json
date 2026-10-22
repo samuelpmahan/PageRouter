@@ -1,0 +1,75 @@
+{
+  "job_id": "R2103",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Independent review accepts the bounded two-file renderer-copy change. The renderer now discloses that password recovery is unavailable in this preview and no email will be sent; required email/form submission/back-to-login controls remain. The focused renderer test passed 1/1, and the unchanged E2102 fixture/controller/render-tree probe showed the new copy while preserving the expected local-only outcome and provider-call boundary.",
+  "review_scope": {
+    "baseline": "H1 E2103 frozen source-before snapshots: public-site.mjs sha256 5f1135c95fdb3baefb64e49d755e45a87b9eb1b17ff363ed91eb5b516812031b; public-site.test.mjs sha256 87f74df3c31eca7388c701deb4ac1fd40ec874f9ce17c971582983124762b213",
+    "reviewed_files": [
+      "PageRouter/checkpoint/vendor/hh/src/public-site.mjs",
+      "PageRouter/checkpoint/vendor/hh/src/public-site.test.mjs"
+    ],
+    "current_sha256": {
+      "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+      "checkpoint/vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a"
+    },
+    "change_review": "Diff against the frozen snapshots is one intro string change and a focused emitted-tree regression split from the existing login test. The new test asserts the exact local/no-email disclosure, rejects the former email-send promise, and asserts the form's public:forgot event, email name/type/required attributes, Submit button, and #/login link. Existing login assertions remain unchanged in a separate test.",
+    "tracked_worktree_review": "Read-only git status showed exactly the two authorized modified tracked source files; untracked hh-cycle13/ and hh-cycle15/ scratch remain excluded/preserved. app.mjs, public-controller.mjs, public-controller.test.mjs, fixture-provider.mjs, and runtime.mjs hashes match the E2102 pre-change/source records."
+  },
+  "commands": [
+    "diff -u /workspace/scratch/8528bb251845/hh-cycle15/H1/E2103/source-before/public-site.mjs checkpoint/vendor/hh/src/public-site.mjs",
+    "diff -u /workspace/scratch/8528bb251845/hh-cycle15/H1/E2103/source-before/public-site.test.mjs checkpoint/vendor/hh/src/public-site.test.mjs",
+    "node --test --test-name-pattern='forgot-password disclosure accurately describes the local preview before submission' vendor/hh/src/public-site.test.mjs",
+    "node /workspace/scratch/8528bb251845/PageRouter/hh-cycle15/H2/E2102/probe.mjs",
+    "sha256sum over R2103 predeclaration/captures, original E2102 script, changed source files, and unchanged app/controller/provider/runtime files"
+  ],
+  "actual_counts": {
+    "focused_renderer_test": {"tests": 1, "pass": 1, "fail": 0, "skipped": 0, "exit_code": 0, "started_utc": "2026-10-18T23:47:47Z", "finished_utc": "2026-10-18T23:47:48Z"},
+    "unchanged_e2102_probe": {
+      "invocations": 1,
+      "exit_code": 0,
+      "started_utc": "2026-10-18T23:47:54Z",
+      "finished_utc": "2026-10-18T23:47:54Z",
+      "fixture": true,
+      "persistence": "volatile-memory",
+      "initialization_service_calls": 1,
+      "initialization_service_ports": ["SchoolData.getStates"],
+      "invalid_forgot_payload": {"ok": false, "provider_call_delta": 0},
+      "valid_forgot_payload": {"ok": true, "remote": false, "message": "Password recovery is not connected. No email was sent.", "provider_call_delta": 0},
+      "runtime_receipts": {"before_initialize": 1, "after_initialize": 2, "final": 2},
+      "new_visible_disclosure": "Password recovery is not connected in this preview. No email will be sent."
+    }
+  },
+  "evidence": {
+    "predeclared": {"path": "/workspace/scratch/8528bb251845/hh-cycle15/H2/R2103/PREDECLARED.json", "sha256": "cccb3ef8f99a37ce6a5580108d4fae0d2f6dfbb7d1e92326935d6c33b1744eab"},
+    "focused_test": {
+      "stdout": {"path": "/workspace/scratch/8528bb251845/hh-cycle15/H2/R2103/focused.stdout.raw", "sha256": "628c7dd4b7bc24ee4fde1b39bffa80fed8921258eb1b9084a2dcccaedbfe2c34", "bytes": 216},
+      "stderr": {"path": "/workspace/scratch/8528bb251845/hh-cycle15/H2/R2103/focused.stderr.raw", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "bytes": 0},
+      "exit": {"path": "/workspace/scratch/8528bb251845/hh-cycle15/H2/R2103/focused.exit.code", "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"},
+      "start_utc_sha256": "3171aa6637bed2b217ed76b4cbadcbadbf871f65dbae2eaae663f2c9c757d04b",
+      "end_utc_sha256": "ed78d9f1d1253efc12fad07d5947ebe6c4fbb26707a8503c49aab17eff4e3097"
+    },
+    "unchanged_probe": {
+      "stdout": {"path": "/workspace/scratch/8528bb251845/hh-cycle15/H2/R2103/probe.stdout.raw", "sha256": "0853e6e94559852605f84ef160da91c0bfec13bbfde862b6830eae8078d21b70", "bytes": 3987},
+      "stderr": {"path": "/workspace/scratch/8528bb251845/hh-cycle15/H2/R2103/probe.stderr.raw", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "bytes": 0},
+      "exit": {"path": "/workspace/scratch/8528bb251845/hh-cycle15/H2/R2103/probe.exit.code", "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"},
+      "start_utc_sha256": "01b764b1226f6bc708a6365be4bca36dc56933e23ad6251920e1cf9fa04204fd",
+      "end_utc_sha256": "01b764b1226f6bc708a6365be4bca36dc56933e23ad6251920e1cf9fa04204fd"
+    },
+    "original_probe_script": {"path": "/workspace/scratch/8528bb251845/PageRouter/hh-cycle15/H2/E2102/probe.mjs", "sha256": "330eb7f30f284b054c93b14b8b107fdfcc60a783e088bfebf1d39c692100ae34"},
+    "unchanged_source_hashes": {
+      "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+      "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164",
+      "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+      "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+    }
+  },
+  "limits": [
+    "No browser DOM, reportValidity/FormData execution, mounted interaction, screenshot, or visual QA; the unchanged probe remains an emitted-tree/controller/runtime probe.",
+    "No draft-retention feature is implemented or claimed. A default-empty fresh render is not a reproduced typed DOM-value loss or a defect finding.",
+    "The copy change confirms only the local preview's current no-email capability disclosure; it does not establish backend capability or user/release acceptance.",
+    "No real email, backend, account, password, reset, tests beyond the one focused renderer test, full suite, build, deployment, Git mutation, native/Lab write, or source edit occurred.",
+    "The six accidental PageRouter/hh-cycle15/H2/E2102 originals and root-owned E2102 copies remain untouched."
+  ]
+}

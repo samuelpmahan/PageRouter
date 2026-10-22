@@ -1,0 +1,6 @@
+{
+  "job_id": "E2801",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Volatile synthetic teacher reply probe: a whitespace-only body is correctly rejected as reply_required with unchanged thread count/storage, but the re-rendered reply composer is empty and controller state has no reply draft. An explicit corrected resubmit creates exactly one local reply; teacher-role exit/re-entry does not restore the rejected body, and existing replies remain. No account-service receipt delta or external effect occurred."
+}

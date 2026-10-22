@@ -1,0 +1,15 @@
+import {createFixtureProvider,createServiceRuntime} from '../../../PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createPublicController} from '../../../PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '../../../PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+const storage={values:new Map(),getItem(k){return this.values.get(k)??null},setItem(k,v){this.values.set(k,String(v))},removeItem(k){this.values.delete(k)}};
+const provider=createFixtureProvider({fixture:true});
+const runtime=createServiceRuntime(provider);
+const controller=createPublicController({runtime,storage});
+await controller.initialize('#/contact');
+const tree=renderPublicSite({route:controller.route,state:controller.state,journey:controller.state.journey});
+const walk=n=>!n||typeof n!=='object'?[]:[...(typeof n.children?.[0]==='string'?[n.children[0]]:[]),...(n.children||[]).flatMap(walk)];
+const pageCopy=walk(tree).join(' ').replace(/\s+/g,' ').trim();
+const preReceipts=runtime.inspect().receipts.length,preProvider=JSON.stringify(provider.snapshot());
+const submit=await controller.dispatch('public:contact',{name:'Demo Contact',email:'demo-contact@example.test',subject:'Synthetic fixture question',message:'Synthetic test message.'});
+const postReceipts=runtime.inspect().receipts.length,postProvider=JSON.stringify(provider.snapshot());
+console.log(JSON.stringify({provider:{mode:provider.mode,fixture:provider.fixture,persistence:provider.capabilities.persistence,realMail:provider.capabilities.realMail,contactPort:Object.keys(provider.services).some(p=>/contact|mail/i.test(p))},initialCopy:pageCopy,submit:{ok:submit.ok,remote:submit.remote,message:submit.message,outcome:controller.state.journey.outcome,retainedDraft:controller.state.journey.contact},effects:{providerReceiptDelta:postReceipts-preReceipts,providerSnapshotUnchanged:postProvider===preProvider}}));

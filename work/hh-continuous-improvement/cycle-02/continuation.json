@@ -1,0 +1,142 @@
+{
+  "schema": "hh-continuous-improvement-continuation/v1",
+  "cycle": "cycle-02",
+  "repository": "PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "base": {
+    "localCommit": "9e3e1f314de657b6e6272951b26c8d36fb3871bb",
+    "remoteReviewedBase": "58bac45ff9096a1f1a3347eb89b6e87e1843416b",
+    "baseTree": "ba0d4d8e5a548a2dce02cd76fd1ebdb6dda3eee8",
+    "fetchedTreeEquivalent": true
+  },
+  "candidate_status": "source frozen; canonical build passed; coordinator R202 and independent W2 E203 accepted; publication pending",
+  "product_files": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "9e5b358f5c88147924fd60b3067a916104a84503510dbf1afd905350ac7cf82e",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "30eb315392bbc032ad8f5cb12a28f3276185ca5be566bb659e586996847d0f17",
+    "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "87f74df3c31eca7388c701deb4ac1fd40ec874f9ce17c971582983124762b213",
+    "checkpoint/exp/cooperative/hh-parity-public.test.mjs": "7bd84be0d0ec62c4845a22fa9db9c4caeeceecb1eeb45844fdde540d1bb9f7d5"
+  },
+  "flow": {
+    "done": [
+      "Create/edit reject nonempty unsupported or overlength wishlist URLs before provider/PxC/overlay mutation.",
+      "Validation retains current profile/open form/typed draft; errors explain synthetic DEMO format.",
+      "Blank create keeps default preview link; blank edit keeps current preview link; valid synthetic DEMO URLs remain accepted.",
+      "Both rendered forms expose concise aria-describedby field guidance."
+    ],
+    "storageBoundary": "Provider retains synthetic fixture fields; identity and display overlays remain tab-local; no backend/production change."
+  },
+  "validation": {
+    "schema": "hh-cycle02-build-summary/v1",
+    "status": "passed",
+    "command": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "workingDirectory": "checkpoint",
+    "node": "v24.19.0",
+    "bazel": "7.4.1",
+    "tests": {
+      "focusedAndParity": {
+        "passed": 54,
+        "failed": 0
+      },
+      "canonicalTargetedHH": {
+        "passed": 101,
+        "failed": 0
+      },
+      "canonicalFullSuite": {
+        "passed": 256,
+        "failed": 0
+      },
+      "atlasImports": {
+        "passed": 1,
+        "failed": 0
+      }
+    },
+    "siteBuildId": "e757af9f206e1c00202d06ebd34af834818f6ce8b53182084c113dee42958a36",
+    "siteDigest": "c38420ed6e185376759758d6d584a0f400c6907d0aebf2094fae57ec13e2ddea",
+    "sourceDigest": "2c6d4d1aaff89b2f81c053a0a8995448a8615f1cee6f155ff6eea4c7a1792ba7",
+    "siteFiles": 843,
+    "pxcubePackages": 14,
+    "sourceReceiptSha256": "6d4faffc5ac6765ddc450859f3b098106bfb9c3754864dfb3c56f9d768145124",
+    "allFrozenFilesMatchBuildInputs": true,
+    "frozenFileChecks": [
+      {
+        "path": "checkpoint/vendor/hh/src/public-controller.mjs",
+        "frozenSha256": "9e5b358f5c88147924fd60b3067a916104a84503510dbf1afd905350ac7cf82e",
+        "currentSha256": "9e5b358f5c88147924fd60b3067a916104a84503510dbf1afd905350ac7cf82e",
+        "buildInputSha256": "9e5b358f5c88147924fd60b3067a916104a84503510dbf1afd905350ac7cf82e",
+        "matches": true
+      },
+      {
+        "path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+        "frozenSha256": "30eb315392bbc032ad8f5cb12a28f3276185ca5be566bb659e586996847d0f17",
+        "currentSha256": "30eb315392bbc032ad8f5cb12a28f3276185ca5be566bb659e586996847d0f17",
+        "buildInputSha256": "30eb315392bbc032ad8f5cb12a28f3276185ca5be566bb659e586996847d0f17",
+        "matches": true
+      },
+      {
+        "path": "checkpoint/vendor/hh/src/public-site.mjs",
+        "frozenSha256": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+        "currentSha256": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+        "buildInputSha256": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+        "matches": true
+      },
+      {
+        "path": "checkpoint/vendor/hh/src/public-site.test.mjs",
+        "frozenSha256": "87f74df3c31eca7388c701deb4ac1fd40ec874f9ce17c971582983124762b213",
+        "currentSha256": "87f74df3c31eca7388c701deb4ac1fd40ec874f9ce17c971582983124762b213",
+        "buildInputSha256": "87f74df3c31eca7388c701deb4ac1fd40ec874f9ce17c971582983124762b213",
+        "matches": true
+      },
+      {
+        "path": "checkpoint/exp/cooperative/hh-parity-public.test.mjs",
+        "frozenSha256": "7bd84be0d0ec62c4845a22fa9db9c4caeeceecb1eeb45844fdde540d1bb9f7d5",
+        "currentSha256": "7bd84be0d0ec62c4845a22fa9db9c4caeeceecb1eeb45844fdde540d1bb9f7d5",
+        "buildInputSha256": "7bd84be0d0ec62c4845a22fa9db9c4caeeceecb1eeb45844fdde540d1bb9f7d5",
+        "matches": true
+      }
+    ],
+    "initialCanonicalFailure": {
+      "retained": "canonical-initial-failure.log",
+      "test": "exp/cooperative/hh-parity-public.test.mjs:86",
+      "reason": "Happy path supplied unsupported /ls/INDEPENDENT; two fixture URLs changed to supported /ls/DEMO-INDEPENDENT without changing assertions."
+    },
+    "browserVisualQA": {
+      "status": "not run",
+      "reason": "Cloud Chrome could not reach local Bazel candidate: net::ERR_CONNECTION_REFUSED at http://127.0.0.1:8765/#/hh; no mounted UI interaction/screenshot validated; no exposure workaround."
+    },
+    "independentReview": {
+      "decision": "accepted",
+      "focusedTests": 54,
+      "independentEdgeCases": 42,
+      "sourceFreezePreserved": true,
+      "evidence": "evidence/independent-review/review.json"
+    }
+  },
+  "publication": {
+    "pullRequest": "https://github.com/samuelpmahan/PageRouter/pull/8",
+    "status": "local reviewed checkpoint prepared; root connected-GitHub publication pending",
+    "committedByWorker": true,
+    "pushedByWorker": false,
+    "mainMergeOrDeployment": "not performed; not authorized by checkpoint publication",
+    "source_review": {
+      "R202": "evidence/scheduler/receipts/R202.json",
+      "decision": "accepted",
+      "E203": "evidence/independent-review/review.json",
+      "independentEdgeCases": 42
+    },
+    "localCheckpoint": "the bounded commit containing this continuation; exact commit/tree reported separately for root publication"
+  },
+  "active_execution": false,
+  "active_mutation_owner": null,
+  "next_cycle": {
+    "journey": "Authenticate as one teacher, open another runtime-owned teacher public profile, attempt profile edit, and check UI/controller ownership plus unchanged other-profile state before proposing a correction.",
+    "first_check": "Compare own-profile and other-teacher public routes using actual loaded profile teacherId and current authenticated teacherId; do not confuse a captured readonly reference with runtime teacher ownership.",
+    "done_conditions": [
+      "Name the owner and requested subject independently in the receipt.",
+      "Observe controller response and current/provider profile state before and after the edit attempt.",
+      "Keep any real authorization/backend claim separate from this browser-local fixture evidence."
+    ],
+    "deferred": "Prior cycle shared journey.loading after invalidated async read remains unverified and unfixed; this cycle did not solve all teacher journeys.",
+    "browser": "Mounted DOM/visual QA still unverified: cloud Chrome local-candidate connection refused; no workaround attempted."
+  }
+}

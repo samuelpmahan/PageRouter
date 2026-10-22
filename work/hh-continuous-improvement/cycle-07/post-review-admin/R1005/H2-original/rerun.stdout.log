@@ -1,0 +1,110 @@
+{
+  "job_id": "R1005",
+  "worker": "H2",
+  "decision": "amend",
+  "summary": "Frozen cycle-07 package bytes, product source freeze, canonical receipt input binding/counts, and provenance records were independently checked. The E1005 narrative has one provenance-note SHA typo; original narrative, native receipt, and clarification remain distinct and byte-exact.",
+  "manifest": {
+    "expectedSha": "b32ad5849211a5fda61b1f74f9df96298b1a834703271a7559149807dc75109f",
+    "actualSha": "b32ad5849211a5fda61b1f74f9df96298b1a834703271a7559149807dc75109f",
+    "entryCount": 68,
+    "checkedCount": 68,
+    "mismatches": [],
+    "extra": [],
+    "missing": []
+  },
+  "source": {
+    "head": "7feded8819db87026a8f35f6aa515bda513ab541",
+    "tree": "1cdcf9bfb34b680ed198eb7e750486ecfd1887cc",
+    "productInputs": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": {
+        "expected": "df2765c4b8eee83236d90e9c4380222561956252a0c2cc9a3d63a8a870be046c",
+        "actual": "df2765c4b8eee83236d90e9c4380222561956252a0c2cc9a3d63a8a870be046c",
+        "bytes": 52287,
+        "manifestMatched": true
+      },
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": {
+        "expected": "9732658d1e0eaca0d7344d4ba3626540b72e954b55424ec5f1a01572e1028f04",
+        "actual": "9732658d1e0eaca0d7344d4ba3626540b72e954b55424ec5f1a01572e1028f04",
+        "bytes": 57862,
+        "manifestMatched": true
+      }
+    },
+    "currentSourceTree": {
+      "head": "7feded8819db87026a8f35f6aa515bda513ab541",
+      "tree": "1cdcf9bfb34b680ed198eb7e750486ecfd1887cc"
+    },
+    "worktreeStatus": "expected two frozen source paths modified; package untracked before audit"
+  },
+  "canonicalBuild": {
+    "receiptShaExpected": "1beb8ba7974dd28d92a99c53c18bdb2c54dddd3baec50de15a9da8b7acb5c2d2",
+    "receiptShaActual": "1beb8ba7974dd28d92a99c53c18bdb2c54dddd3baec50de15a9da8b7acb5c2d2",
+    "receiptInputs": {
+      "vendor/hh/src/public-controller.mjs": {
+        "expected": "df2765c4b8eee83236d90e9c4380222561956252a0c2cc9a3d63a8a870be046c",
+        "actual": "df2765c4b8eee83236d90e9c4380222561956252a0c2cc9a3d63a8a870be046c",
+        "expectedBytes": 52287,
+        "actualBytes": 52287,
+        "match": true
+      },
+      "vendor/hh/src/public-controller.test.mjs": {
+        "expected": "9732658d1e0eaca0d7344d4ba3626540b72e954b55424ec5f1a01572e1028f04",
+        "actual": "9732658d1e0eaca0d7344d4ba3626540b72e954b55424ec5f1a01572e1028f04",
+        "expectedBytes": 57862,
+        "actualBytes": 57862,
+        "match": true
+      }
+    },
+    "bindingsInputs": "2 records",
+    "sourceDigest": "5dad652773d03bbcba82e253c11de1b8e09d9d3237a66798695cbf4cbb8109d8",
+    "sourceInputCount": 1538,
+    "siteBuildId": "b7d30601db9f5e774f55016bf5359cdd7aedb9620cfc3f92c8a3e8a668022bd0",
+    "siteDigest": "f0cf4e8d50e30cd39f72dd2b3951a0d60cd38346c69a699614fc16e3fcd1d737",
+    "crispExactCompiledEquality": true,
+    "pxcube": {
+      "rebuilt": true,
+      "packages": 14,
+      "relocated": false
+    },
+    "siteFiles": 843,
+    "logFacts": {
+      "targeted121": true,
+      "full276": true,
+      "atlas1": true,
+      "pxcube14": true,
+      "site843": true
+    },
+    "reportedCounts": {
+      "targeted_hh": "121/121",
+      "full_suite": "276/276",
+      "atlas_import_closure": "1/1",
+      "preflight_helpers": "2/2",
+      "pxcube_packages": 14,
+      "verified_site_files": 843
+    },
+    "verdict": "confirmed_reuse"
+  },
+  "provenance": {
+    "narrativeSha": "270621f678b4a3568817177a7792ee158d4b84ba80ce714f42c8b715585f46a1",
+    "narrativeExpected": "270621f678b4a3568817177a7792ee158d4b84ba80ce714f42c8b715585f46a",
+    "nativeSha": "3d92c2da01eaa4b2ffa3f301d83069d7188749d34d00c47c8c4d9dc0505aeea4",
+    "nativeExpected": "3d92c2da01eaa4b2ffa3f301d83069d7188749d34d00c47c8c4d9dc0505aeea4",
+    "clarificationNarrativeSha": "270621f678b4a3568817177a7792ee158d4b84ba80ce714f42c8b715585f46a1",
+    "clarificationNativeSha": "3d92c2da01eaa4b2ffa3f301d83069d7188749d34d00c47c8c4d9dc0505aeea4",
+    "nativeAssignmentStart": "2026-10-18T13:23:44.576354Z",
+    "workerApproxStart": "2026-10-18T13:23:00Z",
+    "e1005NarrativeFieldHasFinalExtraOne": false,
+    "clarificationMatchesBoth": true,
+    "interpretation": "E1005 has a provenance-note transcription typo only: its first cited narrative SHA ends in ...f46a1, while actual/clarified narrative ends ...f46a. Original narrative and native receipt are preserved separately; no hashes normalized or rewritten."
+  },
+  "r1003": {
+    "outcome": "accepted",
+    "summary": "Independent adversarial fixture/runtime/renderPublicSite probes found the correction rejects stale prepared and already-confirmed Avery handoffs on Jordan, binds fresh Jordan continuation to Jordan, and preserves expected alias, anonymous, captured-reference, pending/failure, not-found, and generic-home compatibility behavior.",
+    "probeSha": "a678aea5613ed98cb99220fb9f8f24f746d13e83abd986939578233040a254ef",
+    "manifestProbeSha": "a678aea5613ed98cb99220fb9f8f24f746d13e83abd986939578233040a254ef",
+    "probeMatchesManifest": true,
+    "stdoutSha": "3d8ab9e82958aa0e9965009ba227d3ec28d6e97a8527636de00c08dc166df43d",
+    "rawStdoutExcerpt": "{\n  \"schema\": \"hh-cycle07-H2-R1003/wishlist-identity-review/v1\",\n  \"job_id\": \"R1003\",\n  \"worker\": \"H2\",\n  \"decision\": \"rejected\",\n  \"error\": {\n    \"name\": \"AssertionError\",\n    \"message\": \"Expected values to be strictly equal:\\n+ actual - expected\\n\\n+ 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW'\\n- 'https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM'\\n\",\n    \"stack\": \"AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\\n+ actual - expected\\n\\n+ 'https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW'\\n- 'https://www.amazon.com/hz/wishlist/ls/DEMO-CLASSROOM'\\n\\n    at genericCompatibility (file:///workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/probe.mjs:81:381)\\n    at async main (file:///workspace/scratch/8528bb251845/hh-cycle07/H2/R1003/probe.mjs:84:206)\\n    ",
+    "initialScriptPreserved": false,
+    "scope": "Packaged final probe is present; initial wrong-constant script bytes are explicitly not retained."
+  }
+}

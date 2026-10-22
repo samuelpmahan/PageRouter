@@ -1,0 +1,20 @@
+{
+  "job_id": "E3301",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "Actual volatile teacher-author flow confirms the existing deletion recovery is usable: deleting the rendered own-topic action leaves the controller on the deleted detail URL, which renders an unavailable-conversation fallback and a Back to Forum link. Returning preserves the search that matched the deleted topic, shows the existing no-results empty state, and Clear search recovers all three seeded topic cards. The synthetic topic is owned by demo-teacher; fixture initialization produced two legitimate runtime receipts and no further receipts were created by community actions. No deletion, route, empty-state, authority, reply, or renderer defect was demonstrated; no source change is recommended.",
+  "evidence": {
+    "probe_source": "/workspace/scratch/afc0d51965a8/hh27/H1/E3301/probe.mjs",
+    "source_pins": "/workspace/scratch/afc0d51965a8/hh27/H1/E3301/source-pins.json",
+    "execution_status_and_timestamps": "/workspace/scratch/afc0d51965a8/hh27/H1/E3301/execution.json",
+    "stdout_raw": "/workspace/scratch/afc0d51965a8/hh27/H1/E3301/stdout.raw"
+  },
+  "source_checkpoint": {
+    "repo": "/workspace/scratch/86659bbafcce/PageRouter",
+    "commit": "22de162d5838f84c7fd87d84fd6afc0a996f71f5",
+    "tree": "6f041813df2beb9a6c5ba27ab1a821024483c113",
+    "clean_after_probe": true
+  },
+  "proposed_smallest_correction": "None. Reuse existing unavailable-detail fallback, Back to Forum navigation, search empty state, and Clear search recovery. Minimum regression if future route requirements change: volatile actual fixture -> create own topic -> search-match it -> open rendered delete action -> verify successful deletion/fallback/back link -> return and verify no-results state -> clear search and verify seeded index recovery, while asserting existing foreign-owner/anonymous/moderator/hidden/reply-delete behavior is unchanged.",
+  "stopped_after_receipt": true
+}

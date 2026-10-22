@@ -1,0 +1,93 @@
+{
+  "schema": "hh-continuous-improvement-continuation/v1",
+  "cycle": "cycle-03",
+  "repository": "PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "base": {
+    "publishedCommit": "83aa35c29abdbca71b64c7a8dbdfb656834a095b",
+    "localSourceCommit": "a156bae0873ba4207bd48d79359d96103cb74f30",
+    "baseTree": "598c2d839b39e6dbece16dfbffbdd61407e0d78e"
+  },
+  "status": {
+    "candidate": "source repair, canonical build, and independent review complete; awaiting publication",
+    "nativeReview": "R402 accepted by H2; native receipt captured",
+    "humanAcceptance": "not claimed",
+    "commitOrPublication": "Local source commit is authorized; publication to the existing draft PR 8 remains pending.",
+    "currentNativeJob": {
+      "id": "E405",
+      "worker": "H1",
+      "status": "running",
+      "snapshot": "evidence/native/E405-active.json"
+    }
+  },
+  "journey": {
+    "name": "authenticated owner edits own profile while another owner profile stays read-only",
+    "confirmedBefore": "An authenticated fixture teacher could dispatch edit-toggle and submit against another runtime-owned teacher profile. The renderer hid Edit on that public-profile route, but dispatch wrote a local overlay keyed by the other teacherId.",
+    "boundedChange": "Both controller edit paths now require authenticated session teacherId to match the loaded profile teacherId; captured read-only reference checks retain precedence; public aliases remain authorized from actual teacherId ownership.",
+    "storageBoundary": "Successful owner edit is a tab-local overlay. Provider/runtime snapshot remains unchanged. No backend profile-update operation exists in the fixture provider.",
+    "deferred": [
+      "shared journey.loading after an invalidated async read remains unverified and unfixed",
+      "browser visual QA remains unverified because the isolated local candidate could not be reached from cloud Chrome"
+    ]
+  },
+  "validation": {
+    "tdd": {
+      "red": {
+        "passed": 27,
+        "failed": 3,
+        "expectedFailures": [
+          "nonowner toggle",
+          "nonowner submit",
+          "anonymous toggle"
+        ]
+      },
+      "green": {
+        "passed": 31,
+        "failed": 0,
+        "log": "evidence/E402/H1/focused-controller.log"
+      }
+    },
+    "canonicalBuild": {
+      "command": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+      "workingDirectory": "PageRouter/checkpoint",
+      "status": "passed",
+      "targetedHH": {
+        "passed": 105,
+        "failed": 0
+      },
+      "fullSuite": {
+        "passed": 260,
+        "failed": 0
+      },
+      "atlasImports": {
+        "passed": 1,
+        "failed": 0
+      },
+      "siteFiles": 843,
+      "pxcubePackages": 14,
+      "siteBuildId": "1d6a3300b185019346bd1cf340a77d98f21954604e9fa2c832cd1a23e28254bf",
+      "siteDigest": "ab2e5df284ad329152b8d2c5ef217197d4a3aaea78348c2f62ccbc7b7e046f90",
+      "receipt": "evidence/build/site.receipt.json"
+    },
+    "postfixProbe": "evidence/E402/H1/postfix-probe-result.json",
+    "independentReview": {
+      "decision": "accepted",
+      "worker": "H2",
+      "focusedController": {
+        "passed": 31,
+        "failed": 0
+      },
+      "actualRuntimeAdversarialCases": 5,
+      "sourceFilesMatch": true,
+      "receipt": "evidence/native/receipts/R402.json",
+      "report": "evidence/R402/result.json"
+    }
+  },
+  "sourceFreeze": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "c5d31f45140397536e22e6ac744e689d06fdec09c8b7e4c1a43167548adad4d1",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "9eda3ffc8e7553d16845ef1eb25fbdd2420981274f67b49bcb61649618099ea0"
+  },
+  "nativeStateSnapshot": "evidence/native/state.json",
+  "coordinationHistory": "evidence/errata.json",
+  "nextReview": "Root-selected next-cycle hypothesis: use a promise-controlled fixture provider to start a delayed public-profile load, navigate to registration or login before it resolves, then resolve the stale read and inspect journey.loading, current-form usability, and whether stale profile data replaces the current route. Demonstrate the behavior before any correction; do not claim backend behavior. This hypothesis was not executed or implemented in cycle 03."
+}

@@ -1,0 +1,106 @@
+{
+  "schema": "hh-continuous-improvement-continuation/v1",
+  "cycle": "cycle-01",
+  "repository": "PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "base": {
+    "branch": "main",
+    "commit": "7adf7e74a85c4310a5704a4c42808e85a1a82d71"
+  },
+  "candidate_status": "source frozen; canonical build passed; draft PR published",
+  "product_files": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "4eb1ecc139a89a87777a827e9460b370813dd0f498a269ff0c47c2d0f4da94a4",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "7088a497f633718630cfde56a12111240887c41d3c7b50239345429237b292af",
+    "checkpoint/vendor/hh/src/public-site.mjs": "d9c26625a9dc8bb29bad3959ae40e5c26cca7aa143e5246493663c34726c4dd5",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "dcdf6c706b613cc64484276672d27e9717768a6d216a1e30b8039ec41679e7cb"
+  },
+  "flow": {
+    "scope": "registration school cascade recovery and shared directory retry compatibility",
+    "done_checks": [
+      "A retry uses the original selection and epoch.",
+      "Changing selection or route invalidates stale school retries.",
+      "Registration reloads missing states/counties/districts/schools on entry.",
+      "Permanent school lookup errors remain visible without a retry action.",
+      "School lookup success does not clear an unrelated directory retry.",
+      "Directory lookup retries retain priority when present; school lookup retry remains available otherwise."
+    ]
+  },
+  "validation": {
+    "focused_command": "node --test checkpoint/vendor/hh/src/public-controller.test.mjs checkpoint/vendor/hh/src/public-site.test.mjs",
+    "focused_result": "32 passed, 0 failed",
+    "baseline_with_regressions": "25 passed, 7 failed on the original base; red assertions demonstrate candidate regressions, not seven distinct existing defects",
+    "diff_check": "passed",
+    "canonical_build": {
+      "status": "passed",
+      "command": "BAZEL=<pinned Bazel 7.4.1> bash ci/bazel/run.sh",
+      "node": "v24.19.0",
+      "bazel": "7.4.1",
+      "targeted_hh": "92 passed",
+      "full_suite": "247 passed",
+      "atlas_import": "1 passed",
+      "build_helper": "2 passed",
+      "site_files": 843,
+      "pxcube_packages": 14,
+      "site_build_id": "0b10b5a2fcc2e2d7ad9aab97cba4f3e389993759ae60eec7a5845eea88f7ba02",
+      "site_digest": "3bc7256cafcfe67abeef2d6582dc39339ef975e72fecbd1c4303db5f127551e5",
+      "source_digest": "987b863a9286ec40de5f4d6623999df770bc9eb73149ec4408da73c93ed8bac6",
+      "all_changed_inputs_match": true
+    },
+    "browser_visual_qa": {
+      "status": "not run",
+      "reason": "Chrome Headless Shell 151.0.7922.34 archive downloads returned invalid/truncated ZIP; no installed browser was found; no pixel or full event QA claimed"
+    },
+    "deferred": [
+      "Shared journey.loading may remain stale after an invalidated async read; internal state shared with directory loading."
+    ]
+  },
+  "next_cycle": {
+    "journey": [
+      "register",
+      "simulate approval",
+      "log in",
+      "create profile",
+      "reload"
+    ],
+    "first_check": "Separate persisted fixture records from tab-local identity/profile overlays before declaring reload data loss.",
+    "acceptance": [
+      "Each transition has a focused regression and explicit dependency.",
+      "Observed persisted fields match the documented storage boundary after reload.",
+      "Controller and rendered screens agree on error recovery.",
+      "A fresh independent review accepts the exact candidate checkpoint."
+    ],
+    "planning_note": "Planning identifies worthwhile work, dependencies, and done conditions; the Rebalancer allocates actual workers and reprioritizes repairs/reviews from observations. No speedup is claimed.",
+    "resume": "Reuse this branch and its draft PR with fresh refs; confirm ownership and working-tree changes first, then advance the next bounded journey check. An open review checkpoint does not mean another cycle is actively mutating."
+  },
+  "evidence_dir": "evidence",
+  "scheduler": {
+    "workers": 3,
+    "packets": 10,
+    "epochs": 7,
+    "repair_packets": [
+      "E04",
+      "E05"
+    ],
+    "speedup_claim": false
+  },
+  "active_execution": false,
+  "active_mutation_owner": null,
+  "publication": {
+    "status": "draft PR opened",
+    "branch": "codex/hh-continuous-improvement",
+    "pull_request": {
+      "number": 8,
+      "url": "https://github.com/samuelpmahan/PageRouter/pull/8",
+      "draft": true,
+      "base": "main"
+    },
+    "source_checkpoint": {
+      "local_commit": "aff44ae3ba04c6193e5d123016cd6198b647271b",
+      "local_tree": "7fe74777d2aec2a2ee678243a774034773933a34",
+      "published_commit": "b47e9c6860ee5c7c232d6a7b32155fdca17b2ee8",
+      "published_tree": "7fe74777d2aec2a2ee678243a774034773933a34"
+    },
+    "main_landing": "not authorized by this cycle",
+    "human_acceptance": "not inferred"
+  }
+}

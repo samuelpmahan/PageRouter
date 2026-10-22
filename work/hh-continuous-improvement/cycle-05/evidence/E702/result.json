@@ -1,0 +1,57 @@
+{
+  "schema": "hh-continuous-improvement-native-evidence/v1",
+  "job_id": "E702",
+  "worker": "H2",
+  "actual_epoch": 0,
+  "native_assignment_readback": "running",
+  "summary": "Synthetic controlled race reproduced the source-inspected TeacherProfile.createProfile stale-route overwrite: after navigating to Demo Jordan, successful create completion leaves route.profileId=demo-jordan but renders the newly created authenticated teacher's local-overlay profile. Denied completion preserves Jordan. Own-profile and captured-read-only controls passed.",
+  "outcome": "confirmed_reuse",
+  "commands": [
+    {
+      "command": "node hh-cycle05/H2/E702/profile-create-route-probe.mjs",
+      "exit_code": 0,
+      "stdout_file": "hh-cycle05/H2/E702/stdout.json",
+      "assertions": "allAssertionsPassed=true"
+    },
+    {
+      "command": "git -C PageRouter status --porcelain=v1 && git -C PageRouter rev-parse HEAD && git -C PageRouter rev-parse HEAD^{tree}",
+      "result": "clean; HEAD bf27246beebd03d673c92c7152fd26124a58b40b; tree 4daf69ad6017206eb9e95646ca2403e17841a078"
+    }
+  ],
+  "baseline": {
+    "branch": "codex/hh-continuous-improvement",
+    "head": "bf27246beebd03d673c92c7152fd26124a58b40b",
+    "tree": "4daf69ad6017206eb9e95646ca2403e17841a078",
+    "published_main": "7adf7e74a85c4310a5704a4c42808e85a1a82d71",
+    "worktree_initially_clean": true
+  },
+  "source_hashes_sha256_before_and_after": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "908c4fa0aa1c0d809c804b83d680f45c2775cf1919e5244a58af769d2bb8d70f",
+    "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "d84876bb26e846bbb5a482c637a324c9a808d223b668e164204e9191abfeed9d"
+  },
+  "probe_script_sha256": "0eb3c8891c7fcd5e8ebedb80bb741f5243fbc664457a7143619aadefa50fedf7",
+  "artifact_relocation": {
+    "from": "PageRouter/work/hh-continuous-improvement/cycle-05/H2/E702/",
+    "to": "hh-cycle05/H2/E702/",
+    "reason": "Corrected to the assigned H2-only scratch ownership root before continuing.",
+    "scope": "Only the three newly created E702 files were moved; the accidental empty cycle-05 directories were removed. No tracked/source/Git files were touched."
+  },
+  "runtime_evidence": {
+    "reachability": "The fixture-provider wrapper held the exact TeacherProfile.createProfile runtime invocation after dispatch; synthetic registration, approval, login, and profile-create reached the held call. Three independent runs covered Jordan success, Jordan denied failure, and captured Sarah reference success while the create call was pending.",
+    "success": "Before release rendered Demo Jordan (demo-seed-jordan). After success, URL/controller route remained demo-jordan while renderPublicSite projected Success Creator (demo-teacher-1, source local-overlay); fixture runtime ownProfile also belonged to demo-teacher-1.",
+    "failure": "Injected fixture-only denied response returned errorCode=denied; route and rendered profile remained Demo Jordan (demo-seed-jordan).",
+    "capturedReferenceRace": "While create was held, rendered captured route showed Sarah Endsley. After success, route.profileId remained reference-sarah but rendered projection became Success Creator and journey.profile source became local-overlay for demo-teacher-1. A subsequent public:profile-edit dispatch succeeded and changed the local overlay name to Unauthorized during completion; it did not return read_only_reference. This is local fixture state only, but falsifies preservation of captured-route projection/authority in this interleaving.",
+    "positive_control": "Normal own-profile and own-public-profile render both showed Positive Control Owner.",
+    "authority_control": "Authenticated synthetic account opening captured reference showed Sarah Endsley with source captured-readonly; profile-edit dispatch was denied with read_only_reference and reference display remained unchanged.",
+    "scope": "Volatile in-memory fixture provider and synthetic identities only; no production authority, network, real teacher, persistent backend, or provider operation. Render tree/source assertions only, not visual QA."
+  },
+  "root_cause_boundary": "The async createProfile branch at public-controller.mjs around lines 729-758 invokes service(), whose completion syncs runtime and then unconditionally writes the created profile into journey.profile; no route-epoch guard protects the post-service profile projection writes. It is reachable and overwrites another teacher's public projection while route.profileId remains demo-jordan. On captured reference, successful completion also replaces the read-only journey projection; after that, public:profile-edit succeeds against the synthetic owner overlay while route.profileId remains reference-sarah. Failure completion does not install the overlay. No fix was attempted.",
+  "falsifier": "Success completion would have been falsified if, after navigating to another profile while held, release retained that profile's rendered projection and captured-reference authority. It did not: Jordan became Success Creator; captured Sarah became Success Creator and then allowed a local edit. Denied failure retained Jordan. Independent normal own-profile and captured-readonly controls passed.",
+  "limitations": [
+    "No browser visual QA or human acceptance claim.",
+    "No source change, test change, Git commit, push, or deployment.",
+    "This probe is evidence only and is not an independent acceptance review of a proposed fix."
+  ]
+}

@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: startup lookup, county lookup, and two public-profile reads only
+
+5 !== 4
+
+    at file:///workspace/scratch/86659bbafcce/hh29/H2scratch/R3503-probe.mjs:77:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 5,
+  expected: 4,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

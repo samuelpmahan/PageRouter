@@ -1,0 +1,162 @@
+import assert from 'node:assert/strict';
+import {createHash} from 'node:crypto';
+import {readdir, readFile, lstat} from 'node:fs/promises';
+import path from 'node:path';
+
+const repo = '/workspace/scratch/8528bb251845/PageRouter';
+const packageRoot = path.join(repo, 'work/hh-continuous-improvement/cycle-10');
+const manifestPath = path.join(packageRoot, 'evidence/manifest.json');
+const sha = bytes => createHash('sha256').update(bytes).digest('hex');
+const read = async rel => readFile(path.join(packageRoot, rel));
+const json = async rel => JSON.parse(await read(rel));
+const actualFiles = [];
+async function walk(dir, prefix = '') {
+  for (const item of await readdir(dir, {withFileTypes: true})) {
+    const rel = prefix ? `${prefix}/${item.name}` : item.name;
+    const full = path.join(dir, item.name);
+    if (item.isDirectory()) await walk(full, rel);
+    else actualFiles.push(rel);
+  }
+}
+
+await walk(packageRoot);
+const manifestBytes = await readFile(manifestPath);
+const manifest = JSON.parse(manifestBytes);
+assert.equal(sha(manifestBytes), '5bd2ac96ad95f5f9e41047bc41976cbd4188e48b4c751bbecb6ab30c800ea3ec');
+assert.equal(manifest.files.length, 120);
+assert.equal(manifest.fileCount, 120);
+assert.equal(new Set(manifest.files.map(x => x.path)).size, 120);
+const declared = new Set(manifest.files.map(x => x.path));
+assert.deepEqual([...actualFiles].sort(), [...declared, 'evidence/manifest.json'].sort(), 'manifest plus declared files must be the complete package tree');
+
+let parsedJsonFiles = 0;
+for (const entry of manifest.files) {
+  assert.ok(!path.isAbsolute(entry.path) && !entry.path.split('/').includes('..'), `unsafe path: ${entry.path}`);
+  const full = path.join(packageRoot, entry.path);
+  const stat = await lstat(full);
+  assert.ok(stat.isFile() && !stat.isSymbolicLink(), `not a regular file: ${entry.path}`);
+  assert.equal(stat.size, entry.bytes, `size mismatch: ${entry.path}`);
+  const bytes = await readFile(full);
+  assert.equal(sha(bytes), entry.sha256, `hash mismatch: ${entry.path}`);
+  if (entry.path.endsWith('.json')) { JSON.parse(bytes.toString('utf8')); parsedJsonFiles++; }
+}
+assert.equal(actualFiles.filter(p => p.endsWith('.test.mjs')).length, 0, 'no discoverable archived tests');
+assert.equal(actualFiles.filter(p => p.includes('site.evidence')).length, 0, 'no historical site.evidence tree');
+
+const sourcePaths = {
+  controller: 'checkpoint/vendor/hh/src/public-controller.mjs',
+  test: 'checkpoint/vendor/hh/src/public-controller.test.mjs',
+};
+const sourceHashes = {};
+for (const [key, rel] of Object.entries(sourcePaths)) sourceHashes[key] = sha(await readFile(path.join(repo, rel)));
+assert.deepEqual(sourceHashes, manifest.candidateSourceHashes);
+assert.equal(sha(await read('evidence/source-candidate/public-controller.mjs.txt')), sourceHashes.controller);
+assert.equal(sha(await read('evidence/source-candidate/public-controller.test.mjs.txt')), sourceHashes.test);
+
+const buildReceiptBytes = await read('evidence/E1404/build.receipt.json');
+assert.equal(sha(buildReceiptBytes), '99eb0d566822d87552ec9d9df178a14cb64f27ec15d9f4704c764b7cff576ea7');
+const buildReceipt = JSON.parse(buildReceiptBytes.toString('utf8'));
+assert.equal(buildReceipt.schema, 'pagerouter-source-build@1');
+const boundInputs = Object.fromEntries(buildReceipt.sourceInputs
+  .filter(x => Object.values(sourcePaths).some(p => p.endsWith(x.path.split('/').at(-1))))
+  .map(x => [x.path, x.sha256]));
+assert.equal(boundInputs['vendor/hh/src/public-controller.mjs'], sourceHashes.controller);
+assert.equal(boundInputs['vendor/hh/src/public-controller.test.mjs'], sourceHashes.test);
+assert.equal(buildReceipt.sourceInputs.length, 1538);
+assert.equal(buildReceipt.siteFiles.length, 843);
+assert.equal(buildReceipt.siteBuildId, '8166fe07df91c79fb3dd8d0ddcc659a4d9aa756379e81e07861f5ced46dbb2e8');
+assert.equal(buildReceipt.siteDigest, '65eab878c780aa48c9e0915cad8280afecb5a8b80cbf4d17d1b201fab836396c');
+assert.equal(buildReceipt.pxcube.rebuilt, true);
+assert.equal(buildReceipt.pxcube.packages, 14);
+assert.equal(buildReceipt.crispExactCompiledEquality, true);
+
+const packageResult = await json('result.json');
+assert.equal(packageResult.candidate.controller_sha256, sourceHashes.controller);
+assert.equal(packageResult.candidate.test_sha256, sourceHashes.test);
+assert.equal(packageResult.candidate.independent_review, 'R1405 accepted exact source; result SHA-256 055f24470d7713fca1f16bc6bbabe2b464b79130c89a027979b93f290ad588a9');
+assert.equal(packageResult.candidate.canonical_build.includes('8166fe07df91c79fb3dd8d0ddcc659a4d9aa756379e81e07861f5ced46dbb2e8'), true);
+assert.equal(packageResult.build_test_counts.build_helpers, '2/2');
+assert.equal(packageResult.build_test_counts.targeted_hh, '129/129');
+assert.equal(packageResult.build_test_counts.full_npm, '284/284');
+assert.equal(packageResult.build_test_counts.atlas_import_closure, '1/1');
+assert.match(packageResult.build_test_counts.qualification, /overlap/i);
+assert.doesNotMatch(packageResult.build_test_counts.qualification, /416\s+(?:unique|distinct)/i);
+
+const r1403 = await json('evidence/R1403-result.json');
+assert.equal(r1403.job_id, 'R1403');
+assert.equal(r1403.decision, 'amend');
+assert.equal(sha(await read('evidence/adversarial-R1403.mjs.txt')), 'b6749a232ce9f5025b263247214a17f2d18fbb57919254ac7f0fbbe81e183c09');
+assert.equal(sha(await read('evidence/E1403/public-controller.before-E1405.mjs.txt')), '6dde984ebf6b4f71267345341a2f6765e96d28dfd1876f6f8284555e6310b0b8');
+assert.equal(sha(await read('evidence/E1403/public-controller.test.before-E1405.mjs.txt')), 'd28de1e22f382918e8dcf1be2628234c877b732ad2a30ea5d597ef32d1f9a845');
+const r1403Log = (await read('evidence/R1403-adversarial.raw.log')).toString('utf8');
+assert.match(r1403Log, /"retainedLiveDraft":false/);
+assert.match(r1403Log, /not-found|retainedLiveDraft|AssertionError/);
+const r1405Bytes = await read('evidence/R1405-accepted-result.json');
+assert.equal(sha(r1405Bytes), '055f24470d7713fca1f16bc6bbabe2b464b79130c89a027979b93f290ad588a9');
+const r1405 = JSON.parse(r1405Bytes.toString('utf8'));
+assert.equal(r1405.decision, 'accepted');
+assert.equal(r1405.sourcehashes.controller_after, sourceHashes.controller);
+assert.equal(r1405.sourcehashes.test_after, sourceHashes.test);
+const storageLog = (await read('evidence/R1405-storage-failure.raw.log')).toString('utf8');
+assert.match(storageLog, /storage_unavailable/);
+assert.match(storageLog, /retainedRenderedDraft/);
+
+const e1402Clarification = await json('evidence/E1402/provenance-clarification.json');
+assert.match(e1402Clarification.stdout, /post-run/);
+assert.match(e1402Clarification.stdout, /NOT shell-redirected/);
+const e1402Probe = (await read('evidence/E1402/probe.mjs.txt')).toString('utf8');
+const domainCaveat = /@example\.invalid/.test(e1402Probe);
+assert.equal(domainCaveat, true);
+
+const originalWorker = await json('evidence/E1404/worker-result-original.json');
+const nativeOriginal = await json('evidence/native/receipts/E1404-worker-original.json');
+const normalized = await json('evidence/native/receipts/E1404.normalized.json');
+assert.equal(sha(await read('evidence/E1404/worker-result-original.json')), '7e88286ee2b50e764217c26ab73e80ffb7c80a45e02989dd1c0fa190ef58d383');
+assert.equal(sha(await read('evidence/native/receipts/E1404-worker-original.json')), '7e88286ee2b50e764217c26ab73e80ffb7c80a45e02989dd1c0fa190ef58d383');
+assert.equal(originalWorker.outcome, 'fresh_source_build');
+assert.equal(nativeOriginal.outcome, 'fresh_source_build');
+assert.equal(normalized.outcome, 'mixed_change');
+const erratum = await json('evidence/provenance/E1404-coordination-erratum.json');
+assert.match(erratum.actualNativeFinishRejected, /unknown outcome/);
+assert.match(erratum.rootSequenceError, /NO actual followup\/worker dispatch occurred/);
+assert.match(erratum.rootSequenceError, /emptyepoch06/);
+const rootVerificationCommand = await json('evidence/E1404/root-canonical-verification.command.json');
+const rootVerificationExit = await json('evidence/E1404/root-canonical-verification.exit.json');
+assert.equal(rootVerificationExit.exit_code, 0);
+assert.match(rootVerificationCommand.command, /BAZEL=.*bash ci\/bazel\/run\.sh/);
+assert.equal(rootVerificationCommand.expectedSource.controller, sourceHashes.controller);
+assert.equal(rootVerificationCommand.expectedSource.test, sourceHashes.test);
+const canonicalLog = (await read('evidence/E1404/root-canonical-verification.raw.log')).toString('utf8');
+assert.match(canonicalLog, /Target \/\/:site up-to-date/);
+assert.match(canonicalLog, /verifiedFiles":843/);
+assert.match(canonicalLog, /8166fe07df91c79fb3dd8d0ddcc659a4d9aa756379e81e07861f5ced46dbb2e8/);
+const commandClarification = await json('evidence/E1404/command-record-clarification.json');
+assert.match(commandClarification.prospective_command_file_history, /original prospective bytes were not saved separately/);
+assert.match(commandClarification.actual_invocation_provenance.source, /not treated as proof of the exact executed shell command/);
+const workerCommandNote = (await read('evidence/E1404/command-record.post-execution.txt')).toString('utf8');
+assert.match(workerCommandNote, /working_directory:/);
+
+const epoch06 = await json('evidence/native/solves/epoch-06.json');
+const epoch07 = await json('evidence/native/solves/epoch-07.json');
+assert.deepEqual(epoch06.dispatch, {});
+assert.equal(epoch06.assignments.H1, 'E1404');
+assert.equal(epoch07.dispatch.H1, 'E1406');
+const nativeStart = await json('evidence/native/state-at-E1406-start.json');
+assert.equal(nativeStart.jobs.E1406.status, 'running');
+assert.equal(nativeStart.jobs.R1406.status, 'pending');
+assert.ok(nativeStart.events.some(e => e.type === 'complete' && e.job === 'E1404'));
+assert.ok(nativeStart.events.some(e => e.type === 'dispatch' && e.job === 'E1406' && e.worker === 'H1'));
+assert.equal(nativeStart.events.some(e => e.type === 'dispatch' && e.job === 'R1406'), false);
+
+const readme = (await read('README.md')).toString('utf8');
+assert.ok(readme.length > 0, 'package README is present and readable');
+const archivedTests = actualFiles.filter(p => p.endsWith('.test.mjs'));
+const historicalSiteTrees = actualFiles.filter(p => p.includes('site.evidence'));
+
+console.log(JSON.stringify({
+  manifest: {sha256: sha(manifestBytes), expectedSha256: '5bd2ac96ad95f5f9e41047bc41976cbd4188e48b4c751bbecb6ab30c800ea3ec', declaredFiles: manifest.files.length, verifiedFiles: 120, packageFilesIncludingManifest: actualFiles.length, parsedJsonFiles},
+  candidateAndBuild: {controller: sourceHashes.controller, test: sourceHashes.test, sourceInputs: buildReceipt.sourceInputs.length, siteFiles: buildReceipt.siteFiles.length, siteBuildId: buildReceipt.siteBuildId, pxcubePackages: buildReceipt.pxcube.packages, counts: '129 HH / 284 full / 1 Atlas / 2 helpers; overlapping, not 416 distinct'},
+  history: {R1403: r1403.decision, oldControllerSnapshot: '6dde984ebf6b4f71267345341a2f6765e96d28dfd1876f6f8284555e6310b0b8', R1405: 'accepted', E1404Original: originalWorker.outcome, E1404Normalized: normalized.outcome, rootVerification: 'exit 0 cache hit, not fresh suite', epoch06EmptyDispatch: true, epoch07E1406Dispatched: true, R1406StillPendingInSnapshot: nativeStart.jobs.R1406.status === 'pending'},
+  integrity: {jsonParseFailures: 0, discoverableTestArchives: archivedTests.length, historicalSiteEvidenceFiles: historicalSiteTrees.length},
+  wordingCaveat: domainCaveat ? 'E1402 user-facing synthetic emails include @example.invalid; README says all synthetic identities were .test. Both are reserved synthetic domains; wording should say .test/.invalid.' : null
+}));

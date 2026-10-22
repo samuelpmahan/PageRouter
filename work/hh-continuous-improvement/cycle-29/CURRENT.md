@@ -1,0 +1,24 @@
+# HH cycle 29 — global Home random-teacher pool
+
+## Scope and accepted change
+
+The bounded behavior is Home’s “Find Random Teacher” action after a submitted directory query. E3501’s actual rendered-control fixture probe confirmed that nonempty directory matches were reused after returning Home; the independent E3502 source review found Home was the only caller of that dispatch and found no product language binding Home discovery to the last search. The accepted correction chooses from `runtime.snapshot().demo.publicProfiles` regardless of retained directory matches. The deterministic `randomIndex` cycle, profile navigation, `no_profiles` result, directory filter/results, service wiring, storage and authority behavior are unchanged. This is a pool-context correction, not new statistical randomness or a UI rename.
+
+The accepted implementation is limited to `checkpoint/vendor/hh/src/public-controller.mjs` and its regression in `checkpoint/vendor/hh/src/public-controller.test.mjs`. The regression uses the actual volatile fixture provider/runtime/controller/renderer: after a Jordan-only directory search it dispatches the rendered Home random-teacher event twice and expects the literal global sequence Avery, Jordan; it also checks retained directory state and a later Jordan-filtered search.
+
+## Evidence and qualifications
+
+- E3501’s first harness attempt failed before product behavior because it tried to mutate the fixture provider’s frozen service map. The genuine pre-execution probe source is preserved under `evidence/H1/E3501/attempt01/`; its SHA-256 matches the initial frozen hash. The corrected delegating-wrapper probe ran once, exit 0, and confirmed baseline Avery, post-Avery-filter Avery, post-Jordan-filter Jordan. No production files were changed during that baseline.
+- E3503 froze the regression before the one-line product correction. Its RED was 0/1: after filtering to Jordan, old behavior selected Jordan twice rather than Avery then Jordan. The focused GREEN was 1/1 and the HH source suite passed 115/115. The preservation and subsequent-search assertions occur after the first RED failure and are therefore first-GREEN-only coverage, not separate RED evidence.
+- Independent H2 review R3503 accepted the narrow pool correction after its own focused GREEN and a real volatile-fixture/controller/rendered-Home flow. That flow checked prior school/query context, preserved directory matches, a fresh Home cycle, read-only service scope and account/profile projection. H2’s receipt-count expectation needed a harness-only repair; the first and repaired raw streams are retained.
+- E3506 qualifies source custody: H2’s exact initial pre-repair probe body is unavailable and is not reconstructed. Its original probe hash, failed-run output/status/timestamps and the repaired probe’s retained hash/output are preserved. The records do not assert that a retained source diff proves the repair was solely a receipt-count expectation.
+- One canonical E3504 build succeeded for the exact two changed source inputs. The fresh receipt binds both current relative-path hashes, verifies 843 files and 14 PxCube packages, and reports site build ID `10183645694e0c0183f9e461a3d55c51ef737f259531c406e54c4458e80f8064`. The build log reports 162/162 targeted HH tests, 317/317 full-site tests, and 1/1 Atlas import-closure test; the targeted group overlaps the full suite. Two separate Bazel build-helper tests passed in the captured command stdout. These counts are not additive.
+- The connected-browser attempt is represented once by `evidence/context/browser-check.json`; it failed before DOM access. There is no DOM, visual/accessibility, backend, origin, production, real-account, human-acceptance, or deployment verification claim.
+
+## Native coordination and source custody
+
+`evidence/native/` contains the canonical native receipts once each, initial spec, controller, complete state/event history (including guard-admission events), later job packets, and solver JSON/bundles for epochs 00–05. No solver stderr logs or Bazel output cache are included. Root’s frozen external-baseline context is copied once beside the browser result.
+
+## Package and disposition
+
+At package creation (`2026-10-19T18:32:17Z`), this is pending root package audit and ordinary commit. No files are staged; no commit, push, PR mutation or deployment has occurred. Root owns review-branch publication; human acceptance, main landing and deployment remain separate. The only pre-existing tracked modifications are the two authorized HH source/test paths; all other 5,102 old tracked index/tree tuples remain unchanged, and those two source paths are intentional changes. `manifest.json` lists every changed path except itself with exact byte count, SHA-256 and POSIX mode; copied artifacts also record their actual source path. Copies of the canonical receipt and site log retain mode `0555`.

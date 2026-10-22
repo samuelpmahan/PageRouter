@@ -1,0 +1,33 @@
+{
+  "schema": "hh-continuous-improvement-continuation@1",
+  "cycle": "cycle-14",
+  "current_job": "E1905",
+  "current_worker": "H1",
+  "worker_state": "package assembled; awaiting independent H2 package audit and root decision",
+  "entrypoint": "README.md",
+  "next": "NEXT.md",
+  "manifest": "evidence/manifest.json",
+  "native_result": "evidence/E1905/result.json",
+  "next_gate": "independent H2 package audit (R1905), then root decision",
+  "source_freeze": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164"
+  },
+  "build": {
+    "job": "E1904",
+    "source_digest": "b48ad9a809682aab5b6eccd4a1e6d68ce52f61d860b9f0d889433e76118c442f",
+    "site_digest": "1343fcceb41ec09acd0ff550054c38e3a73bf3f4a5e54361d9fe758596e58628",
+    "site_build_id": "02862d25fc8675fa79307b9e72f5b5ffb4d71de2fabd21f384ebdca98f1f7781",
+    "receipt": "evidence/build/E1904-H1/site.receipt.json",
+    "log": "evidence/build/E1904-H1/site.log"
+  },
+  "limits": [
+    "Probe scope is synthetic controller/delegated-equivalent emitted-tree evidence, not mounted browser DOM; no screenshots.",
+    "No production/backend/real-account/external-email activity or human acceptance claim.",
+    "E1902 later secret/count checks and R1903 replay secret scan were unreached; do not describe them as passes.",
+    "E1902 replay stopped at the unchanged total-provider-call assertion (2 vs 1) because initialization reads SchoolData.getStates; no retry or assertion change.",
+    "Archived scripts are inert text and workspace-relative; no portability claim.",
+    "No Git staging/commit, export, publication, deployment, or further build/test is authorized by this package handoff.",
+    "Cycle-13, historical site evidence, screenshots, build output bundles, and Lab project files are outside this package."
+  ]
+}

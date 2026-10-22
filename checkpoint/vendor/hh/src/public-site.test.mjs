@@ -6,6 +6,38 @@ function inspect(tree){const nodes=[];const visit=value=>{if(!value||typeof valu
 function byId(tree,id){return inspect(tree).find(node=>node.attrs?.id===id);}
 function text(tree){return inspect(tree).flatMap(node=>node.children||[]).filter(value=>typeof value==='string').join(' ');}
 
+test('profile create and edit wishlist fields explain supported synthetic links',()=>{
+  for(const status of ['absent','present']){
+    const tree=renderPublicSite({route:{page:'profile'},journey:{session:{status:'authenticated'},profile:{status,editOpen:status==='present',value:{name:'Synthetic teacher'}}}});
+    const field=byId(tree,'hh-profile-wishlist-url'),guidance=byId(tree,'hh-profile-wishlist-help');
+    assert.equal(field.attrs['aria-describedby'],'hh-profile-wishlist-help');
+    assert.match(text(guidance),/https:\/\/www\.amazon\.com\/hz\/wishlist\/ls\/DEMO-CLASSROOM/);
+    assert.match(text(guidance),status==='absent'?/blank.*default/i:/blank.*current/i);
+  }
+});
+
+test('profile create and edit bio fields reference a visible 500-character limit',()=>{
+  for(const status of ['absent','present']){
+    const tree=renderPublicSite({route:{page:'profile'},journey:{session:{status:'authenticated'},profile:{status,editOpen:status==='present',value:{name:'Synthetic teacher'}}}});
+    const field=byId(tree,'hh-profile-bio'),guidance=byId(tree,'hh-profile-bio-help');
+    assert.equal(field.attrs.maxlength,'500');
+    assert.equal(field.attrs['aria-describedby'],'hh-profile-bio-help');
+    assert.ok(guidance,'the referenced bio limit guidance is rendered');
+    assert.equal(Object.hasOwn(guidance.attrs,'hidden'),false,'the bio guidance is visible');
+    assert.match(text(guidance),/up to 500 characters/i);
+  }
+});
+
+test('registration directs missing-school teachers to truthful local contact guidance',()=>{
+  const tree=renderPublicSite({route:{page:'register'},journey:{registration:{status:'none'},lookups:{states:[],counties:[],districts:[],schools:[]}}});
+  const contact=inspect(tree).find(node=>node.tag==='a'&&node.attrs?.['data-public-route']==='contact');
+  assert.ok(contact,'the existing Contact route remains available');
+  assert.equal(contact.attrs.href,'#/contact');
+  assert.match(text(tree),/prepare a local note/i);
+  assert.match(text(tree),/nothing is sent/i);
+  assert.doesNotMatch(text(tree),/send us a message/i);
+});
+
 test('public route tree binds nav state, exposes accessible stable controls, and avoids inline styling',()=>{
   const closed=renderPublicSite({route:{page:'home'},journey:{navOpen:false}});
   const open=renderPublicSite({route:{page:'home'},journey:{navOpen:true}});
@@ -24,6 +56,25 @@ test('public route tree binds nav state, exposes accessible stable controls, and
   assert.equal(inspect(community).find(node=>node.tag==='main')?.attrs.tabindex,'-1','skip-link target must accept programmatic focus');
 });
 
+test('public mobile navigation toggle keeps a stable descriptive label across menu and session states',()=>{
+  for(const sessionStatus of ['anonymous','authenticated']){
+    for(const navOpen of [false,true]){
+      const tree=renderPublicSite({route:{page:'home'},journey:{navOpen,session:{status:sessionStatus}}});
+      const toggle=byId(tree,'hh-public-nav-toggle'),mobileNav=byId(tree,'hh-mobile-nav');
+      assert.ok(toggle,`${sessionStatus} navigation toggle is rendered`);
+      assert.equal(toggle.tag,'button');
+      assert.equal(toggle.attrs['aria-label'],'Toggle account and site navigation');
+      assert.equal(toggle.children[0],'☰','the existing visual glyph is preserved');
+      assert.equal(toggle.attrs['aria-expanded'],String(navOpen));
+      assert.equal(toggle.attrs['aria-controls'],'hh-mobile-nav');
+      assert.equal(toggle.attrs['data-event'],'public:toggle-nav');
+      assert.ok(mobileNav);
+      assert.equal(mobileNav.attrs.id,'hh-mobile-nav');
+      assert.equal(mobileNav.attrs.hidden,!navOpen);
+    }
+  }
+});
+
 test('registration exposes the school cascade, password confirmation, Terms, and local approval',()=>{
   const state={journey:{lookups:{states:['WA'],counties:['King'],districts:['Seattle'],schools:['North']},school:{state:'WA',county:'King',district:'Seattle',school:'North'},terms:{open:true,accepted:true},registration:{status:'none'}}};
   const form=renderPublicSite({route:{page:'register'},...state});
@@ -36,6 +87,32 @@ test('registration exposes the school cascade, password confirmation, Terms, and
   assert.ok(byId(pending,'hh-register-approve'));
 });
 
+test('registration shows a contextual school lookup retry only while choices are unavailable',()=>{
+  const failed=renderPublicSite({route:{page:'register'},journey:{
+    lookupError:'School choices are unavailable.',
+    lookupRetryable:true,
+    lookups:{states:['Demo Washington'],counties:[],districts:[],schools:[]},
+    school:{state:'Demo Washington',county:'',district:'',school:''},
+    registration:{status:'none'},terms:{accepted:false},
+  }});
+  assert.match(text(failed),/School choices are unavailable\./);
+  assert.equal(byId(failed,'hh-register-lookup-retry').attrs['data-event'],'public:retry');
+  assert.match(text({children:[byId(failed,'hh-register-lookup-retry')]}),/Retry school choices/);
+
+  const recovered=renderPublicSite({route:{page:'register'},journey:{
+    lookupError:'',lookups:{states:['Demo Washington'],counties:['Demo King'],districts:[],schools:[]},
+    school:{state:'Demo Washington',county:'',district:'',school:''},registration:{status:'none'},terms:{accepted:false},
+  }});
+  assert.equal(byId(recovered,'hh-register-lookup-retry'),undefined);
+
+  const permanent=renderPublicSite({route:{page:'register'},journey:{
+    lookupError:'School choices are unavailable.',lookupRetryable:false,
+    lookups:{states:[],counties:[],districts:[],schools:[]},school:{},registration:{status:'none'},
+  }});
+  assert.match(text(permanent),/School choices are unavailable\./,'permanent lookup failures must remain visible');
+  assert.equal(byId(permanent,'hh-register-lookup-retry'),undefined,'non-retryable lookup errors must not offer a dead action');
+});
+
 test('directory and contact reflect saved state, error/loading status, and remaining characters',()=>{
   const journey={filters:{query:'Ada',sort:'name'},lookups:{states:['WA'],counties:[],districts:[],schools:[]},school:{state:'WA'},matches:{status:'error',items:[],error:'Fixture lookup failed'},contact:{remaining:230,form:{message:'x'.repeat(20)}}};
   const directory=renderPublicSite({route:{page:'directory'},journey});
@@ -45,6 +122,42 @@ test('directory and contact reflect saved state, error/loading status, and remai
   const contact=renderPublicSite({route:{page:'contact'},journey});
   assert.ok(byId(contact,'hh-contact-subject'));
   assert.equal(text({children:[byId(contact,'hh-contact-counter')]}).trim(),'230 characters remaining');
+});
+
+test('directory shows a school-choice retry only for a retryable lookup failure',()=>{
+  const retryable=renderPublicSite({route:{page:'directory'},journey:{
+    lookupError:'School choices are unavailable.',lookupRetryable:true,
+    matches:{status:'loaded',items:[]},lookups:{states:[],counties:[],districts:[],schools:[]},school:{},
+  }});
+  const action=byId(retryable,'hh-directory-lookup-retry');
+  assert.ok(action,'retryable lookup failure has a rendered recovery action');
+  assert.equal(action.attrs['data-event'],'public:retry-school-lookup');
+  assert.match(text(retryable),/School choices are unavailable\./);
+
+  const permanent=renderPublicSite({route:{page:'directory'},journey:{
+    lookupError:'School choices are unavailable.',lookupRetryable:false,
+    matches:{status:'loaded',items:[]},lookups:{states:[],counties:[],districts:[],schools:[]},school:{},
+  }});
+  assert.match(text(permanent),/School choices are unavailable\./,'permanent lookup failures remain visible');
+  assert.equal(byId(permanent,'hh-directory-lookup-retry'),undefined,'permanent failures do not offer a dead action');
+});
+
+test('contact message counter is associated with the bounded multiline draft',()=>{
+  for(const [length,remaining] of [[0,250],[7,243],[250,0]]){
+    const message='x'.repeat(length);
+    const tree=renderPublicSite({route:{page:'contact'},journey:{contact:{message}}});
+    const field=byId(tree,'hh-contact-message'),counter=byId(tree,'hh-contact-counter');
+    assert.ok(field,'contact message field is rendered');
+    assert.equal(field.tag,'textarea');
+    assert.equal(field.attrs['aria-label'],'Message');
+    assert.equal(field.attrs.maxlength,'250');
+    assert.equal(field.attrs.value,message,'contact message draft is preserved');
+    assert.ok(counter,'the referenced counter is rendered');
+    assert.equal(counter.attrs.id,'hh-contact-counter');
+    assert.equal(Object.hasOwn(counter.attrs,'hidden'),false,'the counter is not hidden');
+    assert.equal(field.attrs['aria-describedby'],counter.attrs.id,'the message field references its visible counter');
+    assert.equal(text(counter).trim(),`${remaining} characters remaining`);
+  }
 });
 
 test('profile error can retry and editable profile drafts survive renderer replacement',()=>{
@@ -109,7 +222,7 @@ test('Teacher of the Day uses the captured Sarah profile and keeps it separate f
   assert.equal(byId(profile,'hh-profile-edit'),undefined,'captured reference profile is read-only');
 });
 
-test('Login and password-help content stays inside the single centered account card',()=>{
+test('Login content stays inside the single centered account card',()=>{
   const login=renderPublicSite({route:{page:'login'},journey:{session:{status:'anonymous'}}});
   const loginCard=inspect(login).find(node=>node.attrs?.class==='hh-card');
   assert.ok(loginCard);
@@ -118,12 +231,21 @@ test('Login and password-help content stays inside the single centered account c
   assert.equal(byId(login,'hh-login-submit').children[0],'Submit');
   assert.ok(byId(login,'hh-login-forgot'));
   assert.match(text(login),/Register/);
+});
+
+test('forgot-password disclosure accurately describes the local preview before submission',()=>{
   const forgot=renderPublicSite({route:{page:'forgot'},journey:{}});
   const forgotCard=inspect(forgot).find(node=>node.attrs?.class==='hh-card');
   assert.ok(inspect(forgotCard).some(node=>node.tag==='h1'&&node.children?.includes('Forgot Your Password?')));
-  assert.match(text(forgot),/we'll send you instructions on how to reset your password/);
+  assert.match(text(forgot),/Password recovery is not connected in this preview\. No email will be sent\./);
+  assert.doesNotMatch(text(forgot),/we'll send you instructions on how to reset your password/i);
+  assert.equal(byId(forgot,'hh-forgot-form').attrs['data-submit'],'public:forgot');
+  assert.equal(byId(forgot,'hh-forgot-email').attrs.name,'email');
+  assert.equal(byId(forgot,'hh-forgot-email').attrs.type,'email');
+  assert.equal(byId(forgot,'hh-forgot-email').attrs.required,true);
   assert.equal(byId(forgot,'hh-forgot-submit').children[0],'Submit');
-  assert.match(text(forgot),/Back to Login/);
+  const backToLogin=inspect(forgot).find(node=>node.tag==='a'&&node.children?.includes('Back to Login'));
+  assert.equal(backToLogin.attrs.href,'#/login');
 });
 
 test('partner and About renders expose source-shaped images and readable team text',()=>{

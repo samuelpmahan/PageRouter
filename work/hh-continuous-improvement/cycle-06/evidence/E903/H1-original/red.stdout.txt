@@ -1,0 +1,139 @@
+✔ successful logout clears the own projection and anonymizes the community on its original route (6.76448ms)
+✖ successful logout preserves a foreign public-profile projection after navigation (4.964639ms)
+✖ successful logout preserves a captured readonly projection and its readonly guard (2.267055ms)
+✖ successful logout does not clear a public-profile projection while its read is pending (2.599316ms)
+✔ failed logout after navigation leaves foreign projection and authenticated authority unchanged (1.487722ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 2
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 120.958087
+
+✖ failing tests:
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:775:1
+✖ successful logout preserves a foreign public-profile projection after navigation (4.964639ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      editOpen: false,
+      source: 'runtime',
+  +   status: 'unknown',
+  +   value: null
+  -   status: 'present',
+  -   value: {
+  -     bio: 'Synthetic arts teacher profile.',
+  -     displayName: 'Demo Jordan',
+  -     id: 'demo-jordan',
+  -     name: 'Demo Jordan',
+  -     school: {
+  -       county: 'Demo Alameda',
+  -       district: 'Demo Bay District',
+  -       school: 'Demo Bay School',
+  -       state: 'Demo California'
+  -     },
+  -     seeded: true,
+  -     subjects: [
+  -       'Art'
+  -     ],
+  -     teacherId: 'demo-seed-jordan',
+  -     wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN'
+  -   }
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:795:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'unknown', value: null, editOpen: false, source: 'runtime' },
+    expected: { status: 'present', value: { id: 'demo-jordan', teacherId: 'demo-seed-jordan', displayName: 'Demo Jordan', bio: 'Synthetic arts teacher profile.', subjects: [Array], wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN', school: [Object], seeded: true, name: 'Demo Jordan' }, editOpen: false, source: 'runtime' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:802:1
+✖ successful logout preserves a captured readonly projection and its readonly guard (2.267055ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  -   createDraft: {
+  -     bio: '',
+  -     name: '',
+  -     wishlistUrl: ''
+  -   },
+  -   editDraft: {
+  -     bio: '',
+  -     name: '',
+  -     wishlistUrl: ''
+  -   },
+      editOpen: false,
+  +   source: 'runtime',
+  +   status: 'unknown',
+  +   value: null
+  -   readOnly: true,
+  -   source: 'captured-readonly',
+  -   status: 'present',
+  -   value: {
+  -     bio: 'I am a Kindergarten teacher in the dual language program at Rochester Primary School. I teach 40 students each year, 20 come from primarily English speaking households and 20 come from primarily Spanish speaking households. Our students spend 3 hours each day in full English immersion and 3 hours each day in full Spanish immersion learning. Thank you so much for your consideration!',
+  -     displayName: 'Sarah Endsley',
+  -     id: 'reference-sarah',
+  -     image: 'homepage/teacher-of-day.jpg',
+  -     name: 'Sarah Endsley',
+  -     provenance: {
+  -       evidence: 'PUBLIC-JOURNEY-EVIDENCE.json',
+  -       imageSha256: '5e736f5b64a103dc18f2aa570061fc43d0e2219fe8a6b6dd1f94297fe14b04bd',
+  -       kind: 'captured public reference snapshot; local preview',
+  -       page: 'https://www.helpteachers.net/pages/homepage.html',
+  -       profilePage: 'https://www.helpteachers.net/pages/teacher.html',
+  -       scope: 'Read-only display data from an anonymous captured page. No account, wishlist, share, or service authority is included.'
+  -     },
+  -     readOnly: true,
+  -     school: {
+  -       county: 'Thurston County',
+  -       school: 'Rochester Primary School',
+  -       state: 'Washington'
+  -     },
+  -     wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20'
+  -   }
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:820:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'unknown', value: null, editOpen: false, source: 'runtime' },
+    expected: { status: 'present', value: { id: 'reference-sarah', name: 'Sarah Endsley', displayName: 'Sarah Endsley', image: 'homepage/teacher-of-day.jpg', school: [Object], bio: 'I am a Kindergarten teacher in the dual language program at Rochester Primary School. I teach 40 students each year, 20 come from primarily English speaking households and 20 come from primarily Spanish speaking households. Our students spend 3 hours each day in full English immersion and 3 hours each day in full Spanish immersion learning. Thank you so much for your consideration!', wishlistUrl: 'https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20', readOnly: true, provenance: [Object] }, editOpen: false, editDraft: { name: '', bio: '', wishlistUrl: '' }, createDraft: { name: '', bio: '', wishlistUrl: '' }, readOnly: true, source: 'captured-readonly' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:827:1
+✖ successful logout does not clear a public-profile projection while its read is pending (2.599316ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+      editOpen: false,
+      source: 'runtime',
+  +   status: 'unknown',
+  -   status: 'loading',
+      value: null
+    }
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:845:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { status: 'unknown', value: null, editOpen: false, source: 'runtime' },
+    expected: { status: 'loading', value: null, editOpen: false, source: 'runtime' },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

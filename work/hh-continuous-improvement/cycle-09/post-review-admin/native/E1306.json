@@ -1,0 +1,6 @@
+{
+  "job_id": "E1306",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Completed bounded scratch transport preparation only. `/workspace/scratch/8528bb251845/hh-cycle09/export/prepare-export.mjs` SHA-256 `4b3dac6bc4ae8e7824156349e8a12fed19a4205a72c16409287c2f9ebddca892` passed `node --check`; it was not run and produced no transport archive. Its read-only Git-object design pins local parent 46d1f32aca87919abceecf8b0c53454173cd574f/tree b80f1408d3c21c23e058989ce79fcfc60a0ba674, preserves coordinator-provided remote candidate 220374f7b8fd2818829063fcd4ec045e47e951ee without independently verifying it, restricts paths to the cycle-09 test/package, and writes only to a new scratch directory. R1305's actual AMEND blocks conditional commit/export pending root-authorized repair and independent review. No repository package changes, Git commit, export, push, PR/main update, publication, or deployment occurred in E1306; candidate publication is not complete. Do not repair or commit until E1307 package-repair and R1307 review are dispatched and root gives authorization."
+}

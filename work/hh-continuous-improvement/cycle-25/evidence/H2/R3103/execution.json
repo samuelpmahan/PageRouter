@@ -1,0 +1,46 @@
+{
+  "schema": "hh25-r3103-h2-execution@1",
+  "job_id": "R3103",
+  "worker": "H2",
+  "focusedTests": {
+    "commandFile": "green-01-focused/command.txt",
+    "exitStatus": 0,
+    "tests": {"passed": 3, "failed": 0},
+    "stdout": {"path": "green-01-focused/stdout.raw", "bytes": 415, "sha256": "a7a7b13d2e1ce9e70d3eaa73003f7335fbc46d33b019b3247aadbec5262a385e"},
+    "stderr": {"path": "green-01-focused/stderr.raw", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+  },
+  "independentFixtureProbe": {
+    "commandFile": "fixture-03-lifecycle/command.txt",
+    "probe": "fixture-01-lifecycle/probe.mjs",
+    "probeSha256": "95b86f6fb1531adac47a8a13be4c9ef05ee25806fe90c1ad70bf89bb30a46388",
+    "exitStatus": 0,
+    "stdout": {"path": "fixture-03-lifecycle/stdout.raw", "bytes": 746, "sha256": "746a0e700abc0579181b68c5f6b0ec216ed080ef6d9a9bd41dad9523e6846858"},
+    "stderr": {"path": "fixture-03-lifecycle/stderr.raw", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "runtime": "Node v24.19.0",
+    "provider": "actual createFixtureProvider({fixture:true, storage:null}) and createServiceRuntime",
+    "serviceCalls": 0,
+    "runtimeReceiptsBeforeAfter": [1, 1],
+    "communityPersistence": "memory_only"
+  },
+  "preservedHarnessIterations": [
+    {
+      "attempt": "fixture-01-lifecycle",
+      "exitStatus": 1,
+      "probe": "fixture-01-lifecycle/probe-attempt01.mjs",
+      "probeSha256": "f856a1663fb27ee3b02cdb4288afee718e327afd30727ffa665c7e57f27d17ef",
+      "stdout": {"path": "fixture-01-lifecycle/stdout.raw", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "stderr": {"path": "fixture-01-lifecycle/stderr.raw", "sha256": "3bcaf0fba441a158d1c4c6094c08703d2c168315c425ed17b24b4936e1a48f4c"},
+      "qualification": "Harness route issue: creating a topic navigated to its detail; moderator report filter is index-only. This was not a product failure."
+    },
+    {
+      "attempt": "fixture-02-lifecycle",
+      "exitStatus": 1,
+      "probe": "fixture-01-lifecycle/probe-attempt02.mjs",
+      "probeSha256": "7666535edde3fab64d9f85fba70d63ab279a72c4bca460c31a92f83706eb2d96",
+      "stdout": {"path": "fixture-02-lifecycle/stdout.raw", "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "stderr": {"path": "fixture-02-lifecycle/stderr.raw", "sha256": "9787ce57e2c2e49ab5694afd477b4ad7b9d3c4c4c8ca90bb99ae175769d17c92"},
+      "qualification": "Harness expectation issue: nonempty search intentionally displays all matches instead of page-size slicing. The corrected probe checks pagination with an empty query and query refiltering separately. This was not a product failure."
+    }
+  ],
+  "boundary": "Source/render/controller tests plus source-backed virtual tree only; no browser DOM, assistive-technology, visual, backend, account, production, or publication claim."
+}

@@ -1,0 +1,82 @@
+{
+  "schema": "hh-continuous-improvement-worker-result/v1",
+  "job_id": "E905",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "observed_at": "2026-10-18T12:38:28Z",
+  "repository": "PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "head": "a5b141816ffb871110e541ef00ecf9527674137e",
+  "tree_at_start": "5eb00395e85afeb357be11b6add395ef5fbb6b68",
+  "package": {
+    "path": "work/hh-continuous-improvement/cycle-06",
+    "manifest": "evidence/manifest.json",
+    "manifest_sha256": "8b86d74d9b0f71883c53253b31b775b24b99fb6ef98a20b6000033064ce8cb93",
+    "manifest_entries": 58,
+    "manifest_scope": "All files except the manifest itself; originals remain in their original-evidence folders and portable companions are labeled unexecuted/path-only rewrites.",
+    "contents": [
+      "E901, E902, E903, E904, and R903 copied original evidence",
+      "native spec, plan, point-in-time state, coordinator notes, normalized receipts, solve records, logs, and bundles",
+      "three unexecuted path-only replay companions",
+      "README.md, NEXT.md, continuation.json, evidence/manifest.json"
+    ]
+  },
+  "metadata_correction": {
+    "continuation_shared_tree": "5eb00395e85afeb357be11b6add395ef5fbb6b68",
+    "e901_stdout_provenance": "README clarifies stdout.json is a copy of final successful tool stdout per worker testimony, not a shell-redirected original raw stream; raw worker result is unchanged.",
+    "manifest_sha256_after_correction": "8b86d74d9b0f71883c53253b31b775b24b99fb6ef98a20b6000033064ce8cb93"
+  },
+  "source_freeze": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "84205881dd991d4be5ddf08a7b014530cb240e065aa0cc4180b362c02a345bff",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "19b9068c250d414ad62818778f376570db7480bd73cd918fd73b825344d1561a",
+    "product_source_changed_during_e905": false
+  },
+  "canonical_build": {
+    "site_build_id": "f9a27ef436bb7218dadf7cec4071618b65eb51b938369058a06ffe12269a0ef8",
+    "site_digest": "6a6ea2ad331a4070bfecfb972dc5e82cd05cd3fe4c8c8ce5b3a070ea660176a2",
+    "source_digest": "4240d5fdde0dd0c49ef65c3de97a99dcd04b3a5ff067882c2f7681cc062d3af0",
+    "receipt_sha256": "c6ff6e2a3a6dbd80d690ed65ac73a9d1667b8ae6fee7f6e44c98b47e3985ef2b",
+    "site_log_sha256": "52c8dfb1e6389801bdbbf7ae3f0575cda49bbd4500f945e45d62e5226cc7cdab",
+    "receipt_bound_source_hashes": {
+      "controller": "84205881dd991d4be5ddf08a7b014530cb240e065aa0cc4180b362c02a345bff",
+      "controller_test": "19b9068c250d414ad62818778f376570db7480bd73cd918fd73b825344d1561a"
+    },
+    "counts": {
+      "targeted_hh_passed": 116,
+      "full_suite_passed": 271,
+      "atlas_import_passed": 1,
+      "helpers_passed": 2,
+      "pxcube_packages": 14,
+      "verified_site_files": 843
+    }
+  },
+  "commands_and_provenance": {
+    "package_copy": [
+      "cp -a /workspace/scratch/8528bb251845/hh-cycle06/H1/E901/. work/hh-continuous-improvement/cycle-06/evidence/E901/H1-original/",
+      "cp -a /workspace/scratch/8528bb251845/hh-cycle06/H2/probe.mjs /workspace/scratch/8528bb251845/hh-cycle06/H2/result.json /workspace/scratch/8528bb251845/hh-cycle06/H2/stdout.log work/hh-continuous-improvement/cycle-06/evidence/E902/H2-original/",
+      "cp -a /workspace/scratch/8528bb251845/hh-cycle06/H1/E903/. work/hh-continuous-improvement/cycle-06/evidence/E903/H1-original/",
+      "cp -a /workspace/scratch/8528bb251845/hh-cycle06/H1/E904/. work/hh-continuous-improvement/cycle-06/evidence/E904/H1-original/",
+      "cp -a /workspace/scratch/8528bb251845/hh-cycle06/H2/R903/. work/hh-continuous-improvement/cycle-06/evidence/R903/H2-original/",
+      "cp -a /workspace/scratch/8528bb251845/hh-cycle06/spec.json /workspace/scratch/8528bb251845/hh-cycle06/plan.json /workspace/scratch/8528bb251845/hh-cycle06/state.json /workspace/scratch/8528bb251845/hh-cycle06/coordinator-notes.json /workspace/scratch/8528bb251845/hh-cycle06/remote-base-commit.json work/hh-continuous-improvement/cycle-06/evidence/native/",
+      "cp -a /workspace/scratch/8528bb251845/hh-cycle06/receipts/. work/hh-continuous-improvement/cycle-06/evidence/native/receipts/",
+      "cp -a /workspace/scratch/8528bb251845/hh-cycle06/solves/. work/hh-continuous-improvement/cycle-06/evidence/native/solves/"
+    ],
+    "validation": [
+      "node --input-type=module -e 'read evidence/manifest.json; recompute SHA-256 for every listed file; report entry count/errors; exit nonzero on mismatch'",
+      "cmp -s /workspace/scratch/8528bb251845/hh-cycle06/H1/E901/result.json work/hh-continuous-improvement/cycle-06/evidence/E901/H1-original/result.json",
+      "cmp -s /workspace/scratch/8528bb251845/hh-cycle06/H1/E903/red.stdout.txt work/hh-continuous-improvement/cycle-06/evidence/E903/H1-original/red.stdout.txt",
+      "cmp -s /workspace/scratch/8528bb251845/hh-cycle06/H1/E904/site.receipt.json work/hh-continuous-improvement/cycle-06/evidence/E904/H1-original/site.receipt.json",
+      "git diff --check"
+    ],
+    "validation_result": "58 manifest entries, zero SHA mismatches; selected original-evidence byte comparisons passed; git diff --check passed.",
+    "tests_rerun_for_packaging": false
+  },
+  "limits": {
+    "commit_or_publication": false,
+    "independent_package_review": "R905 pending; this result does not claim package acceptance",
+    "human_acceptance": "not claimed",
+    "browser_visual_qa": "not performed",
+    "external_data_or_actions": "none"
+  },
+  "summary": "Packaged and froze cycle 06, corrected continuation sharedTree metadata and E901 stdout provenance wording, regenerated and verified the 58-entry manifest, and saved this E905 worker result. Product source/build artifacts are unchanged. R905 remains the next independent package audit."
+}

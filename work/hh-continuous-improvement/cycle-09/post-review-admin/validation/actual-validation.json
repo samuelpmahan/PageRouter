@@ -1,0 +1,55 @@
+{
+  "schema": "hh-cycle09-package-rename-validation/v1",
+  "job_id": "E1307",
+  "candidate": {
+    "live_test_sha256": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9",
+    "renamed_archive_sha256": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9",
+    "live_controller_sha256": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+    "product_source_changed": false
+  },
+  "checks": [
+    {
+      "command": "mv -- evidence/source-candidate/public-controller.test.mjs evidence/source-candidate/public-controller.test.mjs.txt; move_exit=$?; printf 'mv_exit=%s\\n' \"$move_exit\"; exit \"$move_exit\"",
+      "cwd": "PageRouter/work/hh-continuous-improvement/cycle-09",
+      "exit_code": 0,
+      "tool_stdout_testimony": "mv_exit=0",
+      "raw_file_capture": false
+    },
+    {
+      "command": "set -o pipefail; node --test 2>&1 | tee /workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-09/post-review-admin/validation/package-discovery.stdout.log; run_status=(\"${PIPESTATUS[@]}\"); printf 'node_exit=%s\\ntee_exit=%s\\n' \"${run_status[0]}\" \"${run_status[1]}\"; exit \"${run_status[0]}\"",
+      "cwd": "PageRouter/work/hh-continuous-improvement/cycle-09",
+      "node_exit_code": 0,
+      "tee_exit_code": 0,
+      "counts": {"discovered_tests": 0, "pass": 0, "fail": 0},
+      "stdout_path": "package-discovery.stdout.log",
+      "stdout_bytes": 114,
+      "stdout_sha256": "7b9635aa44c5303eb1111bbaf8c89f4a8d4c58eadbad51fee7a24873b147abf0",
+      "interpretation": "Archived test snapshot is no longer discovered. Zero tests is a non-discovery hygiene result, not a product test pass or green suite."
+    },
+    {
+      "command": "cmp -s evidence/source-candidate/public-controller.test.mjs.txt /workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs; cmp_exit=$?; printf 'cmp_exit=%s\\n' \"$cmp_exit\"; exit \"$cmp_exit\"",
+      "cwd": "PageRouter/work/hh-continuous-improvement/cycle-09",
+      "exit_code": 0,
+      "tool_stdout_testimony": "cmp_exit=0",
+      "raw_file_capture": false
+    },
+    {
+      "command": "node /workspace/scratch/8528bb251845/hh-cycle09/E1307/verify-retained-package-files.mjs /workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-09",
+      "cwd": "PageRouter",
+      "exit_code": 0,
+      "asserted": {"original_manifest_entries": 112, "unchanged_old_payloads": 111, "renamed_source_bytes": 67386, "renamed_source_sha256": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9", "old_executable_name_absent": true},
+      "stdout_provenance": "Tool-returned verifier result; not separately shell-captured."
+    },
+    {
+      "command": "git diff --check",
+      "cwd": "PageRouter",
+      "exit_code": 0,
+      "interpretation": "Whitespace gate on tracked diff only; not test or build evidence."
+    }
+  ],
+  "no_reruns": [
+    "No product public-controller test rerun in E1307; prior E1303 focused 2/2 and full controller 51/51 remain separately recorded, and H2 R1307 may independently rerun the 51-case suite.",
+    "No canonical build rerun; archived filename change does not alter build-bound live source candidate.",
+    "No commit, export, push, publication, or deployment."
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "job_id": "E1602",
+  "worker": "H2",
+  "outcome": "mixed_change",
+  "summary": "The held volatile-fixture probe observed that both a known transport_failure and an outcome_unknown from Registration.registerTeacher, released after controller navigation to /login, were rendered on the current login form as visible hh-status local-error feedback. The known-failure message exactly matched the same-route /register control. The outcome_unknown request status remained outcome_unknown and its message advised checking state before retrying, although the shared outcome/render class was local-error. A separate empty-login local-validation control rendered its own login feedback. Each registration case made exactly one provider registration call, had canRetry false, and showed no runtime registration/session change; generated passwords were absent from controller state, runtime snapshot/inspection, actual PxC Part values, storage and rendered tree. This is a reproducible shared-feedback behavior, not a declared defect: product intent for global feedback is unresolved. No product source or tests were changed.",
+  "commands": [
+    {
+      "command": "bash hh-cycle11/H2/E1602/run-once.sh",
+      "exit_code": 0,
+      "stdout_file": "stdout.raw.txt",
+      "stdout_sha256": "233531cc00e9e3989b731e75f874ad4f435063dde22bc2544b1a18bbeeddb991",
+      "stderr_file": "stderr.raw.txt",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "exit_file": "exit.txt",
+      "exit_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+    }
+  ],
+  "phase_controls": {
+    "known_same_register_route": "Held transport_failure released while /register remained current; register form showed local-error with simulated transport-failure message; request failed, runtime registration none/session anonymous.",
+    "known_late_login": "Held transport_failure released after controller navigation to /login; login form remained current and rendered the same shared local-error feedback.",
+    "unknown_late_login": "Held outcome_unknown released after controller navigation to /login; login form remained current and rendered visible status with 'Check state before trying again.' Request status was outcome_unknown; shared outcome kind and rendered CSS class were local-error.",
+    "login_validation_control": "Empty local login submission on /login rendered validation-error feedback; no registration-provider call.",
+    "write_and_retry_window": "One registration provider invocation in each failure case; no second/automatic invocation observed before any explicit user action; canRetry false. No retry was attempted.",
+    "secret_scan": "randomUUID passwords were checked only by boolean non-occurrence against controller state, runtime snapshot/inspection, runtime.pxc.entries() Part values, storage and rendered tree. All cases returned true. Synthetic example.test identity/domain values are non-secret and were intentionally present where expected; no claim that non-secret identity data was absent.",
+    "authority": "Supported runtime fields were mode=fixture, fixture=true, productionAuthority=false; registration remained none and session anonymous. Authority beyond those supported fixture fields is UNKNOWN/not exercised."
+  },
+  "sourceidentities": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "parent_provided_at_dispatch": {
+      "remote": "8d09ffb6ced2d1ca7ab59fa80184d0b94cab0f87",
+      "local_source_commit_corrected_by_parent": "b9eff6a0c4385ed2648e97b30d15366910b7b58b",
+      "tree": "a5c871c0e8b8373bb7010ffce57249f245443846",
+      "main": "7adf7e74a85c4310a5704a4c42808e85a1a82d71"
+    },
+    "source_sha256_at_review_and_post_run_readback": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+      "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+      "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+      "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+      "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d"
+    },
+    "git_state": "Not inspected or changed by H2."
+  },
+  "probe_artifacts": {
+    "directory": "/workspace/scratch/8528bb251845/hh-cycle11/H2/E1602",
+    "probe_script_sha256": "0e640175fbed54495232c6bafba8f77b3eae5bf9c3909c53cff8b39452cb2580",
+    "pre_run_checkpoint_sha256": "35b020efab03eaa4c0c46a5cf9c52cedc1edbe657d57be3562b00a2a783ee9cf",
+    "run_once_wrapper_sha256": "73312e34bee45c660547cf8c43dfc4d23f4f1c39154e24941b52cff4849e9e4e",
+    "command_record_sha256": "508f4461e0a050b5e01f6b85e4f4765c7c120c32660f1e6d4b8348a94b1313e7",
+    "path_clarification_sha256": "4ea49e3d373012062e3a5d8024b80a883ec97ccdea43034fa429c57ecf09e54b"
+  },
+  "limits": [
+    "Controller and renderPublicSite tree only. No mounted DOM, browser route interaction, screenshot, keyboard/pointer event, or UI reachability claim; app.mjs was source-inspected only.",
+    "Fixture provider only, using volatile MemoryStorage and synthetic example.test identities. No production backend, Python runtime, real account, external browser, or network call.",
+    "Global feedback intent is undecided; observed stale cross-route visibility alone is not asserted to be a product defect.",
+    "No valid registration-success control was included. No source/test changes, build/test suite, Git action, native write, publication or deployment.",
+    "Path clarification: initial unexecuted files were placed under the compressed `scratchhh-cycle11/H2/E1602` string, then moved to the parent-clarified `/workspace/scratch/8528bb251845/hh-cycle11/H2/E1602`; only path strings were mechanically adjusted. See path-clarification.md.",
+    "Identity clarification: dispatch contained local ID ending `b58a`; parent clarified pre-run that it was a typo and supplied corrected local commit ending `b58b`. The corrected value is parent-provided, not a H2 Git assertion. See pre-run-checkpoint.md."
+  ]
+}

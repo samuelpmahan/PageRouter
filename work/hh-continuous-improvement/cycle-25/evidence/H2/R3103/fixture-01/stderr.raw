@@ -1,0 +1,9 @@
+file:///workspace/scratch/86659bbafcce/hh25/H2/R3103/fixture-01-lifecycle/probe.mjs:35
+  const dataset = Object.fromEntries(Object.entries(node.attrs).filter(([key]) => key.startsWith('data-'))
+                                                         ^
+
+TypeError: Cannot read properties of undefined (reading 'attrs')
+    at genericClick (file:///workspace/scratch/86659bbafcce/hh25/H2/R3103/fixture-01-lifecycle/probe.mjs:35:58)
+    at file:///workspace/scratch/86659bbafcce/hh25/H2/R3103/fixture-01-lifecycle/probe.mjs:65:27
+
+Node.js v24.19.0

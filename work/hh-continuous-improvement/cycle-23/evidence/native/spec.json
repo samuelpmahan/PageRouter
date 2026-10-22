@@ -1,0 +1,19 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {"name":"hh23-edit-recovery","scope":"author-owned post/reply rejected-save and cancel; no presumed defect"},
+  "workers": ["H1","H2"],
+  "policy": {"extract_priority":100,"review_priority":200,"repair_priority":300},
+  "review_policy": {"enabled":false,"review_prefix":"R","reviewer_must_differ_from_extractor":true},
+  "jobs": [
+    {"id":"E2901","kind":"extract","allow_workers":["H1"],"subject":"Source-pin and actual volatile-fixture baseline for teacher-owned edit rejection/correction/cancel; source owner only after further guard"},
+    {"id":"E2902","kind":"extract","allow_workers":["H2"],"subject":"Independent read-only edit-lifecycle falsifier and authority controls"}
+  ],
+  "coordinator_guards": [
+    "Actual demonstrated usable gap enables smallest regression and correction; no defect inferred from names.",
+    "Author completion enables different-worker review, then one canonical build and exact-path publication.",
+    "Falsified hypothesis retains useful negative evidence; no speculative feature.",
+    "Only H1 may modify PageRouter source/Git; H2 has read-only source and own scratch. Native recommendations are not autonomous dispatch."
+  ],
+  "worker_context": {"H1":{"agent":"/root/hh23_h1","model":"gpt-6-luna","reasoning":"high","capacity":1},"H2":{"agent":"/root/hh23_h2","model":"gpt-6-luna","reasoning":"high","capacity":1}},
+  "capacity_note":"Two actual HH contexts, not an invented three-stream fleet; other global slots remain outside this bounded HH allocation."
+}

@@ -1,0 +1,39 @@
+{
+  "schema": "pagerouter-e1904-process-result@1",
+  "commandSha256": "1dad4d9aafcf5a960accc7d7c52eab9ce75ddc1b2e33e3f93e937a6586dc2131",
+  "status": 0,
+  "signal": null,
+  "error": null,
+  "existingBuildOutputBindings": {
+    "site.receipt.json": {
+      "file": "/workspace/scratch/8528bb251845/PageRouter/checkpoint/bazel-bin/site.receipt.json",
+      "before": {
+        "mtimeMs": 1792356167176.2336,
+        "sha256": "cdcdd6cb71f1e051cf62f948c9f6b59dedab12337ba300acdd3af279db1207d0"
+      }
+    },
+    "site.log": {
+      "file": "/workspace/scratch/8528bb251845/PageRouter/checkpoint/bazel-bin/site.log",
+      "before": {
+        "mtimeMs": 1792356167176.2336,
+        "sha256": "ea7be5b191992e4b79dcea19ff9288c72217f887392e582202df733606f142ce"
+      }
+    }
+  },
+  "copiedFreshBuildOutputs": {
+    "site.receipt.json": {
+      "copied": true,
+      "bytes": 467223,
+      "sha256": "dfb7a0f4159f13dfbd771ffb3a5ff9bb5fcb90ddfc4b9207a131939a841447db",
+      "sourceMtimeUtc": "2026-10-18T22:27:31.318Z",
+      "packetPath": "site.receipt.json"
+    },
+    "site.log": {
+      "copied": true,
+      "bytes": 51011,
+      "sha256": "24b25f908c5d30b9f1cae12283eb608ec92ff20dd22bbe36f25d46052e781190",
+      "sourceMtimeUtc": "2026-10-18T22:27:31.318Z",
+      "packetPath": "site.log"
+    }
+  }
+}

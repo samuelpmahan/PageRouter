@@ -1,0 +1,21 @@
+{
+  "schema": "hh-cycle08-postfinish-diagnostic/v1",
+  "job_id": "E1201",
+  "worker": "H1",
+  "captured_at": "2026-10-18T14:16:13Z",
+  "parent_native_receipt": "/workspace/scratch/8528bb251845/hh-cycle08/receipts/E1201.json",
+  "parent_native_receipt_sha256": "7fc5abfa30b66c4193dda3d554559638661764f1d8cb6c8bf157e31a1a7b1094",
+  "status": "post-finish supplemental diagnostic; not part of the original E1201 worker finish envelope",
+  "exact_command": "set -o pipefail; node /workspace/scratch/8528bb251845/hh-cycle08/H1/E1201/diagnostic.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle08/H1/E1201/diagnostic-stdout.log",
+  "diagnostic_script": "diagnostic.mjs",
+  "diagnostic_script_sha256": "a98ff9aefe44b6c4419eb1d87aea4ce0c9e10ea3a1246966a14596785492a7cb",
+  "stdout": "diagnostic-stdout.log",
+  "stdout_sha256": "0d5d7a512f2905cf6dbf79e166e1d6dc03edaa872f8017a116c8583c0a1aba9e",
+  "observations": [
+    "During a held Jordan read, a direct public:share dispatch succeeds using the current route ID Jordan although the loading render has no visible Share button; after load the field contains Jordan.",
+    "On an unavailable missing-profile route, direct public:share dispatch succeeds using that route ID, while the unavailable render has no route field.",
+    "On captured Sarah, the existing Share Page action continues to prepare #/public-profile/reference-sarah and render its captured note; it does not render the synthetic share-route field."
+  ],
+  "scope": "Synthetic volatile fixture only; no source/Git changes, browser, HTTP, external share, copy, or open. These route-derived dispatch behaviors were recorded as compatibility, not identified as new defects.",
+  "E1203_continuation": "Preserve pending/missing direct share and captured Sarah Share Page compatibility in the profile-bound stale-share correction."
+}

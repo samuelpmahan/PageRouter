@@ -1,0 +1,95 @@
+{
+  "job_id": "E2702",
+  "worker": "H2",
+  "outcome": "not_reuse",
+  "summary": "Controller-level semantic invalid submit rejects a whitespace-only body, but the app input-draft path does not retain title/category/content and the controller rerender tree has empty title/body with no selected category; corrected explicit retry succeeds only when all fields are supplied again. Synthetic teacher-to-visitor switching hides compose and leaves stored topic bytes unchanged.",
+  "git": {
+    "head": "0d52cde4f2a502b6ee0d4b188bfc3b10c376daa4",
+    "branch": "codex/hh-continuous-improvement"
+  },
+  "runtime": {
+    "node": "v24.19.0",
+    "providerMode": "fixture",
+    "fixture": true,
+    "persistence": "per-tab-sessionStorage"
+  },
+  "sourceSha256": {
+    "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "checkpoint/vendor/hh/src/community.mjs": "243b747fbdf059993a7ee9f0dc3c604bbfb1635204b098fbecc6cf841fa95ee2",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d"
+  },
+  "evidence": {
+    "appSubmitBoundary": "root submit handler calls preventDefault(), reportValidity(), then FormData and controller.dispatch; whitespace passes required-form semantics and reaches controller.",
+    "inputDrafts": {
+      "title": false,
+      "category": false,
+      "content": false
+    },
+    "before": {
+      "threadCount": 3,
+      "forumStoragePresent": true
+    },
+    "rejected": {
+      "attempted": {
+        "title": "E2702 title that should have survived",
+        "category": "Questions",
+        "body": " \n\t "
+      },
+      "ok": false,
+      "error": "title_and_body_required",
+      "route": "/create-post",
+      "role": "teacher",
+      "message": "title_and_body_required"
+    },
+    "afterReject": {
+      "threadCount": 3,
+      "forumStoragePresent": false,
+      "stateDraftKeys": [],
+      "communityRoute": {
+        "page": "create-post"
+      },
+      "composerFound": true,
+      "renderedFields": {
+        "title": {
+          "valueAttribute": null,
+          "textValue": "",
+          "selectedValues": []
+        },
+        "category": {
+          "valueAttribute": null,
+          "textValue": "",
+          "selectedValues": []
+        },
+        "content": {
+          "valueAttribute": null,
+          "textValue": "",
+          "selectedValues": []
+        }
+      }
+    },
+    "correctedRetry": {
+      "ok": true,
+      "route": "/posts/topic-local-1",
+      "savedThread": {
+        "title": "E2702 corrected retry title",
+        "category": "Questions",
+        "body": "E2702 corrected retry body, synthetic only.",
+        "authorId": "demo-teacher"
+      }
+    },
+    "storage": {
+      "keys": [
+        "hh-forum-v1"
+      ],
+      "forumThreadCount": 4,
+      "visitorSwitchUnchanged": true
+    },
+    "visitor": {
+      "role": "anonymous",
+      "composerVisible": false
+    },
+    "network": "none; direct imports only, fixture provider, no server/browser/provider HTTP calls",
+    "browserAttempt": "separate Playwright harness was stopped before page execution: installed Chromium executable is absent; no native UI result is claimed."
+  }
+}

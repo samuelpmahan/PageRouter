@@ -1,0 +1,26 @@
+{
+  "job_id": "E2903",
+  "worker": "H1",
+  "repository": "/workspace/scratch/8528bb251845/PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "base_head": "a7ef289c6232a6bb1daa7c805765179b5b502068",
+  "changed_files": [
+    {
+      "path": "checkpoint/vendor/hh/src/public-controller.mjs",
+      "sha256": "97b5c17bf519b7fd05e2933a12dc55ff0e3e0c3e7939db4072368c070b4f67a0",
+      "change": "bounded in-memory post edit draft capture, rendering projection lifecycle, and clear points"
+    },
+    {
+      "path": "checkpoint/vendor/hh/src/community.mjs",
+      "sha256": "311d598b6d6ffc675dc4ee5b07ac0005c55e6ce7a34f8acfac5384d5789288f4",
+      "change": "project matching author-owned post edit draft into edit form values"
+    },
+    {
+      "path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "sha256": "417dfa6b6456a978554ce8184849e1d8f63a5b135ebfffb41442b2162222c35f",
+      "change": "three real synthetic volatile-fixture regressions; unchanged since the one RED run"
+    }
+  ],
+  "diff_stat": "3 files changed, 196 insertions(+), 4 deletions(-)",
+  "verification": "The exact RED run is recorded separately. Focused 3/3 GREEN and public-controller plus community source suite 86/86 passed. No full project build, stage, or commit was run."
+}

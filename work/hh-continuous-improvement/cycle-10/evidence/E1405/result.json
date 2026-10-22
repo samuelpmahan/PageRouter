@@ -1,0 +1,76 @@
+{
+  "job_id": "E1405",
+  "worker": "H1",
+  "summary": "Repaired failed registration draft restoration when the user navigates away and back during a pending registration write. Captures the live non-secret registration identity immediately before runtime sync, then restores it only when the write failed/was unknown and the current route is still registration. Success continues to project the provider-confirmed identity; alias mappings remain success-only.",
+  "outcome": "mixed_change",
+  "source": {
+    "base_commit": "9853c03e1f7458526528d2b350b8bad0c5e3c990",
+    "base_tree": "3e23395038495c7e1ff025ce885b91d9201025d8",
+    "controller": {
+      "path": "PageRouter/checkpoint/vendor/hh/src/public-controller.mjs",
+      "old_sha256": "6dde984ebf6b4f71267345341a2f6765e96d28dfd1876f6f8284555e6310b0b8",
+      "new_sha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2"
+    },
+    "test": {
+      "path": "PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "old_sha256": "d28de1e22f382918e8dcf1be2628234c877b732ad2a30ea5d597ef32d1f9a845",
+      "new_sha256": "dfe05ff98c859f926c839d8b0e5bffbd17c96e58444400d6e108744e8111e389"
+    },
+    "snapshots": {
+      "manifest": "source-snapshots/manifest.json",
+      "controller": "source-snapshots/public-controller.mjs.txt",
+      "test": "source-snapshots/public-controller.test.mjs.txt"
+    }
+  },
+  "red_gate": {
+    "command": "node --test --test-concurrency=1 --test-name-pattern='registration retains the current draft after navigation away and back on failed writes' vendor/hh/src/public-controller.test.mjs",
+    "exit_code": 1,
+    "tests": 1,
+    "passed": 0,
+    "failed": 1,
+    "logical_failure_cases": ["transport_failure", "outcome_unknown"],
+    "failure": "On the unchanged E1403 controller, the held transport_failure case returned a blank rendered name instead of the current E1405 draft after navigating #/about then back to #/register.",
+    "stdout_log": {"path": "red.log", "sha256": "f261233d8bbfbe6fdc397cf661fa4f4b749e7ac60e69c47fd4419485c4ffebe2"},
+    "exit_file": "red.exit"
+  },
+  "green_validation": [
+    {
+      "command": "node --test --test-concurrency=1 --test-name-pattern='registration transport failure retains|registration unknown outcome retains|registration retains the current draft after navigation away and back|failed re-registration preserves' vendor/hh/src/public-controller.test.mjs",
+      "exit_code": 0,
+      "tests": 4,
+      "passed": 4,
+      "failed": 0,
+      "log": {"path": "focused.log", "sha256": "508b8cf77f7e021a8af5965e155ab7ed5b1e96ba8a09f4687eba1f4e22b2ebda"},
+      "exit_file": "focused.exit"
+    },
+    {
+      "command": "node --test --test-concurrency=1 vendor/hh/src/public-controller.test.mjs",
+      "exit_code": 0,
+      "tests": 55,
+      "passed": 55,
+      "failed": 0,
+      "log": {"path": "controller.log", "sha256": "b3f8c9fc07205dadd63331e278126290dbff6d0aabed5f1a433f7a6d2f902926"},
+      "exit_file": "controller.exit"
+    },
+    {
+      "command": "node --test --test-concurrency=2 exp/cooperative/hh-geography-review.test.mjs exp/cooperative/hh-parity-community.test.mjs exp/cooperative/hh-parity-public.test.mjs exp/cooperative/hh-workbench.test.mjs vendor/hh/src/*.test.mjs",
+      "exit_code": 0,
+      "tests": 122,
+      "passed": 122,
+      "failed": 0,
+      "log": {"path": "relevant-hh.log", "sha256": "66afb898e1cbee26b1740e0379be6fe94848242da9c90313a27df75f121c1da2"},
+      "exit_file": "relevant-hh.exit"
+    },
+    {"command": "git diff --check", "exit_code": 0}
+  ],
+  "evidence_boundary": {
+    "synthetic_data_only": true,
+    "provider_fixture_wrapper_only": true,
+    "no_network_service_auth_or_storage_evidence": true,
+    "no_passwords_logged_or_persisted": true,
+    "approved_alias_regression_boundary": "The prior-approved-alias safety test directly dispatches registration in the controller. The rendered register() UI presents the approved state instead of a registration form; this does not claim visible UI re-registration coverage.",
+    "prior_review": "R1403AMEND and adversarial.raw.log are preserved unchanged and remain an amendment, not acceptance.",
+    "canonical_build": "Not run; root requires independent R1405 acceptance before a new native build packet.",
+    "git_landing": "No commit or push."
+  }
+}

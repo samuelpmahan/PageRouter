@@ -1,0 +1,23 @@
+{
+  "job_id": "E1701",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "The current implementation preserves a typed nonsecret createDraft and rendered create form during held synthetic volatile-fixture TeacherProfile.createProfile transport_failure and outcome_unknown outcomes. Both leave provider/storage profile absent, do not auto-repeat, and public:retry returns nothing_to_retry without increasing the call count. Explicit dispatch of public:profile-create resubmits the retained fields once and succeeds; the valid success control creates one profile and clears the draft/form. No product correction is indicated by this probe.",
+  "evidence": {
+    "scope": "actual synthetic volatile fixture, controller, runtime, in-memory storage, and renderPublicSite tree only",
+    "commands": ["node hh-cycle12/H1/E1701/probe.mjs"],
+    "exit": 0,
+    "raw_stdout": "hh-cycle12/H1/E1701/final.stdout.raw",
+    "raw_stderr": "hh-cycle12/H1/E1701/final.stderr.raw",
+    "source_file": "PageRouter/checkpoint/vendor/hh/src/public-controller.mjs",
+    "test_file_unchanged": "PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs"
+  },
+  "limits": [
+    "Fixture outcome_unknown is rejected before the fixture provider mutates state; it does not establish how a real backend behaves after a committed-but-unacknowledged write.",
+    "No production/provider/backend, account, browser, build, human acceptance, publication, or deployment claim is made.",
+    "Ephemeral credentials were generated in process memory and were checked absent from Parts, controller state, storage, and result evidence."
+  ],
+  "source_edits": 0,
+  "test_edits": 0,
+  "git_actions": 0
+}

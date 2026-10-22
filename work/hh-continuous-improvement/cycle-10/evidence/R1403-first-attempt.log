@@ -1,0 +1,8 @@
+command: bash /workspace/scratch/8528bb251845/hh-cycle10/H2/R1403/run-controller-checks.sh
+working directory: /workspace/scratch/8528bb251845/PageRouter
+script exited: 1
+focused.tap: Could not find 'vendor/hh/src/public-controller.test.mjs'
+controller.tap: Could not find 'vendor/hh/src/public-controller.test.mjs'
+focused.exit: 1
+controller.exit: 1
+cause: first prospective script omitted cd to its declared checkpoint cwd; this is a harness error, not a product test result.

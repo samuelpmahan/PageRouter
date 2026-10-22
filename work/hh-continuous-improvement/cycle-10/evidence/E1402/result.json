@@ -1,0 +1,51 @@
+{
+  "job_id": "E1402",
+  "worker": "H2",
+  "summary": "The current controller preserves the selected school after a delayed fixture Registration.registerTeacher failure, but syncRuntime replaces the freshly typed registration identity with empty identity when the provider runtime has no registration. Both known transport_failure and outcome_unknown show this; neither is auto-retried, public:retry returns nothing_to_retry, and an explicit resubmit after re-entering identity succeeds. A separate existing-approved-account control also confirms an adjacent alias redirect: the approved email logs in before a failed re-registration, but login after it is sent to the never-created new fixture alias and returns not_found.",
+  "outcome": "mixed_change",
+  "commands": [
+    {
+      "command": "node /workspace/scratch/8528bb251845/hh-cycle10/H2/E1402/probe.mjs",
+      "exit_code": 0,
+      "stdout_file": "raw.stdout.txt"
+    },
+    {
+      "command": "git rev-parse HEAD HEAD^{tree}; sha256sum <six inspected source files>; git status --short --branch",
+      "exit_code": 0
+    }
+  ],
+  "checks": [
+    "Inspected app.mjs delegated input listener: named non-secret inputs call controller.updateDraft before submit; delegated submit collects FormData, clears password fields, then dispatches public:register.",
+    "Inspected public-controller.mjs public:register: selected school and terms plus registration.identity are assigned before the provider call; service then invokes syncRuntime after completion; registration passes no retry callback.",
+    "Inspected syncRuntime: journey.registration is rebuilt from runtime.registration and identityByFixtureEmail, falling back to empty identity when runtime registration email has no identity mapping.",
+    "Inspected runtime/provider boundaries: credentials cross as a confirmation-valid boolean; fixture failWith transport_failure is retryable, outcome_unknown has outcomeKnown false, and failures occur before fixture mutation.",
+    "Delayed real fixture provider wrappers exercised transport_failure, outcome_unknown, and valid explicit resubmit controls; asserted rendered name/email/phone and selected school, session/registration state, retry behavior, and credential absence in controller state, runtime inspection, Parts, and storage.",
+    "Separate synthetic existing-approved-account control verified login succeeds before failed re-registration and returns not_found after alias overwrite; no source inference alone was treated as proof."
+  ],
+  "evidence": {
+    "known_failure": "transport_failure -> request failed; name/email/phone not retained/rendered; selected school retained; no registration/session; retry rejected; provider calls stay at one until explicit resubmit; explicit resubmit succeeds.",
+    "unknown_failure": "outcome_unknown -> request outcome_unknown; name/email/phone not retained/rendered; selected school retained; no registration/session; retry rejected; provider calls stay at one until explicit resubmit; explicit resubmit succeeds.",
+    "alias_control": "Approved login control true; failed re-registration returns transport_failure; subsequent login returns not_found, consistent with aliasToFixtureEmail being set to an uncreated synthetic fixture identity before provider completion.",
+    "credential_safety": "Ephemeral credentials were generated at runtime and checked only with boolean absence assertions; no credential values were printed or persisted in evidence."
+  },
+  "sourceidentities": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "9853c03e1f7458526528d2b350b8bad0c5e3c990",
+    "tree": "3e23395038495c7e1ff025ce885b91d9201025d8",
+    "published_correspondence": "dfef8eec126e3e0eb9f1aa3f3a1f9c950408d568",
+    "sha256": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+      "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+      "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+      "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+      "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+      "checkpoint/vendor/hh/services/index.mjs": "f7fade286781a86f5339cd1014247fdfc1307bea9de67d318c2b3140741b8838"
+    }
+  },
+  "limits": [
+    "Source/controller/renderer fixture proof only, not mounted-browser visual QA; the app's input binding was source-inspected, while the probe mirrors it through updateDraft calls.",
+    "Fixture-provider failure timing and alias controls only; no real backend, production data, or external service was used.",
+    "Repository remained read-only; probe and evidence were written only under hh-cycle10/H2/E1402."
+  ]
+}

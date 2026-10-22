@@ -1,0 +1,24 @@
+{
+  "job_id": "E3101",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "The actual source-backed synthetic fixture confirms teacher reporting, moderator list visibility, hide/restore recovery, teacher unavailable-state handling, and owner/role boundaries. It also demonstrates that a reported topic badge is absent on its discussion-detail view, while the same topic is marked on the forum card.",
+  "limitations": [
+    "No authorization or hide/restore recovery defect reproduced; the specific detail-view report-marker gap is demonstrated.",
+    "Synthetic source-backed behavior only; not browser, backend, real-account, or production evidence."
+  ],
+  "identified_gap": "A reported topic is visibly marked in the forum card but not in the topic header/details on the discussion page. Reported replies do show their badge in detail.",
+  "proposal": "Add the existing Reported status marker to the topic-level detail metadata; preserve moderator-only hide/restore controls and existing teacher/owner authority checks.",
+  "source_commit": "a0a98f299ea77d2181fa6013df554af843aa0635",
+  "probe_sha256": "3fe00fe45aac8efcb63b7beb390affd1f1a4d7b12eef9d97e551f70edaf38d7c",
+  "stdout_sha256": "3e7b2f0622e8ebb995df36020f96c8f4f741d99b3c7466edd249aa91a8df3e0a",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "probe_exit_status": 0,
+  "source_pins": {
+    "checkpoint/vendor/hh/src/community.mjs": "311d598b6d6ffc675dc4ee5b07ac0005c55e6ce7a34f8acfac5384d5789288f4",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "97b5c17bf519b7fd05e2933a12dc55ff0e3e0c3e7939db4072368c070b4f67a0",
+    "checkpoint/vendor/hh/src/public-site.mjs": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  }
+}

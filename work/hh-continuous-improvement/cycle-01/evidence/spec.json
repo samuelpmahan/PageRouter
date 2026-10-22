@@ -1,0 +1,49 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "hh-pagerouter-improvement",
+    "scope": "registration-profile-cycle-01",
+    "source": "PageRouter@7adf7e74a85c4310a5704a4c42808e85a1a82d71",
+    "scheduler": "chainspot-toolkit@1736f5f8101bef7c4296d318ff440c9493615a78",
+    "notes": "Legacy extract packet kind represents HH implementation/investigation; outcomes retain wrapper vocabulary, not code-extraction claims.",
+    "capacityPolicy": "Three active streams; three additional worker slots reserved and not modeled as available assignments."
+  },
+  "workers": [
+    "W1",
+    "W2",
+    "W3"
+  ],
+  "review_policy": {
+    "enabled": true,
+    "review_prefix": "R",
+    "reviewer_must_differ_from_extractor": true
+  },
+  "jobs": [
+    {
+      "id": "E01",
+      "kind": "extract",
+      "subject": "Own implementation branch; find and fix one evidenced HH registration/profile-flow defect after bounded design",
+      "allow_workers": [
+        "W1"
+      ]
+    },
+    {
+      "id": "E02",
+      "kind": "extract",
+      "subject": "Read-only regression inspection; reproduce next registration/profile defect and identify meaningful acceptance checks",
+      "allow_workers": [
+        "W2",
+        "W3"
+      ]
+    },
+    {
+      "id": "E03",
+      "kind": "extract",
+      "subject": "Read-only UX/flow inspection of HH school selection, validation, registration and profile screens",
+      "allow_workers": [
+        "W2",
+        "W3"
+      ]
+    }
+  ]
+}

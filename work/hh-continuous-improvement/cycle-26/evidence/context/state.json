@@ -1,0 +1,572 @@
+{
+  "schema": "chainspot.rebalancer-state/v1",
+  "service": {
+    "name": "hh26-continuous-improvement",
+    "scope": "teacher-vote-sort-open-back-correction"
+  },
+  "workers": {
+    "H1": {
+      "job": "E3205",
+      "agent": "/root/hh26_h1"
+    },
+    "H2": {
+      "job": null,
+      "agent": null
+    }
+  },
+  "jobs": {
+    "E3201": {
+      "id": "E3201",
+      "kind": "extract",
+      "subject": "Owner: source-pin and execute actual volatile teacher vote-sort-open-back-correction flow",
+      "allow_workers": [
+        "H1"
+      ],
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-19T14:16:12.388779+00:00",
+      "finished_at": "2026-10-19T14:22:48.830602+00:00",
+      "receipt": "/workspace/scratch/afc0d51965a8/hh26/receipts/E3201.json"
+    },
+    "E3202": {
+      "id": "E3202",
+      "kind": "extract",
+      "subject": "Independent vote-state, role and hidden-thread lifecycle falsifier",
+      "allow_workers": [
+        "H2"
+      ],
+      "status": "done",
+      "worker": "H2",
+      "started_at": "2026-10-19T14:16:12.765908+00:00",
+      "finished_at": "2026-10-19T14:20:55.703606+00:00",
+      "receipt": "/workspace/scratch/afc0d51965a8/hh26/receipts/E3202.json"
+    },
+    "E3203": {
+      "id": "E3203",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Teacher current-vote feedback using existing rendered community projection",
+      "guard": "E3201 actual fresh fixture baseline completed vote-sort-open-downvote-back-index correction with accurate internal votes and unchanged2startup receipts, but rendered controls omit current teacher vote state. E3202 independent source corroboration only; five stub-harness attempts insufficient, not validation. Add teacher-only explicit detail current-vote text and string aria-pressed on detail arrows and index upvote, using current existing persona arrays. Preserve aggregate upvote count, Upvotes sort, vote/service/storage/role/hidden semantics and all completed controls. Desired focused RED before product edit, checkpoint actual written flow before GREEN; different-worker review and ONE canonical build required.",
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-19T14:22:50.030341+00:00",
+      "finished_at": "2026-10-19T14:31:04.989204+00:00",
+      "receipt": "/workspace/scratch/afc0d51965a8/hh26/receipts/E3203.json"
+    },
+    "R3203": {
+      "id": "R3203",
+      "kind": "review",
+      "depends_on": "E3203",
+      "allow_workers": [
+        "H2"
+      ],
+      "subject": "Independent current-teacher vote feedback provenance and actual fixture review",
+      "guard": "E3203 owner completed genuine desired2RED then frozen focused2GREEN and HHsource suite, product source frozen. Independent read-only H2 must review diff/spec/provenance and use actual createFixtureProvider/createServiceRuntime/controller/renderPublicSite (not hand runtime stub) for ONE bounded active-vote/remove/back/role/hidden probe. Preserve exact attempts. No self-review, browser/DOM/AT or production claims; acceptance only on observed evidence.",
+      "status": "done",
+      "worker": "H2",
+      "started_at": "2026-10-19T14:31:13.068538+00:00",
+      "finished_at": "2026-10-19T14:36:55.359846+00:00",
+      "receipt": "/workspace/scratch/afc0d51965a8/hh26/receipts/R3203.json"
+    },
+    "E3204": {
+      "id": "E3204",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "ONE canonical HH26 source build from checkpoint with configured pinned toolchain",
+      "guard": "E3203 desired2RED then focused2GREEN and HHsource suite; source frozen during independent R3203 review. ONE command bash ci/bazel/run.sh from checkpoint using pinnedBazel7.4.1/Node24.19.0, retain complete raw/status/freshreceipt binding all3changedinputs; review blockers invalidate acceptance until repaired. No silent retries or product rerun during packaging.",
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-19T14:31:12.638710+00:00",
+      "finished_at": "2026-10-19T14:36:07.377211+00:00",
+      "receipt": "/workspace/scratch/afc0d51965a8/hh26/receipts/E3204.json"
+    },
+    "E3205": {
+      "id": "E3205",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Minimal HH26 raw evidence package and ordinary exact-path review-branch commit",
+      "guard": "R3203 different-worker accepted actualfixture vote-state/role/hidden lifecycle and focused2GREEN; E3204 ONE actual canonicalbuild0 helpers2/HH157/full312 overlap/Atlas1/843files14packages, sourcepins frozen and all3relativeinputs match freshreceipt. Preserve initial harness failures/preflightdiagnostic; one manifest and exactcopy provenance; root audit BEFORE stage/ordinarycommit, no product/test/buildrerun and no main/deploy.",
+      "status": "running",
+      "worker": "H1",
+      "started_at": "2026-10-19T14:36:56.448313+00:00",
+      "finished_at": null
+    }
+  },
+  "events": [
+    {
+      "type": "solve",
+      "epoch": 0,
+      "at": "2026-10-19T14:16:07.460453+00:00",
+      "ready_jobs": [
+        "E3201",
+        "E3202"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H2": "E3202",
+        "H1": "E3201"
+      },
+      "dispatch": {
+        "H2": "E3202",
+        "H1": "E3201"
+      },
+      "native_seconds": 0.008235637000325369,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 200,
+      "native_score": 200,
+      "caps": {
+        "E3201": 1,
+        "E3202": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E3201": [
+          "H1"
+        ],
+        "E3202": [
+          "H2"
+        ]
+      },
+      "weights": {
+        "E3201": 100,
+        "E3202": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T14:16:12.388779+00:00",
+      "worker": "H1",
+      "job": "E3201",
+      "agent": "/root/hh26_h1"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T14:16:12.765908+00:00",
+      "worker": "H2",
+      "job": "E3202",
+      "agent": "/root/hh26_h2"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T14:20:55.703606+00:00",
+      "worker": "H2",
+      "job": "E3202"
+    },
+    {
+      "type": "solve",
+      "epoch": 1,
+      "at": "2026-10-19T14:20:56.070922+00:00",
+      "ready_jobs": [],
+      "pinned_workers": [
+        "H1"
+      ],
+      "assignments": {
+        "H2": "BENCH",
+        "H1": "E3201"
+      },
+      "dispatch": {},
+      "native_seconds": 0.00439365199963504,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 1 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 0,
+      "native_score": 0,
+      "caps": {
+        "E3201": 1,
+        "E3202": 0,
+        "BENCH": 2
+      },
+      "eligible": {},
+      "weights": {},
+      "agent_by_worker": {
+        "H1": "/root/hh26_h1",
+        "H2": null
+      }
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T14:22:48.830602+00:00",
+      "worker": "H1",
+      "job": "E3201"
+    },
+    {
+      "type": "coordinator_guard_admission",
+      "at": "2026-10-19T14:22:49.281141+00:00",
+      "job": "E3203",
+      "guard": "E3201 actual fresh fixture baseline completed vote-sort-open-downvote-back-index correction with accurate internal votes and unchanged2startup receipts, but rendered controls omit current teacher vote state. E3202 independent source corroboration only; five stub-harness attempts insufficient, not validation. Add teacher-only explicit detail current-vote text and string aria-pressed on detail arrows and index upvote, using current existing persona arrays. Preserve aggregate upvote count, Upvotes sort, vote/service/storage/role/hidden semantics and all completed controls. Desired focused RED before product edit, checkpoint actual written flow before GREEN; different-worker review and ONE canonical build required."
+    },
+    {
+      "type": "solve",
+      "epoch": 2,
+      "at": "2026-10-19T14:22:49.666673+00:00",
+      "ready_jobs": [
+        "E3203"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H1": "E3203",
+        "H2": "BENCH"
+      },
+      "dispatch": {
+        "H1": "E3203"
+      },
+      "native_seconds": 0.0037730389994976576,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E3201": 0,
+        "E3202": 0,
+        "E3203": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E3203": [
+          "H1"
+        ]
+      },
+      "weights": {
+        "E3203": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T14:22:50.030341+00:00",
+      "worker": "H1",
+      "job": "E3203",
+      "agent": "/root/hh26_h1"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T14:31:04.989204+00:00",
+      "worker": "H1",
+      "job": "E3203"
+    },
+    {
+      "type": "coordinator_guard_admission",
+      "at": "2026-10-19T14:31:05.323403+00:00",
+      "job": "R3203",
+      "guard": "E3203 owner completed genuine desired2RED then frozen focused2GREEN and HHsource suite, product source frozen. Independent read-only H2 must review diff/spec/provenance and use actual createFixtureProvider/createServiceRuntime/controller/renderPublicSite (not hand runtime stub) for ONE bounded active-vote/remove/back/role/hidden probe. Preserve exact attempts. No self-review, browser/DOM/AT or production claims; acceptance only on observed evidence."
+    },
+    {
+      "type": "coordinator_guard_admission",
+      "at": "2026-10-19T14:31:05.696336+00:00",
+      "job": "E3204",
+      "guard": "E3203 desired2RED then focused2GREEN and HHsource suite; source frozen during independent R3203 review. ONE command bash ci/bazel/run.sh from checkpoint using pinnedBazel7.4.1/Node24.19.0, retain complete raw/status/freshreceipt binding all3changedinputs; review blockers invalidate acceptance until repaired. No silent retries or product rerun during packaging."
+    },
+    {
+      "type": "solve",
+      "epoch": 3,
+      "at": "2026-10-19T14:31:06.050624+00:00",
+      "ready_jobs": [
+        "R3203",
+        "E3204"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H1": "E3204",
+        "H2": "R3203"
+      },
+      "dispatch": {
+        "H1": "E3204",
+        "H2": "R3203"
+      },
+      "native_seconds": 0.005060078000497015,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 300,
+      "native_score": 300,
+      "caps": {
+        "E3201": 0,
+        "E3202": 0,
+        "E3203": 0,
+        "R3203": 1,
+        "E3204": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "R3203": [
+          "H2"
+        ],
+        "E3204": [
+          "H1"
+        ]
+      },
+      "weights": {
+        "R3203": 200,
+        "E3204": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T14:31:12.638710+00:00",
+      "worker": "H1",
+      "job": "E3204",
+      "agent": "/root/hh26_h1"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T14:31:13.068538+00:00",
+      "worker": "H2",
+      "job": "R3203",
+      "agent": "/root/hh26_h2"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T14:36:07.377211+00:00",
+      "worker": "H1",
+      "job": "E3204"
+    },
+    {
+      "type": "solve",
+      "epoch": 4,
+      "at": "2026-10-19T14:36:07.760150+00:00",
+      "ready_jobs": [],
+      "pinned_workers": [
+        "H2"
+      ],
+      "assignments": {
+        "H1": "BENCH",
+        "H2": "R3203"
+      },
+      "dispatch": {},
+      "native_seconds": 0.003781577999689034,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 1 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 0,
+      "native_score": 0,
+      "caps": {
+        "E3201": 0,
+        "E3202": 0,
+        "E3203": 0,
+        "R3203": 1,
+        "E3204": 0,
+        "BENCH": 2
+      },
+      "eligible": {},
+      "weights": {},
+      "agent_by_worker": {
+        "H1": null,
+        "H2": "/root/hh26_h2"
+      }
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-19T14:36:55.359846+00:00",
+      "worker": "H2",
+      "job": "R3203"
+    },
+    {
+      "type": "coordinator_guard_admission",
+      "at": "2026-10-19T14:36:55.711228+00:00",
+      "job": "E3205",
+      "guard": "R3203 different-worker accepted actualfixture vote-state/role/hidden lifecycle and focused2GREEN; E3204 ONE actual canonicalbuild0 helpers2/HH157/full312 overlap/Atlas1/843files14packages, sourcepins frozen and all3relativeinputs match freshreceipt. Preserve initial harness failures/preflightdiagnostic; one manifest and exactcopy provenance; root audit BEFORE stage/ordinarycommit, no product/test/buildrerun and no main/deploy."
+    },
+    {
+      "type": "solve",
+      "epoch": 5,
+      "at": "2026-10-19T14:36:56.065378+00:00",
+      "ready_jobs": [
+        "E3205"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H1": "E3205",
+        "H2": "BENCH"
+      },
+      "dispatch": {
+        "H1": "E3205"
+      },
+      "native_seconds": 0.004439259000719176,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E3201": 0,
+        "E3202": 0,
+        "E3203": 0,
+        "R3203": 0,
+        "E3204": 0,
+        "E3205": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E3205": [
+          "H1"
+        ]
+      },
+      "weights": {
+        "E3205": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-19T14:36:56.448313+00:00",
+      "worker": "H1",
+      "job": "E3205",
+      "agent": "/root/hh26_h1"
+    }
+  ],
+  "epoch": 6,
+  "policy": {
+    "extract_priority": 100,
+    "review_priority": 200,
+    "repair_priority": 300
+  }
+}

@@ -1,0 +1,19 @@
+{"reports":[{"case":"navigate away/back, edit live draft, delayed known failure","result":"transport_failure","expectedDraft":{"name":"E1403 Newer Draft","email":"e1403.newer@example.test","phone":"312-555-0141"},"renderedDraft":{"name":"","email":"","phone":""},"retainedLiveDraft":false,"retryAvailable":false,"registrationCalls":1},{"case":"success while newer draft is typed","ok":true,"status":"pending","displayedIdentity":{"name":"E1403 Committed Identity","email":"e1403.committed@example.test","phone":"312-555-0142"},"matchesCommittedIdentity":true},{"case":"approved alias after transport_failure","failure":"transport_failure","loginOk":true,"aliasIndexUsed":1,"registrationStatus":"approved"},{"case":"approved alias after outcome_unknown","failure":"outcome_unknown","loginOk":true,"aliasIndexUsed":1,"registrationStatus":"approved"},{"case":"profile authority during registration failure: #/public-profile/demo-jordan","result":"transport_failure","before":{"route":"profile","profileId":"demo-jordan","source":"runtime","status":"present","profileValueId":"demo-jordan"},"after":{"route":"profile","profileId":"demo-jordan","source":"runtime","status":"present","profileValueId":"demo-jordan"},"authorityPreserved":true},{"case":"profile authority during registration failure: #/public-profile/reference-sarah","result":"transport_failure","before":{"route":"profile","profileId":"reference-sarah","source":"captured-readonly","status":"present","profileValueId":"reference-sarah"},"after":{"route":"profile","profileId":"reference-sarah","source":"captured-readonly","status":"present","profileValueId":"reference-sarah"},"authorityPreserved":true}]}
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: a newer register draft must survive a same-page re-entry while an older request is pending
+
+false !== true
+
+    at file:///workspace/scratch/8528bb251845/hh-cycle10/H2/R1403/adversarial.mjs:150:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

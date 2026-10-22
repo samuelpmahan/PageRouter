@@ -1,0 +1,147 @@
+{
+  "schema": "hh-cycle13-package-audit@1",
+  "job_id": "R1805",
+  "worker": "H2",
+  "decision": "accepted",
+  "outcome": "accepted",
+  "summary": "Independent file-only audit accepted the exact E1805 cycle-13 package inventory and its qualified source/build/native evidence. All 118 manifest-listed payload files match their declared lengths and SHA-256 hashes; the only unlisted regular files are the manifest and E1805 result, for 120 total. Current source snapshots match the three frozen product files, the E1804 receipt/log/captures and build-input digests validate, original E1803 chronology/capture provenance is preserved, and native assignment/start/dispatch records are consistent through epoch 04. No package or product file was changed.",
+  "package": {
+    "root": "PageRouter/work/hh-continuous-improvement/cycle-13",
+    "manifest_path": "evidence/manifest.json",
+    "manifest_sha256": "6507726bb4c589543efeb8b5b3189a7dc49b0b401653d17766f46b3bcda16c9f",
+    "manifest_bytes": 24337,
+    "manifest_listed_file_count": 118,
+    "actual_regular_file_count": 120,
+    "excluded_envelope_files": [
+      "evidence/manifest.json",
+      "evidence/E1805/result.json"
+    ],
+    "e1805_result_sha256": "4898db94e59f14b50a5ee3ccbb38c0721cb4a9765cf11cbf6120edda054efbe3",
+    "manifest_hash_mismatches": 0,
+    "unlisted_regular_files": [],
+    "missing_inventory_entries": [],
+    "unexpected_inventory_entries": [],
+    "symlinks": [],
+    "archived_inert_scripts": {
+      "count": 13,
+      "suffixes": [".mjs.txt", ".sh.txt"],
+      "mode": "0644 for all; no executable bits"
+    },
+    "envelope_modes": {
+      "README.md": "0644",
+      "NEXT.md": "0644",
+      "ENTRYPOINT.md": "0644",
+      "continuation.json": "0644",
+      "evidence/manifest.json": "0644",
+      "evidence/E1805/result.json": "0644"
+    },
+    "excluded_scope_confirmed": [
+      "No old-cycle evidence is in the inventory.",
+      "The package contains no historical site.evidence, screenshots, .dist output, or accidental PageRouter/hh-cycle13 scratch tree."
+    ]
+  },
+  "source_freeze": {
+    "current_and_snapshot_byte_match": true,
+    "bindings": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "308c876e8bbfeb20a3e8ee92a4065549f5ca815bec0aa6979bf39c61fa4dc07c",
+      "checkpoint/vendor/hh/src/public-site.mjs": "5f1135c95fdb3baefb64e49d755e45a87b9eb1b17ff363ed91eb5b516812031b",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "f426710f6ae9c3012f5eba2aa0d50b3aaca8b4e76a4119dd3ffca58d08e13d4f"
+    },
+    "e1804_receipt_source_input_entries": [
+      {"path": "vendor/hh/src/public-controller.mjs", "bytes": 53520, "sha256": "308c876e8bbfeb20a3e8ee92a4065549f5ca815bec0aa6979bf39c61fa4dc07c"},
+      {"path": "vendor/hh/src/public-site.mjs", "bytes": 29757, "sha256": "5f1135c95fdb3baefb64e49d755e45a87b9eb1b17ff363ed91eb5b516812031b"},
+      {"path": "vendor/hh/src/public-controller.test.mjs", "bytes": 97320, "sha256": "f426710f6ae9c3012f5eba2aa0d50b3aaca8b4e76a4119dd3ffca58d08e13d4f"}
+    ]
+  },
+  "e1804_build_audit": {
+    "process_exit": 0,
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "outer_wrapper_sha256": "3e962043fa5ef3475b3248b0ea434e62ef7ccacd35d8787c8958e4c6cdfb8dc3",
+    "prospective_command_sha256": "9c33014c808acb86ebd44bc6524c2705ae4519d4c4ddc5d92178ae83f78b90df",
+    "child_argv": [
+      "BAZEL=/workspace/scratch/8528bb251845/tools/bazel",
+      "bash",
+      "ci/bazel/run.sh"
+    ],
+    "start_utc": "2026-10-18T20:41:32.118Z",
+    "end_utc": "2026-10-18T20:42:47.715Z",
+    "exit_record": "evidence/H1/E1804/exit.json",
+    "stdout_sha256": "544aac8d101b05489f01a31b98503adfa6f5cb81c67302653182d9147bbf2bda",
+    "stderr_sha256": "9be5ed56ec6e6d3d347057dd10bea6fc8a46e3cdadf5e56f56339dacfde27b23",
+    "site_receipt_sha256": "cdcdd6cb71f1e051cf62f948c9f6b59dedab12337ba300acdd3af279db1207d0",
+    "site_log_sha256": "ea7be5b191992e4b79dcea19ff9288c72217f887392e582202df733606f142ce",
+    "receipt_and_log_byte_match_originals": true,
+    "source_input_count": 1538,
+    "source_digest_recomputed_from_receipt_inputs": "f28be39fc1cd2acbd8e2433bb349b6086ead8f26b3a6f660049e0a69f18dcfee",
+    "site_file_count": 843,
+    "site_digest_recomputed_from_receipt_files": "9df3572f7ef26044872aa89612a5bfc3929902a03cb1671c428001e6b26464bd",
+    "site_build_id": "3b0d0b8ca23975b945f9294432ee7fa0c6da893cbf636438e365a0bfe801c877",
+    "pxcube_packages_rebuilt": 14,
+    "current_build_input_hashes": {
+      "ci/bazel/build-driver.mjs": "e3088879bd49ef401b66e2e9fa0083d25433416468ea5f7f0611f4c618e23acf",
+      "ci/bazel/build-helpers.mjs": "6b1435671c73a7e6fa71eb1fde45b213fcbcfdeefdfedf6ca191e3ce8d07a78c",
+      "ci/bazel/run.sh": "2a1a6fc5bc919f67b424d6fed92e4e888bf3767b634b1ad9544604067fbe072c",
+      ".github/workflows/deploy-pages.yml": "ab5577ab3f50647ff3d52589b85592ef9611915155c13fbab38d8a2be8d3a9d7"
+    },
+    "named_test_counts": {
+      "build_helper": {"passed": 2, "failed": 0},
+      "targeted_hh_controller_community": {"passed": 133, "failed": 0, "overlaps_full_npm_suite": true},
+      "full_npm_suite": {"passed": 288, "failed": 0},
+      "built_atlas_import": {"passed": 1, "failed": 0},
+      "distinct_invocation_case_sum": 291,
+      "qualification": "The 133 targeted HH tests are included in the 288-test full npm suite; 291 is not an independent-behavior count."
+    },
+    "limits": [
+      "This is a successful local source build, not browser QA, production deployment, or human release acceptance.",
+      "No portability or direct execution claim is made for archived .mjs.txt/.sh.txt artifacts."
+    ]
+  },
+  "e1803_provenance_audit": {
+    "red_original_capture_location": "hh-cycle13/H1/E1803-PROPOSAL/",
+    "green_original_capture_location": "PageRouter/hh-cycle13/H1/E1803-PROPOSAL/",
+    "green_verified_copy_location": "evidence/H1/E1803/original-captures/",
+    "red_and_green_full_capture_byte_comparisons": "All five stdout/stderr/exit/start/end captures per red-01, green-01, green-02, controller-full-01, and site-full-01 byte-match their true originals.",
+    "first_red": {"tests": 2, "passed": 0, "failed": 2, "exit": 1},
+    "green_01": {"tests": 2, "passed": 1, "failed": 1, "exit": 1, "qualification": "Wrong fixture fallback expectation; actual projection was empty."},
+    "green_02": {"tests": 2, "passed": 2, "failed": 0, "exit": 0, "qualification": "Only the fallback assertion was corrected."},
+    "reconstructed_green01_test_source": {
+      "bytes": 97228,
+      "sha256": "d3eb4fb4f8858f41ce5a5bae35ad28ce3aea9e2b65ba9de2b9564c71d1bb5e81",
+      "qualification": "Reconstructed after green-02; matching the predeclared hash does not make it a contemporaneous snapshot."
+    },
+    "disqualified_newline_stderr_duplicates": {
+      "count": 4,
+      "sha256_each": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+      "qualification": "Each is one newline byte and is retained only as a disqualified counterexample; genuine original stderr files are zero-byte exact captures."
+    },
+    "proposal_chronology": "Package qualification correctly states H1 source-only proposal preparation preceded native epoch-01 dispatch and was not itself native dispatch or implementation authorization.",
+    "root_derived_e1803_envelope": "Explicitly identified as coordinator normalization of H1 markdown handback, not native rejection or independent acceptance.",
+    "r1803_scope_limit": "The success/reentry probe used the same email as the authenticated fallback; it does not prove behavior for a different newer success draft. The package keeps that case as an unexecuted follow-up, not a presumed defect.",
+    "privacy_limit": "Ephemeral random passwords were absent from observed state/runtime/Parts/storage; normal nonsecret login email in request Parts is not claimed absent."
+  },
+  "native_epoch_00_to_04_audit": {
+    "records": "evidence/native/solves/epoch-00 through epoch-04 JSON, root-command JSON, and bundles",
+    "pins": "pinned_workers is empty at each of epochs 00-04; pin_in_flight constraint is solved with brokenVal 0 and brokenCount 0.",
+    "assignment_and_persisted_start_crosscheck": "External native state.json readback maps each archived assignment to the matching actual dispatch/start, completion, worker, and receipt through epoch 04. Native state itself is outside the 120-file package inventory.",
+    "epochs": [
+      {"epoch": 0, "assigned_and_dispatched": {"H1": "E1801", "H2": "E1802"}, "starts_utc": {"E1801": "2026-10-18T20:07:26.831304+00:00", "E1802": "2026-10-18T20:07:27.332535+00:00"}},
+      {"epoch": 1, "assigned_and_dispatched": {"H1": "E1803"}, "start_utc": "2026-10-18T20:27:14.157140+00:00"},
+      {"epoch": 2, "assigned_and_dispatched": {"H2": "R1803"}, "start_utc": "2026-10-18T20:34:38.722189+00:00"},
+      {"epoch": 3, "assigned_and_dispatched": {"H1": "E1804"}, "start_utc": "2026-10-18T20:39:17.297597+00:00"},
+      {"epoch": 4, "assigned_and_dispatched": {"H1": "E1805"}, "start_utc": "2026-10-18T20:44:57.238504+00:00"}
+    ],
+    "source_ownership": "Native service ownership states H1 as sole PageRouter source/Git owner and H2 as scratch-only reviewer; root owns native bookkeeping/publication. H1 E1805 ownership is time-bounded to its assigned packet until handoff, not a continuous live-owner claim.",
+    "epoch_04_assignment_sha256": "aeb84445716628795d4bab8bd5895f8afb8a9f61ac68e4060d679372d048634c"
+  },
+  "current_document_state": {
+    "readme_next_entrypoint": "Consistent with the E1805 pre-audit checkpoint and the stated hold on stage/commit/export/publication; their H1 E1805 owner text is historical packet ownership, not a claim overriding the current R1805 native assignment.",
+    "continuation_and_manifest": "Manifest accurately describes the 118 payload files and excludes itself plus E1805 result; no package edits made during this audit.",
+    "standard_whitespace_gate": "Predeclared but unrun; audit does not claim full cleanliness.",
+    "native_current_assignment": "R1805 is assigned to H2 in epoch 05; that later audit state is not retroactively added to the closed E1805 evidence package."
+  },
+  "limits": [
+    "File-only audit; no test/build reruns, source/test edits, browser/native writes, Git operations, publication, or package mutations were performed.",
+    "No mounted browser, human acceptance, backend, real account, external email, deployment, or Python-geography claim is made.",
+    "This separate scratch receipt is not retroactive evidence for E1805 and does not replace or rewrite any frozen package file."
+  ]
+}

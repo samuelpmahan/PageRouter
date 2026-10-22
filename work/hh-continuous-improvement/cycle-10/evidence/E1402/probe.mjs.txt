@@ -1,0 +1,136 @@
+import assert from 'node:assert/strict';
+import {createFixtureProvider, createServiceRuntime} from '../../../PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createCommunity} from '../../../PageRouter/checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '../../../PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '../../../PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+const memoryStorage = () => {
+  const values = new Map();
+  return {values, getItem(key) { return values.get(key) ?? null; }, setItem(key, value) { values.set(key, String(value)); }, removeItem(key) { values.delete(key); }};
+};
+const find = (node, id) => {
+  if (!node || typeof node !== 'object') return null;
+  if (node.attrs?.id === id) return node;
+  for (const child of node.children || []) { const match = find(child, id); if (match) return match; }
+  return null;
+};
+const selectedValue = (tree, id) => find(tree, id)?.children?.find(option => option.attrs?.selected)?.attrs?.value || '';
+const fixtureSchool = {state: 'Demo Washington', county: 'Demo King', district: 'Demo District', school: 'Demo Academy'};
+const identity = {name: 'Synthetic Retained', email: 'h2-retained@example.invalid', phone: '555-0109'};
+
+async function scenario(failWith, suffix) {
+  const storage = memoryStorage();
+  const base = createFixtureProvider({fixture: true, storage});
+  let release, startedResolve;
+  const started = new Promise(resolve => { startedResolve = resolve; });
+  const held = new Promise(resolve => { release = resolve; });
+  let registrationCalls = 0;
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    if (port === 'Registration.registerTeacher') {
+      registrationCalls++;
+      startedResolve();
+      if (registrationCalls === 1) {
+        await held;
+        return invoke({...input, failWith});
+      }
+    }
+    return invoke(input);
+  }]));
+  const runtime = createServiceRuntime({...base, services: Object.freeze(services)});
+  let tree;
+  const controller = createPublicController({runtime, storage, community: createCommunity({storage}),
+    onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); }});
+  await controller.initialize('#/register');
+  for (const [key, value] of Object.entries(fixtureSchool)) await controller.selectSchool(key, value);
+  await controller.dispatch('public:terms-consent', {accepted: true});
+  for (const [key, value] of Object.entries(identity)) assert.equal(controller.updateDraft(key, value), true);
+  const password = `ephemeral-${suffix}-${Math.random().toString(36).slice(2)}`;
+  const registering = controller.dispatch('public:register', {...identity, ...fixtureSchool, grade: '4th Grade', termsAccepted: true,
+    password, confirmPassword: password});
+  await started;
+  assert.equal(controller.state.request.status, 'busy');
+  const during = {identity: {...controller.state.journey.registration.identity}, school: {...controller.state.journey.school}};
+  release();
+  const result = await registering;
+  assert.equal(result.ok, false);
+  assert.equal(controller.state.request.status, failWith === 'outcome_unknown' ? 'outcome_unknown' : 'failed');
+  assert.equal(controller.state.journey.registration.status, 'none');
+  assert.equal(controller.state.journey.session.status, 'anonymous');
+  assert.equal(registrationCalls, 1);
+  const rendered = tree;
+  const identityRetained = find(rendered, 'hh-register-name')?.attrs?.value === identity.name &&
+    find(rendered, 'hh-register-email')?.attrs?.value === identity.email &&
+    find(rendered, 'hh-register-phone')?.attrs?.value === identity.phone;
+  for (const [key, value] of Object.entries(fixtureSchool)) assert.equal(controller.state.journey.school[key], value);
+  for (const [key, id] of Object.entries({state: 'hh-directory-state', county: 'hh-directory-county', district: 'hh-directory-district', school: 'hh-directory-school'})) {
+    assert.equal(selectedValue(rendered, id), fixtureSchool[key]);
+  }
+  const retry = await controller.dispatch('public:retry');
+  assert.equal(retry.error?.code, 'nothing_to_retry');
+  assert.equal(registrationCalls, 1, 'unknown and non-retryable writes are never retried automatically');
+  const callsBeforeResubmit = registrationCalls;
+  const surfaces = [JSON.stringify(controller.state), JSON.stringify(runtime.inspect()),
+    JSON.stringify(runtime.pxc.entries().map(([address, part]) => ({address, value: part.value}))),
+    [...storage.values.values()].join('\n')].join('\n');
+  assert.equal(surfaces.includes(password), false);
+  for (const [key, value] of Object.entries(identity)) assert.equal(controller.updateDraft(key, value), true);
+  const resubmitPassword = `ephemeral-resubmit-${suffix}-${Math.random().toString(36).slice(2)}`;
+  const resubmitted = await controller.dispatch('public:register', {...identity, ...fixtureSchool, grade: '4th Grade', termsAccepted: true,
+    password: resubmitPassword, confirmPassword: resubmitPassword});
+  assert.equal(resubmitted.ok, true);
+  assert.equal(registrationCalls, 2, 'only the explicit second submit reaches the provider');
+  const afterResubmit = [JSON.stringify(controller.state), JSON.stringify(runtime.inspect()),
+    JSON.stringify(runtime.pxc.entries().map(([address, part]) => ({address, value: part.value}))),
+    [...storage.values.values()].join('\n')].join('\n');
+  assert.equal(afterResubmit.includes(password), false);
+  assert.equal(afterResubmit.includes(resubmitPassword), false);
+  return {kind: failWith, status: failWith === 'outcome_unknown' ? 'outcome_unknown' : 'failed', retainedRendered: identityRetained,
+    retainedSelectedSchool: true, noRegistrationOrSession: true, explicitRetryRejected: true, registrationCallsBeforeResubmit: callsBeforeResubmit,
+    explicitResubmitSucceeded: resubmitted.ok, credentialsAbsent: true,
+    duringBusyRetained: during.identity.name === identity.name && during.school.school === fixtureSchool.school};
+}
+
+async function aliasScenario() {
+  const storage = memoryStorage();
+  const base = createFixtureProvider({fixture: true, storage});
+  let registrationCalls = 0;
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    if (port === 'Registration.registerTeacher' && ++registrationCalls === 2) return invoke({...input, failWith: 'transport_failure'});
+    return invoke(input);
+  }]));
+  const runtime = createServiceRuntime({...base, services: Object.freeze(services)});
+  const controller = createPublicController({runtime, storage, community: createCommunity({storage})});
+  const email = 'h2-alias-control@example.invalid';
+  const password = `ephemeral-alias-${Math.random().toString(36).slice(2)}`;
+  await controller.initialize('#/register');
+  for (const [key, value] of Object.entries(fixtureSchool)) await controller.selectSchool(key, value);
+  await controller.dispatch('public:terms-consent', {accepted: true});
+  const registration = {...fixtureSchool, name: 'Synthetic Alias', email, phone: '555-0110', grade: '4th Grade', termsAccepted: true,
+    password, confirmPassword: password};
+  assert.equal((await controller.dispatch('public:register', registration)).ok, true);
+  assert.equal((await controller.dispatch('public:approve')).ok, true);
+  assert.equal((await controller.dispatch('public:login', {email, password})).ok, true);
+  assert.equal((await controller.dispatch('public:logout')).ok, true);
+  const approvedControl = await controller.dispatch('public:login', {email, password});
+  assert.equal(approvedControl.ok, true);
+  await controller.dispatch('public:logout');
+  await controller.navigate('#/register');
+  const failedReregistration = await controller.dispatch('public:register', registration);
+  assert.equal(failedReregistration.ok, false);
+  assert.equal(failedReregistration.error?.code, 'transport_failure');
+  const postFailureLogin = await controller.dispatch('public:login', {email, password});
+  assert.equal(postFailureLogin.ok, false);
+  assert.equal(postFailureLogin.error?.code, 'not_found');
+  const surfaces = [JSON.stringify(controller.state), JSON.stringify(runtime.inspect()),
+    JSON.stringify(runtime.pxc.entries().map(([address, part]) => ({address, value: part.value}))),
+    [...storage.values.values()].join('\n')].join('\n');
+  assert.equal(surfaces.includes(password), false);
+  return {approvedLoginControl: approvedControl.ok, reRegistrationFailure: failedReregistration.error?.code,
+    postFailureLogin: postFailureLogin.error?.code, loginRedirectObserved: postFailureLogin.error?.code === 'not_found',
+    credentialsAbsent: true};
+}
+
+const known = await scenario('transport_failure', 'known');
+const unknown = await scenario('outcome_unknown', 'unknown');
+const alias = await aliasScenario();
+console.log(JSON.stringify({known, unknown, alias, exit: 0}));

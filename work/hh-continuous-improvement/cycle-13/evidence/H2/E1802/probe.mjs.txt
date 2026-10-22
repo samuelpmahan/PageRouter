@@ -1,0 +1,300 @@
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {writeFile} from 'node:fs/promises';
+import path from 'node:path';
+import {pathToFileURL} from 'node:url';
+
+const root = process.cwd();
+assert.equal(root, '/workspace/scratch/8528bb251845', 'run only from the admitted scratch cwd');
+const hh = path.join(root, 'PageRouter/checkpoint/vendor/hh');
+const importFile = relative => pathToFileURL(path.join(hh, relative)).href;
+const {createFixtureProvider, createServiceRuntime, SCHOOL_FIXTURES} = await import(importFile('services/index.mjs'));
+const {createCommunity} = await import(importFile('src/community.mjs'));
+const {createPublicController} = await import(importFile('src/public-controller.mjs'));
+const {renderPublicSite} = await import(importFile('src/public-site.mjs'));
+
+function nodeById(tree, id) {
+  if (!tree || typeof tree !== 'object') return null;
+  if (tree.attrs?.id === id) return tree;
+  for (const child of tree.children || []) {
+    const found = nodeById(child, id);
+    if (found) return found;
+  }
+  return null;
+}
+
+function heldPlan(failWith = null) {
+  let announce;
+  let release;
+  const started = new Promise(resolve => { announce = resolve; });
+  const waiting = new Promise(resolve => { release = resolve; });
+  return {failWith, started, announce, release, waiting};
+}
+
+function makeEnvironment() {
+  const base = createFixtureProvider({fixture: true});
+  let nextLoginPlan = null;
+  let probeMode = false;
+  let probeLoginCalls = 0;
+  const providerCalls = [];
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    if (port !== 'Session.login') return invoke(input);
+    if (probeMode) probeLoginCalls += 1;
+    providerCalls.push({port, email: input.email, hasPassword: Object.hasOwn(input, 'password')});
+    const plan = nextLoginPlan;
+    nextLoginPlan = null;
+    if (plan?.announce) {
+      plan.announce();
+      await plan.waiting;
+    }
+    return invoke(plan?.failWith ? {...input, failWith: plan.failWith} : input);
+  }]));
+  const runtime = createServiceRuntime({...base, services: Object.freeze(services)});
+  let tree = null;
+  let renderFrames = 0;
+  const controller = createPublicController({runtime, community: createCommunity({storage: null}), storage: null,
+    onChange(state, route) {
+      tree = renderPublicSite({route, state, journey: state.journey});
+      renderFrames += 1;
+    }});
+  return {
+    controller, runtime,
+    get tree() { return tree; },
+    get renderFrames() { return renderFrames; },
+    get probeLoginCalls() { return probeLoginCalls; },
+    providerCalls,
+    arm(plan) { nextLoginPlan = plan; },
+    startProbe() { probeMode = true; },
+  };
+}
+
+function loginProjection(env) {
+  const input = nodeById(env.tree, 'hh-login-email');
+  const submit = nodeById(env.tree, 'hh-login-submit');
+  return {
+    route: env.controller.route.page,
+    page: env.tree?.attrs?.['data-public-page'] || null,
+    formPresent: !!nodeById(env.tree, 'hh-login-form'),
+    email: input?.attrs?.value ?? null,
+    submitEnabled: !!submit && submit.attrs.disabled !== true,
+    requestStatus: env.controller.state.request.status,
+  };
+}
+
+async function preparePreviousAndPendingIdentity(env) {
+  const {controller, runtime} = env;
+  const previousEmail = `h2-prior-${randomUUID()}@example.test`;
+  const registrationPassword = randomUUID();
+  const firstLoginPassword = randomUUID();
+  const restoredLoginPassword = randomUUID();
+  const previousSchool = SCHOOL_FIXTURES[0];
+  await controller.initialize('#/register');
+  for (const [key, value] of Object.entries({
+    state: previousSchool.state, county: previousSchool.county,
+    district: previousSchool.district, school: previousSchool.school,
+  })) await controller.selectSchool(key, value);
+  await controller.dispatch('public:terms-consent', {accepted: true});
+  const registered = await controller.dispatch('public:register', {
+    name: 'Synthetic H2 Prior', email: previousEmail,
+    password: registrationPassword, confirmPassword: registrationPassword,
+    termsAccepted: true,
+  });
+  assert.equal(registered.ok, true, 'synthetic prior account is created only in volatile fixture state');
+  assert.equal((await controller.dispatch('public:approve')).ok, true);
+  assert.equal((await controller.dispatch('public:login', {email: previousEmail, password: firstLoginPassword})).ok, true,
+    'fixture success control does not authenticate passwords');
+  assert.equal((await controller.dispatch('public:logout')).ok, true);
+
+  const pendingEmail = `h2-pending-${randomUUID()}@fixture.test`;
+  const pendingCreated = await runtime.invoke('Registration.registerTeacher', {
+    teacher: {name: 'Demo H2 Pending', email: pendingEmail, phoneNumber: 'DEMO'},
+    school: previousSchool, termsAccepted: true, demoAccount: true,
+  });
+  assert.equal(pendingCreated.ok, true, 'second identity is a synthetic pending fixture only');
+  assert.equal((await controller.dispatch('public:login', {email: previousEmail, password: restoredLoginPassword})).ok, true,
+    'restore the prior approved identity as the selected projection');
+  assert.equal((await controller.dispatch('public:logout')).ok, true);
+  assert.equal(controller.route.page, 'login');
+  assert.equal(loginProjection(env).email, previousEmail);
+  assert.equal(runtime.mode, 'fixture');
+  assert.equal(runtime.fixture, true);
+  assert.equal(runtime.snapshot().diagnostics.persistence, 'volatile-memory');
+  return {previousEmail, pendingEmail, secrets: [registrationPassword, firstLoginPassword, restoredLoginPassword]};
+}
+
+function delegatedInput(env, name, value) {
+  // Source-equivalent to app.mjs's delegated input handler:
+  // if (target?.name) controller.updateDraft(target.name, target.value).
+  return env.controller.updateDraft(name, value);
+}
+
+function formPayload(email, password) {
+  // FormData(form) -> Object.fromEntries(data.entries()) is the source submit path.
+  // This Node-only harness supplies those captured, nonsecret/synthetic field values;
+  // it does not claim to mount or observe an actual browser DOM form.
+  return Object.fromEntries([['email', email], ['password', password]]);
+}
+
+function retainedSurfaces(env) {
+  return [
+    JSON.stringify(env.controller.state),
+    JSON.stringify(env.runtime.snapshot()),
+    JSON.stringify(env.runtime.inspect()),
+    JSON.stringify(env.runtime.pxc.entries().map(([address, part]) => ({address, value: part.value}))),
+    JSON.stringify(env.tree),
+  ].join('\n');
+}
+
+const env = makeEnvironment();
+const {previousEmail, pendingEmail, secrets} = await preparePreviousAndPendingIdentity(env);
+const baselineRenderFrames = env.renderFrames;
+env.startProbe();
+
+// Held transport failure after the controller receives a submitted typed email.
+const typedEmail = `h2-transport-${randomUUID()}@fixture.test`;
+const newerEmail = `h2-newer-${randomUUID()}@fixture.test`;
+const transportPassword = randomUUID();
+const transportGate = heldPlan('transport_failure');
+env.arm(transportGate);
+const transportInputAccepted = delegatedInput(env, 'email', typedEmail);
+const transportPayload = formPayload(typedEmail, transportPassword);
+let simulatedDomPassword = transportPassword;
+simulatedDomPassword = ''; // app.mjs clears password inputs before controller.dispatch.
+const transportPending = env.controller.dispatch('public:login', transportPayload);
+await transportGate.started;
+const transportBusy = loginProjection(env);
+const newerInputAccepted = delegatedInput(env, 'email', newerEmail);
+const transportRenderCountDuringNewerEdit = env.renderFrames;
+transportGate.release();
+const transportResult = await transportPending;
+const transportCompleted = loginProjection(env);
+const transportCallCountBeforePublicRetry = env.probeLoginCalls;
+const publicRetryResult = await env.controller.dispatch('public:retry');
+const transportCallCountAfterPublicRetry = env.probeLoginCalls;
+
+// A distinct, explicit resubmission is a new Session.login call, not auto-retry.
+const explicitPassword = randomUUID();
+const explicitResult = await env.controller.dispatch('public:login', formPayload(typedEmail, explicitPassword));
+const explicitCallCount = env.probeLoginCalls;
+const explicitProjection = loginProjection(env);
+
+// Valid local fixture success control: the fixture confirms approval, not passwords.
+const successPassword = randomUUID();
+const successResult = await env.controller.dispatch('public:login', formPayload(previousEmail, successPassword));
+const successProjection = {
+  route: env.controller.route.page,
+  sessionStatus: env.controller.state.journey.session.status,
+  sessionEmail: env.controller.state.journey.session.email,
+  passwordAuthentication: env.runtime.capabilities.passwordAuthentication,
+};
+await env.controller.dispatch('public:logout');
+
+// Natural auth denial from a pending synthetic account, held for pending/completion reads.
+const deniedGate = heldPlan();
+env.arm(deniedGate);
+const deniedPassword = randomUUID();
+const deniedInputAccepted = delegatedInput(env, 'email', pendingEmail);
+const deniedPending = env.controller.dispatch('public:login', formPayload(pendingEmail, deniedPassword));
+await deniedGate.started;
+const deniedBusy = loginProjection(env);
+deniedGate.release();
+const deniedResult = await deniedPending;
+const deniedCompleted = loginProjection(env);
+
+const loginProviderCalls = env.providerCalls.filter(call => call.port === 'Session.login');
+const probeProviderCalls = loginProviderCalls.slice(-env.probeLoginCalls);
+const secretsToCheck = [...secrets, transportPassword, explicitPassword, successPassword, deniedPassword];
+const retained = retainedSurfaces(env);
+const secretAbsent = secretsToCheck.every(secret => !retained.includes(secret));
+const payloadPasswordsAbsentFromProvider = loginProviderCalls.every(call => !call.hasPassword);
+const retentionByFailure = [
+  transportCompleted.email === typedEmail,
+  deniedCompleted.email === pendingEmail,
+];
+const outcome = retentionByFailure.every(Boolean) ? 'confirmed_reuse'
+  : retentionByFailure.some(Boolean) ? 'mixed_change' : 'not_reuse';
+
+assert.equal(transportInputAccepted, false, 'login email has no controller draft branch');
+assert.equal(newerInputAccepted, false, 'same-route edit invokes the real updateDraft API and has no login branch');
+assert.equal(transportBusy.requestStatus, 'busy');
+assert.equal(transportBusy.formPresent, true);
+assert.equal(transportBusy.submitEnabled, true, 'login remains editable while the fixture call is held');
+assert.equal(transportRenderCountDuringNewerEdit, baselineRenderFrames + 1,
+  'the rejected draft update itself emits no render; subsequent service render is observed');
+assert.equal(transportResult.error?.code, 'transport_failure');
+assert.equal(transportCompleted.email === typedEmail, false);
+assert.equal(transportCompleted.email, previousEmail);
+assert.equal(transportCallCountBeforePublicRetry, 1);
+assert.equal(publicRetryResult.error?.code, 'nothing_to_retry');
+assert.equal(transportCallCountAfterPublicRetry, 1, 'public retry did not invoke Session.login');
+assert.equal(explicitResult.error?.code, 'not_found', 'explicit resubmission naturally receives a new fixture result');
+assert.equal(explicitCallCount, 2, 'explicit resubmission made exactly one additional login call');
+assert.equal(explicitProjection.email, previousEmail);
+assert.equal(successResult.ok, true, 'approved fixture account is the valid success control');
+assert.equal(successProjection.sessionEmail, previousEmail);
+assert.equal(successProjection.passwordAuthentication, false, 'success does not claim password verification');
+assert.equal(deniedBusy.requestStatus, 'busy');
+assert.equal(deniedInputAccepted, false);
+assert.equal(deniedResult.error?.code, 'pending_denied', 'natural pending-account auth denial, not fictional password denial');
+assert.equal(deniedCompleted.email, previousEmail);
+assert.equal(env.probeLoginCalls, 4);
+assert.equal(probeProviderCalls[0]?.email, typedEmail, 'typed submit value reached the held Session.login provider seam');
+assert.equal(probeProviderCalls[1]?.email, typedEmail, 'explicit resubmission reached Session.login independently');
+assert.equal(probeProviderCalls[2]?.email.endsWith('@fixture.test'), true, 'success control is mapped to a fixture-only identity');
+assert.equal(probeProviderCalls[3]?.email, pendingEmail, 'pending denial control reached Session.login');
+assert.equal(payloadPasswordsAbsentFromProvider, true);
+assert.equal(secretAbsent, true);
+
+const result = {
+  job_id: 'E1802',
+  worker: 'H2',
+  outcome,
+  summary: 'The controller/runtime fixture probe records the login email rendered after held transport and natural pending-auth failures, plus explicit-resubmission and approved-success controls.',
+  evidence: {
+    mode: env.runtime.mode,
+    fixture: env.runtime.fixture,
+    persistence: env.runtime.snapshot().diagnostics.persistence,
+    sourceEquivalentDelegatedInput: true,
+    mountedBrowserObserved: false,
+    formDataFromMountedDom: false,
+    controllerDispatchExecuted: true,
+    transport: {
+      submittedEmailClass: 'synthetic-unregistered-fixture-email',
+      updateDraftAccepted: transportInputAccepted,
+      renderedWhileHeld: transportBusy,
+      newerSameRouteEditAccepted: newerInputAccepted,
+      passwordInputClearedBeforeDispatch: simulatedDomPassword === '',
+      renderCountAfterEditBeforeRelease: transportRenderCountDuringNewerEdit,
+      resultCode: transportResult.error?.code || null,
+      renderedAfterFailure: transportCompleted,
+      publicRetryResult: publicRetryResult.error?.code || null,
+      providerLoginCallsBeforeAndAfterPublicRetry: [transportCallCountBeforePublicRetry, transportCallCountAfterPublicRetry],
+    },
+    explicitResubmission: {
+      resultCode: explicitResult.error?.code || null,
+      providerLoginCallCount: explicitCallCount,
+      renderedEmail: explicitProjection.email,
+    },
+    successControl: successProjection,
+    naturalPendingDenial: {
+      updateDraftAccepted: deniedInputAccepted,
+      renderedWhileHeld: deniedBusy,
+      resultCode: deniedResult.error?.code || null,
+      renderedAfterFailure: deniedCompleted,
+    },
+    provider: {
+      loginCallCount: env.probeLoginCalls,
+      submittedEmailReachedProvider: [
+        probeProviderCalls[0]?.email === typedEmail,
+        probeProviderCalls[1]?.email === typedEmail,
+        probeProviderCalls[3]?.email === pendingEmail,
+      ],
+      inputsContainPassword: !payloadPasswordsAbsentFromProvider,
+      passwordAuthenticationClaimed: env.runtime.capabilities.passwordAuthentication,
+    },
+    retention: {secretAbsentFromRetainedStateTreeRuntimeParts: secretAbsent},
+  },
+};
+const serializedResult = `${JSON.stringify(result, null, 2)}\n`;
+await writeFile(path.join(root, 'hh-cycle13/H2/E1802/result.json'), serializedResult, {flag: 'wx'});
+process.stdout.write(serializedResult);

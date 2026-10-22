@@ -1,0 +1,21 @@
+{
+  "job_id": "E3503",
+  "worker": "H1",
+  "frozen_at": "2026-10-19T18:15:25Z",
+  "repository": "/workspace/scratch/86659bbafcce/PageRouter",
+  "head": "128876031737d853303bbee9906dd7f8d618094d",
+  "tree": "2e6c9aba404034d37f894bacb48b55b639a4ec18",
+  "frozen_test_path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+  "frozen_test_sha256": "2dcced44f31127fb78c367419fab76ded170e74e072a8b8fde21a2b32f240993",
+  "product_input_sha256": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "9c9276c93b4ab9f1afc3263c601588e97af6a7182ff337df55baaa472c0c2481",
+    "checkpoint/vendor/hh/src/public-site.mjs": "524df4132426814cc9621246a4cba548d54c0c537dd840b3997e375e78c9ad4d",
+    "checkpoint/vendor/hh/services/fixtures.mjs": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  },
+  "test": "breaks last-directory-subset wrong pool for rendered Home random teacher action",
+  "frozen_worktree_status": "Only checkpoint/vendor/hh/src/public-controller.test.mjs modified; production source untouched.",
+  "expected_red": "The existing pool implementation is expected to select demo-jordan twice after a Jordan-only directory result, failing the literal two-click assertion expecting demo-avery then demo-jordan.",
+  "note": "Exact full test-file bytes copied to this directory; no production edit occurred before this freeze."
+}

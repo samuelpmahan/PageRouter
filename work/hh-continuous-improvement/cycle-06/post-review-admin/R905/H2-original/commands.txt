@@ -1,0 +1,32 @@
+Working directory for PageRouter-relative commands: /workspace/scratch/8528bb251845/PageRouter
+Only writes made by this reviewer: /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/**
+
+Manifest audit (stdout saved as manifest-check.stdout.log):
+node --input-type=module -e 'import fs from "node:fs";import crypto from "node:crypto";import path from "node:path";const pkg=path.join(process.cwd(),"work/hh-continuous-improvement/cycle-06");const m=JSON.parse(fs.readFileSync(path.join(pkg,"evidence/manifest.json"),"utf8"));const bad=[];for(const [p,h] of Object.entries(m.files)){try{const got=crypto.createHash("sha256").update(fs.readFileSync(path.join(pkg,p))).digest("hex");if(got!==h)bad.push({p,expected:h,got})}catch(e){bad.push({p,error:e.code||String(e)})}}const report={manifestSha256:crypto.createHash("sha256").update(fs.readFileSync(path.join(pkg,"evidence/manifest.json"))).digest("hex"),entries:Object.keys(m.files).length,mismatches:bad};console.log(JSON.stringify(report,null,2));if(bad.length)process.exitCode=1'
+
+JSON syntax validation (stdout saved as json-parse.stdout.log):
+node --input-type=module -e 'import fs from "node:fs";import path from "node:path";const root="work/hh-continuous-improvement/cycle-06";const errors=[],files=[];function walk(dir){for(const e of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,e.name);if(e.isDirectory())walk(p);else if(p.endsWith(".json")){files.push(p);try{JSON.parse(fs.readFileSync(p,"utf8"))}catch(x){errors.push({path:p,error:x.message})}}}}walk(root);console.log(JSON.stringify({jsonFiles:files.length,errors},null,2));if(errors.length)process.exitCode=1'
+
+Byte comparison of originals against assigned scratch evidence:
+diff -qr /workspace/scratch/8528bb251845/hh-cycle06/H1/E901 work/hh-continuous-improvement/cycle-06/evidence/E901/H1-original > /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/provenance-E901.log 2>&1
+cmp /workspace/scratch/8528bb251845/hh-cycle06/H2/probe.mjs work/hh-continuous-improvement/cycle-06/evidence/E902/H2-original/probe.mjs
+cmp /workspace/scratch/8528bb251845/hh-cycle06/H2/result.json work/hh-continuous-improvement/cycle-06/evidence/E902/H2-original/result.json
+cmp /workspace/scratch/8528bb251845/hh-cycle06/H2/stdout.log work/hh-continuous-improvement/cycle-06/evidence/E902/H2-original/stdout.log
+diff -qr /workspace/scratch/8528bb251845/hh-cycle06/H1/E903 work/hh-continuous-improvement/cycle-06/evidence/E903/H1-original > /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/provenance-E903.log 2>&1
+diff -qr /workspace/scratch/8528bb251845/hh-cycle06/H1/E904 work/hh-continuous-improvement/cycle-06/evidence/E904/H1-original > /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/provenance-E904.log 2>&1
+diff -qr /workspace/scratch/8528bb251845/hh-cycle06/H2/R903 work/hh-continuous-improvement/cycle-06/evidence/R903/H2-original > /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/provenance-R903.log 2>&1
+
+Native bundle check (stdout saved as bundle-check.stdout.log):
+zstd -t work/hh-continuous-improvement/cycle-06/evidence/native/solves/*.bundle
+
+Portable companions were copied from the frozen package to R905/replay/ and had only repository import and output paths changed to point at PageRouter and R905/replay-output/:
+node /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/replay/E901-portable.mjs > /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/E901-portable.stdout.log 2>&1 (exit 1 expected: stale-baseline assertion expects unknown, actual corrected status is present)
+node /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/replay/E902-portable.mjs > /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/E902-portable.stdout.log 2>&1 (exit 0, not_reuse)
+node /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/replay/R903-portable.mjs > /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/R903-portable.stdout.log 2>&1 (exit 0, accepted)
+
+Final source checks:
+git diff --check > /workspace/scratch/8528bb251845/hh-cycle06/H2/R905/diff-check.stdout.log 2>&1
+sha256sum checkpoint/vendor/hh/src/public-controller.mjs checkpoint/vendor/hh/src/public-controller.test.mjs
+git diff --name-only
+git rev-parse HEAD
+git rev-parse HEAD^{tree}

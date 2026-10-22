@@ -1,0 +1,20 @@
+{
+  "argv": [
+    "/usr/bin/env",
+    "BAZEL=/workspace/scratch/8528bb251845/tools/bazel",
+    "bash",
+    "ci/bazel/run.sh"
+  ],
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+  "explicitEnvironmentAssignments": [
+    "BAZEL=/workspace/scratch/8528bb251845/tools/bazel"
+  ],
+  "invocationCount": 1,
+  "startUtc": "2026-10-19T06:31:23Z",
+  "endUtc": "2026-10-19T06:32:47Z",
+  "exitCode": 0,
+  "stdout": "build.stdout.raw",
+  "stderr": "build.stderr.raw",
+  "exitCodeFile": "build.exit.code",
+  "captureNote": "An earlier shell capture wrapper failed before launching env/Bazel because the external output directory did not yet exist. After creating that directory, this exact canonical build command was invoked once; no build retry occurred."
+}

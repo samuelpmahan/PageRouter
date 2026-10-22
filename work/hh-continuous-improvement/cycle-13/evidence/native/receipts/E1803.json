@@ -1,0 +1,14 @@
+{
+  "job_id": "E1803",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "H1 implemented three-path memory-only login email draft correction after actual two-test RED; final focused2/controller59/public-site14 pass. Independent review pending. Root derives this native envelope from unchanged H1 markdown handback because H1 supplied no JSON receipt; this is coordinator envelope normalization, not a native rejection or independent acceptance.",
+  "raw_handback": {"path":"hh-cycle13/H1/E1803-ORIGINAL-CAPTURES/RESULT.md","sha256":"90538483c683febc93ea80deb849ab90af3def26d77a2351aa4b3c3ca741d26c"},
+  "provenance_erratum": {"path":"hh-cycle13/H1/E1803-ORIGINAL-CAPTURES/ERRATUM.md","sha256":"d6aa50f10d6d4e265f21829dd99657a914605c01a9090e02d83e39dade86b7b4"},
+  "source_sha256": {
+    "checkpoint/vendor/hh/src/public-controller.mjs":"308c876e8bbfeb20a3e8ee92a4065549f5ca815bec0aa6979bf39c61fa4dc07c",
+    "checkpoint/vendor/hh/src/public-site.mjs":"5f1135c95fdb3baefb64e49d755e45a87b9eb1b17ff363ed91eb5b516812031b",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs":"f426710f6ae9c3012f5eba2aa0d50b3aaca8b4e76a4119dd3ffca58d08e13d4f"
+  },
+  "limits": ["No build or browser/backend/human acceptance yet", "Original red2fail retained; green01 one failed fixture fallback expectation retained, corrected only test expectation before green02", "Green captures originated under accidental PageRouter/hh-cycle13 scratch path and exact exclusive copies are separately verified; newline-altered stderr duplicates disqualified", "Reconstructed prior test source matched predeclared d3eb hash but is not contemporaneous snapshot", "Existing login request email still appears in normal nonsecret service/Parts evidence; only the UI draft is not added to provider/runtime/storage, never passwords"]
+}

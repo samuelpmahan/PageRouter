@@ -1,0 +1,29 @@
+{
+  "review": "R1403",
+  "authority": "Coordinator-defined bounded acceptance before candidate review; not execution/results",
+  "owner": "H2",
+  "exclude": "H1 implementer",
+  "required": [
+    "fresh prospective raw focused/controller TAP on exact final hashes",
+    "known fixture transport failure retains current nonsecret name/email/phone + selectedschool/terms and error requeststatus",
+    "fixture outcome_unknown retained as unknown, never implicit success or automatic retry",
+    "updateDraft while provider response pending retained on failure, not stale submitted copy",
+    "existing approved alias login remains usable after failed re-registration",
+    "normal registration success installs correct alias and projects actual registered identity",
+    "fresh matching ephemeral credential resubmit only on explicit user dispatch",
+    "credentials absent controller state/runtime.inspect/actual PxC Parts/storage/evidence"
+  ],
+  "adversarialIfReachable": [
+    "other fixture failures store_failure/denied/provider exception sanitized",
+    "navigate to foreign/captured profile while registration pending; completion preserves current profile authority",
+    "navigate away/back and type new draft before failure; no older submission overwrite",
+    "successful pending registration while user typed newer unsaved draft does not misrepresent saved identity"
+  ],
+  "claimsExcluded": [
+    "production authentication/backend behavior",
+    "browser DOM or screenshot QA",
+    "human acceptance",
+    "unmatched throughput or allocator causality"
+  ],
+  "retention": "Any uncovered distinct issue gets evidence/guarded continuation; do not broaden product scope silently. Harness errors preserved and corrected only in review code, never adjust acceptance to green."
+}

@@ -1,0 +1,83 @@
+{
+  "schema": "hh-r604-adversarial/v1",
+  "evidence": "volatile synthetic fixture runtime only",
+  "results": {
+    "lookupToLoginSuccess": {
+      "fail": false,
+      "pendingState": {
+        "route": "/directory",
+        "loading": true
+      },
+      "immediatelyAfterNavigation": {
+        "route": "/login",
+        "loading": false
+      },
+      "lookupResult": {
+        "ok": false,
+        "ignored": true
+      },
+      "afterStaleSettlement": {
+        "route": "/login",
+        "loading": false,
+        "counties": [],
+        "lookupError": ""
+      }
+    },
+    "lookupToLoginFailure": {
+      "fail": true,
+      "pendingState": {
+        "route": "/directory",
+        "loading": true
+      },
+      "immediatelyAfterNavigation": {
+        "route": "/login",
+        "loading": false
+      },
+      "lookupResult": {
+        "ok": false,
+        "ignored": true
+      },
+      "afterStaleSettlement": {
+        "route": "/login",
+        "loading": false,
+        "counties": [],
+        "lookupError": ""
+      }
+    },
+    "directoryWithOlderAndNewerLookup": {
+      "afterOldDirectoryReturn": {
+        "route": "/register",
+        "loading": true,
+        "matchesStatus": "loading",
+        "pendingLookupCount": 1
+      },
+      "afterCurrentLookupSettles": {
+        "loading": false,
+        "states": [
+          "Demo California",
+          "Demo Washington"
+        ]
+      }
+    },
+    "newerLookupSettlesBeforeOlder": {
+      "afterNewer": {
+        "loading": false,
+        "selectedState": "Demo California",
+        "counties": [
+          "Demo Alameda"
+        ]
+      },
+      "olderResult": {
+        "ok": false,
+        "ignored": true
+      },
+      "afterOlder": {
+        "loading": false,
+        "selectedState": "Demo California",
+        "counties": [
+          "Demo Alameda"
+        ]
+      }
+    }
+  }
+}

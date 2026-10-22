@@ -1,0 +1,45 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "hh29-home-discovery-context",
+    "scope": "Home Find Random Teacher after submitted directory filter; volatilefixture-only and separate independentreview"
+  },
+  "workers": [
+    "H1",
+    "H2"
+  ],
+  "review_policy": {
+    "enabled": false
+  },
+  "jobs": [
+    {
+      "id": "E3501",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Frontdoor integrationowner: actualvolatilefixture home randomteacher after priorfilter, baseline before anypatch"
+    },
+    {
+      "id": "E3502",
+      "kind": "extract",
+      "allow_workers": [
+        "H2"
+      ],
+      "subject": "Independent read-only controlscope/nonduplication/sourcecontext and smallest meaningful acceptance"
+    }
+  ],
+  "conditional_policy": {
+    "demonstrated_gap": "Root freezesminimalcorrection+RED; differentworkerreview",
+    "falsified": "Retainactualfalsifier,noforcedpatch",
+    "review_accepted": "Canonicalbuildonce,ordinarycommit,existingPR8candidatepublicationonly",
+    "failed": "Retainoriginalfailures/thresholds andboundedrepair",
+    "no_new_gap": "HOLD productpatch; no completedflowreplay"
+  },
+  "ownership": {
+    "integration": "H1 sole PageRouter/source/Gitowner; rootpublication",
+    "review": "H2 read-onlyproject/disjointscratch; cannotacceptownimplementation",
+    "capacity": "TwoactualLunaHighcontexts beneathroot; LabS1 separate repositoryowner; noinvented10slots",
+    "intent": "Boundedspecialist/frontdoor+independentreview, unusedslotsnotclaimed; nativeeligibility/capacity/pins separatesemanticguards"
+  }
+}

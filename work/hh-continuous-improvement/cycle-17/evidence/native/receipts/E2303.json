@@ -1,0 +1,124 @@
+{
+  "job_id": "E2303",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "The one-attribute renderer change passed the focused navigation-label regression, the full public-site suite, and the public-controller suite. The focused test exercised all four anonymous/authenticated × closed/open states within one passing test. No browser or human accessibility behavior was tested.",
+  "source": {
+    "base_head": "86301f84a9b08f40b76de9b64026befe6b0081a5",
+    "base_tree": "c685c5267235fc460c4147592a483dd40d44d3fd",
+    "public_site_sha256_before": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+    "public_site_sha256_after": "d9c17a350375633a53d0dc256be666bb0c82298c9ffa7b05bc6be08156141bfc",
+    "public_site_test_sha256": "264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5",
+    "public_controller_test_sha256": "bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0",
+    "renderer_change": "Added only aria-label=\"Toggle account and site navigation\" to the existing hh-public-nav-toggle attributes."
+  },
+  "execution": {
+    "wrapper_command": [
+      "bash",
+      "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2303/run-green-checks.sh"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+    "wrapper_sha256": "b0950b09876de75734cb017f010ee0ffc4bf3a1f946fc093eafd0c084ba95757",
+    "wrapper_exit_code": 0,
+    "checks": [
+      {
+        "name": "focused navigation label regression",
+        "argv": [
+          "node",
+          "--test",
+          "--test-name-pattern=public mobile navigation toggle keeps a stable descriptive label across menu and session states",
+          "checkpoint/vendor/hh/src/public-site.test.mjs"
+        ],
+        "capture_directory": "captures/green-01-focused",
+        "exit_code": 0,
+        "counts": {
+          "tests": 1,
+          "pass": 1,
+          "fail": 0,
+          "skipped": 0
+        },
+        "stdout": {
+          "bytes": 227,
+          "sha256": "2a07a39a901d3e2619e992b8c5cb46209799f2ebf57991b9dc56048546ee5957"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "timestamps_utc": {
+          "start": "2026-10-19T03:22:40Z",
+          "end": "2026-10-19T03:22:40Z"
+        },
+        "state_cases_asserted_by_test": [
+          "anonymous, closed",
+          "anonymous, open",
+          "authenticated, closed",
+          "authenticated, open"
+        ]
+      },
+      {
+        "name": "full public-site test file",
+        "argv": [
+          "node",
+          "--test",
+          "checkpoint/vendor/hh/src/public-site.test.mjs"
+        ],
+        "capture_directory": "captures/green-02-public-site",
+        "exit_code": 0,
+        "counts": {
+          "tests": 16,
+          "pass": 16,
+          "fail": 0,
+          "skipped": 0
+        },
+        "stdout": {
+          "bytes": 1784,
+          "sha256": "b6d32b54383ca812f1eb4389c8a48136c79e3743b42c31ba10100755be009e80"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "timestamps_utc": {
+          "start": "2026-10-19T03:22:40Z",
+          "end": "2026-10-19T03:22:40Z"
+        }
+      },
+      {
+        "name": "public-controller test file",
+        "argv": [
+          "node",
+          "--test",
+          "checkpoint/vendor/hh/src/public-controller.test.mjs"
+        ],
+        "capture_directory": "captures/green-03-controller",
+        "exit_code": 0,
+        "counts": {
+          "tests": 61,
+          "pass": 61,
+          "fail": 0,
+          "skipped": 0
+        },
+        "stdout": {
+          "bytes": 6014,
+          "sha256": "e83d5549cd3ce9ae881655f62bd3f1b52e8a99623beea3ed16e201cb60f15b0e"
+        },
+        "stderr": {
+          "bytes": 0,
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "timestamps_utc": {
+          "start": "2026-10-19T03:22:40Z",
+          "end": "2026-10-19T03:22:40Z"
+        }
+      }
+    ]
+  },
+  "qualifications": [
+    "The actual Node raw summaries show 0 skipped tests in all three checks. The prepared prospective's focused-check skip prediction was incorrect; it remains preserved unchanged, and actual raw output governs.",
+    "Each check's start and end timestamps have one-second resolution and therefore appear identical; they do not imply zero duration.",
+    "The earlier RED remains preserved separately in red-result.json and captures/red-01. This GREEN changes only the renderer attribute relative to that RED; the test source is unchanged.",
+    "Evidence is emitted renderer-tree/test output only. No browser, DOM mounting, keyboard event, browser-computed accessible name, screen reader, human, backend, build, deployment, or publication was involved."
+  ],
+  "next_step": "Hold for root review and independent review; no canonical build or Git operation is included in this result."
+}

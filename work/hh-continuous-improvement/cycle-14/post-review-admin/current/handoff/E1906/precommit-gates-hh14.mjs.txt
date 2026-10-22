@@ -1,0 +1,132 @@
+// PREPARED ONLY. Do not run until R1905 is accepted and root separately GOes.
+// Read-only gate for the exact HH14 source + frozen package + future admin closure.
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {lstat, readFile, readdir} from 'node:fs/promises';
+import {join, relative, sep} from 'node:path';
+
+const repo = '/workspace/scratch/8528bb251845/PageRouter';
+const packageRelative = 'work/hh-continuous-improvement/cycle-14';
+const packageRoot = join(repo, packageRelative);
+const manifestRelative = `${packageRelative}/evidence/manifest.json`;
+const manifestHash = '0534667e8c1960ba8a8562fafe3a0cfc365942945a3852c0eb982d97c326d2bb';
+const resultRelative = `${packageRelative}/evidence/E1905/result.json`;
+const resultHash = '413f929414b8cb0a7b6a55b4138e7ede4fc77f4bb49a11f8192d34df018ef819';
+const adminRelative = `${packageRelative}/post-review-admin/current/manifest.json`;
+const expectedBase = '06b6da36e326758ccd14cda021bc0a15cfd00817';
+const expectedTree = 'eb7136f80b1bdfd08c771f519a626a1e508bb1a9';
+const reportedCanonicalParent = 'a2b2c45631c14e5f5cb22c3cc2c74fa6bf88d153';
+const sourceHashes = new Map([
+  ['checkpoint/vendor/hh/src/public-controller.mjs', 'd730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669'],
+  ['checkpoint/vendor/hh/src/public-controller.test.mjs', '9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164'],
+]);
+const sha256 = b => createHash('sha256').update(b).digest('hex');
+const git = (...args) => execFileSync('git', args, {cwd: repo, maxBuffer: 64 * 1024 * 1024});
+const failures = [];
+const head = git('rev-parse', 'HEAD').toString('utf8').trim();
+const headTree = git('rev-parse', `${head}^{tree}`).toString('utf8').trim();
+if (head !== expectedBase) failures.push(`HEAD ${head} != pinned base ${expectedBase}`);
+if (headTree !== expectedTree) failures.push(`HEAD tree ${headTree} != pinned tree ${expectedTree}`);
+
+const manifestBytes = await readFile(join(repo, manifestRelative));
+if (sha256(manifestBytes) !== manifestHash) failures.push('immutable E1905 manifest hash changed');
+const manifest = JSON.parse(manifestBytes.toString('utf8'));
+if (manifest.listedFileCount !== 95 || manifest.files?.length !== 95 || manifest.totalPackageFileCount !== 97) {
+  failures.push('immutable E1905 package must remain exactly 95 payload + 2 envelope files');
+}
+const expectedPackage = new Set([manifestRelative, resultRelative]);
+const resultBytes = await readFile(join(repo, resultRelative));
+if (sha256(resultBytes) !== resultHash) failures.push('immutable E1905 result hash changed');
+for (const item of manifest.files ?? []) {
+  if (typeof item.path !== 'string' || item.path.startsWith('/') || item.path.split('/').includes('..')) {
+    failures.push(`unsafe frozen manifest path: ${String(item.path)}`); continue;
+  }
+  const path = `${packageRelative}/${item.path}`;
+  const bytes = await readFile(join(repo, path));
+  if (bytes.length !== item.bytes || sha256(bytes) !== item.sha256) failures.push(`frozen payload mismatch: ${path}`);
+  expectedPackage.add(path);
+}
+
+// The post-review owner/admin closure is intentionally separate from the immutable 97 files.
+let adminBytes;
+try { adminBytes = await readFile(join(repo, adminRelative)); }
+catch { failures.push(`future post-review closure not yet present: ${adminRelative}`); }
+if (adminBytes) {
+  const admin = JSON.parse(adminBytes.toString('utf8'));
+  if (!Array.isArray(admin.entries)) failures.push('post-review manifest must contain entries[]');
+  expectedPackage.add(adminRelative);
+  for (const item of admin.entries ?? []) {
+    if (typeof item.path !== 'string' || item.path.startsWith('/') || item.path.split('/').includes('..')) {
+      failures.push(`unsafe post-review path: ${String(item.path)}`); continue;
+    }
+    const path = `${packageRelative}/post-review-admin/current/${item.path}`;
+    const bytes = await readFile(join(repo, path));
+    if (bytes.length !== item.bytes || sha256(bytes) !== item.sha256) failures.push(`post-review payload mismatch: ${path}`);
+    expectedPackage.add(path);
+  }
+}
+
+const packageFiles = new Set();
+async function walk(dir) {
+  for (const name of (await readdir(dir)).sort()) {
+    const full = join(dir, name); const info = await lstat(full);
+    if (info.isSymbolicLink()) failures.push(`symlink forbidden: ${relative(packageRoot, full).split(sep).join('/')}`);
+    else if (info.isDirectory()) await walk(full);
+    else if (info.isFile()) packageFiles.add(`${packageRelative}/${relative(packageRoot, full).split(sep).join('/')}`);
+    else failures.push(`unsupported package entry: ${relative(packageRoot, full).split(sep).join('/')}`);
+  }
+}
+await walk(packageRoot);
+for (const p of expectedPackage) if (!packageFiles.has(p)) failures.push(`missing package path: ${p}`);
+for (const p of packageFiles) if (!expectedPackage.has(p)) failures.push(`unmanifested package path: ${p}`);
+for (const [path, expected] of sourceHashes) {
+  if (sha256(await readFile(join(repo, path))) !== expected) failures.push(`source hash mismatch: ${path}`);
+}
+
+const allowed = p => sourceHashes.has(p) || p === packageRelative || p.startsWith(`${packageRelative}/`);
+const records = git('status', '--porcelain=v1', '-z', '--untracked-files=all').toString('utf8').split('\0').filter(Boolean);
+const statusPaths = []; const excludedScratch = [];
+for (const record of records) {
+  const xy = record.slice(0, 2); const path = record.slice(3);
+  if (xy === '??' && path.startsWith('hh-cycle13/')) {
+    excludedScratch.push({xy, path, reason: 'preserve existing untracked 21-file HH13 scratch; never stage or export'});
+    continue;
+  }
+  statusPaths.push({xy, path});
+  if (!allowed(path)) failures.push(`changed path outside HH14 allowlist: ${path}`);
+  if (/[RCDU]/.test(xy)) failures.push(`rename/copy/delete/unmerged status forbidden: ${xy} ${path}`);
+}
+if (excludedScratch.length !== 21) failures.push(`expected preserved 21-file hh-cycle13 scratch; observed ${excludedScratch.length}`);
+
+// Whitespace applies only to the two real product files and new authored admin docs.
+// Immutable cycle payload/raw captures are hash-checked, never normalized.
+const authored = new Set(sourceHashes.keys());
+const raw = /(?:\.raw(?:\.txt)?|\.stdout\.raw|\.stderr\.raw|\.exit|\.utc|\.log)$/;
+if (adminBytes) {
+  const admin = JSON.parse(adminBytes.toString('utf8'));
+  for (const item of admin.entries ?? []) {
+    const p = `${packageRelative}/post-review-admin/current/${item.path}`;
+    if (/\.(?:md|json|txt)$/.test(p) && !raw.test(p)) authored.add(p);
+  }
+}
+const whitespace = [];
+for (const p of [...authored].sort()) {
+  let text;
+  try { text = new TextDecoder('utf-8', {fatal: true}).decode(await readFile(join(repo, p))); }
+  catch { failures.push(`authored file not strict UTF-8: ${p}`); continue; }
+  for (const [i, line] of text.split('\n').entries()) {
+    if (/[\t ]+$/.test(line.replace(/\r$/, ''))) whitespace.push({path:p,line:i+1,kind:'trailing whitespace'});
+    if (line.includes('\r')) whitespace.push({path:p,line:i+1,kind:'CR character'});
+  }
+}
+try { git('diff', '--check', '--', ...sourceHashes.keys(), `${packageRelative}/post-review-admin/current`); }
+catch (e) { failures.push(`git diff --check diagnostics: ${e.stdout?.toString('utf8') || e.stderr?.toString('utf8') || e.message}`); }
+failures.push(...whitespace.map(x => `${x.path}:${x.line} ${x.kind}`));
+
+console.log(JSON.stringify({gate:'hh-cycle14-precommit-closure/v1',status:failures.length?'FAIL':'PASS',
+  expectedBase,expectedTree,reportedCanonicalParentOnly:reportedCanonicalParent,
+  sourceHashes:Object.fromEntries(sourceHashes),frozenManifestSha256:manifestHash,
+  frozenPayloadEntries:manifest.files?.length ?? 0,immutablePackageFiles:packageFiles.size,
+  futureAdminManifest:adminRelative,statusPaths,excludedUntrackedScratch:excludedScratch,
+  authoredWhitespaceFileCount:authored.size,rawEvidence:'byte/hash verified; not normalized',failures},null,2));
+if (failures.length) process.exitCode = 1;

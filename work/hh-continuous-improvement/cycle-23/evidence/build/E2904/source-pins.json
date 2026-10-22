@@ -1,0 +1,22 @@
+{
+  "job_id": "E2904",
+  "worker": "H1",
+  "repository": "/workspace/scratch/8528bb251845/PageRouter",
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+  "head": "a7ef289c6232a6bb1daa7c805765179b5b502068",
+  "accepted_product_and_test_sources": [
+    {"path": "vendor/hh/src/public-controller.mjs", "sha256": "97b5c17bf519b7fd05e2933a12dc55ff0e3e0c3e7939db4072368c070b4f67a0"},
+    {"path": "vendor/hh/src/community.mjs", "sha256": "311d598b6d6ffc675dc4ee5b07ac0005c55e6ce7a34f8acfac5384d5789288f4"},
+    {"path": "vendor/hh/src/public-controller.test.mjs", "sha256": "417dfa6b6456a978554ce8184849e1d8f63a5b135ebfffb41442b2162222c35f"}
+  ],
+  "canonical_build_inputs": [
+    {"path": "ci/bazel/run.sh", "sha256": "2a1a6fc5bc919f67b424d6fed92e4e888bf3767b634b1ad9544604067fbe072c"},
+    {"path": "ci/bazel/bootstrap.py", "sha256": "1cea8856f26e95427bd97d3c3aadfcf5554417382f4979eda34eb58f0256a58f"},
+    {"path": "ci/bazel/BUILD.bazel", "sha256": "61b0bed44658be844cfbf54049de7dec4088a6ac08f7db9d3e3a0b3b67686ced"},
+    {"path": "BUILD.bazel", "sha256": "72784e42dfded1173ad550a41c6b98d536f4eb6f076e2f3cbf6df7244e862665"},
+    {"path": "WORKSPACE.bazel", "sha256": "8714b5062c74ea41141fd8e5abfb7ce2331c191bad78107694de91bdda8b758b"},
+    {"path": ".bazelversion", "sha256": "910121d8fda1ee513d664110f94bef46c4791698010db514c2a71cc1932bc3cf"},
+    {"path": "package-lock.json", "sha256": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534"}
+  ],
+  "initial_untracked_preservation_reference": "/workspace/scratch/86659bbafcce/hh22/H1/E2801/initial-worktree"
+}

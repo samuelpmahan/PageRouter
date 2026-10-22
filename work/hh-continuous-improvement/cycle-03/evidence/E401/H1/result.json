@@ -1,0 +1,169 @@
+{
+  "schema": "hh-cycle03-e401-result/v1",
+  "job_id": "E401",
+  "worker": "H1",
+  "protocol_sha256": "58e406095a5ae578c6703eb8d91bb8020c3b831fae30cfec849de57366d9960d",
+  "cases": {
+    "authenticated_nonowner_public_profile": {
+      "owner": {
+        "teacherId": "demo-seed-avery"
+      },
+      "requestedSubject": {
+        "profileId": "demo-jordan",
+        "teacherIdBefore": "demo-seed-jordan",
+        "teacherIdAfter": "demo-seed-jordan"
+      },
+      "uiBefore": {
+        "editButtonRendered": false,
+        "editFormRendered": false
+      },
+      "editOpen": {
+        "result": {
+          "ok": true
+        },
+        "rendered": {
+          "editButtonRendered": false,
+          "editFormRendered": false
+        }
+      },
+      "save": {
+        "result": {
+          "ok": true,
+          "localOnly": true,
+          "profile": {
+            "id": "demo-jordan",
+            "teacherId": "demo-seed-jordan",
+            "displayName": "Demo Jordan",
+            "bio": "Synthetic nonowner local overlay",
+            "subjects": [
+              "Art"
+            ],
+            "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN",
+            "school": {
+              "state": "Demo California",
+              "county": "Demo Alameda",
+              "district": "Demo Bay District",
+              "school": "Demo Bay School"
+            },
+            "seeded": true,
+            "name": "Demo Jordan changed by Avery"
+          }
+        },
+        "profileBefore": {
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "name": "Demo Jordan",
+          "source": "runtime"
+        },
+        "profileAfter": {
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "name": "Demo Jordan changed by Avery",
+          "source": "local-overlay"
+        }
+      },
+      "profileAfterReopen": {
+        "teacherId": "demo-seed-jordan",
+        "name": "Demo Jordan changed by Avery",
+        "source": "local-overlay"
+      },
+      "providerRuntimeSnapshotUnchanged": true,
+      "runtimeBefore": {
+        "sessionTeacherId": "demo-seed-avery",
+        "ownProfileTeacherId": "demo-seed-avery"
+      },
+      "runtimeAfter": {
+        "sessionTeacherId": "demo-seed-avery",
+        "ownProfileTeacherId": "demo-seed-avery"
+      }
+    },
+    "authenticated_owner_profile_positive_control": {
+      "owner": {
+        "teacherId": "demo-seed-avery"
+      },
+      "ownProfile": {
+        "teacherIdBefore": "demo-seed-avery",
+        "teacherIdAfter": "demo-seed-avery"
+      },
+      "uiBefore": {
+        "editButtonRendered": true,
+        "editFormRendered": false
+      },
+      "openEdit": {
+        "ok": true
+      },
+      "edit": {
+        "ok": true,
+        "error": null,
+        "localOnly": true
+      },
+      "profileAfter": {
+        "name": "Demo Avery owner edited",
+        "source": "local-overlay"
+      },
+      "providerRuntimeSnapshotUnchanged": true
+    },
+    "captured_readonly_reference_control": {
+      "ownerTeacherId": "demo-seed-avery",
+      "requestedSubject": {
+        "profileId": "reference-sarah",
+        "teacherId": null,
+        "source": "captured-readonly",
+        "readOnly": true
+      },
+      "uiBefore": {
+        "editButtonRendered": false,
+        "editFormRendered": false
+      },
+      "openEdit": {
+        "ok": false,
+        "error": {
+          "code": "read_only_reference",
+          "message": "Captured public reference profiles are read-only."
+        }
+      },
+      "edit": {
+        "ok": false,
+        "error": {
+          "code": "read_only_reference",
+          "message": "Captured public reference profiles are read-only."
+        }
+      },
+      "profileAfter": {
+        "name": "Sarah Endsley",
+        "source": "captured-readonly",
+        "readOnly": true
+      },
+      "providerRuntimeSnapshotUnchanged": true
+    }
+  },
+  "outcome": "confirmed_reuse",
+  "summary": "Confirmed an authenticated teacher can open the Edit controller flow and save a tab-local overlay to another runtime-owned teacher profile, despite the public UI hiding its Edit button. The actual provider/runtime session and provider-owned profile remain unchanged. Own-profile editing continues to succeed; captured Sarah remains read-only.",
+  "source": {
+    "repository_head": "a156bae0873ba4207bd48d79359d96103cb74f30",
+    "repository_tree": "598c2d839b39e6dbece16dfbffbdd61407e0d78e",
+    "branch": "codex/hh-continuous-improvement",
+    "dirty_source_changes": false,
+    "sha256": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "9e5b358f5c88147924fd60b3067a916104a84503510dbf1afd905350ac7cf82e",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "30eb315392bbc032ad8f5cb12a28f3276185ca5be566bb659e586996847d0f17",
+      "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+      "checkpoint/vendor/hh/src/public-site.test.mjs": "87f74df3c31eca7388c701deb4ac1fd40ec874f9ce17c971582983124762b213",
+      "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+      "checkpoint/vendor/hh/services/fixtures.mjs": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+      "checkpoint/vendor/hh/services/index.mjs": "f7fade286781a86f5339cd1014247fdfc1307bea9de67d318c2b3140741b8838",
+      "protocol.json": "58e406095a5ae578c6703eb8d91bb8020c3b831fae30cfec849de57366d9960d",
+      "probe.mjs": "fd696819a21188a07b6c565dba6301cca3ba692fb5fea63b7fa79f367fa94d8b"
+    }
+  },
+  "commands": [
+    "node ../../hh-cycle03/H1/probe.mjs (cwd: PageRouter/checkpoint)"
+  ],
+  "smallest_bounded_fix_proposal": "Define one ownership predicate from actual loaded profile teacherId and authenticated runtime session teacherId. Use it in the UI to show owner edit controls only when both IDs are present and equal, and in both public:edit-profile and public:profile-edit controller dispatch paths before changing edit state or writing the overlay. Preserve readOnly/captured-reference rejection. This also makes an owned profile route alias editable based on actual ownership, regardless of route spelling; do not use profileId presence as ownership.",
+  "limits": [
+    "Executed only the actual volatile fixture provider, service runtime, controller, and rendered UI tree with seeded synthetic Avery/Jordan accounts plus captured Sarah.",
+    "The save is a browser/tab-local controller overlay; the fixture provider exposes no profile-update capability and its runtime snapshot remained byte-equivalent. This does not establish any production/backend authorization behavior or remote data mutation.",
+    "Rendered-tree assertions verify DOM-tree affordance state, not browser visual QA, CSS behavior, or mounted browser interaction.",
+    "No source changes or ordinary tests were run; E401 was a diagnostic reproduction only."
+  ]
+}

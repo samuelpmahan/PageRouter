@@ -1,0 +1,53 @@
+{
+  "schema": "hh-cycle04-worker-result/v1",
+  "job_id": "E606",
+  "worker": "H1",
+  "summary": "The cycle-04 evidence package is assembled with original and normalized native receipts, binary solve bundles, portable probe copies, independent H2 review, and canonical build evidence. Product source remains the exact R604-accepted freeze.",
+  "outcome": "confirmed_reuse",
+  "package": {
+    "path": "work/hh-continuous-improvement/cycle-04",
+    "manifest": "evidence/manifest.json",
+    "manifest_sha256": "44cfa61986d7cadada6b27d11e1abfec65135486d32c7672ca774cae06ac91c6",
+    "manifest_file_count": 75,
+    "manifest_excludes": [
+      "evidence/manifest.json",
+      "evidence/E606/result.json"
+    ],
+    "full_package_hash_list": "SHA256SUMS.txt (all package files other than itself)",
+    "validation": "evidence/E606/package-validation.json"
+  },
+  "sourceFreeze": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "908c4fa0aa1c0d809c804b83d680f45c2775cf1919e5244a58af769d2bb8d70f",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "d84876bb26e846bbb5a482c637a324c9a808d223b668e164204e9191abfeed9d",
+    "modifiedProductFiles": 2,
+    "sourceEditsDuringPackaging": false
+  },
+  "nativeSnapshot": {
+    "path": "evidence/native/state-at-E606-start.json",
+    "recordedStatus": "E606 running; R606 blocked",
+    "interpretation": "This is an immutable copied snapshot, not evidence of a live background worker or completion. Root owns later native-state changes."
+  },
+  "preservedEvidence": [
+    "E601 exact four-case falsifier, raw swapped-field report, explicit normalized receipt, and unmodified output",
+    "E602 H2 independent probe, original missing-summary producer report/raw receipt and normalized summary envelope",
+    "E603 H1 pre-correction directory/login/register microtask repro",
+    "E604 red and green tests, source diff, and H2 R604 accepted review with independent controlled race outputs",
+    "E605 canonical build and receipt with source inputs matching both accepted product hashes",
+    "Native spec, root-owned recorded state snapshot, all available solve JSON plus binary bundles, solve logs, receipts, normalization history, source check, and root verification",
+    "E604 TDD: original author counts remain testimony in the E604 report; packaged red log is labeled as a separate reconstructed run with its actual baseline controller hash, current test hash, and capture time.",
+    "All five packaged portable runners were smoke-tested: E601 and R604 against the reviewed candidate; E602 and E603 against a temporary path-only baseline-controller stage. Each output matched its retained evidence byte-for-byte."
+  ],
+  "limits": [
+    "No auth-form disruption was observed; this is a controller shared-state correctness correction only.",
+    "The hidden historical matches.status loading snapshot is not represented as a UI fix or redesigned.",
+    "Profile ownership, captured-reference read-only authority, and distinct school geography semantics remain unchanged.",
+    "No backend or real teacher-data claim; browser visual QA and human acceptance unverified.",
+    "No commit, push, protected-branch merge, main update, or deployment.",
+    "The packaged E604 red stdout is a reconstructed baseline/current-test run captured during E606, not the original E604 console log; its controller/test hashes and capture time are recorded."
+  ],
+  "nextSelectedHypothesis": {
+    "executed": false,
+    "statement": "A pending synthetic TeacherProfile.createProfile completion might overwrite another teacher public-profile projection after navigation.",
+    "disposition": "Source-inspected hypothesis only; runtime overlap may be prevented. H2 R606 must audit package before root authorizes any later bounded probe or publication."
+  }
+}

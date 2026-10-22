@@ -1,0 +1,4 @@
+Working directory: /workspace/scratch/8528bb251845/PageRouter
+Original first red command (preserved output): node --test --test-name-pattern='wishlist handoff|failed profile navigation clears' checkpoint/vendor/hh/src/public-controller.test.mjs
+Behavioral red command: set -o pipefail; node --test --test-name-pattern='wishlist handoff|failed profile navigation clears|confirmed wishlist destination' checkpoint/vendor/hh/src/public-controller.test.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle07/H1/E1003/behavioral-red.log
+The probe runs only controller tests backed by the in-memory synthetic fixture provider; no HTTP/browser/external links.

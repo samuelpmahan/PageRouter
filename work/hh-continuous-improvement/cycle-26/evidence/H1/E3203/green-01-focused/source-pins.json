@@ -1,0 +1,17 @@
+{
+  "job_id": "E3203",
+  "worker": "H1",
+  "attempt": "green-01-focused",
+  "repo_commit": "ce139be6b26a56736efb3f1981af3c3aa2cd8b5e",
+  "repo_tree": "8a3ca1921e69c8e34b374d0ed674489191c76d01",
+  "files": {
+    "checkpoint/vendor/hh/src/community.mjs": "9e5ce0c47acea55e4217463f099b115080faa7d1e1b412eecc9128690e6a9cc2",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "5df1e0f71385b22976951dbf2127c8ab78aeb7ddc8dad3608eb7b96850539890",
+    "checkpoint/vendor/hh/src/public-site.mjs": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d",
+    "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "checkpoint/vendor/hh/src/community.test.mjs": "6d39274f02039760a6e6fbd813f07d1f221aee1d08f21c55a81d33b78c9a6253",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "3a86fbb96948d99de2e7fa453b4654b6629b8f4d9a849b67c7f25fbaa330c218",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "fd6725f339f1ba64614f6b82c42dc8d9d14c6d3147b7c12a3e2846c8b37c8eb5"
+  },
+  "command": "node --test --test-name-pattern='projects the current teacher vote on index and detail|rendered teacher vote state follows actual index' src/community.test.mjs src/public-controller.test.mjs"
+}

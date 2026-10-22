@@ -1,0 +1,77 @@
+{
+  "job_id": "E2704",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "command": "/usr/bin/env BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+  "invocations": 1,
+  "started_utc": "2026-10-19T09:02:50Z",
+  "ended_utc": "2026-10-19T09:04:14Z",
+  "exit_code": 0,
+  "source_head": "0d52cde4f2a502b6ee0d4b188bfc3b10c376daa4",
+  "source_pins": {
+    "checkpoint/vendor/hh/src/community.mjs": {
+      "bytes": 32461,
+      "sha256": "d5f4bf9b416fd53eb66fe4d983f08865c532b9982519e73735be88a0eaf1a964"
+    },
+    "checkpoint/vendor/hh/src/public-controller.mjs": {
+      "bytes": 54288,
+      "sha256": "2ffc11a0b694d752930eb8ef93abe1d045a3811096b8ac81fc429b60a49c91e9"
+    },
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": {
+      "bytes": 115230,
+      "sha256": "88385bec51b14da0bd6f6e586e591d5198759892b4f697ce7c46517738ab2e7f"
+    }
+  },
+  "fresh_receipt": {
+    "path": "checkpoint/bazel-bin/site.receipt.json",
+    "bytes": 467223,
+    "sha256": "3be878d7807e61c7c439de1fb33aa4110efdb5c6bc2b253effb3b17e60697325",
+    "source_input_count": 1538,
+    "source_digest": "d05d706a481dd479599957ef7f89d4d73b957a16d3ff03bb2d6040e733d5a9cf",
+    "site_build_id": "27879924ebf62bd907a3653e41627667ea5f07878d5be150f7f5309036f72a51",
+    "site_digest": "24f97f2488fcd9e5edb3201a41c0cc0e6152b8d75abf030c1bd0fe4fb5c9d9ba",
+    "site_file_count": 843,
+    "pxcube": {
+      "rebuilt": true,
+      "packages": 14,
+      "relocated": false
+    },
+    "crisp_exact_compiled_equality": true,
+    "selected_source_inputs": [
+      {
+        "path": "vendor/hh/src/community.mjs",
+        "bytes": 32461,
+        "sha256": "d5f4bf9b416fd53eb66fe4d983f08865c532b9982519e73735be88a0eaf1a964"
+      },
+      {
+        "path": "vendor/hh/src/public-controller.mjs",
+        "bytes": 54288,
+        "sha256": "2ffc11a0b694d752930eb8ef93abe1d045a3811096b8ac81fc429b60a49c91e9"
+      },
+      {
+        "path": "vendor/hh/src/public-controller.test.mjs",
+        "bytes": 115230,
+        "sha256": "88385bec51b14da0bd6f6e586e591d5198759892b4f697ce7c46517738ab2e7f"
+      }
+    ]
+  },
+  "actual_site_log": {
+    "path": "checkpoint/bazel-bin/site.log",
+    "bytes": 53215,
+    "sha256": "79a70e652574ebc1572bdb197b4c7deaf0b435c5f7d30af27f13e4b5c4b4ab84"
+  },
+  "test_summary_from_actual_site_log": {
+    "targeted_hh": "145/145 pass, 0 fail, 0 skip",
+    "full_suite": "300/300 pass, 0 fail, 0 skip",
+    "built_atlas_import": "1/1 pass, 0 fail, 0 skip",
+    "overlap": "Targeted HH tests overlap with the full suite; counts are not additive."
+  },
+  "direct_streams": {
+    "stdout": "canonical-build.stdout.raw",
+    "stderr": "canonical-build.stderr.raw",
+    "stderr_bytes": 1037,
+    "qualification": "Direct command stream includes Bazel progress and a JVM deprecation warning; exit was 0."
+  },
+  "boundaries": "No browser QA, backend, email, accounts, deployment, build rerun, or Git stage/commit."
+}

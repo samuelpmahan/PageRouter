@@ -1,0 +1,31 @@
+{
+  "job_id": "E1902",
+  "worker": "H2",
+  "outcome": "insufficient_evidence",
+  "summary": "The single held-success probe reached authenticated session A and cleared the controller draft, but the rendered virtual login tree still showed newer draft B immediately after completion. The predeclared assertion stopped the run; later credential-retention and provider-count checks were not reached. No retry or source edit was made.",
+  "scope": {
+    "provider": "Volatile in-memory fixture; synthetic identities only",
+    "interaction": "Controller input and rendered virtual tree; not mounted DOM or browser",
+    "navigation": "Navigated away and reentered login before releasing the held call",
+    "observed": "Session authenticated as A; controller loginDraft became null; immediate virtual-tree projection remained B",
+    "production_or_real_account": false,
+    "PageRouter_source_or_Git_changes": false,
+    "exit_code": 1,
+    "stdout_empty": true,
+    "secret_absence_checks_completed": false,
+    "provider_count_checks_completed": false
+  },
+  "artifacts": {
+    "probe.mjs": "6b8f640b0031ee0c4c62df7baed4b360dcf912445118f594c245ec4afcea1618",
+    "run-probe.sh": "96bef8f9757ab0a6d8adfebbea5a2d962efe9493b7c15bd7cb452efcb3cf5f19",
+    "probe.stdout.raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "probe.stderr.raw": "b9609aaad22acde3bf2d50e427f47d9eb4bf96c8f5c45cc621c3cb92de0932b0",
+    "probe.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "probe.start.utc": "3228b1fd3088ae6ea413d28ff28e78a6ccfdbf08e651c11289d9727b51191252",
+    "probe.end.utc": "e0c448e53517d156d334573a8076fe26e2e413d952cf14c6c5dd7aa77c3b2819"
+  },
+  "capture_times_utc": {
+    "start": "2026-10-18T22:14:29.848993980Z",
+    "end": "2026-10-18T22:14:29.933051555Z"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "HH-cycle05-profile-create-overlap",
+    "source": "77ef66c5fd9c4050c4f474253cff19ad9e535193",
+    "scope": "Promise-controlled volatile TeacherProfile.createProfile completion across route navigation; synthetic data only",
+    "ownership": "H1 sole PageRouter source/Git owner; H2 read-only repository and scratch-owned independent review; root coordinator owns native state",
+    "actualCapacity": "Two cheap workers plus coordinator; no extra agents claimed. Source, independent review and floating/reserve intent are dependency-staged rather than three invented concurrent streams.",
+    "fit": "H1 eligible source/integration; H2 eligible independent probes/review. Native affinity is packet priority among eligible roles, not measured model quality."
+  },
+  "workers": ["H1", "H2"],
+  "review_policy": {"enabled": false},
+  "policy": {"extract_priority": 100, "review_priority": 200, "repair_priority": 300},
+  "jobs": [
+    {"id": "E701", "kind": "extract", "allow_workers": ["H1"], "subject": "Sole source owner read-only first: reproduce current selected profile-create overlap via delayed volatile provider; inspect actual runtime/route/profile and UI projection; no source changes before demonstrated defect"},
+    {"id": "E702", "kind": "extract", "allow_workers": ["H2"], "subject": "Independent read-only fixture-runtime reproduction of delayed profile creation across own/public/auth routes and rejection controls; inspect displayed teacher and authority; no repo edits"}
+  ]
+}

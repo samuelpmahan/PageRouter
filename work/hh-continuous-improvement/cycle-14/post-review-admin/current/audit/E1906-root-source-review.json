@@ -1,0 +1,16 @@
+{
+  "schema": "hh14-root-source-review/v1",
+  "scope": "Coordinator fully read the complete five E1906 preparation files before gate, syntax, staging, commit or exporter execution; source review only, not execution or publication evidence.",
+  "files": {
+    "H1/E1906/FLOW.md": "b48a362a91b446f26625144a9b4d4054c8bb83ec3cbed840972f8048e95f7efb",
+    "H1/E1906/precommit-gates-hh14.mjs": "8b78806024e76e11712a225ee58c9ae0183f9614a92bfb0e909c71384fe9d6cb",
+    "H1/E1906/prepare-export-hh14.mjs": "d33084e43f40f13404791195911ff53c6ec838e9984a9ef1a6f21ecd6eca9dcf",
+    "H1/E1906/verify-staged-allowlist-hh14.mjs": "0127a059455a8eeaf8cf790e5f04c495d57f68f40294bb80df393842e16a3ec0",
+    "H1/E1906/prospective-commands.json": "2fb883465d487b9ffbdad3c25824b3dff16277a969a89303a4c294d6f789d403"
+  },
+  "audit": {"job": "R1905", "decision": "accepted", "sha256": "b95b64ec0d5d83e9890bbdbd1c69f3b2dc5c50b11ccb269a54aa315c2de5fe07", "nativeFinish": "completed before solve epoch07"},
+  "admission": "NEW separately indexed post-review-admin/current preparation only; preserve original97 and exact product hashes. Execution remains gated on root readback of actual admin closure and final prospective plan.",
+  "limits": {"segmentJsonBytes": 60000, "indexJsonBytes": 190000},
+  "knownScratch": "Precommit script checks count21 under bounded hh-cycle13; root independent actual-Git verifier later additionally requires exact previously frozen21 names. No general dirty-tree waiver.",
+  "excludedClaims": ["No syntax or gate execution yet", "No Git stage or commit", "No exporter execution", "No remote publication", "No browser visual QA", "No deployment or main landing"]
+}

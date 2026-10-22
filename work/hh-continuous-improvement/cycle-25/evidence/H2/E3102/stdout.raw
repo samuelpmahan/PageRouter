@@ -1,0 +1,48 @@
+{
+  "probe": "E3102 actual HH community source / volatile synthetic fixture",
+  "storageStatus": "memory_only",
+  "created": {
+    "threadId": "topic-local-1",
+    "replyId": "reply-local-2",
+    "warning": "volatile_storage"
+  },
+  "reports": {
+    "topic": true,
+    "reply": true,
+    "warning": "volatile_storage"
+  },
+  "moderation": {
+    "hideReply": true,
+    "restoreReply": true,
+    "hideTopic": true,
+    "restoreTopic": true
+  },
+  "visibility": {
+    "reportedTopicVisibleToTeacherAndAnonymous": true,
+    "reportedTopicVisibleInModeratorIndex": true,
+    "hiddenTopicExcludedForTeacherAnonymousForeign": true,
+    "hiddenTopicRetainedForModerator": true,
+    "hiddenReplyOmittedForTeacherAndRetainedForModerator": true,
+    "directHiddenTopicUnavailableToTeacherAnonymous": true
+  },
+  "renderedControls": {
+    "moderatorHideRestoreTopicAndReply": true,
+    "teacherForeignModeratorActionsAbsent": true,
+    "reportedBadgesVisible": true,
+    "reportControlsDisappearAfterReport": true
+  },
+  "semantics": {
+    "reportAndModerationLocalOnly": true,
+    "restoreClearsReportMarker": true,
+    "dedicatedReportQueue": false,
+    "moderatorIndexShowsReportedTopicsButReplyRequiresOpeningTopic": true
+  },
+  "controller": {
+    "eventPathReportsTopicAndReply": true,
+    "eventPathUsesVolatileState": true,
+    "truthfulLocalFeedback": "Local forum preview updated.",
+    "teacherServiceInvocations": 0,
+    "moderatorHideEventRefreshesProjection": true
+  },
+  "assertions": "all passed"
+}

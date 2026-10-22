@@ -1,0 +1,36 @@
+{
+  "decision": "accepted",
+  "tests": {
+    "focusedShare": {
+      "passed": 3,
+      "failed": 0
+    },
+    "fullController": {
+      "passed": 49,
+      "failed": 0
+    },
+    "reviewProbeCases": 3,
+    "allAssertionsPassed": true
+  },
+  "cases": [
+    {
+      "case": "held_foreign_profile_read_clears_stale_share_before_completion",
+      "outcome": "accepted"
+    },
+    {
+      "case": "direct_route_derived_dispatch_for_pending_missing_and_captured",
+      "outcome": "accepted"
+    },
+    {
+      "case": "navigation_away_owner_and_logout_controls",
+      "outcome": "accepted"
+    }
+  ],
+  "sourceHashes": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "1150f43987bf79a5eb82936e0ee6100852f8f29388b239d14849ac08a0fbad62",
+    "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  }
+}

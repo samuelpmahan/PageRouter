@@ -1,0 +1,55 @@
+{
+  "schema": "hh-continuous-improvement-continuation/v1",
+  "cycle": "cycle-04",
+  "repository": "PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "base": {
+    "publishedCommit": "b07944d38a69ac3959bec9a54445cf4a0adbb89c",
+    "localSourceCommit": "6488c98774adb41c4bcdcec02387753c492233d8",
+    "sharedTree": "eb12130d5eadf8b854254246eca5d50a0fc54204",
+    "main": "7adf7e74a85c4310a5704a4c42808e85a1a82d71",
+    "draftPR": 8
+  },
+  "status": {
+    "candidate": "H2 R604 accepted exact two-file source freeze; canonical Bazel build passed; E606 evidence package prepared for independent R606 audit",
+    "nativeSnapshot": "The copied coordinator state records E606 running and R606 blocked at its capture point; this package does not claim a background worker completion.",
+    "humanAcceptance": "not claimed",
+    "browserVisualQA": "unverified; no screenshot or layout claim",
+    "publication": "not committed, pushed, merged, or deployed; root authorization remains required"
+  },
+  "journey": {
+    "confirmed": "E601 and independent E602 falsified the delayed public-profile shared-loading hypothesis. H1 E603 and H2 E602 independently confirmed that an abandoned local directory microtask can leave shared journey.loading true and matches.status loading after navigation. Login and registration forms remained rendered and enabled; empty dispatch reached local validation. No auth-form disruption was observed.",
+    "boundedChange": "navigate clears the prior shared journey.loading flag at route ownership handoff before starting a route-specific read. Current directory and school lookup operations set loading for their own work. Existing epoch guards prevent stale completions from changing route, results, or a newer read's loading state.",
+    "preserved": [
+      "The stale internal matches.status loading snapshot is retained as historical hidden directory state; no matches redesign or fake UI fix was added.",
+      "Authenticated profile ownership and captured read-only reference checks remain unchanged.",
+      "School state/county/district/school cascade geography remains distinct and unchanged.",
+      "No provider/backend or real teacher data operation is claimed."
+    ]
+  },
+  "sourceFreeze": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "908c4fa0aa1c0d809c804b83d680f45c2775cf1919e5244a58af769d2bb8d70f",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "d84876bb26e846bbb5a482c637a324c9a808d223b668e164204e9191abfeed9d"
+  },
+  "canonicalBuild": {
+    "command": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "workingDirectory": "checkpoint/",
+    "exitCode": 0,
+    "siteBuildId": "ee631cce67903dafd20228b5090d208fb50aaecedd0d713974ea47b9a3c75ff5",
+    "siteDigest": "d62d763c939b15a2e7ec1c2fb4c675afb91e70efa7bc7405664a514906348bb9",
+    "siteFiles": 843,
+    "targetedHHTests": {"passed": 107, "failed": 0},
+    "fullTests": {"passed": 262, "failed": 0},
+    "builtAtlasImports": {"passed": 1, "failed": 0},
+    "pxcubePackages": 14,
+    "receipt": "evidence/E605/site.receipt.json"
+  },
+  "nextSelectedHypothesis": {
+    "executed": false,
+    "statement": "A pending synthetic TeacherProfile.createProfile completion might overwrite another teacher's public-profile projection after route navigation.",
+    "sourceInspection": "The profile-create completion calls syncRuntime and then writes the new own-profile overlay into journey.profile without an explicit route-epoch guard in that branch.",
+    "nextAction": "Use a promise-controlled volatile fixture provider to determine whether the overlap is reachable and inspect the current route, profile projection, and authority before considering any source change.",
+    "constraints": ["preserve ownership checks", "preserve captured read-only authority", "preserve distinct school geography semantics", "no assumption that the defect exists"]
+  },
+  "evidenceManifest": "evidence/manifest.json"
+}

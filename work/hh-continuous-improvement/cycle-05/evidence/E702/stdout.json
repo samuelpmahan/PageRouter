@@ -1,0 +1,66 @@
+{
+  "schema": "hh-cycle05-H2-E702/profile-create-route-probe/v1",
+  "allAssertionsPassed": true,
+  "successRace": {
+    "result": {
+      "ok": true,
+      "errorCode": null
+    },
+    "routeProfileId": "demo-jordan",
+    "before": {
+      "profileName": "Demo Jordan",
+      "profileTeacherId": "demo-seed-jordan"
+    },
+    "after": {
+      "profileName": "Success Creator",
+      "profileTeacherId": "demo-teacher-1",
+      "visibleMainText": " Teacher profile Success Creator Demo Academy  Demo King, Demo Washington About the classroom Synthetic local probe. Classroom wishlist Wishlist: https://www.amazon.com/hz/wishlist/ls/DEMO-PREVIEW Prepare wishlist handoff Share profile One session-only demo profile created. This is a locally rendered profile. Changes and sharing are not sent to the public service."
+    },
+    "runtimeOwnProfileTeacherId": "demo-teacher-1"
+  },
+  "failureRace": {
+    "result": {
+      "ok": false,
+      "errorCode": "denied"
+    },
+    "routeProfileId": "demo-jordan",
+    "before": {
+      "profileName": "Demo Jordan",
+      "profileTeacherId": "demo-seed-jordan"
+    },
+    "after": {
+      "profileName": "Demo Jordan",
+      "profileTeacherId": "demo-seed-jordan",
+      "visibleMainText": " Teacher profile Demo Jordan Demo Bay School  Demo Alameda, Demo California About the classroom Synthetic arts teacher profile. Classroom wishlist Wishlist: https://www.amazon.com/hz/wishlist/ls/DEMO-JORDAN Prepare wishlist handoff Share profile The fixture provider denied this operation. This is a locally rendered profile. Changes and sharing are not sent to the public service."
+    }
+  },
+  "capturedRace": {
+    "result": {
+      "ok": true,
+      "errorCode": null
+    },
+    "routeProfileId": "reference-sarah",
+    "beforeRenderedName": "Sarah Endsley",
+    "afterRenderedName": "Success Creator",
+    "journeyProjectionAfterRelease": {
+      "source": "local-overlay",
+      "status": "present",
+      "name": "Success Creator",
+      "teacherId": "demo-teacher-1"
+    },
+    "referenceEditOk": true,
+    "referenceEditError": null,
+    "journeyProjectionAfterEdit": {
+      "source": "local-overlay",
+      "status": "present",
+      "name": "Unauthorized during completion",
+      "teacherId": "demo-teacher-1"
+    }
+  },
+  "controls": {
+    "ownProfileName": "Positive Control Owner",
+    "ownPublicProfileName": "Positive Control Owner",
+    "capturedReferenceName": "Sarah Endsley",
+    "capturedReferenceMutation": "read_only_reference"
+  }
+}

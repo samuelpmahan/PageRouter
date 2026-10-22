@@ -1,0 +1,121 @@
+{
+  "job_id": "E2301",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "One source-equivalent synthetic controller/runtime/emitted-tree run confirmed that a loaded no-match directory query can be edited and explicitly resubmitted to recover a seeded profile while retaining the selected geography. The controlled local read failure was visibly distinct and explicit retry recovered. No recovery defect was observed. The navigation tree exposes a glyph-only toggle without an explicit aria-label; browser-computed accessible name and keyboard behavior were not tested, so this remains a qualified source-level affordance observation rather than a verified accessibility defect.",
+  "execution": {
+    "command": [
+      "bash",
+      "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2301/run-once.sh"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+    "runs": 1,
+    "exit_code": 0,
+    "started_utc": "2026-10-19T03:13:24Z",
+    "ended_utc": "2026-10-19T03:13:25Z",
+    "signal": null,
+    "signal_qualification": "The shell wrapper records child exit status but does not independently instrument an OS signal; exit 0 is the observed result.",
+    "capture_qualification": "Wrapper-created start/end and stdout/stderr/exit captures are retained. Do not claim all capture file descriptors were pre-opened before process launch."
+  },
+  "source_pins_before_and_after": {
+    "HEAD": "86301f84a9b08f40b76de9b64026befe6b0081a5",
+    "tree": "c685c5267235fc460c4147592a483dd40d44d3fd",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+    "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a",
+    "unchanged": true
+  },
+  "observations": {
+    "empty_search": {
+      "query": "no-synthetic-teacher-matches-this-query",
+      "matches_status": "loaded",
+      "match_count": 0,
+      "status_text": "0 teachers",
+      "status_aria_live": "polite",
+      "results_copy": "No teachers found. Try another school or search term.",
+      "query_control": "Search by teacher, type=search, inside a closed details element (detailsOpen=false)."
+    },
+    "edit_before_submit": {
+      "typed_query": "avery",
+      "matches_remained": 0,
+      "remembered_filter_query_remained": "no-synthetic-teacher-matches-this-query",
+      "geography_retained": "Demo Washington / Demo King / Demo District / Demo Academy"
+    },
+    "recovery_submit": {
+      "query": "avery",
+      "matches_status": "loaded",
+      "match_count": 1,
+      "synthetic_profile_id": "demo-avery",
+      "rendered_heading": "Demo Avery",
+      "geography_retained": "Demo Washington / Demo King / Demo District / Demo Academy",
+      "remembered_filter_query": "avery"
+    },
+    "controlled_failure_and_retry": {
+      "failure_status": "error",
+      "failure_status_text": "Could not load results",
+      "retry_event": "public:retry",
+      "retry_status": "loaded",
+      "retry_profile_id": "demo-avery",
+      "geography_retained": "Demo Washington / Demo King / Demo District / Demo Academy"
+    },
+    "provider_reads": {
+      "setup": {
+        "SchoolData.getStates": 1,
+        "SchoolData.getCounties": 1,
+        "SchoolData.getDistricts": 1,
+        "SchoolData.getSchools": 1
+      },
+      "after_empty_search_edit_recovery_failure_retry": {
+        "SchoolData.getStates": 1,
+        "SchoolData.getCounties": 1,
+        "SchoolData.getDistricts": 1,
+        "SchoolData.getSchools": 1
+      },
+      "additional_provider_invokes_for_search_failure_retry": 0
+    },
+    "navigation_toggle_tree": {
+      "open": {
+        "tag": "button",
+        "text": "☰",
+        "explicit_aria_label": null,
+        "aria_expanded": "true",
+        "aria_controls": "hh-mobile-nav",
+        "data_event": "public:toggle-nav",
+        "mobile_nav_hidden": false,
+        "mobile_nav_label": "Account and site navigation"
+      },
+      "closed": {
+        "tag": "button",
+        "text": "☰",
+        "explicit_aria_label": null,
+        "aria_expanded": "false",
+        "aria_controls": "hh-mobile-nav",
+        "data_event": "public:toggle-nav",
+        "mobile_nav_hidden": true,
+        "mobile_nav_label": "Account and site navigation"
+      },
+      "keyboard": "No keyboard event was executed. Source inspection found app.mjs Escape-to-close/focus code, but no browser key handling or computed accessible-name result is claimed."
+    }
+  },
+  "captures": {
+    "directory": "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2301/captures/run-01",
+    "stdout": {
+      "bytes": 9116,
+      "sha256": "9c94b5c9638ae844bfb7bf211772986d0e135d5f009842baf77da4cbbbc824a7"
+    },
+    "stderr": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "start_utc_sha256": "3d6ea62a6b07b00099e289a1977ba6a4226540eaeb4aaefd8343f53f345d6886",
+    "end_utc_sha256": "9c3a0a0aa81fa8dfde03c55da28b92ed21a5a9d019f62c2c9920b8bb1d69330d",
+    "exit_code_file_sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "evidence_boundary": [
+    "Synthetic fixture controller/runtime plus pure emitted tree; form payload is reconstructed from emitted controls, not native FormData/reportValidity.",
+    "No mounted browser DOM, keyboard execution, computed accessibility tree, backend, real account, network, email, or human observation.",
+    "No source or test files were changed; no tests or build were run."
+  ]
+}

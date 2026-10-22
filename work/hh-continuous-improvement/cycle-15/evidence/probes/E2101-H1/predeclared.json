@@ -1,0 +1,46 @@
+{
+  "record": "HH15 E2101 H1 predeclared one-shot probe",
+  "authorizedBy": "root followup: Nativeepoch00 assigned H1E2101; bounded actual volatile controller/runtime/renderPublicSite TREE forgot probe",
+  "scope": {
+    "repo": "PageRouter",
+    "expectedSourceHead": "77420532395984874536d6e10373fe76970e92a4",
+    "expectedTree": "c4e04221e776e3c15c24efe804993af7146b18d3",
+    "probe": "one synthetic volatile fixture run using current createFixtureProvider/createServiceRuntime/createPublicController/renderPublicSite; initialize forgot route, inspect source-equivalent delegated email input, exercise updateDraft, route reentry, and valid/invalid/blank controller dispatch controls",
+    "artifactDirectory": "hh-cycle15/H1/E2101"
+  },
+  "preparationFindings": {
+    "appSubmit": "app.mjs delegated submit prevents default, calls form.reportValidity(), then constructs new FormData(form), projects entries, and dispatches the named event; native browser validation/FormData will not be executed in this TREE-only probe",
+    "appInput": "app.mjs delegated input listener calls controller.updateDraft(target.name, target.value) when target.name exists",
+    "forgotField": "public-site.mjs renders required type=email input named email with empty value and copy promising reset instructions by email",
+    "controller": "public-controller.mjs updateDraft currently handles email for login/register/contact, not forgot; public:forgot validates payload email, sets explicit local-simulation/no-email-sent outcome, and does not call runtime",
+    "provider": "fixture provider is the actual local fixture implementation; capabilities report realMail false; HH_PORTS is authoritative provider inventory and contains no email/reset port"
+  },
+  "expectedObservations": [
+    "Initial route is reachable as page=forgot; rendered copy, form identity, and initial fields are recorded exactly.",
+    "Calling the same updateDraft(name,value) operation used by the delegated input listener returns false for the forgot email field. Because false does not notify/rerender, the captured TREE may still be the original emitted blank tree; do not treat that as an observation of a mounted typed DOM value.",
+    "After leaving for login and re-entering via forgot-password alias, capture the newly emitted TREE default. Any retention behavior is reported as observed only, not presumed defective.",
+    "A valid synthetic .test email dispatch returns the existing local-only/no-email-sent result; malformed and blank direct-controller controls are recorded separately.",
+    "Per-port fixture invocation counts and runtime receipt/Part deltas are measured from the post-initialization baseline, so initialization reads are not misattributed to forgot submit.",
+    "Volatile fixture state and storage capabilities are recorded; no email value is expected to enter runtime state, PxC Parts, provider persistence, or storage."
+  ],
+  "falsifiersAndInterpretation": {
+    "copyCapabilityHypothesisFalsifiedIf": "current rendered copy accurately says no reset email is sent or a real email/reset provider capability exists and the valid forgot action actually invokes it (must still remain local-only unless separately authorized)",
+    "retention": "missing retained email alone is not classified as unacceptable; report accepted/rejected updateDraft, TREE values, and reentry outcome separately",
+    "notAProductAssertion": "This probe records reachable synthetic behavior, not browser-native required/email validity, mounted DOM behavior, real backend capability, production service behavior, or human acceptance."
+  },
+  "controls": {
+    "validSyntheticEmail": "hh15-probe@example.test",
+    "invalidEmail": "not-an-email",
+    "blankEmail": "",
+    "executionCount": 1,
+    "retryPolicy": "STOP on the first execution/probe failure; no automated retry and no overwrite of original captures",
+    "externalEffects": "No network, email, backend, account, production authority, mounted browser, native FormData/reportValidity execution, product edit, Git mutation, or native registry/state mutation."
+  },
+  "outputPolicy": {
+    "stdout": "stdout.raw",
+    "stderr": "stderr.raw",
+    "exit": "exit.code",
+    "source": "probe.mjs and run-once.sh are saved before the first execution; original raw captures are immutable after execution.",
+    "red": "If an expected-defect assertion is introduced and it fails, stop and report reached/unreached checks without repair or rerun. The probe records observations rather than asserting product expectations."
+  }
+}

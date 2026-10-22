@@ -1,0 +1,60 @@
+{
+  "schema": "hh-continuous-improvement-continuation/v1",
+  "cycle": "cycle-10",
+  "repository": "PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "base": {
+    "localSourceCommit": "9853c03e1f7458526528d2b350b8bad0c5e3c990",
+    "localSourceTree": "3e23395038495c7e1ff025ce885b91d9201025d8",
+    "publishedBranchBreadcrumb": "dfef8eec126e3e0eb9f1aa3f3a1f9c950408d568",
+    "main": "7adf7e74a85c4310a5704a4c42808e85a1a82d71",
+    "provenance": "These are the cycle's recorded source identities; no new remote fetch is claimed."
+  },
+  "ownership": {
+    "sourceAndGit": "H1 is sole source/Git owner; no commit or push in this package.",
+    "independentPackageReview": "R1406 is pending H2 read-only audit at the captured epoch-07 state.",
+    "coordination": "root"
+  },
+  "candidate": {
+    "changedProductFiles": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "controllerSha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "testSha256": "dfe05ff98c859f926c839d8b0e5bffbd17c96e58444400d6e108744e8111e389",
+    "exactSourceBuild": {
+      "siteBuildId": "8166fe07df91c79fb3dd8d0ddcc659a4d9aa756379e81e07861f5ced46dbb2e8",
+      "siteDigest": "65eab878c780aa48c9e0915cad8280afecb5a8b80cbf4d17d1b201fab836396c",
+      "receiptSha256": "99eb0d566822d87552ec9d9df178a14cb64f27ec15d9f4704c764b7cff576ea7"
+    }
+  },
+  "status": {
+    "sourceFinding": "Fixture/controller/render-tree registration failures erased non-secret identity; first correction missed a navigation-away/back case; bounded re-entry repair is accepted by H2 R1405 on the exact hashes.",
+    "review": "R1403 remains AMEND and is retained as a counterexample; R1405 is accepted with result SHA-256 055f24470d7713fca1f16bc6bbabe2b464b79130c89a027979b93f290ad588a9.",
+    "build": "Canonical source build passed. Counts are reported separately: build-helper 2/2, targeted HH 129/129, full npm 284/284, Atlas closure 1/1. These sets overlap; 416 is arithmetic sum, not distinct test count.",
+    "nativeHistory": "Original E1404 worker result is unchanged with outcome fresh_source_build; native receipt was separately normalized to mixed_change after an actual unknown-outcome finish rejection. Epoch 06 had H1 pinned to E1404 and empty dispatch; premature E1406 start was rejected with no worker dispatch; epoch 07 then actually dispatched E1406. See the command/provenance errata and native solve/state artifacts.",
+    "packageAudit": "Pending R1406; manifest must be independently audited before any separately indexed final-review/admin append.",
+    "commit": "not created",
+    "publication": "not pushed, merged, deployed, or visually reviewed",
+    "browser": "current connection unverified; originating-context request refused; zero screenshots",
+    "humanAcceptance": "not claimed",
+    "backend": "not exercised"
+  },
+  "next": {
+    "proposal": "Check whether a known or unknown registration failure completed after navigation to /login leaves stale registration feedback on the current login form.",
+    "state": "Unexecuted and not natively admitted; this is not a defect claim.",
+    "guard": "Freshly verify source/reachability and probe before any correction. Feedback may be acceptable global status.",
+    "controls": [
+      "Hold known transport_failure and outcome_unknown until /login is current.",
+      "Include same-route existing-error control.",
+      "Observe actual route/form/projection authority, feedback and retry/write count.",
+      "Keep credentials ephemeral and absent from retained surfaces/output."
+    ],
+    "execution": "Await root native assignment before probe; no product edits under this proposal."
+  },
+  "evidence": {
+    "manifest": "evidence/manifest.json",
+    "nativeSnapshot": "evidence/native/state-at-E1406-start.json",
+    "limits": "Fixture/controller/render-tree only; no mounted browser, production backend, human acceptance, or Python runtime claims."
+  }
+}

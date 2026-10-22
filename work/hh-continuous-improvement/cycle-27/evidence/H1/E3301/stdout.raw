@@ -1,0 +1,71 @@
+{
+  "fixture": {
+    "provider": "createFixtureProvider({fixture:true, storage:null})",
+    "runtime": "createServiceRuntime(provider)",
+    "storage": null
+  },
+  "receiptBaselineAfterInitialize": {
+    "count": 2,
+    "kinds": [
+      null,
+      null
+    ]
+  },
+  "author": {
+    "personaId": "demo-teacher",
+    "topicId": "topic-local-1",
+    "ownership": "confirmed"
+  },
+  "renderedDeleteAction": {
+    "event": "forum-delete-post",
+    "payload": {
+      "postId": "topic-local-1",
+      "threadId": "topic-local-1"
+    }
+  },
+  "afterDelete": {
+    "route": {
+      "page": "community",
+      "path": "/posts/topic-local-1",
+      "communityRoute": {
+        "page": "post",
+        "threadId": "topic-local-1"
+      }
+    },
+    "message": "Local forum preview updated.",
+    "detailText": "Skip to content  Home Donate Sign Up About Contact Partners ☰ Home Donate Sign Up About Contact Partners Login Discussion Detail  ← Back to Forum Error: This conversation is unavailable in this local preview. © 2024 Homeroom Heroes. All rights reserved. Local preview controls Synthetic data only. Changes stay in this tab; no live service is connected. Simulated preview role Visitor Teacher Moderator Category All Classroom Resources Questions Community Export forum data",
+    "ownTopicStillInIndexData": false,
+    "receipts": 2
+  },
+  "afterBack": {
+    "route": {
+      "page": "community",
+      "path": "/forum",
+      "communityRoute": {
+        "page": "forum"
+      }
+    },
+    "query": "E3301 volatile delete recovery",
+    "category": "All",
+    "sort": "date-newest",
+    "emptyText": "No discussions found Try a different keyword!",
+    "indexTopicCards": 0,
+    "message": "Local forum preview updated."
+  },
+  "afterClear": {
+    "route": {
+      "page": "community",
+      "path": "/forum",
+      "communityRoute": {
+        "page": "forum"
+      }
+    },
+    "query": "",
+    "category": "All",
+    "topicCards": 3,
+    "deletedTopicPresent": false,
+    "emptyText": "",
+    "receipts": 2
+  },
+  "outcome": "Delete succeeds. Controller remains on deleted detail route; that route renders unavailable fallback plus Back to Forum. Returning preserves the matching search filter and shows the empty state; Clear search recovers the seeded index. No missing renderer/control or unreachable recovery was observed."
+}

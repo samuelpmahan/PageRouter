@@ -1,0 +1,102 @@
+{
+  "job_id": "R2105",
+  "worker": "H2",
+  "audit_type": "independent_file_only_package_audit",
+  "package": "/workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-15",
+  "manifest": {
+    "path": "evidence/manifest.json",
+    "sha256": "ef30d3251b256aba162ebbf2fd50b6367cff6816b04d27e37e6c3ef268c4f914",
+    "listed_payloads": 105,
+    "excluded_envelopes": ["evidence/manifest.json", "evidence/E2105/result.json"],
+    "actual_regular_files_including_envelopes": 107,
+    "actual_manifest_and_result_sha256": {
+      "evidence/manifest.json": "ef30d3251b256aba162ebbf2fd50b6367cff6816b04d27e37e6c3ef268c4f914",
+      "evidence/E2105/result.json": "5b22f485243c0f981b8e5bb0043fb478d22c706d9c8ea8f6c2104eaf173c5022"
+    },
+    "path_set": {"missing": 0, "extra": 0, "duplicate_manifest_paths": 0, "symlinks_or_nonregular": 0},
+    "payload_verification": {"byte_length_mismatches": 0, "sha256_mismatches": 0, "mode_mismatches": 0}
+  },
+  "canonical_e2102_copies": {
+    "files_checked": 6,
+    "comparisons": [
+      "Each package copy was compared byte-for-byte and mode-for-mode with root-owned E2102-ORIGINAL-CAPTURES and the six preserved originals under PageRouter/hh-cycle15/H2/E2102/.",
+      "All 12 counterpart comparisons matched; package copy names retain probe.mjs as inert probe.mjs.txt.",
+      "stderr.log is zero bytes in all three locations with SHA-256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855."
+    ],
+    "preserved_originals_changed": false
+  },
+  "source_bindings": {
+    "frozen_source_hashes_match_manifest_and_checkout": true,
+    "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a",
+    "unchanged_sources_match_checkout_and_E2104_receipt": {
+      "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+      "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164",
+      "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+      "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+    },
+    "E2104_source_inputs": {"count": 1538, "unique_paths": 1538, "missing_or_byte_hash_mismatches": 0,
+      "recomputed_digest": "5877a1d6685dcb25d8f2e614217d6c70da2a09fe07cabdf56e7c34a5f639ed75"}
+  },
+  "E2104_build_binding": {
+    "receipt": {
+      "path": "evidence/build/E2104-H1/bazel-output/site.receipt.json",
+      "bytes": 467223,
+      "mode": "0555",
+      "sha256": "ceade7f38e472a182c43ce9f31ed933ac0643bb4bfa2acb214e01dfbe7876203"
+    },
+    "log": {
+      "path": "evidence/build/E2104-H1/bazel-output/site.log",
+      "bytes": 51203,
+      "mode": "0555",
+      "sha256": "b1e4b5c30f7d196a7f5e7a9e36b5972626fe90bb26d3d1e8d0d5f6e39db04338"
+    },
+    "site_file_list": {"entries": 843, "unique_paths": 843, "invalid_digest_rows": 0,
+      "recomputed_aggregate_digest_from_receipt_entries": "72970ad3b9663f24f1acae43e54c3d38926f4b65f6bfa5702340f108d47bd5c7"},
+    "site_build_id": "354979f0d61832de23c74cd99a99305498804b797f25b61ea76ebc4a322ec17c",
+    "counts_from_actual_E2104_result_and_captured_streams": {
+      "helpers": "2/2",
+      "targeted_HH": "135/135",
+      "full_suite": "290/290",
+      "Atlas_import_closure": "1/1",
+      "PxCube_packages": 14,
+      "count_qualification": "Targeted HH 135 is included in full suite 290; these counts are not additive."
+    },
+    "raw_outcome_qualification": "Actual E2104 worker result remains outcome=completed. Its separate root receipt/envelope is byte-identical and uses mixed_change; this is a schema qualification, not an actual native finish rejection/event.",
+    "site_tree_limit": "Only receipt/log were retained; the package excludes the site tree. The 843 rows and aggregate digest were independently parsed/recomputed from the receipt, but the 843 output file bytes were not independently rehashed from a retained site tree."
+  },
+  "native_records": {
+    "epochs_00_to_04": {"all_five_solve_records_bundles_and_root_commands_present_and_manifest_verified": true,
+      "epoch_00_assignment": {"H1": "E2101", "H2": "E2102"},
+      "epoch_01_assignment": {"H1": "E2103", "H2": "BENCH"},
+      "epoch_02_assignment": {"H1": "BENCH", "H2": "R2103"},
+      "epoch_03_assignment": {"H1": "E2104", "H2": "BENCH"},
+      "epoch_04_assignment": {"H1": "E2105", "H2": "BENCH"}},
+    "receipt_root_envelope_pairs": {"E2101": "byte-identical; both mixed_change", "E2102": "byte-identical; both mixed_change", "E2104": "byte-identical; both mixed_change"},
+    "captured_not_live": {
+      "ROOT-CURRENT.json": "Its own metadata is stateCounter 1 / acceptedEpoch 0 and lists E2101/E2102 as started; this is an older copied snapshot, not current live worker ownership.",
+      "state.json": "Its copied epoch is 5 and records E2105 as running at capture; this predates E2105 packaging completion and is not a live status assertion.",
+      "qualification": "Native solve/registry/state files are preserved time-bounded phase records. No native state transition was performed by H2."
+    }
+  },
+  "empty_captures": {
+    "zero_byte_payload_count": 8,
+    "all_zero_byte_entries_match_manifest_hash_and_mode": true
+  },
+  "limitations": [
+    "This was a file-only audit. No archived script/test/build/probe/browser/DOM/backend/email/Git/native/Lab operation was run.",
+    "No site tree was retained, so output file bytes beyond the receipt's per-file digest inventory could not be independently recalculated.",
+    "Native files and E2105 worker result capture bounded historical state; they do not claim current native ownership/state or human/release acceptance.",
+    "No manifest inventory threshold waiver or package repair was used."
+  ],
+  "raw_audit_capture": {
+    "path": "/workspace/scratch/8528bb251845/hh-cycle15/H2/R2105/audit.stdout.raw",
+    "bytes": 19099,
+    "sha256": "74cf90be64a801a7cf88f84faa13728908e386f3b17d64a3b2f40b4ad3ecea76",
+    "exit_code": 0,
+    "stderr_bytes": 0,
+    "start_utc": "2026-10-19T00:01:09Z",
+    "end_utc": "2026-10-19T00:01:09Z"
+  }
+}

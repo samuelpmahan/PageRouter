@@ -1,0 +1,18 @@
+{
+  "schema": "hh16-conditional-policy@2",
+  "actual": {
+    "E2201_E2202": "Independent one-shot probes falsified the presumed local-profile persistence defect; existing disclosure and local-only behavior agree.",
+    "E2203": "One missing lifecycle regression added, expected first-pass; actual full controller file 61/61 passed. No product behavior change or manufactured RED.",
+    "R2203": "Independent source review plus one focused run assigned and pending.",
+    "E2204_phase1": "Build capture SOURCE CONSTRUCTION only, independently eligible while R2203 runs; not execution readiness."
+  },
+  "guards": [
+    {"if": "R2203 accepted and root fully reads exact prospective/wrapper", "then": "E2204 same-pin phase2 ONE canonical build GO"},
+    {"if": "R2203 amend/rejected", "then": "H1 diagnosis/minimal test repair with separate review; no canonical build yet"},
+    {"if": "Canonical build passes and exact source/build bindings verified", "then": "Lean evidence package and independent file-only audit"},
+    {"if": "Package independently accepted and root reads exact precommit plan", "then": "One own-branch commit, actual Git transport verification and connected PR8 candidate"},
+    {"if": "Any execution failure", "then": "Retain first original result; diagnose changed source/failure before any new packet, no blind retry"}
+  ],
+  "scope": "Tests protect existing user-visible local-preview contract; runtime/provider/controller/site production source unchanged. Browser/backend/human/main/deploy acceptance not claimed.",
+  "separateLab": "Frozen discovery-cycle07 original source must not be mutated. Lab canonical native state lives outside at discovery-cycle07-checkpoint-admission/control."
+}

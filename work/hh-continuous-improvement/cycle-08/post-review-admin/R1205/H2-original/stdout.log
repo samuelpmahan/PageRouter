@@ -1,0 +1,302 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Loading profile/. Input:
+
+"import assert from 'node:assert/strict';\n" +
+  "import {createFixtureProvider} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/services/fixture-provider.mjs';\n" +
+  "import {createServiceRuntime} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/services/runtime.mjs';\n" +
+  "import {createPublicController} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';\n" +
+  "import {renderPublicSite} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.mjs';\n" +
+  '\n' +
+  'const evidence = {\n' +
+  "  job_id: 'E1201', worker: 'H1',\n" +
+  "  environment: {provider: 'fixture', fixture: true, productionAuthority: false, persistence: 'volatile-memory', httpCalls: 0, browserOpened: false, externalActions: 0},\n" +
+  '  assertions: [], cases: {},\n' +
+  '};\n' +
+  'function elements(node, found = []) {\n' +
+  "  if (!node || typeof node !== 'object') return found;\n" +
+  '  found.push(node);\n' +
+  '  for (const child of node.children || []) elements(child, found);\n' +
+  '  return found;\n' +
+  '}\n' +
+  'function view(controller) {\n' +
+  '  const s = controller.state, root = renderPublicSite({route: s.route, state: s, journey: s.journey, community: s.community});\n' +
+  '  const nodes = elements(root);\n' +
+  "  const routeField = nodes.find(n => n.attrs?.id === 'hh-share-route');\n" +
+  '  return {\n' +
+  "    page: root.attrs?.['data-public-page'], route: structuredClone(controller.route),\n" +
+  '    profile: s.journey.profile.value ? {id: s.journey.profile.value.id, name: s.journey.profile.value.name, readOnly: !!s.journey.profile.value.readOnly} : null,\n' +
+  '    profileStatus: s.journey.profile.status, share: structuredClone(s.journey.share),\n' +
+  '    shareRouteField: routeField ? {tag: routeField.tag, value: routeField.attrs?.value, readonly: routeField.attrs?.readonly} : null,\n' +
+  "    h1: nodes.filter(n => n.tag === 'h1').map(n => (n.children || []).filter(x => typeof x === 'string').join('')),\n" +
+  "    anchors: nodes.filter(n => n.tag === 'a').map(n => ({id: n.attrs?.id || null, href: n.attrs?.href || null})),\n" +
+  "    buttons: nodes.filter(n => n.tag === 'button').map(n => ({id: n.attrs?.id || null, event: n.attrs?.['data-event'] || null})),\n" +
+  '  };\n' +
+  '}\n' +
+  'function fixtureRuntime({holdJordan = false} = {}) {\n' +
+  '  const base = createFixtureProvider({fixture: true});\n' +
+  '  const calls = [];\n' +
+  '  let releaseJordan, startedJordan;\n' +
+  '  const jordanStarted = new Promise(resolve => { startedJordan = resolve; });\n' +
+  '  const jordanGate = new Promise(resolve => { releaseJordan = resolve; });\n' +
+  '  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {\n' +
+  '    calls.push({port, profileId: input?.profileId || null});\n' +
+  "    if (holdJordan && port === 'TeacherProfile.openPublicProfile' && input?.profileId === 'demo-jordan') {\n" +
+  '      startedJordan(); await jordanGate;\n' +
+  '    }\n' +
+  '    return invoke(input);\n' +
+  '  }]));\n' +
+  '  return {runtime: createServiceRuntime({...base, services}), calls, jordanStarted, releaseJordan};\n' +
+  '}\n' +
+  'async function preparedAvery({holdJordan = false} = {}) {\n' +
+  '  const env = fixtureRuntime({holdJordan});\n' +
+  '  const controller = createPublicController({runtime: env.runtime});\n' +
+  "  await controller.initialize('#/');\n" +
+  "  await controller.navigate('#/public-profile/demo-avery');\n" +
+  "  assert.equal(controller.state.journey.profile.value?.id, 'demo-avery');\n" +
+  "  const share = await controller.dispatch('public:share');\n" +
+  '  assert.equal(share.ok, true);\n' +
+  "  assert.equal(share.share.url, '#/public-profile/demo-avery');\n" +
+  '  return {...env, controller};\n' +
+  '}\n' +
+  'function capture(name, controller, extra = {}) { evidence.cases[name] = {...view(controller), ...extra}; }\n' +
+  '\n' +
+  '// Main finding: the actual provider read is held while route and UI tree are observable.\n' +
+  '{\n' +
+  '  const env = await preparedAvery({holdJordan: true});\n' +
+  '  const c = env.controller;\n' +
+  "  capture('prepared_avery', c);\n" +
+  "  const pending = c.navigate('#/public-profile/demo-jordan');\n" +
+  '  await env.jordanStarted;\n' +
+  "  assert.equal(c.route.profileId, 'demo-jordan');\n" +
+  "  assert.equal(c.state.journey.profile.status, 'loading');\n" +
+  "  capture('jordan_provider_read_held', c, {providerReadHeld: true});\n" +
+  '  env.releaseJordan();\n' +
+  '  await pending;\n' +
+  "  assert.equal(c.state.journey.profile.value?.id, 'demo-jordan');\n" +
+  '  const loaded = view(c);\n' +
+  "  assert.equal(loaded.shareRouteField?.value, '#/public-profile/demo-avery');\n" +
+  "  assert.equal(c.state.journey.share.url, '#/public-profile/demo-avery');\n" +
+  "  capture('jordan_loaded_stale_share_route', c);\n" +
+  "  const forged = await c.dispatch('public:share', {profileId: 'demo-avery', id: 'demo-avery', url: '#/public-profile/demo-avery'});\n" +
+  '  assert.equal(forged.ok, true);\n' +
+  "  assert.equal(forged.share.url, '#/public-profile/demo-jordan');\n" +
+  "  assert.equal(view(c).shareRouteField?.value, '#/public-profile/demo-jordan');\n" +
+  "  evidence.cases.fresh_jordan_dispatch_ignores_forged_payload = {dispatchedPayload: {profileId: 'demo-avery', id: 'demo-avery', url: '#/public-profile/demo-avery'}, dispatchResult: forged, rendered: view(c)};\n" +
+  "  evidence.assertions.push('Actual synthetic route change leaves the prior Avery share route in both journey state and the rendered read-only share-route field while Jordan is loaded; explicit dispatch on Jordan refreshes to Jordan and ignores forged payload identity fields.');\n" +
+  '  evidence.cases.provider_calls = env.calls;\n' +
+  '}\n' +
+  '\n' +
+  "// Same profile alias is identity-preserving: a prepared share remains correct on Avery's alias.\n" +
+  '{\n' +
+  '  const {controller: c} = await preparedAvery();\n' +
+  "  await c.navigate('#/teachers/demo-avery');\n" +
+  "  assert.equal(c.state.journey.profile.value?.id, 'demo-avery');\n" +
+  "  assert.equal(view(c).shareRouteField?.value, '#/public-profile/demo-avery');\n" +
+  "  capture('same_profile_alias_positive_control', c);\n" +
+  "  evidence.assertions.push('Same-profile alias retains the matching Avery route.');\n" +
+  '}\n' +
+  '\n' +
+  '// Captured Sarah is served by the static read-only renderer, not the synthetic provider.\n' +
+  '{\n' +
+  '  const env = await preparedAvery(); const c = env.controller; const before = env.calls.length;\n' +
+  "  await c.navigate('#/public-profile/reference-sarah');\n" +
+  "  assert.equal(c.state.journey.profile.source, 'captured-readonly');\n" +
+  '  assert.equal(env.calls.length, before);\n' +
+  "  assert.equal(view(c).page, 'profile');\n" +
+  '  assert.equal(view(c).shareRouteField, null);\n' +
+  "  capture('captured_sarah_readonly_priority', c, {providerCallsDuringNavigation: env.calls.length - before});\n" +
+  "  evidence.assertions.push('Captured Sarah route uses the separate read-only renderer and does not inherit the synthetic share-route field or invoke the provider.');\n" +
+  '}\n' +
+  '\n' +
+  '// Missing profile has no stale public-profile page, but the controller retains share state.\n' +
+  '{\n' +
+  '  const {controller: c} = await preparedAvery();\n' +
+  "  await c.navigate('#/public-profile/demo-missing');\n" +
+  "  assert.equal(c.state.journey.profile.status, 'error');\n" +
+  '  assert.equal(view(c).shareRouteField, null);\n' +
+  "  capture('missing_profile', c);\n" +
+  "  evidence.assertions.push('Missing-profile result is unavailable and renders no share-route field on the error state.');\n" +
+  '}\n' +
+  '\n' +
+  '// Pending provider read preserves the stale field until route resolution, then still displays it on Jordan.\n' +
+  '{\n' +
+  '  const env = await preparedAvery({holdJordan: true}); const c = env.controller;\n' +
+  "  const pending = c.navigate('#/public-profile/demo-jordan'); await env.jordanStarted;\n" +
+  "  assert.equal(view(c).profileStatus, 'loading');\n" +
+  "  assert.equal(view(c).shareRouteField?.value, '#/public-profile/demo-avery');\n" +
+  "  capture('pending_read_while_stale_field_visible', c, {providerReadHeld: true});\n" +
+  '  env.releaseJordan(); await pending;\n' +
+  "  assert.equal(view(c).shareRouteField?.value, '#/public-profile/demo-avery');\n" +
+  "  capture('pending_read_resolved_jordan_still_stale', c);\n" +
+  "  evidence.assertions.push('The stale share field is visible during the held route read and remains Avery after Jordan resolves.');\n" +
+  '}\n' +
+  '\n' +
+  '// Anonymous supporter compatibility: no session is needed to prepare a local share of a viewed profile.\n' +
+  '{\n' +
+  '  const env = fixtureRuntime(); const c = createPublicController({runtime: env.runtime});\n' +
+  "  await c.initialize('#/'); await c.navigate('#/public-profile/demo-avery');\n" +
+  "  assert.equal(c.state.journey.session.status, 'anonymous');\n" +
+  "  const share = await c.dispatch('public:share');\n" +
+  '  assert.equal(share.ok, true);\n' +
+  "  assert.equal(share.share.url, '#/public-profile/demo-avery');\n" +
+  "  capture('anonymous_supporter_share', c);\n" +
+  "  evidence.assertions.push('Anonymous supporter can prepare the local route for the viewed synthetic profile.');\n" +
+  '}\n' +
+  '\n' +
+  'console.log(JSON.stringify(evidence, null, 2));\n'
+
+    at file:///workspace/scratch/8528bb251845/hh-cycle08/H2/R1205/audit.mjs:106:8 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: "import assert from 'node:assert/strict';\n" +
+    "import {createFixtureProvider} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/services/fixture-provider.mjs';\n" +
+    "import {createServiceRuntime} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/services/runtime.mjs';\n" +
+    "import {createPublicController} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';\n" +
+    "import {renderPublicSite} from '/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.mjs';\n" +
+    '\n' +
+    'const evidence = {\n' +
+    "  job_id: 'E1201', worker: 'H1',\n" +
+    "  environment: {provider: 'fixture', fixture: true, productionAuthority: false, persistence: 'volatile-memory', httpCalls: 0, browserOpened: false, externalActions: 0},\n" +
+    '  assertions: [], cases: {},\n' +
+    '};\n' +
+    'function elements(node, found = []) {\n' +
+    "  if (!node || typeof node !== 'object') return found;\n" +
+    '  found.push(node);\n' +
+    '  for (const child of node.children || []) elements(child, found);\n' +
+    '  return found;\n' +
+    '}\n' +
+    'function view(controller) {\n' +
+    '  const s = controller.state, root = renderPublicSite({route: s.route, state: s, journey: s.journey, community: s.community});\n' +
+    '  const nodes = elements(root);\n' +
+    "  const routeField = nodes.find(n => n.attrs?.id === 'hh-share-route');\n" +
+    '  return {\n' +
+    "    page: root.attrs?.['data-public-page'], route: structuredClone(controller.route),\n" +
+    '    profile: s.journey.profile.value ? {id: s.journey.profile.value.id, name: s.journey.profile.value.name, readOnly: !!s.journey.profile.value.readOnly} : null,\n' +
+    '    profileStatus: s.journey.profile.status, share: structuredClone(s.journey.share),\n' +
+    '    shareRouteField: routeField ? {tag: routeField.tag, value: routeField.attrs?.value, readonly: routeField.attrs?.readonly} : null,\n' +
+    "    h1: nodes.filter(n => n.tag === 'h1').map(n => (n.children || []).filter(x => typeof x === 'string').join('')),\n" +
+    "    anchors: nodes.filter(n => n.tag === 'a').map(n => ({id: n.attrs?.id || null, href: n.attrs?.href || null})),\n" +
+    "    buttons: nodes.filter(n => n.tag === 'button').map(n => ({id: n.attrs?.id || null, event: n.attrs?.['data-event'] || null})),\n" +
+    '  };\n' +
+    '}\n' +
+    'function fixtureRuntime({holdJordan = false} = {}) {\n' +
+    '  const base = createFixtureProvider({fixture: true});\n' +
+    '  const calls = [];\n' +
+    '  let releaseJordan, startedJordan;\n' +
+    '  const jordanStarted = new Promise(resolve => { startedJordan = resolve; });\n' +
+    '  const jordanGate = new Promise(resolve => { releaseJordan = resolve; });\n' +
+    '  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {\n' +
+    '    calls.push({port, profileId: input?.profileId || null});\n' +
+    "    if (holdJordan && port === 'TeacherProfile.openPublicProfile' && input?.profileId === 'demo-jordan') {\n" +
+    '      startedJordan(); await jordanGate;\n' +
+    '    }\n' +
+    '    return invoke(input);\n' +
+    '  }]));\n' +
+    '  return {runtime: createServiceRuntime({...base, services}), calls, jordanStarted, releaseJordan};\n' +
+    '}\n' +
+    'async function preparedAvery({holdJordan = false} = {}) {\n' +
+    '  const env = fixtureRuntime({holdJordan});\n' +
+    '  const controller = createPublicController({runtime: env.runtime});\n' +
+    "  await controller.initialize('#/');\n" +
+    "  await controller.navigate('#/public-profile/demo-avery');\n" +
+    "  assert.equal(controller.state.journey.profile.value?.id, 'demo-avery');\n" +
+    "  const share = await controller.dispatch('public:share');\n" +
+    '  assert.equal(share.ok, true);\n' +
+    "  assert.equal(share.share.url, '#/public-profile/demo-avery');\n" +
+    '  return {...env, controller};\n' +
+    '}\n' +
+    'function capture(name, controller, extra = {}) { evidence.cases[name] = {...view(controller), ...extra}; }\n' +
+    '\n' +
+    '// Main finding: the actual provider read is held while route and UI tree are observable.\n' +
+    '{\n' +
+    '  const env = await preparedAvery({holdJordan: true});\n' +
+    '  const c = env.controller;\n' +
+    "  capture('prepared_avery', c);\n" +
+    "  const pending = c.navigate('#/public-profile/demo-jordan');\n" +
+    '  await env.jordanStarted;\n' +
+    "  assert.equal(c.route.profileId, 'demo-jordan');\n" +
+    "  assert.equal(c.state.journey.profile.status, 'loading');\n" +
+    "  capture('jordan_provider_read_held', c, {providerReadHeld: true});\n" +
+    '  env.releaseJordan();\n' +
+    '  await pending;\n' +
+    "  assert.equal(c.state.journey.profile.value?.id, 'demo-jordan');\n" +
+    '  const loaded = view(c);\n' +
+    "  assert.equal(loaded.shareRouteField?.value, '#/public-profile/demo-avery');\n" +
+    "  assert.equal(c.state.journey.share.url, '#/public-profile/demo-avery');\n" +
+    "  capture('jordan_loaded_stale_share_route', c);\n" +
+    "  const forged = await c.dispatch('public:share', {profileId: 'demo-avery', id: 'demo-avery', url: '#/public-profile/demo-avery'});\n" +
+    '  assert.equal(forged.ok, true);\n' +
+    "  assert.equal(forged.share.url, '#/public-profile/demo-jordan');\n" +
+    "  assert.equal(view(c).shareRouteField?.value, '#/public-profile/demo-jordan');\n" +
+    "  evidence.cases.fresh_jordan_dispatch_ignores_forged_payload = {dispatchedPayload: {profileId: 'demo-avery', id: 'demo-avery', url: '#/public-profile/demo-avery'}, dispatchResult: forged, rendered: view(c)};\n" +
+    "  evidence.assertions.push('Actual synthetic route change leaves the prior Avery share route in both journey state and the rendered read-only share-route field while Jordan is loaded; explicit dispatch on Jordan refreshes to Jordan and ignores forged payload identity fields.');\n" +
+    '  evidence.cases.provider_calls = env.calls;\n' +
+    '}\n' +
+    '\n' +
+    "// Same profile alias is identity-preserving: a prepared share remains correct on Avery's alias.\n" +
+    '{\n' +
+    '  const {controller: c} = await preparedAvery();\n' +
+    "  await c.navigate('#/teachers/demo-avery');\n" +
+    "  assert.equal(c.state.journey.profile.value?.id, 'demo-avery');\n" +
+    "  assert.equal(view(c).shareRouteField?.value, '#/public-profile/demo-avery');\n" +
+    "  capture('same_profile_alias_positive_control', c);\n" +
+    "  evidence.assertions.push('Same-profile alias retains the matching Avery route.');\n" +
+    '}\n' +
+    '\n' +
+    '// Captured Sarah is served by the static read-only renderer, not the synthetic provider.\n' +
+    '{\n' +
+    '  const env = await preparedAvery(); const c = env.controller; const before = env.calls.length;\n' +
+    "  await c.navigate('#/public-profile/reference-sarah');\n" +
+    "  assert.equal(c.state.journey.profile.source, 'captured-readonly');\n" +
+    '  assert.equal(env.calls.length, before);\n' +
+    "  assert.equal(view(c).page, 'profile');\n" +
+    '  assert.equal(view(c).shareRouteField, null);\n' +
+    "  capture('captured_sarah_readonly_priority', c, {providerCallsDuringNavigation: env.calls.length - before});\n" +
+    "  evidence.assertions.push('Captured Sarah route uses the separate read-only renderer and does not inherit the synthetic share-route field or invoke the provider.');\n" +
+    '}\n' +
+    '\n' +
+    '// Missing profile has no stale public-profile page, but the controller retains share state.\n' +
+    '{\n' +
+    '  const {controller: c} = await preparedAvery();\n' +
+    "  await c.navigate('#/public-profile/demo-missing');\n" +
+    "  assert.equal(c.state.journey.profile.status, 'error');\n" +
+    '  assert.equal(view(c).shareRouteField, null);\n' +
+    "  capture('missing_profile', c);\n" +
+    "  evidence.assertions.push('Missing-profile result is unavailable and renders no share-route field on the error state.');\n" +
+    '}\n' +
+    '\n' +
+    '// Pending provider read preserves the stale field until route resolution, then still displays it on Jordan.\n' +
+    '{\n' +
+    '  const env = await preparedAvery({holdJordan: true}); const c = env.controller;\n' +
+    "  const pending = c.navigate('#/public-profile/demo-jordan'); await env.jordanStarted;\n" +
+    "  assert.equal(view(c).profileStatus, 'loading');\n" +
+    "  assert.equal(view(c).shareRouteField?.value, '#/public-profile/demo-avery');\n" +
+    "  capture('pending_read_while_stale_field_visible', c, {providerReadHeld: true});\n" +
+    '  env.releaseJordan(); await pending;\n' +
+    "  assert.equal(view(c).shareRouteField?.value, '#/public-profile/demo-avery');\n" +
+    "  capture('pending_read_resolved_jordan_still_stale', c);\n" +
+    "  evidence.assertions.push('The stale share field is visible during the held route read and remains Avery after Jordan resolves.');\n" +
+    '}\n' +
+    '\n' +
+    '// Anonymous supporter compatibility: no session is needed to prepare a local share of a viewed profile.\n' +
+    '{\n' +
+    '  const env = fixtureRuntime(); const c = createPublicController({runtime: env.runtime});\n' +
+    "  await c.initialize('#/'); await c.navigate('#/public-profile/demo-avery');\n" +
+    "  assert.equal(c.state.journey.session.status, 'anonymous');\n" +
+    "  const share = await c.dispatch('public:share');\n" +
+    '  assert.equal(share.ok, true);\n' +
+    "  assert.equal(share.share.url, '#/public-profile/demo-avery');\n" +
+    "  capture('anonymous_supporter_share', c);\n" +
+    "  evidence.assertions.push('Anonymous supporter can prepare the local route for the viewed synthetic profile.');\n" +
+    '}\n' +
+    '\n' +
+    'console.log(JSON.stringify(evidence, null, 2));\n',
+  expected: /Loading profile/,
+  operator: 'match',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

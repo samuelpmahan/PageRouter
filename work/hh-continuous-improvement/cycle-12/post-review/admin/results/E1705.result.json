@@ -1,0 +1,50 @@
+{
+  "job_id": "E1705",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Assembled the lean cycle-12 evidence package and froze its exact manifest before H2 audit. The 69 listed payload files all verified against declared byte lengths and SHA-256 values. Includes independent R1703 acceptance, H1 test/build evidence and exact receipt, H2 probe plus capture/preflight limitations, and current native snapshots/bundles/errata. The only product-source change remains the accepted 115-line test-only addition; no controller/app/provider behavior changed. No tests or builds were rerun, and no Git action was taken.",
+  "package": {
+    "path": "PageRouter/work/hh-continuous-improvement/cycle-12",
+    "manifest": "PageRouter/work/hh-continuous-improvement/cycle-12/evidence/manifest.json",
+    "manifest_sha256": "73dcdd01c1f6ea9cbe1e3c812610e57bdf334363c55d2f47a301a128eedc0786",
+    "payload_file_count": 69,
+    "manifest_self_excluded": true,
+    "all_payload_lengths_and_hashes_verified": true,
+    "frozen_before_H2_audit": true
+  },
+  "source": {
+    "test_path": "PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "test_sha256": "f0304a33a0526dd94ba8e031986963d0c5f18e09fd101c7878194d2860c8f604",
+    "controller_sha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "test_diff": "115 insertions, 0 deletions; only product-repository path changed"
+  },
+  "review": {
+    "job_id": "R1703",
+    "decision": "accepted",
+    "accepted_test_sha256": "f0304a33a0526dd94ba8e031986963d0c5f18e09fd101c7878194d2860c8f604"
+  },
+  "build": {
+    "job_id": "E1704",
+    "site_build_id": "e771b3fc7fcef92e3bc8a485c36337ea525602a2dae6b8b870f405558d90705e",
+    "source_digest": "61de5208c2357ec9005291df0f4c52f3498c54f3efabaaa1a11482fe83e60d3f",
+    "site_digest": "22285f335df8bf10ca1911a4650f39f2e9d1a4ae1e16a5d26e013fb80bf098f9",
+    "receipt_sha256": "510a99a46b8ea6f5247a7576912a3dd44e50c5979fc291d2a3d6f18dfe7cec6e",
+    "site_log_sha256": "e3bd3b0b5b7fe716eeb949b59d94845d82703f76f0349cc5303dfd3ba9799366",
+    "verified_site_files": 843,
+    "pxcube_packages": 14,
+    "counts": {
+      "build_helpers": "2/2",
+      "targeted_hh_controller_community": "131/131",
+      "full_npm": "286/286",
+      "built_atlas_import": "1/1",
+      "warning": "Counts overlap and are not additive."
+    }
+  },
+  "limitations": [
+    "No source/build/test reruns during package assembly.",
+    "No Git, commit, export, publication, or deployment.",
+    "No `site.evidence` directory or browser screenshots included; browser QA remains unverified (zero screenshots).",
+    "E1701/E1702 capture and preflight errata remain explicit; no missing raw output or overwritten scripts were reconstructed.",
+    "Authored documentation whitespace check was applied only to authored files, not archived raw diagnostics."
+  ]
+}

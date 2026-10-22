@@ -1,0 +1,9 @@
+{
+  "job_id": "E402",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Both profile edit dispatch paths now require the authenticated session teacherId to match the loaded profile teacherId. Anonymous sessions and missing identities fail closed; captured read-only reference precedence is preserved. Actual synthetic runtime checks show another teacher profile and provider state remain unchanged after rejected actions, while an owned public-profile alias remains locally editable.",
+  "evidence": "H1/E402-result.json",
+  "rawWorkerOutcome": "fixed_verified",
+  "normalization": "Coordinator maps bounded changed-and-verified implementation to native mixed_change enum; original worker report/rejected envelope retained, no scientific or human acceptance inferred."
+}

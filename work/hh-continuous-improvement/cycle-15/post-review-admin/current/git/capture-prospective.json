@@ -1,0 +1,68 @@
+{
+  "schema": "hh-cycle15-git-capture-prospective@1",
+  "status": "prospective only; no command executed or phase admitted",
+  "rootScratch": "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106",
+  "repository": "/workspace/scratch/8528bb251845/PageRouter",
+  "workingDirectory": "/workspace/scratch/8528bb251845/PageRouter",
+  "expectedBranch": "codex/hh-continuous-improvement",
+  "expectedParent": "77420532395984874536d6e10373fe76970e92a4",
+  "expectedParentTree": "c4e04221e776e3c15c24efe804993af7146b18d3",
+  "canonicalParent": {
+    "value": "01512524bb4387f06471a927d6657f8486de579d",
+    "qualification": "previously reported only; not freshly fetched/authenticated here"
+  },
+  "commands": [
+    {
+      "phase": "precommit gate",
+      "argv": ["node", "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/precommit-gate.v2.mjs", "<root-admitted-plan-path>", "<plan-sha256>"],
+      "runCount": 0,
+      "requires": "R2105 accepted; root full-read of admin manifest/allowlist/plan/literals; separate precommit GO",
+      "prospectiveCaptureStem": "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/captures/precommit"
+    },
+    {
+      "phase": "stage exact NUL allowlist",
+      "argv": ["git", "add", "--pathspec-from-file=/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/stage-paths.draft.nul", "--pathspec-file-nul"],
+      "runCount": 0,
+      "requires": "passing precommit gate plus separate stage GO",
+      "prospectiveCaptureStem": "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/captures/stage"
+    },
+    {
+      "phase": "full staged whitespace diagnostic",
+      "argv": ["git", "diff", "--cached", "--check"],
+      "runCount": 0,
+      "requires": "stage command completed once; preserve stdout/stderr/raw exit including exit 2; nonzero means stop and root review",
+      "prospectiveCaptureStem": "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/captures/staged-whitespace"
+    },
+    {
+      "phase": "verify exact staged paths and blobs",
+      "argv": ["node", "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/verify-staged-allowlist.v2.mjs", "<root-admitted-plan-path>", "<plan-sha256>"],
+      "runCount": 0,
+      "requires": "passing precommit/whitespace gates plus separate staged-verification GO",
+      "prospectiveCaptureStem": "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/captures/staged-verify"
+    },
+    {
+      "phase": "one local commit",
+      "argv": ["git", "commit", "-m", "HH cycle 15: disclose local-only password recovery"],
+      "runCount": 0,
+      "requires": "root reads exact staged verifier result and separately GOes one commit",
+      "prospectiveCaptureStem": "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/captures/commit"
+    },
+    {
+      "phase": "one read-only local Git-object export",
+      "argv": ["node", "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/export-once.v2.mjs", "<root-admitted-export-plan-path>", "<plan-sha256>", "<immutable-40-hex-commit>"],
+      "runCount": 0,
+      "requires": "root reads exact immutable commit/tree and export plan, then separately GOes one export",
+      "prospectiveCaptureStem": "/workspace/scratch/8528bb251845/hh-cycle15/H1/E2106/captures/export"
+    }
+  ],
+  "captureProtocol": {
+    "filesPerRun": ["stdout.raw", "stderr.raw", "exit.code", "start.utc", "end.utc"],
+    "creation": "prospective future captures must use exclusive creation and preserve original raw channels; no rerun/overwrite",
+    "status": "No E2106 gate/stage/whitespace/commit/export capture exists because no such command has run."
+  },
+  "boundaries": [
+    "No generic dirty-tree waiver; only the exact 27 enumerated untracked scratch paths are excluded.",
+    "No broad git add, hook bypass, raw normalization, push/fetch/reset/force, publication, or deployment.",
+    "The plan and command list are not self-admitted; placeholders are intentionally unresolved until root review."
+  ]
+}

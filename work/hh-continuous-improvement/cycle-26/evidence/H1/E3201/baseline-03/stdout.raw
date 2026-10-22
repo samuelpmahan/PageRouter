@@ -1,0 +1,101 @@
+{
+  "job_id": "E3201",
+  "worker": "H1",
+  "flow": "rendered index upvote -> upvote sort -> open detail -> downvote correction -> back -> index upvote correction",
+  "topic_id": "topic-official-bug-forum",
+  "synthetic_only": true,
+  "storage": "null / volatile memory",
+  "after_first_vote": {
+    "state": {
+      "upvotes": 3,
+      "downvotes": 0
+    },
+    "index_payload": {
+      "event": "forum-vote",
+      "postId": "topic-official-bug-forum",
+      "threadId": "topic-official-bug-forum"
+    }
+  },
+  "sorted_index_top_id": "topic-official-bug-forum",
+  "detail_before_correction": {
+    "upvoteButton": {
+      "type": "button",
+      "data-event": "forum-vote",
+      "data-post-id": "topic-official-bug-forum",
+      "data-thread-id": "topic-official-bug-forum",
+      "data-direction": "upvote",
+      "id": "upvote-btn",
+      "aria-label": "Upvote discussion",
+      "class": "community-vote-arrow"
+    },
+    "downvoteButton": {
+      "type": "button",
+      "data-event": "forum-vote",
+      "data-post-id": "topic-official-bug-forum",
+      "data-thread-id": "topic-official-bug-forum",
+      "data-direction": "downvote",
+      "id": "downvote-btn",
+      "aria-label": "Downvote discussion",
+      "class": "community-vote-arrow"
+    },
+    "upvoteCountText": "3",
+    "downvoteCountText": null,
+    "votedStateAttributes": []
+  },
+  "correction_dispatch_result": {
+    "ok": true,
+    "value": {
+      "id": "topic-official-bug-forum",
+      "upvotes": 2,
+      "downvotes": 1,
+      "score": 1,
+      "voted": "downvote"
+    },
+    "warning": "volatile_storage"
+  },
+  "detail_after_correction": {
+    "upvoteButton": {
+      "type": "button",
+      "data-event": "forum-vote",
+      "data-post-id": "topic-official-bug-forum",
+      "data-thread-id": "topic-official-bug-forum",
+      "data-direction": "upvote",
+      "id": "upvote-btn",
+      "aria-label": "Upvote discussion",
+      "class": "community-vote-arrow"
+    },
+    "downvoteButton": {
+      "type": "button",
+      "data-event": "forum-vote",
+      "data-post-id": "topic-official-bug-forum",
+      "data-thread-id": "topic-official-bug-forum",
+      "data-direction": "downvote",
+      "id": "downvote-btn",
+      "aria-label": "Downvote discussion",
+      "class": "community-vote-arrow"
+    },
+    "upvoteCountText": "2",
+    "downvoteCountText": null,
+    "votedStateAttributes": []
+  },
+  "after_back_then_index_correction": {
+    "state": {
+      "upvotes": 3,
+      "downvotes": 0
+    },
+    "dispatch_result": {
+      "ok": true,
+      "value": {
+        "id": "topic-official-bug-forum",
+        "upvotes": 3,
+        "downvotes": 0,
+        "score": 3,
+        "voted": "upvote"
+      },
+      "warning": "volatile_storage"
+    }
+  },
+  "runtime_receipts_after_forum_actions": 2,
+  "runtime_receipts_at_startup": 2,
+  "finding": "vote correction is operable and returns a correct internal voted result; rendered detail confirms the reduced upvote count but does not show the downvote count or selected vote state. No demonstrated flow failure; possible feedback/discoverability gap is bounded to visible vote-state confirmation."
+}

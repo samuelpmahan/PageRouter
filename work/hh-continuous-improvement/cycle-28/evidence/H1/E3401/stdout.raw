@@ -1,0 +1,117 @@
+{
+  "fixtureCapabilities": {
+    "mode": "fixture",
+    "fixture": true,
+    "productionAuthority": false,
+    "persistence": "volatile-memory",
+    "services": {
+      "SchoolData.getStates": {
+        "supported": true,
+        "fixtureOnly": true
+      },
+      "SchoolData.getCounties": {
+        "supported": true,
+        "fixtureOnly": true
+      },
+      "SchoolData.getDistricts": {
+        "supported": true,
+        "fixtureOnly": true
+      },
+      "SchoolData.getSchools": {
+        "supported": true,
+        "fixtureOnly": true
+      },
+      "Registration.registerTeacher": {
+        "supported": true,
+        "fixtureOnly": true
+      },
+      "Registration.getOwnStatus": {
+        "supported": true,
+        "fixtureOnly": true
+      },
+      "Session.getSession": {
+        "supported": true,
+        "fixtureOnly": true
+      },
+      "Session.login": {
+        "supported": true,
+        "fixtureOnly": true
+      },
+      "Session.logout": {
+        "supported": true,
+        "fixtureOnly": true
+      },
+      "TeacherProfile.createProfile": {
+        "supported": true,
+        "fixtureOnly": true
+      },
+      "TeacherProfile.getOwnProfile": {
+        "supported": true,
+        "fixtureOnly": true
+      },
+      "TeacherProfile.openPublicProfile": {
+        "supported": true,
+        "fixtureOnly": true
+      },
+      "Demo.reset": {
+        "supported": true,
+        "fixtureOnly": true
+      },
+      "Demo.simulateApproval": {
+        "supported": true,
+        "fixtureOnly": true
+      }
+    },
+    "profileEdit": false,
+    "realMail": false,
+    "passwordAuthentication": false,
+    "payments": false
+  },
+  "initial": {
+    "label": "initialized directory",
+    "route": "directory",
+    "lookupError": "",
+    "lookupRetryable": false,
+    "matchesStatus": "loaded",
+    "canRetry": false,
+    "retryControls": [],
+    "visibleFailureText": [],
+    "counties": []
+  },
+  "selectSchoolResult": {
+    "ok": false,
+    "errorCode": "transport_failure"
+  },
+  "failure": {
+    "label": "retryable school lookup failure",
+    "route": "directory",
+    "lookupError": "Simulated local school-data failure; no state changed.",
+    "lookupRetryable": true,
+    "matchesStatus": "loaded",
+    "canRetry": true,
+    "retryControls": [],
+    "visibleFailureText": [
+      "Simulated local school-data failure; no state changed."
+    ],
+    "counties": []
+  },
+  "retryDispatchResult": {
+    "ok": true,
+    "errorCode": null
+  },
+  "recovered": {
+    "label": "explicit public:retry dispatch",
+    "route": "directory",
+    "lookupError": "",
+    "lookupRetryable": false,
+    "matchesStatus": "loaded",
+    "canRetry": false,
+    "retryControls": [],
+    "visibleFailureText": [
+      "Simulated local school-data failure; no state changed."
+    ],
+    "counties": [
+      "Demo King"
+    ]
+  }
+}

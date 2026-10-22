@@ -1,0 +1,341 @@
+{
+  "schema": "hh17-directory-recovery-source-equivalent-probe@1",
+  "evidenceType": "synthetic fixture controller plus emitted renderer tree",
+  "boundary": "No mounted DOM, native FormData, browser accessibility tree, keyboard event, backend, or human observation.",
+  "sourceEquivalentSubmit": "Payload was reconstructed from the emitted form/input/select values; app.mjs native FormData/reportValidity execution was not run.",
+  "selectionSetupProviderCalls": [
+    {
+      "port": "SchoolData.getStates",
+      "input": {}
+    },
+    {
+      "port": "SchoolData.getCounties",
+      "input": {
+        "state": "Demo Washington",
+        "county": "",
+        "district": "",
+        "school": "",
+        "grade": ""
+      }
+    },
+    {
+      "port": "SchoolData.getDistricts",
+      "input": {
+        "state": "Demo Washington",
+        "county": "Demo King",
+        "district": "",
+        "school": "",
+        "grade": ""
+      }
+    },
+    {
+      "port": "SchoolData.getSchools",
+      "input": {
+        "state": "Demo Washington",
+        "county": "Demo King",
+        "district": "Demo District",
+        "school": "",
+        "grade": ""
+      }
+    }
+  ],
+  "providerReadsBeforeSearch": {
+    "SchoolData.getStates": 1,
+    "SchoolData.getCounties": 1,
+    "SchoolData.getDistricts": 1,
+    "SchoolData.getSchools": 1
+  },
+  "providerReadsAfterSearchAndRetry": {
+    "SchoolData.getStates": 1,
+    "SchoolData.getCounties": 1,
+    "SchoolData.getDistricts": 1,
+    "SchoolData.getSchools": 1
+  },
+  "emptySearch": {
+    "route": "directory",
+    "form": {
+      "id": "hh-directory-form",
+      "submit": "public:directory-search"
+    },
+    "query": {
+      "value": "no-synthetic-teacher-matches-this-query",
+      "type": "search",
+      "label": "Search by teacher",
+      "insideDetails": true,
+      "detailsOpen": false
+    },
+    "school": {
+      "state": "Demo Washington",
+      "county": "Demo King",
+      "district": "Demo District",
+      "school": "Demo Academy",
+      "grade": ""
+    },
+    "selectedOptions": {
+      "state": "Demo Washington",
+      "county": "Demo King",
+      "district": "Demo District",
+      "school": "Demo Academy"
+    },
+    "searchPerformed": true,
+    "matches": {
+      "status": "loaded",
+      "count": 0,
+      "ids": [],
+      "renderedTeacherHeadings": []
+    },
+    "statusText": "0 teachers",
+    "statusRole": null,
+    "statusLive": "polite",
+    "resultsText": "No teachers found Try another school or search term.",
+    "retryEvent": null,
+    "rememberedFilters": {
+      "version": 1,
+      "school": {
+        "state": "Demo Washington",
+        "county": "Demo King",
+        "district": "Demo District",
+        "school": "Demo Academy",
+        "grade": ""
+      },
+      "query": "no-synthetic-teacher-matches-this-query",
+      "sort": "date-newest"
+    }
+  },
+  "editedDraft": {
+    "route": "directory",
+    "form": {
+      "id": "hh-directory-form",
+      "submit": "public:directory-search"
+    },
+    "query": {
+      "value": "avery",
+      "type": "search",
+      "label": "Search by teacher",
+      "insideDetails": true,
+      "detailsOpen": false
+    },
+    "school": {
+      "state": "Demo Washington",
+      "county": "Demo King",
+      "district": "Demo District",
+      "school": "Demo Academy",
+      "grade": ""
+    },
+    "selectedOptions": {
+      "state": "Demo Washington",
+      "county": "Demo King",
+      "district": "Demo District",
+      "school": "Demo Academy"
+    },
+    "searchPerformed": true,
+    "matches": {
+      "status": "loaded",
+      "count": 0,
+      "ids": [],
+      "renderedTeacherHeadings": []
+    },
+    "statusText": "0 teachers",
+    "statusRole": null,
+    "statusLive": "polite",
+    "resultsText": "No teachers found Try another school or search term.",
+    "retryEvent": null,
+    "rememberedFilters": {
+      "version": 1,
+      "school": {
+        "state": "Demo Washington",
+        "county": "Demo King",
+        "district": "Demo District",
+        "school": "Demo Academy",
+        "grade": ""
+      },
+      "query": "no-synthetic-teacher-matches-this-query",
+      "sort": "date-newest"
+    }
+  },
+  "recoveredSearch": {
+    "route": "directory",
+    "form": {
+      "id": "hh-directory-form",
+      "submit": "public:directory-search"
+    },
+    "query": {
+      "value": "avery",
+      "type": "search",
+      "label": "Search by teacher",
+      "insideDetails": true,
+      "detailsOpen": false
+    },
+    "school": {
+      "state": "Demo Washington",
+      "county": "Demo King",
+      "district": "Demo District",
+      "school": "Demo Academy",
+      "grade": ""
+    },
+    "selectedOptions": {
+      "state": "Demo Washington",
+      "county": "Demo King",
+      "district": "Demo District",
+      "school": "Demo Academy"
+    },
+    "searchPerformed": true,
+    "matches": {
+      "status": "loaded",
+      "count": 1,
+      "ids": [
+        "demo-avery"
+      ],
+      "renderedTeacherHeadings": [
+        "Demo Avery"
+      ]
+    },
+    "statusText": "1 teacher",
+    "statusRole": null,
+    "statusLive": "polite",
+    "resultsText": "Demo Academy Demo Avery Science View profile",
+    "retryEvent": null,
+    "rememberedFilters": {
+      "version": 1,
+      "school": {
+        "state": "Demo Washington",
+        "county": "Demo King",
+        "district": "Demo District",
+        "school": "Demo Academy",
+        "grade": ""
+      },
+      "query": "avery",
+      "sort": "date-newest"
+    }
+  },
+  "controlledReadFailure": {
+    "route": "directory",
+    "form": {
+      "id": "hh-directory-form",
+      "submit": "public:directory-search"
+    },
+    "query": {
+      "value": "avery",
+      "type": "search",
+      "label": "Search by teacher",
+      "insideDetails": true,
+      "detailsOpen": false
+    },
+    "school": {
+      "state": "Demo Washington",
+      "county": "Demo King",
+      "district": "Demo District",
+      "school": "Demo Academy",
+      "grade": ""
+    },
+    "selectedOptions": {
+      "state": "Demo Washington",
+      "county": "Demo King",
+      "district": "Demo District",
+      "school": "Demo Academy"
+    },
+    "searchPerformed": true,
+    "matches": {
+      "status": "error",
+      "count": 0,
+      "ids": [],
+      "renderedTeacherHeadings": []
+    },
+    "statusText": "Could not load results",
+    "statusRole": null,
+    "statusLive": "polite",
+    "resultsText": "Results could not be loaded Please try the search again. Retry search",
+    "retryEvent": "public:retry",
+    "rememberedFilters": {
+      "version": 1,
+      "school": {
+        "state": "Demo Washington",
+        "county": "Demo King",
+        "district": "Demo District",
+        "school": "Demo Academy",
+        "grade": ""
+      },
+      "query": "avery",
+      "sort": "date-newest"
+    }
+  },
+  "explicitRetry": {
+    "route": "directory",
+    "form": {
+      "id": "hh-directory-form",
+      "submit": "public:directory-search"
+    },
+    "query": {
+      "value": "avery",
+      "type": "search",
+      "label": "Search by teacher",
+      "insideDetails": true,
+      "detailsOpen": false
+    },
+    "school": {
+      "state": "Demo Washington",
+      "county": "Demo King",
+      "district": "Demo District",
+      "school": "Demo Academy",
+      "grade": ""
+    },
+    "selectedOptions": {
+      "state": "Demo Washington",
+      "county": "Demo King",
+      "district": "Demo District",
+      "school": "Demo Academy"
+    },
+    "searchPerformed": true,
+    "matches": {
+      "status": "loaded",
+      "count": 1,
+      "ids": [
+        "demo-avery"
+      ],
+      "renderedTeacherHeadings": [
+        "Demo Avery"
+      ]
+    },
+    "statusText": "1 teacher",
+    "statusRole": null,
+    "statusLive": "polite",
+    "resultsText": "Demo Academy Demo Avery Science View profile",
+    "retryEvent": null,
+    "rememberedFilters": {
+      "version": 1,
+      "school": {
+        "state": "Demo Washington",
+        "county": "Demo King",
+        "district": "Demo District",
+        "school": "Demo Academy",
+        "grade": ""
+      },
+      "query": "avery",
+      "sort": "date-newest"
+    }
+  },
+  "navigationOpen": {
+    "tag": "button",
+    "text": "☰",
+    "typeAttribute": null,
+    "explicitAriaLabel": null,
+    "ariaExpanded": "true",
+    "ariaControls": "hh-mobile-nav",
+    "event": "public:toggle-nav",
+    "mobileNavHidden": false,
+    "mobileNavLabel": "Account and site navigation"
+  },
+  "navigationClosed": {
+    "tag": "button",
+    "text": "☰",
+    "typeAttribute": null,
+    "explicitAriaLabel": null,
+    "ariaExpanded": "false",
+    "ariaControls": "hh-mobile-nav",
+    "event": "public:toggle-nav",
+    "mobileNavHidden": true,
+    "mobileNavLabel": "Account and site navigation"
+  },
+  "keyboardHandling": "Not executed. Source inspection found an app.mjs Escape handler that toggles nav closed and focuses the toggle; the emitted tree has no explicit aria-label and displays only ☰. No computed accessible-name or keyboard conformance is claimed.",
+  "outcome": "Expected behavior is falsifiable from this run; any failure in assertions should be reported as the actual first result without retry."
+}

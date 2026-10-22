@@ -1,0 +1,77 @@
+{
+  "job_id": "E1302",
+  "worker": "H2",
+  "allowed_outcome": "insufficient_evidence",
+  "summary": "Controller-plus-renderer assertions preserve synthetic registration identity and school through mismatch and missing-terms validation when updateDraft has run; a valid fixture registration reaches pending and credential absence checks pass. A direct-dispatch-without-updateDraft control drops the identity draft. Source inspection shows app.mjs binds input events to updateDraft, but the mounted browser could not be reached, so real-host input reachability remains unverified and no UI defect is confirmed.",
+  "status": "insufficient-evidence-for-mounted-UI-reachability",
+  "finding": "The controller-level loss-of-draft defect hypothesis is falsified when updateDraft has populated registration.identity. Whether the actual mounted host always reaches updateDraft remains source-inspected only, not browser-verified; therefore the end-to-end hypothesis remains insufficiently evidenced.",
+  "probe": {
+    "command": "node hh-cycle09/H2/E1302/actual-mounted-probe.mjs",
+    "kind": "controller-plus-renderer fixture probe; not an actual mounted browser run",
+    "scenarios": [
+      {
+        "name": "mismatch",
+        "accepted": true,
+        "error": "validation_failed",
+        "rendered_identity_preserved": true,
+        "registration_status": "none",
+        "outcome": "The password confirmation does not match."
+      },
+      {
+        "name": "missing-terms",
+        "accepted": false,
+        "error": "validation_failed",
+        "rendered_identity_preserved": true,
+        "registration_status": "none",
+        "outcome": "Read and accept the preview terms before registering."
+      },
+      {
+        "name": "valid",
+        "accepted": true,
+        "result_ok": true,
+        "renderer_projection": "registration status is pending; the registration renderer selects its pending-request page",
+        "registration_status": "pending"
+      }
+    ],
+    "credentials": "Passwords and confirmations were generated per iteration in memory and not emitted or persisted."
+  },
+  "source_evidence": {
+    "app_input_binding": "PageRouter/checkpoint/vendor/hh/src/app.mjs:199-203; delegated input invokes controller.updateDraft(target.name, target.value).",
+    "app_submit_binding": "PageRouter/checkpoint/vendor/hh/src/app.mjs:179-197; FormData is dispatched to public:register after required-field validity; passwords are cleared from DOM before dispatch.",
+    "validation_order": "PageRouter/checkpoint/vendor/hh/src/public-controller.mjs:697-715; mismatch and missing-terms validation precede the registration.identity assignment.",
+    "draft_fields": "PageRouter/checkpoint/vendor/hh/src/public-controller.mjs:872-879; password-like names are rejected; registration name/email/phone are copied into identity.",
+    "renderer": "PageRouter/checkpoint/vendor/hh/src/public-site.mjs; registration fields render from journey.registration.identity."
+  },
+  "sha256": {
+    "controller": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+    "renderer": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "app": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "fixture_provider": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "probe_script": "939372b6d847f97e4cbc783eb5a31f0c0695d1534d85cada942d29d72e122f88",
+    "assertion_probe_script": "d8347d4e6efa9886e1d9885ecd84ce9ec27ab3321644e85be927bb56c00aa3df",
+    "assertion_stdout": "d8ddecaad1781ce73110e081fae0f8f9f1980c846983a517efbb679b6cbb16bf",
+    "original_result_raw": "5228c0de5cb6edd0bcbb71bb6a37af763a1b584ebbbd278a5db55cf0c2c2e9cf",
+    "original_probe_raw": "939372b6d847f97e4cbc783eb5a31f0c0695d1534d85cada942d29d72e122f88",
+    "page_router_head": "46d1f32aca87919abceecf8b0c53454173cd574f",
+    "page_router_tree": "b80f1408d3c21c23e058989ce79fcfc60a0ba674"
+  },
+  "limitations": [
+    "Actual mounted browser DOM interaction was not observed: local Playwright browser binary is absent; the connected Browser extension context was unavailable; the CUA cloud browser could not reach the localhost preview (ERR_CONNECTION_REFUSED).",
+    "The host input-to-updateDraft association is source-inspected, not end-to-end browser-verified. The scratch controller/renderer probe does not itself dispatch browser input events.",
+    "No screenshot, visual QA, production/backend behavior, real account data, or live service behavior is claimed."
+  ],
+  "assertion_probe": {
+    "command": "node hh-cycle09/H2/E1302/assertion-probe.mjs",
+    "exit_code": 0,
+    "stdout": "stdout-assertion.log",
+    "assertions": [
+      "mismatch: validation_failed; non-secret rendered identity and selected school retained",
+      "missing-terms: validation_failed; non-secret rendered identity and selected school retained",
+      "valid: result ok; controller and volatile runtime snapshot both report pending",
+      "direct-no-draft control: mismatch validation retains school but renders blank identity when updateDraft was intentionally omitted",
+      "for every case, booleans confirm password and confirmation absent from controller state, runtime.inspect, runtime Parts, and volatile storage"
+    ]
+  },
+  "clarification": "The original result and probe are preserved byte-for-byte as result.raw.json (SHA-256 5228c0de5cb6edd0bcbb71bb6a37af763a1b584ebbbd278a5db55cf0c2c2e9cf) and probe.raw.mjs (SHA-256 939372b6d847f97e4cbc783eb5a31f0c0695d1534d85cada942d29d72e122f88). The original probe was exploratory and had no assertions; it printed controller registration status, not the runtime snapshot. The assertion follow-up supplies those checks and records stdout/exit in separate files. Nothing in this report claims mounted-DOM proof.",
+  "boundary": "No PageRouter files, refs, or Git state were changed. Probe/report files are scratch-only under hh-cycle09/H2/E1302."
+}

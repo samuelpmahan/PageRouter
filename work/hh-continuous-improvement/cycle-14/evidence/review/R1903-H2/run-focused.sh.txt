@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -u
+cd /workspace/scratch/8528bb251845/PageRouter || exit 90
+date -u +%Y-%m-%dT%H:%M:%S.%NZ > /workspace/scratch/8528bb251845/hh-cycle14/H2/R1903/focused.start.utc
+set +e
+node --test --test-name-pattern=held\ successful\ login\ projects\ authenticated\ email\ after\ route\ reentry checkpoint/vendor/hh/src/public-controller.test.mjs > /workspace/scratch/8528bb251845/hh-cycle14/H2/R1903/focused.stdout.raw 2> /workspace/scratch/8528bb251845/hh-cycle14/H2/R1903/focused.stderr.raw
+run_status=$?
+set -e
+printf '%s\n' "$run_status" > /workspace/scratch/8528bb251845/hh-cycle14/H2/R1903/focused.exit
+date -u +%Y-%m-%dT%H:%M:%S.%NZ > /workspace/scratch/8528bb251845/hh-cycle14/H2/R1903/focused.end.utc
+exit "$run_status"

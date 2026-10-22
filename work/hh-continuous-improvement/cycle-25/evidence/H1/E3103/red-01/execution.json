@@ -1,0 +1,21 @@
+{
+  "schema": "hh25-red-capture@1",
+  "job_id": "E3103",
+  "worker": "H1",
+  "phase": "focused-red-before-implementation",
+  "command": "node --test --test-name-pattern 'moderator reported-items filter includes hidden reports before paging and is role-gated|reported-items filter follows reply reports, restore, moderator exit, and role guards' checkpoint/vendor/hh/src/community.test.mjs checkpoint/vendor/hh/src/public-controller.test.mjs > /workspace/scratch/86659bbafcce/hh25/H1/E3103/red-01/stdout.raw 2> /workspace/scratch/86659bbafcce/hh25/H1/E3103/red-01/stderr.raw; rc=$?; printf '%s\\n' \"$rc\" > /workspace/scratch/86659bbafcce/hh25/H1/E3103/red-01/exit.status; exit 0",
+  "cwd": "/workspace/scratch/86659bbafcce/PageRouter",
+  "runtime": "Node v24.19.0",
+  "process_exit_status": 1,
+  "tests": {"count": 2, "passed": 0, "failed": 2},
+  "stdout": {"bytes": 2090, "sha256": "955eec03cebbbda5d83f3280795d951ae29df5e8fe6f648c3ecd96b4e727b760"},
+  "stderr": {"bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+  "canonical_repo_commit": "a0a98f299ea77d2181fa6013df554af843aa0635",
+  "preimplementation_source_pins": {
+    "checkpoint/vendor/hh/src/community.mjs": "311d598b6d6ffc675dc4ee5b07ac0005c55e6ce7a34f8acfac5384d5789288f4",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "97b5c17bf519b7fd05e2933a12dc55ff0e3e0c3e7939db4072368c070b4f67a0",
+    "checkpoint/vendor/hh/src/community.test.mjs": "0d360fe2d9da7404218f4a1f952f6f1dfae101f2851a6a2ea0593e7169bc5125",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "613d9360e2552846b426a33328a8bd07fd5f02803691d8ee1f8c671212e5823d"
+  },
+  "red_reason": "Both targeted tests failed on the absent behavior: the moderator list retained the newest unreported topic instead of filtering and the controller had no reported-items event result."
+}

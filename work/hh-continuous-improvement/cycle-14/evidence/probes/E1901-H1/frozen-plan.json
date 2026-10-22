@@ -1,0 +1,20 @@
+{
+  "job_id": "E1901",
+  "worker": "H1",
+  "scope": "One bounded read-only synthetic fixture/controller projection probe; no product edits, tests, build, Git mutation, native mutation, production/backend/account, browser, or external email.",
+  "source_bindings": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "local_head": "06b6da36e326758ccd14cda021bc0a15cfd00817",
+    "controller_sha256": "308c876e8bbfeb20a3e8ee92a4065549f5ca815bec0aa6979bf39c61fa4dc07c",
+    "site_sha256": "5f1135c95fdb3baefb64e49d755e45a87b9eb1b17ff363ed91eb5b516812031b",
+    "test_sha256": "f426710f6ae9c3012f5eba2aa0d50b3aaca8b4e76a4119dd3ffca58d08e13d4f"
+  },
+  "expected_observation": "A request captured with synthetic account email A is held; input draft changes to distinct synthetic email B; user navigates away and back while request is held; on successful fixture completion, the session/runtime authority remains A, route reentry remains login, and rendered input follows the existing authority projection A because the successful authority change clears the overlay. A result would warrant further investigation only if the actual authority/request identity diverges, or the route/draft behavior contradicts the documented authority-change policy; B clearing alone is not deemed a defect.",
+  "falsifier": "Unexpected harness/setup failure; login fails despite synthetic registration+approval; service attempt count differs from one; runtime request/session binds to B instead of submitted A; or projection contradicts controller policy in a way that changes authenticated authority or leaks the ephemeral password.",
+  "prospective_argv": ["node", "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1901/probe.mjs"],
+  "prospective_stdout": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1901/stdout.raw",
+  "prospective_stderr": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1901/stderr.raw",
+  "prospective_utc_start": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1901/start.utc",
+  "prospective_utc_exit": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1901/exit.code",
+  "run_limit": "Exactly one invocation of the declared Node script. Preserve its original stdout, stderr, UTC timestamps, and exit status. Stop at first unexpected harness failure; do not retry or overwrite."
+}

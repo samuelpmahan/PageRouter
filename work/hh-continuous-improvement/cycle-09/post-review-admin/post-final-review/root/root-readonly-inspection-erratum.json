@@ -1,0 +1,11 @@
+{
+  "schema": "hh-cycle09-root-readonly-inspection-erratum@1",
+  "events": [
+    "Root's first manifest-inspection helper assumed files was an array and failed TypeError before filtering; actual manifest uses a path-to-hash object.",
+    "The next read-only helper had an extra closing parenthesis and failed syntax before execution.",
+    "Corrected reader used Object.keys(files), exit0, and revealed the archive test filename later independently reproduced by H2/R1305 as a package-level discovery/import failure."
+  ],
+  "effects": "Read-only helper errors only; no candidate/Git/ref/native mutation by either failed reader. Separate native finish/solve commands subsequently ran successfully; no native rejection or gate override occurred.",
+  "evidenceAuthority": "Original tool transcript; no exported original shell stdout file is invented.",
+  "packageDisposition": "R1305 AMEND is retained, not relabelled accepted. Product source tests and canonical build remain separate from the failed archive-import discovery."
+}

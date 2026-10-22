@@ -1,0 +1,23 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "hh-continuous-improvement-cycle13",
+    "source": "samuelpmahan/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "publishedHead": "b4bd028e5b907efe33c053dc26705d5710f96aec",
+    "localHead": "b91b0ab0d10bf0ddeed68144ff2654e880e0401f",
+    "tree": "6b165318096ac0def49f178551603c5fdc988681",
+    "boundedHypothesis": "Reachable synthetic login failure loses typed nonsecret email; no defect assumed before actual probe",
+    "actualCapacity": "Two fresh actual gpt-6-luna/high contexts H1/H2; separate Lab current pool reduced to four registered Sol6.1/high workers, six global workers maximum",
+    "streams": ["reachable login and privacy controls", "bounded implementation and canonical verification", "independent review and evidence"],
+    "floatingReserve": "Only two actual HH workers; dependent work reassigned after outcomes, no invented three-stream or reserve slots",
+    "ownership": "H1 sole PageRouter source/Git owner; H2 scratch-only independent reviewer. Root alone native bookkeeping and connected GitHub publication. No main/deploy/real-account/backend authority."
+  },
+  "workers": ["H1", "H2"],
+  "review_policy": {"enabled": false},
+  "policy": {"extract_priority": 100, "review_priority": 200, "repair_priority": 300},
+  "jobs": [
+    {"id": "E1801", "kind": "extract", "allow_workers": ["H1"], "subject": "Read-only source/current UI-delegation reconnaissance then bounded actual volatile login-email failure/valid controls; synthetic secret nonretention, no source edits"},
+    {"id": "E1802", "kind": "extract", "allow_workers": ["H2"], "subject": "Independent read-only source/runtime/render-tree login-email failure and success controls, distinguish current mounted-browser reachability from source evidence"}
+  ]
+}

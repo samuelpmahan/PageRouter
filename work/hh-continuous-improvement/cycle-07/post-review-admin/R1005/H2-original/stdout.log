@@ -1,0 +1,11 @@
+{
+  "schema": "hh-cycle07-H2-R1005/package-audit/v1",
+  "job_id": "R1005",
+  "worker": "H2",
+  "decision": "rejected",
+  "error": {
+    "name": "Error",
+    "message": "ENOENT: no such file or directory, open '/workspace/scratch/8528bb251845/PageRouter/checkpoint/checkpoint/vendor/hh/src/public-controller.mjs'",
+    "stack": "Error: ENOENT: no such file or directory, open '/workspace/scratch/8528bb251845/PageRouter/checkpoint/checkpoint/vendor/hh/src/public-controller.mjs'\n    at async open (node:internal/fs/promises:697:25)\n    at async readFile (node:internal/fs/promises:1348:14)\n    at async main (file:///workspace/scratch/8528bb251845/hh-cycle07/H2/R1005/audit.mjs:24:97)\n    at async file:///workspace/scratch/8528bb251845/hh-cycle07/H2/R1005/audit.mjs:51:13"
+  }
+}

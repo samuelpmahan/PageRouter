@@ -1,0 +1,80 @@
+{
+  "job_id": "E2302",
+  "worker": "H2",
+  "observations": {
+    "initializationRoute": "directory",
+    "initialProviderCalls": {
+      "SchoolData.getStates": 1,
+      "SchoolData.getCounties": 0,
+      "SchoolData.getDistricts": 0,
+      "SchoolData.getSchools": 0,
+      "Registration.getOwnStatus": 0,
+      "Session.getSession": 0,
+      "TeacherProfile.getOwnProfile": 0,
+      "Registration.registerTeacher": 0,
+      "Demo.simulateApproval": 0,
+      "Session.login": 0,
+      "Session.logout": 0,
+      "TeacherProfile.createProfile": 0,
+      "TeacherProfile.openPublicProfile": 0,
+      "Demo.reset": 0
+    },
+    "noMatch": {
+      "ok": true,
+      "status": "loaded",
+      "count": 0,
+      "queryProjection": "__hh17_no_synthetic_match__",
+      "guidanceVisible": true
+    },
+    "recovered": {
+      "ok": true,
+      "ids": [
+        "demo-jordan"
+      ],
+      "queryProjection": "Jordan",
+      "profileLink": "#/teachers/demo-jordan",
+      "emptyGuidanceVisible": false
+    },
+    "providerCallsAfterSearches": {
+      "SchoolData.getStates": 1,
+      "SchoolData.getCounties": 0,
+      "SchoolData.getDistricts": 0,
+      "SchoolData.getSchools": 0,
+      "Registration.getOwnStatus": 0,
+      "Session.getSession": 0,
+      "TeacherProfile.getOwnProfile": 0,
+      "Registration.registerTeacher": 0,
+      "Demo.simulateApproval": 0,
+      "Session.login": 0,
+      "Session.logout": 0,
+      "TeacherProfile.createProfile": 0,
+      "TeacherProfile.openPublicProfile": 0,
+      "Demo.reset": 0
+    },
+    "navClosedBefore": {
+      "tag": "button",
+      "text": "☰",
+      "ariaLabel": null,
+      "ariaExpanded": "false",
+      "ariaControls": "hh-mobile-nav"
+    },
+    "navOpen": {
+      "tag": "button",
+      "text": "☰",
+      "ariaLabel": null,
+      "ariaExpanded": "true",
+      "ariaControls": "hh-mobile-nav",
+      "targetLabel": "Account and site navigation",
+      "targetHidden": false
+    },
+    "navClosed": {
+      "ariaExpanded": "false",
+      "targetHidden": true
+    }
+  },
+  "limits": [
+    "controller event and source-equivalent emitted tree only",
+    "no native FormData/reportValidity, mounted DOM, browser keyboard, screen reader, responsive visibility, or visual QA",
+    "no provider service calls after initialization; runtime snapshot reads are not counted as provider invokes"
+  ]
+}

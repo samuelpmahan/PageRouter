@@ -1,0 +1,40 @@
+{
+  "job_id": "E2303",
+  "worker": "H1",
+  "status": "prepared_unrun",
+  "base_head": "86301f84a9b08f40b76de9b64026befe6b0081a5",
+  "base_tree": "c685c5267235fc460c4147592a483dd40d44d3fd",
+  "product_scope": {
+    "only_changed_path": "checkpoint/vendor/hh/src/public-site.test.mjs",
+    "before_sha256": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a",
+    "after_sha256": "264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5",
+    "renderer_sha256_unchanged": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+    "test_added": "public mobile navigation toggle keeps a stable descriptive label across menu and session states"
+  },
+  "exact_command": [
+    "bash",
+    "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2303/run-focused-red-once.sh"
+  ],
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+  "underlying_command": [
+    "node",
+    "--test",
+    "--test-name-pattern=public mobile navigation toggle keeps a stable descriptive label across menu and session states",
+    "checkpoint/vendor/hh/src/public-site.test.mjs"
+  ],
+  "expected_first_result": "RED only on the new aria-label assertion because public-site.mjs does not currently emit an explicit aria-label for hh-public-nav-toggle. Existing renderer assertions must remain untouched. This is a renderer-contract test, not a computed browser-accessibility result.",
+  "captures": {
+    "directory": "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2303/captures/red-01",
+    "stdout": "stdout.raw",
+    "stderr": "stderr.raw",
+    "start_utc": "start.utc",
+    "end_utc": "end.utc",
+    "exit_code": "exit.code"
+  },
+  "first_failure_rule": "Preserve original streams and actual exit; stop on any unexpected failure. No retry, weakening, source behavior edit, build, full suite, Git operation, browser, or UI mounting before root reads the first result and separately authorizes the next step.",
+  "scope_limits": [
+    "No renderer change is present yet.",
+    "No DOM, screen reader, browser accessibility tree, keyboard event, human, backend, or deployed behavior is claimed.",
+    "H2 evidence remains independently owned; do not read or copy H2 files into this packet."
+  ]
+}

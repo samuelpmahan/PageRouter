@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -u
+repo=/workspace/scratch/8528bb251845/PageRouter/checkpoint
+evidence=/workspace/scratch/8528bb251845/hh-cycle10/H2/R1405
+cd "$repo" || exit 2
+
+node --test --test-concurrency=1 --test-name-pattern='registration transport failure retains|registration unknown outcome retains|registration retains the current draft after navigation away and back|failed re-registration preserves' \
+  vendor/hh/src/public-controller.test.mjs > "$evidence/focused.tap" 2>&1
+focused_status=$?
+printf '%s\n' "$focused_status" > "$evidence/focused.exit"
+
+node --test --test-concurrency=1 vendor/hh/src/public-controller.test.mjs > "$evidence/controller.tap" 2>&1
+controller_status=$?
+printf '%s\n' "$controller_status" > "$evidence/controller.exit"
+
+if [[ "$focused_status" -ne 0 || "$controller_status" -ne 0 ]]; then
+  exit 1
+fi

@@ -1,0 +1,30 @@
+{
+  "schema": "hh-cycle07-post-review-admin-erratum/v1",
+  "job_id": "E1007",
+  "purpose": "Correct one truncated SHA-256 string in the E1005 provenance note without changing the frozen package or its manifest.",
+  "binding": {
+    "raw_E1005_result_path": "/workspace/scratch/8528bb251845/hh-cycle07/H1/E1005/result.json",
+    "raw_E1005_result_sha256": "fb238b10bcc27bdb664b1c065df02237fe6565c7655bef1c556cc246f9aa907a",
+    "quoted_field_path": "provenance_notes[0]",
+    "quoted_bad_value_exact": "H1 E1004 worker narrative and native receipt are separate preserved files: narrative SHA-256 270621f678b4a3568817177a7792ee158d4b84ba80ce714f42c8b715585f46a; native receipt SHA-256 3d92c2da01eaa4b2ffa3f301d83069d7188749d34d00c47c8c4d9dc0505aeea4.",
+    "corrected_narrative_sha256": "270621f678b4a3568817177a7792ee158d4b84ba80ce714f42c8b715585f46a1",
+    "native_E1004_receipt_path": "work/hh-continuous-improvement/cycle-07/evidence/native/receipts/E1004.json",
+    "native_E1004_receipt_sha256": "3d92c2da01eaa4b2ffa3f301d83069d7188749d34d00c47c8c4d9dc0505aeea4",
+    "R1005_final_amendment_sha256": "a7eebd8b8af92d26eecbb4e262f7cf18ed4753c842da02f46b2806b4d83b8e78"
+  },
+  "correction": {
+    "actual_E1004_worker_narrative_sha256": "270621f678b4a3568817177a7792ee158d4b84ba80ce714f42c8b715585f46a1",
+    "corrected_note": "H1 E1004 worker narrative and native receipt are separate preserved files: narrative SHA-256 270621f678b4a3568817177a7792ee158d4b84ba80ce714f42c8b715585f46a1; native receipt SHA-256 3d92c2da01eaa4b2ffa3f301d83069d7188749d34d00c47c8c4d9dc0505aeea4."
+  },
+  "unchanged_freeze": {
+    "manifest_path": "work/hh-continuous-improvement/cycle-07/evidence/manifest.json",
+    "manifest_sha256": "b32ad5849211a5fda61b1f74f9df96298b1a834703271a7559149807dc75109f",
+    "manifest_entry_count": 68,
+    "raw_E1005_result_modified": false,
+    "frozen_manifest_modified": false,
+    "product_source_modified": false,
+    "build_or_tests_run": false,
+    "commit_or_export_performed": false
+  },
+  "provenance": "The E1005 result and manifest remain byte-for-byte unchanged. This separately labeled post-review admin file records only the confirmed full hash and its bindings."
+}

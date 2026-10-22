@@ -1,0 +1,183 @@
+{
+  "schema": "hh-e602-probe/v1",
+  "evidence": "synthetic volatile fixture runtime; controller and renderer execution; no browser or backend",
+  "results": [
+    {
+      "target": "#/register",
+      "outcome": "success",
+      "pendingInvocation": {
+        "port": "TeacherProfile.openPublicProfile",
+        "input": {
+          "profileId": "demo-avery"
+        }
+      },
+      "whilePending": {
+        "route": "/public-profile/demo-avery",
+        "journeyLoading": false,
+        "profileStatus": "loading"
+      },
+      "afterNavigateBeforeResolve": {
+        "route": "/register",
+        "journeyLoading": false,
+        "profileStatus": "loading",
+        "formRendered": true,
+        "submitRendered": true,
+        "submitDisabled": false,
+        "profileProjectionRendered": false
+      },
+      "outerNavigationResult": {
+        "ok": true,
+        "route": "/register"
+      },
+      "staleProfileUpdateObserved": false,
+      "afterResolve": {
+        "route": "/register",
+        "journeyLoading": false,
+        "profileStatus": "loading",
+        "formRendered": true,
+        "submitRendered": true,
+        "submitDisabled": false,
+        "profileProjectionRendered": false
+      }
+    },
+    {
+      "target": "#/register",
+      "outcome": "failure",
+      "pendingInvocation": {
+        "port": "TeacherProfile.openPublicProfile",
+        "input": {
+          "profileId": "demo-avery"
+        }
+      },
+      "whilePending": {
+        "route": "/public-profile/demo-avery",
+        "journeyLoading": false,
+        "profileStatus": "loading"
+      },
+      "afterNavigateBeforeResolve": {
+        "route": "/register",
+        "journeyLoading": false,
+        "profileStatus": "loading",
+        "formRendered": true,
+        "submitRendered": true,
+        "submitDisabled": false,
+        "profileProjectionRendered": false
+      },
+      "outerNavigationResult": {
+        "ok": true,
+        "route": "/register"
+      },
+      "staleProfileUpdateObserved": false,
+      "afterResolve": {
+        "route": "/register",
+        "journeyLoading": false,
+        "profileStatus": "loading",
+        "formRendered": true,
+        "submitRendered": true,
+        "submitDisabled": false,
+        "profileProjectionRendered": false
+      }
+    },
+    {
+      "target": "#/login",
+      "outcome": "success",
+      "pendingInvocation": {
+        "port": "TeacherProfile.openPublicProfile",
+        "input": {
+          "profileId": "demo-avery"
+        }
+      },
+      "whilePending": {
+        "route": "/public-profile/demo-avery",
+        "journeyLoading": false,
+        "profileStatus": "loading"
+      },
+      "afterNavigateBeforeResolve": {
+        "route": "/login",
+        "journeyLoading": false,
+        "profileStatus": "loading",
+        "formRendered": true,
+        "submitRendered": true,
+        "submitDisabled": false,
+        "profileProjectionRendered": false
+      },
+      "outerNavigationResult": {
+        "ok": true,
+        "route": "/login"
+      },
+      "staleProfileUpdateObserved": false,
+      "afterResolve": {
+        "route": "/login",
+        "journeyLoading": false,
+        "profileStatus": "loading",
+        "formRendered": true,
+        "submitRendered": true,
+        "submitDisabled": false,
+        "profileProjectionRendered": false
+      }
+    },
+    {
+      "target": "#/login",
+      "outcome": "failure",
+      "pendingInvocation": {
+        "port": "TeacherProfile.openPublicProfile",
+        "input": {
+          "profileId": "demo-avery"
+        }
+      },
+      "whilePending": {
+        "route": "/public-profile/demo-avery",
+        "journeyLoading": false,
+        "profileStatus": "loading"
+      },
+      "afterNavigateBeforeResolve": {
+        "route": "/login",
+        "journeyLoading": false,
+        "profileStatus": "loading",
+        "formRendered": true,
+        "submitRendered": true,
+        "submitDisabled": false,
+        "profileProjectionRendered": false
+      },
+      "outerNavigationResult": {
+        "ok": true,
+        "route": "/login"
+      },
+      "staleProfileUpdateObserved": false,
+      "afterResolve": {
+        "route": "/login",
+        "journeyLoading": false,
+        "profileStatus": "loading",
+        "formRendered": true,
+        "submitRendered": true,
+        "submitDisabled": false,
+        "profileProjectionRendered": false
+      }
+    }
+  ],
+  "adjacentDirectoryCase": {
+    "pendingState": {
+      "route": "/directory",
+      "journeyLoading": true,
+      "matchesStatus": "loading"
+    },
+    "searchResult": {
+      "ok": false,
+      "ignored": true
+    },
+    "blankLoginDispatch": {
+      "ok": false,
+      "errorCode": "validation_failed"
+    },
+    "loadingAfterBlankLoginDispatch": true,
+    "afterInvalidation": {
+      "route": "/login",
+      "journeyLoading": true,
+      "matchesStatus": "loading",
+      "loginFormRendered": true,
+      "loginSubmitRendered": true,
+      "loginSubmitDisabled": false,
+      "staleDirectoryProjectionRendered": false
+    }
+  }
+}

@@ -1,0 +1,13 @@
+✔ wishlist handoff is invalidated before a foreign profile read and must be freshly prepared for that profile (7.7539ms)
+✔ wishlist handoff remains on same-profile aliases and captured reference keeps its static link (3.329937ms)
+✔ failed profile navigation clears prior wishlist handoff and stale confirmation is rejected (1.522726ms)
+✔ confirmed wishlist destination is not rendered on a foreign profile (1.222708ms)
+✔ same-profile wishlist handoff cannot be confirmed while its profile reload is pending or failed (1.405941ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 110.418109

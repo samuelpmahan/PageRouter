@@ -1,0 +1,21 @@
+{
+  "job_id": "E3501",
+  "worker": "H1",
+  "frozen_at": "2026-10-19T18:11:38Z",
+  "repository": "/workspace/scratch/86659bbafcce/PageRouter",
+  "head": "128876031737d853303bbee9906dd7f8d618094d",
+  "tree": "2e6c9aba404034d37f894bacb48b55b639a4ec18",
+  "probe_sha256": "6def7b65dbab1736a7e4a4391e8dd49848339a2c24d26b896def10078a0b0960",
+  "product_inputs_sha256": {
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+    "checkpoint/vendor/hh/services/fixtures.mjs": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+    "checkpoint/vendor/hh/src/community.mjs": "9e5ce0c47acea55e4217463f099b115080faa7d1e1b412eecc9128690e6a9cc2",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "9c9276c93b4ab9f1afc3263c601588e97af6a7182ff337df55baaa472c0c2481",
+    "checkpoint/vendor/hh/src/public-site.mjs": "524df4132426814cc9621246a4cba548d54c0c537dd840b3997e375e78c9ad4d"
+  },
+  "attempt": 2,
+  "prior_attempt": "probe.stdout.raw/probe.stderr.raw/process.exit show a harness-only frozen-provider-wrapper failure before any product behavior was observed; provider inputs could not be mutated because the provider service map is frozen.",
+  "correction": "Build a separate wrapper provider service-map before runtime construction; preserve the immutable fixture provider and delegate unchanged service calls.",
+  "scope": "Harness-only; no product source/test/build changes."
+}

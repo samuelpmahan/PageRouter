@@ -1,0 +1,63 @@
+{
+  "command": "BAZEL=<pinned Bazel 7.4.1> bash ci/bazel/run.sh",
+  "status": "passed",
+  "sourceBase": "7adf7e74a85c4310a5704a4c42808e85a1a82d71",
+  "node": "v24.19.0",
+  "bazel": "7.4.1",
+  "siteBuildId": "0b10b5a2fcc2e2d7ad9aab97cba4f3e389993759ae60eec7a5845eea88f7ba02",
+  "siteDigest": "3bc7256cafcfe67abeef2d6582dc39339ef975e72fecbd1c4303db5f127551e5",
+  "sourceDigest": "987b863a9286ec40de5f4d6623999df770bc9eb73149ec4408da73c93ed8bac6",
+  "siteFiles": 843,
+  "pxcube": {
+    "rebuilt": true,
+    "packages": 14,
+    "relocated": false
+  },
+  "crispExactCompiledEquality": true,
+  "changedFiles": [
+    {
+      "path": "checkpoint/vendor/hh/src/public-controller.mjs",
+      "sha256": "4eb1ecc139a89a87777a827e9460b370813dd0f498a269ff0c47c2d0f4da94a4",
+      "matchesCanonicalInput": true
+    },
+    {
+      "path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "sha256": "7088a497f633718630cfde56a12111240887c41d3c7b50239345429237b292af",
+      "matchesCanonicalInput": true
+    },
+    {
+      "path": "checkpoint/vendor/hh/src/public-site.mjs",
+      "sha256": "d9c26625a9dc8bb29bad3959ae40e5c26cca7aa143e5246493663c34726c4dd5",
+      "matchesCanonicalInput": true
+    },
+    {
+      "path": "checkpoint/vendor/hh/src/public-site.test.mjs",
+      "sha256": "dcdf6c706b613cc64484276672d27e9717768a6d216a1e30b8039ec41679e7cb",
+      "matchesCanonicalInput": true
+    }
+  ],
+  "allChangedInputsMatch": true,
+  "counts": [
+    "Targeted HH controller/community regressions",
+    "\u2139 tests 92",
+    "\u2139 pass 92",
+    "\u2139 fail 0",
+    "npm test suite against freshly assembled site",
+    "\u2139 tests 247",
+    "\u2139 pass 247",
+    "\u2139 fail 0",
+    "Built Atlas import closure",
+    "\u2139 tests 1",
+    "\u2139 pass 1",
+    "\u2139 fail 0",
+    "Built 843 files; all 14 PxCube packages succeeded; fresh output siteBuildId 0b10b5a2fcc2e2d7ad9aab97cba4f3e389993759ae60eec7a5845eea88f7ba02"
+  ],
+  "browser": {
+    "status": "not_run",
+    "reason": "Chrome Headless Shell 151.0.7922.34 archive downloads returned invalid/truncated ZIP; no installed browser was found; no pixel or full event QA claimed"
+  },
+  "publication": {
+    "status": "not_yet_published",
+    "mainLanding": "not_authorized_by_this_cycle"
+  }
+}

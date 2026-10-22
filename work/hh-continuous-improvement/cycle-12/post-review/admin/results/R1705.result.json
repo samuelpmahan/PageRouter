@@ -1,0 +1,101 @@
+{
+  "job_id": "R1705",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Independently audited the frozen cycle-12 evidence payload, source/build bindings, raw test/build evidence, and native epoch 00–05 records. The declared 69 evidence payload files all match manifest byte lengths and SHA-256 values; no payload entry is missing or unlisted. Current source hashes match the reviewed regression and unchanged controller/app/renderer. All 1,538 build source inputs (47,267,014 bytes) match the canonical receipt. Canonical site receipt and site log copies exactly match current Bazel outputs. Native solve outputs and embedded root-command stdout agree for epochs 00–05; all reported constraints and independent checks pass, assignments and in-flight pins match the job sequence. No test, probe, or build was rerun for this audit; no source or Git mutation occurred.",
+  "payload_audit": {
+    "manifest_path": "PageRouter/work/hh-continuous-improvement/cycle-12/evidence/manifest.json",
+    "manifest_sha256_computed": "73dcdd01c1f6ea9cbe1e3c812610e57bdf334363c55d2f47a301a128eedc0786",
+    "declared_files": 69,
+    "actual_evidence_files_including_manifest": 70,
+    "verified_lengths_and_hashes": 69,
+    "mismatches": 0,
+    "missing": 0,
+    "unlisted_files_under_evidence": 0,
+    "self_manifest_excluded": true,
+    "boundary_note": "The cycle directory also contains README.md, NEXT.md, and continuation.json outside evidence/. The README describes evidence/manifest.json as the payload boundary; these three cycle-level context files are not evidence payload entries. If packageRoot is intended to cover every physical cycle-root file rather than the evidence payload, the exclusions/field naming should explicitly clarify those three files."
+  },
+  "source_bindings_computed": {
+    "test_sha256": "f0304a33a0526dd94ba8e031986963d0c5f18e09fd101c7878194d2860c8f604",
+    "controller_sha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "app_sha256": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "renderer_sha256": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "pre_correction_candidate_sha256": "fd36d5ac06919bbdb9b69b3e0fbbdb3219f9917f80ab682dd6d25deeccff6890",
+    "corrected_test_is_one_expectation_comment_hunk_from_candidate": true,
+    "pre_correction_candidate_executed": false,
+    "R1703_result_sha256_computed": "9befea30a9f010f96d670506841b32b9e11b2899ba93b9decec25e1a60047413",
+    "R1703_scratch_and_payload_and_native_receipt_identical": true
+  },
+  "build_audit": {
+    "canonical_receipt_sha256_computed": "510a99a46b8ea6f5247a7576912a3dd44e50c5979fc291d2a3d6f18dfe7cec6e",
+    "canonical_receipt_copy_matches": true,
+    "site_log_sha256_computed": "e3bd3b0b5b7fe716eeb949b59d94845d82703f76f0349cc5303dfd3ba9799366",
+    "site_log_copy_matches": true,
+    "site_build_id": "e771b3fc7fcef92e3bc8a485c36337ea525602a2dae6b8b870f405558d90705e",
+    "source_digest_receipt_value": "61de5208c2357ec9005291df0f4c52f3498c54f3efabaaa1a11482fe83e60d3f",
+    "site_digest": "22285f335df8bf10ca1911a4650f39f2e9d1a4ae1e16a5d26e013fb80bf098f9",
+    "verified_site_files": 843,
+    "pxcube_packages": 14,
+    "source_inputs_checked": 1538,
+    "source_input_bytes_checked": 47267014,
+    "source_input_mismatches": 0,
+    "observed_counts": {
+      "build_helper": "2/2",
+      "targeted_hh_controller_community": "131/131",
+      "fresh_site_full_npm": "286/286",
+      "built_atlas_import": "1/1"
+    },
+    "count_caveat": "Build suites overlap; counts are not distinct-test arithmetic."
+  },
+  "test_evidence_reviewed": {
+    "focused_regression": "1/1, exit 0, stderr empty",
+    "full_controller_suite": "57/57, exit 0, stderr empty",
+    "public_site_suite": "14/14, exit 0, stderr empty",
+    "coverage_summary": "Known/unknown held failures retain latest rendered draft; provider own profile remains absent; one service call; public:retry does not issue a write; explicit fresh resubmit uses latest edits. Ordinary held success expects the originally submitted values captured before await. Passwords are generated in process and checked absent from controller state, runtime Parts, and storage."
+  },
+  "native_audit": {
+    "spec_schema": "chainspot.rebalancer-spec/v1",
+    "registry_schema": "actual-worker-registry@1",
+    "workers": ["H1", "H2"],
+    "actual_lab_pool": ["V1", "V2", "R1", "R2"],
+    "total_available_slots": 6,
+    "worker_continuity_assumed": false,
+    "epoch_outputs_checked": [0, 1, 2, 3, 4, 5],
+    "epoch_bundle_sizes": [1571, 1273, 1549, 1566, 1594, 1638],
+    "all_root_commands_exit_zero": true,
+    "embedded_stdout_matches_epoch_json": true,
+    "all_solves_true": true,
+    "all_broken_values_and_counts_zero": true,
+    "constraint_values_zero_each_epoch": ["independent_review", "pin_in_flight", "ready_packet_capacity"],
+    "independent_capacity_and_eligibility_checks_true_each_epoch": true,
+    "assignment_sequence": [
+      {"epoch": 0, "H1": "E1701", "H2": "E1702"},
+      {"epoch": 1, "H1": "E1701 pinned", "H2": "E1702 pinned"},
+      {"epoch": 2, "H1": "E1703", "H2": "BENCH"},
+      {"epoch": 3, "H1": "BENCH", "H2": "R1703"},
+      {"epoch": 4, "H1": "E1704", "H2": "BENCH"},
+      {"epoch": 5, "H1": "E1705", "H2": "BENCH"}
+    ],
+    "claims_checked": "Two actual HH contexts, four actual lab contexts, global capacity six; no invented reserve workers. Epoch-1 pins persist in place; later dispatch follows prior completion. Frozen state shows E1705 running and R1705 pending as of epoch 05; R1705 epoch-06 admission/readback was separately confirmed by root after this payload freeze."
+  },
+  "provenance_and_limits": [
+    "E1701 first and corrected script versions/output limitations are explicitly disclosed; final.stdout.raw is a tool-transcript copy, not shell-captured stdout, and no first-run raw streams/status file are claimed.",
+    "E1702 log retains three failed harness attempts and the passing fourth; output was combined by the tool, not separate original stdout/stderr, and overwritten earlier script versions are not reconstructed.",
+    "The initial E1702 summary-envelope preflight refusal happened before native invocation; erratum records the separate ENOENT copy failure and empty solve without claiming a native finish rejection or evidence rewrite.",
+    "Archived `.mjs.txt` source snapshots are inert, not test-discovered; workspace-bound absolute-import probes are not promised portable.",
+    "No browser QA/screenshots, backend/production/real-account behavior, human acceptance, publication, or deployment claim. E1704 establishes build compatibility only."
+  ],
+  "git_read_only_observation": {
+    "branch": "codex/hh-continuous-improvement",
+    "head": "67d1cba056c4e7be43d1007188419f7cecce5267",
+    "head_subject": "HH cycle 11: archive accepted review checkpoint",
+    "working_tree": "one modified controller test and untracked cycle-12 package; no commit observed before R1705 acceptance",
+    "git_mutations_by_H2": 0
+  },
+  "audit_actions": {
+    "tests_rerun": 0,
+    "probes_run": 0,
+    "builds_run": 0,
+    "source_or_Git_mutations": 0
+  }
+}

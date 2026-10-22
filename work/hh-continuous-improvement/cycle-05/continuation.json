@@ -1,0 +1,75 @@
+{
+  "schema": "hh-continuous-improvement-continuation/v1",
+  "cycle": "cycle-05",
+  "repository": "PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "base": {
+    "publishedCommit": "77ef66c5fd9c4050c4f474253cff19ad9e535193",
+    "localSourceCommit": "bf27246beebd03d673c92c7152fd26124a58b40b",
+    "sharedTreeAtStart": "4daf69ad6017206eb9e95646ca2403e17841a078",
+    "main": "7adf7e74a85c4310a5704a4c42808e85a1a82d71",
+    "draftPullRequest": 8
+  },
+  "ownership": {
+    "sourceAndGit": "H1 sole owner",
+    "independentReview": "H2 read-only source reviewer and assigned scratch owner",
+    "nativeCoordinationAndConnectedPublication": "root"
+  },
+  "status": {
+    "finding": "confirmed: a pending synthetic profile creation could replace another active public-profile projection and captured-reference readonly projection while the URL stayed on that route",
+    "boundedCorrection": "accepted exact two-file controller/test freeze; syncRuntime projects runtime own-profile only when there is no active profileId or it matches own.id; create completion stores the owner overlay but only mutates a matching present own-route projection",
+    "independentReview": "R703 accepted the exact E703 source hashes after eight additional fixture adversarial cases and focused/controller reruns",
+    "canonicalBuild": "E704 passed and receipt binds both exact reviewed source inputs",
+    "package": "prepared for independent R705 audit; no commit or push",
+    "nativeSnapshot": "Copied point-in-time state records E705 assigned/running for H1 and R705 blocked for H2 at capture. This is historical state, not live background execution or current dispatch authority.",
+    "humanAcceptance": "not claimed",
+    "browserVisualQA": "unverified; controller/tree checks are not visual QA",
+    "publication": "not committed, pushed, merged, or deployed"
+  },
+  "evidenceSummary": {
+    "E701": "H1 baseline probe confirms a reachable held create completion overwrites /public-profile/demo-avery projection; edit then succeeds against the signed-in synthetic teacher projection.",
+    "E702": "H2 independent baseline probe reproduces Jordan overwrite and captured Sarah reference overwrite. R703 clarifies that synthetic fixture-provider operations did execute; no production/backend operation, network call, or real teacher data occurred. Raw E702 report remains unchanged.",
+    "E703": "Original-source regression red was 0 passed/4 failed at intended projection assertions. After the bounded two-file correction: focused 4/4, controller 37/37, all HH 64/64. Original logs and diff are retained.",
+    "R703": "Independent H2 review accepted exact source freeze; eight synthetic fixture adversarial cases and focused/controller reruns passed.",
+    "E704": "Canonical build exit 0; targeted HH regression tests 111/111, full suite 266/266, Atlas import 1/1, helpers 2/2, 14 PxCube packages, 843 verified files. Source hashes match exact receipt inputs."
+  },
+  "sourceFreeze": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "a5deede267691459429f8bc404ba9cbc8e07d18f8120047281cf773d5cdaf558",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "8716ff6cd19f8ca56312ba143062d59f5a18dc0677b020d4aa75a356b985025f",
+    "changedProductFiles": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "receiptBound": true
+  },
+  "canonicalBuild": {
+    "command": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "workingDirectory": "PageRouter/checkpoint",
+    "exitCode": 0,
+    "siteBuildId": "14f8afa0adde85fdefad575487d4992c9c373c5244663fd64f5b3b4a0d8c84b0",
+    "siteDigest": "d89776561978a5c35e5c2c9609f9d96cc998892f9c14f05e1678647fceb426e0",
+    "targetedHHTests": {"passed": 111, "failed": 0},
+    "fullTests": {"passed": 266, "failed": 0},
+    "atlasImport": {"passed": 1, "failed": 0},
+    "helperTests": {"passed": 2, "failed": 0},
+    "pxcubePackages": 14,
+    "verifiedSiteFiles": 843,
+    "receiptSourceInputs": {
+      "controller": "a5deede267691459429f8bc404ba9cbc8e07d18f8120047281cf773d5cdaf558",
+      "controllerTest": "8716ff6cd19f8ca56312ba143062d59f5a18dc0677b020d4aa75a356b985025f"
+    },
+    "receipt": "evidence/E704/site.receipt.json"
+  },
+  "limits": {
+    "provider": "volatile synthetic fixture operations only; no backend/network/real teacher data",
+    "authorityImpact": "The stale display/edit dispatch affected the owner's local overlay only; captured Sarah source data and provider records were not mutated by that UI edit.",
+    "browser": "Root's fresh connected-browser attempt required the originating context; no browser workaround or repeat localhost probe was used.",
+    "geography": "Existing recorded Python/backend geography evidence remains distinct and unchanged; no new Python/backend execution occurred in this cycle."
+  },
+  "next": {
+    "review": "R705 independently audits the exact package manifest, source/build binding, provenance, and continuation. H1 stops package edits for this audit.",
+    "publication": "After R705 acceptance, root-authorized E706 may create a local commit/payload on the existing branch with the exact intended base parent/tree; root handles connected publication. No push/main merge/deploy is authorized here.",
+    "unexecutedHypothesis": "Delay a synthetic Session.logout completion while navigating to another or captured public profile; resolve success/failure and inspect anonymous session, current route/profile projection, and edit authority. First prove reachability in the volatile fixture runtime. An unguarded profile clear is only source-inspected; do not assume a defect or alter logout privacy/authority. Fresh native assignment is required before source work."
+  },
+  "evidenceManifest": "evidence/manifest.json"
+}

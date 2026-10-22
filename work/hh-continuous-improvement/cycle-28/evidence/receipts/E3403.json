@@ -1,0 +1,64 @@
+{
+  "job_id": "E3403",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Implemented directory school-choice recovery as a distinct retry action, preserved separate directory-results retry ownership, and cleared only a recovered lookup's stale shared error. The full HH source suite passes. No build, staging, commit, or publication was performed.",
+  "repository": {
+    "path": "/workspace/scratch/86659bbafcce/PageRouter",
+    "baseline_commit": "6e58a206bb30deb967f81cfe6214d6ffb581a84b",
+    "baseline_tree": "0446ad99d770c61f99ddb1acf8ec53534875dcf1",
+    "final_commit": "6e58a206bb30deb967f81cfe6214d6ffb581a84b",
+    "final_tree": "0446ad99d770c61f99ddb1acf8ec53534875dcf1",
+    "staged": false
+  },
+  "changed_files": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "9c9276c93b4ab9f1afc3263c601588e97af6a7182ff337df55baaa472c0c2481",
+    "checkpoint/vendor/hh/src/public-site.mjs": "524df4132426814cc9621246a4cba548d54c0c537dd840b3997e375e78c9ad4d",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "1a290586620e47f7c5a04460c4375416b966e7997f8519b95577a550db2120dc",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "e2ed463e7c37b7431a2767579e41f90e2df055893a6362e8690597571707ea1e"
+  },
+  "runs": [
+    {
+      "kind": "pre-fix-red",
+      "command": "node --test --test-name-pattern='directory renders a distinct|directory school-choice retry does not consume|school-choice retry event rejects|directory shows a school-choice retry' checkpoint/vendor/hh/src/public-controller.test.mjs checkpoint/vendor/hh/src/public-site.test.mjs",
+      "started_utc": "2026-10-19T16:13:43Z",
+      "ended_utc": "2026-10-19T16:13:43Z",
+      "exit_code": 1,
+      "counts": {"pass": 0, "fail": 4},
+      "interpretation": "Two missing-control AssertionErrors directly demonstrate the gap. Two TypeErrors are downstream failures caused by dereferencing the absent control/unknown event handler, not independent guard assertions.",
+      "stdout": "/workspace/scratch/afc0d51965a8/hh28/H1/E3403/red.stdout.raw",
+      "stderr": "/workspace/scratch/afc0d51965a8/hh28/H1/E3403/red.stderr.raw"
+    },
+    {
+      "kind": "focused-post-change-attempt",
+      "command": "node --test --test-name-pattern='directory renders a distinct|directory school-choice retry does not consume|school-choice retry event rejects|directory shows a school-choice retry' checkpoint/vendor/hh/src/public-controller.test.mjs checkpoint/vendor/hh/src/public-site.test.mjs",
+      "started_utc": "2026-10-19T16:14:54Z",
+      "ended_utc": "2026-10-19T16:14:54Z",
+      "exit_code": 1,
+      "counts": {"pass": 3, "fail": 1},
+      "interpretation": "The remaining failure was an incorrect test expectation for the existing Demo California fixture (actual county Demo Alameda, expected Demo Marin). The expectation was corrected, and the focused command was not rerun per instruction.",
+      "stdout": "/workspace/scratch/afc0d51965a8/hh28/H1/E3403/focused-green.stdout.raw",
+      "stderr": "/workspace/scratch/afc0d51965a8/hh28/H1/E3403/focused-green.stderr.raw"
+    },
+    {
+      "kind": "post-change-hh-source-suite",
+      "command": "node --test checkpoint/vendor/hh/src/*.test.mjs",
+      "started_utc": "2026-10-19T16:15:12Z",
+      "ended_utc": "2026-10-19T16:15:13Z",
+      "exit_code": 0,
+      "counts": {"pass": 114, "fail": 0},
+      "stdout": "/workspace/scratch/afc0d51965a8/hh28/H1/E3403/hh-suite.stdout.raw",
+      "stderr": "/workspace/scratch/afc0d51965a8/hh28/H1/E3403/hh-suite.stderr.raw"
+    }
+  ],
+  "behavior": {
+    "render": "Directory shows lookupError and only renders Retry school choices while lookupRetryable is true, using data-event public:retry-school-lookup; permanent failures remain visible without a retry control.",
+    "dispatch": "The named event runs only the current-epoch schoolLookupRetry closure, or returns nothing_to_retry. Generic public:retry is unchanged and still owns directory-result retry precedence.",
+    "error_cleanup": "On successful lookup, journey.error is cleared only when it still equals the lookup error captured before the retry; unrelated directory errors survive.",
+    "registration": "The registration retry event and rendering are unchanged.",
+    "fixture_scope": "Tests use fixture-only local providers and volatile in-memory storage; no browser, server, origin, real account, or persistent storage writes."
+  },
+  "diff_check": "git diff --check passed",
+  "test_expectation_note": "The initial focused post-change run had 3 pass and 1 fail because the newly added invalidation test expected Demo Marin. The fixture source at checkpoint/vendor/hh/services/fixtures.mjs:6 maps Demo California to Demo Alameda, verified by the lead before authorizing the literal correction. No separate pre-correction test-file snapshot was saved; preserve the focused raw output and the lead's preceding diff review as the evidence for the original literal. The later 114/114 HH source suite ran after correcting only that test literal.",
+  "remaining_work": "No focused post-change rerun, package/build, staging, commit, or publication. Lead may review and decide whether another focused run is needed."
+}

@@ -1,0 +1,37 @@
+{
+  "schema": "hh-cycle03-e401-protocol/v1",
+  "job_id": "E401",
+  "worker": "H1",
+  "status": "frozen-before-execution",
+  "repository": "PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "sourceBase": "a156bae0873ba4207bd48d79359d96103cb74f30",
+  "noSourceEdits": true,
+  "fixtureOnly": true,
+  "controls": [
+    {
+      "case": "authenticated_nonowner_public_profile",
+      "sessionTeacherId": "demo-seed-avery",
+      "viewedProfileId": "demo-jordan",
+      "viewedTeacherId": "demo-seed-jordan",
+      "actions": ["inspect rendered edit affordance", "dispatch public:edit-profile", "dispatch public:profile-edit with changed synthetic name and bio", "reopen same public route"],
+      "observe": ["runtime snapshot before and after", "controller profile before and after", "session teacherId", "viewed profile teacherId", "rendered edit button and form", "overlay effect after reopen"]
+    },
+    {
+      "case": "authenticated_owner_profile_positive_control",
+      "sessionTeacherId": "demo-seed-avery",
+      "route": "#/profile",
+      "actions": ["inspect rendered edit affordance", "dispatch public:edit-profile", "dispatch public:profile-edit with changed synthetic name and bio"],
+      "observe": ["actual session and own-profile teacherIds", "controller result and profile state", "runtime snapshot remains unchanged because controller edits are tab-local"]
+    },
+    {
+      "case": "captured_readonly_reference_control",
+      "sessionTeacherId": "demo-seed-avery",
+      "route": "#/pages/teacher.html",
+      "actions": ["inspect rendered edit affordance", "dispatch public:edit-profile", "dispatch public:profile-edit"],
+      "observe": ["actual session teacherId", "captured profile identity and source", "rejections", "runtime snapshot before and after"]
+    }
+  ],
+  "fixtureSetup": "Use createFixtureProvider({fixture:true, storage:memoryStorage()}) and createServiceRuntime, authenticate the existing seeded avery@fixture.test demo account, and use seeded runtime public profile demo-jordan. No production service, browser, real accounts, or persisted user data.",
+  "interpretation": "Confirm reuse only if the nonowner controller accepts save and an overlay tied to demo-seed-jordan survives route reopen; classify provider mutation independently. UI affordance absence is a rendered-tree assertion, not visual QA. Keep all seeded profile data and tab-local overlay semantics explicit."
+}

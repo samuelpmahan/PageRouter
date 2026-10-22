@@ -1,0 +1,80 @@
+{
+  "job_id": "E1904",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "The one authorized canonical local Bazel source build completed with process status 0. It consumed 1,538 declared inputs including the E1903 controller/test hashes, rebuilt all 14 PxCube packages, and verified 843 fresh site files. Named test summaries: build helpers 2/2, targeted HH controller/community 134/134, full npm suite 289/289, built Atlas import closure 1/1. The 134 targeted HH tests overlap the 289-test full suite and are not added to the distinct total; distinct pass-case count is 292. This is local source build evidence only, not browser QA, release acceptance, or deployment.",
+  "command": {
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "executable": "/usr/bin/env",
+    "argv": ["BAZEL=/workspace/scratch/8528bb251845/tools/bazel", "bash", "ci/bazel/run.sh"],
+    "wrapper": "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1904/run-captured.mjs",
+    "wrapper_sha256": "bc3c96569ee890a7824cb4c8316509b2214ac4c035a2d5e2e76d9a01416bc84b",
+    "command_record": "prospective-command.json",
+    "command_sha256": "1dad4d9aafcf5a960accc7d7c52eab9ce75ddc1b2e33e3f93e937a6586dc2131",
+    "bazel": "7.4.1",
+    "bazel_sha256": "c97f02133adce63f0c28678ac1f21d65fa8255c80429b588aeeba8a1fac6202b",
+    "node": "v24.19.0",
+    "start_utc": "2026-10-18T22:26:21.626Z",
+    "end_utc": "2026-10-18T22:27:31.814Z",
+    "duration_seconds": 70.188,
+    "process_status": 0,
+    "signal": null,
+    "error": null,
+    "exit_record": {"path": "exit.json", "bytes": 1302, "sha256": "d4f6847c1342a23156ca9ded18df02aa9e05afdd36d1cbf1afcaff9b36477691"}
+  },
+  "source_binding": {
+    "git_head": "06b6da36e326758ccd14cda021bc0a15cfd00817",
+    "expected_current_sources": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164"
+    },
+    "receipt_input_bindings": {
+      "vendor/hh/src/public-controller.mjs": {"bytes": 53532, "sha256": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669"},
+      "vendor/hh/src/public-controller.test.mjs": {"bytes": 100173, "sha256": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164"}
+    },
+    "excluded_preserved_untracked": "PageRouter/hh-cycle13/",
+    "tracked_product_changes_during_build": "none"
+  },
+  "build_receipt": {
+    "schema": "pagerouter-source-build@1",
+    "path": "site.receipt.json",
+    "bytes": 467223,
+    "sha256": "dfb7a0f4159f13dfbd771ffb3a5ff9bb5fcb90ddfc4b9207a131939a841447db",
+    "source_input_count": 1538,
+    "source_digest": "b48ad9a809682aab5b6eccd4a1e6d68ce52f61d860b9f0d889433e76118c442f",
+    "site_file_count": 843,
+    "site_digest": "1343fcceb41ec09acd0ff550054c38e3a73bf3f4a5e54361d9fe758596e58628",
+    "site_build_id": "02862d25fc8675fa79307b9e72f5b5ffb4d71de2fabd21f384ebdca98f1f7781",
+    "pxcube_rebuilt": true,
+    "pxcube_packages": 14,
+    "pxcube_relocated": false,
+    "crisp_exact_compiled_equality": true,
+    "log": {"path": "site.log", "bytes": 51011, "sha256": "24b25f908c5d30b9f1cae12283eb608ec92ff20dd22bbe36f25d46052e781190"},
+    "copy_note": "Both files were copied after successful child exit; wrapper recorded that each output changed during this invocation. No site.evidence, PNG, or site bundle was copied."
+  },
+  "tests": {
+    "build_helper_tests": {"pass": 2, "fail": 0, "capture": "stdout.raw"},
+    "targeted_hh_controller_community": {
+      "pass": 134,
+      "fail": 0,
+      "capture": "site.log",
+      "overlap": "Included in the 289 full npm tests; do not add to distinct total."
+    },
+    "npm_test_suite": {"pass": 289, "fail": 0, "capture": "site.log"},
+    "built_atlas_import_closure": {"pass": 1, "fail": 0, "capture": "site.log"},
+    "distinct_pass_case_count": 292,
+    "distinct_count_note": "2 build helpers + 289 full npm suite + 1 Atlas closure. The targeted HH 134 overlap is excluded."
+  },
+  "captures": {
+    "stdout": {"path": "stdout.raw", "bytes": 1296, "sha256": "bab21b44a54e2dc0b05dbd7876efa4333cbb35b8a085b1b7bb650a0df9775e88"},
+    "stderr": {"path": "stderr.raw", "bytes": 1037, "sha256": "bb361ef48c95ea4670b1d5197d3e067171dabb2f811a8916e77432876cd700b0", "note": "Preserved original OpenJDK deprecation warning and Bazel progress/success output; child exit status is 0."},
+    "start_utc": {"path": "start.utc", "bytes": 25, "sha256": "0523e617bff14e5ac4e44ed7e8dd89206aefae364be336e5304e612778e2f054"},
+    "end_utc": {"path": "end.utc", "bytes": 25, "sha256": "faa137df4d2561b7796774f6c7e8863357375d6b91a3c26f843d5a3d1987d23c"}
+  },
+  "scope_limitations": [
+    "Local canonical source build and static output verification only; no Pages deployment or release acceptance.",
+    "No mounted-browser QA, screenshots, production service/account, or external email.",
+    "No Git staging, commit, publication, or native state write by H1.",
+    "Only the current actual site.receipt.json and site.log plus direct build captures were preserved; site.evidence, PNG, and the full site bundle were intentionally not copied."
+  ]
+}

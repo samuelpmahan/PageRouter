@@ -1,0 +1,7 @@
+{
+  "job_id": "R01",
+  "worker": "W3",
+  "decision": "amend",
+  "summary": "Controller retry behavior passes 28 focused tests, but renderer suppresses top-level lookup outcome whenever lookupError exists and renders inline error only if retryable. Nonretryable school lookup errors disappear entirely. Render nonretryable error text without offering a dead retry and assert that text.",
+  "agent": "/root/hh_regression"
+}

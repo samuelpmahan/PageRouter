@@ -1,0 +1,56 @@
+{
+  "job_id": "E2305",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Assembled a bounded cycle-17 evidence checkpoint with exact source snapshots, original native captures and receipts, the accepted corrected-cwd review, and the fresh E2304 receipt/log. The package is frozen for independent file-only audit; no Git stage, commit, export, publication, or deployment was performed.",
+  "package": {
+    "path": "work/hh-continuous-improvement/cycle-17",
+    "manifest": "evidence/manifest.json",
+    "manifest_sha256": "87ab8bd69084df7bba88077c851c16cb570c5c8dd0d9584eb57d82a8eb142fd9",
+    "listed_file_count_excluding_manifest_and_result": 115,
+    "total_package_file_count_including_manifest_and_result": 117,
+    "listed_bytes_excluding_manifest_and_result": 847742,
+    "manifest_mode": "0644",
+    "exclusions": [
+      "evidence/manifest.json",
+      "evidence/E2305/result.json"
+    ]
+  },
+  "source_freeze": {
+    "checkpoint/vendor/hh/src/public-site.mjs": {
+      "sha256": "d9c17a350375633a53d0dc256be666bb0c82298c9ffa7b05bc6be08156141bfc",
+      "change": "One added aria-label on hh-public-nav-toggle."
+    },
+    "checkpoint/vendor/hh/src/public-site.test.mjs": {
+      "sha256": "264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5",
+      "change": "One 19-line renderer-tree regression for anonymous/authenticated × closed/open states."
+    },
+    "other_product_paths_changed": 0
+  },
+  "included_evidence": {
+    "native_receipts": [
+      "E2301",
+      "E2302",
+      "E2303",
+      "E2304",
+      "R2303",
+      "R2303B"
+    ],
+    "native_solves": "Epoch 00-05 bundles, solve JSON, and root command records copied byte-exact; native state, spec, registry, next-packet and root policy snapshots plus process notes included.",
+    "probe_evidence": "Both E2301/E2302 bounded directory-recovery probes, source/FLOW/prospective and original captures; E2302 pre-execution source-only result is separately labeled.",
+    "red_green": "E2303 actual first-case RED, focused 1/1 GREEN, full public-site 16/16, full controller 61/61; all original captures retained.",
+    "independent_review": "R2303 wrong-cwd AMEND and zero-test captures preserved separately from accepted R2303B corrected-cwd 1/1 pass.",
+    "canonical_build": "E2304 original stdout/stderr/UTC/exit/signal, plus only the fresh site.receipt.json and site.log, preserving both output files' mode 0555."
+  },
+  "qualifications": [
+    "E2301/E2302 falsified a directory recovery defect; no directory implementation change was made.",
+    "E2303 raw RED says the actual attribute was undefined; its JSON result records null because undefined is not representable in JSON.",
+    "The E2303 GREEN prospective predicted skipped tests incorrectly; actual raw output reports zero skips in all three runs.",
+    "R2303 used the wrong working directory, exited before target loading and registered zero tests; it is a harness AMEND, not a product/test failure. R2303B is the accepted corrected-cwd review.",
+    "E2304 targeted 137 HH tests overlap the 292 full-suite tests and are not additive. Receipt sourceInputs contain the renderer but no public-site.test.mjs entry.",
+    "All UI observations are synthetic emitted-tree evidence only; no browser DOM, computed accessible name, keyboard, screen-reader, human, backend, real account, email, deployment or publication claim.",
+    "The native state snapshot records E2305 running during package preparation and is historical, not live post-finish state.",
+    "Two E2305 copy attempts referenced a nonexistent destination and failed before the target copy; the exact copy was then completed. No source or previously copied payload was overwritten."
+  ],
+  "next_gate": "Independent file-only audit of the exact manifest, source snapshots/diff, raw captures and full modes, native provenance, accepted R2303B review, and E2304 receipt/log bindings; then root decision."
+}

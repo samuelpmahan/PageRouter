@@ -1,0 +1,61 @@
+{
+  "schema": "hh-cycle05-worker-result/v1",
+  "job_id": "E705",
+  "worker": "H1",
+  "summary": "Packaged the cycle-05 evidence and continuation at the assigned path, preserving raw probe/review/build records and native captures with a checked SHA-256 manifest.",
+  "outcome": "mixed_change",
+  "native_assignment": {
+    "epoch": 4,
+    "start_readback": "running",
+    "capturedStateLabels": "The retained native snapshot records E705 running for H1 and R705 blocked for H2; it is historical, not current dispatch authority or background execution."
+  },
+  "package": {
+    "path": "PageRouter/work/hh-continuous-improvement/cycle-05/",
+    "readme": "PageRouter/work/hh-continuous-improvement/cycle-05/README.md",
+    "next": "PageRouter/work/hh-continuous-improvement/cycle-05/NEXT.md",
+    "continuation": "PageRouter/work/hh-continuous-improvement/cycle-05/continuation.json",
+    "manifest": "PageRouter/work/hh-continuous-improvement/cycle-05/evidence/manifest.json",
+    "manifest_sha256": "e2201ce25c291e8a98f131de6841d71586d52c56d6d2eba158ecbd9be1a68237",
+    "manifest_listed_file_count": 43,
+    "total_file_count_including_manifest": 44,
+    "total_size_bytes": 706008,
+    "manifest_verification": {"checked": 43, "mismatched": 0},
+    "manifest_self_hash": "reported separately in manifest_sha256 to avoid a circular entry"
+  },
+  "source_freeze": {
+    "branch": "codex/hh-continuous-improvement",
+    "head": "bf27246beebd03d673c92c7152fd26124a58b40b",
+    "controller": "a5deede267691459429f8bc404ba9cbc8e07d18f8120047281cf773d5cdaf558",
+    "controller_test": "8716ff6cd19f8ca56312ba143062d59f5a18dc0677b020d4aa75a356b985025f",
+    "tracked_product_files_modified": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "no_commit_or_push": true
+  },
+  "included_evidence": {
+    "E701_E702": "One copy each of original synthetic baseline probe, stdout, and result; original worker result language is retained and E702 wording clarification appears in R703 and package README.",
+    "E703": "Original-source red log, all three green logs, source diff, and result.",
+    "R703": "Independent probe, stdout, and accepted result; original eight-case stdout retained.",
+    "E704": "Canonical invocation log, source-build site.log, exact receipt, and result.",
+    "native": "Exact spec, plan, source-check, coordinator notes, updated root verification, point-in-time state, epoch-00..04 solve records/bundles/logs. Byte-identical native receipt duplicates were omitted; the corresponding worker result is preserved once under each job."
+  },
+  "validation": {
+    "canonicalBuild": "E704 passed: targeted HH 111/111, full suite 266/266, Atlas import 1/1, helpers 2/2, 14 PxCube packages, 843 verified site files.",
+    "siteBuildId": "14f8afa0adde85fdefad575487d4992c9c373c5244663fd64f5b3b4a0d8c84b0",
+    "siteDigest": "d89776561978a5c35e5c2c9609f9d96cc998892f9c14f05e1678647fceb426e0",
+    "browserVisualQA": "unverified; root's connected-browser attempt required originating browser context; no workaround or repeated localhost probe",
+    "backendOrHumanAcceptance": "not claimed"
+  },
+  "reviewHandoff": {
+    "next": "R705 independent exact package manifest/source-build binding/provenance/continuation audit",
+    "sourceWorkStopped": true,
+    "localCommitPushOrDeployment": false
+  },
+  "evidence": {
+    "package_manifest_sha256": "e2201ce25c291e8a98f131de6841d71586d52c56d6d2eba158ecbd9be1a68237",
+    "manifest_check_command": "Node SHA-256 comparison of every manifest.files entry against package bytes; 43 checked, 0 mismatched.",
+    "native_state_hash": "ccd33fa8d699d216cbb3a9081cb6826c89ae6bffa211860290044c97d1f0b42c",
+    "root_verification_hash": "ddf888033a5858c9c1232b430464e65802205984ea12e426c854e974b3f493d3"
+  }
+}

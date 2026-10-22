@@ -1,0 +1,47 @@
+{
+  "schema": "chainspot.rebalancer-spec/v1",
+  "service": {
+    "name": "hh28-directory-school-recovery",
+    "scope": "HH supporter directory school-choice failure recovery, actual volatile fixture"
+  },
+  "workers": [
+    "H1",
+    "H2"
+  ],
+  "review_policy": {
+    "enabled": false
+  },
+  "jobs": [
+    {
+      "id": "E3401",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Sole integration owner: freeze baseline and actually probe directory school lookup failure/recovery; no product edits yet"
+    },
+    {
+      "id": "E3402",
+      "kind": "extract",
+      "allow_workers": [
+        "H2"
+      ],
+      "subject": "Independent read-only check of directory renderer/controller/app retry ownership, previous fixes and narrow acceptance"
+    }
+  ],
+  "conditional_policy": {
+    "demonstrated_gap": "Admit H1 smallest RED->fix, then independent H2 review",
+    "falsified": "Retain falsifier, no forced patch",
+    "review_amend": "Diagnose exact finding, retain original; admit bounded repair",
+    "accepted": "One canonical build for changed source then package one manifest and ordinary commit; existing PR8",
+    "blocked": "Preserve evidence; no authority expansion"
+  },
+  "capacity_intent": {
+    "actual_workers": 2,
+    "slots_per_packet": 1,
+    "owner": "H1 source/Git",
+    "floating": "H2 read-only/review",
+    "reserve": "Remaining available slots not invented as workers; three-stream/floating/reserve intent adapted to bounded two-worker HH scope",
+    "fit": "Explicit allow_workers encodes owner vs independent review capability; native priority/capacity/eligibility/pins checked"
+  }
+}

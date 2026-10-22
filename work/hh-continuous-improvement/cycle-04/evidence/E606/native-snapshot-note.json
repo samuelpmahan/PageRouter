@@ -1,0 +1,7 @@
+{
+  "purpose": "Read-only capture note for the coordinator-owned native state included in evidence/native/state-at-E606-start.json.",
+  "source": "/workspace/scratch/8528bb251845/hh-cycle04/state.json",
+  "recorded_native_job": {"id": "E606", "status": "running", "worker": "H1", "started_at": "2026-10-18T10:29:17.639789+00:00"},
+  "recorded_review_job": {"id": "R606", "status": "blocked", "worker": null},
+  "capture_interpretation": "This exact state snapshot was copied during package preparation. Its recorded running status is not proof of a live background worker or completion. The root coordinator owns any later native-state update."
+}

@@ -1,0 +1,68 @@
+{
+  "job_id": "E1704",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Canonical isolated PageRouter source build completed successfully using the exact R1703-accepted controller/test source hashes. It built and verified a fresh site receipt after the admitted test-only source change; controller/app/provider files remain unchanged. This confirms build compatibility only, not product defect, browser, backend, human, or production acceptance.",
+  "command": {
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "environment": {"BAZEL": "/workspace/scratch/8528bb251845/tools/bazel"},
+    "argv": ["env", "BAZEL=/workspace/scratch/8528bb251845/tools/bazel", "bash", "ci/bazel/run.sh"],
+    "start_utc": "2026-10-18T19:19:00.883856386Z",
+    "end_utc": "2026-10-18T19:20:17.170628518Z",
+    "process_exit": 0,
+    "bazel_version": "7.4.1",
+    "capture": {
+      "stdout": "hh-cycle12/H1/E1704/build-01.stdout.raw",
+      "stdout_sha256": "1b4018989e25f9fdd0b735d8cf5e29a1726bffd2f410a4ac42a5466118c87aba",
+      "stdout_bytes": 1298,
+      "stderr": "hh-cycle12/H1/E1704/build-01.stderr.raw",
+      "stderr_sha256": "a6e1e82e5a6eabb19390af64e2b2f4fa8e7342f4ddd7e72d92fc67efdc715298",
+      "stderr_bytes": 1037,
+      "exit": "hh-cycle12/H1/E1704/build-01.exit",
+      "start_utc": "hh-cycle12/H1/E1704/build-01.start.utc",
+      "end_utc": "hh-cycle12/H1/E1704/build-01.end.utc"
+    }
+  },
+  "source_binding": {
+    "test_path": "vendor/hh/src/public-controller.test.mjs",
+    "test_sha256": "f0304a33a0526dd94ba8e031986963d0c5f18e09fd101c7878194d2860c8f604",
+    "controller_path": "vendor/hh/src/public-controller.mjs",
+    "controller_sha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2",
+    "source_digest": "61de5208c2357ec9005291df0f4c52f3498c54f3efabaaa1a11482fe83e60d3f"
+  },
+  "build_receipt": {
+    "schema": "pagerouter-source-build@1",
+    "site_build_id": "e771b3fc7fcef92e3bc8a485c36337ea525602a2dae6b8b870f405558d90705e",
+    "site_digest": "22285f335df8bf10ca1911a4650f39f2e9d1a4ae1e16a5d26e013fb80bf098f9",
+    "verified_site_files": 843,
+    "pxcube_packages": 14,
+    "pxcube_rebuilt": true,
+    "pxcube_relocated": false,
+    "receipt_path_copy": "hh-cycle12/H1/E1704/site.receipt.json",
+    "receipt_sha256": "510a99a46b8ea6f5247a7576912a3dd44e50c5979fc291d2a3d6f18dfe7cec6e",
+    "site_log_path_copy": "hh-cycle12/H1/E1704/site.log",
+    "site_log_sha256": "e3bd3b0b5b7fe716eeb949b59d94845d82703f76f0349cc5303dfd3ba9799366"
+  },
+  "observed_counts": {
+    "build_helper_tests": {"tests": 2, "pass": 2, "fail": 0},
+    "targeted_hh_controller_community": {"tests": 131, "pass": 131, "fail": 0},
+    "full_npm_suite_on_fresh_site": {"tests": 286, "pass": 286, "fail": 0},
+    "built_atlas_import": {"tests": 1, "pass": 1, "fail": 0},
+    "note": "These suite counts overlap and are not distinct-test arithmetic. The build log reported 14 PxCube packages succeeded and 843 emitted site files verified. Bazel stderr reported target up-to-date and two actions including the PageRouterSourceBuild processwrapper-sandbox action; no cache hit/miss interpretation is added."
+  },
+  "retained_outputs": {
+    "current_receipt": "PageRouter/checkpoint/bazel-bin/site.receipt.json",
+    "current_site_log": "PageRouter/checkpoint/bazel-bin/site.log",
+    "exact_copies": true,
+    "copied": [
+      "hh-cycle12/H1/E1704/site.receipt.json",
+      "hh-cycle12/H1/E1704/site.log"
+    ],
+    "site_evidence_tree_copied": false
+  },
+  "limits": [
+    "No browser QA was performed; zero screenshots are retained, and browser QA remains unverified.",
+    "No backend, production, account, or human acceptance claim.",
+    "No source/test edits during build, no Git action, commit, publication, or deployment."
+  ]
+}

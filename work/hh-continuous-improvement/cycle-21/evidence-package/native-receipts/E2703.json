@@ -1,0 +1,79 @@
+{
+  "job_id": "E2703",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "Retained the bounded, non-secret teacher topic draft only after semantic rejection; both compose renderers project it, explicit correction is required to retry, and lifecycle clears are tested. 98 HH source tests pass. The full package suite remains blocked by unrelated missing fast-check and stale/missing dist build outputs; no build or Git mutation was performed.",
+  "source": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "baseline_head": "0d52cde4f2a502b6ee0d4b188bfc3b10c376daa4",
+    "baseline_tree": "8e8b71932d59f13be4b3dd92bc9c7cd8f91b9d51",
+    "post_head": "0d52cde4f2a502b6ee0d4b188bfc3b10c376daa4",
+    "modified": [
+      {
+        "path": "checkpoint/vendor/hh/src/public-controller.mjs",
+        "sha256": "2ffc11a0b694d752930eb8ef93abe1d045a3811096b8ac81fc429b60a49c91e9"
+      },
+      {
+        "path": "checkpoint/vendor/hh/src/community.mjs",
+        "sha256": "d5f4bf9b416fd53eb66fe4d983f08865c532b9982519e73735be88a0eaf1a964"
+      },
+      {
+        "path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+        "sha256": "88385bec51b14da0bd6f6e586e591d5198759892b4f697ce7c46517738ab2e7f"
+      }
+    ]
+  },
+  "runs": [
+    {
+      "command": "node --test vendor/hh/src/public-controller.test.mjs",
+      "phase": "tests-first-red",
+      "started_utc": "2026-10-19T08:52:03Z",
+      "ended_utc": "2026-10-19T08:52:09Z",
+      "exit_code": 1,
+      "stdout": "red.stdout.raw",
+      "stderr": "red.stderr.raw",
+      "interpretation": "The five new regression tests failed against baseline because rejected topic values were not projected back into the compose tree."
+    },
+    {
+      "command": "node --test --test-name-pattern='rejected topic|corrected explicit topic|overlength topic|topic draft clears' vendor/hh/src/public-controller.test.mjs",
+      "phase": "focused-green",
+      "started_utc": "2026-10-19T08:53:36Z",
+      "exit_code": 0,
+      "stdout": "green-focused.stdout.raw",
+      "stderr": "green-focused.stderr.raw"
+    },
+    {
+      "command": "npm test",
+      "phase": "package-suite",
+      "interval_utc": "2026-10-19T08:53:53Z/2026-10-19T08:54:15Z",
+      "exit_code": 1,
+      "stdout": "full-suite.stdout.raw",
+      "stderr": "full-suite.stderr.raw",
+      "summary": "290 total: 283 pass, 7 fail. Two failures require unavailable fast-check; four expect missing dist/compiled outputs; one compares source against stale dist. No rebuild was attempted."
+    },
+    {
+      "command": "node --test vendor/hh/src/*.test.mjs",
+      "phase": "all-hh-source-tests",
+      "started_utc": "2026-10-19T08:55:15Z",
+      "ended_utc": "2026-10-19T08:55:16Z",
+      "exit_code": 0,
+      "stdout": "hh-source-suite.stdout.raw",
+      "stderr": "hh-source-suite.stderr.raw",
+      "summary": "98 tests passed, 0 failed."
+    },
+    {
+      "command": "git diff --check",
+      "exit_code": 0
+    }
+  ],
+  "git": {
+    "mutations": "none",
+    "preexisting_untracked": ["hh-cycle13/", "hh-cycle15/"],
+    "scoped_changes": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/community.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ]
+  }
+}

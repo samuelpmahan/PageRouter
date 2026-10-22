@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -u
+capture_dir=/workspace/scratch/8528bb251845/hh-cycle15/H1/E2103/captures/R2-focused-green
+for name in stdout.raw stderr.raw exit.code start.utc end.utc; do
+  if [ -e "$capture_dir/$name" ]; then
+    printf 'Refusing to overwrite existing capture: %s\n' "$capture_dir/$name" >&2
+    exit 73
+  fi
+done
+cd /workspace/scratch/8528bb251845/PageRouter/checkpoint
+date -u +%Y-%m-%dT%H:%M:%SZ > "$capture_dir/start.utc"
+node --test --test-name-pattern='forgot-password disclosure accurately describes the local preview before submission' vendor/hh/src/public-site.test.mjs > "$capture_dir/stdout.raw" 2> "$capture_dir/stderr.raw"
+test_status=$?
+printf '%s\n' "$test_status" > "$capture_dir/exit.code"
+date -u +%Y-%m-%dT%H:%M:%SZ > "$capture_dir/end.utc"
+exit "$test_status"

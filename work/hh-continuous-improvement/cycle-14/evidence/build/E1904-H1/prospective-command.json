@@ -1,0 +1,28 @@
+{
+  "schema": "pagerouter-e1904-command@1",
+  "wrapper": {
+    "cwd": "/workspace/scratch/8528bb251845",
+    "executable": "/opt/codex/runtimes/codex-primary-runtime/dependencies/node/bin/node",
+    "argv": ["/workspace/scratch/8528bb251845/hh-cycle14/H1/E1904/run-captured.mjs"]
+  },
+  "child": {
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "executable": "/usr/bin/env",
+    "argv": ["BAZEL=/workspace/scratch/8528bb251845/tools/bazel", "bash", "ci/bazel/run.sh"],
+    "display": "/usr/bin/env BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh"
+  },
+  "source_expected": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164"
+  },
+  "capture": {
+    "stdout": "stdout.raw",
+    "stderr": "stderr.raw",
+    "processResult": "exit.json",
+    "startUtc": "start.utc",
+    "endUtc": "end.utc",
+    "currentBuildReceipt": "site.receipt.json",
+    "currentBuildLog": "site.log",
+    "mode": "direct-child-file-descriptors; exclusive-create; no tee, rewrite, retry, site.evidence, PNG, or site bundle copy"
+  }
+}

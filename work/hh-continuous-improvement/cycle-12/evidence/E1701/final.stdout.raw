@@ -1,0 +1,71 @@
+{
+  "probe": "HH12 E1701 TeacherProfile.createProfile",
+  "scope": "actual synthetic volatile fixture/controller/render-tree only",
+  "results": [
+    {
+      "case": "transport_failure",
+      "held": {
+        "calls": 1,
+        "requestStatus": "busy",
+        "providerProfile": "absent",
+        "rendered": {
+          "form": true,
+          "name": "Synthetic E1701 Profile",
+          "bio": "Typed preview-only classroom introduction.",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-E1701"
+        }
+      },
+      "completion": {
+        "ok": false,
+        "error": "transport_failure",
+        "requestStatus": "failed",
+        "draftPreserved": true,
+        "formPreserved": true,
+        "providerProfile": "absent",
+        "persistedProfile": false,
+        "publicRetry": "nothing_to_retry",
+        "callsAfterRetry": 1,
+        "explicitResubmit": true,
+        "totalCalls": 2,
+        "finalProfile": "present",
+        "draftClearedAfterSuccess": true
+      }
+    },
+    {
+      "case": "outcome_unknown",
+      "held": {
+        "calls": 1,
+        "requestStatus": "busy",
+        "providerProfile": "absent",
+        "rendered": {
+          "form": true,
+          "name": "Synthetic E1701 Profile",
+          "bio": "Typed preview-only classroom introduction.",
+          "wishlistUrl": "https://www.amazon.com/hz/wishlist/ls/DEMO-E1701"
+        }
+      },
+      "completion": {
+        "ok": false,
+        "error": "outcome_unknown",
+        "requestStatus": "outcome_unknown",
+        "draftPreserved": true,
+        "formPreserved": true,
+        "providerProfile": "absent",
+        "persistedProfile": false,
+        "publicRetry": "nothing_to_retry",
+        "callsAfterRetry": 1,
+        "explicitResubmit": true,
+        "totalCalls": 2,
+        "finalProfile": "present",
+        "draftClearedAfterSuccess": true
+      }
+    },
+    {
+      "case": "success_control",
+      "calls": 1,
+      "providerProfile": "present",
+      "draftCleared": true,
+      "formRemoved": true
+    }
+  ]
+}

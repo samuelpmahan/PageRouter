@@ -1,0 +1,25 @@
+{
+  "job_id": "E1404",
+  "purpose": "Clarify the command-record discrepancy without rewriting the original worker result or changing build evidence.",
+  "original_worker_result": {
+    "path": "worker-result-original.json",
+    "sha256": "7e88286ee2b50e764217c26ab73e80ffb7c80a45e02989dd1c0fa190ef58d383",
+    "recorded_command_note": "The original result retains the worker's original command string with ambiguous printf/quote escaping. It is preserved unchanged; the exact original shell command is unresolved."
+  },
+  "prospective_command_file_history": "The command.txt working artifact was modified after execution; its original prospective bytes were not saved separately. The copied text is named command-record.post-execution.txt. It is not a contemporaneous prospective capture and is not certified as an executable reproduction; a later literal-ledger quoting diagnostic exited 2.",
+  "actual_invocation_provenance": {
+    "source": "H1 functions.exec tool-call text as visible in this transcript, not a separately captured raw command file. Root's literal-ledger quoting diagnostic found the recorded nested quoting did not parse as expected, so this string is not treated as proof of the exact executed shell command. The successful build is supported by the raw wrapper output, receipt, and exit record; original command bytes remain unresolved.",
+    "shell_command": "bash -o pipefail -c 'date -u +%Y-%m-%dT%H:%M:%SZ > /workspace/scratch/8528bb251845/hh-cycle10/H1/E1404/build.start.utc; BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle10/H1/E1404/build.raw.log; status=$?; date -u +%Y-%m-%dT%H:%M:%SZ > /workspace/scratch/8528bb251845/hh-cycle10/H1/E1404/build.end.utc; printf \"%s\\n\" \"$status\" > /workspace/scratch/8528bb251845/hh-cycle10/H1/E1404/build.exit; exit \"$status\"'",
+    "corroborating_files": [
+      {"path": "build.raw.log", "sha256": "0c4944e740ee4b99ff5ba7d9b1ff8daaae16ff88d7ade5349d843455f64c3ec0"},
+      {"path": "build.exit", "observed_content": "0 followed by newline"},
+      {"path": "build.receipt.json", "sha256": "99eb0d566822d87552ec9d9df178a14cb64f27ec15d9f4704c764b7cff576ea7"}
+    ]
+  },
+  "reproduction": {
+    "simple_canonical_command": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "working_directory": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "provenance": "Simple reproducible canonical command, not a claim about the exact original wrapper invocation. Root separately ran this exact command as a cache verification; exit 0 and an actual Bazel cache hit. It did not run a fresh suite and does not replace the original successful build run. See root-canonical-verification.command.json, root-canonical-verification.raw.log, root-canonical-verification.exit.json, and root-E1404-command-provenance-clarification.json."
+  },
+  "build_result": "Unchanged successful build: exit 0, source hashes fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2 and dfe05ff98c859f926c839d8b0e5bffbd17c96e58444400d6e108744e8111e389 match the main receipt. No rebuild was performed for this command-documentation clarification."
+}

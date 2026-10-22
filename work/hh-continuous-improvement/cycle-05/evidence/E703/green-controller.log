@@ -1,0 +1,45 @@
+✔ delayed profile creation preserves the current other-teacher route and edit authority (13.272478ms)
+✔ delayed profile creation preserves a captured read-only reference projection (3.441844ms)
+✔ delayed profile creation leaves an in-flight public-profile read projection intact (2.353377ms)
+✔ failed profile creation service sync preserves a captured reference when an own profile exists (2.790304ms)
+✔ profile create rejects unsupported wishlist before mutation and retains draft (2.741971ms)
+✔ profile create rejects overlength wishlist before mutation and retains draft (2.087217ms)
+✔ profile create preserves blank wishlist compatibility (2.436182ms)
+✔ profile create preserves valid synthetic wishlist compatibility (2.818296ms)
+✔ profile edit rejects unsupported wishlist before mutation and retains draft (2.339416ms)
+✔ profile edit rejects overlength wishlist before mutation and retains draft (2.088619ms)
+✔ profile edit preserves blank wishlist compatibility (2.371164ms)
+✔ profile edit preserves valid synthetic wishlist compatibility (2.370653ms)
+✔ normalizes captured public route aliases and forum paths (0.383797ms)
+✔ captured Teacher of the Day opens as a read-only snapshot without invoking teacher services (1.540175ms)
+✔ profile edit toggle rejects another authenticated teacher profile (1.023428ms)
+✔ profile edit submit rejects another authenticated teacher profile without creating an overlay (0.95856ms)
+✔ profile edit toggle fails closed for anonymous and missing teacher identities (1.669489ms)
+✔ profile edit remains available to its owner through a public profile alias (2.370733ms)
+✔ cascades school filters, loads local directory matches and restores remembered filters (2.055399ms)
+✔ school lookup retry stays bound to the failed current selection (0.481414ms)
+✔ school lookup retry recovers the same current selection (0.684489ms)
+✔ navigating away invalidates a failed registration school lookup retry (0.761615ms)
+✔ initial school choices remain retryable when the states read fails (0.460512ms)
+✔ returning to registration reloads states after an invalidated initial lookup failure (0.318188ms)
+✔ successful initial school-data read does not erase a directory retry (0.389245ms)
+✔ returning to registration reloads a failed county cascade (0.749987ms)
+✔ school lookup retry remains available from directory when no directory retry owns it (0.568314ms)
+✔ distinguishes an explicit empty-filter search from the initial background directory load (0.467362ms)
+✔ leaving a pending directory read for login or registration retires shared loading (0.807143ms)
+✔ an abandoned directory completion cannot clear a newer pending school lookup (0.670989ms)
+✔ bounded text drafts keep spaces while typing and normalize only on submit (0.676006ms)
+✔ rejects stored school selections whose individual values do not form one fixture row (0.369365ms)
+✔ registration keeps passwords ephemeral, approval and login stay separate, and edits remain local (2.396041ms)
+✔ Terms checkbox consent tracks both checking and unchecking without opening the modal (0.450817ms)
+✔ seeded UI login, local contact and reset never claim remote effects (0.981765ms)
+✔ wishlist and community actions are explicit local preview handoffs (1.590019ms)
+✔ late login, approval and logout results never redirect away from the current route (3.584577ms)
+ℹ tests 37
+ℹ suites 0
+ℹ pass 37
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 167.176241

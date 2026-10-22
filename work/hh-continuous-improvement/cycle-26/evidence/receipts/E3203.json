@@ -1,0 +1,55 @@
+{
+  "job_id": "E3203",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Added teacher-only current-vote feedback as a pure community renderer projection. Detail now states `Your vote: No vote`, `Your vote: Upvote`, or `Your vote: Downvote`; teacher detail arrows and the index upvote control expose string-valued `aria-pressed` derived from the active persona's existing votes/downvotes. Vote state, aggregate counts, sorting, event payloads, controller, storage, services, app wiring, role/hidden behavior, and moderator/anonymous rendering remain unchanged.",
+  "source_checkpoint": {
+    "repo": "/workspace/scratch/86659bbafcce/PageRouter",
+    "base_commit": "ce139be6b26a56736efb3f1981af3c3aa2cd8b5e",
+    "base_tree": "8a3ca1921e69c8e34b374d0ed674489191c76d01",
+    "source_paths_changed": [
+      "checkpoint/vendor/hh/src/community.mjs",
+      "checkpoint/vendor/hh/src/community.test.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "source_sha256": {
+      "checkpoint/vendor/hh/src/community.mjs": "9e5ce0c47acea55e4217463f099b115080faa7d1e1b412eecc9128690e6a9cc2",
+      "checkpoint/vendor/hh/src/community.test.mjs": "6d39274f02039760a6e6fbd813f07d1f221aee1d08f21c55a81d33b78c9a6253",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "3a86fbb96948d99de2e7fa453b4654b6629b8f4d9a849b67c7f25fbaa330c218"
+    },
+    "no_staging_commit_or_build": true
+  },
+  "red": {
+    "focused_desired_red": "/workspace/scratch/afc0d51965a8/hh26/H1/E3203/red-02",
+    "execution_status": 1,
+    "tests_selected": 2,
+    "tests_failed_as_expected": 2,
+    "stdout": "/workspace/scratch/afc0d51965a8/hh26/H1/E3203/red-02/stdout.raw",
+    "stderr": "/workspace/scratch/afc0d51965a8/hh26/H1/E3203/red-02/stderr.raw",
+    "note": "red-01 retained separately: one correct controller RED assertion, but renderer test title was not matched by its filter. Do not count red-01 and red-02 as independent test failures."
+  },
+  "validation": [
+    {
+      "attempt": "green-01-focused",
+      "tests": 2,
+      "passed": 2,
+      "failed": 0,
+      "stdout": "/workspace/scratch/afc0d51965a8/hh26/H1/E3203/green-01-focused/stdout.raw",
+      "stderr": "/workspace/scratch/afc0d51965a8/hh26/H1/E3203/green-01-focused/stderr.raw"
+    },
+    {
+      "attempt": "green-02-hh-suite",
+      "tests": 110,
+      "passed": 110,
+      "failed": 0,
+      "stdout": "/workspace/scratch/afc0d51965a8/hh26/H1/E3203/green-02-hh-suite/stdout.raw",
+      "stderr": "/workspace/scratch/afc0d51965a8/hh26/H1/E3203/green-02-hh-suite/stderr.raw"
+    }
+  ],
+  "evidence": {
+    "written_flow": "/workspace/scratch/afc0d51965a8/hh26/H1/E3203/written-flow.md",
+    "diff": "/workspace/scratch/afc0d51965a8/hh26/H1/E3203/checkpoint/diff.patch",
+    "source_pins_after_write": "/workspace/scratch/afc0d51965a8/hh26/H1/E3203/checkpoint/source-pins.json"
+  },
+  "stop_boundary": "No canonical build, stage, commit, push, PR, deployment, browser, or external write was performed."
+}

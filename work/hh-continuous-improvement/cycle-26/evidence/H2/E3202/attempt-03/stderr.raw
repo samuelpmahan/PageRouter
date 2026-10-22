@@ -1,0 +1,18 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: same-persona repeat toggles rather than duplicates
+
+0 !== 1
+
+    at file:///workspace/scratch/afc0d51965a8/hh26/H2/E3202/attempt-03/probe.mjs:102:8 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 0,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

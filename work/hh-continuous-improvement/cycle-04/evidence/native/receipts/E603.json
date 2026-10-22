@@ -1,0 +1,52 @@
+{
+  "schema": "hh-cycle04-worker-result/v1",
+  "job_id": "E603",
+  "worker": "H1",
+  "summary": "A synchronous navigation away from the directory before its first microtask resumes leaves the shared journey.loading flag true and the directory matches status loading. Registration and login still render enabled forms and their dispatch handlers remain usable.",
+  "outcome": "confirmed_reuse",
+  "scope": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head_before": "6488c98774adb41c4bcdcec02387753c492233d8",
+    "head_after": "6488c98774adb41c4bcdcec02387753c492233d8",
+    "source_mutation": false,
+    "git_worktree_clean_after": true,
+    "preserved_prior_result": "/workspace/scratch/8528bb251845/hh-cycle04/H1/result.json (E601)",
+    "provider_boundary": "volatile fixture provider; directory reads runtime.snapshot().demo.publicProfiles; no backend/network calls"
+  },
+  "execution": {
+    "command": "node /workspace/scratch/8528bb251845/hh-cycle04/H1/E603/probe.mjs",
+    "node": "v24.19.0",
+    "result": "passed all assertions in both cases",
+    "cases": ["directory-to-login same-turn navigation", "directory-to-register same-turn navigation"],
+    "sequence": [
+      "Initialize fixture controller; journey.loading=false.",
+      "Call navigate('#/directory') without awaiting; loadDirectory sets loading=true and yields at await Promise.resolve().",
+      "In the same JavaScript turn call navigate('#/login') or navigate('#/register'), advancing routeEpoch.",
+      "Await both route promises; stale directory request returns before clearing loading or changing matches.",
+      "Inspect renderPublicSite projection and dispatch the empty current auth form."
+    ],
+    "before_after": {
+      "before_directory": {"route": "home", "journey.loading": false},
+      "directory_pending": {"route": "directory", "journey.loading": true, "matches.status": "loading", "ui_copy": ["Loading…", "Loading teachers…"]},
+      "after_stale_return_login": {"route": "login", "journey.loading": true, "matches.status": "loading", "ui_loading_copy": [], "form": "hh-login-form", "submit_disabled": false, "dispatch_error": "validation_failed"},
+      "after_stale_return_register": {"route": "register", "journey.loading": true, "matches.status": "loading", "ui_loading_copy": [], "form": "hh-register-form", "submit_disabled": false, "dispatch_error": "validation_failed"}
+    },
+    "implication": "The stale directory request leaves a shared loading flag and directory status stranded. Neither is shown on the auth routes; auth forms remain usable. This repro establishes stale controller state, not a disabled auth flow."
+  },
+  "evidence": {
+    "probe": "/workspace/scratch/8528bb251845/hh-cycle04/H1/E603/probe.mjs",
+    "probe_sha256": "43722cb4e77eaab61fc6e8741071d4c9f5565566ae6599566ce5e83d440cee10",
+    "output": "/workspace/scratch/8528bb251845/hh-cycle04/H1/E603/probe-output.json",
+    "output_sha256": "41dd311ecc68e3bd564a6b10d846936ad3a0648225aef608579b18b1c4cb5b58",
+    "source_sha256": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "c5d31f45140397536e22e6ac744e689d06fdec09c8b7e4c1a43167548adad4d1",
+      "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+      "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+    },
+    "git_status_command": "git status --porcelain=v1",
+    "git_status_output": "",
+    "visual_qa_limit": "Rendered UI tree was inspected; browser screenshots/layout QA were not performed.",
+    "dispatch_limit": "Empty synthetic payloads verified live handlers and validation projection without mutating fixture state; a successful registration/login was not attempted."
+  }
+}

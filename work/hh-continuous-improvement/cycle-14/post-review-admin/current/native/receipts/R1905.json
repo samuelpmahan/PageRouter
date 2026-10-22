@@ -1,0 +1,95 @@
+{
+  "job_id": "R1905",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Independent file-only audit accepts the exact E1905 evidence package. All 95 listed payload files match manifest length/hash; the package has exactly 97 regular files including the two declared exclusions, no symlinks or extras, and no direct executable script source. Archived worker/native/build captures and mapped originals match byte-for-byte and mode-for-mode. Product hashes match the freeze and E1904 receipt's 1,538-input/sourceDigest/843-site-file binding. Native snapshots, raw worker receipts, root qualification envelopes, overlapping test-count caveats, and unreached scan limitations are accurately kept distinct. No package, source, Git, test, build, probe, browser, or native mutation was performed.",
+  "package": {
+    "root": "/workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-14",
+    "manifest_sha256": "0534667e8c1960ba8a8562fafe3a0cfc365942945a3852c0eb982d97c326d2bb",
+    "manifest_listed_payload_files": 95,
+    "actual_regular_files": 97,
+    "declared_excluded_envelopes": [
+      "evidence/manifest.json",
+      "evidence/E1905/result.json"
+    ],
+    "e1905_result_sha256": "413f929414b8cb0a7b6a55b4138e7ede4fc77f4bb49a11f8192d34df018ef819",
+    "e1905_result_matches_native_receipt": true,
+    "extras": 0,
+    "missing": 0,
+    "manifest_length_or_hash_mismatches": 0,
+    "symlinks": 0,
+    "mode_counts": {"555": 2, "600": 5, "644": 90},
+    "mapped_original_byte_and_mode_mismatches": 0,
+    "archived_direct_executable_scripts": 0,
+    "archived_runnable_script_suffixes": [".mjs.txt", ".sh.txt"],
+    "historical_native_state_snapshot": {
+      "package_epoch": 5,
+      "package_workers": {"H1": "E1905", "H2": null},
+      "current_root_epoch_after_R1905_start": 6,
+      "current_root_workers": {"H1": null, "H2": "R1905"},
+      "qualification": "The package state is an epoch-5 handoff snapshot from before E1905 completion and R1905 dispatch, not a claim of live/current ownership. Its captured timeline and package status are coherent."
+    }
+  },
+  "source_and_build": {
+    "PageRouter_head": "06b6da36e326758ccd14cda021bc0a15cfd00817",
+    "PageRouter_tree": "eb7136f80b1bdfd08c771f519a626a1e508bb1a9",
+    "controller_sha256": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "controller_test_sha256": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164",
+    "source_freeze_matches_live_source_and_current_receipt": true,
+    "build_receipt_sha256": "dfb7a0f4159f13dfbd771ffb3a5ff9bb5fcb90ddfc4b9207a131939a841447db",
+    "build_log_sha256": "24b25f908c5d30b9f1cae12283eb608ec92ff20dd22bbe36f25d46052e781190",
+    "source_input_count": 1538,
+    "source_digest": "b48ad9a809682aab5b6eccd4a1e6d68ce52f61d860b9f0d889433e76118c442f",
+    "receipt_source_input_bindings": {
+      "vendor/hh/src/public-controller.mjs": {"bytes": 53532, "sha256": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669"},
+      "vendor/hh/src/public-controller.test.mjs": {"bytes": 100173, "sha256": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164"}
+    },
+    "site_file_count": 843,
+    "site_digest": "1343fcceb41ec09acd0ff550054c38e3a73bf3f4a5e54361d9fe758596e58628",
+    "site_build_id": "02862d25fc8675fa79307b9e72f5b5ffb4d71de2fabd21f384ebdca98f1f7781",
+    "named_test_counts_only": {"helpers": "2/2", "targeted_HH": "134/134", "full_npm": "289/289", "Atlas_import_closure": "1/1"},
+    "count_qualification": "Targeted HH overlaps the full npm suite. H1 raw E1904 result contains a 292 distinct-count claim; separate native envelope and README explicitly do not adopt it. This audit reports named overlapping summaries only.",
+    "historical_site_evidence_png_or_site_bundle_included": false
+  },
+  "provenance_and_claim_review": {
+    "native_spec_registry_and_solves": {
+      "epochs_included": [0, 1, 2, 3, 4],
+      "all_epoch_records_and_bundles_match_originals": true,
+      "epoch_0": {"assignments": {"H1": "E1901", "H2": "E1902"}, "dispatches": ["H1/E1901", "H2/E1902"]},
+      "epoch_1": {"assignments": {"H1": "E1903", "H2": "BENCH"}, "dispatches": ["H1/E1903"]},
+      "epoch_2": {"assignments": {"H2": "R1903", "H1": "BENCH"}, "dispatches": ["H2/R1903"]},
+      "epoch_3": {"assignments": {"H1": "E1904", "H2": "BENCH"}, "dispatches": ["H1/E1904"]},
+      "epoch_4": {"assignments": {"H1": "E1905", "H2": "BENCH"}, "dispatches": ["H1/E1905"]},
+      "dispatch_timestamps_match_persisted_started_at": true,
+      "H1_source_Git_owner_H2_independent_scratch_review_roles_match_spec_registry_and_flow": true,
+      "separateLab_contexts_mixed_into_HH_package": false
+    },
+    "root_qualifications_separate_from_worker_receipts": true,
+    "E1901_allowed_outcome_normalization": "Raw worker receipt is unchanged; separate root envelope carries required outcome mixed_change and explains normalization was preflight, not native rejection.",
+    "R1903_decision_and_capture_count": "Raw worker receipt remains unchanged; separate root envelope maps explicit outcome accepted to native decision and corrects 59-skipped prose: raw focused stream says 1 pass, 0 fail, 0 skipped.",
+    "R1903_replay": "Original changed-source replay reached projection A, authority A, one explicit login, zero registration/profile writes, then exited 1 on its total-call assertion (actual 2 vs expected 1 because initialize reads SchoolData.getStates). Its later secret scan was unreached; focused-regression secret helper passed. No retry or assertion edit.",
+    "E1902_later_checks": "Secret and provider-count checks were unreached; package and README do not claim them as passes.",
+    "README_NEXT_continuation_scope_and_links": "Reviewed; links resolve within package; claims distinguish local build, controller/emitted-tree evidence, native historical snapshot, raw records, and separate qualifications. No portable import, mounted-browser, screenshot, backend, production, human-acceptance, release, main, or deployment claim.",
+    "old_HH13_scratch_preserved_but_in_package": false,
+    "Lab_copy_in_package": false
+  },
+  "audit_execution": {
+    "tests_build_probes_browser_git_or_native_actions": false,
+    "package_mutation": false,
+    "audit_attempt_01": "Read-only verifier first failed mapping archived run-captured.mjs.txt to the original run-captured.mjs. Exact diagnostic/version was preserved before the bounded suffix-map correction; no product/package failure was inferred.",
+    "audit_attempt_02": "Corrected verifier found no manifest/count/set/symlink mismatches; it exposed the expected current-state advancement and two snapshot-name mapping false positives. Exact diagnostic output was preserved before narrowing the mapping.",
+    "audit_attempt_03": "A read-only inline native-summary command had shell interpolation quoting failure; exact diagnostic/version preserved. Corrected read-only summary then confirmed epochs 00–04 assignment/dispatch timeline.",
+    "bounded_correction": "Verification-only mapping correction: preserve literal .mjs.txt names for E1903 snapshots, strip inert suffix only for archived runnable scripts, and treat the package state file as historical epoch 5 rather than compare it to later epoch 6 live state.",
+    "final_manifest_verifier_summary": "95/95 listed lengths and hashes matched; 97 regular files including exact exclusions; zero extras/missing/symlinks; zero mapped original byte/mode mismatches; no direct executable scripts."
+  },
+  "audit_diagnostics": {
+    "audit-01.failure.txt": "01cf3e7bb640ccdc283d1ee775ea8170eccd023fe11b97e32c4414bac610c687",
+    "audit-02.inventory.txt": "3921b463056adf38063defdcc1c2472e830b7c6816f46be1a5583b4061bb52a1",
+    "audit-03.failure.txt": "8841d3ed62570ecc953519925700def400ef42a1890a26ad6fd737940735fea6"
+  },
+  "limitations": [
+    "The package state file is a historical epoch-5 snapshot; the later live root state is epoch 6 after R1905 start.",
+    "No package tests, builds, probes, renders, or browser interaction were run by H2.",
+    "The package remains evidence for a bounded local source change, not a release or publication artifact."
+  ]
+}

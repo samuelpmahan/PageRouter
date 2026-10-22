@@ -1,0 +1,686 @@
+{
+  "schema": "hh-cycle08-H2-E1202/public-share-identity-probe/v1",
+  "job_id": "E1202",
+  "worker": "H2",
+  "repository": "PageRouter",
+  "head": "65ea21f5a2ef3f3a7adb285b2285d2c6f8274fcd",
+  "tree": "0901b1816314ef3aa5d580867ac0cd3fc49d3637",
+  "sourceHashes": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "df2765c4b8eee83236d90e9c4380222561956252a0c2cc9a3d63a8a870be046c",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "9732658d1e0eaca0d7344d4ba3626540b72e954b55424ec5f1a01572e1028f04",
+    "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  },
+  "commands": [
+    "node /workspace/scratch/8528bb251845/hh-cycle08/H2/E1202/probe.mjs"
+  ],
+  "environment": {
+    "runtime": "actual createFixtureProvider volatile-memory + createServiceRuntime + createPublicController + renderPublicSite tree",
+    "identity": "synthetic seeded Demo Avery, Demo Jordan, and captured read-only Sarah reference only",
+    "fixture": true,
+    "productionAuthority": false,
+    "persistence": "volatile-memory",
+    "networkOrProduction": false,
+    "backendExecution": false,
+    "externalCopyOrShareOrOpen": false,
+    "browserVisualQA": false
+  },
+  "hypothesis": "A public:share route prepared for Demo Avery may remain visible after navigation to Demo Jordan instead of following the current profile; direct dispatch behavior and captured-reference rendering may differ.",
+  "cases": [
+    {
+      "case": "prepared_demo_avery_then_navigated_demo_jordan",
+      "prepared": {
+        "before": {
+          "route": {
+            "path": "/profile",
+            "page": "profile",
+            "profileId": null
+          },
+          "session": {
+            "status": "authenticated",
+            "teacherId": "demo-seed-avery"
+          },
+          "profile": {
+            "status": "present",
+            "id": "demo-avery",
+            "teacherId": "demo-seed-avery",
+            "name": "Demo Avery",
+            "source": "runtime",
+            "readOnly": false
+          },
+          "share": {
+            "intent": false,
+            "url": null,
+            "remote": null,
+            "copied": null
+          },
+          "rendered": {
+            "buttons": [
+              {
+                "id": "hh-profile-share",
+                "tag": "button"
+              }
+            ],
+            "shareHandoff": [],
+            "shareRouteFields": [],
+            "sarahNote": false,
+            "staticSarahWishlist": [],
+            "textHasAvery": true,
+            "textHasJordan": false,
+            "textHasSarah": false,
+            "textHasUnavailable": false
+          },
+          "debug": {
+            "matchedShareElements": 0,
+            "labels": 0
+          }
+        },
+        "dispatch": {
+          "intent": true,
+          "url": "#/public-profile/demo-avery",
+          "remote": false,
+          "copied": false
+        },
+        "after": {
+          "route": {
+            "path": "/profile",
+            "page": "profile",
+            "profileId": null
+          },
+          "session": {
+            "status": "authenticated",
+            "teacherId": "demo-seed-avery"
+          },
+          "profile": {
+            "status": "present",
+            "id": "demo-avery",
+            "teacherId": "demo-seed-avery",
+            "name": "Demo Avery",
+            "source": "runtime",
+            "readOnly": false
+          },
+          "share": {
+            "intent": true,
+            "url": "#/public-profile/demo-avery",
+            "remote": false,
+            "copied": false
+          },
+          "rendered": {
+            "buttons": [
+              {
+                "id": "hh-profile-share",
+                "tag": "button"
+              }
+            ],
+            "shareHandoff": [
+              {
+                "class": "hh-share-handoff",
+                "data-testid": "hh-share-handoff"
+              }
+            ],
+            "shareRouteFields": [
+              {
+                "id": "hh-share-route",
+                "name": "share-route",
+                "value": "#/public-profile/demo-avery",
+                "readonly": true
+              }
+            ],
+            "sarahNote": false,
+            "staticSarahWishlist": [],
+            "textHasAvery": true,
+            "textHasJordan": false,
+            "textHasSarah": false,
+            "textHasUnavailable": false
+          },
+          "debug": {
+            "matchedShareElements": 1,
+            "labels": 0
+          }
+        }
+      },
+      "beforeReprepare": {
+        "route": {
+          "path": "/public-profile/demo-jordan",
+          "page": "profile",
+          "profileId": "demo-jordan"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "name": "Demo Jordan",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-avery",
+          "remote": false,
+          "copied": false
+        },
+        "rendered": {
+          "buttons": [
+            {
+              "id": "hh-profile-share",
+              "tag": "button"
+            }
+          ],
+          "shareHandoff": [
+            {
+              "class": "hh-share-handoff",
+              "data-testid": "hh-share-handoff"
+            }
+          ],
+          "shareRouteFields": [
+            {
+              "id": "hh-share-route",
+              "name": "share-route",
+              "value": "#/public-profile/demo-avery",
+              "readonly": true
+            }
+          ],
+          "sarahNote": false,
+          "staticSarahWishlist": [],
+          "textHasAvery": false,
+          "textHasJordan": true,
+          "textHasSarah": false,
+          "textHasUnavailable": false
+        },
+        "debug": {
+          "matchedShareElements": 1,
+          "labels": 0
+        }
+      },
+      "directDispatch": {
+        "ok": true,
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-jordan",
+          "remote": false,
+          "copied": false
+        }
+      },
+      "afterReprepare": {
+        "route": {
+          "path": "/public-profile/demo-jordan",
+          "page": "profile",
+          "profileId": "demo-jordan"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "name": "Demo Jordan",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-jordan",
+          "remote": false,
+          "copied": false
+        },
+        "rendered": {
+          "buttons": [
+            {
+              "id": "hh-profile-share",
+              "tag": "button"
+            }
+          ],
+          "shareHandoff": [
+            {
+              "class": "hh-share-handoff",
+              "data-testid": "hh-share-handoff"
+            }
+          ],
+          "shareRouteFields": [
+            {
+              "id": "hh-share-route",
+              "name": "share-route",
+              "value": "#/public-profile/demo-jordan",
+              "readonly": true
+            }
+          ],
+          "sarahNote": false,
+          "staticSarahWishlist": [],
+          "textHasAvery": false,
+          "textHasJordan": true,
+          "textHasSarah": false,
+          "textHasUnavailable": false
+        },
+        "debug": {
+          "matchedShareElements": 1,
+          "labels": 0
+        }
+      },
+      "providerCalls": {
+        "beforeNavigation": 2,
+        "afterJordanNavigation": 3,
+        "directShareDispatchAddedProviderCall": false
+      },
+      "outcome": "stale_prepared_identity_visible_until_reprepared"
+    },
+    {
+      "case": "prepared_and_navigated_to_same_avery_alias",
+      "prepared": {
+        "before": {
+          "route": {
+            "path": "/profile",
+            "page": "profile",
+            "profileId": null
+          },
+          "session": {
+            "status": "authenticated",
+            "teacherId": "demo-seed-avery"
+          },
+          "profile": {
+            "status": "present",
+            "id": "demo-avery",
+            "teacherId": "demo-seed-avery",
+            "name": "Demo Avery",
+            "source": "runtime",
+            "readOnly": false
+          },
+          "share": {
+            "intent": false,
+            "url": null,
+            "remote": null,
+            "copied": null
+          },
+          "rendered": {
+            "buttons": [
+              {
+                "id": "hh-profile-share",
+                "tag": "button"
+              }
+            ],
+            "shareHandoff": [],
+            "shareRouteFields": [],
+            "sarahNote": false,
+            "staticSarahWishlist": [],
+            "textHasAvery": true,
+            "textHasJordan": false,
+            "textHasSarah": false,
+            "textHasUnavailable": false
+          },
+          "debug": {
+            "matchedShareElements": 0,
+            "labels": 0
+          }
+        },
+        "dispatch": {
+          "intent": true,
+          "url": "#/public-profile/demo-avery",
+          "remote": false,
+          "copied": false
+        },
+        "after": {
+          "route": {
+            "path": "/profile",
+            "page": "profile",
+            "profileId": null
+          },
+          "session": {
+            "status": "authenticated",
+            "teacherId": "demo-seed-avery"
+          },
+          "profile": {
+            "status": "present",
+            "id": "demo-avery",
+            "teacherId": "demo-seed-avery",
+            "name": "Demo Avery",
+            "source": "runtime",
+            "readOnly": false
+          },
+          "share": {
+            "intent": true,
+            "url": "#/public-profile/demo-avery",
+            "remote": false,
+            "copied": false
+          },
+          "rendered": {
+            "buttons": [
+              {
+                "id": "hh-profile-share",
+                "tag": "button"
+              }
+            ],
+            "shareHandoff": [
+              {
+                "class": "hh-share-handoff",
+                "data-testid": "hh-share-handoff"
+              }
+            ],
+            "shareRouteFields": [
+              {
+                "id": "hh-share-route",
+                "name": "share-route",
+                "value": "#/public-profile/demo-avery",
+                "readonly": true
+              }
+            ],
+            "sarahNote": false,
+            "staticSarahWishlist": [],
+            "textHasAvery": true,
+            "textHasJordan": false,
+            "textHasSarah": false,
+            "textHasUnavailable": false
+          },
+          "debug": {
+            "matchedShareElements": 1,
+            "labels": 0
+          }
+        }
+      },
+      "afterNavigation": {
+        "route": {
+          "path": "/public-profile/demo-avery",
+          "page": "profile",
+          "profileId": "demo-avery"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "name": "Demo Avery",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-avery",
+          "remote": false,
+          "copied": false
+        },
+        "rendered": {
+          "buttons": [
+            {
+              "id": "hh-profile-share",
+              "tag": "button"
+            }
+          ],
+          "shareHandoff": [
+            {
+              "class": "hh-share-handoff",
+              "data-testid": "hh-share-handoff"
+            }
+          ],
+          "shareRouteFields": [
+            {
+              "id": "hh-share-route",
+              "name": "share-route",
+              "value": "#/public-profile/demo-avery",
+              "readonly": true
+            }
+          ],
+          "sarahNote": false,
+          "staticSarahWishlist": [],
+          "textHasAvery": true,
+          "textHasJordan": false,
+          "textHasSarah": false,
+          "textHasUnavailable": false
+        },
+        "debug": {
+          "matchedShareElements": 1,
+          "labels": 0
+        }
+      },
+      "outcome": "same_identity_control_matches_current_profile"
+    },
+    {
+      "case": "captured_sarah_static_reference_priority",
+      "prepared": {
+        "before": {
+          "route": {
+            "path": "/profile",
+            "page": "profile",
+            "profileId": null
+          },
+          "session": {
+            "status": "authenticated",
+            "teacherId": "demo-seed-avery"
+          },
+          "profile": {
+            "status": "present",
+            "id": "demo-avery",
+            "teacherId": "demo-seed-avery",
+            "name": "Demo Avery",
+            "source": "runtime",
+            "readOnly": false
+          },
+          "share": {
+            "intent": false,
+            "url": null,
+            "remote": null,
+            "copied": null
+          },
+          "rendered": {
+            "buttons": [
+              {
+                "id": "hh-profile-share",
+                "tag": "button"
+              }
+            ],
+            "shareHandoff": [],
+            "shareRouteFields": [],
+            "sarahNote": false,
+            "staticSarahWishlist": [],
+            "textHasAvery": true,
+            "textHasJordan": false,
+            "textHasSarah": false,
+            "textHasUnavailable": false
+          },
+          "debug": {
+            "matchedShareElements": 0,
+            "labels": 0
+          }
+        },
+        "dispatch": {
+          "intent": true,
+          "url": "#/public-profile/demo-avery",
+          "remote": false,
+          "copied": false
+        },
+        "after": {
+          "route": {
+            "path": "/profile",
+            "page": "profile",
+            "profileId": null
+          },
+          "session": {
+            "status": "authenticated",
+            "teacherId": "demo-seed-avery"
+          },
+          "profile": {
+            "status": "present",
+            "id": "demo-avery",
+            "teacherId": "demo-seed-avery",
+            "name": "Demo Avery",
+            "source": "runtime",
+            "readOnly": false
+          },
+          "share": {
+            "intent": true,
+            "url": "#/public-profile/demo-avery",
+            "remote": false,
+            "copied": false
+          },
+          "rendered": {
+            "buttons": [
+              {
+                "id": "hh-profile-share",
+                "tag": "button"
+              }
+            ],
+            "shareHandoff": [
+              {
+                "class": "hh-share-handoff",
+                "data-testid": "hh-share-handoff"
+              }
+            ],
+            "shareRouteFields": [
+              {
+                "id": "hh-share-route",
+                "name": "share-route",
+                "value": "#/public-profile/demo-avery",
+                "readonly": true
+              }
+            ],
+            "sarahNote": false,
+            "staticSarahWishlist": [],
+            "textHasAvery": true,
+            "textHasJordan": false,
+            "textHasSarah": false,
+            "textHasUnavailable": false
+          },
+          "debug": {
+            "matchedShareElements": 1,
+            "labels": 0
+          }
+        }
+      },
+      "beforeDirectDispatch": {
+        "route": {
+          "path": "/public-profile/reference-sarah",
+          "page": "profile",
+          "profileId": "reference-sarah"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery"
+        },
+        "profile": {
+          "status": "present",
+          "id": "reference-sarah",
+          "teacherId": null,
+          "name": "Sarah Endsley",
+          "source": "captured-readonly",
+          "readOnly": true
+        },
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-avery",
+          "remote": false,
+          "copied": false
+        },
+        "rendered": {
+          "buttons": [
+            {
+              "id": "hh-reference-share",
+              "tag": "button"
+            }
+          ],
+          "shareHandoff": [],
+          "shareRouteFields": [],
+          "sarahNote": true,
+          "staticSarahWishlist": [
+            "https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20"
+          ],
+          "textHasAvery": false,
+          "textHasJordan": false,
+          "textHasSarah": true,
+          "textHasUnavailable": false
+        },
+        "debug": {
+          "matchedShareElements": 0,
+          "labels": 0
+        }
+      },
+      "directDispatch": {
+        "ok": true,
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/reference-sarah",
+          "remote": false,
+          "copied": false
+        }
+      },
+      "afterDirectDispatch": {
+        "route": {
+          "path": "/public-profile/reference-sarah",
+          "page": "profile",
+          "profileId": "reference-sarah"
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery"
+        },
+        "profile": {
+          "status": "present",
+          "id": "reference-sarah",
+          "teacherId": null,
+          "name": "Sarah Endsley",
+          "source": "captured-readonly",
+          "readOnly": true
+        },
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/reference-sarah",
+          "remote": false,
+          "copied": false
+        },
+        "rendered": {
+          "buttons": [
+            {
+              "id": "hh-reference-share",
+              "tag": "button"
+            }
+          ],
+          "shareHandoff": [],
+          "shareRouteFields": [],
+          "sarahNote": true,
+          "staticSarahWishlist": [
+            "https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20"
+          ],
+          "textHasAvery": false,
+          "textHasJordan": false,
+          "textHasSarah": true,
+          "textHasUnavailable": false
+        },
+        "debug": {
+          "matchedShareElements": 0,
+          "labels": 0
+        }
+      },
+      "outcome": "captured_static_wishlist_stays_separate_from_generic_share_route"
+    }
+  ],
+  "assertions": {
+    "actualVolatileFixtureUsed": true,
+    "AveryShareWasPreparedByControllerDispatch": true,
+    "JordanIdentityWasActuallyLoaded": true,
+    "AveryShareRouteRemainedVisibleOnJordanBeforeNewDispatch": true,
+    "shareRouteFieldRenderedAveryRouteOnJordan": true,
+    "directDispatchRepreparedRouteForCurrentJordan": true,
+    "sameIdentityAliasControlMatches": true,
+    "capturedSarahStaticShareNoteDistinct": true,
+    "noExternalCopyShareOrOpen": true
+  },
+  "allAssertionsPassed": true,
+  "outcome": "confirmed_reuse",
+  "summary": "Actual synthetic volatile-fixture controller/runtime/tree evidence shows the prepared share route remains #/public-profile/demo-avery when Demo Jordan is loaded, and the rendered editable-profile Share route field still presents Avery. Direct public:share dispatch while on Jordan replaces it with Jordan. The same-Avery alias remains a matching control. Captured Sarah remains a separate static read-only renderer with its own share note and static wishlist link; it does not render the generic share-route field. No external copy/share/open was performed.",
+  "limits": {
+    "syntheticOnly": true,
+    "noProductionBackendOrNetwork": true,
+    "noRealTeacherData": true,
+    "noExternalCopyShareOrOpen": true,
+    "renderedTreeNotBrowserQA": true,
+    "noProductSourceOrGitMutation": true,
+    "profileRecordWrites": "None; only fixture login and public-profile reads were performed."
+  },
+  "next": "Preserve as runtime/tree reproduction baseline. H1 may add a focused failing regression and smallest identity-binding correction under the existing native task gates; H2 must independently review any later source change. This probe does not approve code or claim browser visual QA."
+}

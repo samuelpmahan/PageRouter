@@ -1,0 +1,1689 @@
+{
+  "record": "HH15 E2101 H1 one-shot synthetic forgotten-password flow",
+  "startedAt": "2026-10-18T23:39:13.750Z",
+  "instrumentedServiceBoundary": "Each actual fixture provider service is wrapped only to count calls, then delegated unchanged to that same provider function.",
+  "externalNetworkEnabledByProbe": false,
+  "initial": {
+    "view": {
+      "page": "forgot",
+      "mainText": "Forgot Your Password? Enter your email address below, and we'll send you instructions on how to reset your password. Email: Submit Back to Login",
+      "form": {
+        "id": "hh-forgot-form",
+        "submit": "public:forgot",
+        "controls": [
+          {
+            "tag": "input",
+            "id": "hh-forgot-email",
+            "name": "email",
+            "type": "email",
+            "value": "",
+            "required": true,
+            "autocomplete": "email"
+          }
+        ],
+        "buttons": [
+          {
+            "type": "submit",
+            "id": "hh-forgot-submit",
+            "text": "Submit"
+          }
+        ]
+      }
+    },
+    "state": {
+      "route": {
+        "page": "forgot",
+        "path": "/forgot-password"
+      },
+      "request": {
+        "status": "idle",
+        "message": ""
+      },
+      "journeyKeys": [
+        "communityRole",
+        "contact",
+        "error",
+        "filters",
+        "loading",
+        "loginDraft",
+        "lookupError",
+        "lookupRetryable",
+        "lookups",
+        "matches",
+        "navOpen",
+        "outcome",
+        "profile",
+        "registration",
+        "rememberedFilters",
+        "runtime",
+        "school",
+        "searchPerformed",
+        "session",
+        "share",
+        "terms",
+        "wishlist"
+      ],
+      "forgotDraft": null,
+      "outcome": null,
+      "loginDraft": {
+        "email": null
+      },
+      "registrationIdentity": {
+        "name": "",
+        "email": "",
+        "phone": ""
+      },
+      "contact": {
+        "name": "",
+        "email": "",
+        "subject": "",
+        "message": ""
+      }
+    },
+    "runtime": {
+      "snapshotDigest": "a331acd8c889a8163bae4440aee70fd92a41dece6fba5ad04a6415a1cef1772b",
+      "mode": "fixture",
+      "fixture": true,
+      "persistence": "volatile-memory",
+      "sessionStatus": "anonymous",
+      "registrationStatus": "none",
+      "parts": [
+        {
+          "address": "hh.contract",
+          "kind": "valuePart"
+        },
+        {
+          "address": "hh.provider",
+          "kind": "providerPart"
+        },
+        {
+          "address": "hh.capabilities",
+          "kind": "valuePart"
+        },
+        {
+          "address": "hh.calculation.bind-service-functions",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service-bindings",
+          "kind": "valuePart"
+        },
+        {
+          "address": "hh.service.SchoolData.getStates",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.SchoolData.getCounties",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.SchoolData.getDistricts",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.SchoolData.getSchools",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.Registration.registerTeacher",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.Registration.getOwnStatus",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.Session.getSession",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.Session.login",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.Session.logout",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.TeacherProfile.createProfile",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.TeacherProfile.getOwnProfile",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.TeacherProfile.openPublicProfile",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.Demo.reset",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.Demo.simulateApproval",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.request.1",
+          "kind": "valuePart"
+        },
+        {
+          "address": "hh.result.1",
+          "kind": "valuePart"
+        }
+      ],
+      "receiptCount": 2,
+      "receipts": [
+        {
+          "index": 1,
+          "status": "produced",
+          "into": "hh.service-bindings",
+          "inputNames": [
+            "provider"
+          ]
+        },
+        {
+          "index": 2,
+          "status": "produced",
+          "into": "hh.result.1",
+          "inputNames": [
+            "request"
+          ]
+        }
+      ]
+    },
+    "storage": {
+      "injectedStorage": false,
+      "browserSessionStorageAvailable": false,
+      "fixturePersistence": "volatile-memory",
+      "communityPersistence": "memory_only",
+      "storageKeys": []
+    },
+    "providerCapabilities": {
+      "mode": "fixture",
+      "fixture": true,
+      "productionAuthority": false,
+      "persistence": "volatile-memory",
+      "services": {
+        "SchoolData.getStates": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "SchoolData.getCounties": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "SchoolData.getDistricts": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "SchoolData.getSchools": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "Registration.registerTeacher": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "Registration.getOwnStatus": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "Session.getSession": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "Session.login": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "Session.logout": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "TeacherProfile.createProfile": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "TeacherProfile.getOwnProfile": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "TeacherProfile.openPublicProfile": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "Demo.reset": {
+          "supported": true,
+          "fixtureOnly": true
+        },
+        "Demo.simulateApproval": {
+          "supported": true,
+          "fixtureOnly": true
+        }
+      },
+      "profileEdit": false,
+      "realMail": false,
+      "passwordAuthentication": false,
+      "payments": false
+    },
+    "providerPortInventory": [
+      "Demo.reset",
+      "Demo.simulateApproval",
+      "Registration.getOwnStatus",
+      "Registration.registerTeacher",
+      "SchoolData.getCounties",
+      "SchoolData.getDistricts",
+      "SchoolData.getSchools",
+      "SchoolData.getStates",
+      "Session.getSession",
+      "Session.login",
+      "Session.logout",
+      "TeacherProfile.createProfile",
+      "TeacherProfile.getOwnProfile",
+      "TeacherProfile.openPublicProfile"
+    ],
+    "declaredPorts": [
+      "SchoolData.getStates",
+      "SchoolData.getCounties",
+      "SchoolData.getDistricts",
+      "SchoolData.getSchools",
+      "Registration.registerTeacher",
+      "Registration.getOwnStatus",
+      "Session.getSession",
+      "Session.login",
+      "Session.logout",
+      "TeacherProfile.createProfile",
+      "TeacherProfile.getOwnProfile",
+      "TeacherProfile.openPublicProfile",
+      "Demo.reset",
+      "Demo.simulateApproval"
+    ],
+    "postInitializationPerPortCounts": {
+      "SchoolData.getStates": 1,
+      "SchoolData.getCounties": 0,
+      "SchoolData.getDistricts": 0,
+      "SchoolData.getSchools": 0,
+      "Registration.registerTeacher": 0,
+      "Registration.getOwnStatus": 0,
+      "Session.getSession": 0,
+      "Session.login": 0,
+      "Session.logout": 0,
+      "TeacherProfile.createProfile": 0,
+      "TeacherProfile.getOwnProfile": 0,
+      "TeacherProfile.openPublicProfile": 0,
+      "Demo.reset": 0,
+      "Demo.simulateApproval": 0
+    },
+    "postInitializationReceiptCount": 2
+  },
+  "stages": [
+    {
+      "name": "delegated-input-equivalent-updateDraft",
+      "operation": "controller.updateDraft('email', syntheticEmail)",
+      "returnValue": false,
+      "treeObjectUnchangedFromInitialEmission": true,
+      "interpretation": "A false return means this controller path did not notify/rerender; the snapshot records the prior emitted blank tree, not a mounted DOM value or a typed DOM input.",
+      "view": {
+        "page": "forgot",
+        "mainText": "Forgot Your Password? Enter your email address below, and we'll send you instructions on how to reset your password. Email: Submit Back to Login",
+        "form": {
+          "id": "hh-forgot-form",
+          "submit": "public:forgot",
+          "controls": [
+            {
+              "tag": "input",
+              "id": "hh-forgot-email",
+              "name": "email",
+              "type": "email",
+              "value": "",
+              "required": true,
+              "autocomplete": "email"
+            }
+          ],
+          "buttons": [
+            {
+              "type": "submit",
+              "id": "hh-forgot-submit",
+              "text": "Submit"
+            }
+          ]
+        }
+      },
+      "state": {
+        "route": {
+          "page": "forgot",
+          "path": "/forgot-password"
+        },
+        "request": {
+          "status": "idle",
+          "message": ""
+        },
+        "journeyKeys": [
+          "communityRole",
+          "contact",
+          "error",
+          "filters",
+          "loading",
+          "loginDraft",
+          "lookupError",
+          "lookupRetryable",
+          "lookups",
+          "matches",
+          "navOpen",
+          "outcome",
+          "profile",
+          "registration",
+          "rememberedFilters",
+          "runtime",
+          "school",
+          "searchPerformed",
+          "session",
+          "share",
+          "terms",
+          "wishlist"
+        ],
+        "forgotDraft": null,
+        "outcome": null,
+        "loginDraft": {
+          "email": null
+        },
+        "registrationIdentity": {
+          "name": "",
+          "email": "",
+          "phone": ""
+        },
+        "contact": {
+          "name": "",
+          "email": "",
+          "subject": "",
+          "message": ""
+        }
+      },
+      "runtime": {
+        "snapshotDigest": "a331acd8c889a8163bae4440aee70fd92a41dece6fba5ad04a6415a1cef1772b",
+        "mode": "fixture",
+        "fixture": true,
+        "persistence": "volatile-memory",
+        "sessionStatus": "anonymous",
+        "registrationStatus": "none",
+        "parts": [
+          {
+            "address": "hh.contract",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.provider",
+            "kind": "providerPart"
+          },
+          {
+            "address": "hh.capabilities",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.calculation.bind-service-functions",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service-bindings",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.service.SchoolData.getStates",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getCounties",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getDistricts",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getSchools",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Registration.registerTeacher",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Registration.getOwnStatus",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.getSession",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.login",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.logout",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.createProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.getOwnProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.openPublicProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Demo.reset",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Demo.simulateApproval",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.request.1",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.result.1",
+            "kind": "valuePart"
+          }
+        ],
+        "receiptCount": 2,
+        "receipts": [
+          {
+            "index": 1,
+            "status": "produced",
+            "into": "hh.service-bindings",
+            "inputNames": [
+              "provider"
+            ]
+          },
+          {
+            "index": 2,
+            "status": "produced",
+            "into": "hh.result.1",
+            "inputNames": [
+              "request"
+            ]
+          }
+        ]
+      },
+      "storage": {
+        "injectedStorage": false,
+        "browserSessionStorageAvailable": false,
+        "fixturePersistence": "volatile-memory",
+        "communityPersistence": "memory_only",
+        "storageKeys": []
+      },
+      "perPortCallDelta": {
+        "SchoolData.getStates": 0,
+        "SchoolData.getCounties": 0,
+        "SchoolData.getDistricts": 0,
+        "SchoolData.getSchools": 0,
+        "Registration.registerTeacher": 0,
+        "Registration.getOwnStatus": 0,
+        "Session.getSession": 0,
+        "Session.login": 0,
+        "Session.logout": 0,
+        "TeacherProfile.createProfile": 0,
+        "TeacherProfile.getOwnProfile": 0,
+        "TeacherProfile.openPublicProfile": 0,
+        "Demo.reset": 0,
+        "Demo.simulateApproval": 0
+      },
+      "receiptDelta": 0
+    },
+    {
+      "name": "navigation-reentry",
+      "routes": [
+        {
+          "page": "login",
+          "path": "/login"
+        },
+        {
+          "page": "forgot",
+          "path": "/forgot-password"
+        }
+      ],
+      "view": {
+        "page": "forgot",
+        "mainText": "Forgot Your Password? Enter your email address below, and we'll send you instructions on how to reset your password. Email: Submit Back to Login",
+        "form": {
+          "id": "hh-forgot-form",
+          "submit": "public:forgot",
+          "controls": [
+            {
+              "tag": "input",
+              "id": "hh-forgot-email",
+              "name": "email",
+              "type": "email",
+              "value": "",
+              "required": true,
+              "autocomplete": "email"
+            }
+          ],
+          "buttons": [
+            {
+              "type": "submit",
+              "id": "hh-forgot-submit",
+              "text": "Submit"
+            }
+          ]
+        }
+      },
+      "state": {
+        "route": {
+          "page": "forgot",
+          "path": "/forgot-password"
+        },
+        "request": {
+          "status": "idle",
+          "message": ""
+        },
+        "journeyKeys": [
+          "communityRole",
+          "contact",
+          "error",
+          "filters",
+          "loading",
+          "loginDraft",
+          "lookupError",
+          "lookupRetryable",
+          "lookups",
+          "matches",
+          "navOpen",
+          "outcome",
+          "profile",
+          "registration",
+          "rememberedFilters",
+          "runtime",
+          "school",
+          "searchPerformed",
+          "session",
+          "share",
+          "terms",
+          "wishlist"
+        ],
+        "forgotDraft": null,
+        "outcome": null,
+        "loginDraft": {
+          "email": null
+        },
+        "registrationIdentity": {
+          "name": "",
+          "email": "",
+          "phone": ""
+        },
+        "contact": {
+          "name": "",
+          "email": "",
+          "subject": "",
+          "message": ""
+        }
+      },
+      "runtime": {
+        "snapshotDigest": "a331acd8c889a8163bae4440aee70fd92a41dece6fba5ad04a6415a1cef1772b",
+        "mode": "fixture",
+        "fixture": true,
+        "persistence": "volatile-memory",
+        "sessionStatus": "anonymous",
+        "registrationStatus": "none",
+        "parts": [
+          {
+            "address": "hh.contract",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.provider",
+            "kind": "providerPart"
+          },
+          {
+            "address": "hh.capabilities",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.calculation.bind-service-functions",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service-bindings",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.service.SchoolData.getStates",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getCounties",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getDistricts",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getSchools",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Registration.registerTeacher",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Registration.getOwnStatus",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.getSession",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.login",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.logout",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.createProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.getOwnProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.openPublicProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Demo.reset",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Demo.simulateApproval",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.request.1",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.result.1",
+            "kind": "valuePart"
+          }
+        ],
+        "receiptCount": 2,
+        "receipts": [
+          {
+            "index": 1,
+            "status": "produced",
+            "into": "hh.service-bindings",
+            "inputNames": [
+              "provider"
+            ]
+          },
+          {
+            "index": 2,
+            "status": "produced",
+            "into": "hh.result.1",
+            "inputNames": [
+              "request"
+            ]
+          }
+        ]
+      },
+      "storage": {
+        "injectedStorage": false,
+        "browserSessionStorageAvailable": false,
+        "fixturePersistence": "volatile-memory",
+        "communityPersistence": "memory_only",
+        "storageKeys": []
+      },
+      "perPortCallDelta": {
+        "SchoolData.getStates": 0,
+        "SchoolData.getCounties": 0,
+        "SchoolData.getDistricts": 0,
+        "SchoolData.getSchools": 0,
+        "Registration.registerTeacher": 0,
+        "Registration.getOwnStatus": 0,
+        "Session.getSession": 0,
+        "Session.login": 0,
+        "Session.logout": 0,
+        "TeacherProfile.createProfile": 0,
+        "TeacherProfile.getOwnProfile": 0,
+        "TeacherProfile.openPublicProfile": 0,
+        "Demo.reset": 0,
+        "Demo.simulateApproval": 0
+      },
+      "receiptDelta": 0
+    },
+    {
+      "name": "valid-controller-payload",
+      "payloadClassification": "synthetic nonsecret .test address",
+      "result": {
+        "ok": true,
+        "remote": false,
+        "message": "Password recovery is not connected. No email was sent."
+      },
+      "view": {
+        "page": "forgot",
+        "mainText": "Forgot Your Password? Enter your email address below, and we'll send you instructions on how to reset your password. Password recovery is not connected. No email was sent. Email: Submit Back to Login",
+        "form": {
+          "id": "hh-forgot-form",
+          "submit": "public:forgot",
+          "controls": [
+            {
+              "tag": "input",
+              "id": "hh-forgot-email",
+              "name": "email",
+              "type": "email",
+              "value": "",
+              "required": true,
+              "autocomplete": "email"
+            }
+          ],
+          "buttons": [
+            {
+              "type": "submit",
+              "id": "hh-forgot-submit",
+              "text": "Submit"
+            }
+          ]
+        }
+      },
+      "state": {
+        "route": {
+          "page": "forgot",
+          "path": "/forgot-password"
+        },
+        "request": {
+          "status": "completed",
+          "message": "Password recovery is not connected. No email was sent."
+        },
+        "journeyKeys": [
+          "communityRole",
+          "contact",
+          "error",
+          "filters",
+          "loading",
+          "loginDraft",
+          "lookupError",
+          "lookupRetryable",
+          "lookups",
+          "matches",
+          "navOpen",
+          "outcome",
+          "profile",
+          "registration",
+          "rememberedFilters",
+          "runtime",
+          "school",
+          "searchPerformed",
+          "session",
+          "share",
+          "terms",
+          "wishlist"
+        ],
+        "forgotDraft": null,
+        "outcome": {
+          "kind": "local-simulation",
+          "message": "Password recovery is not connected. No email was sent.",
+          "remote": false
+        },
+        "loginDraft": {
+          "email": null
+        },
+        "registrationIdentity": {
+          "name": "",
+          "email": "",
+          "phone": ""
+        },
+        "contact": {
+          "name": "",
+          "email": "",
+          "subject": "",
+          "message": ""
+        }
+      },
+      "runtime": {
+        "snapshotDigest": "a331acd8c889a8163bae4440aee70fd92a41dece6fba5ad04a6415a1cef1772b",
+        "mode": "fixture",
+        "fixture": true,
+        "persistence": "volatile-memory",
+        "sessionStatus": "anonymous",
+        "registrationStatus": "none",
+        "parts": [
+          {
+            "address": "hh.contract",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.provider",
+            "kind": "providerPart"
+          },
+          {
+            "address": "hh.capabilities",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.calculation.bind-service-functions",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service-bindings",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.service.SchoolData.getStates",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getCounties",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getDistricts",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getSchools",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Registration.registerTeacher",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Registration.getOwnStatus",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.getSession",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.login",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.logout",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.createProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.getOwnProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.openPublicProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Demo.reset",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Demo.simulateApproval",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.request.1",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.result.1",
+            "kind": "valuePart"
+          }
+        ],
+        "receiptCount": 2,
+        "receipts": [
+          {
+            "index": 1,
+            "status": "produced",
+            "into": "hh.service-bindings",
+            "inputNames": [
+              "provider"
+            ]
+          },
+          {
+            "index": 2,
+            "status": "produced",
+            "into": "hh.result.1",
+            "inputNames": [
+              "request"
+            ]
+          }
+        ]
+      },
+      "storage": {
+        "injectedStorage": false,
+        "browserSessionStorageAvailable": false,
+        "fixturePersistence": "volatile-memory",
+        "communityPersistence": "memory_only",
+        "storageKeys": []
+      },
+      "perPortCallDelta": {
+        "SchoolData.getStates": 0,
+        "SchoolData.getCounties": 0,
+        "SchoolData.getDistricts": 0,
+        "SchoolData.getSchools": 0,
+        "Registration.registerTeacher": 0,
+        "Registration.getOwnStatus": 0,
+        "Session.getSession": 0,
+        "Session.login": 0,
+        "Session.logout": 0,
+        "TeacherProfile.createProfile": 0,
+        "TeacherProfile.getOwnProfile": 0,
+        "TeacherProfile.openPublicProfile": 0,
+        "Demo.reset": 0,
+        "Demo.simulateApproval": 0
+      },
+      "receiptDelta": 0
+    },
+    {
+      "name": "malformed-controller-payload",
+      "payloadClassification": "synthetic malformed nonsecret string",
+      "result": {
+        "ok": false,
+        "error": {
+          "code": "validation_failed",
+          "message": "Enter a valid email address."
+        }
+      },
+      "view": {
+        "page": "forgot",
+        "mainText": "Forgot Your Password? Enter your email address below, and we'll send you instructions on how to reset your password. Enter a valid email address. Email: Submit Back to Login",
+        "form": {
+          "id": "hh-forgot-form",
+          "submit": "public:forgot",
+          "controls": [
+            {
+              "tag": "input",
+              "id": "hh-forgot-email",
+              "name": "email",
+              "type": "email",
+              "value": "",
+              "required": true,
+              "autocomplete": "email"
+            }
+          ],
+          "buttons": [
+            {
+              "type": "submit",
+              "id": "hh-forgot-submit",
+              "text": "Submit"
+            }
+          ]
+        }
+      },
+      "state": {
+        "route": {
+          "page": "forgot",
+          "path": "/forgot-password"
+        },
+        "request": {
+          "status": "failed",
+          "message": "Enter a valid email address."
+        },
+        "journeyKeys": [
+          "communityRole",
+          "contact",
+          "error",
+          "filters",
+          "loading",
+          "loginDraft",
+          "lookupError",
+          "lookupRetryable",
+          "lookups",
+          "matches",
+          "navOpen",
+          "outcome",
+          "profile",
+          "registration",
+          "rememberedFilters",
+          "runtime",
+          "school",
+          "searchPerformed",
+          "session",
+          "share",
+          "terms",
+          "wishlist"
+        ],
+        "forgotDraft": null,
+        "outcome": {
+          "kind": "validation-error",
+          "message": "Enter a valid email address.",
+          "remote": false
+        },
+        "loginDraft": {
+          "email": null
+        },
+        "registrationIdentity": {
+          "name": "",
+          "email": "",
+          "phone": ""
+        },
+        "contact": {
+          "name": "",
+          "email": "",
+          "subject": "",
+          "message": ""
+        }
+      },
+      "runtime": {
+        "snapshotDigest": "a331acd8c889a8163bae4440aee70fd92a41dece6fba5ad04a6415a1cef1772b",
+        "mode": "fixture",
+        "fixture": true,
+        "persistence": "volatile-memory",
+        "sessionStatus": "anonymous",
+        "registrationStatus": "none",
+        "parts": [
+          {
+            "address": "hh.contract",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.provider",
+            "kind": "providerPart"
+          },
+          {
+            "address": "hh.capabilities",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.calculation.bind-service-functions",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service-bindings",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.service.SchoolData.getStates",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getCounties",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getDistricts",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getSchools",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Registration.registerTeacher",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Registration.getOwnStatus",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.getSession",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.login",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.logout",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.createProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.getOwnProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.openPublicProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Demo.reset",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Demo.simulateApproval",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.request.1",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.result.1",
+            "kind": "valuePart"
+          }
+        ],
+        "receiptCount": 2,
+        "receipts": [
+          {
+            "index": 1,
+            "status": "produced",
+            "into": "hh.service-bindings",
+            "inputNames": [
+              "provider"
+            ]
+          },
+          {
+            "index": 2,
+            "status": "produced",
+            "into": "hh.result.1",
+            "inputNames": [
+              "request"
+            ]
+          }
+        ]
+      },
+      "storage": {
+        "injectedStorage": false,
+        "browserSessionStorageAvailable": false,
+        "fixturePersistence": "volatile-memory",
+        "communityPersistence": "memory_only",
+        "storageKeys": []
+      },
+      "perPortCallDelta": {
+        "SchoolData.getStates": 0,
+        "SchoolData.getCounties": 0,
+        "SchoolData.getDistricts": 0,
+        "SchoolData.getSchools": 0,
+        "Registration.registerTeacher": 0,
+        "Registration.getOwnStatus": 0,
+        "Session.getSession": 0,
+        "Session.login": 0,
+        "Session.logout": 0,
+        "TeacherProfile.createProfile": 0,
+        "TeacherProfile.getOwnProfile": 0,
+        "TeacherProfile.openPublicProfile": 0,
+        "Demo.reset": 0,
+        "Demo.simulateApproval": 0
+      },
+      "receiptDelta": 0
+    },
+    {
+      "name": "blank-direct-controller-control",
+      "payloadClassification": "empty string sent directly to controller; browser reportValidity is not exercised",
+      "result": {
+        "ok": false,
+        "error": {
+          "code": "validation_failed",
+          "message": "Enter a valid email address."
+        }
+      },
+      "view": {
+        "page": "forgot",
+        "mainText": "Forgot Your Password? Enter your email address below, and we'll send you instructions on how to reset your password. Enter a valid email address. Email: Submit Back to Login",
+        "form": {
+          "id": "hh-forgot-form",
+          "submit": "public:forgot",
+          "controls": [
+            {
+              "tag": "input",
+              "id": "hh-forgot-email",
+              "name": "email",
+              "type": "email",
+              "value": "",
+              "required": true,
+              "autocomplete": "email"
+            }
+          ],
+          "buttons": [
+            {
+              "type": "submit",
+              "id": "hh-forgot-submit",
+              "text": "Submit"
+            }
+          ]
+        }
+      },
+      "state": {
+        "route": {
+          "page": "forgot",
+          "path": "/forgot-password"
+        },
+        "request": {
+          "status": "failed",
+          "message": "Enter a valid email address."
+        },
+        "journeyKeys": [
+          "communityRole",
+          "contact",
+          "error",
+          "filters",
+          "loading",
+          "loginDraft",
+          "lookupError",
+          "lookupRetryable",
+          "lookups",
+          "matches",
+          "navOpen",
+          "outcome",
+          "profile",
+          "registration",
+          "rememberedFilters",
+          "runtime",
+          "school",
+          "searchPerformed",
+          "session",
+          "share",
+          "terms",
+          "wishlist"
+        ],
+        "forgotDraft": null,
+        "outcome": {
+          "kind": "validation-error",
+          "message": "Enter a valid email address.",
+          "remote": false
+        },
+        "loginDraft": {
+          "email": null
+        },
+        "registrationIdentity": {
+          "name": "",
+          "email": "",
+          "phone": ""
+        },
+        "contact": {
+          "name": "",
+          "email": "",
+          "subject": "",
+          "message": ""
+        }
+      },
+      "runtime": {
+        "snapshotDigest": "a331acd8c889a8163bae4440aee70fd92a41dece6fba5ad04a6415a1cef1772b",
+        "mode": "fixture",
+        "fixture": true,
+        "persistence": "volatile-memory",
+        "sessionStatus": "anonymous",
+        "registrationStatus": "none",
+        "parts": [
+          {
+            "address": "hh.contract",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.provider",
+            "kind": "providerPart"
+          },
+          {
+            "address": "hh.capabilities",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.calculation.bind-service-functions",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service-bindings",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.service.SchoolData.getStates",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getCounties",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getDistricts",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.SchoolData.getSchools",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Registration.registerTeacher",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Registration.getOwnStatus",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.getSession",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.login",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Session.logout",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.createProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.getOwnProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.TeacherProfile.openPublicProfile",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Demo.reset",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.service.Demo.simulateApproval",
+            "kind": "functionPart"
+          },
+          {
+            "address": "hh.request.1",
+            "kind": "valuePart"
+          },
+          {
+            "address": "hh.result.1",
+            "kind": "valuePart"
+          }
+        ],
+        "receiptCount": 2,
+        "receipts": [
+          {
+            "index": 1,
+            "status": "produced",
+            "into": "hh.service-bindings",
+            "inputNames": [
+              "provider"
+            ]
+          },
+          {
+            "index": 2,
+            "status": "produced",
+            "into": "hh.result.1",
+            "inputNames": [
+              "request"
+            ]
+          }
+        ]
+      },
+      "storage": {
+        "injectedStorage": false,
+        "browserSessionStorageAvailable": false,
+        "fixturePersistence": "volatile-memory",
+        "communityPersistence": "memory_only",
+        "storageKeys": []
+      },
+      "perPortCallDelta": {
+        "SchoolData.getStates": 0,
+        "SchoolData.getCounties": 0,
+        "SchoolData.getDistricts": 0,
+        "SchoolData.getSchools": 0,
+        "Registration.registerTeacher": 0,
+        "Registration.getOwnStatus": 0,
+        "Session.getSession": 0,
+        "Session.login": 0,
+        "Session.logout": 0,
+        "TeacherProfile.createProfile": 0,
+        "TeacherProfile.getOwnProfile": 0,
+        "TeacherProfile.openPublicProfile": 0,
+        "Demo.reset": 0,
+        "Demo.simulateApproval": 0
+      },
+      "receiptDelta": 0
+    }
+  ],
+  "final": {
+    "finishedAt": "2026-10-18T23:39:13.757Z",
+    "providerPortInventory": [
+      "Demo.reset",
+      "Demo.simulateApproval",
+      "Registration.getOwnStatus",
+      "Registration.registerTeacher",
+      "SchoolData.getCounties",
+      "SchoolData.getDistricts",
+      "SchoolData.getSchools",
+      "SchoolData.getStates",
+      "Session.getSession",
+      "Session.login",
+      "Session.logout",
+      "TeacherProfile.createProfile",
+      "TeacherProfile.getOwnProfile",
+      "TeacherProfile.openPublicProfile"
+    ],
+    "providerCounts": {
+      "SchoolData.getStates": 1,
+      "SchoolData.getCounties": 0,
+      "SchoolData.getDistricts": 0,
+      "SchoolData.getSchools": 0,
+      "Registration.registerTeacher": 0,
+      "Registration.getOwnStatus": 0,
+      "Session.getSession": 0,
+      "Session.login": 0,
+      "Session.logout": 0,
+      "TeacherProfile.createProfile": 0,
+      "TeacherProfile.getOwnProfile": 0,
+      "TeacherProfile.openPublicProfile": 0,
+      "Demo.reset": 0,
+      "Demo.simulateApproval": 0
+    },
+    "runtimeReceiptCount": 2,
+    "finalRuntime": {
+      "snapshotDigest": "a331acd8c889a8163bae4440aee70fd92a41dece6fba5ad04a6415a1cef1772b",
+      "mode": "fixture",
+      "fixture": true,
+      "persistence": "volatile-memory",
+      "sessionStatus": "anonymous",
+      "registrationStatus": "none",
+      "parts": [
+        {
+          "address": "hh.contract",
+          "kind": "valuePart"
+        },
+        {
+          "address": "hh.provider",
+          "kind": "providerPart"
+        },
+        {
+          "address": "hh.capabilities",
+          "kind": "valuePart"
+        },
+        {
+          "address": "hh.calculation.bind-service-functions",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service-bindings",
+          "kind": "valuePart"
+        },
+        {
+          "address": "hh.service.SchoolData.getStates",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.SchoolData.getCounties",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.SchoolData.getDistricts",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.SchoolData.getSchools",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.Registration.registerTeacher",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.Registration.getOwnStatus",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.Session.getSession",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.Session.login",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.Session.logout",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.TeacherProfile.createProfile",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.TeacherProfile.getOwnProfile",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.TeacherProfile.openPublicProfile",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.Demo.reset",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.service.Demo.simulateApproval",
+          "kind": "functionPart"
+        },
+        {
+          "address": "hh.request.1",
+          "kind": "valuePart"
+        },
+        {
+          "address": "hh.result.1",
+          "kind": "valuePart"
+        }
+      ],
+      "receiptCount": 2,
+      "receipts": [
+        {
+          "index": 1,
+          "status": "produced",
+          "into": "hh.service-bindings",
+          "inputNames": [
+            "provider"
+          ]
+        },
+        {
+          "index": 2,
+          "status": "produced",
+          "into": "hh.result.1",
+          "inputNames": [
+            "request"
+          ]
+        }
+      ]
+    },
+    "finalState": {
+      "route": {
+        "page": "forgot",
+        "path": "/forgot-password"
+      },
+      "request": {
+        "status": "failed",
+        "message": "Enter a valid email address."
+      },
+      "journeyKeys": [
+        "communityRole",
+        "contact",
+        "error",
+        "filters",
+        "loading",
+        "loginDraft",
+        "lookupError",
+        "lookupRetryable",
+        "lookups",
+        "matches",
+        "navOpen",
+        "outcome",
+        "profile",
+        "registration",
+        "rememberedFilters",
+        "runtime",
+        "school",
+        "searchPerformed",
+        "session",
+        "share",
+        "terms",
+        "wishlist"
+      ],
+      "forgotDraft": null,
+      "outcome": {
+        "kind": "validation-error",
+        "message": "Enter a valid email address.",
+        "remote": false
+      },
+      "loginDraft": {
+        "email": null
+      },
+      "registrationIdentity": {
+        "name": "",
+        "email": "",
+        "phone": ""
+      },
+      "contact": {
+        "name": "",
+        "email": "",
+        "subject": "",
+        "message": ""
+      }
+    },
+    "finalView": {
+      "page": "forgot",
+      "mainText": "Forgot Your Password? Enter your email address below, and we'll send you instructions on how to reset your password. Enter a valid email address. Email: Submit Back to Login",
+      "form": {
+        "id": "hh-forgot-form",
+        "submit": "public:forgot",
+        "controls": [
+          {
+            "tag": "input",
+            "id": "hh-forgot-email",
+            "name": "email",
+            "type": "email",
+            "value": "",
+            "required": true,
+            "autocomplete": "email"
+          }
+        ],
+        "buttons": [
+          {
+            "type": "submit",
+            "id": "hh-forgot-submit",
+            "text": "Submit"
+          }
+        ]
+      }
+    },
+    "storage": {
+      "injectedStorage": false,
+      "browserSessionStorageAvailable": false,
+      "fixturePersistence": "volatile-memory",
+      "communityPersistence": "memory_only",
+      "storageKeys": []
+    },
+    "sourceLevelExpectedControl": "Actual app.mjs submit delegate checks reportValidity() before new FormData(form), then dispatches Object.fromEntries(data.entries()); this probe did not call browser APIs.",
+    "noServiceDeltaOnForgotControls": true
+  }
+}

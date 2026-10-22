@@ -1,0 +1,24 @@
+{
+  "job_id": "E2903",
+  "worker": "H1",
+  "phase": "RED-before-implementation",
+  "repository": "/workspace/scratch/8528bb251845/PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "head": "a7ef289c6232a6bb1daa7c805765179b5b502068",
+  "initial_untracked_preservation_reference": "/workspace/scratch/86659bbafcce/hh22/H1/E2801/initial-worktree",
+  "source_files": [
+    {
+      "path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "sha256": "417dfa6b6456a978554ce8184849e1d8f63a5b135ebfffb41442b2162222c35f"
+    },
+    {
+      "path": "checkpoint/vendor/hh/src/public-controller.mjs",
+      "sha256": "8e70652af3ffe9ac40825b8132321febf7ee0dc6c7748008f3492ee5a57efcab"
+    },
+    {
+      "path": "checkpoint/vendor/hh/src/community.mjs",
+      "sha256": "3613ec5676623cc3bee9905ab68e5dbeac090effea36ebb0e6069c785f1581db"
+    }
+  ],
+  "test_change": "Only public-controller.test.mjs was changed before RED; implementation source remained byte-identical to HEAD."
+}

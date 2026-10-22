@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -euo pipefail
+set -o noclobber
+repo=/workspace/scratch/8528bb251845/PageRouter
+packet=/workspace/scratch/8528bb251845/hh-cycle17/H1/E2303
+capture="$packet/captures/red-01"
+cd "$repo"
+printf '%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$capture/start.utc"
+set +e
+node --test --test-name-pattern='public mobile navigation toggle keeps a stable descriptive label across menu and session states' checkpoint/vendor/hh/src/public-site.test.mjs > "$capture/stdout.raw" 2> "$capture/stderr.raw"
+rc=$?
+printf '%s\n' "$rc" > "$capture/exit.code"
+printf '%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$capture/end.utc"
+exit "$rc"

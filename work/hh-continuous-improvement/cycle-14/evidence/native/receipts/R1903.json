@@ -1,0 +1,13 @@
+{
+  "job_id": "R1903",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Root preflight envelope for unchanged independent H2 review54d43214: accepted exact controllerd730252e/test9768d179 after source/provenance review and actual independent focused1pass/0fail/0skipped. Worker raw outcome accepted lacked required decision field, normalized explicitly before native finish. Root raw stdout corrects worker prose59nonmatching skipped: actual tests1/skipped0. Unchanged original E1902 replay verified repaired projection and one login/zero registration/profile writes, then failed its old total-call expectation2vs1 because initialize also reads SchoolData.getStates. No rerun or assertion change; later replay secret scan unreached, while focused regression secret helper passed. Fixture/controller/tree only, not mounted browser/backend/human acceptance.",
+  "raw_receipt": {"path": "H2/R1903/result.json", "bytes": 7728, "sha256": "54d43214e0a723ea93a05f54ea881e55f9a6e4f9be3452b7e4b75f35bee6e0e4"},
+  "corrections": [
+    "Required native decision added from explicit worker outcome accepted; raw unchanged, preflight not native rejection.",
+    "Actual focused.stdout.raw says tests1/pass1/fail0/skipped0, not59skipped. Root inspected exact raw file; no test rerun.",
+    "Original replay still exits1 at predeclared incorrect total-call assertion; never relabelled full green."
+  ],
+  "scope": "Independent bounded code acceptance with raw count/provenance qualifications; root did not implement the product change or self-review it."
+}

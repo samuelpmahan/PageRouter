@@ -1,0 +1,7 @@
+{
+  "schema":"chainspot.rebalancer-spec/v1",
+  "service":{"name":"hh20-form-help","source":"334b55038e88f56d152676a92f79fba7be43b546","localSource":"172c9de23c2c3c2778d52a6aebf8b85ac3a6cd20","scope":"Probe remaining form-help/reference associations; choose one demonstrated usable gap, bounded fix, tests, independent review, canonical build, same draft PR8.","capacity":"Two real Luna/high workers; H1 sole source/Git owner, H2 read-only independent reviewer. Three-stream/floating/reserve intent limited to two slots: owner, reviewer, no invented reserve worker."},
+  "workers":["H1","H2"],
+  "review_policy":{"enabled":true,"review_prefix":"R","reviewer_must_differ_from_extractor":true},
+  "jobs":[{"id":"E2601","kind":"extract","allow_workers":["H1"],"subject":"Probe actual remaining teacher registration/profile form-help/reference associations; no source edits until demonstrated finding."},{"id":"E2602","kind":"extract","allow_workers":["H2"],"subject":"Independent read-only audit/probe of remaining form-help/reference associations; falsify suspected gaps; no source or Git edits."}]
+}

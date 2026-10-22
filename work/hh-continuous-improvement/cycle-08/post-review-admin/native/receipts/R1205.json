@@ -1,0 +1,125 @@
+{
+  "job_id": "R1205",
+  "worker": "H2",
+  "decision": "accepted",
+  "repository": "PageRouter",
+  "packagePath": "work/hh-continuous-improvement/cycle-08/",
+  "manifestSha256": "487bc186ea2e144f4a20648abf85d39d9c796e33cb0d1c130c308557074d29a9",
+  "manifestEntries": 77,
+  "actualFilesExcludingManifest": 77,
+  "byteAudit": {
+    "missing": 0,
+    "unmanifested": 0,
+    "mismatches": 0,
+    "verified": true
+  },
+  "sourceFreeze": {
+    "productHashes": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "1150f43987bf79a5eb82936e0ee6100852f8f29388b239d14849ac08a0fbad62"
+    },
+    "canonicalSourceBindings": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": {
+        "archivePath": "evidence/E1203/public-controller.after.mjs",
+        "buildSha256": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+        "bytes": 52766
+      },
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": {
+        "archivePath": "evidence/E1203/public-controller.test.after.mjs",
+        "buildSha256": "1150f43987bf79a5eb82936e0ee6100852f8f29388b239d14849ac08a0fbad62",
+        "bytes": 62709
+      }
+    },
+    "E1204ReceiptSha256": "d44b1c9919141192737fec8cd8462d078d90c22dc4c332c3a5992cb354b8d440",
+    "sourceInputCount": 1538,
+    "verified": true
+  },
+  "canonicalBuild": {
+    "targetedHH": {
+      "passed": 123,
+      "failed": 0
+    },
+    "fullSuite": {
+      "passed": 278,
+      "failed": 0
+    },
+    "atlas": {
+      "passed": 1,
+      "failed": 0
+    },
+    "helpers": {
+      "passed": 2,
+      "failed": 0
+    },
+    "pxcubePackages": 14,
+    "verifiedOutputFiles": 843,
+    "siteBuildId": "816d6c0b6c549819bab6098362146c47c8887d19fc7619397cccafd63ca2fbaa",
+    "siteDigest": "1d0e74dc968d1859df3513336f717416e18ae99d9105c857fef2cbab950b3c09"
+  },
+  "regressionEvidence": {
+    "E1201": {
+      "outcome": "confirmed_reuse",
+      "firstFailurePreserved": true,
+      "secondFailurePreserved": true,
+      "postFinishSupplementQualified": "post-finish supplemental diagnostic; not part of the original E1201 worker finish envelope"
+    },
+    "E1203": {
+      "actualRed": "1 test, 0 pass, 1 fail (expected old-code behavioral failure)",
+      "compatibilityControl": "1 passed, 0 failed",
+      "focusedShare": "3 passed, 0 failed",
+      "controller": "49 passed, 0 failed",
+      "sourceCore": "116 passed, 0 failed",
+      "broadDirect": "116 passed, 1 failed at module load; missing fast-check",
+      "broadFailureQualified": true
+    }
+  },
+  "nativeEvidence": {
+    "comparedSourceToPackageFiles": 28,
+    "epochsPackaged": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "historicalSnapshotEpoch": 4,
+    "E1205HistoricalStatusAtCapture": "running",
+    "explicitlyNotLive": true
+  },
+  "browserScope": {
+    "extensionFailureRecorded": true,
+    "cloudLoopbackRefusedRecorded": true,
+    "screenshots": 0,
+    "browserVisualQA": "UNVERIFIED"
+  },
+  "scope": {
+    "syntheticFixturesOnly": true,
+    "backendOrHTTPCalls": false,
+    "productionOrRealData": false,
+    "externalShareCopyOpen": false,
+    "gitOrProductSourceChangesByAudit": false,
+    "humanAcceptanceClaimed": false,
+    "mainOrDeploymentClaimed": false
+  },
+  "auditNotes": {
+    "commandPortability": "COMMANDS.txt files preserve exact original invocations; several contain this workspace’s absolute /workspace/scratch paths or direct probe imports, so they are provenance records rather than relocatable drop-in commands. Replaying elsewhere requires path remapping and must preserve original scripts separately.",
+    "wordingAmbiguity": {
+      "severity": "nonblocking",
+      "exactE1205Wording": "No source, docs, Git refs, build outputs, or publication payload were changed during packaging.",
+      "packageAuthoredDocs": [
+        "README.md",
+        "NEXT.md",
+        "continuation.json"
+      ],
+      "assessment": "The frozen package plainly contains newly authored cycle-08 README/NEXT/continuation docs, while copied source and earlier docs remain manifest-bound. This is best read as no pre-existing source/docs changed, but the raw E1205 sentence is broader than that. Preserve the package bytes; clarify append-only in root-owned post-review administration."
+    }
+  },
+  "summary": "Accepted the exact frozen 77-file package: the manifest SHA-256 matches, all 77 listed files match and there are no unmanifested files. Product source copies and E1204 build receipt bind the two assigned hashes. Recorded red/green/build counts and their dependency failure distinction match raw logs. Original E1201 harness failures, explicitly post-finish supplement, native receipts/bundles, historical E1205-running capture, and browser attempt boundaries are preserved and qualified. No rebuild or re-execution of unchanged green evidence was performed.",
+  "commands": [
+    "node /workspace/scratch/8528bb251845/hh-cycle08/H2/R1205/audit.mjs"
+  ],
+  "limitations": [
+    "This was a package-integrity/provenance audit, not browser QA or a fresh canonical build.",
+    "Historical browser extension and loopback failures are not interpreted as production or application failures.",
+    "Machine-specific absolute paths in original command records require remapping for relocation."
+  ]
+}

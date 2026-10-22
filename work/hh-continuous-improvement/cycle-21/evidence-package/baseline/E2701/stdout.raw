@@ -1,0 +1,148 @@
+{
+  "job_id": "E2701",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "The local controller rejects a whitespace-only title with a meaningful body and emits status while leaving thread/storage unchanged, but its input-draft API rejects the composer field names and the next emitted compose form has no submitted values. Correcting only the title and explicitly retrying creates exactly one volatile topic and navigates to its detail. Fixture service receipts do not change. This is a source/controller/renderer run, not a browser-native constraint-validation claim.",
+  "sourcePins": {
+    "repoCommit": "0d52cde4f2a502b6ee0d4b188bfc3b10c376daa4",
+    "repoTree": "8e8b71932d59f13be4b3dd92bc9c7cd8f91b9d51",
+    "communitySource": "/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/community.mjs",
+    "controllerSource": "/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.mjs",
+    "wrapperSource": "/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/app.mjs",
+    "rendererSource": "/workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-site.mjs"
+  },
+  "probeScope": "Synthetic in-memory fixture provider + volatile Map-backed forum storage; actual createPublicController, createCommunity, renderPublicSite, renderCommunity and emitted tree. Input and submit payloads follow app.mjs listener field names and dispatch event. No live accounts, email, or outbound network.",
+  "initialComposer": {
+    "fields": {
+      "title": {
+        "tag": "input",
+        "valueAttribute": null,
+        "required": true,
+        "options": []
+      },
+      "category": {
+        "tag": "select",
+        "valueAttribute": null,
+        "required": true,
+        "options": [
+          {
+            "value": "Classroom",
+            "selected": false
+          },
+          {
+            "value": "Resources",
+            "selected": false
+          },
+          {
+            "value": "Questions",
+            "selected": false
+          },
+          {
+            "value": "Community",
+            "selected": false
+          }
+        ]
+      },
+      "content": {
+        "tag": "textarea",
+        "valueAttribute": null,
+        "required": true,
+        "options": []
+      }
+    },
+    "formSubmit": "forum-topic"
+  },
+  "invalidAttempt": {
+    "draftInputAccepts": {
+      "title": false,
+      "category": false,
+      "content": false
+    },
+    "result": {
+      "ok": false,
+      "error": "title_and_body_required"
+    },
+    "visibleStatus": "title and body required",
+    "emitted": {
+      "fields": {
+        "title": {
+          "tag": "input",
+          "valueAttribute": null,
+          "required": true,
+          "options": []
+        },
+        "category": {
+          "tag": "select",
+          "valueAttribute": null,
+          "required": true,
+          "options": [
+            {
+              "value": "Classroom",
+              "selected": false
+            },
+            {
+              "value": "Resources",
+              "selected": false
+            },
+            {
+              "value": "Questions",
+              "selected": false
+            },
+            {
+              "value": "Community",
+              "selected": false
+            }
+          ]
+        },
+        "content": {
+          "tag": "textarea",
+          "valueAttribute": null,
+          "required": true,
+          "options": []
+        }
+      },
+      "formSubmit": "forum-topic"
+    },
+    "titleAndBodyInControllerDrafts": {
+      "title": false,
+      "category": false,
+      "content": false
+    },
+    "retainedSubmittedValues": {
+      "title": null,
+      "category": null,
+      "content": null
+    },
+    "threadsBefore": 3,
+    "threadsAfter": 3,
+    "storageUnchanged": true
+  },
+  "correctedRetry": {
+    "draftInputAccepts": {
+      "title": false,
+      "category": false,
+      "content": false
+    },
+    "result": {
+      "ok": true,
+      "id": "topic-local-1",
+      "title": "Local classroom routines",
+      "category": "Questions"
+    },
+    "route": {
+      "page": "community",
+      "path": "/posts/topic-local-1",
+      "communityRoute": {
+        "page": "post",
+        "threadId": "topic-local-1"
+      }
+    },
+    "threadsAfter": 4,
+    "fixtureServiceReceiptDelta": 0,
+    "communityStorageKeys": [
+      "E2701-community"
+    ]
+  },
+  "emittedTrees": 10,
+  "browserExecution": "Unavailable: Playwright browser binary absent; connected browser extension unavailable; cloud browser cannot reach 127.0.0.1 scratch server."
+}

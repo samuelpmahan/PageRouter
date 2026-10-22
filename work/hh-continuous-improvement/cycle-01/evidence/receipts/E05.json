@@ -1,0 +1,8 @@
+{
+  "job_id": "E05",
+  "worker": "W1",
+  "outcome": "mixed_change",
+  "summary": "Scoped school lookup retry separately from directory/profile retry, reloaded missing current registration choices on route reentry, kept initial directory retry through independent states load, and retained directory school-choice retry compatibility. Four regressions failed before corresponding fixes, focused suite now 32/32, source frozen.",
+  "agent": "/root/hh_owner",
+  "repair_of": "E04"
+}

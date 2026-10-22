@@ -1,0 +1,42 @@
+{
+  "job_id": "R2305",
+  "worker": "H2",
+  "decision": "amend",
+  "summary": "Frozen cycle-17 package is exact (115 listed payload files, 847742 bytes; 117 physical files including manifest and excluded E2305 result; all listed bytes, SHA-256 values, and full modes match). Independent audit found a material receipt-description mismatch: the packaged E2304 site.receipt.json has 1538 sourceInputs and includes vendor/hh/src/public-site.test.mjs (19545 bytes, SHA-256 264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5), contrary to README.md, continuation.json, and E2305 result. Correct in a new package revision; no frozen files changed.",
+  "audit_scope": "FILE-ONLY; no tests, probes, builds, browser, Git, source, package, deployment, or product operations",
+  "package_root": "/workspace/scratch/8528bb251845/PageRouter/work/hh-continuous-improvement/cycle-17",
+  "manifest_sha256": "87ab8bd69084df7bba88077c851c16cb570c5c8dd0d9584eb57d82a8eb142fd9",
+  "manifest_listed_files": 115,
+  "manifest_listed_bytes": 847742,
+  "physical_files_including_manifest_and_excluded_result": 117,
+  "manifest_mismatches": 0,
+  "verified_original_copy_pairs": 60,
+  "excluded_e2305_result_sha256": "a73076499dcfd0c2205619b692d1b25958e9828477773bd0a32a47af7e1c8d47",
+  "source_pins": {
+    "checkpoint/vendor/hh/src/public-site.mjs": "d9c17a350375633a53d0dc256be666bb0c82298c9ffa7b05bc6be08156141bfc",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5"
+  },
+  "e2304_receipt": {
+    "source_input_count": 1538,
+    "renderer_test_included": true,
+    "renderer_test_path": "vendor/hh/src/public-site.test.mjs",
+    "renderer_test_bytes": 19545,
+    "renderer_test_sha256": "264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5",
+    "output_metadata_count": 843,
+    "output_bodies_rehashed": false,
+    "receipt_and_log_only_archived": true
+  },
+  "review_qualifications": [
+    "R2303 wrong-cwd AMEND is distinct from accepted R2303B corrected-cwd focused 1/1 pass.",
+    "E2303 raw RED undefined differs from JSON null representation; GREEN prospective skip prediction differs from actual zero skips.",
+    "E2302 prepared source-only status is not the actual native execution result; no-match status was read after recovery.",
+    "E2305 state is a historical snapshot while job preparation was running; locator/copy failures remain process qualifications.",
+    "Emitted-tree evidence does not establish browser DOM, computed accessible name, keyboard, screen-reader, or human behavior.",
+    "Exact 27 prior HH scratch paths remain stated excluded/preserved; Lab7 separate and untouched."
+  ],
+  "created_files": [
+    "audit.md",
+    "review.md",
+    "result.json"
+  ]
+}

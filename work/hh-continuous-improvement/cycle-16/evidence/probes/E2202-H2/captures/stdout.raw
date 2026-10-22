@@ -1,0 +1,70 @@
+{
+  "job_id": "E2202",
+  "worker": "H2",
+  "probe": "profile-overlay-lifecycle",
+  "initialization": {
+    "portCounts": {
+      "SchoolData.getStates": 1
+    },
+    "statesCalls": 1
+  },
+  "login": {
+    "result": "success",
+    "portDelta": {
+      "Session.login": 1
+    },
+    "syntheticSeed": "avery@fixture.test",
+    "passwordRetainedSurfaceLeak": false
+  },
+  "edit": {
+    "result": {
+      "ok": true,
+      "localOnly": true,
+      "outcomeRemote": false
+    },
+    "providerSnapshotUnchangedAtSave": true,
+    "portDelta": {},
+    "providerHasProfileUpdatePort": false,
+    "source": "local-overlay",
+    "ownTreeLocalDisclosure": true,
+    "ownName": "Demo Avery E2202 Edited"
+  },
+  "sameController": {
+    "ownerReentry": {
+      "name": "Demo Avery E2202 Edited",
+      "source": "local-overlay"
+    },
+    "publicAlias": {
+      "name": "Demo Avery E2202 Edited",
+      "source": "local-overlay",
+      "routePage": "profile",
+      "renderedNamePresent": true
+    },
+    "aliasPortDelta": {
+      "TeacherProfile.openPublicProfile": 1
+    }
+  },
+  "freshController": {
+    "name": "Demo Avery",
+    "source": "runtime"
+  },
+  "reset": {
+    "result": true,
+    "portDelta": {
+      "TeacherProfile.openPublicProfile": 1,
+      "Demo.reset": 1
+    },
+    "afterReset": {
+      "name": "Demo Avery",
+      "source": "runtime",
+      "session": "anonymous"
+    }
+  },
+  "qualifications": {
+    "emittedSourceEquivalentTreeOnly": true,
+    "mountedDomOrFormData": false,
+    "browserOrBackend": false,
+    "realEmail": false,
+    "realAccount": false
+  }
+}

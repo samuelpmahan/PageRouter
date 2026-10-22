@@ -1,0 +1,33 @@
+{
+  "schema": "hh-cycle04-package-validation/v1",
+  "json_documents_parsed": 49,
+  "reviewed_source_hashes_match": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": true,
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": true
+  },
+  "canonical_receipt_source_inputs_match": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": true,
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": true
+  },
+  "siteBuildId": "ee631cce67903dafd20228b5090d208fb50aaecedd0d713974ea47b9a3c75ff5",
+  "siteFiles": 843,
+  "pxcubePackages": 14,
+  "R604_decision": "accepted",
+  "native_snapshot_E606_status": "running",
+  "normalization_checks": {
+    "E601_raw_swapped_fields_retained": true,
+    "E601_normalized_outcome": "not_reuse",
+    "E602_raw_missing_summary_retained": true,
+    "E602_summary_present_in_normalized_receipt": true
+  },
+  "portable_runner_checks": {
+    "E601_current_matches_original": true,
+    "E602_baseline_stage_matches_original": true,
+    "E603_baseline_stage_matches_original": true,
+    "R604_profile_matches_H2": true,
+    "R604_adversarial_matches_H2": true
+  },
+  "portable_runner_count": 5,
+  "binarySolveBundles": 6,
+  "product_source_mutation_during_packaging": false
+}

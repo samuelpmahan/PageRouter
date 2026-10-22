@@ -1,0 +1,93 @@
+// PREPARED ONLY. Run after exact allowlist staging and before the one commit, with root GO.
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+import {readFile} from 'node:fs/promises';
+
+const repo = '/workspace/scratch/8528bb251845/PageRouter';
+const exactExcludedScratch = new Set([
+  'hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.end.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.exit',
+  'hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.start.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.stderr.raw',
+  'hh-cycle13/H1/E1803-PROPOSAL/controller-full-01.stdout.raw',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-01-test-source-reconstructed-after-green02.mjs.txt',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-01.end.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-01.exit',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-01.start.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-01.stderr.raw',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-01.stdout.raw',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-02.end.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-02.exit',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-02.start.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-02.stderr.raw',
+  'hh-cycle13/H1/E1803-PROPOSAL/green-02.stdout.raw',
+  'hh-cycle13/H1/E1803-PROPOSAL/site-full-01.end.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/site-full-01.exit',
+  'hh-cycle13/H1/E1803-PROPOSAL/site-full-01.start.utc',
+  'hh-cycle13/H1/E1803-PROPOSAL/site-full-01.stderr.raw',
+  'hh-cycle13/H1/E1803-PROPOSAL/site-full-01.stdout.raw',
+  'hh-cycle15/H2/E2102/PREDECLARED-PROBE.md',
+  'hh-cycle15/H2/E2102/exit-code.txt',
+  'hh-cycle15/H2/E2102/probe.mjs',
+  'hh-cycle15/H2/E2102/result.json',
+  'hh-cycle15/H2/E2102/stderr.log',
+  'hh-cycle15/H2/E2102/stdout.log',
+]);
+const args = process.argv.slice(2), planPath = args[0], planSha = args[1];
+if (!planPath || !/^[0-9a-f]{64}$/.test(planSha ?? '')) {
+  throw new Error('usage: node verify-staged-allowlist.mjs <root-admitted-plan-path> <plan-sha256>');
+}
+const sha256 = b => createHash('sha256').update(b).digest('hex');
+const blobSha1 = b => createHash('sha1').update(`blob ${b.length}\0`).update(b).digest('hex');
+const git = (...a) => execFileSync('git', a, {cwd: repo, maxBuffer: 64 * 1024 * 1024});
+const planBytes = await readFile(planPath);
+if (sha256(planBytes) !== planSha) throw new Error('prospective plan hash mismatch');
+const plan = JSON.parse(planBytes.toString('utf8'));
+if (plan.schema !== 'hh-cycle15-export-plan/v1' || plan.status !== 'root-admitted-precommit') throw new Error('plan is not root-admitted');
+const branch = git('branch', '--show-current').toString('utf8').trim();
+const head = git('rev-parse', 'HEAD').toString('utf8').trim();
+if (branch !== plan.branch || head !== plan.expectedParent) throw new Error('branch or parent changed since frozen plan');
+if (!Array.isArray(plan.files) || plan.files.length !== plan.allowlistCount) throw new Error('allowlist count mismatch');
+const expected = new Map(plan.files.map(x => [x.path, x]));
+if (expected.size !== plan.files.length) throw new Error('duplicate allowlist path');
+const staged = git('diff', '--cached', '--name-only', '-z').toString('utf8').split('\0').filter(Boolean).sort();
+const wanted = [...expected.keys()].sort();
+if (JSON.stringify(staged) !== JSON.stringify(wanted)) throw new Error(`staged names differ from exact admitted plan: ${JSON.stringify(staged)}`);
+const records = git('ls-files', '--stage', '-z', '--', ...wanted).toString('utf8').split('\0').filter(Boolean);
+const indexed = new Map();
+for (const record of records) {
+  const tab = record.indexOf('\t'), [mode, oid, stage] = record.slice(0, tab).split(' '), path = record.slice(tab + 1);
+  if (stage !== '0' || !expected.has(path) || indexed.has(path)) throw new Error(`unexpected index record: ${path}`);
+  indexed.set(path, {mode, oid});
+}
+if (indexed.size !== expected.size) throw new Error(`index records ${indexed.size} != planned ${expected.size}`);
+let verifiedBytes = 0;
+for (const [path, item] of expected) {
+  const entry = indexed.get(path);
+  if (!entry || entry.mode !== item.mode) throw new Error(`staged Git mode mismatch: ${path}`);
+  const blob = git('cat-file', 'blob', entry.oid);
+  const sha = sha256(blob), gitBlob = blobSha1(blob);
+  if (blob.length !== item.bytes || sha !== item.sha256 || gitBlob !== item.gitBlobSha1 || gitBlob !== entry.oid) {
+    throw new Error(`staged blob mismatch: ${path}`);
+  }
+  const worktree = await readFile(`${repo}/${path}`);
+  if (worktree.length !== blob.length || sha256(worktree) !== sha) throw new Error(`worktree/index mismatch: ${path}`);
+  verifiedBytes += blob.length;
+}
+const statusRaw = git('status', '--porcelain=v1', '-z', '--untracked-files=all').toString('utf8');
+const planned = new Set(wanted), excluded = new Set(plan.excludedScratch ?? []), seenExcluded = new Set(), failures = [];
+if (excluded.size !== exactExcludedScratch.size || [...exactExcludedScratch].some(p => !excluded.has(p))) {
+  failures.push('plan excludedScratch is not the literal exact 27-path set');
+}
+for (const record of statusRaw.split('\0').filter(Boolean)) {
+  const xy = record.slice(0, 2), path = record.slice(3);
+  if (excluded.has(path) && xy === '??') { seenExcluded.add(path); continue; }
+  if (!planned.has(path)) failures.push(`status path outside exact plan: ${xy} ${path}`);
+  if (!/^(M |A )$/.test(xy)) failures.push(`staged path has unstaged/unexpected state ${xy}: ${path}`);
+}
+if (seenExcluded.size !== 27 || seenExcluded.size !== exactExcludedScratch.size ||
+    [...exactExcludedScratch].some(p => !seenExcluded.has(p))) failures.push(`exact excluded scratch set mismatch: ${seenExcluded.size}/${excluded.size}`);
+if (failures.length) throw new Error(failures.join('\n'));
+console.log(JSON.stringify({result: 'PASS', branch, parent: head, plannedPaths: expected.size,
+  stagedPaths: staged.length, indexRecords: indexed.size, verifiedBlobBytes: verifiedBytes,
+  excludedScratchCount: seenExcluded.size, gitModes: 'matched exact plan', sha256AndGitBlobSha1: 'verified for every staged path'}, null, 2));

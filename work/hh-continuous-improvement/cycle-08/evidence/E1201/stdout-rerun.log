@@ -1,0 +1,20 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
++ actual - expected
+
++ undefined
+- '#/public-profile/demo-avery'
+
+    at file:///workspace/scratch/8528bb251845/hh-cycle08/H1/E1201/probe.mjs:123:10 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: '#/public-profile/demo-avery',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.19.0

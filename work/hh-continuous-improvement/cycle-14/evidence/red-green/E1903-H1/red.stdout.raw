@@ -1,0 +1,30 @@
+✖ held successful login projects authenticated email after route reentry (11.023554ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 106.416889
+
+✖ failing tests:
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:261:1
+✖ held successful login projects authenticated email after route reentry (11.023554ms)
+  AssertionError [ERR_ASSERTION]: reentered login view follows the successful authenticated identity, not the superseded draft
+  + actual - expected
+  
+  + 'newer-657c5e9a-dc79-42a6-a517-486339eddeba@example.test'
+  - 'e1903-8441721a-e3e6-4459-8fac-3f2ba9b7d79f@example.test'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:312:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'newer-657c5e9a-dc79-42a6-a517-486339eddeba@example.test',
+    expected: 'e1903-8441721a-e3e6-4459-8fac-3f2ba9b7d79f@example.test',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

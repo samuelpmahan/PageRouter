@@ -1,0 +1,105 @@
+{
+  "job_id": "E1603",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "Added one behavior-only table regression to preserve the observed global-feedback-compatible registration flow without freezing feedback text/style/policy. The new focused test passed all three isolated held-provider branches: known transport failure, unknown outcome, and pending-registration success; current login form remained present/enabled, transaction classifications remained distinct, no automatic/safe retry was available for failures, and no additional registration call occurred. The entire controller suite and bounded public-site renderer suite also passed. Passwords were generated at runtime and absent from controller/runtime/Parts/storage/rendered tree. This is compatibility coverage, not a defect fix or browser acceptance claim.",
+  "source": {
+    "repository": "PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "b9eff6a0c4385ed2648e97b30d15366910b7b58b",
+    "tree_before_test_edit": "a5c871c0e8b8373bb7010ffce57249f245443846",
+    "changed_product_file": {
+      "path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "sha256": "e11885f0f55e56094bed3e865d9acfcb57fc995097d5be627f9ebed3631d89a3"
+    },
+    "unchanged_controller": {
+      "path": "checkpoint/vendor/hh/src/public-controller.mjs",
+      "sha256": "fbb5803ae6269b8d4c61b3e4c0e100dfaf18269c823283be192aa66a353be6f2"
+    },
+    "unchanged_renderer": {
+      "path": "checkpoint/vendor/hh/src/public-site.mjs",
+      "sha256": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4"
+    },
+    "git_commit": null,
+    "git_changes": "only the one intended test-file edit"
+  },
+  "test": {
+    "name": "held registration completion on login preserves transaction classification without replay",
+    "expected_first_pass": true,
+    "cases": [
+      {
+        "branch": "known transport failure",
+        "result_code": "transport_failure",
+        "outcome_known": true,
+        "completion_request_status": "failed",
+        "provider_registration_status": "none",
+        "safe_retry_available": false,
+        "registration_calls_after_completion_retry_check": 1
+      },
+      {
+        "branch": "unknown outcome",
+        "result_code": "outcome_unknown",
+        "outcome_known": false,
+        "completion_request_status": "outcome_unknown",
+        "provider_registration_status": "none",
+        "safe_retry_available": false,
+        "registration_calls_after_completion_retry_check": 1
+      },
+      {
+        "branch": "successful pending registration",
+        "result_ok": true,
+        "result_outcome": "pending_saved",
+        "completion_request_status": "completed",
+        "provider_registration_status": "pending",
+        "safe_retry_available": false,
+        "registration_calls_after_completion": 1
+      }
+    ],
+    "common_observations": [
+      "Each branch held the actual Registration.registerTeacher fixture call, then navigated to /login before release.",
+      "At completion the current route/rendered page stayed login and the actual login form/submit control remained present/enabled.",
+      "After completion snapshot, invalid login reached existing validation_failed locally and added no registration call.",
+      "Generated password was absent from controller state, runtime snapshot, runtime inspection, actual PxC Part values, storage and rendered tree before and after local login validation."
+    ],
+    "phase_qualification": "Completion statuses above were captured before the separate invalid-login control. Subsequent login validation changed controller request/outcome projection; those later values are not reported as registration completion state.",
+    "no_password_values_in_evidence": true
+  },
+  "commands": [
+    {
+      "kind": "focused new table test",
+      "command_record": "hh-cycle11/H1/E1603/run-focused.sh",
+      "command_sha256": "37beee18665dc0695ee8bcf845a12d6c8a1e3500dd8c20657c1431f5c60a5003",
+      "command": "node --test --test-concurrency=2 --test-name-pattern='held registration completion on login preserves transaction classification without replay' checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "stdout": {"path": "hh-cycle11/H1/E1603/focused.stdout.raw", "bytes": 223, "sha256": "8dd5773a2b4b02e4f1339661351e2e6ef979382e2b194a8890d0df9b1f17249c"},
+      "stderr": {"path": "hh-cycle11/H1/E1603/focused.stderr.raw", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "exit": {"path": "hh-cycle11/H1/E1603/focused.exit", "value": 0, "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"},
+      "count": {"passed": 1, "failed": 0}
+    },
+    {
+      "kind": "full public-controller suite",
+      "command_record": "hh-cycle11/H1/E1603/run-controller.sh",
+      "command_sha256": "12002e43d1e7e6d54da818c50c508b5f436b00211ea5d036669b353674b0d06c",
+      "command": "node --test --test-concurrency=2 checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "stdout": {"path": "hh-cycle11/H1/E1603/controller.stdout.raw", "bytes": 5535, "sha256": "4a194f7f3a4c7c7366ccc239486b91575d52923dc344855e96435db9a111aa62"},
+      "stderr": {"path": "hh-cycle11/H1/E1603/controller.stderr.raw", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "exit": {"path": "hh-cycle11/H1/E1603/controller.exit", "value": 0, "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"},
+      "count": {"passed": 56, "failed": 0}
+    },
+    {
+      "kind": "bounded relevant nonstyle renderer suite",
+      "command_record": "hh-cycle11/H1/E1603/run-public-site.sh",
+      "command_sha256": "65a487ed9ce24b4080a8709559e177a8e9736c3c84aa8dfa5577f67bd3ea1e04",
+      "command": "node --test --test-concurrency=2 checkpoint/vendor/hh/src/public-site.test.mjs",
+      "stdout": {"path": "hh-cycle11/H1/E1603/public-site.stdout.raw", "bytes": 1589, "sha256": "6b27719517fdfffc1416c47bee22edcf2b79b85c786bdd5fe8917987cbb278da"},
+      "stderr": {"path": "hh-cycle11/H1/E1603/public-site.stderr.raw", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+      "exit": {"path": "hh-cycle11/H1/E1603/public-site.exit", "value": 0, "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"},
+      "count": {"passed": 14, "failed": 0}
+    }
+  ],
+  "limits": [
+    "Compatibility regression only; no controller/source policy change, defect correction, or red-before-fix claim.",
+    "Local fixture/controller/render-tree only; no real provider/backend, browser, production authority, Python runtime, or network operation.",
+    "No global feedback message/style/visibility policy is asserted.",
+    "No canonical build, independent review, commit, push, or publication was part of E1603."
+  ]
+}

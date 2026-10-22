@@ -1,0 +1,234 @@
+{
+  "schema": "hh11-h1-e1601-probe/v1",
+  "source": "local fixture provider + public controller/render tree",
+  "observations": [
+    {
+      "name": "same-route-existing-error-control",
+      "failWith": "transport_failure",
+      "navigatedBeforeRelease": false,
+      "result": {
+        "ok": false,
+        "code": "transport_failure",
+        "outcomeKnown": true
+      },
+      "beforeRelease": {
+        "page": "register",
+        "loginForm": false,
+        "registerForm": true,
+        "loginSubmitEnabled": false,
+        "feedback": []
+      },
+      "wasPendingOnRegister": true,
+      "completedRoute": {
+        "page": "register",
+        "loginForm": false,
+        "registerForm": true,
+        "loginSubmitEnabled": false,
+        "feedback": [
+          {
+            "className": "hh-status local-error",
+            "text": "Simulated transport failure; no change was made."
+          }
+        ]
+      },
+      "after": {
+        "page": "login",
+        "loginForm": true,
+        "registerForm": false,
+        "loginSubmitEnabled": true,
+        "feedback": [
+          {
+            "className": "hh-status local-error",
+            "text": "Simulated transport failure; no change was made."
+          }
+        ]
+      },
+      "loginLocalValidation": {
+        "code": "validation_failed",
+        "requestStatus": "failed",
+        "afterFeedback": [
+          {
+            "className": "hh-status validation-error",
+            "text": "Enter the demo email and password field to continue. The preview does not verify passwords."
+          }
+        ],
+        "registrationCalls": 1
+      },
+      "requestStatus": "failed",
+      "outcomeKind": "validation-error",
+      "registrationCalls": 1,
+      "credentialAbsentFromRetainedSurfaces": true
+    },
+    {
+      "name": "navigate-login-then-known-failure",
+      "failWith": "transport_failure",
+      "navigatedBeforeRelease": true,
+      "result": {
+        "ok": false,
+        "code": "transport_failure",
+        "outcomeKnown": true
+      },
+      "beforeRelease": {
+        "page": "login",
+        "loginForm": true,
+        "registerForm": false,
+        "loginSubmitEnabled": true,
+        "feedback": []
+      },
+      "wasPendingOnRegister": true,
+      "completedRoute": {
+        "page": "login",
+        "loginForm": true,
+        "registerForm": false,
+        "loginSubmitEnabled": true,
+        "feedback": [
+          {
+            "className": "hh-status local-error",
+            "text": "Simulated transport failure; no change was made."
+          }
+        ]
+      },
+      "after": {
+        "page": "login",
+        "loginForm": true,
+        "registerForm": false,
+        "loginSubmitEnabled": true,
+        "feedback": [
+          {
+            "className": "hh-status local-error",
+            "text": "Simulated transport failure; no change was made."
+          }
+        ]
+      },
+      "loginLocalValidation": {
+        "code": "validation_failed",
+        "requestStatus": "failed",
+        "afterFeedback": [
+          {
+            "className": "hh-status validation-error",
+            "text": "Enter the demo email and password field to continue. The preview does not verify passwords."
+          }
+        ],
+        "registrationCalls": 1
+      },
+      "requestStatus": "failed",
+      "outcomeKind": "validation-error",
+      "registrationCalls": 1,
+      "credentialAbsentFromRetainedSurfaces": true
+    },
+    {
+      "name": "navigate-login-then-unknown-outcome",
+      "failWith": "outcome_unknown",
+      "navigatedBeforeRelease": true,
+      "result": {
+        "ok": false,
+        "code": "outcome_unknown",
+        "outcomeKnown": false
+      },
+      "beforeRelease": {
+        "page": "login",
+        "loginForm": true,
+        "registerForm": false,
+        "loginSubmitEnabled": true,
+        "feedback": []
+      },
+      "wasPendingOnRegister": true,
+      "completedRoute": {
+        "page": "login",
+        "loginForm": true,
+        "registerForm": false,
+        "loginSubmitEnabled": true,
+        "feedback": [
+          {
+            "className": "hh-status local-error",
+            "text": "Simulated unknown outcome. Check state before trying again."
+          }
+        ]
+      },
+      "after": {
+        "page": "login",
+        "loginForm": true,
+        "registerForm": false,
+        "loginSubmitEnabled": true,
+        "feedback": [
+          {
+            "className": "hh-status local-error",
+            "text": "Simulated unknown outcome. Check state before trying again."
+          }
+        ]
+      },
+      "loginLocalValidation": {
+        "code": "validation_failed",
+        "requestStatus": "failed",
+        "afterFeedback": [
+          {
+            "className": "hh-status validation-error",
+            "text": "Enter the demo email and password field to continue. The preview does not verify passwords."
+          }
+        ],
+        "registrationCalls": 1
+      },
+      "requestStatus": "failed",
+      "outcomeKind": "validation-error",
+      "registrationCalls": 1,
+      "credentialAbsentFromRetainedSurfaces": true
+    },
+    {
+      "name": "navigate-login-then-success-control",
+      "failWith": "none",
+      "navigatedBeforeRelease": true,
+      "result": {
+        "ok": true,
+        "code": null,
+        "outcomeKnown": null
+      },
+      "beforeRelease": {
+        "page": "login",
+        "loginForm": true,
+        "registerForm": false,
+        "loginSubmitEnabled": true,
+        "feedback": []
+      },
+      "wasPendingOnRegister": true,
+      "completedRoute": {
+        "page": "login",
+        "loginForm": true,
+        "registerForm": false,
+        "loginSubmitEnabled": true,
+        "feedback": [
+          {
+            "className": "hh-status local-simulation",
+            "text": "Demo registration saved as pending. Simulated approval is required before demo login."
+          }
+        ]
+      },
+      "after": {
+        "page": "login",
+        "loginForm": true,
+        "registerForm": false,
+        "loginSubmitEnabled": true,
+        "feedback": [
+          {
+            "className": "hh-status local-simulation",
+            "text": "Demo registration saved as pending. Simulated approval is required before demo login."
+          }
+        ]
+      },
+      "loginLocalValidation": {
+        "code": "validation_failed",
+        "requestStatus": "failed",
+        "afterFeedback": [
+          {
+            "className": "hh-status validation-error",
+            "text": "Enter the demo email and password field to continue. The preview does not verify passwords."
+          }
+        ],
+        "registrationCalls": 1
+      },
+      "requestStatus": "failed",
+      "outcomeKind": "validation-error",
+      "registrationCalls": 1,
+      "credentialAbsentFromRetainedSurfaces": true
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+--- work/hh-continuous-improvement/cycle-07/evidence/R1003/probe.mjs	2026-10-18 16:23:08.004657513 +0300
++++ /workspace/scratch/8528bb251845/hh-cycle07/H2/R1005/portable-probe.mjs	2026-10-18 16:34:47.316370814 +0300
+@@ -7,7 +7,7 @@
+ import {renderPublicSite} from '../../../PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+ 
+ const repo = resolve('/workspace/scratch/8528bb251845/PageRouter');
+-const out = resolve('/workspace/scratch/8528bb251845/hh-cycle07/H2/R1003');
++const out = resolve('/workspace/scratch/8528bb251845/hh-cycle07/H2/R1005/portable-replay');
+ const files = ['checkpoint/vendor/hh/src/public-controller.mjs','checkpoint/vendor/hh/src/public-controller.test.mjs',
+   'checkpoint/vendor/hh/src/public-site.mjs','checkpoint/vendor/hh/services/fixture-provider.mjs','checkpoint/vendor/hh/services/runtime.mjs'];
+ const sha = async file => createHash('sha256').update(await readFile(resolve(repo,file))).digest('hex');

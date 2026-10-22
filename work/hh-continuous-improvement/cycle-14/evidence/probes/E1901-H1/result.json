@@ -1,0 +1,74 @@
+{
+  "job_id": "E1901",
+  "worker": "H1",
+  "allowed_outcome": "mixed_change",
+  "summary": "A single bounded synthetic-fixture held-success probe confirmed login authority stays bound to submitted email A and controller state clears the newer draft, but the delegated-equivalent login tree remains at newer email B after route reentry. The success postprocessing changes state after service notification, and the route-epoch guard skips navigation when the user has reentered login; the final dispatch path does not otherwise notify/render. This is a controller/state-to-view notification divergence, not an authority divergence. Scope is actual checkpoint HH source plus delegated-equivalent render tree; mounted-browser behavior is not claimed.",
+  "source_binding": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "local_head": "06b6da36e326758ccd14cda021bc0a15cfd00817",
+    "tree": "eb7136f80b1bdfd08c771f519a626a1e508bb1a9",
+    "tracked_worktree_clean": true,
+    "product_files": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "308c876e8bbfeb20a3e8ee92a4065549f5ca815bec0aa6979bf39c61fa4dc07c",
+      "checkpoint/vendor/hh/src/public-site.mjs": "5f1135c95fdb3baefb64e49d755e45a87b9eb1b17ff363ed91eb5b516812031b",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "f426710f6ae9c3012f5eba2aa0d50b3aaca8b4e76a4119dd3ffca58d08e13d4f"
+    },
+    "excluded_preserved_untracked": "PageRouter/hh-cycle13/"
+  },
+  "scope_and_method": {
+    "execution": "Exactly one invocation of the pre-frozen Node probe; no retry.",
+    "environment": "Synthetic random .test account, explicit fixture provider, in-memory storage, actual pinned HH controller/runtime/site modules.",
+    "interaction": "Register and locally approve synthetic fixture account A; hold Session.login(A); update login draft to distinct B; navigate to about and back to login; release successful login; inspect controller authority/state, runtime, Parts/storage, and delegated-equivalent render tree.",
+    "not_claimed": ["mounted browser", "production/backend/account", "external email", "browser screenshots", "product test/build execution"]
+  },
+  "observations": {
+    "pre_run_expected_observation": "Successful authority remains A; route stays reentered login; overlay clears; rendered input follows authority projection A. Clearing B alone was not defined as a defect.",
+    "pre_run_falsifier": "Unexpected setup failure, login failure, attempt count other than one, request/session authority diverging from submitted A, or secret presence.",
+    "reached_before_red_assertion": {
+      "synthetic_registration_ok": true,
+      "synthetic_approval_ok": true,
+      "held_request_busy": true,
+      "newer_draft_B_accepted_while_held": true,
+      "navigation_away_and_reentry_completed": true,
+      "draft_B_retained_in_controller_state_before_release": true,
+      "ephemeral_password_absent_from_inspected_state_runtime_parts_storage_projection": true,
+      "held_login_result_ok": true,
+      "login_attempt_count_equals_one": true,
+      "runtime_request_identity_equals_original_A": true,
+      "authenticated_session_authority_equals_original_A": true,
+      "runtime_teacher_id_matches_registered_fixture_account": true,
+      "controller_login_draft_cleared_after_success": true,
+      "route_remains_reentered_login": true,
+      "delegated_tree_remains_login_page_and_contains_main": true
+    },
+    "first_red_assertion": {
+      "probe_line": 82,
+      "assertion": "successful authority projection displays authenticated email, not newer draft",
+      "expected": "original submitted synthetic email A",
+      "actual": "newer synthetic draft email B",
+      "disposition": "Meaningful predeclared target red: controller state is authenticated A with null draft while the last emitted render tree still displays B. The assertion failed before any later checks; there were no later checks."
+    },
+    "authority_conclusion": "The service request and authenticated session stayed on A; no evidence of misdirected authority or account switching.",
+    "root_source_readback": "Root read the same probe, stderr, controller, and actual app callbacks: service() notifies before event-specific login success postprocessing; login then clears loginDraft and updates session email; routeEpoch mismatch suppresses redirect/navigation; setCommunityRole does not provide an app subscription/compensating render; actual app onChange calls render, and dispatch returns without post-render. This matches the observed stale tree.",
+    "test_coverage_note": "Existing same-email success/fallback/authority-clear tests do not exercise distinct newer B during held success plus route reentry."
+  },
+  "execution": {
+    "argv": ["node", "/workspace/scratch/8528bb251845/hh-cycle14/H1/E1901/probe.mjs"],
+    "started_utc": "2026-10-18T22:14:00.667705034Z",
+    "exited_utc": "2026-10-18T22:14:00.752373024Z",
+    "elapsed_ms": 84.668,
+    "exit_code": 1,
+    "runtime": "Node v24.19.0",
+    "stdout": {"path": "stdout.raw", "bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "stderr": {"path": "stderr.raw", "bytes": 663, "sha256": "f25b2da49c7ab5290d966d317d1155e795aee37e2c738852f267d853fa6df861"},
+    "start_utc_file": {"path": "start.utc", "bytes": 31, "sha256": "44035047e4c75f2ebc612e40909c2c822a1d5b169bd2d870ea701834c3a7f721"},
+    "exit_utc_file": {"path": "exit.utc", "bytes": 31, "sha256": "f5d44886cf4e0aedc42edf7d1351bb708af5bcce7195f3d355d664b9b0abb795"},
+    "exit_code_file": {"path": "exit.code", "bytes": 2, "sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"}
+  },
+  "frozen_inputs": {
+    "probe": {"path": "probe.mjs", "bytes": 5633, "sha256": "ec4f7cae4377e4e8a21ac827f398b88bd67b92f7c9b7a9e4289476253b163e36"},
+    "plan": {"path": "frozen-plan.json", "bytes": 2301, "sha256": "4f11a7b733080d2f33c22de29ac1ce7219f90436042e78c68532172d20e7ede6"}
+  },
+  "limitations": "This result is a synthetic fixture/controller projection observation. It is not mounted-browser QA and does not establish production behavior. The only raw run output is the preserved assertion failure; no product files, tests, build outputs, Git state, or native state were changed by H1."
+}

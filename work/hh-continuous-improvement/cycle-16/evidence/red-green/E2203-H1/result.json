@@ -1,0 +1,53 @@
+{
+  "job_id": "E2203",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Added one focused regression for the existing local-only profile overlay lifecycle, then ran the full public-controller test file once: 61 total tests (1 new regression plus 60 existing), all passed. This is characterization/regression coverage, not a production fix or defect claim.",
+  "repository": {
+    "path": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "1d8f32657922f0f67cbde1719472f688060b4e94",
+    "tree": "519253865a06aa60d651074db893fa0ae6428f07",
+    "onlyProductPathChanged": "checkpoint/vendor/hh/src/public-controller.test.mjs"
+  },
+  "testChange": {
+    "testName": "profile edit overlay remains local to this controller and reset clears it",
+    "addedLines": 94,
+    "baselineSha256": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164",
+    "sourcePostSha256": "bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0",
+    "description": "Uses the real seeded fixture provider, runtime, controller, and renderPublicSite callback. Verifies the pre-save local disclosure; provider/runtime/receipt/storage/Part stability during local save; same-controller alias merge; fresh provider/runtime/controller with restored synthetic session but no old overlay; and explicit reset clearing the overlay. One new test was added; 60 pre-existing controller tests also ran in the same file invocation."
+  },
+  "actualCommand": {
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+    "argv": ["bash", "/workspace/scratch/8528bb251845/hh-cycle16/H1/E2203/run-once.sh"],
+    "underlyingCommand": "node --test --test-concurrency=2 checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "exitCode": 0,
+    "startedUtc": "2026-10-19T01:26:15Z",
+    "endedUtc": "2026-10-19T01:26:15Z",
+    "durationMs": 267,
+    "testCounts": {"tests": 61, "passed": 61, "failed": 0, "cancelled": 0, "skipped": 0, "todo": 0}
+  },
+  "captures": {
+    "directory": "/workspace/scratch/8528bb251845/hh-cycle16/H1/E2203/captures/focused-controller-01",
+    "stdoutBytes": 6021,
+    "stdoutSha256": "c19d252abffb7b87f3c9eb26a1a6d28a1840599c192103175a382f3b0675df44",
+    "stderrBytes": 0,
+    "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "startUtcSha256": "9d9f1e55589add72426bc9930c5141cbc82c1ab5939910a8ea69ddef951f048a",
+    "endUtcSha256": "9d9f1e55589add72426bc9930c5141cbc82c1ab5939910a8ea69ddef951f048a",
+    "exitCodeFileSha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "prospective": {
+    "path": "/workspace/scratch/8528bb251845/hh-cycle16/H1/E2203/prospective.json",
+    "sha256": "7e33b7b268d6833d91773460dcca6d20cd855995b1d4eaa026ba45036655de91",
+    "runnerSha256": "71e65a435860ecb1adeae2dec0ff10203c3e22babba2f261a7b926e837036c18"
+  },
+  "assertionQualification": {
+    "E2201": "Its original runtimePartsChanged=false measurement compared address/kind inventory only; it did not prove Part-body equality. That original raw/result remains unchanged. This E2203 test independently compares Part count/address, Part object identity, value reference identity, and JSON-serialized values for Parts other than provider and function-valued Parts, alongside provider snapshot, runtime snapshot, receipts, call counts, and fixture storage.",
+    "providerAndFunctionParts": "Provider and function-valued Part bodies are not serialized by the test. Provider snapshot/state, provider-call counts, Part identity, value-reference identity, and runtime receipts are checked separately; no claim is made that JSON serialization inspected private provider/function closures.",
+    "E2202": "H2's fresh-controller probe reused the same runtime. This test's fresh-controller phase constructs a new fixture provider and runtime over the same synthetic storage.",
+    "evidenceBoundary": "Synthetic fixture/controller/runtime/rendered-tree test only; no mounted browser DOM, native browser validation/FormData, backend persistence, production provider, real account, or human acceptance is claimed.",
+    "redGreen": "No RED run was manufactured. Existing behavior was expected to pass and the task requested a regression test, not a defect fix."
+  },
+  "status": "Authorized focused controller test passed once; awaiting root native finish and independent review. No build, broad suite, Git stage/commit/export, or publication was performed."
+}

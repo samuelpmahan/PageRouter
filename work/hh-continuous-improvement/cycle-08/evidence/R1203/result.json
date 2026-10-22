@@ -1,0 +1,617 @@
+{
+  "schema": "hh-cycle08-H2-R1203/public-share-review/v1",
+  "job_id": "R1203",
+  "worker": "H2",
+  "decision": "accepted",
+  "repository": "PageRouter",
+  "head": "65ea21f5a2ef3f3a7adb285b2285d2c6f8274fcd",
+  "tree": "0901b1816314ef3aa5d580867ac0cd3fc49d3637",
+  "reviewedSourceHashes": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "1150f43987bf79a5eb82936e0ee6100852f8f29388b239d14849ac08a0fbad62",
+    "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  },
+  "exactFixHashes": {
+    "controller": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+    "test": "1150f43987bf79a5eb82936e0ee6100852f8f29388b239d14849ac08a0fbad62"
+  },
+  "reviewedPriorEvidence": {
+    "e1201": "/workspace/scratch/8528bb251845/hh-cycle08/H1/E1201/result.json + stdout-final.log: synthetic runtime/tree stale-share reproduction and held-read/alias/captured/missing controls",
+    "e1202": "/workspace/scratch/8528bb251845/hh-cycle08/H2/E1202/result.json: independent prior reproduction with same-identity and captured-Sarah controls",
+    "e1203": "/workspace/scratch/8528bb251845/hh-cycle08/H1/E1203/result.json + actual red.stdout.log, compatibility-baseline.stdout.log, green-share.stdout.log, full-controller.stdout.log: expected pre-code failure, route-derived compatibility pass, targeted green and 49-test controller green"
+  },
+  "commands": [
+    "node --test --test-name-pattern='share' checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "node --test checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "node /workspace/scratch/8528bb251845/hh-cycle08/H2/R1203/review-probe.mjs"
+  ],
+  "tests": {
+    "focusedShare": {
+      "passed": 3,
+      "failed": 0
+    },
+    "fullController": {
+      "passed": 49,
+      "failed": 0
+    },
+    "reviewProbeCases": 3,
+    "allAssertionsPassed": true
+  },
+  "cases": [
+    {
+      "case": "held_foreign_profile_read_clears_stale_share_before_completion",
+      "prepared": {
+        "intent": true,
+        "url": "#/public-profile/demo-avery",
+        "profileId": "demo-avery",
+        "remote": false,
+        "copied": false
+      },
+      "wishlistBeforeShare": {
+        "intent": true,
+        "remote": false,
+        "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+        "profileId": "demo-avery",
+        "choiceRequired": true,
+        "opened": false
+      },
+      "alias": {
+        "route": {
+          "page": "profile",
+          "path": "/teachers/demo-avery",
+          "profileId": "demo-avery"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery"
+        },
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-avery",
+          "profileId": "demo-avery",
+          "remote": false,
+          "copied": false
+        },
+        "wishlist": {
+          "intent": true,
+          "remote": false,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "profileId": "demo-avery",
+          "choiceRequired": true,
+          "opened": false
+        },
+        "rendered": {
+          "shareFields": [
+            {
+              "id": "hh-share-route",
+              "value": "#/public-profile/demo-avery",
+              "readonly": true
+            }
+          ],
+          "shareButtons": [
+            "hh-profile-share"
+          ],
+          "capturedShareNote": false,
+          "capturedWishlist": [],
+          "editButton": false,
+          "unavailable": false,
+          "loading": false
+        }
+      },
+      "pending": {
+        "route": {
+          "page": "profile",
+          "path": "/public-profile/demo-jordan",
+          "profileId": "demo-jordan"
+        },
+        "profile": {
+          "status": "loading",
+          "id": null,
+          "teacherId": null,
+          "source": "runtime",
+          "readOnly": false
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery"
+        },
+        "share": {
+          "intent": false,
+          "url": "",
+          "profileId": null,
+          "remote": false,
+          "copied": false
+        },
+        "wishlist": {
+          "intent": false,
+          "remote": false,
+          "destination": null,
+          "profileId": null
+        },
+        "rendered": {
+          "shareFields": [],
+          "shareButtons": [],
+          "capturedShareNote": false,
+          "capturedWishlist": [],
+          "editButton": false,
+          "unavailable": false,
+          "loading": true
+        }
+      },
+      "jordan": {
+        "route": {
+          "page": "profile",
+          "path": "/public-profile/demo-jordan",
+          "profileId": "demo-jordan"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery"
+        },
+        "share": {
+          "intent": false,
+          "url": "",
+          "profileId": null,
+          "remote": false,
+          "copied": false
+        },
+        "wishlist": {
+          "intent": false,
+          "remote": false,
+          "destination": null,
+          "profileId": null
+        },
+        "rendered": {
+          "shareFields": [],
+          "shareButtons": [
+            "hh-profile-share"
+          ],
+          "capturedShareNote": false,
+          "capturedWishlist": [],
+          "editButton": false,
+          "unavailable": false,
+          "loading": false
+        }
+      },
+      "providerReadCount": 2,
+      "outcome": "accepted"
+    },
+    {
+      "case": "direct_route_derived_dispatch_for_pending_missing_and_captured",
+      "pendingDuring": {
+        "route": "#/public-profile/demo-jordan",
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-jordan",
+          "profileId": "demo-jordan",
+          "remote": false,
+          "copied": false
+        }
+      },
+      "loadedJordan": {
+        "route": {
+          "page": "profile",
+          "path": "/public-profile/demo-jordan",
+          "profileId": "demo-jordan"
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-jordan",
+          "teacherId": "demo-seed-jordan",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "session": {
+          "status": "anonymous",
+          "teacherId": null
+        },
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-jordan",
+          "profileId": "demo-jordan",
+          "remote": false,
+          "copied": false
+        },
+        "wishlist": {
+          "intent": false,
+          "remote": false,
+          "destination": null,
+          "profileId": null
+        },
+        "rendered": {
+          "shareFields": [
+            {
+              "id": "hh-share-route",
+              "value": "#/public-profile/demo-jordan",
+              "readonly": true
+            }
+          ],
+          "shareButtons": [
+            "hh-profile-share"
+          ],
+          "capturedShareNote": false,
+          "capturedWishlist": [],
+          "editButton": false,
+          "unavailable": false,
+          "loading": false
+        }
+      },
+      "missingRead": {
+        "route": {
+          "page": "profile",
+          "path": "/public-profile/demo-missing",
+          "profileId": "demo-missing"
+        },
+        "profile": {
+          "status": "error",
+          "id": null,
+          "teacherId": null,
+          "source": "runtime",
+          "readOnly": false
+        },
+        "session": {
+          "status": "anonymous",
+          "teacherId": null
+        },
+        "share": {
+          "intent": false,
+          "url": "",
+          "profileId": null,
+          "remote": false,
+          "copied": false
+        },
+        "wishlist": {
+          "intent": false,
+          "remote": false,
+          "destination": null,
+          "profileId": null
+        },
+        "rendered": {
+          "shareFields": [],
+          "shareButtons": [],
+          "capturedShareNote": false,
+          "capturedWishlist": [],
+          "editButton": false,
+          "unavailable": true,
+          "loading": false
+        }
+      },
+      "missingDispatch": {
+        "intent": true,
+        "url": "#/public-profile/demo-missing",
+        "profileId": "demo-missing",
+        "remote": false,
+        "copied": false
+      },
+      "missingAfterDispatch": {
+        "route": {
+          "page": "profile",
+          "path": "/public-profile/demo-missing",
+          "profileId": "demo-missing"
+        },
+        "profile": {
+          "status": "error",
+          "id": null,
+          "teacherId": null,
+          "source": "runtime",
+          "readOnly": false
+        },
+        "session": {
+          "status": "anonymous",
+          "teacherId": null
+        },
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-missing",
+          "profileId": "demo-missing",
+          "remote": false,
+          "copied": false
+        },
+        "wishlist": {
+          "intent": false,
+          "remote": false,
+          "destination": null,
+          "profileId": null
+        },
+        "rendered": {
+          "shareFields": [],
+          "shareButtons": [],
+          "capturedShareNote": false,
+          "capturedWishlist": [],
+          "editButton": false,
+          "unavailable": true,
+          "loading": false
+        }
+      },
+      "capturedBefore": {
+        "route": {
+          "page": "profile",
+          "path": "/public-profile/reference-sarah",
+          "profileId": "reference-sarah"
+        },
+        "profile": {
+          "status": "present",
+          "id": "reference-sarah",
+          "teacherId": null,
+          "source": "captured-readonly",
+          "readOnly": true
+        },
+        "session": {
+          "status": "anonymous",
+          "teacherId": null
+        },
+        "share": {
+          "intent": false,
+          "url": "",
+          "profileId": null,
+          "remote": false,
+          "copied": false
+        },
+        "wishlist": {
+          "intent": false,
+          "remote": false,
+          "destination": null,
+          "profileId": null
+        },
+        "rendered": {
+          "shareFields": [],
+          "shareButtons": [
+            "hh-reference-share"
+          ],
+          "capturedShareNote": false,
+          "capturedWishlist": [
+            "https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20"
+          ],
+          "editButton": false,
+          "unavailable": false,
+          "loading": false
+        }
+      },
+      "capturedDispatch": {
+        "intent": true,
+        "url": "#/public-profile/reference-sarah",
+        "profileId": "reference-sarah",
+        "remote": false,
+        "copied": false
+      },
+      "capturedAfter": {
+        "route": {
+          "page": "profile",
+          "path": "/public-profile/reference-sarah",
+          "profileId": "reference-sarah"
+        },
+        "profile": {
+          "status": "present",
+          "id": "reference-sarah",
+          "teacherId": null,
+          "source": "captured-readonly",
+          "readOnly": true
+        },
+        "session": {
+          "status": "anonymous",
+          "teacherId": null
+        },
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/reference-sarah",
+          "profileId": "reference-sarah",
+          "remote": false,
+          "copied": false
+        },
+        "wishlist": {
+          "intent": false,
+          "remote": false,
+          "destination": null,
+          "profileId": null
+        },
+        "rendered": {
+          "shareFields": [],
+          "shareButtons": [
+            "hh-reference-share"
+          ],
+          "capturedShareNote": true,
+          "capturedWishlist": [
+            "https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20"
+          ],
+          "editButton": false,
+          "unavailable": false,
+          "loading": false
+        }
+      },
+      "outcome": "accepted"
+    },
+    {
+      "case": "navigation_away_owner_and_logout_controls",
+      "prepared": {
+        "intent": true,
+        "url": "#/public-profile/demo-avery",
+        "profileId": "demo-avery",
+        "remote": false,
+        "copied": false
+      },
+      "beforeAway": {
+        "route": {
+          "page": "profile",
+          "path": "/profile",
+          "profileId": null
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery"
+        },
+        "share": {
+          "intent": true,
+          "url": "#/public-profile/demo-avery",
+          "profileId": "demo-avery",
+          "remote": false,
+          "copied": false
+        },
+        "wishlist": {
+          "intent": false,
+          "remote": false,
+          "destination": null,
+          "profileId": null
+        },
+        "rendered": {
+          "shareFields": [
+            {
+              "id": "hh-share-route",
+              "value": "#/public-profile/demo-avery",
+              "readonly": true
+            }
+          ],
+          "shareButtons": [
+            "hh-profile-share"
+          ],
+          "capturedShareNote": false,
+          "capturedWishlist": [],
+          "editButton": true,
+          "unavailable": false,
+          "loading": false
+        }
+      },
+      "away": {
+        "route": {
+          "page": "home",
+          "path": "/home",
+          "profileId": null
+        },
+        "profile": {
+          "status": "present",
+          "id": "demo-avery",
+          "teacherId": "demo-seed-avery",
+          "source": "runtime",
+          "readOnly": false
+        },
+        "session": {
+          "status": "authenticated",
+          "teacherId": "demo-seed-avery"
+        },
+        "share": {
+          "intent": false,
+          "url": "",
+          "profileId": null,
+          "remote": false,
+          "copied": false
+        },
+        "wishlist": {
+          "intent": false,
+          "remote": false,
+          "destination": null,
+          "profileId": null
+        },
+        "rendered": {
+          "shareFields": [],
+          "shareButtons": [],
+          "capturedShareNote": false,
+          "capturedWishlist": [],
+          "editButton": false,
+          "unavailable": false,
+          "loading": false
+        }
+      },
+      "ownAlias": {
+        "intent": true,
+        "url": "#/public-profile/demo-avery",
+        "profileId": "demo-avery",
+        "remote": false,
+        "copied": false
+      },
+      "logout": {
+        "ok": true
+      },
+      "afterLogout": {
+        "route": {
+          "page": "login",
+          "path": "/login",
+          "profileId": null
+        },
+        "profile": {
+          "status": "unknown",
+          "id": null,
+          "teacherId": null,
+          "source": "runtime",
+          "readOnly": false
+        },
+        "session": {
+          "status": "anonymous",
+          "teacherId": null
+        },
+        "share": {
+          "intent": false,
+          "url": "",
+          "profileId": null,
+          "remote": false,
+          "copied": false
+        },
+        "wishlist": {
+          "intent": false,
+          "remote": false,
+          "destination": null,
+          "profileId": null
+        },
+        "rendered": {
+          "shareFields": [],
+          "shareButtons": [],
+          "capturedShareNote": false,
+          "capturedWishlist": [],
+          "editButton": false,
+          "unavailable": false,
+          "loading": false
+        }
+      },
+      "outcome": "accepted"
+    }
+  ],
+  "assessment": {
+    "synchronousInvalidation": true,
+    "aliasesRetainMatchingIdentity": true,
+    "pendingAndFailedDirectDispatchRemainRouteDerived": true,
+    "capturedSarahStaticReadonlyPriorityRetained": true,
+    "payloadIdentityAndTransportFieldsIgnored": true,
+    "wishlistStateNotModifiedBySharePreparation": true,
+    "ownerSessionAndLogoutFlowRetained": true,
+    "noExternalCopyShareOpenOrProviderWrite": true,
+    "noProductSourceOrGitMutation": true
+  },
+  "scope": {
+    "fixture": true,
+    "productionAuthority": false,
+    "persistence": "volatile-memory",
+    "httpCalls": 0,
+    "backendExecution": false,
+    "realTeacherData": false,
+    "externalCopyShareOpen": false,
+    "browserVisualQA": false,
+    "canonicalBuild": false,
+    "humanAcceptance": false
+  },
+  "summary": "Accepted the exact two-file fix. The identity key is set from the current public route/profile and a foreign route synchronously clears the old share state before its read resolves. Independent held-read/runtime/tree cases confirmed the old Avery route and input are gone on Jordan; matching aliases retain it; pending/missing/captured direct dispatches derive the URL from the current route despite forged payloads; captured Sarah keeps the static read-only note and wishlist; wishlist state, owner session, and logout behavior remain intact.",
+  "limitations": [
+    "Runtime and rendered-tree fixture evidence only; not browser visual QA.",
+    "No backend, production account, network, real teacher data, external copy/share/open, canonical build, or human acceptance."
+  ]
+}

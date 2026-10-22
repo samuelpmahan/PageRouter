@@ -1,0 +1,46 @@
+{
+  "schema": "capability-ladder-verification@1",
+  "siteBuildId": "9315e256bb770f102ba0da7dbda3975f187667e846046455c81f8c3f490da454",
+  "atlasImplementationPin": "a96cb2f0d4f8ea3fdecb97d545f7428d18cb5e50d7b7a654f2d80137c134ec89",
+  "evaluatorImplementationPin": "af0c2e0f2a17e2f7d3e81f0f119e8b4401a3683c322c764fb7bd3e61bad53492",
+  "fullSuite": {
+    "tests": 101,
+    "passed": 101
+  },
+  "builtImports": {
+    "tests": 2,
+    "passed": 2
+  },
+  "browserChecks": {
+    "checks": 66,
+    "passed": 66,
+    "runtimeErrors": []
+  },
+  "existingAtlasBrowserChecks": {
+    "checks": 14,
+    "passed": 14
+  },
+  "independentReview": {
+    "focusedTests": 45,
+    "passed": 45,
+    "preservedCompiledFiles": 627,
+    "unresolvedBlockers": 0
+  },
+  "recipes": [
+    "npm test",
+    "npm run build",
+    "node --test scripts/atlas-built-imports.test.mjs scripts/hh-built-imports.test.mjs",
+    "CHROME_PATH=/absolute/path/to/chromium node scripts/capability-ladder-browser-smoke.mjs",
+    "CHROME_PATH=/absolute/path/to/chromium node scripts/atlas-browser-smoke.mjs"
+  ],
+  "sample": {
+    "firstRunDomainBodies": 6,
+    "replayDomainBodies": 0,
+    "replayDomainCacheHits": 6,
+    "domainKernelReceiptsPerExecution": 7,
+    "heldOutCasesPassed": 10,
+    "heldOutCases": 10,
+    "posteriorMean": "11/12"
+  },
+  "scope": "Fixed declarative Atlas recipe language; no universal contract semantics or model-inference savings asserted."
+}

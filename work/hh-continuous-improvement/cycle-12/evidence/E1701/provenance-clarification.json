@@ -1,0 +1,36 @@
+{
+  "job_id": "E1701",
+  "worker": "H1",
+  "scope": "append-only provenance clarification for the E1701 scratch evidence inventory; does not amend result.json, any native record, or the original probe observations",
+  "inventory_checked": [
+    "PRE-RUN-CHECKPOINT.md",
+    "probe.mjs",
+    "command.txt",
+    "final.stdout.raw",
+    "final.stderr.raw",
+    "result.json"
+  ],
+  "first_execution": {
+    "command": "node hh-cycle12/H1/E1701/probe.mjs",
+    "reported_exit": 0,
+    "script_copy": "not retained as a separate file; the original script was later edited in place to correct summary observation timing",
+    "stdout": "visible in the execution tool transcript only; no separate first-run raw stdout artifact was retained",
+    "stderr": "not separately captured or retained",
+    "exit_artifact": "no separate first-run exit-status file was retained"
+  },
+  "corrected_execution": {
+    "command": "node hh-cycle12/H1/E1701/probe.mjs",
+    "reported_exit": 0,
+    "script": "probe.mjs is the corrected version used for this execution",
+    "stdout": "final.stdout.raw was written from the successful execution's tool-transcript stdout; it is not a shell-level redirected capture",
+    "stderr": "final.stderr.raw is empty because no stderr text was visible in the execution tool result; stderr was not captured to a separate stream file",
+    "exit_artifact": "no final.exit file is present in the current inventory; exit 0 is recorded in command.txt and result.json based on the tool response"
+  },
+  "run_count_clarification": "PRE-RUN-CHECKPOINT.md said the planned script would be run once. In fact there were two executions: the first completed with all assertions passing but summarized request.status after the subsequent explicit successful resubmission; the second reran the corrected summary sampling immediately after failure. This mismatch is documented here; no output was reconstructed or backdated.",
+  "not_done": [
+    "No probe rerun for this clarification",
+    "No reconstruction of the original script or first-run raw output",
+    "No copy or modification of current output presented as an earlier run",
+    "No source, test, native, or Git changes"
+  ]
+}

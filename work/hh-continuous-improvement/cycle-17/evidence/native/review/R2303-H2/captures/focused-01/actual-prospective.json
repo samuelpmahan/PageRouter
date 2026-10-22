@@ -1,0 +1,42 @@
+{
+  "job_id": "R2303",
+  "worker": "H2",
+  "phase": "independent exact-change review; one focused authorized test",
+  "review_pin": {
+    "base_head": "86301f84a9b08f40b76de9b64026befe6b0081a5",
+    "base_tree": "c685c5267235fc460c4147592a483dd40d44d3fd",
+    "renderer_after_sha256": "d9c17a350375633a53d0dc256be666bb0c82298c9ffa7b05bc6be08156141bfc",
+    "test_sha256": "264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5",
+    "red_result_sha256": "0ab3345c94702cff504f082cf619a5dd88207e166a9d54fc3c64118d26b20a5b",
+    "green_result_sha256": "bbd22dd994595cd7c27fe61cdd602491f0c9e925108768ebf8181553c2e285df",
+    "green_prospective_sha256": "178309404aa81ea5cedf1de91c8a25f4524ebc320c96d2908c41d2c55805823b"
+  },
+  "review_conclusion_before_run": {
+    "scope": "Actual working diff is 20 insertions and one deletion across exactly public-site.mjs and public-site.test.mjs: one aria-label attribute was added to the existing nav toggle, plus one 19-line focused renderer test. No app/controller/provider/runtime/CSS path is changed.",
+    "test_contract": "Requires an explicit stable label for a button that retains glyph ☰, aria-expanded, aria-controls, data-event, and controlled target id/hidden state across anonymous/authenticated and closed/open renderer inputs.",
+    "red_provenance": "Raw RED stdout records actual undefined at the first anonymous/closed case; red-result normalizes actual to null. It correctly records the remaining three combinations as unreached.",
+    "green_provenance": "Raw author GREEN captures report focused 1/1, public-site 16/16 and controller 61/61. The green prospective predicted filtered tests would be skipped, but actual Node output reports skipped=0; do not repeat that prediction as fact.",
+    "interpretation": "The change is a bounded emitted-tree labeling contract improvement. It does not prove a computed browser accessible name, keyboard operation, screen-reader behavior, visual focus, responsive visibility, or a broader accessibility defect."
+  },
+  "one_authorized_command": {
+    "argv": [
+      "node",
+      "--test",
+      "--test-name-pattern=public mobile navigation toggle keeps a stable descriptive label across menu and session states",
+      "checkpoint/vendor/hh/src/public-site.test.mjs"
+    ],
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "reason": "Independent confirmation of the exact new test; author already ran same focused argv once as part of green sequence, and renderer source changed from RED checkpoint."
+  },
+  "capture_plan": {
+    "directory": "/workspace/scratch/8528bb251845/hh-cycle17/H2/R2303/captures/focused-01",
+    "files": ["actual-prospective.json", "stdout.raw", "stderr.raw", "start.utc", "end.utc", "exit.code", "signal.txt"],
+    "exclusive": true,
+    "first_failure_rule": "Stop and preserve originals if execution or capture fails. No automatic retry, test edit/assertion weakening, fallback, broader test, or source change."
+  },
+  "scope_limits": [
+    "No full-site/controller rerun; author raw captures were read and retained as independent evidence.",
+    "No syntax/import precheck, build, Git write, browser/DOM, keyboard, computed accessibility, screenshot, backend, real data, or Lab operation.",
+    "Exact 27 old scratch paths remain preserved/excluded."
+  ]
+}

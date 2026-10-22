@@ -1,0 +1,7 @@
+# Next
+
+This package is frozen for independent H2 package audit. H1 should not alter package contents or the two product files during audit. There is no commit, publication payload, push, merge, main update, deployment, browser visual QA, or human acceptance in this packet. Root retains source/Git continuation ownership after publication and any fresh native coordination.
+
+One source-derived next hypothesis is **unexecuted**: on the synthetic registration page, enter valid non-secret name/email/phone/school values and two nonempty but mismatched passwords, then submit through the actual app dispatch and inspect the resulting rendered form/tree. `public:register` performs local validation for mismatch before assigning `registration.identity`, while the app rerenders after controller notification; this may drop the non-secret draft values. Confirm actual reachability and compare with missing-terms and valid controls before treating it as a defect. Keep passwords ephemeral: never place them in controller state, logs, receipts, artifacts, or evidence. Use only synthetic `.test` values. No next probe or correction was executed in cycle 08; a fresh native assignment is required.
+
+The native state copy in `native/state-historical-E1205-packaging-running.json` is a historical point-in-time record only, not live dispatch authority. The current browser-attempt files are root-owned diagnostics, not visual evidence; do not reuse them to claim browser acceptance.

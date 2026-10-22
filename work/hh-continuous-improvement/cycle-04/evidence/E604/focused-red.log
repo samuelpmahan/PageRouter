@@ -1,0 +1,60 @@
+✔ profile create rejects unsupported wishlist before mutation and retains draft (9.909032ms)
+✔ profile create rejects overlength wishlist before mutation and retains draft (3.536046ms)
+✔ profile create preserves blank wishlist compatibility (2.523768ms)
+✔ profile create preserves valid synthetic wishlist compatibility (2.889029ms)
+✔ profile edit rejects unsupported wishlist before mutation and retains draft (3.335548ms)
+✔ profile edit rejects overlength wishlist before mutation and retains draft (2.731752ms)
+✔ profile edit preserves blank wishlist compatibility (2.083694ms)
+✔ profile edit preserves valid synthetic wishlist compatibility (2.564479ms)
+✔ normalizes captured public route aliases and forum paths (0.356408ms)
+✔ captured Teacher of the Day opens as a read-only snapshot without invoking teacher services (2.951794ms)
+✔ profile edit toggle rejects another authenticated teacher profile (1.16618ms)
+✔ profile edit submit rejects another authenticated teacher profile without creating an overlay (1.360924ms)
+✔ profile edit toggle fails closed for anonymous and missing teacher identities (1.874178ms)
+✔ profile edit remains available to its owner through a public profile alias (1.266922ms)
+✔ cascades school filters, loads local directory matches and restores remembered filters (2.464619ms)
+✔ school lookup retry stays bound to the failed current selection (0.561257ms)
+✔ school lookup retry recovers the same current selection (0.887979ms)
+✔ navigating away invalidates a failed registration school lookup retry (0.7752ms)
+✔ initial school choices remain retryable when the states read fails (0.375706ms)
+✔ returning to registration reloads states after an invalidated initial lookup failure (0.493625ms)
+✔ successful initial school-data read does not erase a directory retry (0.60986ms)
+✔ returning to registration reloads a failed county cascade (0.66321ms)
+✔ school lookup retry remains available from directory when no directory retry owns it (0.902312ms)
+✔ distinguishes an explicit empty-filter search from the initial background directory load (0.467796ms)
+✖ leaving a pending directory read for login or registration retires shared loading (1.332761ms)
+✔ an abandoned directory completion cannot clear a newer pending school lookup (0.633897ms)
+✔ bounded text drafts keep spaces while typing and normalize only on submit (0.784494ms)
+✔ rejects stored school selections whose individual values do not form one fixture row (1.381474ms)
+✔ registration keeps passwords ephemeral, approval and login stay separate, and edits remain local (2.913386ms)
+✔ Terms checkbox consent tracks both checking and unchecking without opening the modal (0.551502ms)
+✔ seeded UI login, local contact and reset never claim remote effects (1.094341ms)
+✔ wishlist and community actions are explicit local preview handoffs (1.406613ms)
+✔ late login, approval and logout results never redirect away from the current route (2.283415ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 32
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 163.018807
+
+✖ failing tests:
+
+test at vendor/hh/src/public-controller.test.mjs:377:1
+✖ leaving a pending directory read for login or registration retires shared loading (1.332761ms)
+  AssertionError [ERR_ASSERTION]: login must not inherit the abandoned directory loading flag
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8528bb251845/hh-cycle04/H1/E606-red-stage/vendor/hh/src/public-controller.test.mjs:386:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

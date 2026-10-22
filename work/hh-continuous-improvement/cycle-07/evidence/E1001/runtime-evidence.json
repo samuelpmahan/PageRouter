@@ -1,0 +1,1043 @@
+{
+  "job_id": "E1001",
+  "worker": "H1",
+  "environment": {
+    "provider": "fixture",
+    "fixture": true,
+    "productionAuthority": false,
+    "persistence": "volatile-memory",
+    "httpCalls": 0,
+    "browserOpened": false,
+    "externalActions": 0
+  },
+  "assertions": [
+    "Foreign-profile stale wishlist mismatch reproduced through the actual fixture provider, controller state, direct event dispatch, and rendered continue anchor.",
+    "Same-profile alias control renders the selected profile’s own synthetic destination.",
+    "Already-confirmed handoff control also persists and renders its Avery URL on Jordan.",
+    "Captured read-only Sarah route keeps its static reference link and never substitutes the stale synthetic Avery handoff.",
+    "Missing profile read yields unavailable rendering and no external continue anchor."
+  ],
+  "cases": {
+    "foreign_prepared_before_navigation": {
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/demo-avery",
+        "profileId": "demo-avery"
+      },
+      "profileStatus": "present",
+      "profile": {
+        "id": "demo-avery",
+        "name": "Demo Avery",
+        "readOnly": false
+      },
+      "session": {
+        "status": "authenticated",
+        "teacherId": "demo-seed-avery"
+      },
+      "wishlist": {
+        "intent": true,
+        "remote": false,
+        "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+        "choiceRequired": true,
+        "opened": false
+      },
+      "render": {
+        "page": "profile",
+        "h1": [
+          "Demo Avery"
+        ],
+        "anchors": [
+          {
+            "id": null,
+            "href": "#hh-main",
+            "text": "Skip to content"
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": ""
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": "Home"
+          },
+          {
+            "id": null,
+            "href": "#/directory",
+            "text": "Donate"
+          },
+          {
+            "id": null,
+            "href": "#/register",
+            "text": "Sign Up"
+          },
+          {
+            "id": null,
+            "href": "#/about",
+            "text": "About"
+          },
+          {
+            "id": null,
+            "href": "#/contact",
+            "text": "Contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners",
+            "text": "Partners"
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": "Home"
+          },
+          {
+            "id": null,
+            "href": "#/directory",
+            "text": "Donate"
+          },
+          {
+            "id": null,
+            "href": "#/register",
+            "text": "Sign Up"
+          },
+          {
+            "id": null,
+            "href": "#/about",
+            "text": "About"
+          },
+          {
+            "id": null,
+            "href": "#/contact",
+            "text": "Contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners",
+            "text": "Partners"
+          },
+          {
+            "id": null,
+            "href": "#/profile",
+            "text": "My page"
+          },
+          {
+            "id": null,
+            "href": "#/community",
+            "text": "Forum"
+          }
+        ],
+        "buttons": [
+          {
+            "id": "hh-public-nav-toggle",
+            "event": "public:toggle-nav",
+            "text": "☰"
+          },
+          {
+            "id": "hh-logout",
+            "event": "public:logout",
+            "text": "Logout"
+          },
+          {
+            "id": "hh-profile-wishlist",
+            "event": "public:wishlist",
+            "text": "Wishlist handoff prepared"
+          },
+          {
+            "id": "hh-profile-wishlist-confirm",
+            "event": "public:confirm-wishlist",
+            "text": "Confirm wishlist destination"
+          },
+          {
+            "id": "hh-profile-share",
+            "event": "public:share",
+            "text": "Share profile"
+          }
+        ]
+      }
+    },
+    "foreign_while_provider_read_held": {
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/demo-jordan",
+        "profileId": "demo-jordan"
+      },
+      "profileStatus": "loading",
+      "profile": null,
+      "session": {
+        "status": "authenticated",
+        "teacherId": "demo-seed-avery"
+      },
+      "wishlist": {
+        "intent": true,
+        "remote": false,
+        "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+        "choiceRequired": true,
+        "opened": false
+      },
+      "render": {
+        "page": "profile",
+        "h1": [
+          "Loading profile…"
+        ],
+        "anchors": [
+          {
+            "id": null,
+            "href": "#hh-main",
+            "text": "Skip to content"
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": ""
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": "Home"
+          },
+          {
+            "id": null,
+            "href": "#/directory",
+            "text": "Donate"
+          },
+          {
+            "id": null,
+            "href": "#/register",
+            "text": "Sign Up"
+          },
+          {
+            "id": null,
+            "href": "#/about",
+            "text": "About"
+          },
+          {
+            "id": null,
+            "href": "#/contact",
+            "text": "Contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners",
+            "text": "Partners"
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": "Home"
+          },
+          {
+            "id": null,
+            "href": "#/directory",
+            "text": "Donate"
+          },
+          {
+            "id": null,
+            "href": "#/register",
+            "text": "Sign Up"
+          },
+          {
+            "id": null,
+            "href": "#/about",
+            "text": "About"
+          },
+          {
+            "id": null,
+            "href": "#/contact",
+            "text": "Contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners",
+            "text": "Partners"
+          },
+          {
+            "id": null,
+            "href": "#/profile",
+            "text": "My page"
+          },
+          {
+            "id": null,
+            "href": "#/community",
+            "text": "Forum"
+          }
+        ],
+        "buttons": [
+          {
+            "id": "hh-public-nav-toggle",
+            "event": "public:toggle-nav",
+            "text": "☰"
+          },
+          {
+            "id": "hh-logout",
+            "event": "public:logout",
+            "text": "Logout"
+          }
+        ]
+      },
+      "providerReadHeld": true
+    },
+    "foreign_before_confirmation": {
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/demo-jordan",
+        "profileId": "demo-jordan"
+      },
+      "profileStatus": "present",
+      "profile": {
+        "id": "demo-jordan",
+        "name": "Demo Jordan",
+        "readOnly": false
+      },
+      "session": {
+        "status": "authenticated",
+        "teacherId": "demo-seed-avery"
+      },
+      "wishlist": {
+        "intent": true,
+        "remote": false,
+        "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+        "choiceRequired": true,
+        "opened": false
+      },
+      "render": {
+        "page": "profile",
+        "h1": [
+          "Demo Jordan"
+        ],
+        "anchors": [
+          {
+            "id": null,
+            "href": "#hh-main",
+            "text": "Skip to content"
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": ""
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": "Home"
+          },
+          {
+            "id": null,
+            "href": "#/directory",
+            "text": "Donate"
+          },
+          {
+            "id": null,
+            "href": "#/register",
+            "text": "Sign Up"
+          },
+          {
+            "id": null,
+            "href": "#/about",
+            "text": "About"
+          },
+          {
+            "id": null,
+            "href": "#/contact",
+            "text": "Contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners",
+            "text": "Partners"
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": "Home"
+          },
+          {
+            "id": null,
+            "href": "#/directory",
+            "text": "Donate"
+          },
+          {
+            "id": null,
+            "href": "#/register",
+            "text": "Sign Up"
+          },
+          {
+            "id": null,
+            "href": "#/about",
+            "text": "About"
+          },
+          {
+            "id": null,
+            "href": "#/contact",
+            "text": "Contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners",
+            "text": "Partners"
+          },
+          {
+            "id": null,
+            "href": "#/profile",
+            "text": "My page"
+          },
+          {
+            "id": null,
+            "href": "#/community",
+            "text": "Forum"
+          }
+        ],
+        "buttons": [
+          {
+            "id": "hh-public-nav-toggle",
+            "event": "public:toggle-nav",
+            "text": "☰"
+          },
+          {
+            "id": "hh-logout",
+            "event": "public:logout",
+            "text": "Logout"
+          },
+          {
+            "id": "hh-profile-wishlist",
+            "event": "public:wishlist",
+            "text": "Wishlist handoff prepared"
+          },
+          {
+            "id": "hh-profile-wishlist-confirm",
+            "event": "public:confirm-wishlist",
+            "text": "Confirm wishlist destination"
+          },
+          {
+            "id": "hh-profile-share",
+            "event": "public:share",
+            "text": "Share profile"
+          }
+        ]
+      }
+    },
+    "foreign_after_direct_confirmation": {
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/demo-jordan",
+        "profileId": "demo-jordan"
+      },
+      "profile": {
+        "id": "demo-jordan",
+        "name": "Demo Jordan"
+      },
+      "session": {
+        "status": "authenticated",
+        "teacherId": "demo-seed-avery"
+      },
+      "dispatchedEvent": "public:confirm-wishlist",
+      "dispatchResult": {
+        "ok": true,
+        "handoff": {
+          "intent": true,
+          "remote": false,
+          "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+          "choiceRequired": false,
+          "opened": false,
+          "confirmed": true
+        }
+      },
+      "renderedContinueAnchor": {
+        "id": "hh-profile-wishlist-open",
+        "href": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+        "text": "Continue to synthetic wishlist"
+      },
+      "wishlist": {
+        "intent": true,
+        "remote": false,
+        "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+        "choiceRequired": false,
+        "opened": false,
+        "confirmed": true
+      }
+    },
+    "foreign_provider_calls": [
+      {
+        "port": "SchoolData.getStates",
+        "profileId": null
+      },
+      {
+        "port": "Session.login",
+        "profileId": null
+      },
+      {
+        "port": "TeacherProfile.openPublicProfile",
+        "profileId": "demo-avery"
+      },
+      {
+        "port": "TeacherProfile.openPublicProfile",
+        "profileId": "demo-jordan"
+      }
+    ],
+    "same_profile_alias_positive_control": {
+      "route": {
+        "page": "profile",
+        "path": "/teachers/demo-avery",
+        "profileId": "demo-avery"
+      },
+      "profileStatus": "present",
+      "profile": {
+        "id": "demo-avery",
+        "name": "Demo Avery",
+        "readOnly": false
+      },
+      "session": {
+        "status": "authenticated",
+        "teacherId": "demo-seed-avery"
+      },
+      "wishlist": {
+        "intent": true,
+        "remote": false,
+        "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+        "choiceRequired": false,
+        "opened": false,
+        "confirmed": true
+      },
+      "render": {
+        "page": "profile",
+        "h1": [
+          "Demo Avery"
+        ],
+        "anchors": [
+          {
+            "id": null,
+            "href": "#hh-main",
+            "text": "Skip to content"
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": ""
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": "Home"
+          },
+          {
+            "id": null,
+            "href": "#/directory",
+            "text": "Donate"
+          },
+          {
+            "id": null,
+            "href": "#/register",
+            "text": "Sign Up"
+          },
+          {
+            "id": null,
+            "href": "#/about",
+            "text": "About"
+          },
+          {
+            "id": null,
+            "href": "#/contact",
+            "text": "Contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners",
+            "text": "Partners"
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": "Home"
+          },
+          {
+            "id": null,
+            "href": "#/directory",
+            "text": "Donate"
+          },
+          {
+            "id": null,
+            "href": "#/register",
+            "text": "Sign Up"
+          },
+          {
+            "id": null,
+            "href": "#/about",
+            "text": "About"
+          },
+          {
+            "id": null,
+            "href": "#/contact",
+            "text": "Contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners",
+            "text": "Partners"
+          },
+          {
+            "id": null,
+            "href": "#/profile",
+            "text": "My page"
+          },
+          {
+            "id": null,
+            "href": "#/community",
+            "text": "Forum"
+          },
+          {
+            "id": "hh-profile-wishlist-open",
+            "href": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+            "text": "Continue to synthetic wishlist"
+          }
+        ],
+        "buttons": [
+          {
+            "id": "hh-public-nav-toggle",
+            "event": "public:toggle-nav",
+            "text": "☰"
+          },
+          {
+            "id": "hh-logout",
+            "event": "public:logout",
+            "text": "Logout"
+          },
+          {
+            "id": "hh-profile-wishlist",
+            "event": "public:wishlist",
+            "text": "Wishlist handoff prepared"
+          },
+          {
+            "id": "hh-profile-share",
+            "event": "public:share",
+            "text": "Share profile"
+          }
+        ]
+      },
+      "renderedContinueAnchor": {
+        "id": "hh-profile-wishlist-open",
+        "href": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+        "text": "Continue to synthetic wishlist"
+      }
+    },
+    "confirmed_then_foreign_control": {
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/demo-jordan",
+        "profileId": "demo-jordan"
+      },
+      "profileStatus": "present",
+      "profile": {
+        "id": "demo-jordan",
+        "name": "Demo Jordan",
+        "readOnly": false
+      },
+      "session": {
+        "status": "authenticated",
+        "teacherId": "demo-seed-avery"
+      },
+      "wishlist": {
+        "intent": true,
+        "remote": false,
+        "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+        "choiceRequired": false,
+        "opened": false,
+        "confirmed": true
+      },
+      "render": {
+        "page": "profile",
+        "h1": [
+          "Demo Jordan"
+        ],
+        "anchors": [
+          {
+            "id": null,
+            "href": "#hh-main",
+            "text": "Skip to content"
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": ""
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": "Home"
+          },
+          {
+            "id": null,
+            "href": "#/directory",
+            "text": "Donate"
+          },
+          {
+            "id": null,
+            "href": "#/register",
+            "text": "Sign Up"
+          },
+          {
+            "id": null,
+            "href": "#/about",
+            "text": "About"
+          },
+          {
+            "id": null,
+            "href": "#/contact",
+            "text": "Contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners",
+            "text": "Partners"
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": "Home"
+          },
+          {
+            "id": null,
+            "href": "#/directory",
+            "text": "Donate"
+          },
+          {
+            "id": null,
+            "href": "#/register",
+            "text": "Sign Up"
+          },
+          {
+            "id": null,
+            "href": "#/about",
+            "text": "About"
+          },
+          {
+            "id": null,
+            "href": "#/contact",
+            "text": "Contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners",
+            "text": "Partners"
+          },
+          {
+            "id": null,
+            "href": "#/profile",
+            "text": "My page"
+          },
+          {
+            "id": null,
+            "href": "#/community",
+            "text": "Forum"
+          },
+          {
+            "id": "hh-profile-wishlist-open",
+            "href": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+            "text": "Continue to synthetic wishlist"
+          }
+        ],
+        "buttons": [
+          {
+            "id": "hh-public-nav-toggle",
+            "event": "public:toggle-nav",
+            "text": "☰"
+          },
+          {
+            "id": "hh-logout",
+            "event": "public:logout",
+            "text": "Logout"
+          },
+          {
+            "id": "hh-profile-wishlist",
+            "event": "public:wishlist",
+            "text": "Wishlist handoff prepared"
+          },
+          {
+            "id": "hh-profile-share",
+            "event": "public:share",
+            "text": "Share profile"
+          }
+        ]
+      },
+      "renderedContinueAnchor": {
+        "id": "hh-profile-wishlist-open",
+        "href": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+        "text": "Continue to synthetic wishlist"
+      }
+    },
+    "captured_reference_priority_control": {
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/reference-sarah",
+        "profileId": "reference-sarah"
+      },
+      "profileStatus": "present",
+      "profile": {
+        "id": "reference-sarah",
+        "name": "Sarah Endsley",
+        "readOnly": true
+      },
+      "session": {
+        "status": "authenticated",
+        "teacherId": "demo-seed-avery"
+      },
+      "wishlist": {
+        "intent": true,
+        "remote": false,
+        "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+        "choiceRequired": false,
+        "opened": false,
+        "confirmed": true
+      },
+      "render": {
+        "page": "profile",
+        "h1": [
+          "Sarah Endsley"
+        ],
+        "anchors": [
+          {
+            "id": null,
+            "href": "#hh-main",
+            "text": "Skip to content"
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": ""
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": "Home"
+          },
+          {
+            "id": null,
+            "href": "#/directory",
+            "text": "Donate"
+          },
+          {
+            "id": null,
+            "href": "#/register",
+            "text": "Sign Up"
+          },
+          {
+            "id": null,
+            "href": "#/about",
+            "text": "About"
+          },
+          {
+            "id": null,
+            "href": "#/contact",
+            "text": "Contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners",
+            "text": "Partners"
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": "Home"
+          },
+          {
+            "id": null,
+            "href": "#/directory",
+            "text": "Donate"
+          },
+          {
+            "id": null,
+            "href": "#/register",
+            "text": "Sign Up"
+          },
+          {
+            "id": null,
+            "href": "#/about",
+            "text": "About"
+          },
+          {
+            "id": null,
+            "href": "#/contact",
+            "text": "Contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners",
+            "text": "Partners"
+          },
+          {
+            "id": null,
+            "href": "#/profile",
+            "text": "My page"
+          },
+          {
+            "id": null,
+            "href": "#/community",
+            "text": "Forum"
+          },
+          {
+            "id": "hh-reference-wishlist",
+            "href": "https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20",
+            "text": "View Wishlist"
+          }
+        ],
+        "buttons": [
+          {
+            "id": "hh-public-nav-toggle",
+            "event": "public:toggle-nav",
+            "text": "☰"
+          },
+          {
+            "id": "hh-logout",
+            "event": "public:logout",
+            "text": "Logout"
+          },
+          {
+            "id": "hh-reference-share",
+            "event": "public:share",
+            "text": "Share Page"
+          }
+        ]
+      },
+      "providerCallsDuringCapturedNavigation": 0,
+      "staticCapturedAnchor": {
+        "id": "hh-reference-wishlist",
+        "href": "https://www.amazon.com/hz/wishlist/ls/3F27WJHJEBAXN?ref_=wl_share&tag=h0mer00mher0-20",
+        "text": "View Wishlist"
+      }
+    },
+    "missing_profile_control": {
+      "route": {
+        "page": "profile",
+        "path": "/public-profile/demo-profile-missing",
+        "profileId": "demo-profile-missing"
+      },
+      "profileStatus": "error",
+      "profile": null,
+      "session": {
+        "status": "authenticated",
+        "teacherId": "demo-seed-avery"
+      },
+      "wishlist": {
+        "intent": true,
+        "remote": false,
+        "destination": "https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY",
+        "choiceRequired": true,
+        "opened": false
+      },
+      "render": {
+        "page": "profile",
+        "h1": [
+          "Profile unavailable"
+        ],
+        "anchors": [
+          {
+            "id": null,
+            "href": "#hh-main",
+            "text": "Skip to content"
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": ""
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": "Home"
+          },
+          {
+            "id": null,
+            "href": "#/directory",
+            "text": "Donate"
+          },
+          {
+            "id": null,
+            "href": "#/register",
+            "text": "Sign Up"
+          },
+          {
+            "id": null,
+            "href": "#/about",
+            "text": "About"
+          },
+          {
+            "id": null,
+            "href": "#/contact",
+            "text": "Contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners",
+            "text": "Partners"
+          },
+          {
+            "id": null,
+            "href": "#/",
+            "text": "Home"
+          },
+          {
+            "id": null,
+            "href": "#/directory",
+            "text": "Donate"
+          },
+          {
+            "id": null,
+            "href": "#/register",
+            "text": "Sign Up"
+          },
+          {
+            "id": null,
+            "href": "#/about",
+            "text": "About"
+          },
+          {
+            "id": null,
+            "href": "#/contact",
+            "text": "Contact"
+          },
+          {
+            "id": null,
+            "href": "#/partners",
+            "text": "Partners"
+          },
+          {
+            "id": null,
+            "href": "#/profile",
+            "text": "My page"
+          },
+          {
+            "id": null,
+            "href": "#/community",
+            "text": "Forum"
+          }
+        ],
+        "buttons": [
+          {
+            "id": "hh-public-nav-toggle",
+            "event": "public:toggle-nav",
+            "text": "☰"
+          },
+          {
+            "id": "hh-logout",
+            "event": "public:logout",
+            "text": "Logout"
+          },
+          {
+            "id": "hh-profile-retry",
+            "event": "public:retry",
+            "text": "Retry profile load"
+          }
+        ]
+      },
+      "navigationResult": {
+        "ok": true,
+        "route": {
+          "page": "profile",
+          "path": "/public-profile/demo-profile-missing",
+          "profileId": "demo-profile-missing"
+        }
+      }
+    }
+  }
+}

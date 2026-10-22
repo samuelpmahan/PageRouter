@@ -1,0 +1,13 @@
+{
+  "job_id": "E3201",
+  "attempt": "baseline-02",
+  "source_pin": "source-pins.json",
+  "started_utc": "2026-10-19 14:19:34 UTC",
+  "ended_utc": "2026-10-19 14:19:55 UTC",
+  "command": "node probe.mjs",
+  "exit_status": 1,
+  "stdout": "stdout.raw (0 bytes)",
+  "stderr": "stderr.raw (400 bytes)",
+  "classification": "probe_harness_assertion_mismatch",
+  "detail": "Full vote/sort/open/correction/back flow reached the final assertion. The harness incorrectly expected zero total runtime receipts; controller initialization legitimately created two. Next attempt will record the startup receipt baseline and assert that forum interactions add no receipts."
+}

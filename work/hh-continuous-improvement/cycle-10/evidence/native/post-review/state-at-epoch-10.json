@@ -1,0 +1,943 @@
+{
+  "schema": "chainspot.rebalancer-state/v1",
+  "service": {
+    "name": "hh-continuous-improvement-cycle10",
+    "source": "dfef8eec126e3e0eb9f1aa3f3a1f9c950408d568",
+    "localSource": "9853c03e1f7458526528d2b350b8bad0c5e3c990",
+    "tree": "3e23395038495c7e1ff025ce885b91d9201025d8",
+    "scope": "Actual synthetic Registration.registerTeacher failure, nonsecret draft retention and resubmit/privacy; demonstrate before correction",
+    "actualCapacity": "Two actual freshly registered Luna/high contexts H1/H2 beneath root. Current agent list shows no other running stream; reserve remaining slots, do not invent allocation or workers.",
+    "streams": [
+      "registration flow integration",
+      "independent failure/provider/projection verification",
+      "canonical build and checkpoint"
+    ],
+    "floatingReserve": "Two useful HH workers; H1 sole source/Git owner and H2 independent scratch-only review; streams sequenced, no background dispatch"
+  },
+  "workers": {
+    "H1": {
+      "job": "E1407",
+      "agent": "/root/hh10_h1"
+    },
+    "H2": {
+      "job": null,
+      "agent": null
+    }
+  },
+  "jobs": {
+    "E1407": {
+      "id": "E1407",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "status": "running",
+      "worker": "H1",
+      "started_at": "2026-10-18T16:46:47.121351+00:00",
+      "finished_at": null,
+      "subject": "Sole source/Git ADMIN reservation while exactpackage R1406audited. Prepare exporter scratch-only; accepted120payload/sourcefiles frozen. Only after root exactauditGO may append separatelyindexedreview/admin receipts and local onecheckpoint/export. No remote push/main/deploy."
+    },
+    "E1406": {
+      "id": "E1406",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-18T16:38:05.831093+00:00",
+      "finished_at": "2026-10-18T16:46:42.676803+00:00",
+      "subject": "Canonical129HH284full acceptedsource hashes verified. Sole owner packages lean cycle10 immutable engineering evidence/provenance/rawAMEND/repair/native/build and guardednext under existingworkdir, source/test frozen, manifest audit before any commit. Do not copy historicalbrowser artifacts or discoverable archived tests.",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle10/receipts/E1406.json"
+    },
+    "R1406": {
+      "id": "R1406",
+      "kind": "review",
+      "depends_on": "E1406",
+      "allow_workers": [
+        "H2"
+      ],
+      "status": "done",
+      "worker": "H2",
+      "started_at": "2026-10-18T16:46:48.257715+00:00",
+      "finished_at": "2026-10-18T16:52:44.331658+00:00",
+      "subject": "Independent exact package manifest/hash/source-build/provenance/native audit and archive non-discovery; no production or test/build rerun needed. H1 package author excluded, originalR1403 remainsAMEND, fixture/tree/browser boundary exact.",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle10/receipts/R1406.json"
+    },
+    "E1404": {
+      "id": "E1404",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-18T16:33:24.225309+00:00",
+      "finished_at": "2026-10-18T16:38:04.086082+00:00",
+      "subject": "R1405 independently accepted finalfbb580controller/dfe05test. Sole integration owner runs exact canonical bash ci/bazel/run.sh with prospective command/rawtee/pipefail/exits, retains receipt/sourcehash/counts; no source/test edits/Gitcommit, no historicalbrowser evidence imported as current.",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle10/receipts/E1404.json"
+    },
+    "E1405": {
+      "id": "E1405",
+      "kind": "extract",
+      "repair_of": "E1403",
+      "allow_workers": [
+        "H1"
+      ],
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-18T16:27:03.208727+00:00",
+      "finished_at": "2026-10-18T16:30:30.168253+00:00",
+      "subject": "R1403 actual AMEND nav-away/back newer-draft failure. Preserve exact old source/counterexample; add red re-entry regression and minimal current-register-page live snapshot repair ONLY two controllerfiles. Keep success-only aliases/confirmed identity and foreign/captured/stale protections, no commit.",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle10/receipts/E1405.json"
+    },
+    "R1405": {
+      "id": "R1405",
+      "kind": "review",
+      "depends_on": "E1405",
+      "allow_workers": [
+        "H2"
+      ],
+      "status": "done",
+      "worker": "H2",
+      "started_at": "2026-10-18T16:30:31.960943+00:00",
+      "finished_at": "2026-10-18T16:33:20.614057+00:00",
+      "subject": "Independent repaired exactsource re-review/focused+fullcontroller raw runs, exact prior failing adversarial replay plus unknown/reentry/success/alias/foreign/captured guards. R1403 remains AMEND. Source owner excluded.",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle10/receipts/R1405.json"
+    },
+    "E1403": {
+      "id": "E1403",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-18T16:17:41.589879+00:00",
+      "finished_at": "2026-10-18T16:23:36.229077+00:00",
+      "subject": "Both actual E1401/E1402 support registration transaction-boundary draft loss and alias poisoning. Sole source owner writes minimal red regressions then correction ONLY public-controller.mjs + public-controller.test.mjs; preserve live newer nonsecret drafts, old successful alias, explicit unknown/no automatic writes, authority/route/geography controls. Flow checkpoint before corrected execution; no commit/publication.",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle10/receipts/E1403.json"
+    },
+    "R1403": {
+      "id": "R1403",
+      "kind": "review",
+      "depends_on": "E1403",
+      "allow_workers": [
+        "H2"
+      ],
+      "status": "done",
+      "worker": "H2",
+      "started_at": "2026-10-18T16:23:38.019989+00:00",
+      "finished_at": "2026-10-18T16:26:59.728965+00:00",
+      "subject": "Independent corrected registration boundary source review, fresh prospective raw focused/controller tests + actual volatile known/unknown/alias/newer-input/valid controls. H1 implementer excluded, no source writes; replay old defective expectations separately, no relabelled before-fix evidence.",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle10/receipts/R1403.json"
+    },
+    "E1401": {
+      "id": "E1401",
+      "kind": "extract",
+      "allow_workers": [
+        "H1"
+      ],
+      "subject": "Read exact instructions/current cycle09 continuation/source/tests; canonical current-base build before edits; promise-controlled synthetic registration provider-failure/form/retry/alias/privacy probe. Demonstrate/falsify actual tree/runtime behavior; no source correction yet, no secrets retained.",
+      "status": "done",
+      "worker": "H1",
+      "started_at": "2026-10-18T16:11:48.919243+00:00",
+      "finished_at": "2026-10-18T16:17:32.896152+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle10/receipts/E1401.json"
+    },
+    "E1402": {
+      "id": "E1402",
+      "kind": "extract",
+      "allow_workers": [
+        "H2"
+      ],
+      "subject": "Independent read-only/scratch-only provider-failure retention/retry probe and source/runtime reachability; transport_failure/outcome_unknown/valid controls, ephemeral credentials excluded from evidence. No product/source/Git mutation, no browser-policy workaround.",
+      "status": "done",
+      "worker": "H2",
+      "started_at": "2026-10-18T16:11:50.636000+00:00",
+      "finished_at": "2026-10-18T16:15:28.580932+00:00",
+      "receipt": "/workspace/scratch/8528bb251845/hh-cycle10/receipts/E1402.json"
+    }
+  },
+  "events": [
+    {
+      "type": "solve",
+      "epoch": 0,
+      "at": "2026-10-18T16:11:43.548675+00:00",
+      "ready_jobs": [
+        "E1401",
+        "E1402"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H2": "E1402",
+        "H1": "E1401"
+      },
+      "dispatch": {
+        "H2": "E1402",
+        "H1": "E1401"
+      },
+      "native_seconds": 0.003451709999353625,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 200,
+      "native_score": 200,
+      "caps": {
+        "E1401": 1,
+        "E1402": 1,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E1401": [
+          "H1"
+        ],
+        "E1402": [
+          "H2"
+        ]
+      },
+      "weights": {
+        "E1401": 100,
+        "E1402": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T16:11:48.919243+00:00",
+      "worker": "H1",
+      "job": "E1401",
+      "agent": "/root/hh10_h1"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T16:11:50.636000+00:00",
+      "worker": "H2",
+      "job": "E1402",
+      "agent": "/root/hh10_h2"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T16:15:28.580932+00:00",
+      "worker": "H2",
+      "job": "E1402"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T16:17:32.896152+00:00",
+      "worker": "H1",
+      "job": "E1401"
+    },
+    {
+      "type": "solve",
+      "epoch": 1,
+      "at": "2026-10-18T16:17:34.881653+00:00",
+      "ready_jobs": [
+        "E1403"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H2": "BENCH",
+        "H1": "E1403"
+      },
+      "dispatch": {
+        "H1": "E1403"
+      },
+      "native_seconds": 0.0034463539996067993,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E1403": 1,
+        "R1403": 0,
+        "E1401": 0,
+        "E1402": 0,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E1403": [
+          "H1"
+        ]
+      },
+      "weights": {
+        "E1403": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T16:17:41.589879+00:00",
+      "worker": "H1",
+      "job": "E1403",
+      "agent": "/root/hh10_h1"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T16:23:36.229077+00:00",
+      "worker": "H1",
+      "job": "E1403"
+    },
+    {
+      "type": "solve",
+      "epoch": 2,
+      "at": "2026-10-18T16:23:36.874263+00:00",
+      "ready_jobs": [
+        "R1403"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H1": "BENCH",
+        "H2": "R1403"
+      },
+      "dispatch": {
+        "H2": "R1403"
+      },
+      "native_seconds": 0.005258965997199994,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 200,
+      "native_score": 200,
+      "caps": {
+        "E1403": 0,
+        "R1403": 1,
+        "E1401": 0,
+        "E1402": 0,
+        "BENCH": 2
+      },
+      "eligible": {
+        "R1403": [
+          "H2"
+        ]
+      },
+      "weights": {
+        "R1403": 200
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T16:23:38.019989+00:00",
+      "worker": "H2",
+      "job": "R1403",
+      "agent": "/root/hh10_h2"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T16:26:59.728965+00:00",
+      "worker": "H2",
+      "job": "R1403"
+    },
+    {
+      "type": "solve",
+      "epoch": 3,
+      "at": "2026-10-18T16:27:02.040775+00:00",
+      "ready_jobs": [
+        "E1405"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H2": "BENCH",
+        "H1": "E1405"
+      },
+      "dispatch": {
+        "H1": "E1405"
+      },
+      "native_seconds": 0.005036935996031389,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 300,
+      "native_score": 300,
+      "caps": {
+        "E1405": 1,
+        "R1405": 0,
+        "E1403": 0,
+        "R1403": 0,
+        "E1401": 0,
+        "E1402": 0,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E1405": [
+          "H1"
+        ]
+      },
+      "weights": {
+        "E1405": 300
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T16:27:03.208727+00:00",
+      "worker": "H1",
+      "job": "E1405",
+      "agent": "/root/hh10_h1"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T16:30:30.168253+00:00",
+      "worker": "H1",
+      "job": "E1405"
+    },
+    {
+      "type": "solve",
+      "epoch": 4,
+      "at": "2026-10-18T16:30:30.796786+00:00",
+      "ready_jobs": [
+        "R1405"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H1": "BENCH",
+        "H2": "R1405"
+      },
+      "dispatch": {
+        "H2": "R1405"
+      },
+      "native_seconds": 0.005045379002694972,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 200,
+      "native_score": 200,
+      "caps": {
+        "E1405": 0,
+        "R1405": 1,
+        "E1403": 0,
+        "R1403": 0,
+        "E1401": 0,
+        "E1402": 0,
+        "BENCH": 2
+      },
+      "eligible": {
+        "R1405": [
+          "H2"
+        ]
+      },
+      "weights": {
+        "R1405": 200
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T16:30:31.960943+00:00",
+      "worker": "H2",
+      "job": "R1405",
+      "agent": "/root/hh10_h2"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T16:33:20.614057+00:00",
+      "worker": "H2",
+      "job": "R1405"
+    },
+    {
+      "type": "solve",
+      "epoch": 5,
+      "at": "2026-10-18T16:33:23.235653+00:00",
+      "ready_jobs": [
+        "E1404"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H2": "BENCH",
+        "H1": "E1404"
+      },
+      "dispatch": {
+        "H1": "E1404"
+      },
+      "native_seconds": 0.004023933004646096,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E1404": 1,
+        "E1405": 0,
+        "R1405": 0,
+        "E1403": 0,
+        "R1403": 0,
+        "E1401": 0,
+        "E1402": 0,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E1404": [
+          "H1"
+        ]
+      },
+      "weights": {
+        "E1404": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T16:33:24.225309+00:00",
+      "worker": "H1",
+      "job": "E1404",
+      "agent": "/root/hh10_h1"
+    },
+    {
+      "type": "solve",
+      "epoch": 6,
+      "at": "2026-10-18T16:37:06.040577+00:00",
+      "ready_jobs": [
+        "E1406"
+      ],
+      "pinned_workers": [
+        "H1"
+      ],
+      "assignments": {
+        "H1": "E1404",
+        "H2": "BENCH"
+      },
+      "dispatch": {},
+      "native_seconds": 0.004093014998943545,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 1 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 0,
+      "native_score": 0,
+      "caps": {
+        "E1406": 1,
+        "R1406": 0,
+        "E1404": 1,
+        "E1405": 0,
+        "R1405": 0,
+        "E1403": 0,
+        "R1403": 0,
+        "E1401": 0,
+        "E1402": 0,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E1406": []
+      },
+      "weights": {
+        "E1406": 100
+      },
+      "agent_by_worker": {
+        "H1": "/root/hh10_h1",
+        "H2": null
+      }
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T16:38:04.086082+00:00",
+      "worker": "H1",
+      "job": "E1404"
+    },
+    {
+      "type": "solve",
+      "epoch": 7,
+      "at": "2026-10-18T16:38:04.725835+00:00",
+      "ready_jobs": [
+        "E1406"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H1": "E1406",
+        "H2": "BENCH"
+      },
+      "dispatch": {
+        "H1": "E1406"
+      },
+      "native_seconds": 0.0037548260006587952,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 100,
+      "native_score": 100,
+      "caps": {
+        "E1406": 1,
+        "R1406": 0,
+        "E1404": 0,
+        "E1405": 0,
+        "R1405": 0,
+        "E1403": 0,
+        "R1403": 0,
+        "E1401": 0,
+        "E1402": 0,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E1406": [
+          "H1"
+        ]
+      },
+      "weights": {
+        "E1406": 100
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T16:38:05.831093+00:00",
+      "worker": "H1",
+      "job": "E1406",
+      "agent": "/root/hh10_h1"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T16:46:42.676803+00:00",
+      "worker": "H1",
+      "job": "E1406"
+    },
+    {
+      "type": "solve",
+      "epoch": 8,
+      "at": "2026-10-18T16:46:45.978314+00:00",
+      "ready_jobs": [
+        "E1407",
+        "R1406"
+      ],
+      "pinned_workers": [],
+      "assignments": {
+        "H2": "R1406",
+        "H1": "E1407"
+      },
+      "dispatch": {
+        "H2": "R1406",
+        "H1": "E1407"
+      },
+      "native_seconds": 0.005161637003766373,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 0 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 300,
+      "native_score": 300,
+      "caps": {
+        "E1407": 1,
+        "E1406": 0,
+        "R1406": 1,
+        "E1404": 0,
+        "E1405": 0,
+        "R1405": 0,
+        "E1403": 0,
+        "R1403": 0,
+        "E1401": 0,
+        "E1402": 0,
+        "BENCH": 2
+      },
+      "eligible": {
+        "E1407": [
+          "H1"
+        ],
+        "R1406": [
+          "H2"
+        ]
+      },
+      "weights": {
+        "E1407": 100,
+        "R1406": 200
+      },
+      "agent_by_worker": {
+        "H1": null,
+        "H2": null
+      }
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T16:46:47.121351+00:00",
+      "worker": "H1",
+      "job": "E1407",
+      "agent": "/root/hh10_h1"
+    },
+    {
+      "type": "dispatch",
+      "at": "2026-10-18T16:46:48.257715+00:00",
+      "worker": "H2",
+      "job": "R1406",
+      "agent": "/root/hh10_h2"
+    },
+    {
+      "type": "complete",
+      "at": "2026-10-18T16:52:44.331658+00:00",
+      "worker": "H2",
+      "job": "R1406"
+    },
+    {
+      "type": "solve",
+      "epoch": 9,
+      "at": "2026-10-18T16:52:44.952443+00:00",
+      "ready_jobs": [],
+      "pinned_workers": [
+        "H1"
+      ],
+      "assignments": {
+        "H1": "E1407",
+        "H2": "BENCH"
+      },
+      "dispatch": {},
+      "native_seconds": 0.003306462000182364,
+      "native_constraints": {
+        "solved": true,
+        "brokenVal": 0,
+        "brokenCount": 0,
+        "constraints": [
+          {
+            "name": "independent_review",
+            "desc": "avoidAssignmentsSpec: Avoid 2 assignments on scope packets",
+            "value": 0
+          },
+          {
+            "name": "pin_in_flight",
+            "desc": "avoidMovingSpec: Avoid moving 1 objects",
+            "value": 0
+          },
+          {
+            "name": "ready_packet_capacity",
+            "desc": "capacitySpec: after(headcount) <= 1 for scope packets",
+            "value": 0
+          }
+        ]
+      },
+      "independent_capacity_check": true,
+      "independent_eligibility_check": true,
+      "exact_score": 0,
+      "native_score": 0,
+      "caps": {
+        "E1407": 1,
+        "E1406": 0,
+        "R1406": 0,
+        "E1404": 0,
+        "E1405": 0,
+        "R1405": 0,
+        "E1403": 0,
+        "R1403": 0,
+        "E1401": 0,
+        "E1402": 0,
+        "BENCH": 2
+      },
+      "eligible": {},
+      "weights": {},
+      "agent_by_worker": {
+        "H1": "/root/hh10_h1",
+        "H2": null
+      }
+    }
+  ],
+  "epoch": 10,
+  "policy": {
+    "extract_priority": 100,
+    "review_priority": 200,
+    "repair_priority": 300
+  }
+}

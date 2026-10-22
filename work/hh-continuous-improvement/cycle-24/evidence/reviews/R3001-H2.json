@@ -1,0 +1,41 @@
+{
+  "job_id": "R3001",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "H1's anonymous-role volatile-fixture baseline is supported by its original probe and stdout: the filtered thread opened, back preserved query/category, clear and empty-filter recovery worked, role visibility behaved as stated, and load-more expanded 10 to 14. Current source hashes match H1's pins. H1 explicitly does not claim teacher-role flow or an assertion-suite run, so it is a qualified baseline, not closure of the teacher-path hypothesis.",
+  "review": {
+    "h1_original_outcome": "insufficient_evidence",
+    "native_envelope": "Identity-only amendment: original result used `job`, not `job_id`; helper stopped at identity preflight before canonical/native receipt mutation. It does not supply additional behavioral evidence.",
+    "anonymous_role_qualified": true,
+    "teacher_role_proven_by_h1": false,
+    "assertion_suite_claimed": false,
+    "source_hashes_current": {
+      "checkpoint/vendor/hh/src/community.mjs": "311d598b6d6ffc675dc4ee5b07ac0005c55e6ce7a34f8acfac5384d5789288f4",
+      "checkpoint/vendor/hh/src/public-controller.mjs": "97b5c17bf519b7fd05e2933a12dc55ff0e3e0c3e7939db4072368c070b4f67a0",
+      "work/hh-continuous-improvement/cycle-23/CURRENT.md": "0cd20910d9d28867875a71f50f04ee3291bdd5d96c9de5fa82048086f6e7013c"
+    },
+    "observations_cross_checked": [
+      "15 volatile threads; memory_only storage",
+      "anonymous list omitted hidden topic; moderator list included it",
+      "Resources + needle-1 yielded topic-local-10 and topic-local-12",
+      "detail opened topic-local-10; back returned to /forum with needle-1 and Resources retained",
+      "clear query kept Resources and displayed 6 topics",
+      "unmatched filter rendered No discussions found; clear restored 10 of 14 anonymous-visible topics",
+      "date-oldest sort followed by Load More showed 14 and removed the control"
+    ]
+  },
+  "e3002_artifact_handoff": {
+    "result_json_is_exact_stdout": false,
+    "result_json_description": "Manually copied summary of the final Node output; not an exact child-stdout capture.",
+    "probe_path": "/workspace/scratch/86659bbafcce/hh24/H2/E3002/probe.mjs",
+    "result_path": "/workspace/scratch/86659bbafcce/hh24/H2/E3002/result.json",
+    "argv_observed_in_tool_call": ["node", "/workspace/scratch/86659bbafcce/hh24/H2/E3002/probe.mjs"],
+    "status": "Tool call completed and returned the structured JSON, but numeric process exit status was not retained.",
+    "raw_streams": "No separate stdout.raw or stderr.raw file was retained; no missing stream is inferred or reconstructed."
+  },
+  "limits": [
+    "Review was read-only; no probe rerun or test suite execution.",
+    "H1 proves only anonymous-role search/open/back/clear/empty recovery, not teacher-role flow.",
+    "Rendered-tree observations are not browser, DOM, backend, real-account, or production evidence."
+  ]
+}

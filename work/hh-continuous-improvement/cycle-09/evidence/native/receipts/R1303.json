@@ -1,0 +1,54 @@
+{
+  "job_id": "R1303",
+  "worker": "H2",
+  "decision": "accepted",
+  "summary": "Independently reviewed the exact test-only change and reran its two focused cases plus the complete public-controller suite. The two regressions correctly exercise the controller's existing updateDraft/onChange/render path for mismatch and missing-terms validation, retain non-secret registration fields and selected school, assert no provider receipt or pending registration is created, and check generated credentials are absent from controller state, runtime inspection, Parts, and storage. Product controller source is unchanged. This accepts the tests as useful reuse protection, not as proof of mounted DOM input reachability or a product behavior fix.",
+  "reviewed_scope": {
+    "changed_paths": ["checkpoint/vendor/hh/src/public-controller.test.mjs"],
+    "test_sha256": "d29cf793a619aabb22c2ae13151cc3facc12f9d143a8f167f96d1b22463608c9",
+    "controller_sha256": "8faad923a2e4721f1cc1059f902c54f97759ef32b57d36fe4fa8523205011a0b",
+    "head": "46d1f32aca87919abceecf8b0c53454173cd574f",
+    "tree": "b80f1408d3c21c23e058989ce79fcfc60a0ba674",
+    "git_status_readback": "Only checkpoint/vendor/hh/src/public-controller.test.mjs is modified; H2 made no PageRouter changes."
+  },
+  "checks_run": [
+    {
+      "command": "node --test --test-reporter=tap --test-concurrency=1 --test-name-pattern='registration (mismatch|missing-terms) validation' vendor/hh/src/public-controller.test.mjs",
+      "cwd": "PageRouter/checkpoint",
+      "exit_code": 0,
+      "counts": {"tests": 2, "pass": 2, "fail": 0, "skipped": 0},
+      "stdout": "focused.stdout.log",
+      "stdout_sha256": "c9cedf0e052b85b710b56f4121cb330aacecc508f0a5f5a12a6ddd54477a419f"
+    },
+    {
+      "command": "node --test --test-reporter=tap vendor/hh/src/public-controller.test.mjs",
+      "cwd": "PageRouter/checkpoint",
+      "exit_code": 0,
+      "counts": {"tests": 51, "pass": 51, "fail": 0, "skipped": 0},
+      "stdout": "controller.stdout.log",
+      "stdout_sha256": "15fcfa33029c5a203107d06dd8ffcfee64802d413bf16b528e9cc4d131cc680a"
+    }
+  ],
+  "review_points": {
+    "host_equivalent_controller_path": "The helper mirrors app.mjs's delegated input callback by calling updateDraft on non-secret fields; registrationDraftSetup wires controller.onChange to renderPublicSite, and assertions read the latest rendered tree. This is controller/onChange/tree evidence, not mounted browser input evidence.",
+    "failure_boundaries": "Each invalid case records receiptsBefore and asserts runtime.inspect().receipts.length remains unchanged, runtime.snapshot().registration.status remains none, and the rendered identity and selected Demo Washington/Demo King/Demo District/Demo Academy values remain intact.",
+    "credential_boundaries": "Passwords are randomUUID-generated at runtime. Assertions compare only non-persistence results after scanning controller state, runtime.inspect, runtime Parts, and storage; no credential values are written to logs or reports.",
+    "product_claim": "The added tests pass against unchanged controller source. No red-before-fix, app behavior correction, or production/runtime claim is made."
+  },
+  "limitations": [
+    "Actual mounted DOM/input reachability remains unverified; E1302's local browser tooling limitation applies. The app input binding was source-inspected, while these tests directly invoke updateDraft.",
+    "No screenshots, visual QA, backend or production behavior, canonical build, commit, push, main update, or deployment were performed by H2.",
+    "The broader 118-test HH core run is recorded by H1; H2 independently reran only the focused 2 and full 51 public-controller tests requested for this review."
+  ],
+  "cleanup": {
+    "local_preview_server_4188": "Stopped with Ctrl-C; subsequent process-list query showed no matching preview process.",
+    "cloud_browser": "The earlier attempt to open localhost returned ERR_CONNECTION_REFUSED before page load; no browser retry was made."
+  },
+  "evidence_files": {
+    "commands": "COMMANDS.txt",
+    "focused_stdout": "focused.stdout.log",
+    "focused_exit": "focused.exit-code.txt",
+    "controller_stdout": "controller.stdout.log",
+    "controller_exit": "controller.exit-code.txt"
+  }
+}

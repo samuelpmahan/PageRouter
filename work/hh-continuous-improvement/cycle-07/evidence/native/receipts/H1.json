@@ -1,0 +1,53 @@
+{
+  "job_id": "E1001",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "Confirmed the selected Avery-to-Jordan wishlist identity mismatch in the actual mounted controller/provider/renderer using volatile synthetic fixtures. Avery preparation survived navigation while Jordan loaded; the rendered confirmation flow and direct public:confirm-wishlist dispatch left an Avery synthetic URL on Demo Jordan. Same-profile control passed; captured Sarah remained a distinct read-only static link with zero provider calls; missing-profile rendering had no continue anchor. No source/test changes, browser, HTTP, or external actions.",
+  "observed_at_utc": "2026-10-18T13:12:01Z",
+  "source": {
+    "repository": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "7feded8819db87026a8f35f6aa515bda513ab541",
+    "tree": "1cdcf9bfb34b680ed198eb7e750486ecfd1887cc",
+    "clean_before_after": true,
+    "inputs": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "84205881dd991d4be5ddf08a7b014530cb240e065aa0cc4180b362c02a345bff",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "19b9068c250d414ad62818778f376570db7480bd73cd918fd73b825344d1561a",
+      "checkpoint/vendor/hh/src/public-site.mjs": "96d930a2e6fc8c712dea5a593105071de217069d8f8313c4d531f0c4cf400ef4",
+      "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e",
+      "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+      "checkpoint/vendor/hh/services/fixtures.mjs": "a915f775582a6ed1cce0e92cb70de34463c2fbf40438eab3ecdcab5c412d6ff7",
+      "checkpoint/vendor/hh/src/site-data.mjs": "61862ee060435d6d516faf99700ec6e0788bf2e96a8698e5f7461f7d9362e5d8"
+    }
+  },
+  "execution": {
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+    "command": "set -o pipefail; node /workspace/scratch/8528bb251845/hh-cycle07/H1/E1001/probe.mjs 2>&1 | tee /workspace/scratch/8528bb251845/hh-cycle07/H1/E1001/stdout.log",
+    "exit_code": 0,
+    "probe_sha256": "28ab5a7979f8dc62fcd8d9416ba5f02728a08a8cb30f6380dfb4055a55787a41",
+    "stdout_log_sha256": "8df8bac075ba2fed61ccac3273757a7a32df5810451136a180c4bafd872bf627",
+    "stdout_capture": "Actual shell stdout/stderr captured during this run with tee; not reconstructed or copied from prior tool output.",
+    "runtime_evidence_file": "runtime-evidence.json"
+  },
+  "controls": {
+    "provider": "fixture:true; productionAuthority:false; persistence:volatile-memory",
+    "http_calls": 0,
+    "browser_opened": false,
+    "external_actions": 0,
+    "same_profile_alias": "Demo Avery via /teachers/demo-avery retained DEMO-AVERY destination and rendered its matching continue href.",
+    "captured_reference": "Sarah Endsley readOnly=true/source=captured-readonly; no provider calls on reference navigation; static hh-reference-wishlist URL remained unchanged after direct confirm dispatch, and no synthetic profile continue anchor rendered.",
+    "missing_profile": "Demo missing lookup resolved to profile error/unavailable; no hh-profile-wishlist-open anchor rendered.",
+    "confirmed_before_navigation": "A separately confirmed Avery handoff also persisted to Jordan and rendered DEMO-AVERY href; this shows the mismatch is not limited to the pre-confirmation button state."
+  },
+  "reproduction": {
+    "before_navigation": "Route/profile Demo Avery; authenticated synthetic session; prepared destination https://www.amazon.com/hz/wishlist/ls/DEMO-AVERY; choiceRequired=true.",
+    "while_jordan_provider_read_held": "Actual route was /public-profile/demo-jordan; profile status loading; Avery wishlist remained in journey state; loading render had no confirm/continue action.",
+    "after_provider_read_resolved": "Actual route/profile Demo Jordan; Avery destination remained; rendered tree exposed Confirm wishlist destination.",
+    "after_direct_dispatch": "public:confirm-wishlist returned ok=true, confirmed=true, and renderPublicSite emitted id=hh-profile-wishlist-open with Avery DEMO-AVERY href while current profile was Demo Jordan.",
+    "smallest_supported_fix_proposal": "Bind wishlist intent/destination/confirmation to the profile identity at preparation, then only render or dispatch confirmation/continue for that same identity. On profile change, invalidate or require a fresh explicit preparation for the newly displayed profile; preserve the captured-reference renderer's separate static-link priority and user-controlled synthetic URL behavior. Regression should assert both stale control hidden/rejected and re-preparation selects the current profile's synthetic URL."
+  },
+  "limitations": [
+    "This is a deterministic volatile fixture reproduction, not a browser click/visual QA or live external handoff.",
+    "No source/test edits or repair were performed; this is only the initial read-only evidence packet."
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "job": "E3001",
+  "worker": "H1",
+  "outcome": "insufficient_evidence",
+  "summary": "Read-only reconnaissance and an actual volatile-fixture rendered-tree baseline found no reproduced search/open/back/clear/empty-filter recovery defect. Search/open/back ran with the anonymous preview role after a role-visibility check; the synthetic posts were created with teacher authority, but this does not prove the teacher-role flow. H2 owns the independent teacher-flow probe.",
+  "scope": "checkpoint/vendor/hh actual source; synthetic fixture runtime and createCommunity storage:null; no source changes",
+  "command": {
+    "argv": [
+      "node",
+      "/workspace/scratch/86659bbafcce/hh24/H1/E3001/probe.mjs"
+    ],
+    "exitCode": 0,
+    "stdout": "result.stdout.raw",
+    "stderr": "not retained as a separate stream"
+  },
+  "observations": {
+    "volatileThreadCount": 15,
+    "storageStatus": "memory_only",
+    "roleVisibilityControl": "anonymous omitted hidden synthetic topic; moderator included it",
+    "filteredAnonymousResults": 2,
+    "detail": "topic-local-10 displayed the expected synthetic discussion title",
+    "back": "returned to /forum with query needle-1 and category Resources still selected; two results rendered",
+    "clear": "clearing query retained Resources category and rendered six visible topics",
+    "emptyRecovery": "unmatched query rendered No discussions found; clearing restored 10 of 14 visible anonymous topics",
+    "sortAndLoadMore": "date-oldest selected; load more expanded the rendered list from 10 to 14 and hid the control"
+  },
+  "sourcePins": {
+    "checkpoint/vendor/hh/src/community.mjs": "311d598b6d6ffc675dc4ee5b07ac0005c55e6ce7a34f8acfac5384d5789288f4",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "97b5c17bf519b7fd05e2933a12dc55ff0e3e0c3e7939db4072368c070b4f67a0",
+    "work/hh-continuous-improvement/cycle-23/CURRENT.md": "0cd20910d9d28867875a71f50f04ee3291bdd5d96c9de5fa82048086f6e7013c"
+  },
+  "limits": [
+    "No assertion suite was run as part of this baseline.",
+    "No teacher-role search/open/back flow is claimed.",
+    "No source edits, backend, real account, browser, server, or production behavior are claimed."
+  ]
+}

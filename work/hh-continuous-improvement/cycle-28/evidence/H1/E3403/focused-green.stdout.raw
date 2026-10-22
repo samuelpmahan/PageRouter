@@ -1,0 +1,35 @@
+✔ directory renders a distinct school-choice retry and clears only its recovered error (11.399053ms)
+✔ directory school-choice retry does not consume a coexisting directory-results retry (2.249285ms)
+✖ school-choice retry event rejects a lookup closure invalidated by a new selection (2.195213ms)
+✔ directory shows a school-choice retry only for a retryable lookup failure (2.832715ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 3
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 143.209415
+
+✖ failing tests:
+
+test at checkpoint/vendor/hh/src/public-controller.test.mjs:1120:1
+✖ school-choice retry event rejects a lookup closure invalidated by a new selection (2.195213ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   'Demo Alameda'
+  -   'Demo Marin'
+    ]
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/86659bbafcce/PageRouter/checkpoint/vendor/hh/src/public-controller.test.mjs:1130:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 'Demo Alameda' ],
+    expected: [ 'Demo Marin' ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

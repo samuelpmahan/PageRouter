@@ -1,0 +1,208 @@
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {createFixtureProvider} from '../../../PageRouter/checkpoint/vendor/hh/services/fixture-provider.mjs';
+import {createServiceRuntime} from '../../../PageRouter/checkpoint/vendor/hh/services/runtime.mjs';
+import {createCommunity} from '../../../PageRouter/checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '../../../PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '../../../PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+function memoryStorage() {
+  const values = new Map();
+  return {
+    values,
+    getItem(key) { return values.get(key) ?? null; },
+    setItem(key, value) { values.set(key, String(value)); },
+    removeItem(key) { values.delete(key); },
+  };
+}
+
+function deferred() {
+  let resolve;
+  const promise = new Promise(done => { resolve = done; });
+  return {promise, resolve};
+}
+
+function nodeById(tree, id) {
+  if (!tree || typeof tree !== 'object') return null;
+  if (tree.attrs?.id === id) return tree;
+  for (const child of tree.children || []) {
+    const match = nodeById(child, id);
+    if (match) return match;
+  }
+  return null;
+}
+
+function makeEnvironment(outcomes = []) {
+  const storage = memoryStorage();
+  const base = createFixtureProvider({fixture: true, storage});
+  const starts = [];
+  const gates = [];
+  let loginAttempts = 0;
+  let loginProviderCalls = 0;
+  const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+    if (port !== 'Session.login') return invoke(input);
+    const index = loginAttempts++;
+    const gate = deferred();
+    const started = deferred();
+    gates.push(gate);
+    starts.push(started);
+    started.resolve();
+    await gate.promise;
+    loginProviderCalls += 1;
+    const outcome = outcomes[index] || {};
+    return invoke(outcome.failWith ? {...input, failWith: outcome.failWith} : input);
+  }]));
+  const provider = {...base, services: Object.freeze(services)};
+  const runtime = createServiceRuntime(provider);
+  let tree = null;
+  const controller = createPublicController({runtime, storage, community: createCommunity({storage}),
+    onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+  });
+  return {storage, runtime, controller, get tree() { return tree; }, starts, gates,
+    get loginAttempts() { return loginAttempts; }, get loginProviderCalls() { return loginProviderCalls; }};
+}
+
+function retainedSurfaces(env) {
+  return [
+    JSON.stringify(env.controller.state),
+    JSON.stringify(env.runtime.snapshot()),
+    JSON.stringify(env.runtime.inspect()),
+    JSON.stringify(env.runtime.pxc.entries().map(([address, part]) => ({address, value: part.value}))),
+    [...env.storage.values.values()].join('\n'),
+  ].join('\n');
+}
+
+function loginRequestPartCount(env) {
+  return env.runtime.pxc.entries().filter(([address, part]) => address.startsWith('hh.request.') &&
+    part.value?.demoAccount === true && typeof part.value?.email === 'string' && part.value.email.endsWith('@fixture.test')).length;
+}
+
+async function submitLikeCurrentApp(env, typedEmail, typedPassword) {
+  // app.mjs's delegated input listener calls updateDraft for named fields.
+  const accepted = env.controller.updateDraft('email', typedEmail);
+  const transientInputs = {email: typedEmail, password: typedPassword};
+  // Model the submit listener's FormData payload capture, then its pre-dispatch
+  // DOM password clear. This is a host simulation, not a mounted DOM claim.
+  const formData = new FormData();
+  formData.set('email', transientInputs.email);
+  formData.set('password', transientInputs.password);
+  const payload = Object.fromEntries(formData.entries());
+  transientInputs.password = '';
+  const resultPromise = env.controller.dispatch('public:login', payload);
+  return {accepted, transientPasswordCleared: transientInputs.password === '', resultPromise};
+}
+
+const summary = {probe: 'HHcycle13 E1801 bounded synthetic login retention', browserDomClaim: false};
+
+// Held known transport failure, no automatic retry, then explicit valid resubmit.
+{
+  const env = makeEnvironment([{failWith: 'transport_failure'}, {}]);
+  await env.controller.initialize('#/login');
+  const receiptsBefore = env.runtime.inspect().receipts.length;
+  const providerStateBefore = JSON.stringify(env.runtime.snapshot());
+  const firstSecret = randomUUID();
+  const first = await submitLikeCurrentApp(env, 'first-synthetic@fixture.test', firstSecret);
+  assert.equal(first.accepted, false, 'login input is not stored as a draft by current controller');
+  assert.equal(first.transientPasswordCleared, true);
+  await env.starts[0].promise;
+  assert.equal(nodeById(env.tree, 'hh-login-email')?.attrs?.value || '', '', 'busy rerender uses prior identity fallback');
+  assert.equal(env.loginAttempts, 1);
+  assert.equal(env.loginProviderCalls, 0, 'provider has not run while Session.login is held');
+  env.gates[0].resolve();
+  const failed = await first.resultPromise;
+  assert.equal(failed.ok, false);
+  assert.equal(failed.error?.code, 'transport_failure');
+  assert.equal(nodeById(env.tree, 'hh-login-email')?.attrs?.value || '', '', 'completion rerender uses prior identity fallback');
+  const retry = await env.controller.dispatch('public:retry');
+  assert.equal(retry.error?.code, 'nothing_to_retry');
+  assert.equal(env.loginAttempts, 1, 'retry does not start a second Session.login');
+  const failedStateUnchanged = JSON.stringify(env.runtime.snapshot()) === providerStateBefore;
+  assert.equal(failedStateUnchanged, true, 'known transport failure did not commit provider state');
+  const receiptsAfterFailure = env.runtime.inspect().receipts.length;
+  const requestPartsAfterFailure = loginRequestPartCount(env);
+  const secondSecret = randomUUID();
+  const second = await submitLikeCurrentApp(env, 'avery@fixture.test', secondSecret);
+  assert.equal(second.accepted, false);
+  assert.equal(second.transientPasswordCleared, true);
+  await env.starts[1].promise;
+  env.gates[1].resolve();
+  const succeeded = await second.resultPromise;
+  assert.equal(succeeded.ok, true);
+  assert.equal(env.controller.route.page, 'profile');
+  assert.equal(env.loginAttempts, 2, 'only explicit resubmission adds the next login attempt');
+  assert.equal(env.loginProviderCalls, 2);
+  const receiptsAfterResubmit = env.runtime.inspect().receipts.length;
+  const requestPartsAfterResubmit = loginRequestPartCount(env);
+  const surfaces = retainedSurfaces(env);
+  assert.equal(surfaces.includes(firstSecret), false, 'first random password is absent from inspected surfaces');
+  assert.equal(surfaces.includes(secondSecret), false, 'resubmission random password is absent from inspected surfaces');
+  summary.transportFailure = {
+    outcome: failed.error.code,
+    busyAndCompletionTreeShowsPreviousIdentity: true,
+    automaticRetry: false,
+    explicitResubmissionSucceeded: succeeded.ok,
+    loginAttempts: env.loginAttempts,
+    loginProviderCalls: env.loginProviderCalls,
+    providerStateChangedOnKnownTransportFailure: !failedStateUnchanged,
+    loginRequestPartsAfterFailure: requestPartsAfterFailure,
+    allRuntimeReceiptDeltaAfterFailure: receiptsAfterFailure - receiptsBefore,
+    loginRequestPartsAfterExplicitResubmission: requestPartsAfterResubmit,
+    allRuntimeReceiptDeltaAfterExplicitResubmission: receiptsAfterResubmit - receiptsAfterFailure,
+    bothRandomPasswordsAbsentFromStateSnapshotPartsAndStorage: true,
+  };
+}
+
+// Natural provider auth rejection for an unregistered synthetic email.
+{
+  const env = makeEnvironment([{}]);
+  await env.controller.initialize('#/login');
+  const receiptsBefore = env.runtime.inspect().receipts.length;
+  const providerStateBefore = JSON.stringify(env.runtime.snapshot());
+  const secret = randomUUID();
+  const submitted = await submitLikeCurrentApp(env, 'unknown-synthetic@fixture.test', secret);
+  await env.starts[0].promise;
+  env.gates[0].resolve();
+  const rejected = await submitted.resultPromise;
+  assert.equal(rejected.ok, false);
+  assert.equal(rejected.error?.code, 'not_found');
+  assert.equal(env.loginAttempts, 1);
+  assert.equal(env.loginProviderCalls, 1);
+  const providerStateChanged = JSON.stringify(env.runtime.snapshot()) !== providerStateBefore;
+  assert.equal(providerStateChanged, false, 'natural auth rejection did not commit provider state');
+  const receiptDelta = env.runtime.inspect().receipts.length - receiptsBefore;
+  const requestParts = loginRequestPartCount(env);
+  assert.equal(retainedSurfaces(env).includes(secret), false);
+  summary.authRejection = {outcome: rejected.error.code, loginAttempts: 1, loginProviderCalls: 1,
+    providerStateChanged, loginRequestParts: requestParts, allRuntimeReceiptDelta: receiptDelta,
+    randomPasswordAbsentFromStateSnapshotPartsAndStorage: true};
+}
+
+// Approved built-in fixture identity is a valid success control. The fixture
+// explicitly does not verify password authenticity.
+{
+  const env = makeEnvironment([{}]);
+  await env.controller.initialize('#/login');
+  const receiptsBefore = env.runtime.inspect().receipts.length;
+  const providerStateBefore = JSON.stringify(env.runtime.snapshot());
+  const secret = randomUUID();
+  const submitted = await submitLikeCurrentApp(env, 'avery@fixture.test', secret);
+  await env.starts[0].promise;
+  env.gates[0].resolve();
+  const result = await submitted.resultPromise;
+  assert.equal(result.ok, true);
+  assert.equal(env.controller.state.journey.session.status, 'authenticated');
+  assert.equal(env.controller.route.page, 'profile');
+  assert.equal(env.loginAttempts, 1);
+  assert.equal(env.loginProviderCalls, 1);
+  const providerStateChanged = JSON.stringify(env.runtime.snapshot()) !== providerStateBefore;
+  assert.equal(providerStateChanged, true, 'valid fixture login updates provider session state');
+  const receiptDelta = env.runtime.inspect().receipts.length - receiptsBefore;
+  const requestParts = loginRequestPartCount(env);
+  assert.equal(retainedSurfaces(env).includes(secret), false);
+  summary.successControl = {outcome: 'success', authenticationState: 'authenticated', route: 'profile',
+    passwordVerification: 'not provided by fixture', loginAttempts: 1, loginProviderCalls: 1,
+    providerStateChanged, loginRequestParts: requestParts, allRuntimeReceiptDelta: receiptDelta,
+    randomPasswordAbsentFromStateSnapshotPartsAndStorage: true};
+}
+
+console.log(JSON.stringify(summary));

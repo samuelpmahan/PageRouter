@@ -1,0 +1,19 @@
+{
+  "job_id": "E2804",
+  "argv": ["/usr/bin/env", "BAZEL=/workspace/scratch/8528bb251845/tools/bazel", "bash", "ci/bazel/run.sh"],
+  "working_directory": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+  "start_utc": "2026-10-19T10:32:54Z (clock captured immediately before invocation)",
+  "end_utc": "2026-10-19T10:34:20Z (clock captured after process exit)",
+  "exit_code": 1,
+  "raw_stdout": "canonical-build.stdout.raw",
+  "raw_stdout_sha256": "0b7eb13cfbec962ef78d2c6e89840ebd0f268768753798a019e6165ff0f9bd09",
+  "raw_stderr": "canonical-build.stderr.raw",
+  "raw_stderr_sha256": "be57d376a27962b28dbc71044131c269cb525c4bc8cb6cf1c0e53b74dadca586",
+  "bazel_elapsed_seconds": 80.120,
+  "failure": "No space left on device while writing Bazel action log; subsequent profile file write also failed.",
+  "receipt": null,
+  "site_output": "bazel-bin/site.site was an empty directory; no fresh site files or receipt were produced.",
+  "source_input_verification": "not available because the build produced no site.receipt.json",
+  "filesystem_at_failure": {"size": "32G", "used": "32G", "available": "0", "use_percent": "100%"},
+  "reruns": 0
+}

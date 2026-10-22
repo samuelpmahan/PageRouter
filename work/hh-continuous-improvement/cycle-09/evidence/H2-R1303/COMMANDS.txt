@@ -1,0 +1,11 @@
+Independent H2 review; working directory: /workspace/scratch/8528bb251845/PageRouter/checkpoint
+
+1. `node --test --test-reporter=tap --test-concurrency=1 --test-name-pattern='registration (mismatch|missing-terms) validation' vendor/hh/src/public-controller.test.mjs`
+   Exit code: 0; counts: 2 passed, 0 failed, 0 skipped.
+   Raw stdout: focused.stdout.log; exit record: focused.exit-code.txt.
+
+2. `node --test --test-reporter=tap vendor/hh/src/public-controller.test.mjs`
+   Exit code: 0; counts: 51 passed, 0 failed, 0 skipped.
+   Raw stdout: controller.stdout.log; exit record: controller.exit-code.txt.
+
+Also inspected the exact two-test diff, E1303 receipt, app.mjs delegated input listener, public-controller validation/updateDraft logic, renderer fields, and volatile fixture runtime storage/Part boundary. No source changes made by H2.

@@ -1,0 +1,56 @@
+{
+  "job_id": "E2204",
+  "worker": "H1",
+  "status": "phase1_scratch_preparation_only_not_build_authorized",
+  "authorization": "Root E2204 phase 1: prepare a prospective capture for one later canonical build after independent review and separate root GO. No syntax check, test, build, Git, package, export, or publication is authorized in this phase.",
+  "repository": "/workspace/scratch/8528bb251845/PageRouter",
+  "expectedHead": "1d8f32657922f0f67cbde1719472f688060b4e94",
+  "expectedTree": "519253865a06aa60d651074db893fa0ae6428f07",
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+  "argv": [
+    "/usr/bin/env",
+    "BAZEL=/workspace/scratch/8528bb251845/tools/bazel",
+    "bash",
+    "ci/bazel/run.sh"
+  ],
+  "changedTest": {
+    "path": "checkpoint/vendor/hh/src/public-controller.test.mjs",
+    "sha256": "bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0",
+    "scope": "One characterization regression for controller-local profile edit overlay lifecycle; E2203 full controller file run recorded 61 tests total (1 new, 60 existing), 61 pass, 0 fail."
+  },
+  "unchangedProductionBindings": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "checkpoint/vendor/hh/src/public-site.mjs": "1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a"
+  },
+  "buildToolBindings": {
+    "checkpoint/ci/bazel/run.sh": "2a1a6fc5bc919f67b424d6fed92e4e888bf3767b634b1ad9544604067fbe072c",
+    "checkpoint/ci/bazel/bootstrap.py": "1cea8856f26e95427bd97d3c3aadfcf5554417382f4979eda34eb58f0256a58f",
+    "checkpoint/ci/bazel/verify-output.mjs": "d2a3528e96fdb5cccb9ac4e873da6200a9261e9c14b45828a08d413d6ec1cb5a",
+    "checkpoint/ci/bazel/build-helpers.test.mjs": "fa3e854630a442c40fdcd8dd4e7c301a54632594193e41d9f9d3bbe5e2670c02",
+    "checkpoint/.bazelversion": "910121d8fda1ee513d664110f94bef46c4791698010db514c2a71cc1932bc3cf",
+    "/workspace/scratch/8528bb251845/tools/bazel": "c97f02133adce63f0c28678ac1f21d65fa8255c80429b588aeeba8a1fac6202b"
+  },
+  "observedBuildFlowFromSource": [
+    "ci/bazel/run.sh resolves checkpoint as the build root and changes into it.",
+    "It invokes ci/bazel/bootstrap.py. The bootstrap validates the configured Node version and prepares the private, pinned build toolchain/dependency state.",
+    "The wrapper reads .bazelversion, invokes the explicitly supplied absolute Bazel binary for --version, and requires exact version equality.",
+    "It runs node --test --test-concurrency=2 ci/bazel/build-helpers.test.mjs.",
+    "It invokes the pinned Bazel in batch mode to build //:site, using the wrapper's configured output-user-root selection.",
+    "It runs node ci/bazel/verify-output.mjs bazel-bin/site.site bazel-bin/site.receipt.json to verify emitted files against the fresh receipt."
+  ],
+  "predictionOnly": {
+    "priorCycleNamedSummaries": ["2 build helpers", "135 targeted HH", "290 full suite", "1 Atlas import closure"],
+    "qualification": "These are historical E2104 counts, not E2204 expectations or observations. The named targeted HH count overlapped the full suite and must not be summed into an independent total. E2204 counts and fresh build receipt/log will be reported only from the actual authorized run."
+  },
+  "capturePlan": {
+    "runner": "/workspace/scratch/8528bb251845/hh-cycle16/H1/E2204/run-once.sh",
+    "rawCaptureDirectory": "/workspace/scratch/8528bb251845/hh-cycle16/H1/E2204/captures",
+    "retainedBuildOutputsIfAndOnlyIfCanonicalCommandExitsZero": [
+      "/workspace/scratch/8528bb251845/hh-cycle16/H1/E2204/build-output/site.receipt.json",
+      "/workspace/scratch/8528bb251845/hh-cycle16/H1/E2204/build-output/site.log"
+    ],
+    "excluded": ["site output tree", "historical site.evidence", "screenshots/PNGs", "old-cycle build artifacts"]
+  },
+  "stopPolicy": "After a separate root execution GO, run the canonical command once. Preserve its original stdout/stderr, UTC bounds, raw command exit and signal classification. First unexpected failure is terminal: no retry, cache reenactment, source/test edit, assertion weakening, environment/flag/config change, permission change, or Git/publication action. This file is prospective; no build has run under E2204."
+}

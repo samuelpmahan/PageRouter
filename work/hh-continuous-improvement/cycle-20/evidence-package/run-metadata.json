@@ -1,0 +1,115 @@
+{
+  "cycle": 20,
+  "candidateUtc": "2026-10-19T08:11:29Z",
+  "repository": {
+    "path": "/workspace/scratch/8528bb251845/PageRouter",
+    "branch": "codex/hh-continuous-improvement",
+    "head": "172c9de23c2c3c2778d52a6aebf8b85ac3a6cd20",
+    "gitWrites": false
+  },
+  "sourcePinsBeforeAndAfterBuild": {
+    "checkpoint/vendor/hh/src/public-site.mjs": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "fd6725f339f1ba64614f6b82c42dc8d9d14c6d3147b7c12a3e2846c8b37c8eb5",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "bbc47f37250ffb207b671fb83d3f467123e21b1673ae72f2c32f45dfe759b2d0",
+    "checkpoint/ci/bazel/run.sh": "2a1a6fc5bc919f67b424d6fed92e4e888bf3767b634b1ad9544604067fbe072c",
+    "checkpoint/package-lock.json": "23850cdc0bfa00441c0f2b8a33c4f9f3355330c273613b5f6bd266068605f534",
+    "checkpoint/.bazelversion": "910121d8fda1ee513d664110f94bef46c4791698010db514c2a71cc1932bc3cf"
+  },
+  "tests": [
+    {
+      "id": "E2603-red",
+      "command": "node --test checkpoint/vendor/hh/src/public-site.test.mjs",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+      "startUtc": "2026-10-19T07:58:45Z",
+      "endUtc": "2026-10-19T07:58:46Z",
+      "exit": 1,
+      "summary": "19 tests: 17 pass; 2 intended fail (missing bio maxlength and local-contact copy).",
+      "stdout": "evidence-package/implementation/E2603/red.stdout.raw",
+      "stderr": "evidence-package/implementation/E2603/red.stderr.raw"
+    },
+    {
+      "id": "E2603-green-site",
+      "command": "node --test checkpoint/vendor/hh/src/public-site.test.mjs",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+      "startUtc": "2026-10-19T08:00:58Z",
+      "endUtc": "2026-10-19T08:00:58Z",
+      "exit": 0,
+      "summary": "19 pass, 0 fail.",
+      "stdout": "evidence-package/implementation/E2603/green.focused.stdout.raw",
+      "stderr": "evidence-package/implementation/E2603/green.focused.stderr.raw"
+    },
+    {
+      "id": "E2603-green-renderer-controller",
+      "command": "node --test checkpoint/vendor/hh/src/public-site.test.mjs checkpoint/vendor/hh/src/public-controller.test.mjs",
+      "cwd": "/workspace/scratch/8528bb251845/PageRouter",
+      "startUtc": "2026-10-19T08:01:08Z",
+      "endUtc": "2026-10-19T08:01:09Z",
+      "exit": 0,
+      "summary": "80 pass, 0 fail.",
+      "stdout": "evidence-package/implementation/E2603/renderer-controller.stdout.raw",
+      "stderr": "evidence-package/implementation/E2603/renderer-controller.stderr.raw"
+    }
+  ],
+  "canonicalBuild": {
+    "command": "/usr/bin/env BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "invocations": 1,
+    "startUtc": "2026-10-19T08:09:00Z",
+    "endUtc": "2026-10-19T08:10:23Z",
+    "exit": 0,
+    "node": "v24.19.0",
+    "bazelVersion": "7.4.1",
+    "siteBuildId": "aa26fa7ad0a0ae5727ababfcfb4e3e66dfe5764c588f382ad7337d4656241372",
+    "verifiedSiteFiles": 843,
+    "pxcubePackages": "14/14",
+    "targetedHHTests": "140/140",
+    "fullSuiteTests": "295/295",
+    "builtAtlasImportTests": "1/1",
+    "stdout": "evidence-package/build/E2604/build.stdout.raw",
+    "stderr": "evidence-package/build/E2604/build.stderr.raw",
+    "freshReceipt": {
+      "path": "evidence-package/build/E2604/freshsite.receipt.json",
+      "bytes": 467223,
+      "mode": "555",
+      "sha256": "40251917e0d5efcdfc40cc5f9242151333ae8559af979767a8158c338a3c6435"
+    },
+    "siteLog": {
+      "path": "evidence-package/build/E2604/site.log",
+      "bytes": 52169,
+      "mode": "555",
+      "sha256": "76ef48360eea2672a58116b27cc977aa003d02ea613f247f79d92cb1db3ad1bc"
+    }
+  },
+  "assignmentEvidence": {
+    "selectedSpec": "evidence-package/assignments/spec.json",
+    "nativeSolveReceipts": [
+      "evidence-package/assignments/solves/epoch-00.json",
+      "evidence-package/assignments/solves/epoch-01.json",
+      "evidence-package/assignments/solves/epoch-02.json",
+      "evidence-package/assignments/solves/epoch-03.json",
+      "evidence-package/assignments/solves/epoch-04.json"
+    ]
+  },
+  "nativeReceipts": ["E2601", "E2602", "E2603", "R2603", "E2604"],
+  "review": {
+    "receipt": "evidence-package/native-receipts/R2603.json",
+    "metadata": "evidence-package/review/R2603/metadata.json",
+    "decision": "accepted",
+    "reviewProbeArtifacts": {
+      "source": "evidence-package/review/R2603/probe.mjs.txt (inert text copy; not executed from package)",
+      "focusedStdout": "evidence-package/review/R2603/focused.stdout.tool.txt (tool-output copy, not direct raw capture)",
+      "probeStdout": "evidence-package/review/R2603/probe.stdout.tool.txt (tool-output copy, not direct raw capture)",
+      "harnessFailures": "evidence-package/review/R2603/probe-harness-failures.summary.txt (summary artifact; not full original stderr)"
+    },
+    "qualifications": [
+      "H2 stdout files were copied from tool output, not retained as original direct raw bytes.",
+      "The H2 reported stderr newline is not asserted to be the original actual capture; two harness failures are summarized, not preserved as full original stderr.",
+      "H2 E2602 stub probe is not treated as actual-runtime port-count evidence."
+    ]
+  },
+  "priorProbeQualifications": [
+    "H1 E2601 output is a tool transcript summarized in receipt prose; no raw stdout/stderr file is claimed."
+  ],
+  "authorResult": "evidence-package/implementation/E2603/author-result.json (original H1 result retains outcome implemented; native E2603 envelope remains separately included and qualified)."
+}

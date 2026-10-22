@@ -1,0 +1,130 @@
+import assert from 'node:assert/strict';
+import {randomUUID} from 'node:crypto';
+import {createFixtureProvider, createServiceRuntime} from '../../../PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createCommunity} from '../../../PageRouter/checkpoint/vendor/hh/src/community.mjs';
+import {createPublicController} from '../../../PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '../../../PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+
+function memoryStorage() {
+  const values = new Map();
+  return {
+    values,
+    getItem(key) { return values.get(key) ?? null; },
+    setItem(key, value) { values.set(key, String(value)); },
+    removeItem(key) { values.delete(key); },
+  };
+}
+
+function nodeById(tree, id) {
+  if (!tree || typeof tree !== 'object') return null;
+  if (tree.attrs?.id === id) return tree;
+  for (const child of tree.children || []) {
+    const match = nodeById(child, id);
+    if (match) return match;
+  }
+  return null;
+}
+
+const storage = memoryStorage();
+const base = createFixtureProvider({fixture: true, storage});
+let announceLoginStart;
+let releaseLogin;
+const loginStarted = new Promise(resolve => { announceLoginStart = resolve; });
+const loginGate = new Promise(resolve => { releaseLogin = resolve; });
+const callCounts = Object.create(null);
+const services = Object.fromEntries(Object.entries(base.services).map(([port, invoke]) => [port, async input => {
+  callCounts[port] = (callCounts[port] || 0) + 1;
+  if (port === 'Session.login') {
+    announceLoginStart();
+    await loginGate;
+  }
+  return invoke(input);
+}]));
+const runtime = createServiceRuntime({...base, services: Object.freeze(services)});
+let tree = null;
+const controller = createPublicController({runtime, storage, community: createCommunity({storage}),
+  onChange(state, route) { tree = renderPublicSite({route, state, journey: state.journey}); },
+});
+
+const emailA = 'avery@fixture.test';
+const emailB = `newer-${randomUUID()}@example.invalid`;
+const password = randomUUID();
+await controller.initialize('#/login');
+const form = nodeById(tree, 'hh-login-form');
+assert.equal(form?.attrs?.['data-submit'], 'public:login');
+assert.equal(nodeById(tree, 'hh-login-email')?.attrs?.name, 'email');
+assert.equal(nodeById(tree, 'hh-login-password')?.attrs?.name, 'password');
+assert.equal(controller.state.journey.session.status, 'anonymous');
+
+assert.equal(controller.updateDraft('email', emailA), true);
+assert.equal(nodeById(tree, 'hh-login-email')?.attrs?.value, emailA);
+const pendingLogin = controller.dispatch('public:login', {email: emailA, password});
+await loginStarted;
+assert.equal(controller.state.request.status, 'busy');
+assert.equal(controller.updateDraft('email', emailB), true);
+assert.equal(nodeById(tree, 'hh-login-email')?.attrs?.value, emailB);
+
+await controller.navigate('#/about');
+assert.equal(controller.route.page, 'about');
+await controller.navigate('#/login');
+assert.equal(controller.route.page, 'login');
+assert.equal(nodeById(tree, 'hh-login-email')?.attrs?.value, emailB);
+releaseLogin();
+const result = await pendingLogin;
+assert.equal(result.ok, true);
+assert.equal(controller.route.page, 'login', 'reentry changes the route epoch and suppresses the success redirect');
+assert.equal(controller.state.journey.session.status, 'authenticated');
+assert.equal(controller.state.journey.session.email, emailA);
+assert.equal(controller.state.journey.loginDraft.email, null);
+assert.equal(nodeById(tree, 'hh-login-email')?.attrs?.value, emailA);
+
+await controller.navigate('#/about');
+await controller.navigate('#/login');
+assert.equal(nodeById(tree, 'hh-login-email')?.attrs?.value, emailA);
+assert.equal(controller.state.journey.session.status, 'authenticated');
+assert.equal(callCounts['Session.login'], 1);
+assert.equal(callCounts['Registration.registerTeacher'] || 0, 0);
+assert.equal(callCounts['TeacherProfile.createProfile'] || 0, 0);
+assert.equal(Object.values(callCounts).reduce((sum, count) => sum + count, 0), 1);
+
+const inspected = [
+  JSON.stringify(controller.state),
+  JSON.stringify(runtime.snapshot()),
+  JSON.stringify(runtime.inspect()),
+  JSON.stringify(runtime.pxc.entries().map(([, part]) => part.value)),
+  [...storage.values.values()].join('\n'),
+  JSON.stringify(tree),
+];
+const secretAbsent = inspected.map(surface => !surface.includes(password));
+assert.ok(secretAbsent.every(Boolean));
+assert.equal(base.mode, 'fixture');
+assert.equal(base.capabilities.productionAuthority, false);
+assert.equal(base.capabilities.passwordAuthentication, false);
+
+process.stdout.write(JSON.stringify({
+  job_id: 'E1902',
+  worker: 'H2',
+  outcome: 'confirmed_reuse',
+  summary: 'A held successful synthetic login for submitted identity A intentionally clears the newer in-memory email draft B when authority becomes authenticated as A; navigation away and reentry suppress redirect and project authenticated identity A. One explicit login call only; no registration/profile write; random credential absent from inspected surfaces.',
+  scope: {
+    provider: 'volatile in-memory fixture only',
+    interaction: 'source-equivalent delegated input via controller.updateDraft and actual rendered virtual form/controller dispatch; not mounted DOM or browser',
+    held_success_with_newer_email: true,
+    navigated_away_and_reentered_login_before_completion: true,
+    login_calls: callCounts['Session.login'],
+    total_provider_calls: Object.values(callCounts).reduce((sum, count) => sum + count, 0),
+    registration_calls: callCounts['Registration.registerTeacher'] || 0,
+    profile_create_calls: callCounts['TeacherProfile.createProfile'] || 0,
+    secret_absent_by_surface: secretAbsent,
+    no_secret_values_emitted: true,
+    no_automatic_write_or_retry: true,
+    production_or_real_account: false,
+  },
+  observation: {
+    current_authority: 'authenticated as the submitted A identity',
+    post_success_draft_state: 'null (cleared)',
+    reentered_form_projection: 'authenticated session identity A',
+    draft_B_retained: false,
+    falsifier_triggered: false,
+  },
+}));

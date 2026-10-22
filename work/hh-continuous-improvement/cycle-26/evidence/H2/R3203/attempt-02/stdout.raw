@@ -1,0 +1,39 @@
+{
+  "job_id": "R3203",
+  "worker": "H2",
+  "result": "pass",
+  "initialization": {
+    "storage": "memory_only",
+    "counts": {
+      "threads": 3,
+      "replies": 2
+    },
+    "runtimeReceiptsAfterInitialize": 2
+  },
+  "voteProjection": {
+    "sequence": [
+      "No vote",
+      "Downvote",
+      "No vote",
+      "Upvote"
+    ],
+    "afterBackAndReopen": "Your vote: Upvote",
+    "activePersona": "demo-teacher",
+    "otherPersona": "teacher-alt sees No vote"
+  },
+  "roleAndHiddenGuards": {
+    "anonymousHasNoVoteStatusOrControl": true,
+    "moderatorHasNoVoteStatusOrPressedState": true,
+    "anonymousAndModeratorVoteDenied": true,
+    "hiddenTopicUnavailableAndVoteDenied": true
+  },
+  "final": {
+    "counts": {
+      "threads": 3,
+      "replies": 2
+    },
+    "runtimeReceipts": 2,
+    "sort": "date-newest",
+    "storage": "memory_only"
+  }
+}

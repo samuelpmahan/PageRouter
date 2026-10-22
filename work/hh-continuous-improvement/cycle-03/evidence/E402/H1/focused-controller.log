@@ -1,0 +1,39 @@
+✔ profile create rejects unsupported wishlist before mutation and retains draft (9.145013ms)
+✔ profile create rejects overlength wishlist before mutation and retains draft (3.52729ms)
+✔ profile create preserves blank wishlist compatibility (2.179846ms)
+✔ profile create preserves valid synthetic wishlist compatibility (1.937815ms)
+✔ profile edit rejects unsupported wishlist before mutation and retains draft (2.411443ms)
+✔ profile edit rejects overlength wishlist before mutation and retains draft (2.854224ms)
+✔ profile edit preserves blank wishlist compatibility (2.310922ms)
+✔ profile edit preserves valid synthetic wishlist compatibility (2.130113ms)
+✔ normalizes captured public route aliases and forum paths (0.394739ms)
+✔ captured Teacher of the Day opens as a read-only snapshot without invoking teacher services (2.34967ms)
+✔ profile edit toggle rejects another authenticated teacher profile (1.152552ms)
+✔ profile edit submit rejects another authenticated teacher profile without creating an overlay (1.281495ms)
+✔ profile edit toggle fails closed for anonymous and missing teacher identities (1.322396ms)
+✔ profile edit remains available to its owner through a public profile alias (1.089278ms)
+✔ cascades school filters, loads local directory matches and restores remembered filters (2.521267ms)
+✔ school lookup retry stays bound to the failed current selection (0.598334ms)
+✔ school lookup retry recovers the same current selection (0.678664ms)
+✔ navigating away invalidates a failed registration school lookup retry (0.635439ms)
+✔ initial school choices remain retryable when the states read fails (0.44194ms)
+✔ returning to registration reloads states after an invalidated initial lookup failure (0.369722ms)
+✔ successful initial school-data read does not erase a directory retry (0.540738ms)
+✔ returning to registration reloads a failed county cascade (0.650763ms)
+✔ school lookup retry remains available from directory when no directory retry owns it (0.918001ms)
+✔ distinguishes an explicit empty-filter search from the initial background directory load (0.551044ms)
+✔ bounded text drafts keep spaces while typing and normalize only on submit (1.042698ms)
+✔ rejects stored school selections whose individual values do not form one fixture row (0.461169ms)
+✔ registration keeps passwords ephemeral, approval and login stay separate, and edits remain local (5.207971ms)
+✔ Terms checkbox consent tracks both checking and unchecking without opening the modal (0.370343ms)
+✔ seeded UI login, local contact and reset never claim remote effects (1.290629ms)
+✔ wishlist and community actions are explicit local preview handoffs (1.3316ms)
+✔ late login, approval and logout results never redirect away from the current route (2.252436ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 146.407793

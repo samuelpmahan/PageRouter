@@ -1,0 +1,221 @@
+{
+  "schema": "hh-cycle14-post-review-closure@1",
+  "cycle": "cycle-14",
+  "status": "current post-review admin closure; outside and does not alter immutable E1905 97-file snapshot; excludes this manifest",
+  "originalEvidenceManifestSha256": "0534667e8c1960ba8a8562fafe3a0cfc365942945a3852c0eb982d97c326d2bb",
+  "originalE1905ResultSha256": "413f929414b8cb0a7b6a55b4138e7ede4fc77f4bb49a11f8192d34df018ef819",
+  "acceptedAudit": {
+    "job_id": "R1905",
+    "worker": "H2",
+    "decision": "accepted",
+    "reviewSha256": "b95b64ec0d5d83e9890bbdbd1c69f3b2dc5c50b11ccb269a54aa315c2de5fe07",
+    "nativeReceipt": "native/receipts/R1905.json",
+    "completedAt": "2026-10-18T22:42:40.014543+00:00"
+  },
+  "sourceFreeze": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "checkpoint/vendor/hh/src/public-site.mjs": "5f1135c95fdb3baefb64e49d755e45a87b9eb1b17ff363ed91eb5b516812031b",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164"
+  },
+  "buildBinding": {
+    "job": "E1904",
+    "processExit": 0,
+    "receiptSha256": "dfb7a0f4159f13dfbd771ffb3a5ff9bb5fcb90ddfc4b9207a131939a841447db",
+    "logSha256": "24b25f908c5d30b9f1cae12283eb608ec92ff20dd22bbe36f25d46052e781190",
+    "sourceDigest": "b48ad9a809682aab5b6eccd4a1e6d68ce52f61d860b9f0d889433e76118c442f",
+    "sourceInputs": 1538,
+    "pxcubePackagesRebuilt": 14,
+    "exactCompiledEquality": true,
+    "siteDigest": "1343fcceb41ec09acd0ff550054c38e3a73bf3f4a5e54361d9fe758596e58628",
+    "siteBuildId": "02862d25fc8675fa79307b9e72f5b5ffb4d71de2fabd21f384ebdca98f1f7781",
+    "siteFiles": 843,
+    "namedTestCounts": {
+      "helpers": "2/2",
+      "targetedHH": "134/134",
+      "fullNpm": "289/289",
+      "atlasImportClosure": "1/1"
+    },
+    "qualification": "targeted HH overlaps full npm; no deduplicated 292 behavior claim"
+  },
+  "nativeScope": {
+    "copiedEpochs": [
+      5,
+      6,
+      7
+    ],
+    "currentStateSnapshot": "native/snapshot/E1906-admin-start/state.json",
+    "currentStateEpoch": 8,
+    "qualification": "time-bounded snapshot, not continuous ownership claim; epoch07 pins H1 E1906/H2 BENCH with no dispatch"
+  },
+  "diagnostics": {
+    "audit/diagnostics/audit-01.failure.txt": "01cf3e7bb640ccdc283d1ee775ea8170eccd023fe11b97e32c4414bac610c687",
+    "audit/diagnostics/audit-02.inventory.txt": "3921b463056adf38063defdcc1c2472e830b7c6816f46be1a5583b4061bb52a1",
+    "audit/diagnostics/audit-03.failure.txt": "8841d3ed62570ecc953519925700def400ef42a1890a26ad6fd737940735fea6"
+  },
+  "entryCount": 27,
+  "manifestSelfExcluded": true,
+  "entries": [
+    {
+      "path": "audit/diagnostics/audit-01.failure.txt",
+      "bytes": 1922,
+      "sha256": "01cf3e7bb640ccdc283d1ee775ea8170eccd023fe11b97e32c4414bac610c687",
+      "mode": "0644"
+    },
+    {
+      "path": "audit/diagnostics/audit-02.inventory.txt",
+      "bytes": 2092,
+      "sha256": "3921b463056adf38063defdcc1c2472e830b7c6816f46be1a5583b4061bb52a1",
+      "mode": "0644"
+    },
+    {
+      "path": "audit/diagnostics/audit-03.failure.txt",
+      "bytes": 2448,
+      "sha256": "8841d3ed62570ecc953519925700def400ef42a1890a26ad6fd737940735fea6",
+      "mode": "0644"
+    },
+    {
+      "path": "audit/E1906-root-source-review.json",
+      "bytes": 1665,
+      "sha256": "61c248fdd76f32fa15b02d43f64d90e83e94b974c6932a03462dce9ff2e2fa9e",
+      "mode": "0644"
+    },
+    {
+      "path": "audit/R1905.review.json",
+      "bytes": 8178,
+      "sha256": "b95b64ec0d5d83e9890bbdbd1c69f3b2dc5c50b11ccb269a54aa315c2de5fe07",
+      "mode": "0644"
+    },
+    {
+      "path": "git/allowlist-paths.json",
+      "bytes": 11872,
+      "sha256": "b4465490bfdd5dd39c7808e888c94737ac4f25a5934320f6f9e1ac09477fc170",
+      "mode": "0644"
+    },
+    {
+      "path": "git/allowlist-proposal.json",
+      "bytes": 3306,
+      "sha256": "1684da3668e463d7d19543a82f754f792dd7d6d2a517faf88a15ea0c3ce73580",
+      "mode": "0644"
+    },
+    {
+      "path": "handoff/E1906/FLOW.md",
+      "bytes": 4920,
+      "sha256": "b48a362a91b446f26625144a9b4d4054c8bb83ec3cbed840972f8048e95f7efb",
+      "mode": "0644"
+    },
+    {
+      "path": "handoff/E1906/precommit-gates-hh14.mjs.txt",
+      "bytes": 8002,
+      "sha256": "8b78806024e76e11712a225ee58c9ae0183f9614a92bfb0e909c71384fe9d6cb",
+      "mode": "0644"
+    },
+    {
+      "path": "handoff/E1906/prepare-export-hh14.mjs.txt",
+      "bytes": 8568,
+      "sha256": "d33084e43f40f13404791195911ff53c6ec838e9984a9ef1a6f21ecd6eca9dcf",
+      "mode": "0644"
+    },
+    {
+      "path": "handoff/E1906/prospective-commands.json",
+      "bytes": 2213,
+      "sha256": "2fb883465d487b9ffbdad3c25824b3dff16277a969a89303a4c294d6f789d403",
+      "mode": "0644"
+    },
+    {
+      "path": "handoff/E1906/verify-staged-allowlist-hh14.mjs.txt",
+      "bytes": 2855,
+      "sha256": "0127a059455a8eeaf8cf790e5f04c495d57f68f40294bb80df393842e16a3ec0",
+      "mode": "0644"
+    },
+    {
+      "path": "native/receipts/R1905.json",
+      "bytes": 8178,
+      "sha256": "b95b64ec0d5d83e9890bbdbd1c69f3b2dc5c50b11ccb269a54aa315c2de5fe07",
+      "mode": "0644"
+    },
+    {
+      "path": "native/snapshot/E1906-admin-start/registry.json",
+      "bytes": 776,
+      "sha256": "cf4e13be020c0b17de76b01b094d4459227ab88d429f398d706f6568cbfbaeb5",
+      "mode": "0644"
+    },
+    {
+      "path": "native/snapshot/E1906-admin-start/spec.json",
+      "bytes": 2062,
+      "sha256": "23d8e90ecc557963fcb8dddae3e79412f5888e9a5ade8a7ea7f655511ff28784",
+      "mode": "0644"
+    },
+    {
+      "path": "native/snapshot/E1906-admin-start/state.json",
+      "bytes": 20019,
+      "sha256": "5e75b9d0b82ed1cb854c52d5be46c0ec28c3cd2e54df222fdcb8a98362f36cd1",
+      "mode": "0644"
+    },
+    {
+      "path": "native/solves/epoch-05.bundle",
+      "bytes": 1636,
+      "sha256": "7056632ba5b4649d1a3b8560b973b7267a71b636ae7fb50311b90c9dcea07a9c",
+      "mode": "0644"
+    },
+    {
+      "path": "native/solves/epoch-05.json",
+      "bytes": 1228,
+      "sha256": "9eedf825946e0de3f179a7b106c1e9d7fef2fee5f8701a18f80decb85be90c3e",
+      "mode": "0644"
+    },
+    {
+      "path": "native/solves/epoch-05.root-command.json",
+      "bytes": 8717,
+      "sha256": "408782e5b724ba1ca73264060cf5f33674756776fa38b295c4a9c20360d7e5f0",
+      "mode": "0644"
+    },
+    {
+      "path": "native/solves/epoch-06.bundle",
+      "bytes": 1651,
+      "sha256": "b49b678342f74a820375b7cc35be4c27d5133de35369c73ab44ea4dc2b224ab7",
+      "mode": "0644"
+    },
+    {
+      "path": "native/solves/epoch-06.json",
+      "bytes": 1267,
+      "sha256": "b9cb9e08b6580a87566a7d600a3577da341925f051cafd1c928add1589847415",
+      "mode": "0644"
+    },
+    {
+      "path": "native/solves/epoch-06.root-command.json",
+      "bytes": 9312,
+      "sha256": "5eb6096df9f9e1b84347d4c0c473ccf5e72d857cb5f8b9cf007fe7af847f3826",
+      "mode": "0644"
+    },
+    {
+      "path": "native/solves/epoch-07.bundle",
+      "bytes": 1474,
+      "sha256": "79e2450dec1ec8af39d19a52c61b09c274652ad8276a3335c5dbb484956ab749",
+      "mode": "0644"
+    },
+    {
+      "path": "native/solves/epoch-07.json",
+      "bytes": 1172,
+      "sha256": "820676f3923fa09e8489a55e0b7fdab8d67444070f4eff3ed6b0ad7953c1eb64",
+      "mode": "0644"
+    },
+    {
+      "path": "native/solves/epoch-07.root-command.json",
+      "bytes": 8645,
+      "sha256": "86fbe60468e2752610c9a53facf3473cce5dd7678eafeea7a1a64bb77a64715e",
+      "mode": "0644"
+    },
+    {
+      "path": "POST-REVIEW.md",
+      "bytes": 7525,
+      "sha256": "c3b5bf989fa071638dfc720d3374f7666dfae9a567f9f2132f80f05b27885ac9",
+      "mode": "0644"
+    },
+    {
+      "path": "qualification/forgot-password-hypothesis.txt",
+      "bytes": 1508,
+      "sha256": "30b404b91006145f45ed6d4dc978fff5065d304a60422e3380109687e8104b96",
+      "mode": "0644"
+    }
+  ]
+}

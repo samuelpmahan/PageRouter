@@ -1,0 +1,17 @@
+R1905 native-timeline summary attempt 03 — preserved before corrected read-only query
+UTC noted: 2026-10-18 22:36 UTC.
+The first inline `node -e` used a double-quoted shell payload containing a JavaScript template literal. Bash attempted `${root}` expansion and caused the Node command to fail before reading the requested JSON. Later semicolon-separated read-only commands in that same shell invocation did run; this failure is limited to the first timeline-summary query and does not imply a native/package/source failure.
+
+Exact emitted diagnostic:
+/bin/bash: line 1: ${root}/solves/epoch-${String(i).padStart(2,'0')}.json: bad substitution
+[eval]:1
+const fs=require('node:fs'); const root='PageRouter/work/hh-continuous-improvement/cycle-14/evidence/native'; const s=JSON.parse(fs.readFileSync(root+'/state.json','utf8')); console.log(JSON.stringify({epoch:s.epoch,workers:s.workers,jobs:Object.fromEntries(Object.entries(s.jobs).map(([k,v])=>[k,{status:v.status,worker:v.worker,started_at:v.started_at,finished_at:v.finished_at}])),events:s.events.map(e=>({type:e.type,epoch:e.epoch,at:e.at,assignments:e.assignments,dispatch:e.dispatch,worker:e.worker,job:e.job}))},null,2)); for(let i=0;i<=4;i++){const p=; const x=JSON.parse(fs.readFileSync(p,'utf8')); console.log(JSON.stringify({epoch:x.epoch,at:x.at,ready:x.ready_jobs,pinned:x.pinned_workers,assignments:x.assignments,dispatch:x.dispatch,eligible:x.eligible,exact_score:x.exact_score,native_score:x.native_score}));}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ^
+
+SyntaxError: Unexpected token ';'
+    at makeContextifyScript (node:internal/vm:194:14)
+    at compileScript (node:internal/process/execution:444:10)
+    at evalTypeScript (node:internal/process/execution:93:10)
+    at node:internal/main/eval_string:74:3
+
+The bounded correction is to query timeline JSON using single-quoted shell payload and string concatenation, with no template literal/interpolation.

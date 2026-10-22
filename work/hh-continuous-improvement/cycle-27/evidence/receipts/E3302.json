@@ -1,0 +1,43 @@
+{
+  "job_id": "E3302",
+  "worker": "H2",
+  "outcome": "mixed_change",
+  "summary": "Read-only source/control review confirms deletion authorization is guarded at both renderer and community-store layers, with separate topic/reply deletion paths. A narrow route-recovery gap candidate is present: successful forum-delete-post refreshes the forum snapshot but does not navigate away from the deleted post route; the renderer then presents the generic unavailable-thread projection and a manual Back to Forum link. This is source-confirmed behavior, not an independently executed UX failure; H1 owns the actual volatile baseline probe.",
+  "source": {
+    "gitCommit": "22de162d5838f84c7fd87d84fd6afc0a996f71f5",
+    "gitTree": "6f041813df2beb9a6c5ba27ab1a821024483c113",
+    "branch": "codex/hh-continuous-improvement",
+    "community": {"path": "checkpoint/vendor/hh/src/community.mjs", "sha256": "9e5ce0c47acea55e4217463f099b115080faa7d1e1b412eecc9128690e6a9cc2"},
+    "controller": {"path": "checkpoint/vendor/hh/src/public-controller.mjs", "sha256": "5df1e0f71385b22976951dbf2127c8ab78aeb7ddc8dad3608eb7b96850539890"},
+    "site": {"path": "checkpoint/vendor/hh/src/public-site.mjs", "sha256": "c50c07ab34e652790bae616277d3418cd850920d0c0721d50bb1e59af4d8502d"},
+    "app": {"path": "checkpoint/vendor/hh/src/app.mjs", "sha256": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3"},
+    "controllerTests": {"path": "checkpoint/vendor/hh/src/public-controller.test.mjs", "sha256": "3a86fbb96948d99de2e7fa453b4654b6629b8f4d9a849b67c7f25fbaa330c218"},
+    "communityTests": {"path": "checkpoint/vendor/hh/src/community.test.mjs", "sha256": "6d39274f02039760a6e6fbd813f07d1f221aee1d08f21c55a81d33b78c9a6253"}
+  },
+  "controlMatrix": [
+    {"case": "Rendered delete control", "sourceBehavior": "postDetail exposes Delete post only to matching teacher author (authorId equals session personaId) or moderator; anonymous/foreign teacher receive no control.", "pin": "community.mjs:postDetail"},
+    {"case": "Store authorization and hidden topic", "sourceBehavior": "deletePost returns thread_not_found for missing IDs; hidden topic is thread_unavailable except moderator; non-moderator deletion requires teacher role and exact authorId/personaId match; moderator may delete.", "pin": "community.mjs:createCommunity.deletePost"},
+    {"case": "Controller event and payload", "sourceBehavior": "forum-delete-post resolves postId from postId/threadId/id, passes roleArgs (simulated community role and demo-teacher persona), refreshes snapshot and notifies; success does not request navigation or change route.", "pin": "public-controller.mjs:forumAction"},
+    {"case": "Deleted detail and back/index/empty state", "sourceBehavior": "Route remains /posts/:id. Refreshed thread list no longer contains that ID, so renderCommunity selects postErrorPage (unavailable message plus Back to Forum). On back navigation, index uses current snapshot and renders No posts found if empty.", "pin": "community.mjs:renderCommunity"},
+    {"case": "Reply deletion distinction", "sourceBehavior": "forum-delete-comment calls deleteReply with parent postId and replyId; ownership/hidden-parent/hidden-reply checks are distinct. Success clears edit state and refreshes but remains on surviving thread detail; zero visible replies renders No comments yet.", "pin": "public-controller.mjs:forumAction; community.mjs:createCommunity.deleteReply, postDetail"},
+    {"case": "Existing regression coverage", "sourceBehavior": "community.test.mjs covers author deletePost at store level; reviewed controller tests cover other rendered forum flows but no rendered topic-delete -> index/back -> empty-state lifecycle case was found.", "pin": "community.test.mjs; public-controller.test.mjs"}
+  ],
+  "nextValidation": {
+    "owner": "H1 (sole source owner), then H2 independent review",
+    "mode": "Actual volatile fixture-provider/runtime/controller/renderPublicSite tree flow only; no DOM/browser/server/origin/loopback.",
+    "steps": [
+      "Construct the actual fixture provider/runtime with volatile community storage and controlled seed data containing one author-owned topic plus at least one reply; initialize the controller before recording runtime receipt count.",
+      "Select teacher through the rendered role control, open topic through rendered index link, and dispatch the rendered Delete post element with the app-shaped dataset-to-payload mapping (threadId/postId). Verify store deletion, storage absence, no account-service receipt delta, unchanged authority, and controller route.",
+      "Record the exact tree immediately after deletion: expected source projection is unavailable-topic detail with Back to Forum. Dispatch that rendered back href; verify index derives from current snapshot and a controlled one-topic fixture reaches its empty-state message. If contract expects automatic recovery, freeze a focused test that currently REDs before any edit; otherwise retain manual recovery as accepted behavior.",
+      "Contrast anonymous, foreign teacher, hidden topic and stale event cases (no control/rejection as appropriate); separately verify moderator deletion of hidden topic. Delete a reply as owner and verify parent thread remains and reply-empty state is distinct from topic-empty state.",
+      "Capture exact source pins, probe, streams, exit status and post-initialization runtime receipt count; preserve each attempt separately. Do not treat source review alone as actual runtime proof."
+    ]
+  },
+  "boundaries": [
+    "Read-only review only; no source, test, Git, native, build, or product mutation.",
+    "H2 did not run an actual runtime probe; H1 owns the volatile baseline to avoid duplication.",
+    "No broad stub fixture; future probe must use actual fixture provider/runtime/controller/renderPublicSite and post-initialization receipt count.",
+    "No browser DOM/visual/accessibility, real account, backend, service, network, server, origin, deployment, spend or external effect was exercised.",
+    "HH26 current-vote feedback was not repeated."
+  ]
+}

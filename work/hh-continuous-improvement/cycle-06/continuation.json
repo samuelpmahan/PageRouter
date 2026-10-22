@@ -1,0 +1,82 @@
+{
+  "schema": "hh-continuous-improvement-continuation/v1",
+  "cycle": "cycle-06",
+  "repository": "PageRouter",
+  "branch": "codex/hh-continuous-improvement",
+  "base": {
+    "publishedCommit": "79e48fb8c91c51147f4598ea223da431f413a6a1",
+    "publishedParent": "77ef66c5fd9c4050c4f474253cff19ad9e535193",
+    "localSourceCommit": "a5b141816ffb871110e541ef00ecf9527674137e",
+    "sharedTree": "5eb00395e85afeb357be11b6add395ef5fbb6b68",
+    "main": "7adf7e74a85c4310a5704a4c42808e85a1a82d71",
+    "draftPullRequest": 8
+  },
+  "ownership": {
+    "sourceAndGit": "H1 sole owner",
+    "independentReview": "H2 read-only reviewer",
+    "nativeCoordinationAndConnectedPublication": "root"
+  },
+  "status": {
+    "finding": "confirmed: successful delayed synthetic logout cleared a foreign active profile projection after navigation; captured Sarah controller projection cleared but its special static/read-only rendering remained visible",
+    "correction": "accepted exact two-file route-owned projection guard; successful logout still anonymizes session/community; normal same-route logout clears own projection and route-epoch redirects; foreign/captured/pending route projections survive",
+    "independentReview": "R903 accepted exact E903 source hashes with adversarial synthetic controls",
+    "canonicalBuild": "E904 passed and exact source inputs match build receipt",
+    "package": "E905 package assembled and frozen for R905 independent audit; no commit or publication",
+    "humanAcceptance": "not claimed",
+    "browserVisualQA": "not performed",
+    "publication": "not committed, pushed, merged, or deployed"
+  },
+  "sourceFreeze": {
+    "checkpoint/vendor/hh/src/public-controller.mjs": "84205881dd991d4be5ddf08a7b014530cb240e065aa0cc4180b362c02a345bff",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs": "19b9068c250d414ad62818778f376570db7480bd73cd918fd73b825344d1561a",
+    "changedProductFiles": [
+      "checkpoint/vendor/hh/src/public-controller.mjs",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs"
+    ],
+    "receiptBound": true
+  },
+  "canonicalBuild": {
+    "command": "BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+    "workingDirectory": "PageRouter/checkpoint",
+    "exitCode": 0,
+    "siteBuildId": "f9a27ef436bb7218dadf7cec4071618b65eb51b938369058a06ffe12269a0ef8",
+    "siteDigest": "6a6ea2ad331a4070bfecfb972dc5e82cd05cd3fe4c8c8ce5b3a070ea660176a2",
+    "sourceDigest": "4240d5fdde0dd0c49ef65c3de97a99dcd04b3a5ff067882c2f7681cc062d3af0",
+    "tests": {
+      "targetedHH": {"passed": 116, "failed": 0},
+      "full": {"passed": 271, "failed": 0},
+      "builtAtlasImport": {"passed": 1, "failed": 0},
+      "helpers": {"passed": 2, "failed": 0},
+      "pxcubePackages": 14,
+      "verifiedSiteFiles": 843,
+      "crispExactCompiledEquality": true,
+      "relocationFallback": false
+    },
+    "receiptSha256": "c6ff6e2a3a6dbd80d690ed65ac73a9d1667b8ae6fee7f6e44c98b47e3985ef2b",
+    "siteLogSha256": "52c8dfb1e6389801bdbbf7ae3f0575cda49bbd4500f945e45d62e5226cc7cdab",
+    "receiptSourceInputs": {
+      "checkpoint/vendor/hh/src/public-controller.mjs": "84205881dd991d4be5ddf08a7b014530cb240e065aa0cc4180b362c02a345bff",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "19b9068c250d414ad62818778f376570db7480bd73cd918fd73b825344d1561a"
+    },
+    "evidence": "evidence/E904/H1-original/site.receipt.json"
+  },
+  "nativeEnvelopeNotes": {
+    "E901": "Raw worker result used allowed_outcome; native receipt copies the same verdict to outcome and preserves raw hash. This was preflight normalization, not native rejection.",
+    "R903": "Raw review result used outcome: accepted; normalized receipt copies verdict into decision. One actual native finish was rejected for the missing decision field; raw hash and rejection are retained.",
+    "coordinator": "Initial solve directory redirection and two premature start acknowledgments are separately documented administrative errors. Root's same-file delete+add patch attempt was rejected before any change or dispatch."
+  },
+  "limits": {
+    "provider": "synthetic volatile/local fixture provider only; no production account/data, HTTP/network, or external action",
+    "geography": "mounted fixture geography-review test ran in HH tests; separate Python/backend geography evidence was not run or changed",
+    "browser": "visual QA not performed",
+    "dependencies": "E903 broad HH style invocation could not import fast-check; no dependency install. Canonical isolated validation passed.",
+    "humanAcceptance": "not claimed"
+  },
+  "next": {
+    "review": "R905 independently audits frozen package, provenance, manifest, continuation, and exact source/build binding",
+    "publication": "No commit/payload/publication without fresh explicit root authorization; root handles connected publication",
+    "unexecutedHypothesis": "Synthetic Demo Avery wishlist handoff, navigate to Demo Jordan without re-preparation, inspect confirmation/continue href and direct confirm dispatch under Jordan identity. Source inspection only; fresh volatile probes and same-profile, captured-reference, missing/not-found controls are required. No external open/share/payment; preserve user choice and approved syntheticURL behavior. No execution while current package/source owner is active."
+  },
+  "nativeSnapshot": "evidence/native/state.json is a point-in-time capture showing E905 running for H1 and R905 pending for H2; not live dispatch authority",
+  "evidenceManifest": "evidence/manifest.json"
+}

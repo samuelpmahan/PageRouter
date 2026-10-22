@@ -1,0 +1,276 @@
+import fs from 'node:fs';
+import path from 'node:path';
+import {createHash} from 'node:crypto';
+import {execFileSync} from 'node:child_process';
+
+const repo = '/workspace/scratch/8528bb251845/PageRouter';
+const root = `${repo}/work/hh-continuous-improvement/cycle-16`;
+const manifestPath = `${root}/evidence/manifest.json`;
+const expectedManifestHash = '414eec12c7438e78c09ab81970af556b783486bd50d6c98c4ea18c7c28b22f15';
+const expectedE2205Hash = '3caf69ca2f4fad2ae6c6f5c4b0351274f37c851b94b1e1672a4ea22603931dcd';
+const mismatches = [];
+const sha = bytes => createHash('sha256').update(bytes).digest('hex');
+const read = file => fs.readFileSync(file);
+const json = file => JSON.parse(read(file).toString('utf8'));
+const addMismatch = (kind, detail) => mismatches.push({kind, detail});
+
+function walk(dir, rel = '') {
+  const entries = fs.readdirSync(dir, {withFileTypes: true}).sort((a, b) => a.name.localeCompare(b.name));
+  const files = [];
+  const dirs = [];
+  const special = [];
+  for (const entry of entries) {
+    const childRel = rel ? `${rel}/${entry.name}` : entry.name;
+    const absolute = path.join(dir, entry.name);
+    if (entry.isSymbolicLink()) special.push({path: childRel, type: 'symlink'});
+    else if (entry.isDirectory()) { dirs.push(childRel); const nested = walk(absolute, childRel); files.push(...nested.files); dirs.push(...nested.dirs); special.push(...nested.special); }
+    else if (entry.isFile()) files.push(childRel);
+    else special.push({path: childRel, type: 'non-regular'});
+  }
+  return {files, dirs, special};
+}
+
+const manifestBytes = read(manifestPath);
+const manifest = JSON.parse(manifestBytes.toString('utf8'));
+const resultPath = `${root}/evidence/E2205/result.json`;
+const actualTree = walk(root);
+const expectedExclusions = new Set(manifest.excludedEnvelopeFiles);
+const expectedFiles = new Set(manifest.files.map(row => row.path));
+const expectedPackageFiles = new Set([...expectedFiles, ...expectedExclusions]);
+const actualFiles = new Set(actualTree.files);
+const missingFiles = [...expectedPackageFiles].filter(item => !actualFiles.has(item)).sort();
+const extraFiles = [...actualFiles].filter(item => !expectedPackageFiles.has(item)).sort();
+if (sha(manifestBytes) !== expectedManifestHash) addMismatch('manifest_hash', sha(manifestBytes));
+if (sha(read(resultPath)) !== expectedE2205Hash) addMismatch('E2205_result_hash', sha(read(resultPath)));
+if (manifest.listedFileCount !== manifest.files.length) addMismatch('manifest_count', {declared: manifest.listedFileCount, actual: manifest.files.length});
+if (manifest.totalPackageFileCount !== expectedPackageFiles.size) addMismatch('manifest_package_count', {declared: manifest.totalPackageFileCount, expected: expectedPackageFiles.size});
+if (manifest.files.reduce((sum, row) => sum + row.bytes, 0) !== manifest.totalListedBytes) addMismatch('manifest_byte_total', manifest.totalListedBytes);
+if (actualFiles.size !== manifest.totalPackageFileCount) addMismatch('actual_package_file_count', {declared: manifest.totalPackageFileCount, actual: actualFiles.size});
+if (missingFiles.length || extraFiles.length) addMismatch('exact_file_set', {missing: missingFiles, extra: extraFiles});
+if (actualTree.special.length) addMismatch('special_entries', actualTree.special);
+
+const fileChecks = [];
+for (const row of manifest.files) {
+  const file = path.join(root, row.path);
+  let st;
+  let bytes;
+  try { st = fs.statSync(file); bytes = read(file); }
+  catch (error) { addMismatch('listed_file_missing_or_unreadable', {path: row.path, error: String(error)}); continue; }
+  const actual = {path: row.path, bytes: bytes.length, sha256: sha(bytes), mode: (st.mode & 0o777).toString(8).padStart(4, '0'), regular: st.isFile()};
+  fileChecks.push(actual);
+  if (!st.isFile() || actual.bytes !== row.bytes || actual.sha256 !== row.sha256 || actual.mode !== row.mode) {
+    addMismatch('listed_file_metadata', {expected: row, actual});
+  }
+}
+const emptyFiles = fileChecks.filter(file => file.bytes === 0).map(file => file.path).sort();
+const expectedEmptyFiles = [
+  'evidence/probes/E2201-H1/captures/run-01/stderr.raw',
+  'evidence/probes/E2202-H2/captures/stderr.raw',
+  'evidence/red-green/E2203-H1/captures/focused-controller-01/stderr.raw',
+  'evidence/review/R2203-H2/captures/focused-01/stderr.raw',
+].sort();
+if (JSON.stringify(emptyFiles) !== JSON.stringify(expectedEmptyFiles)) addMismatch('empty_capture_inventory', {actual: emptyFiles, expected: expectedEmptyFiles});
+
+const sourceFreeze = manifest.sourceFreeze;
+const currentSources = {};
+for (const [relative, expectedHash] of Object.entries(sourceFreeze)) {
+  const file = path.join(repo, relative);
+  const actualHash = sha(read(file));
+  currentSources[relative] = actualHash;
+  if (actualHash !== expectedHash) addMismatch('current_source_hash', {relative, expectedHash, actualHash});
+}
+const frozenTestPath = `${root}/evidence/source-freeze/public-controller.test.mjs.txt`;
+if (!read(frozenTestPath).equals(read(`${repo}/checkpoint/vendor/hh/src/public-controller.test.mjs`))) addMismatch('frozen_test_copy', 'payload copy differs bytewise from current test source');
+for (const [relative, expectedHash] of Object.entries({
+  'checkpoint/vendor/hh/src/public-controller.mjs': 'd730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669',
+  'checkpoint/vendor/hh/src/public-site.mjs': '1159a5883839107df5655b4faf3857f9f59b98e9daaa2ab5c8d011af9b6409b7',
+  'checkpoint/vendor/hh/src/public-site.test.mjs': '12e8b8512c9ade866229a7096c07a371dfa83ed35bbc865691289d17fb66fb1a',
+})) {
+  if (currentSources[relative] !== expectedHash) addMismatch('production_binding', {relative, expectedHash, actual: currentSources[relative]});
+}
+
+const packageReceipts = `${root}/evidence/native/receipts`;
+const externalReceipts = '/workspace/scratch/8528bb251845/hh-cycle16/receipts';
+const receiptBindings = [];
+for (const id of ['E2201', 'E2202', 'E2203', 'E2204', 'E2205', 'R2203']) {
+  const packaged = id === 'E2205' ? resultPath : path.join(packageReceipts, `${id}.json`);
+  const external = path.join(externalReceipts, `${id}.json`);
+  const same = read(packaged).equals(read(external));
+  receiptBindings.push({id, sameAsRootReceipt: same, sha256: sha(read(packaged))});
+  if (!same) addMismatch('root_receipt_copy', {id, packagedSha256: sha(read(packaged)), externalSha256: sha(read(external))});
+}
+const e2202EnvelopePath = `${root}/evidence/native/E2202-native-envelope.json`;
+if (!read(e2202EnvelopePath).equals(read(`${packageReceipts}/E2202.json`))) addMismatch('E2202_envelope_copy', 'duplicated root envelope copy differs');
+const workerResultBindings = [
+  ['E2201', '/workspace/scratch/8528bb251845/hh-cycle16/H1/E2201/result.json', `${root}/evidence/native/receipts/E2201.json`],
+  ['E2202-worker', '/workspace/scratch/8528bb251845/hh-cycle16/H2/E2202/result.json', `${root}/evidence/probes/E2202-H2/result.json`],
+  ['E2203', '/workspace/scratch/8528bb251845/hh-cycle16/H1/E2203/result.json', `${root}/evidence/native/receipts/E2203.json`],
+  ['R2203', '/workspace/scratch/8528bb251845/hh-cycle16/H2/R2203/result.json', `${root}/evidence/native/receipts/R2203.json`],
+  ['E2204', '/workspace/scratch/8528bb251845/hh-cycle16/H1/E2204/result.json', `${root}/evidence/native/receipts/E2204.json`],
+];
+for (const [id, source, packaged] of workerResultBindings) {
+  const same = read(source).equals(read(packaged));
+  if (!same) addMismatch('worker_result_copy', {id, sourceHash: sha(read(source)), packageHash: sha(read(packaged))});
+}
+
+const copyPairs = [];
+const addPair = (packageRelative, externalPath) => copyPairs.push({packageRelative, externalPath});
+for (const [artifact, source] of [
+  ['probe.mjs.txt', 'probe.mjs'], ['prospective.json', 'prospective.json'], ['run-once.sh.txt', 'run-once.sh'], ['result.json', 'result.json'],
+]) addPair(`evidence/probes/E2201-H1/${artifact}`, `/workspace/scratch/8528bb251845/hh-cycle16/H1/E2201/${source}`);
+for (const name of ['start.utc','end.utc','exit.code','stderr.raw','stdout.raw']) addPair(`evidence/probes/E2201-H1/captures/run-01/${name}`, `/workspace/scratch/8528bb251845/hh-cycle16/H1/E2201/captures/run-01/${name}`);
+for (const [artifact, source] of [
+  ['PREDECLARED.md.txt', 'PREDECLARED.md'], ['probe.mjs.txt', 'probe.mjs'], ['capture-once.mjs.txt', 'capture-once.mjs'], ['result.json', 'result.json'],
+]) addPair(`evidence/probes/E2202-H2/${artifact}`, `/workspace/scratch/8528bb251845/hh-cycle16/H2/E2202/${source}`);
+for (const name of ['start.utc','end.utc','exit.code','stderr.raw','stdout.raw']) addPair(`evidence/probes/E2202-H2/captures/${name}`, `/workspace/scratch/8528bb251845/hh-cycle16/H2/E2202/${name}`);
+for (const [artifact, source] of [
+  ['prospective.json', 'prospective.json'], ['run-once.sh.txt', 'run-once.sh'], ['result.json', 'result.json'],
+]) addPair(`evidence/red-green/E2203-H1/${artifact}`, `/workspace/scratch/8528bb251845/hh-cycle16/H1/E2203/${source}`);
+for (const name of ['start.utc','end.utc','exit.code','stderr.raw','stdout.raw']) addPair(`evidence/red-green/E2203-H1/captures/focused-controller-01/${name}`, `/workspace/scratch/8528bb251845/hh-cycle16/H1/E2203/captures/focused-controller-01/${name}`);
+for (const [artifact, source] of [
+  ['prospective.md', 'prospective.md'], ['capture-once.sh.txt', 'capture-once.sh'], ['result.json', 'result.json'],
+]) addPair(`evidence/review/R2203-H2/${artifact}`, `/workspace/scratch/8528bb251845/hh-cycle16/H2/R2203/${source}`);
+for (const name of ['start.utc','end.utc','exit.code','stderr.raw','stdout.raw']) addPair(`evidence/review/R2203-H2/captures/focused-01/${name}`, `/workspace/scratch/8528bb251845/hh-cycle16/H2/R2203/captures/focused-01/${name}`);
+for (const [artifact, source] of [
+  ['README.txt', 'README.txt'], ['prospective.json', 'prospective.json'], ['result.json', 'result.json'], ['run-once.sh.txt', 'run-once.sh'],
+  ['captures/start.utc', 'captures/start.utc'], ['captures/end.utc', 'captures/end.utc'], ['captures/exit.code', 'captures/exit.code'],
+  ['captures/signal.txt', 'captures/signal.txt'], ['captures/stderr.raw', 'captures/stderr.raw'], ['captures/stdout.raw', 'captures/stdout.raw'],
+  ['fresh-output/site.receipt.json', 'build-output/site.receipt.json'], ['fresh-output/site.log', 'build-output/site.log'],
+]) addPair(`evidence/build/E2204-H1/${artifact}`, `/workspace/scratch/8528bb251845/hh-cycle16/H1/E2204/${source}`);
+for (let i = 0; i < 5; i += 1) {
+  const tag = String(i).padStart(2, '0');
+  for (const suffix of ['bundle','json','root-command.json']) addPair(`evidence/native/solves/epoch-${tag}.${suffix}`, `/workspace/scratch/8528bb251845/hh-cycle16/solves/epoch-${tag}.${suffix}`);
+}
+for (const [relative, external] of [
+  ['evidence/native/E2202-native-envelope.json','E2202-native-envelope.json'],
+  ['evidence/native/next-packets.json','next-packets.json'],
+  ['evidence/native/registry.json','registry.json'],
+  ['evidence/native/root-state-policy.v2.json','root-state-policy.v2.json'],
+  ['evidence/native/spec.json','spec.json'],
+]) addPair(relative, `/workspace/scratch/8528bb251845/hh-cycle16/${external}`);
+const evidenceCopyBindings = copyPairs.map(({packageRelative, externalPath}) => {
+  const same = read(path.join(root, packageRelative)).equals(read(externalPath));
+  if (!same) addMismatch('evidence_copy_binding', {packageRelative, externalPath,
+    packageSha256: sha(read(path.join(root, packageRelative))), externalSha256: sha(read(externalPath))});
+  return {packageRelative, sameBytes: same, sha256: sha(read(path.join(root, packageRelative)))};
+});
+const baselineTestHash = sha(execFileSync('git', ['show', 'HEAD:checkpoint/vendor/hh/src/public-controller.test.mjs'], {cwd: repo}));
+if (baselineTestHash !== '9768d179968f1e2fcaafa0576e2896d5a72f45a7ae5ea0153a4ca4596a8bb164') addMismatch('baseline_test_hash', baselineTestHash);
+
+const receipt = json(`${root}/${manifest.buildReceipt.path}`);
+const sourceInputs = receipt.sourceInputs;
+const sourceInputMismatches = [];
+for (const row of sourceInputs) {
+  const inputPath = path.join(repo, 'checkpoint', row.path);
+  try {
+    const bytes = read(inputPath);
+    if (bytes.length !== row.bytes || sha(bytes) !== row.sha256) sourceInputMismatches.push({path: row.path, expectedBytes: row.bytes, actualBytes: bytes.length, expectedHash: row.sha256, actualHash: sha(bytes)});
+  } catch (error) { sourceInputMismatches.push({path: row.path, missing: String(error)}); }
+}
+const sourceDigest = sha(Buffer.from(JSON.stringify(sourceInputs)));
+const siteDigestFromMetadata = sha(Buffer.from(JSON.stringify(receipt.siteFiles)));
+const sitePaths = receipt.siteFiles.map(row => row.path);
+const siteDuplicates = sitePaths.filter((v, i) => sitePaths.indexOf(v) !== i);
+const siteUnsafePaths = sitePaths.filter(item => path.posix.isAbsolute(item) || item.split('/').some(part => part === '..' || part === '.' || part === ''));
+const buildAlgorithmSource = read(`${repo}/checkpoint/ci/bazel/build-driver.mjs`).toString('utf8');
+const buildHelperHash = sha(read(`${repo}/checkpoint/ci/bazel/build-helpers.mjs`));
+const buildDriverHash = sha(read(`${repo}/checkpoint/ci/bazel/build-driver.mjs`));
+if (sourceDigest !== receipt.sourceDigest) addMismatch('receipt_source_digest', {expected: receipt.sourceDigest, actual: sourceDigest});
+if (siteDigestFromMetadata !== receipt.siteDigest) addMismatch('receipt_site_metadata_digest', {expected: receipt.siteDigest, actual: siteDigestFromMetadata});
+if (sourceInputMismatches.length) addMismatch('receipt_source_input_files', sourceInputMismatches.slice(0, 20));
+if (sourceInputs.length !== 1538 || receipt.siteFiles.length !== 843) addMismatch('receipt_counts', {sourceInputs: sourceInputs.length, siteFiles: receipt.siteFiles.length});
+if (siteDuplicates.length || siteUnsafePaths.length) addMismatch('receipt_site_paths', {duplicates: siteDuplicates, unsafe: siteUnsafePaths});
+if (receipt.recipe.driverSha256 !== buildDriverHash || receipt.recipe.helpersSha256 !== buildHelperHash) addMismatch('receipt_recipe', {expected: receipt.recipe, actual: {driverSha256: buildDriverHash, helpersSha256: buildHelperHash}});
+if (!buildAlgorithmSource.includes('sourceDigest:sha(JSON.stringify(sourceInputs))') || !buildAlgorithmSource.includes('siteDigest:sha(JSON.stringify(outputFiles))')) addMismatch('build_digest_algorithm_source', 'receipt digest algorithm snippets not found');
+const buildLog = read(`${root}/evidence/build/E2204-H1/fresh-output/site.log`).toString('utf8');
+const buildIdentity = {sourceDigest: receipt.sourceDigest, siteDigest: receipt.siteDigest, siteBuildId: receipt.siteBuildId,
+  sourceInputs: sourceInputs.length, sourceInputMismatches: sourceInputMismatches.length, siteFiles: receipt.siteFiles.length,
+  siteMetadataDigestVerified: siteDigestFromMetadata === receipt.siteDigest, sourceMetadataDigestVerified: sourceDigest === receipt.sourceDigest,
+  sourceInputTest: sourceInputs.find(row => row.path === 'vendor/hh/src/public-controller.test.mjs') || null,
+  sourceInputsProduction: sourceInputs.filter(row => ['vendor/hh/src/public-controller.mjs','vendor/hh/src/public-site.mjs','vendor/hh/src/public-site.test.mjs'].includes(row.path)),
+  driverSha256: buildDriverHash, helpersSha256: buildHelperHash, logMentions843: /Built 843 files/.test(buildLog),
+  siteBodiesRetained: false};
+
+const nativeDir = `${root}/evidence/native`;
+const epochSummaries = [];
+for (let i = 0; i < 5; i += 1) {
+  const tag = String(i).padStart(2, '0');
+  const solve = json(`${nativeDir}/solves/epoch-${tag}.json`);
+  const command = json(`${nativeDir}/solves/epoch-${tag}.root-command.json`);
+  let stdoutSolve;
+  try { stdoutSolve = JSON.parse(command.stdout); }
+  catch (error) { addMismatch('native_solve_stdout_json', {epoch: i, error: String(error)}); }
+  const sameSolve = stdoutSolve && JSON.stringify(stdoutSolve) === JSON.stringify(solve);
+  if (command.exit !== 0 || !sameSolve || solve.epoch !== i) addMismatch('native_solve_binding', {epoch: i, exit: command.exit, sameSolve, solveEpoch: solve.epoch});
+  epochSummaries.push({epoch: solve.epoch, at: solve.at, readyJobs: solve.ready_jobs, assignments: solve.assignments,
+    dispatch: solve.dispatch, solveExit: command.exit, rootStdoutMatchesSolve: sameSolve});
+}
+const nativeState = json(`${nativeDir}/state.json`);
+const policySnapshot = json(`${nativeDir}/root-state-policy.v2.json`);
+const nextPackets = json(`${nativeDir}/next-packets.json`);
+const registry = json(`${nativeDir}/registry.json`);
+const spec = json(`${nativeDir}/spec.json`);
+const e2202Envelope = json(e2202EnvelopePath);
+const epoch5Job = nativeState.jobs?.E2205;
+const nativeHistory = {solveEpochs: epochSummaries, stateSnapshotEpoch: nativeState.epoch,
+  stateSnapshotE2205Status: epoch5Job?.status || null, stateSnapshotEventCount: nativeState.events?.length || 0,
+  currentE2205EnvelopeOutcome: json(resultPath).outcome, e2202RawEnvelopeOutcome: e2202Envelope.outcome,
+  e2202Qualification: e2202Envelope.summary, nextReady: nextPackets.ready, policySnapshotGuards: policySnapshot.guards,
+  registryWorkerMax: registry.globalWorkerMaximum, specSchema: spec.schema,
+  snapshotsAreCreationTime: true};
+if (nativeState.epoch !== 5 || epoch5Job?.status !== 'running' || json(resultPath).outcome !== 'mixed_change') addMismatch('native_state_chronology', nativeHistory);
+if (e2202Envelope.outcome !== 'confirmed_reuse') addMismatch('E2202_envelope_outcome', e2202Envelope.outcome);
+if (JSON.stringify(nextPackets.ready) !== JSON.stringify(['E2201', 'E2202'])) addMismatch('native_next_packet_epoch0', nextPackets.ready);
+
+const oldAdmin = json(`${repo}/work/hh-continuous-improvement/cycle-15/post-review-admin/current/history/E2106-v2-final/prospective.v2.json`);
+const excludedScratch = [...oldAdmin.excludedScratch.HH13ExactPaths, ...oldAdmin.excludedScratch.HH15E2102AccidentalPaths];
+const excludedChecks = excludedScratch.map(relative => ({path: relative, exists: fs.existsSync(path.join(repo, relative))}));
+if (excludedScratch.length !== 27 || excludedChecks.some(check => !check.exists)) addMismatch('preserved_excluded_scratch', excludedChecks.filter(check => !check.exists));
+
+const statusRaw = execFileSync('git', ['status', '--porcelain', '-z', '--untracked-files=all'], {cwd: repo});
+const statusEntries = statusRaw.toString('utf8').split('\0').filter(Boolean).map(item => ({xy: item.slice(0, 2), path: item.slice(3)}));
+const actualUntracked = new Set(statusEntries.filter(item => item.xy === '??').map(item => item.path));
+const expectedUntracked = new Set([...excludedScratch, ...[...expectedPackageFiles].map(relative => `work/hh-continuous-improvement/cycle-16/${relative}`)]);
+const unexpectedUntracked = [...actualUntracked].filter(item => !expectedUntracked.has(item)).sort();
+const missingUntracked = [...expectedUntracked].filter(item => !actualUntracked.has(item)).sort();
+const trackedChanges = statusEntries.filter(item => item.xy !== '??');
+if (unexpectedUntracked.length || missingUntracked.length) addMismatch('git_untracked_exact_set', {unexpected: unexpectedUntracked, missing: missingUntracked});
+if (JSON.stringify(trackedChanges) !== JSON.stringify([{xy: ' M', path: 'checkpoint/vendor/hh/src/public-controller.test.mjs'}])) addMismatch('git_tracked_change_set', trackedChanges);
+const branch = execFileSync('git', ['branch', '--show-current'], {cwd: repo, encoding: 'utf8'}).trim();
+const head = execFileSync('git', ['rev-parse', 'HEAD'], {cwd: repo, encoding: 'utf8'}).trim();
+const diffNames = execFileSync('git', ['diff', '--name-only'], {cwd: repo, encoding: 'utf8'}).trim().split('\n').filter(Boolean);
+const diffNumstat = execFileSync('git', ['diff', '--numstat', '--', 'checkpoint/vendor/hh/src/public-controller.test.mjs'], {cwd: repo, encoding: 'utf8'}).trim();
+const staged = execFileSync('git', ['diff', '--cached', '--name-only'], {cwd: repo, encoding: 'utf8'}).trim();
+
+const readme = read(`${root}/README.md`).toString('utf8');
+const continuation = json(`${root}/continuation.json`);
+const wordingIssue = continuation.limits.find(line => /email-retention defect/.test(line)) || null;
+const wordingAssessment = wordingIssue
+  ? 'Stale domain-specific wording: “email-retention” is unrelated to this profile-edit cycle. It does not alter the correct README, source, test, or build claims and no email behavior is asserted elsewhere; treat as non-blocking editorial qualification, not a technical package failure. Do not silently edit this frozen payload; root may fix in any future package revision.'
+  : null;
+const rootReadAndNextClaims = {readmeContainsProfileNoRetention: /No persistence requirement or defect was established/.test(readme),
+  continuationHasStaleEmailPhrase: Boolean(wordingIssue), wordingIssue, wordingAssessment,
+  collectiveFreshBoundaryQualified: continuation.limits.some(line => /H2 E2202.*reused its runtime/.test(line))};
+
+process.stdout.write(JSON.stringify({
+  audit_job: 'R2205', worker: 'H2',
+  manifest: {sha256: sha(manifestBytes), expectedSha256: expectedManifestHash, bytes: manifestBytes.length,
+    listedFiles: manifest.files.length, declaredListedFiles: manifest.listedFileCount, listedBytes: manifest.files.reduce((n, row) => n + row.bytes, 0),
+    declaredListedBytes: manifest.totalListedBytes, actualRegularFiles: actualFiles.size, declaredTotalPackageFiles: manifest.totalPackageFileCount,
+    exactSet: missingFiles.length === 0 && extraFiles.length === 0, mismatches: mismatches.filter(item => ['manifest_hash','E2205_result_hash','manifest_count','manifest_package_count','manifest_byte_total','actual_package_file_count','exact_file_set','special_entries','listed_file_missing_or_unreadable','listed_file_metadata'].includes(item.kind)),
+    emptyFiles, exclusions: manifest.excludedEnvelopeFiles, mode0555: fileChecks.filter(item => item.mode === '0555').map(item => item.path),
+    resultSha256: sha(read(resultPath))},
+  sourceFreeze: {currentHashes: currentSources, frozenTestCopyByteIdentical: true, productionUnchanged: true,
+    git: {branch, head, trackedChanges, diffNames, diffNumstat, stagedChanges: staged || null, actualUntracked: actualUntracked.size,
+      expectedUntracked: expectedUntracked.size, exactUntrackedSet: !unexpectedUntracked.length && !missingUntracked.length,
+      unexpectedUntracked, missingUntracked, preservedExcludedScratchCount: excludedScratch.length, excludedScratchAllPresent: excludedChecks.every(item => item.exists)}},
+  rootReceiptBindings: receiptBindings,
+  workerResultCopies: workerResultBindings.map(([id, source, packaged]) => ({id, sameBytes: read(source).equals(read(packaged)), sha256: sha(read(packaged))})),
+  evidenceCopyBindings: {checked: evidenceCopyBindings.length, allExact: evidenceCopyBindings.every(item => item.sameBytes), baselineTestHash,
+    entries: evidenceCopyBindings},
+  buildIdentity,
+  nativeHistory,
+  rootReadAndNextClaims,
+  mismatches,
+  decision: mismatches.length === 0 ? 'accepted' : 'amend'
+}, null, 2) + '\n');

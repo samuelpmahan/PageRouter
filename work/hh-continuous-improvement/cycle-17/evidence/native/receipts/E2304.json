@@ -1,0 +1,140 @@
+{
+  "job_id": "E2304",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "The single authorized canonical build completed with shell exit 0. Build-helper tests, targeted HH regressions, the full suite, and Atlas import-closure checks all reported passing named summaries; the fresh receipt/log report 843 verified site files and 14 successful PxCube packages. No Git, browser, deployment, or publication action occurred.",
+  "source_bindings": {
+    "base_head": "86301f84a9b08f40b76de9b64026befe6b0081a5",
+    "base_tree_before_uncommitted_cycle17_changes": "c685c5267235fc460c4147592a483dd40d44d3fd",
+    "checkpoint/vendor/hh/src/public-site.mjs": "d9c17a350375633a53d0dc256be666bb0c82298c9ffa7b05bc6be08156141bfc",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5"
+  },
+  "execution": {
+    "wrapper_argv": [
+      "bash",
+      "/workspace/scratch/8528bb251845/hh-cycle17/H1/E2304/run-once.sh"
+    ],
+    "cwd_of_wrapper": "/workspace/scratch/8528bb251845/PageRouter",
+    "canonical_argv": [
+      "/usr/bin/env",
+      "BAZEL=/workspace/scratch/8528bb251845/tools/bazel",
+      "bash",
+      "ci/bazel/run.sh"
+    ],
+    "canonical_cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "wrapper_sha256": "e4064e63cde72de464f9dd80b2e59af34917150bf9bf9702cc477365cef5d772",
+    "wrapper_exit_code": 0,
+    "canonical_command_shell_exit_code": 0,
+    "signal_capture": {
+      "raw": "none",
+      "qualification": "The wrapper classifies possible signals from shell status greater than 128; this is not independent OS-level signal instrumentation."
+    },
+    "timestamps_utc": {
+      "start": "2026-10-19T03:32:51Z",
+      "end": "2026-10-19T03:34:04Z",
+      "elapsed_wall_seconds_from_recorded_bounds": 73
+    },
+    "bazel_elapsed_seconds_from_stderr": 71.7,
+    "raw_captures": {
+      "stdout": {
+        "path": "captures/stdout.raw",
+        "bytes": 1297,
+        "sha256": "dd754de97186719e61c612e7c0efeca1f493d14a5c6e29f22ad5a8ea641c521b"
+      },
+      "stderr": {
+        "path": "captures/stderr.raw",
+        "bytes": 1037,
+        "sha256": "d5661d9a722b0e3aa4b26c6da968a3d6b5d7e14bdedcdeb345acc6b0298e5be0"
+      },
+      "exit_code": {
+        "path": "captures/exit.code",
+        "sha256": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+      },
+      "signal": {
+        "path": "captures/signal.txt",
+        "sha256": "fcf33dfbe13c2354bf0e1b063f9fb422747a46cee00b7420bceff2b81457b345"
+      },
+      "start_utc": {
+        "path": "captures/start.utc",
+        "sha256": "00627b5139a44fb0f2d840e0d779cd0ae4eded7ef59f6487b6d90485084433ae"
+      },
+      "end_utc": {
+        "path": "captures/end.utc",
+        "sha256": "553e6b9ae8df823d86e0963ad12ee7d2883047ed68569caae067456113d80b94"
+      }
+    }
+  },
+  "named_summaries": [
+    {
+      "group": "build-helper tests",
+      "tests": 2,
+      "pass": 2,
+      "fail": 0,
+      "skipped": 0,
+      "captured_in": "captures/stdout.raw"
+    },
+    {
+      "group": "targeted HH controller/community regressions",
+      "tests": 137,
+      "pass": 137,
+      "fail": 0,
+      "skipped": 0,
+      "captured_in": "build-output/site.log"
+    },
+    {
+      "group": "full test suite against freshly assembled site",
+      "tests": 292,
+      "pass": 292,
+      "fail": 0,
+      "skipped": 0,
+      "captured_in": "build-output/site.log"
+    },
+    {
+      "group": "built Atlas import closure",
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "skipped": 0,
+      "captured_in": "build-output/site.log"
+    }
+  ],
+  "fresh_build_outputs": {
+    "receipt": {
+      "path": "build-output/site.receipt.json",
+      "bytes": 467223,
+      "mode_octal": "555",
+      "sha256": "22af0cc823a853b5ec0e31699f96d55154fe2571fa09c9dccc91c1438a3f1020"
+    },
+    "site_log": {
+      "path": "build-output/site.log",
+      "bytes": 51595,
+      "mode_octal": "555",
+      "sha256": "fae5e0ccc1731b3814810b8bc403e05656c4317a4224d4f502bb940e6fa5e831"
+    },
+    "receipt_identity": {
+      "schema": "pagerouter-source-build@1",
+      "node": "v24.19.0",
+      "source_digest": "523de8b0f53f4452ffc4dd0569465e3fa983ac7d9b2558e85fe94c3d5fe896ac",
+      "site_digest": "9c9a030307c94b7889ae7388eb3f806ccfa44a867c66104572df128660064af1",
+      "site_build_id": "d07d1a28741d968affa168bc3ea904f36bbf1d5d30fb26b437493bc6ddfd53d1",
+      "source_input_count": 1538,
+      "verified_site_file_count": 843,
+      "pxcube_packages": 14,
+      "pxcube_rebuilt": true,
+      "pxcube_relocated": false,
+      "renderer_source_binding": {
+        "path": "vendor/hh/src/public-site.mjs",
+        "bytes": 29787,
+        "sha256": "d9c17a350375633a53d0dc256be666bb0c82298c9ffa7b05bc6be08156141bfc"
+      }
+    }
+  },
+  "interpretation": [
+    "The 137 targeted HH regressions overlap with the 292-test full suite and are named summaries, not disjoint counts; do not sum these groups into a unique total.",
+    "The stderr stream contains the OpenJDK deprecation warning and Bazel progress/INFO output; the actual command exit was 0 and the fresh receipt/log were copied by the wrapper.",
+    "Only the fresh receipt and site.log were retained from Bazel outputs. No site output tree, historical site.evidence, screenshot, or PNG was copied.",
+    "The receipt lists 1,538 source inputs and binds the renderer source SHA. The test file is pinned separately in this result and was exercised by the preceding approved validation; this receipt's sourceInputs do not include a public-site.test.mjs entry.",
+    "No browser, DOM mounting, keyboard behavior, screen reader, human, backend, publication, deployment, or main-branch change is claimed."
+  ],
+  "next_step": "Hold for root readback and any separate evidence-packaging or Git authorization."
+}

@@ -1,0 +1,15 @@
+import {createFixtureProvider,createServiceRuntime} from '../../../PageRouter/checkpoint/vendor/hh/services/index.mjs';
+import {createPublicController} from '../../../PageRouter/checkpoint/vendor/hh/src/public-controller.mjs';
+import {renderPublicSite} from '../../../PageRouter/checkpoint/vendor/hh/src/public-site.mjs';
+const storage={values:new Map(),getItem(k){return this.values.get(k)??null},setItem(k,v){this.values.set(k,String(v))},removeItem(k){this.values.delete(k)}};
+const provider=createFixtureProvider({fixture:true}),base=createServiceRuntime(provider);let calls=0;
+const runtime={...base,invoke:(...args)=>{calls++;return base.invoke(...args)}};
+const controller=createPublicController({runtime,storage});await controller.initialize('#/contact');
+const text=n=>typeof n==='string'?n:!n||typeof n!=='object'?'':(n.children||[]).map(text).join(' ');
+const find=(n,id)=>!n||typeof n!=='object'?null:n.attrs?.id===id?n:(n.children||[]).map(c=>find(c,id)).find(Boolean)||null;
+const initial=renderPublicSite({route:controller.route,state:controller.state,journey:controller.state.journey});
+const initialText=text(initial).replace(/\s+/g,' ').trim(),button=find(initial,'hh-contact-submit');
+const callsBefore=calls,receiptsBefore=base.inspect().receipts.length,snapshotBefore=JSON.stringify(provider.snapshot());
+const submit=await controller.dispatch('public:contact',{name:'Demo Contact',email:'demo-contact@example.test',subject:'Synthetic review',message:'Synthetic volatile note.'});
+const final=renderPublicSite({route:controller.route,state:controller.state,journey:controller.state.journey});
+console.log(JSON.stringify({initialCopy:initialText,submitButton:{type:button.attrs.type,label:text(button)},submit:{ok:submit.ok,remote:submit.remote,visibleOutcome:controller.state.journey.outcome?.message,retainedDraft:controller.state.journey.contact,projectedStatus:text(find(final,'hh-contact-form')?.parent)},effects:{providerInvokeDelta:calls-callsBefore,receiptDelta:base.inspect().receipts.length-receiptsBefore,providerSnapshotUnchanged:JSON.stringify(provider.snapshot())===snapshotBefore},sourceSha256:'dfbbf6127c181b8818cf3071bdd02e5c32f799a8e8ceabc8755b4cb0ed79df6a'}));

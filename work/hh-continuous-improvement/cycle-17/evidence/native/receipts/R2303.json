@@ -1,0 +1,43 @@
+{
+  "job_id": "R2303",
+  "worker": "H2",
+  "decision": "amend",
+  "summary": "Independent source/evidence review found the one-attribute renderer change and four-state test narrowly scoped and internally coherent. The one authorized H2 command did not reach the test: I launched the exact Node argv with the wrong working directory (`.../PageRouter/checkpoint` rather than the required `.../PageRouter`), so Node could not find the checkpoint-relative test path. Exit was 1, stdout was empty, and stderr reported the missing file. I stopped after this first failure; no retry or corrective rerun was made. This capture provides no independent pass/fail evidence about the test or implementation. Root direction is required for any further execution.",
+  "review": {
+    "source_diff": "Actual git diff reviewed: exactly checkpoint/vendor/hh/src/public-site.mjs and checkpoint/vendor/hh/src/public-site.test.mjs; renderer adds only aria-label='Toggle account and site navigation' to the existing button; test adds one 19-line case. Diff totals 20 insertions and one deletion.",
+    "test_coverage": "Four pure-renderer inputs: anonymous/authenticated × closed/open. Asserts explicit label, button tag, preserved glyph, expanded state, controls, event, target ID and hidden state.",
+    "red_evidence": "H1 raw RED confirms actual emitted attribute was undefined on the first anonymous/closed case; H1 red-result reports normalized actual null and the remaining three cases unreached. This is source-equivalent renderer evidence, not browser accessibility evidence.",
+    "author_green_evidence": "H1 raw GREEN says focused 1 pass/0 skipped, public-site 16/16, controller 61/61. The green prospective's expected skip prediction is inaccurate and is qualified by H1 actual result. H2 did not independently reproduce those checks.",
+    "interpretation": "An explicit renderer label is a bounded semantic markup improvement. No computed accessible name, keyboard behavior, screen-reader behavior, visual focus, responsive visibility, human accessibility result, or broader accessibility defect is inferred."
+  },
+  "execution": {
+    "attempts": 1,
+    "argv": [
+      "node",
+      "--test",
+      "--test-name-pattern=public mobile navigation toggle keeps a stable descriptive label across menu and session states",
+      "checkpoint/vendor/hh/src/public-site.test.mjs"
+    ],
+    "actual_cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+    "required_cwd": "/workspace/scratch/8528bb251845/PageRouter",
+    "start_utc": "2026-10-19T03:26:28Z",
+    "end_utc": "2026-10-19T03:26:28Z",
+    "exit_code": 1,
+    "signal": "not instrumented",
+    "failure": "Node could not find checkpoint/vendor/hh/src/public-site.test.mjs from the checkpoint subdirectory; test assertions were not reached and zero tests were registered.",
+    "capture_directory": "/workspace/scratch/8528bb251845/hh-cycle17/H2/R2303/captures/focused-01",
+    "stdout": {"bytes": 0, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+    "stderr": {"bytes": 63, "sha256": "c07fb35a714b9dff6a2c95966d442b0281b20ab324d3a49a03da7b20350697a4"},
+    "exit_capture_sha256": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865",
+    "actual_prospective_sha256": "604e0c1eea9e46893a837bc1452ea7a92ff109fd6fbc905930294216b4aebd07"
+  },
+  "source_hashes_post_attempt": {
+    "checkpoint/vendor/hh/src/public-site.mjs": "d9c17a350375633a53d0dc256be666bb0c82298c9ffa7b05bc6be08156141bfc",
+    "checkpoint/vendor/hh/src/public-site.test.mjs": "264f67b21ad165aab85e71c48d48d9d898ca30725418d7b2eb350f9cc98c74c5",
+    "checkpoint/vendor/hh/src/public-controller.mjs": "d730252e211af138383e76ca97b1cf39ddc8aabb4426b2d2ba5560cb58772669",
+    "checkpoint/vendor/hh/src/app.mjs": "bde60c7db3393a57c8d1936b149c7ca0181dc90bdb16f846635f4110d6b8a5c3",
+    "checkpoint/vendor/hh/services/fixture-provider.mjs": "99807675ac53b1944c8838b3251139b62174c43f82276ef64cc919ce15e7d16d",
+    "checkpoint/vendor/hh/services/runtime.mjs": "1ce3c4510361a2b24df26a3ae09d08093757abee75a5b2ab50353d15ff58b88e"
+  },
+  "qualification": "The original H2 prospective contains the wrong cwd and is preserved; actual-prospective.json was copied byte-exact before launch. All raw captures are retained without reconstruction. The E2303 source-only/result artifacts and H1 RED/GREEN artifacts remain unchanged. No source edit, additional test command, build, Git write, browser, Lab operation, or unrelated scratch cleanup occurred."
+}

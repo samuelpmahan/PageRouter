@@ -1,0 +1,46 @@
+{
+  "job_id": "E3401",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "Confirmed a real rendered recovery-action gap in the public directory: a retryable school-cascade failure leaves directory matches loaded, shows the lookup error, and retains controller retry capability, but renderPublicSite emits no public:retry button. An explicit controller dispatch recovers the counties fixture. No repository source was changed.",
+  "evidence": {
+    "repository": "/workspace/scratch/86659bbafcce/PageRouter",
+    "commit": "6e58a206bb30deb967f81cfe6214d6ffb581a84b",
+    "tree": "0446ad99d770c61f99ddb1acf8ec53534875dcf1",
+    "probe": "/workspace/scratch/afc0d51965a8/hh28/H1/E3401/probe.mjs",
+    "stdout": "/workspace/scratch/afc0d51965a8/hh28/H1/E3401/stdout.raw",
+    "stderr": "/workspace/scratch/afc0d51965a8/hh28/H1/E3401/stderr.raw",
+    "exit_code": 0,
+    "started_utc": "2026-10-19T16:11:23Z",
+    "ended_utc": "2026-10-19T16:11:23Z",
+    "source_pins": {
+      "checkpoint/vendor/hh/src/public-site.mjs": "ec48a6807218cb5e65401391df68404f75f2dacd",
+      "checkpoint/vendor/hh/src/public-controller.mjs": "02e21412504350610b6e09b7806a5704c8d77282",
+      "checkpoint/vendor/hh/src/public-controller.test.mjs": "c1f205d6380f3700a9b64ada41996b3f6f50db94",
+      "checkpoint/vendor/hh/services/fixture-provider.mjs": "8dbead0aa466a6d603df0430cc49e1c6a4fccea5",
+      "checkpoint/vendor/hh/services/runtime.mjs": "2ffb8322abe526f8fb9518520d69f9d7f589a2de"
+    }
+  },
+  "observations": {
+    "failure_state": {
+      "lookup_retryable": true,
+      "matches_status": "loaded",
+      "controller_can_retry": true,
+      "visible_lookup_error": true,
+      "rendered_public_retry_controls": []
+    },
+    "explicit_controller_retry": {
+      "ok": true,
+      "counties": ["Demo King"]
+    },
+    "scope": "fixture-only volatile memory; no browser/server/origin/account/persistent-storage writes"
+  },
+  "source_refs": [
+    "checkpoint/vendor/hh/src/public-site.mjs:38-54 gates rendered directory retry only on matches.status === 'error'; status text also renders j.error.",
+    "checkpoint/vendor/hh/src/public-controller.mjs:242-269 marks the school lookup retryable and retains schoolLookupRetry.",
+    "checkpoint/vendor/hh/src/public-controller.mjs:936-939 dispatches the safe controller retry.",
+    "checkpoint/vendor/hh/src/public-controller.test.mjs:1069-1078 proves controller retry from directory but does not inspect the rendered tree."
+  ],
+  "minimal_proposed_correction": "In the directory renderer, when matches.status is not 'error' and lookupError is present with lookupRetryable true, render a distinct 'Retry school choices' public:retry button. Keep the existing retry-search branch for directory failures so the visible control matches the operation currently owned by the controller retry dispatcher.",
+  "secondary_observation": "After successful retry, lookupError clears but journey.error remains the prior failure text; directory renders result.error || journey.error, so the old failure message remains visible. Consider clearing journey.error on successful lookup when it still equals the recovered lookup error."
+}

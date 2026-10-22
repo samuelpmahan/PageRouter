@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -u
+
+cd /workspace/scratch/8528bb251845
+capture_dir=/workspace/scratch/8528bb251845/hh-cycle15/H1/E2101
+
+for name in stdout.raw stderr.raw exit.code start.utc end.utc; do
+  if [ -e "$capture_dir/$name" ]; then
+    printf 'Refusing to overwrite existing capture: %s\n' "$capture_dir/$name" >&2
+    exit 73
+  fi
+done
+
+date -u +%Y-%m-%dT%H:%M:%SZ > "$capture_dir/start.utc"
+node /workspace/scratch/8528bb251845/hh-cycle15/H1/E2101/probe.mjs > "$capture_dir/stdout.raw" 2> "$capture_dir/stderr.raw"
+probe_status=$?
+printf '%s\n' "$probe_status" > "$capture_dir/exit.code"
+date -u +%Y-%m-%dT%H:%M:%SZ > "$capture_dir/end.utc"
+exit "$probe_status"

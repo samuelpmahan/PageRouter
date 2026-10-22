@@ -1,0 +1,28 @@
+{
+  "job_id": "E2704",
+  "worker": "H1",
+  "outcome": "confirmed_reuse",
+  "summary": "The single canonical build passed and verified all three reviewed source inputs in a fresh source receipt. 1,538 source inputs assembled 843 site files; 14 PxCube packages, 145 targeted HH tests, 300 full-suite tests, and one built Atlas import test passed. Full receipt/log are retained at their Bazel output paths; their exact hashes and sizes are recorded in the compact build summary.",
+  "command": "/usr/bin/env BAZEL=/workspace/scratch/8528bb251845/tools/bazel bash ci/bazel/run.sh",
+  "cwd": "/workspace/scratch/8528bb251845/PageRouter/checkpoint",
+  "started_utc": "2026-10-19T09:02:50Z",
+  "ended_utc": "2026-10-19T09:04:14Z",
+  "exit_code": 0,
+  "site_build_id": "27879924ebf62bd907a3653e41627667ea5f07878d5be150f7f5309036f72a51",
+  "receipt": {
+    "path": "checkpoint/bazel-bin/site.receipt.json",
+    "bytes": 467223,
+    "sha256": "3be878d7807e61c7c439de1fb33aa4110efdb5c6bc2b253effb3b17e60697325"
+  },
+  "site_log": {
+    "path": "checkpoint/bazel-bin/site.log",
+    "bytes": 53215,
+    "sha256": "79a70e652574ebc1572bdb197b4c7deaf0b435c5f7d30af27f13e4b5c4b4ab84"
+  },
+  "build_summary": "work/hh-continuous-improvement/cycle-21/evidence-package/build/E2704/build-summary.json",
+  "direct_streams": {
+    "stdout": "/workspace/scratch/afc0d51965a8/hh21/H1/E2704/canonical-build.stdout.raw",
+    "stderr": "/workspace/scratch/afc0d51965a8/hh21/H1/E2704/canonical-build.stderr.raw"
+  },
+  "git_mutations": "none"
+}

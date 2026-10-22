@@ -1,0 +1,26 @@
+{
+  "job_id": "E3201",
+  "worker": "H1",
+  "outcome": "mixed_change",
+  "summary": "Actual teacher upvote, upvote-sort, open-detail, downvote correction, back, and index upvote correction all work in volatile synthetic fixtures. The vote API reports the correct voted state and count changes; however the pure rendered detail tree shows only the upvote count and no current-vote text/pressed state or downvote count, and the index upvote control has no pressed state. Evidence supports a bounded projection-only feedback enhancement, not a vote math/sort/navigation defect. No product edit or Git mutation was made.",
+  "evidence": {
+    "baseline": "/workspace/scratch/afc0d51965a8/hh26/H1/E3201/baseline-03/baseline.json",
+    "probe_source": "/workspace/scratch/afc0d51965a8/hh26/H1/E3201/baseline-03/probe.mjs",
+    "source_pins": "/workspace/scratch/afc0d51965a8/hh26/H1/E3201/baseline-03/source-pins.json",
+    "execution_status_and_timestamps": "/workspace/scratch/afc0d51965a8/hh26/H1/E3201/baseline-03/execution.json",
+    "stdout_raw": "/workspace/scratch/afc0d51965a8/hh26/H1/E3201/baseline-03/stdout.raw",
+    "stderr_raw": "/workspace/scratch/afc0d51965a8/hh26/H1/E3201/baseline-03/stderr.raw",
+    "retained_harness_attempts": [
+      "/workspace/scratch/afc0d51965a8/hh26/H1/E3201/baseline-01",
+      "/workspace/scratch/afc0d51965a8/hh26/H1/E3201/baseline-02"
+    ]
+  },
+  "source_checkpoint": {
+    "repo": "/workspace/scratch/86659bbafcce/PageRouter",
+    "commit": "ce139be6b26a56736efb3f1981af3c3aa2cd8b5e",
+    "tree": "8a3ca1921e69c8e34b374d0ed674489191c76d01",
+    "clean_after_probe": true
+  },
+  "proposed_smallest_correction": "Renderer-only teacher vote-state feedback: index upvote aria-pressed as string true/false; detail text for no vote/upvote/downvote plus matching aria-pressed string true/false on both arrows. Preserve aggregate count, existing sort semantics, and anonymous/moderator controls; do not change controller, vote mutation, storage, services, or authority.",
+  "stopped_after_receipt": true
+}

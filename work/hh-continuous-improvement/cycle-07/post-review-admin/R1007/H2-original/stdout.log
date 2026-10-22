@@ -1,0 +1,52 @@
+{
+  "schema": "hh-cycle07-H2-R1007/erratum-review/v1",
+  "job_id": "R1007",
+  "worker": "H2",
+  "decision": "amend",
+  "summary": "The erratum binding or frozen-state checks did not all match.",
+  "checks": {
+    "erratumHashMatchesAssignment": true,
+    "erratumQuotesExactBadField": true,
+    "rawE1005HashUnchanged": true,
+    "rawE1005FieldNotEdited": true,
+    "correctedDigestIsFull64Hex": false,
+    "correctedDigestMatchesNarrative": false,
+    "erratumCorrectedNoteMatchesReplacement": true,
+    "nativeReceiptUnchanged": true,
+    "nativeDigestMatchesE1005Citation": true,
+    "r1005AmendmentBinding": true,
+    "manifestUnchanged": true,
+    "frozenManifestHas68Entries": true,
+    "productSourceHashesUnchanged": true,
+    "erratumIsSeparatelyLabeled": true
+  },
+  "hashes": {
+    "erratum": "ac22e4ffbedfddc0b55f0dc146be4bdd5b2887165bfcca6608de44a4d5fc3d5f",
+    "rawE1005": "fb238b10bcc27bdb664b1c065df02237fe6565c7655bef1c556cc246f9aa907a",
+    "e1004Narrative": "270621f678b4a3568817177a7792ee158d4b84ba80ce714f42c8b715585f46a1",
+    "e1004NativeReceipt": "3d92c2da01eaa4b2ffa3f301d83069d7188749d34d00c47c8c4d9dc0505aeea4",
+    "r1005": "a7eebd8b8af92d26eecbb4e262f7cf18ed4753c842da02f46b2806b4d83b8e78",
+    "manifest": "b32ad5849211a5fda61b1f74f9df96298b1a834703271a7559149807dc75109f",
+    "controller": "df2765c4b8eee83236d90e9c4380222561956252a0c2cc9a3d63a8a870be046c",
+    "controllerTests": "9732658d1e0eaca0d7344d4ba3626540b72e954b55424ec5f1a01572e1028f04"
+  },
+  "boundValues": {
+    "badNarrativeReference": "270621f678b4a3568817177a7792ee158d4b84ba80ce714f42c8b715585f46a",
+    "actualNarrativeSha": "270621f678b4a3568817177a7792ee158d4b84ba80ce714f42c8b715585f46a1",
+    "nativeReceiptSha": "3d92c2da01eaa4b2ffa3f301d83069d7188749d34d00c47c8c4d9dc0505aeea4",
+    "r1005Decision": "amend",
+    "r1005Sha": "a7eebd8b8af92d26eecbb4e262f7cf18ed4753c842da02f46b2806b4d83b8e78",
+    "manifestEntryCount": 68
+  },
+  "limits": {
+    "appendOnlyErratumReview": true,
+    "noTestsOrBuildRun": true,
+    "noSourceOrGitWrite": true,
+    "noFrozenManifestWrite": true,
+    "priorR1005AmendmentNotRelabeled": true,
+    "erratumLocatedOutsideFrozenManifestEntries": true
+  },
+  "commands": [
+    "node /workspace/scratch/8528bb251845/hh-cycle07/H2/R1007/audit.mjs"
+  ]
+}
