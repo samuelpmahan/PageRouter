@@ -5,20 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>thro battle lab</title>
 <style>
-  :root { --bg: #0d140f; --panel: #16201a; --panel2: #1d2a22; --ink: #eef3ea; --muted: #9fb0a3; --lime: #c8f49d; --mint: #a6edda; --bad: #ff8a6b; --line: #2a3a30; }
+  :root { --bg: #0d140f; --panel: #16201a; --panel2: #1d2a22; --ink: #eef3ea; --muted: #9fb0a3; --lime: #c8f49d; --bad: #ff8a6b; --line: #2a3a30; }
   * { box-sizing: border-box; }
   body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 system-ui, sans-serif; }
   main { max-width: 1240px; margin: 0 auto; padding: 20px 16px 64px; }
   h1 { font-size: 26px; margin: 0 0 4px; }
-  .lead { color: var(--muted); margin: 0 0 16px; max-width: 72ch; }
-  .tabs { display: flex; gap: 6px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 5px; width: fit-content; margin-bottom: 16px; }
-  .tabs button { min-height: 44px; padding: 0 18px; border-radius: 9px; border: 0; background: transparent; color: var(--ink); font: inherit; font-weight: 600; cursor: pointer; }
-  .tabs button[aria-pressed="true"] { background: var(--lime); color: #10180f; }
-  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 16px; align-items: start; }
+  .lead { color: var(--muted); margin: 0 0 16px; max-width: 74ch; }
+  .grid { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 16px; align-items: start; }
   @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
   section.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
   h2 { font-size: 17px; margin: 0 0 10px; }
-  h3 { font-size: 14px; margin: 14px 0 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  h3 { font-size: 13px; margin: 14px 0 6px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
   .frame { width: 100%; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; background: repeating-conic-gradient(#26302a 0% 25%, #1c241f 0% 50%) 0 0 / 24px 24px; }
   .frame img { width: 100%; height: 100%; display: block; }
   .meta { color: var(--muted); font-size: 13px; margin: 8px 0 0; }
@@ -28,57 +25,50 @@
   button.b { cursor: pointer; font-weight: 600; }
   button.primary { background: var(--lime); color: #10180f; border-color: var(--lime); }
   button.b:disabled { opacity: .45; cursor: default; }
-  input[type="text"] { width: 100%; }
+  label.f { display: grid; gap: 4px; font-size: 13px; color: var(--muted); }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .entry { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 6px 0; }
+  .entry input { width: 100%; min-width: 0; }
+  .hole { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: var(--panel2); border-radius: 10px; padding: 8px 10px; margin: 8px 0; }
+  .hole strong { font-size: 17px; }
   input.num { width: 64px; text-align: center; padding: 0; }
-  .entry { display: grid; grid-template-columns: 1fr auto; gap: 8px; margin: 6px 0; }
-  .hole { display: flex; align-items: center; justify-content: space-between; gap: 8px; background: var(--panel2); border-radius: 10px; padding: 8px 10px; margin: 6px 0; }
-  .hole strong { font-size: 18px; }
+  .line { display: grid; grid-template-columns: 1fr auto auto auto; gap: 6px; align-items: center; margin: 6px 0; }
+  .line .name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .winners { display: grid; gap: 6px; }
-  .winners button { justify-content: space-between; display: flex; align-items: center; width: 100%; text-align: left; }
-  .tally { font-variant-numeric: tabular-nums; color: var(--lime); }
-  .history { color: var(--muted); font-size: 13px; margin: 8px 0 0; max-height: 7.5em; overflow: auto; }
-  .player { display: grid; grid-template-columns: 1fr auto auto auto; gap: 6px; align-items: center; margin: 6px 0; }
-  .player .name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .topar { font-variant-numeric: tabular-nums; min-width: 3ch; text-align: right; color: var(--muted); }
+  .winners button { display: flex; justify-content: space-between; width: 100%; }
+  .winners button[aria-pressed="true"] { background: var(--lime); color: #10180f; border-color: var(--lime); }
+  .tally { font-variant-numeric: tabular-nums; }
   .note { color: var(--muted); font-size: 13px; }
+  details { margin-top: 12px; } summary { cursor: pointer; color: var(--muted); font-size: 13px; }
+  pre { background: #0a100c; border-radius: 8px; padding: 10px; font-size: 12px; overflow: auto; max-height: 260px; }
   [hidden] { display: none !important; }
 </style>
 </head>
 <body>
 <main>
   <h1>Battle, prototype</h1>
-  <p class="lead">Two kinds of Battle, each with its own editor. The graphic updates as you score. Prototype only: it keeps its state in this browser and isn't wired into the main screen yet.</p>
-  <div class="tabs" role="group" aria-label="Battle kind">
-    <button type="button" data-kind="ctp" aria-pressed="true">Closest to the pin</button>
-    <button type="button" data-kind="round" aria-pressed="false">Round</button>
-  </div>
+  <p class="lead">One Battle: entries × holes, with a result per entry per hole. The format is the only thing that changes, and each format is a class with the same few methods (what you enter per hole, how holes add up, <code>compare(a, b) → int</code>, how a total reads). Switch between Round and Skins: they read the same strokes. Prototype only: state stays in this browser.</p>
   <div class="grid">
     <section class="panel">
       <div class="frame"><img id="graphic" alt="Battle graphic"></div>
       <p class="meta" id="meta">Drawing…</p>
       <div class="row"><button type="button" class="b primary" id="download">Download PNG</button></div>
     </section>
-    <section class="panel" id="ctp-editor">
-      <h2>Closest to the pin</h2>
-      <p class="note">Each hole, the disc closest to the pin gets one point.</p>
-      <h3>Discs (2–5)</h3>
-      <div id="ctp-entries"></div>
-      <div class="row"><button type="button" class="b" id="ctp-add">Add a disc</button><button type="button" class="b" id="ctp-remove">Remove last</button></div>
-      <h3 id="ctp-hole-title">Hole 1</h3>
-      <div class="winners" id="ctp-winners"></div>
-      <div class="row"><button type="button" class="b" id="ctp-nobody">Nobody hit the green</button><button type="button" class="b" id="ctp-undo">Undo last hole</button><button type="button" class="b" id="ctp-reset">Start over</button></div>
-      <div class="history" id="ctp-history"></div>
-    </section>
-    <section class="panel" id="round-editor" hidden>
-      <h2>Round</h2>
-      <p class="note">Normal stroke play. Score to par; lowest total wins.</p>
-      <h3>Course</h3>
-      <div class="row"><label>Holes <select id="round-holes"><option>9</option><option>18</option></select></label><button type="button" class="b" id="round-reset">Start over</button></div>
-      <h3>Players (2–5)</h3>
-      <div id="round-players"></div>
-      <div class="row"><button type="button" class="b" id="round-add">Add a player</button><button type="button" class="b" id="round-remove">Remove last</button></div>
-      <div class="hole"><button type="button" class="b" id="round-prev" aria-label="Previous hole">‹</button><strong id="round-hole-title">Hole 1</strong><label>Par <input class="num" id="round-par" type="number" min="2" max="6" value="3"></label><button type="button" class="b" id="round-next" aria-label="Next hole">›</button></div>
-      <div id="round-strokes"></div>
+    <section class="panel">
+      <h2>Battle</h2>
+      <div class="two">
+        <label class="f">Format<select id="format"></select></label>
+        <label class="f">Graphic<select id="layout"><option value="cards">Disc cards</option><option value="leaderboard">Leaderboard</option></select></label>
+      </div>
+      <p class="note" id="format-note"></p>
+      <h3>Entries (2–5)</h3>
+      <div id="entries"></div>
+      <div class="row"><button type="button" class="b" id="add">Add</button><button type="button" class="b" id="remove">Remove last</button><label class="f" style="margin-left:auto">Holes<select id="hole-count"><option>9</option><option>18</option></select></label></div>
+      <div class="hole"><button type="button" class="b" id="prev" aria-label="Previous hole">‹</button><strong id="hole-title">Hole 1</strong><label id="par-field">Par <input class="num" id="par" type="number" min="2" max="6"></label><button type="button" class="b" id="next" aria-label="Next hole">›</button></div>
+      <div id="hole-input"></div>
+      <p class="note" id="standings-note"></p>
+      <div class="row"><button type="button" class="b" id="reset">Clear all results</button></div>
+      <details><summary>Saved data (plain; the format is rebuilt from its name)</summary><pre id="saved"></pre></details>
     </section>
   </div>
 </main>
@@ -88,10 +78,90 @@
   const { resolveCardDisc } = await import('./vendor/discstudio-cards/card-renderer-core.js?v=28ac2b39fab85255');
   const { getMoldDetails } = await import('./vendor/discstudio-cards/mold-library.js?v=28ac2b39fab85255');
   await ensureCardFonts();
-  const W = 1920, H = 1080, M = 48, ACCENT = '#c8f23d';
+  const W = 1920, H = 1080, M = 48, ACCENT = '#c8f23d', MINUS = '−';
   const SANS = '"DS Card Sans", system-ui, sans-serif', COND = '"DS Card Sans Condensed", "DS Card Sans", system-ui, sans-serif';
+  const plural = (n, one, many = one + 'S') => `${n === 1 ? one : many}`;
+  const parText = n => n === 0 ? 'E' : n > 0 ? `+${n}` : `${MINUS}${-n}`;
 
-  // ---- Sample discs, with flight numbers exactly as thro shows them ----
+  // ================= The model: one Battle, formats as classes =================
+  // A hole is { par, strokes: [entry → number | null], winner: entry index | null | undefined }.
+  // Every format reads the same table. A format answers four things; Battle does the rest.
+  class Format {
+    static id = ''; static label = ''; static note = '';
+    get input() { return 'strokes'; }          // what you enter per hole: 'strokes' or 'winner'
+    get usesPar() { return false; }
+    get layout() { return 'cards'; }           // the graphic it starts with
+    /** One hole's contribution per entry: a number, or null when that entry has no result there. */
+    holeScores(hole, n) { return Array.from({ length: n }, (_, i) => Number.isFinite(hole.strokes[i]) ? hole.strokes[i] : null); }
+    /** Totals over the holes. Formats that carry something from hole to hole override this. */
+    totals(holes, n) {
+      const rows = Array.from({ length: n }, () => ({ total: 0, played: 0 }));
+      for (const hole of holes) this.holeScores(hole, n).forEach((v, i) => { if (v !== null) { rows[i].total += v; rows[i].played++; } });
+      return rows;
+    }
+    /** < 0: a ranks ahead of b; 0: tied; > 0: b ranks ahead. */
+    compare(a, b) { return 0; }
+    show(row) { return String(row.total); }
+    unit(row, battle) { return ''; }
+  }
+  class StrokePlay extends Format {
+    static id = 'stroke'; static label = 'Round (stroke play)'; static note = 'Strokes per hole against par. Lowest total wins.';
+    get usesPar() { return true; }
+    get layout() { return 'leaderboard'; }
+    totals(holes, n) {
+      const rows = super.totals(holes, n);
+      return rows.map((row, i) => ({ ...row, toPar: holes.reduce((t, h) => Number.isFinite(h.strokes[i]) ? t + h.strokes[i] - h.par : t, 0) }));
+    }
+    compare(a, b) { return a.toPar - b.toPar; }
+    show(row) { return row.played ? parText(row.toPar) : '–'; }
+    unit(row, battle) { return row.played ? `${row.total} · ${row.played === battle.holeCount ? 'F' : `THRU ${row.played}`}` : ''; }
+  }
+  class ClosestToPin extends Format {
+    static id = 'ctp'; static label = 'Closest to the pin'; static note = 'One point per hole to the closest. Most points wins.';
+    get input() { return 'winner'; }
+    holeScores(hole, n) { return hole.winner === undefined ? Array(n).fill(null) : Array.from({ length: n }, (_, i) => i === hole.winner ? 1 : 0); }
+    compare(a, b) { return b.total - a.total; }
+    unit(row) { return plural(row.total, 'POINT'); }
+  }
+  class Skins extends Format {
+    static id = 'skins'; static label = 'Skins'; static note = 'Lowest score alone takes the hole. A tie carries the skin to the next hole.';
+    totals(holes, n) {
+      const rows = Array.from({ length: n }, () => ({ total: 0, played: 0 })); let carry = 0;
+      for (const hole of holes) {
+        const s = this.holeScores(hole, n); if (s.some(v => v === null)) continue;     // a skin needs everyone's score
+        s.forEach((_, i) => rows[i].played++);
+        const low = Math.min(...s), winners = s.flatMap((v, i) => v === low ? [i] : []);
+        if (winners.length === 1) { rows[winners[0]].total += 1 + carry; carry = 0; } else carry++;
+      }
+      rows.carry = carry; return rows;
+    }
+    compare(a, b) { return b.total - a.total; }
+    unit(row) { return plural(row.total, 'SKIN'); }
+  }
+  const FORMATS = Object.fromEntries([StrokePlay, ClosestToPin, Skins].map(F => [F.id, F]));
+
+  class Battle {
+    constructor(data) { Object.assign(this, structuredClone(data)); this.format = new FORMATS[data.format](); }
+    get n() { return this.entries.length; }
+    get holes() { return this.holeList.slice(0, this.holeCount); }
+    /** The same for every format: total, sort with the format's compare, share places on 0. */
+    standings() {
+      const rows = this.format.totals(this.holes, this.n).map((row, i) => ({ ...row, i, entry: this.entries[i] }));
+      const order = (a, b) => (b.played > 0) - (a.played > 0) || this.format.compare(a, b) || a.i - b.i;
+      const sorted = [...rows].sort(order);
+      for (const row of sorted) {
+        const first = sorted.findIndex(o => o.played && this.format.compare(o, row) === 0);
+        const tied = sorted.filter(o => o.played && this.format.compare(o, row) === 0).length > 1;
+        row.pos = row.played ? `${tied ? 'T' : ''}${first + 1}` : '–';
+        row.leads = Boolean(row.played) && first === 0;
+      }
+      sorted.carry = rows.carry; return sorted;
+    }
+    get playedHoles() { return Math.max(0, ...this.format.totals(this.holes, this.n).map(r => r.played)); }
+    toData() { return { format: this.format.constructor.id, holeCount: this.holeCount, entries: this.entries, holes: this.holes.map(h => ({ par: h.par, strokes: h.strokes.slice(0, this.n), ...(h.winner !== undefined ? { winner: h.winner } : {}) })) }; }
+  }
+
+  // ================= Sample discs (flight numbers as thro shows them) =================
   const fixture = await (await fetch('./prepared-fixture.json')).json();
   const discs = [];
   for (const d of fixture.discs) {
@@ -101,15 +171,16 @@
   }
   const discById = id => discs.find(d => d.id === id) ?? discs[0];
 
-  // ---- State (this browser only) ----
+  // ================= State (this browser only) =================
   const load = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
   const save = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* storage unavailable */ } };
-  let kind = load('battle-lab-kind', 'ctp');
-  let ctp = load('battle-lab-ctp', { entries: discs.map(d => d.id), holes: [] });          // holes: [entryIndex | null]
-  let round = load('battle-lab-round', { holes: 9, par: Array(18).fill(3), hole: 0,
-    players: [['Sam', discs[0].id], ['Dab', discs[1].id], ['Boone', discs[2].id], ['Ivy', discs[0].id]].map(([name, disc]) => ({ name, disc, strokes: Array(18).fill(null) })) });
+  const blankHoles = () => Array.from({ length: 18 }, () => ({ par: 3, strokes: Array(5).fill(null) }));
+  let ui = load('battle-lab-v2-ui', { hole: 0, layout: null });
+  let data = load('battle-lab-v2', { format: 'stroke', holeCount: 9,
+    entries: [['Sam', discs[0].id], ['Dab', discs[1].id], ['Boone', discs[2].id], ['Ivy', discs[0].id]].map(([name, disc]) => ({ name, disc })), holeList: blankHoles() });
+  let battle = new Battle(data);
 
-  // ---- Shared drawing helpers ----
+  // ================= Graphics =================
   const canvas = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
   const blobOf = c => new Promise(r => c.toBlob(r, 'image/png'));
   const imageOf = blob => new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = URL.createObjectURL(blob); });
@@ -121,169 +192,140 @@
   }
   function roundRect(x, X, Y, w, h, r) { x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + w, Y, X + w, Y + h, r); x.arcTo(X + w, Y + h, X, Y + h, r); x.arcTo(X, Y + h, X, Y, r); x.arcTo(X, Y, X + w, Y, r); x.closePath(); }
   const cardCache = new Map();
-  async function nativeCard(id) {            // the exact Single card (U05 Glass drawer), full size, cropped to its pixels
+  const nativeCard = id => {                    // the exact Single card (U05), full size, cropped to its pixels
     if (!cardCache.has(id)) cardCache.set(id, (async () => {
       const d = discById(id);
       const r = await A.renderDiscStudioCard({ disc: d.disc, photoSrc: d.photoSrc, flights: d.flights, preset: 'u05', placement: 'native', appearance: { discSide: 'left', highlightTarget: 'digits', accentColor: ACCENT } });
       const img = await imageOf(r.png); return { img, box: alphaBox(img), layout: r.layout };
     })());
     return cardCache.get(id);
-  }
+  };
   const photoCache = new Map();
   const photo = id => { if (!photoCache.has(id)) photoCache.set(id, new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = discById(id).photoSrc; })); return photoCache.get(id); };
-
-  // ---- Closest to the pin: every disc is its own card; one point per hole to the closest ----
-  const ctpScores = () => ctp.entries.map((_, i) => ctp.holes.filter(w => w === i).length);
-  async function drawCtp() {
-    const cards = await Promise.all(ctp.entries.map(nativeCard)), scores = ctpScores(), best = Math.max(...scores);
-    const gap = 36, plateGap = 14;
-    const numbersPx = Math.min(...cards.map(c => c.layout.numbers?.size ?? 40));     // flight-number size at 100%
+  function heading() {
+    const played = battle.playedHoles, F = battle.format.constructor;
+    const progress = !played ? 'FIRST HOLE' : battle.format.usesPar ? `THRU ${played} OF ${battle.holeCount}` : `AFTER ${played} ${plural(played, 'HOLE')}`;
+    const carry = battle.format instanceof Skins && battle.standings().carry ? ` · ${battle.standings().carry} CARRYING` : '';
+    return `${F.label.replace(/\s*\(.*\)/, '').toUpperCase()} · ${progress}${carry}`;
+  }
+  // Disc cards: every entry is its exact Single card; the score plate stays smaller than the flight numbers.
+  async function drawCards() {
+    const rows = battle.standings(), byIndex = new Map(rows.map(r => [r.i, r]));
+    const cards = await Promise.all(battle.entries.map(e => nativeCard(e.disc)));
+    const gap = 36, plateGap = 14, numbersPx = Math.min(...cards.map(c => c.layout.numbers?.size ?? 40));
     const sumW = cards.reduce((t, c) => t + c.box.w, 0), maxH = Math.max(...cards.map(c => c.box.h));
-    // Score plate height is part of the stack, so solve the shared scale with it included.
     const plateAt = s => Math.round(numbersPx * s * 1.9);
     let s = Math.min(1.5, (W - M * 2 - gap * (cards.length - 1)) / sumW);
     while (s > 0.3 && maxH * s + plateGap + plateAt(s) > H - M * 2 - 40) s -= 0.01;
     const out = canvas(W, H), x = out.getContext('2d'); x.imageSmoothingQuality = 'high';
-    const row = sumW * s + gap * (cards.length - 1); let cx = (W - row) / 2;
     const plateH = plateAt(s), bottom = H - M, cardBottom = bottom - plateH - plateGap;
+    let cx = (W - (sumW * s + gap * (cards.length - 1))) / 2;
+    const headPx = Math.round(numbersPx * s * 0.62), scorePx = Math.round(numbersPx * s * 0.9), labelPx = Math.round(numbersPx * s * 0.5);
     const checks = [];
-    // A small heading: everything-else tier.
-    const headPx = Math.round(numbersPx * s * 0.62);
-    x.font = `600 ${headPx}px ${SANS}`; x.fillStyle = 'rgba(255,255,255,0.86)'; x.textAlign = 'left'; x.textBaseline = 'alphabetic';
-    const holesPlayed = ctp.holes.length;
-    const heading = `CLOSEST TO THE PIN · ${holesPlayed ? `AFTER ${holesPlayed} HOLE${holesPlayed === 1 ? '' : 'S'}` : 'FIRST HOLE'}`;
     for (const [i, card] of cards.entries()) {
-      const w = card.box.w * s, h = card.box.h * s, top = cardBottom - h;
+      const w = card.box.w * s, h = card.box.h * s, top = cardBottom - h, row = byIndex.get(i), entry = battle.entries[i];
       x.drawImage(card.img, card.box.x, card.box.y, card.box.w, card.box.h, cx, top, w, h);
-      if (i === 0) x.fillText(heading, cx, top - Math.round(headPx * 0.6));
-      // Score plate under the card: the score is smaller than the flight numbers (Sam's rule).
-      const lead = scores[i] === best && best > 0;
-      const scorePx = Math.round(numbersPx * s * 0.9), labelPx = Math.round(numbersPx * s * 0.5);
-      roundRect(x, cx, bottom - plateH, w, plateH, 14);
-      x.fillStyle = lead ? ACCENT : 'rgba(10,14,12,0.86)'; x.fill();
-      x.fillStyle = lead ? '#10180f' : '#ffffff'; x.textAlign = 'center';
-      x.font = `700 ${scorePx}px ${SANS}`; const sw = x.measureText(String(scores[i])).width;
-      x.font = `600 ${labelPx}px ${SANS}`; const lw = x.measureText(scores[i] === 1 ? 'POINT' : 'POINTS').width;
-      const gapT = labelPx * 0.5, startX = cx + w / 2 - (sw + gapT + lw) / 2, base = bottom - plateH / 2 + scorePx * 0.36;
-      x.textAlign = 'left'; x.font = `700 ${scorePx}px ${SANS}`; x.fillText(String(scores[i]), startX, base);
-      x.font = `600 ${labelPx}px ${SANS}`; x.fillText(scores[i] === 1 ? 'POINT' : 'POINTS', startX + sw + gapT, base);
+      if (i === 0) { x.font = `600 ${headPx}px ${SANS}`; x.fillStyle = 'rgba(255,255,255,0.86)'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText(heading(), cx, top - Math.round(headPx * 0.6)); }
+      roundRect(x, cx, bottom - plateH, w, plateH, 14); x.fillStyle = row.leads ? ACCENT : 'rgba(10,14,12,0.86)'; x.fill();
+      const own = entry.name.trim() && entry.name.trim().toUpperCase() !== discById(entry.disc).disc.name.toUpperCase();
+      const label = [own ? entry.name.trim().toUpperCase() : '', battle.format.unit(row, battle)].filter(Boolean).join(' · ');
+      x.fillStyle = row.leads ? '#10180f' : '#ffffff'; x.textAlign = 'left';
+      x.font = `700 ${scorePx}px ${SANS}`; const score = battle.format.show(row), sw = x.measureText(score).width;
+      x.font = `600 ${labelPx}px ${SANS}`; let lab = label; while (lab.length > 3 && x.measureText(lab).width > w - sw - labelPx * 2.5) lab = lab.slice(0, -2) + '…';
+      const lw = lab ? x.measureText(lab).width : 0, gapT = lab ? labelPx * 0.5 : 0, startX = cx + w / 2 - (sw + gapT + lw) / 2, base = bottom - plateH / 2 + scorePx * 0.36;
+      x.font = `700 ${scorePx}px ${SANS}`; x.fillText(score, startX, base);
+      if (lab) { x.font = `600 ${labelPx}px ${SANS}`; x.fillText(lab, startX + sw + gapT, base); }
       const L = card.layout, d = (L.photo?.w ?? 0) * s, n = (L.name?.size ?? 0) * s, f = (L.numbers?.size ?? 0) * s, o = Math.max(scorePx, labelPx, headPx, ...L.other.map(t => t.size * s));
-      checks.push({ name: discById(ctp.entries[i]).disc.name, pass: d > n && n > f && f > o, d, n, f, o });
+      checks.push({ name: entry.name || discById(entry.disc).disc.name, pass: d > n && n > f && f > o });
       cx += w + gap;
     }
-    return { canvas: out, checks, note: `${ctp.entries.length} discs · card scale ${Math.round(s * 100)}%` };
+    return { canvas: out, checks, note: `disc cards at ${Math.round(s * 100)}%` };
   }
-
-  // ---- Round: stroke play to par, lowest total wins ----
-  function standings() {
-    const rows = round.players.map(p => {
-      let toPar = 0, total = 0, thru = 0;
-      for (let h = 0; h < round.holes; h++) if (Number.isFinite(p.strokes[h])) { total += p.strokes[h]; toPar += p.strokes[h] - round.par[h]; thru++; }
-      return { ...p, toPar, total, thru };
-    }).sort((a, b) => (b.thru > 0) - (a.thru > 0) || a.toPar - b.toPar || a.name.localeCompare(b.name));
-    rows.forEach((r, i) => { const tied = rows.filter(o => o.thru && o.toPar === r.toPar).length > 1; const first = rows.findIndex(o => o.toPar === r.toPar && o.thru); r.pos = r.thru ? `${tied ? 'T' : ''}${first + 1}` : '–'; });
-    return rows;
-  }
-  const parText = n => n === 0 ? 'E' : n > 0 ? `+${n}` : `−${-n}`;
-  async function drawRound() {
-    const rows = standings(), out = canvas(W, H), x = out.getContext('2d'); x.imageSmoothingQuality = 'high';
-    // Sizes follow the same order as a card: disc photo > name > score > everything else.
+  // Leaderboard: disc photo > name > score > everything else, same order as a card.
+  async function drawLeaderboard() {
+    const rows = battle.standings(), out = canvas(W, H), x = out.getContext('2d'); x.imageSmoothingQuality = 'high';
     const rowH = 132, photoD = 112, namePx = 64, scorePx = 56, smallPx = 32, headPx = 30, panelW = 1040;
     const panelH = 70 + rows.length * rowH + 16, X = M, Y = H - M - panelH;
-    roundRect(x, X, Y, panelW, panelH, 22); x.fillStyle = 'rgba(8,11,9,0.86)'; x.fill();
-    x.fillStyle = ACCENT; x.fillRect(X, Y + 22, 6, panelH - 44);
-    const played = Math.max(0, ...rows.map(r => r.thru)), parTotal = round.par.slice(0, round.holes).reduce((t, v) => t + v, 0);
-    x.font = `600 ${headPx}px ${SANS}`; x.fillStyle = 'rgba(255,255,255,0.78)'; x.textAlign = 'left'; x.textBaseline = 'alphabetic';
-    x.fillText(`ROUND · ${played ? `THRU ${played}` : 'FIRST TEE'} OF ${round.holes} · PAR ${parTotal}`, X + 40, Y + 50);
-    const leader = rows[0]?.thru ? rows[0].toPar : null;
+    roundRect(x, X, Y, panelW, panelH, 22); x.fillStyle = 'rgba(8,11,9,0.86)'; x.fill(); x.fillStyle = ACCENT; x.fillRect(X, Y + 22, 6, panelH - 44);
+    x.font = `600 ${headPx}px ${SANS}`; x.fillStyle = 'rgba(255,255,255,0.78)'; x.textAlign = 'left'; x.textBaseline = 'alphabetic'; x.fillText(heading(), X + 40, Y + 50);
     x.font = `600 ${smallPx}px ${SANS}`;
-    const smallColumn = Math.max(x.measureText(`${9 * 15} · THRU ${round.holes}`).width, ...rows.map(r => x.measureText(`${r.total} · THRU ${r.thru}`).width));
+    const smallColumn = Math.max(x.measureText(`135 · THRU ${battle.holeCount}`).width, ...rows.map(r => x.measureText(battle.format.unit(r, battle)).width));
     for (const [i, r] of rows.entries()) {
-      const top = Y + 70 + i * rowH, mid = top + rowH / 2;
+      const mid = Y + 70 + i * rowH + rowH / 2;
       x.font = `700 ${smallPx}px ${SANS}`; x.fillStyle = 'rgba(255,255,255,0.7)'; x.textAlign = 'center'; x.fillText(r.pos, X + 70, mid + smallPx * 0.36);
-      const img = await photo(r.disc); const pcx = X + 160, r0 = photoD / 2;
+      const img = await photo(r.entry.disc), pcx = X + 160, r0 = photoD / 2;
       x.save(); x.beginPath(); x.arc(pcx, mid, r0, 0, Math.PI * 2); x.clip();
       const k = Math.max(photoD / img.width, photoD / img.height); x.drawImage(img, pcx - img.width * k / 2, mid - img.height * k / 2, img.width * k, img.height * k); x.restore();
-      x.strokeStyle = r.thru && r.toPar === leader ? ACCENT : 'rgba(255,255,255,0.5)'; x.lineWidth = 5; x.beginPath(); x.arc(pcx, mid, r0, 0, Math.PI * 2); x.stroke();
+      x.strokeStyle = r.leads ? ACCENT : 'rgba(255,255,255,0.5)'; x.lineWidth = 5; x.beginPath(); x.arc(pcx, mid, r0, 0, Math.PI * 2); x.stroke();
       x.textAlign = 'left'; x.fillStyle = '#ffffff'; x.font = `800 ${namePx}px ${COND}`;
-      let name = r.name.toUpperCase(); while (x.measureText(name).width > 440 && name.length > 2) name = name.slice(0, -2) + '…';
+      let name = (r.entry.name || discById(r.entry.disc).disc.name).toUpperCase(); while (x.measureText(name).width > 440 && name.length > 2) name = name.slice(0, -2) + '…';
       x.fillText(name, X + 240, mid + namePx * 0.36);
-      // Right column: strokes and holes played; the score to par sits in its own column left of it.
-      x.textAlign = 'right'; x.font = `600 ${smallPx}px ${SANS}`; x.fillStyle = 'rgba(255,255,255,0.7)';
-      x.fillText(r.thru ? `${r.total} · ${r.thru === round.holes ? 'F' : `THRU ${r.thru}`}` : '', X + panelW - 36, mid + smallPx * 0.36);
-      x.font = `700 ${scorePx}px ${SANS}`; x.fillStyle = !r.thru ? 'rgba(255,255,255,0.45)' : r.toPar < 0 ? ACCENT : r.toPar > 0 ? '#ff9e80' : '#ffffff';
-      x.fillText(r.thru ? parText(r.toPar) : '–', X + panelW - 36 - smallColumn - 36, mid + scorePx * 0.36);
+      x.textAlign = 'right'; x.font = `600 ${smallPx}px ${SANS}`; x.fillStyle = 'rgba(255,255,255,0.7)'; x.fillText(battle.format.unit(r, battle), X + panelW - 36, mid + smallPx * 0.36);
+      const tone = battle.format instanceof StrokePlay && r.played ? (r.toPar < 0 ? ACCENT : r.toPar > 0 ? '#ff9e80' : '#ffffff') : r.leads ? ACCENT : r.played ? '#ffffff' : 'rgba(255,255,255,0.45)';
+      x.font = `700 ${scorePx}px ${SANS}`; x.fillStyle = tone; x.fillText(battle.format.show(r), X + panelW - 36 - smallColumn - 36, mid + scorePx * 0.36);
     }
-    const pass = photoD > namePx && namePx > scorePx && scorePx > Math.max(smallPx, headPx);
-    return { canvas: out, checks: [{ name: 'Leaderboard', pass, d: photoD, n: namePx, f: scorePx, o: Math.max(smallPx, headPx) }], note: `${rows.length} players · ${round.holes} holes` };
+    return { canvas: out, checks: [{ name: 'Leaderboard', pass: photoD > namePx && namePx > scorePx && scorePx > Math.max(smallPx, headPx) }], note: 'leaderboard' };
   }
 
-  // ---- Editors ----
+  // ================= Editor =================
   const $ = id => document.getElementById(id), esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  $('format').innerHTML = Object.values(FORMATS).map(F => `<option value="${F.id}">${esc(F.label)}</option>`).join('');
   const discOptions = selected => discs.map(d => `<option value="${d.id}"${d.id === selected ? ' selected' : ''}>${esc(d.label)}</option>`).join('');
-  function paintCtp() {
-    const scores = ctpScores();
-    $('ctp-entries').innerHTML = ctp.entries.map((id, i) => `<div class="entry"><select data-ctp-entry="${i}" aria-label="Disc ${i + 1}">${discOptions(id)}</select><span class="tally">${scores[i]} pt</span></div>`).join('');
-    $('ctp-add').disabled = ctp.entries.length >= 5; $('ctp-remove').disabled = ctp.entries.length <= 2;
-    $('ctp-hole-title').textContent = `Hole ${ctp.holes.length + 1}: who was closest?`;
-    $('ctp-winners').innerHTML = ctp.entries.map((id, i) => `<button type="button" class="b" data-ctp-win="${i}"><span>${esc(discById(id).disc.name)}</span><span class="tally">${scores[i]}</span></button>`).join('');
-    $('ctp-undo').disabled = !ctp.holes.length;
-    $('ctp-history').innerHTML = ctp.holes.map((w, h) => `Hole ${h + 1}: ${w === null ? 'nobody' : esc(discById(ctp.entries[w]).disc.name)}`).reverse().join('<br>');
-    document.querySelectorAll('[data-ctp-entry]').forEach(el => el.onchange = () => { ctp.entries[+el.dataset.ctpEntry] = el.value; commit(); });
-    document.querySelectorAll('[data-ctp-win]').forEach(el => el.onclick = () => { ctp.holes.push(+el.dataset.ctpWin); commit(); });
-  }
-  function paintRound() {
-    $('round-holes').value = String(round.holes);
-    const roster = JSON.stringify(round.players.map(p => [p.name, p.disc]));
-    if ($('round-players').dataset.roster !== roster) { $('round-players').dataset.roster = roster; $('round-players').innerHTML = round.players.map((p, i) => `<div class="entry"><input type="text" data-round-name="${i}" value="${esc(p.name)}" aria-label="Player ${i + 1} name" maxlength="24"><select data-round-disc="${i}" aria-label="Player ${i + 1} disc">${discOptions(p.disc)}</select></div>`).join(''); }
-    $('round-add').disabled = round.players.length >= 5; $('round-remove').disabled = round.players.length <= 2;
-    $('round-hole-title').textContent = `Hole ${round.hole + 1} of ${round.holes}`; $('round-par').value = round.par[round.hole];
-    $('round-prev').disabled = round.hole === 0; $('round-next').disabled = round.hole >= round.holes - 1;
-    const shape = JSON.stringify([round.hole, round.players.map(p => p.name)]);
-    if ($('round-strokes').dataset.shape === shape) {
-      round.players.forEach((p, i) => { const box = document.querySelector(`[data-strokes="${i}"]`); if (box && box !== document.activeElement) box.value = p.strokes[round.hole] ?? ''; });
-      document.querySelector('#round-strokes .note').textContent = `Totals: ${standings().map(r => `${r.name} ${r.thru ? parText(r.toPar) : '–'}`).join(' · ')}`;
-      return;
+  const hole = () => data.holeList[ui.hole];
+  function paint() {
+    const f = battle.format, rows = battle.standings();
+    $('format').value = data.format; $('layout').value = ui.layout ?? f.layout; $('hole-count').value = String(data.holeCount);
+    $('format-note').textContent = f.constructor.note;
+    const roster = JSON.stringify(data.entries);
+    if ($('entries').dataset.roster !== roster) {
+      $('entries').dataset.roster = roster;
+      $('entries').innerHTML = data.entries.map((e, i) => `<div class="entry"><input type="text" data-name="${i}" value="${esc(e.name)}" maxlength="24" aria-label="Entry ${i + 1} name" placeholder="${esc(discById(e.disc).disc.name)}"><select data-disc="${i}" aria-label="Entry ${i + 1} disc">${discOptions(e.disc)}</select></div>`).join('');
     }
-    $('round-strokes').dataset.shape = shape;
-    $('round-strokes').innerHTML = round.players.map((p, i) => { const s = p.strokes[round.hole];
-      return `<div class="player"><span class="name">${esc(p.name)}</span><button type="button" class="b" data-stroke="${i}" data-delta="-1" aria-label="${esc(p.name)} one fewer">−</button><input class="num" type="number" min="1" max="15" data-strokes="${i}" value="${s ?? ''}" placeholder="–" aria-label="${esc(p.name)} strokes on hole ${round.hole + 1}"><button type="button" class="b" data-stroke="${i}" data-delta="1" aria-label="${esc(p.name)} one more">+</button></div>`; }).join('')
-      + `<p class="note">Totals: ${standings().map(r => `${esc(r.name)} ${r.thru ? parText(r.toPar) : '–'}`).join(' · ')}</p>`;
-    document.querySelectorAll('[data-round-name]').forEach(el => el.onchange = () => { round.players[+el.dataset.roundName].name = el.value.trim() || `Player ${+el.dataset.roundName + 1}`; commit(); });
-    document.querySelectorAll('[data-round-disc]').forEach(el => el.onchange = () => { round.players[+el.dataset.roundDisc].disc = el.value; commit(); });
-    document.querySelectorAll('[data-strokes]').forEach(el => el.onchange = () => { const v = Number(el.value); round.players[+el.dataset.strokes].strokes[round.hole] = el.value === '' ? null : Math.max(1, Math.min(15, Math.round(v))); commit(); });
-    document.querySelectorAll('[data-stroke]').forEach(el => el.onclick = () => { const p = round.players[+el.dataset.stroke], cur = p.strokes[round.hole] ?? round.par[round.hole]; p.strokes[round.hole] = Math.max(1, Math.min(15, cur + (p.strokes[round.hole] == null ? 0 : +el.dataset.delta))); commit(); });
+    $('add').disabled = data.entries.length >= 5; $('remove').disabled = data.entries.length <= 2;
+    $('hole-title').textContent = `Hole ${ui.hole + 1} of ${data.holeCount}`; $('par-field').hidden = !f.usesPar; $('par').value = hole().par;
+    $('prev').disabled = ui.hole === 0; $('next').disabled = ui.hole >= data.holeCount - 1;
+    const shape = JSON.stringify([f.input, ui.hole, data.entries.map(e => e.name || e.disc)]), box = $('hole-input');
+    if (f.input === 'winner') {
+      box.dataset.shape = shape;
+      box.innerHTML = `<div class="winners">${data.entries.map((e, i) => `<button type="button" class="b" data-win="${i}" aria-pressed="${hole().winner === i}"><span>${esc(e.name || discById(e.disc).disc.name)}</span><span class="tally">${rows.find(r => r.i === i).total}</span></button>`).join('')}<button type="button" class="b" data-win="none" aria-pressed="${hole().winner === null}"><span>Nobody hit the green</span><span></span></button></div>`;
+    } else if (box.dataset.shape !== shape) {
+      box.dataset.shape = shape;
+      box.innerHTML = data.entries.map((e, i) => `<div class="line"><span class="name">${esc(e.name || discById(e.disc).disc.name)}</span><button type="button" class="b" data-step="${i}" data-delta="-1" aria-label="One fewer">−</button><input class="num" type="number" min="1" max="15" data-strokes="${i}" value="${hole().strokes[i] ?? ''}" placeholder="–" aria-label="${esc(e.name)} strokes"><button type="button" class="b" data-step="${i}" data-delta="1" aria-label="One more">+</button></div>`).join('');
+    } else data.entries.forEach((_, i) => { const el = box.querySelector(`[data-strokes="${i}"]`); if (el && el !== document.activeElement) el.value = hole().strokes[i] ?? ''; });
+    $('standings-note').textContent = rows.map(r => `${r.pos} ${r.entry.name || discById(r.entry.disc).disc.name} ${f.show(r)}${f.unit(r, battle) ? ' ' + f.unit(r, battle).toLowerCase() : ''}`).join(' · ') + (rows.carry ? ` · ${rows.carry} carrying` : '');
+    $('saved').textContent = JSON.stringify(battle.toData(), null, 1);
+    bind();
   }
-  $('ctp-add').onclick = () => { if (ctp.entries.length < 5) { ctp.entries.push(discs[ctp.entries.length % discs.length].id); commit(); } };
-  $('ctp-remove').onclick = () => { if (ctp.entries.length > 2) { const gone = ctp.entries.length - 1; ctp.entries.pop(); ctp.holes = ctp.holes.map(w => w === gone ? null : w); commit(); } };
-  $('ctp-nobody').onclick = () => { ctp.holes.push(null); commit(); };
-  $('ctp-undo').onclick = () => { ctp.holes.pop(); commit(); };
-  $('ctp-reset').onclick = () => { ctp.holes = []; commit(); };
-  $('round-holes').onchange = () => { round.holes = +$('round-holes').value; round.hole = Math.min(round.hole, round.holes - 1); commit(); };
-  $('round-par').onchange = () => { round.par[round.hole] = Math.max(2, Math.min(6, Math.round(+$('round-par').value || 3))); commit(); };
-  $('round-prev').onclick = () => { round.hole = Math.max(0, round.hole - 1); commit(); };
-  $('round-next').onclick = () => { round.hole = Math.min(round.holes - 1, round.hole + 1); commit(); };
-  $('round-add').onclick = () => { if (round.players.length < 5) { round.players.push({ name: `Player ${round.players.length + 1}`, disc: discs[round.players.length % discs.length].id, strokes: Array(18).fill(null) }); commit(); } };
-  $('round-remove').onclick = () => { if (round.players.length > 2) { round.players.pop(); commit(); } };
-  $('round-reset').onclick = () => { round.players.forEach(p => p.strokes = Array(18).fill(null)); round.hole = 0; commit(); };
-  document.querySelectorAll('[data-kind]').forEach(el => el.onclick = () => { kind = el.dataset.kind; commit(); });
+  function bind() {
+    document.querySelectorAll('[data-name]').forEach(el => el.onchange = () => { data.entries[+el.dataset.name].name = el.value.trim(); commit(); });
+    document.querySelectorAll('[data-disc]').forEach(el => el.onchange = () => { data.entries[+el.dataset.disc].disc = el.value; commit(); });
+    document.querySelectorAll('[data-win]').forEach(el => el.onclick = () => { const v = el.dataset.win === 'none' ? null : +el.dataset.win; hole().winner = hole().winner === v ? undefined : v; if (ui.hole < data.holeCount - 1 && hole().winner !== undefined) ui.hole++; commit(); });
+    document.querySelectorAll('[data-strokes]').forEach(el => el.onchange = () => { hole().strokes[+el.dataset.strokes] = el.value === '' ? null : Math.max(1, Math.min(15, Math.round(+el.value))); commit(); });
+    document.querySelectorAll('[data-step]').forEach(el => el.onclick = () => { const i = +el.dataset.step, cur = hole().strokes[i]; hole().strokes[i] = cur == null ? hole().par : Math.max(1, Math.min(15, cur + +el.dataset.delta)); commit(); });
+  }
+  $('format').onchange = () => { data.format = $('format').value; ui.layout = null; commit(); };
+  $('layout').onchange = () => { ui.layout = $('layout').value; commit(); };
+  $('hole-count').onchange = () => { data.holeCount = +$('hole-count').value; ui.hole = Math.min(ui.hole, data.holeCount - 1); commit(); };
+  $('par').onchange = () => { hole().par = Math.max(2, Math.min(6, Math.round(+$('par').value || 3))); commit(); };
+  $('prev').onclick = () => { ui.hole = Math.max(0, ui.hole - 1); commit(); };
+  $('next').onclick = () => { ui.hole = Math.min(data.holeCount - 1, ui.hole + 1); commit(); };
+  $('add').onclick = () => { if (data.entries.length < 5) { data.entries.push({ name: '', disc: discs[data.entries.length % discs.length].id }); commit(); } };
+  $('remove').onclick = () => { if (data.entries.length > 2) { const gone = data.entries.length - 1; data.entries.pop(); data.holeList.forEach(h => { h.strokes[gone] = null; if (h.winner === gone) h.winner = undefined; }); commit(); } };
+  $('reset').onclick = () => { data.holeList = blankHoles(); ui.hole = 0; commit(); };
 
-  // ---- Render loop: newest request wins ----
   let token = 0, lastBlob = null;
   async function commit() {
-    save('battle-lab-kind', kind); save('battle-lab-ctp', ctp); save('battle-lab-round', round);
-    document.querySelectorAll('[data-kind]').forEach(el => el.setAttribute('aria-pressed', String(el.dataset.kind === kind)));
-    $('ctp-editor').hidden = kind !== 'ctp'; $('round-editor').hidden = kind !== 'round';
-    kind === 'ctp' ? paintCtp() : paintRound();
-    const mine = ++token, t = performance.now();
-    const result = kind === 'ctp' ? await drawCtp() : await drawRound();
+    battle = new Battle(data); save('battle-lab-v2', data); save('battle-lab-v2-ui', ui); paint();
+    const mine = ++token, t = performance.now(), layout = ui.layout ?? battle.format.layout;
+    const result = layout === 'cards' ? await drawCards() : await drawLeaderboard();
     if (mine !== token) return;
     lastBlob = await blobOf(result.canvas); if (mine !== token) return;
     const img = $('graphic'), old = img.src; img.src = URL.createObjectURL(lastBlob); if (old.startsWith('blob:')) URL.revokeObjectURL(old);
-    $('meta').innerHTML = `1920 × 1080 · ${result.note} · ${Math.round(performance.now() - t)} ms<br>Rule (disc image &gt; name &gt; numbers &gt; everything else): ${result.checks.map(c => `${esc(c.name)} <b class="${c.pass ? 'ok' : 'no'}">${c.pass ? 'pass' : 'fail'}</b>`).join(' · ')}`;
+    $('meta').innerHTML = `1920 × 1080 · ${esc(battle.format.constructor.label)} · ${result.note} · ${Math.round(performance.now() - t)} ms<br>Rule (disc image &gt; name &gt; numbers &gt; everything else): ${result.checks.map(c => `${esc(c.name)} <b class="${c.pass ? 'ok' : 'no'}">${c.pass ? 'pass' : 'fail'}</b>`).join(' · ')}`;
     document.body.dataset.done = 'true'; document.body.dataset.rule = String(result.checks.every(c => c.pass));
   }
-  $('download').onclick = () => { if (!lastBlob) return; const a = document.createElement('a'); a.href = URL.createObjectURL(lastBlob); a.download = `thro-battle-${kind}.png`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); };
+  $('download').onclick = () => { if (!lastBlob) return; const a = document.createElement('a'); a.href = URL.createObjectURL(lastBlob); a.download = `thro-battle-${data.format}.png`; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 2000); };
+  window.__battle = () => ({ data: battle.toData(), standings: battle.standings().map(r => ({ name: r.entry.name, pos: r.pos, total: r.total, toPar: r.toPar, played: r.played, show: battle.format.show(r) })), carry: battle.standings().carry });
   await commit();
 </script>
 </body>
