@@ -11,6 +11,7 @@ const runtimeFiles = [
   'thro-app.mjs',
   'thro.css',
   'workspace.mjs',
+  'workspace-package.mjs',
   'locked-storage.mjs',
   'archive-codec.mjs',
   'native-cards.mjs',

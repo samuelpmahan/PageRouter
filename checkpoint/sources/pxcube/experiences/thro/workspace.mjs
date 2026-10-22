@@ -7,6 +7,7 @@ import { createArchiveCodec } from './archive-codec.mjs';
 import { defaultDesign } from './graphics.mjs';
 import { createNativeRenderer, isNativeStudy, workspaceDesignChange } from './native-cards.mjs';
 import { validateFlightCorrection } from './prepared-fixture.mjs';
+import { createWorkspacePackage, snapshotJson } from './workspace-package.mjs';
 
 const codec = createArchiveCodec({ pack, unpack });
 
@@ -22,7 +23,7 @@ const failure = (code, message) => Object.assign(Error(message), { code });
 // isolates those mutations until the complete archive has durably committed.
 export async function openWorkspace({ storage = globalThis.localStorage, locks = globalThis.navigator?.locks, fixture, key = archiveKey, renderGraphic = createNativeRenderer() } = {}) {
   const retained = await openLockedArchive(storage, key, { locks, pack: codec.packArchive, unpack: codec.unpackArchive });
-  let committedRaw = retained.getItem(''), model, conflict = null, draft = null, queue = Promise.resolve();
+  let committedRaw = retained.getItem(''), model, conflict = null, draft = null, queue = Promise.resolve(), pending = 0;
   if (committedRaw === null) {
     if (!Array.isArray(fixture) || fixture.length === 0) throw Error('A prepared sample shelf is required.');
     let seededState;
@@ -51,6 +52,7 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
   }
 
   const serial = (intent, action) => {
+    pending++;
     const operation = queue.then(async () => {
       if (conflict) throw conflict;
       draft = clone(intent);
@@ -72,8 +74,9 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
         throw error;
       }
     });
-    queue = operation.catch(() => {});
-    return operation;
+    const finished = operation.finally(() => { pending--; });
+    queue = finished.catch(() => {});
+    return finished;
   };
 
   return {
@@ -82,6 +85,15 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
     get conflict() { return conflict; },
     get key() { return key; },
     settled: () => queue,
+    saveDisc(draft, depiction, sources = {}) {
+      const input = snapshotJson({ draft, depiction, sources });
+      return serial({ operation: 'save-disc', ...input }, candidate => candidate.experience.save(input.draft, input.depiction, input.sources));
+    },
+    async exportPackage({ identity, provenance = {} } = {}) {
+      const metadata = snapshotJson({ identity, provenance });
+      if (pending || draft || conflict) throw failure('THRO_PACKAGE_BUSY', 'Finish or recover the pending workspace change before exporting a package.');
+      return createWorkspacePackage({ raw: committedRaw, ...metadata });
+    },
     change(changes) {
       return serial({ operation: 'change', context: changes }, async candidate => {
         const next = await candidate.patch(workspaceDesignChange(candidate.context, changes, defaultDesign));
