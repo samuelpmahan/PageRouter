@@ -1,6 +1,11 @@
 // Native card pixels are an optional Single treatment. The renderer/catalog
 // module graph is imported only when one of these explicit studies is used.
 export const nativeBuild = '28ac2b39fab85255';
+// Thro card revisions (vendor/discstudio-cards/thro-card-core-r2.js): only layouts whose drawing changed have one.
+// A design without nativeRevision draws exactly as DiscStudio 6.6.1. A saved design keeps its revision until a
+// person chooses the fixed card; a layout picked fresh starts at its latest revision.
+export const cardRevisions = Object.freeze({ b01: 2, u04: 2 });
+export const latestCardRevision = study => (isNativeStudy(study) ? cardRevisions[nativeStudy(study).preset] : undefined);
 const definitions = [
   ['u01', 'Compact scorebug'], ['u02', 'Stacked poster'],
   ['u03-front', 'Disc in front'], ['u03-behind', 'Disc behind'],
@@ -34,7 +39,7 @@ export function nativeStudy(study) {
 }
 export function nativeDesign(previous, study) {
   const selected = nativeStudy(study), wasNative = isNativeStudy(previous.study), same = previous.study === study;
-  return { ...previous, study, rendererBuild: nativeBuild, orientation: selected.orientation, frame: 'none',
+  const design = { ...previous, study, rendererBuild: nativeBuild, orientation: selected.orientation, frame: 'none',
     accent: wasNative ? previous.accent : selected.accent,
     nativeScale: wasNative ? previous.nativeScale ?? 0.66 : 0.66,
     nativeSide: same ? previous.nativeSide ?? selected.side : selected.side,
@@ -42,6 +47,10 @@ export function nativeDesign(previous, study) {
     // Plate carries across layouts like the accent; a nudge belongs to one layout's geometry.
     nativePlate: wasNative ? previous.nativePlate ?? 'see-through' : 'see-through',
     nativeNudge: same && previous.nativeNudge ? { ...previous.nativeNudge } : { x: 0, y: 0 } };
+  delete design.nativeRevision;
+  const revision = same ? previous.nativeRevision : cardRevisions[selected.preset];
+  if (revision !== undefined) design.nativeRevision = revision;
+  return design;
 }
 const nudgeLimit = 1920;
 export const validNudge = nudge => nudge && Number.isFinite(nudge.x) && Number.isFinite(nudge.y) && Math.abs(nudge.x) <= nudgeLimit && Math.abs(nudge.y) <= nudgeLimit;
@@ -59,6 +68,8 @@ export function nativeControlDesign(previous, controls) {
     if (controls.side !== undefined) design.nativeSide = controls.side;
     if (controls.highlight !== undefined) design.nativeHighlight = controls.highlight;
     if (controls.nudge !== undefined) design.nativeNudge = validNudge(controls.nudge) ? { x: Math.round(controls.nudge.x), y: Math.round(controls.nudge.y) } : { x: 0, y: 0 };
+    // Moving a saved design to the fixed card is always an explicit choice.
+    if (controls.revision !== undefined && controls.revision === cardRevisions[nativeStudy(controls.study).preset]) design.nativeRevision = controls.revision;
   }
   return design;
 }
@@ -88,6 +99,8 @@ export function nativeCardRequest({ disc, resolved, design }) {
   if (!validNudge(nudge)) throw Error('Card position is out of range.');
   const appearance = { discSide: design.nativeSide ?? selected.side, highlightTarget: design.nativeHighlight ?? selected.highlight, accentColor: design.accent ?? selected.accent };
   if (design.nativePlate === 'solid') appearance.plate = 'solid';
+  const revision = design.nativeRevision;
+  if (revision !== undefined && revision !== cardRevisions[selected.preset]) throw Error('This card revision is not available for its layout.');
   return {
     disc: { id: disc.id, mold: disc.mold, name: resolved.name, manufacturer: resolved.manufacturer,
       plastic: disc.plastic ?? null, weight: disc.weight ?? null, depiction: { ...disc.depiction } },
@@ -96,6 +109,7 @@ export function nativeCardRequest({ disc, resolved, design }) {
     preset: selected.preset, placement: 'panel-default', scale, appearance,
     // The card keeps its own corner anchor; a nudge moves it from there (canvas pixels).
     ...(nudge.x || nudge.y ? { nudge: { x: nudge.x, y: nudge.y } } : {}),
+    ...(revision !== undefined ? { revision } : {}),
   };
 }
 async function preparedPhotoDigest(source) {
@@ -120,6 +134,8 @@ export function createNativeRenderer(renderCard = async request => {
     const request = nativeCardRequest(input), result = await renderCard(request);
     const portrait = nativeStudy(input.design.study).orientation === 'portrait';
     if (result.build !== nativeBuild) throw Error('Native renderer build does not match this saved design.');
+    // A renderer that does not report a revision drew revision 1; one that ignored the asked revision is refused.
+    if ((result.revision ?? 1) !== (request.revision ?? 1)) throw Error('The card renderer drew another revision than this design asked for.');
     if (result.width !== (portrait ? 1080 : 1920) || result.height !== (portrait ? 1920 : 1080)) throw Error('Native card dimensions do not match its layout.');
     if (typeof result.svg !== 'string' || !/href=["']data:image\/png;base64,/.test(result.svg) || /href=["'](?:https?:|blob:)/i.test(result.svg)) throw Error('Native output must contain its retained PNG pixels.');
     // Explicit allowlist: the adapter's Blob and any browser objects never enter
@@ -133,6 +149,7 @@ export function createNativeRenderer(renderCard = async request => {
       appearance: { ...request.appearance }, placement: { ...result.placement }, rasterOnly: true,
       // the nudge the design asked for, kept apart from the placement the adapter's clamp produced
       ...(request.nudge ? { nudge: { ...request.nudge } } : {}),
+      ...(request.revision !== undefined ? { revision: request.revision } : {}),
     } };
   };
   // Bag: each entry is the exact request its Single card would make, set in one frame.

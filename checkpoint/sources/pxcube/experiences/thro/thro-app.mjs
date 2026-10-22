@@ -1,5 +1,5 @@
 import { openWorkspace } from './workspace.mjs';
-import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, cardLayout } from './native-cards.mjs';
+import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, cardLayout, latestCardRevision } from './native-cards.mjs';
 import { attachCardEditor, detachCardEditor } from './card-editor.mjs';
 import { createThroWorld, decide, SITE_FILL } from './thro-world.mjs';
 import { alphaBounds, fitArtwork } from './preview-frame.mjs';
@@ -214,7 +214,7 @@ function thumbDesign(id) {
 // Rendered thumbnails are cached by everything that changes how they look, so a repaint
 // never blanks the picker; a stale thumbnail stays visible (dimmed) while its new one renders.
 const thumbCache = new Map(), lastThumb = new Map();
-const thumbKey = (disc, id) => { const d = thumbDesign(id); return JSON.stringify([disc, id, isLineupStudy(id) ? [ui.selection, context().competitionAddress] : null, d.accent, d.foreground, d.background, d.nativeSide ?? null, d.nativeHighlight ?? null, d.nativeScale ?? null, d.nativePlate ?? null]); };
+const thumbKey = (disc, id) => { const d = thumbDesign(id); return JSON.stringify([disc, id, isLineupStudy(id) ? [ui.selection, context().competitionAddress] : null, d.accent, d.foreground, d.background, d.nativeSide ?? null, d.nativeHighlight ?? null, d.nativeScale ?? null, d.nativePlate ?? null, d.nativeRevision ?? null]); };
 async function paintCompositionThumbs() {
   const token = ++thumbToken, disc = ui.mode === 'single' ? ui.selectedDisc : (ui.selection[0] ?? ui.selectedDisc);
   if (!disc) return;
@@ -441,7 +441,7 @@ function editCard(holder, graphic) {
   // The card's own pixel bounds (plate included) are the drag target; the renderer's layout places the taps.
   rasterBounds(graphic.svg).then(bounds => {
     if (holder.querySelector('svg') !== svg || graphic !== currentGraphic()) return;
-    attachCardEditor(holder, { graphic, layout: cardLayout(graphic.svg), bounds: bounds && { x: bounds.x, y: bounds.y, w: bounds.width, h: bounds.height }, design, onChange: (controls, note) => {
+    attachCardEditor(holder, { graphic, layout: cardLayout(graphic.svg), bounds: bounds && { x: bounds.x, y: bounds.y, w: bounds.width, h: bounds.height }, design, fixedRevision: latestCardRevision(ui.design.study), onChange: (controls, note) => {
       ui.design = nativeControlDesign(ui.design, { study: ui.design.study, ...controls });
       change({ design: structuredClone(ui.design) }, `${note}. Your graphic is ready.`);
     } });

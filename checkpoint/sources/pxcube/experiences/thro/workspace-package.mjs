@@ -10,7 +10,7 @@ import { openLockedArchive } from './locked-storage.mjs';
 import { createWorkspaceCodec } from './archive-codec.mjs';
 import { pack, unpack } from './archive-storage.mjs';
 
-import { bad, unsupported, require, same, exactKeys, encoder, snapshotJson, digest, digestBytes, envelopeDigest, identity, rawBytes, DATA_SCHEMA, EDIT_PROFILE, validPlate, validNudge } from './transfer-contracts.mjs';
+import { bad, unsupported, require, same, exactKeys, encoder, snapshotJson, digest, digestBytes, envelopeDigest, identity, rawBytes, DATA_SCHEMA, EDIT_PROFILE, validPlate, validNudge, validRevision } from './transfer-contracts.mjs';
 import { preflight, inspectWorkspacePackage, deriveRequirements } from './archive-inspection.mjs';
 export { snapshotJson } from './transfer-contracts.mjs';
 export { inspectWorkspacePackage } from './archive-inspection.mjs';
@@ -49,10 +49,12 @@ async function validateWorld(raw, renderGraphic) {
       require(['left', 'right'].includes(item.nativeSide ?? defaults.side) && ['digits', 'tiles'].includes(item.nativeHighlight ?? defaults.highlight)
         && Number.isFinite(item.nativeScale ?? 0.66) && (item.nativeScale ?? 0.66) >= 0.5 && (item.nativeScale ?? 0.66) <= 1.5, 'Unsupported native appearance.');
     }
-    // Plate and nudge: omitted keeps the old defaults; anything supplied must be exactly valid (no normalising).
+    else require(allCardStudies.some(study => study.id === item.study), 'Unsupported legacy design.');
+    // Plate, nudge and card revision: omitted keeps the old defaults; anything supplied must be exactly valid
+    // (no normalising). Checked after, not between, the native/legacy branches above, so neither branch is skipped.
     if (Object.hasOwn(item, 'nativePlate')) require(validPlate(item.nativePlate), 'Unsupported native plate.');
     if (Object.hasOwn(item, 'nativeNudge')) require(validNudge(item.nativeNudge), 'Unsupported native nudge.');
-    else require(allCardStudies.some(study => study.id === item.study), 'Unsupported legacy design.');
+    if (Object.hasOwn(item, 'nativeRevision')) require(isNativeStudy(item.study) && validRevision(nativeStudy(item.study).preset, item.nativeRevision), 'Unsupported card revision.');
   };
   require(shelf.length > 0 && new Set(shelf.map(row => row.disc.id)).size === shelf.length, 'A prepared shelf needs distinct physical copies.');
   for (const row of shelf) disc(row.address);
@@ -89,12 +91,12 @@ async function validateWorld(raw, renderGraphic) {
       if (isNativeStudy(capture.design.study)) {
         const provenance = capture.graphic.provenance;
         const request = nativeCardRequest({ disc: specimen, resolved, design: capture.design });
-        require(exactKeys(provenance, ['schema', 'renderer', 'rendererBuild', 'preset', 'physicalDiscId', 'discAddress', 'designAddress', 'resolvedAddress', 'preparedPhotoSha256', 'appearance', 'placement', 'rasterOnly', ...(request.nudge ? ['nudge'] : [])])
+        require(exactKeys(provenance, ['schema', 'renderer', 'rendererBuild', 'preset', 'physicalDiscId', 'discAddress', 'designAddress', 'resolvedAddress', 'preparedPhotoSha256', 'appearance', 'placement', 'rasterOnly', ...(request.nudge ? ['nudge'] : []), ...(request.revision !== undefined ? ['revision'] : [])])
           && provenance.schema === 'thro-native-card@1' && provenance.renderer === 'discstudio-cards' && provenance.rasterOnly === true
           && provenance.preset === request.preset && provenance.rendererBuild === nativeBuild && provenance.discAddress === source.disc && provenance.physicalDiscId === specimen.id
           && provenance.designAddress === source.design && same(value(provenance.resolvedAddress), resolved), 'Native capture provenance is not bound to its owning version.');
         // provenance.nudge is what the design asked for; provenance.placement is where the adapter's clamp put the card.
-        require(same(provenance.appearance, request.appearance) && same(provenance.nudge, request.nudge) && exactKeys(provenance.placement, ['scale', 'dx', 'dy']) && provenance.placement.scale === request.scale
+        require(same(provenance.appearance, request.appearance) && same(provenance.nudge, request.nudge) && provenance.revision === request.revision && exactKeys(provenance.placement, ['scale', 'dx', 'dy']) && provenance.placement.scale === request.scale
           && [provenance.placement.dx, provenance.placement.dy].every(value => Number.isFinite(value) && Math.abs(value) <= 1), 'Native capture treatment differs from its retained design.');
         const photo = Uint8Array.from(atob(specimen.depiction.src.split(',')[1]), value => value.charCodeAt(0));
         require(provenance.preparedPhotoSha256 === await digestBytes(photo), 'Native capture prepared-photo identity differs from its retained bytes.');

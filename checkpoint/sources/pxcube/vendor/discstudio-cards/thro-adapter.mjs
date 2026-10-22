@@ -4,6 +4,7 @@
 // pngFromSvg export path reproduces those pixels unchanged. Nothing in thro changes.
 import { CARD_SIZE, browserFrames, sizeBrowserSticker, ensureCardFonts } from './browser-card-renderer.js?v=28ac2b39fab85255';
 import { drawCard } from './card-renderer-core.js?v=28ac2b39fab85255';
+import { drawCard as drawCardRevision2 } from './thro-card-core-r2.js?v=28ac2b39fab85255';
 import { getMoldDetails } from './mold-library.js?v=28ac2b39fab85255';
 import { alphaBounds as rasterAlphaBounds, cardRasterIdentity, stickerOrigin } from './sticker-raster.mjs?v=28ac2b39fab85255';
 import { imageLayer } from './frame-seek.mjs?v=28ac2b39fab85255';
@@ -13,6 +14,14 @@ import { anchoredDefaultPlacement, clampTransform } from './transform-geometry.m
 export const build = '28ac2b39fab85255';
 export const version = '6.6.1';
 export const DEFAULT_CARD_SCALE = 0.66; // what the DiscStudio export panel uses for an untouched card
+/** Thro card revisions: a recipe without a revision draws exactly as DiscStudio 6.6.1 (revision 1).
+ *  Revision 2 exists only where the drawing changed (thro-card-core-r2.js): B01 upright disc, U04 smaller manufacturer. */
+export const cardRevisions = Object.freeze({ b01: 2, u04: 2 });
+function coreFor(preset, revision) {
+  if (revision === undefined || revision === null || revision === 1) return drawCard;
+  if (revision === 2 && cardRevisions[preset] === 2) return drawCardRevision2;
+  throw Error(`Card revision ${revision} is not available for layout ${preset}.`);
+}
 export const presets = Object.freeze([
   { id: 'u01', orientation: 'vertical', name: 'U01 · Compact scorebug' }, { id: 'u02', orientation: 'vertical', name: 'U02 · Stacked poster' },
   { id: 'u03-front', orientation: 'vertical', name: 'U03 · Disc in front' }, { id: 'u03-behind', orientation: 'vertical', name: 'U03 · Disc behind' },
@@ -163,7 +172,7 @@ export function resolveCardPlacement(placement, footprint, scale = DEFAULT_CARD_
 /** Draw one native card on its own full-size canvas, once. DiscStudio's renderCardBlob makes
  *  exactly these calls; keeping the canvas lets its layout be read and its pixels be reused
  *  for placement instead of drawing the whole card a second time. */
-async function drawNativeCard({ disc, photoSrc, flights, preset, appearance }) {
+async function drawNativeCard({ disc, photoSrc, flights, preset, appearance, revision }) {
   const { id, orientation } = presetById(preset);
   const look = validateCardAppearance({ ...defaultCardAppearance(id), ...(appearance ?? {}) });
   const card = cardFromThroDisc(disc, { photoSrc, flights });
@@ -172,19 +181,25 @@ async function drawNativeCard({ disc, photoSrc, flights, preset, appearance }) {
   const canvas = newCanvas(width, height), context = canvas.getContext('2d');
   if (!context) throw new Error('Canvas2D is unavailable in this browser.');
   await ensureCardFonts();
-  await drawCard(context, card, orientation, id, { loadImage, getMoldDetails, strictPhoto: true, createCanvas: newCanvas, frameRenderer: browserFrames }, look);
+  await coreFor(id, revision)(context, card, orientation, id, { loadImage, getMoldDetails, strictPhoto: true, createCanvas: newCanvas, frameRenderer: browserFrames }, look);
   const png = await canvasBlob(canvas), items = drawn.get(canvas)?.items ?? [];
   const bounds = rasterAlphaBounds(context.getImageData(0, 0, width, height).data, width, height);
-  return { id, orientation, look, card, width, height, png, items, bounds, moldName: card.renderer?.moldName ?? disc.name };
+  return { id, orientation, look, card, width, height, png, items, bounds, moldName: card.renderer?.moldName ?? disc.name, revision: revision ?? 1 };
 }
 /** DiscStudio's sticker step, from a PNG already made: the card cropped to its pixels at this scale. */
-const stickerFor = async (native, scale) => sizeBrowserSticker(await blobImage(native.png), native.width, native.height, native.bounds, cardRasterIdentity(native.card, native.orientation, native.id, native.look), scale);
+// DiscStudio's sticker sizer caches by this identity. Revision 1 keeps DiscStudio's identity exactly; a later
+// revision is part of the identity, or a card drawn at one revision would be served for the other.
+const stickerIdentity = native => {
+  const identity = cardRasterIdentity(native.card, native.orientation, native.id, native.look);
+  return native.revision === 1 ? identity : JSON.stringify(['thro-card-revision', native.revision, identity]);
+};
+const stickerFor = async (native, scale) => sizeBrowserSticker(await blobImage(native.png), native.width, native.height, native.bounds, stickerIdentity(native), scale);
 const toSticker = (native, sticker, origin) => new DOMMatrix([sticker.scale, 0, 0, sticker.scale, origin.x - native.bounds[0] * sticker.scale - sticker.cropOffset.x, origin.y - native.bounds[1] * sticker.scale - sticker.cropOffset.y]);
 const svgFor = async (png, width, height) => `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><image width="${width}" height="${height}" href="${await toDataUrl(png)}"/></svg>`;
 
-export async function renderDiscStudioCard({ disc, photoSrc, flights, preset = 'b01', appearance, placement = 'panel-default', scale = DEFAULT_CARD_SCALE, nudge = null }) {
+export async function renderDiscStudioCard({ disc, photoSrc, flights, preset = 'b01', appearance, placement = 'panel-default', scale = DEFAULT_CARD_SCALE, nudge = null, revision }) {
   if (placement === 'panel-default') validatePanelScale(scale);
-  const native = await drawNativeCard({ disc, photoSrc, flights, preset, appearance }), { width, height } = native;
+  const native = await drawNativeCard({ disc, photoSrc, flights, preset, appearance, revision }), { width, height } = native;
   const footprint = placement === 'panel-default' ? { width, height, alphaBounds: [...native.bounds] } : undefined;
   const transform = resolveCardPlacement(placement, footprint, scale, nudge);
   let png = native.png, toPlaced = new DOMMatrix();
@@ -199,7 +214,7 @@ export async function renderDiscStudioCard({ disc, photoSrc, flights, preset = '
     toPlaced = toSticker(native, sticker, origin);
   }
   const layout = layoutOf(native.items.map(item => itemThrough(item, toPlaced)), native.moldName);
-  return { svg: await svgFor(png, width, height), width, height, png, layout, preset: native.id, orientation: native.orientation, appearance: native.look, placement: transform, build };
+  return { svg: await svgFor(png, width, height), width, height, png, layout, preset: native.id, orientation: native.orientation, appearance: native.look, placement: transform, build, revision: native.revision };
 }
 
 /** A lineup (Battle or Bag): 2–4 DiscStudio cards, each drawn by the same renderer as a Single

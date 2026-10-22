@@ -94,7 +94,7 @@ test('invalid namespace, unavailable locks, quota and uncertain readback fail wi
 
 test('native adoption preserves retained carrier bytes without repainting on the recipient (synthetic producer, no browser-pixel claim)', async () => {
   const png = syntheticPng(1920, 1080);
-  const renderGraphic = createNativeRenderer(async request => ({ svg: `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" href="data:image/png;base64,${png}"/></svg>`, width: 1920, height: 1080, build: identity.nativeRendererBuild, placement: { scale: request.scale, dx: 0, dy: 0 } }));
+  const renderGraphic = createNativeRenderer(async request => ({ svg: `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" href="data:image/png;base64,${png}"/></svg>`, width: 1920, height: 1080, build: identity.nativeRendererBuild, revision: request.revision ?? 1, placement: { scale: request.scale, dx: 0, dy: 0 } }));
   const workspace = await openWorkspace({ storage: storage(), locks: locks(), fixture, renderGraphic });
   await workspace.change({ design: nativeDesign(workspace.model.context.design, 'discstudio:b01') });
   const kept = await workspace.keep(await workspace.single(workspace.model.context.selectedDisc));
@@ -151,7 +151,7 @@ test('uncaptured live lineup and dormant design corruption cannot install a star
 
 test('mixed painted/photo shelf validates native state against its actual selected photo', async () => {
   const mixed = fixture.map((item, i) => i === 0 ? { ...item, depiction: paintings[0] } : item);
-  const renderGraphic = createNativeRenderer(async request => ({ svg: `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" href="data:image/png;base64,${syntheticPng(1920, 1080)}"/></svg>`, width: 1920, height: 1080, build: identity.nativeRendererBuild, placement: { scale: request.scale, dx: 0, dy: 0 } }));
+  const renderGraphic = createNativeRenderer(async request => ({ svg: `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" href="data:image/png;base64,${syntheticPng(1920, 1080)}"/></svg>`, width: 1920, height: 1080, build: identity.nativeRendererBuild, revision: request.revision ?? 1, placement: { scale: request.scale, dx: 0, dy: 0 } }));
   const workspace = await openWorkspace({ storage: storage(), locks: locks(), fixture: mixed, renderGraphic });
   await workspace.change({ selectedDisc: workspace.model.experience.shelf()[1].address, design: nativeDesign(workspace.model.context.design, 'discstudio:b01') });
   const packageValue = await workspace.exportPackage({ identity });

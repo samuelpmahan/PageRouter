@@ -32,7 +32,7 @@ const union = boxes => {
  *  layout: the boxes the renderer reported for this exact card (canvas pixels).
  *  bounds: the card's visible pixels, plate included (canvas pixels), when known.
  *  onChange(controls, note): controls are { nudge } | { scale } | { side } | { highlight } | { plate }. */
-export function attachCardEditor(holder, { graphic, layout, bounds = null, design, onChange }) {
+export function attachCardEditor(holder, { graphic, layout, bounds = null, design, fixedRevision, onChange }) {
   holder.querySelector(':scope > .card-editor')?.remove();
   const svg = holder.querySelector(':scope > svg');
   const card = union([bounds, layout?.photo, layout?.name, layout?.numbers, ...(layout?.other ?? [])]);
@@ -70,7 +70,13 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
     [`⇄ Disc <b>${side === 'left' ? 'left' : 'right'}</b>`, `Put the disc on the ${other}`, layout.photo, true, () => onChange({ side: other }, `Disc on the ${other}`)],
     [`# Accent on <b>${tiles ? 'tiles' : 'digits'}</b>`, `Put the accent on the ${tiles ? 'digits' : 'tiles'}`, layout.numbers, false, () => onChange({ highlight: tiles ? 'digits' : 'tiles' }, tiles ? 'Accent on the digits' : 'Accent on the tiles')],
     [`Plate <b>${solid ? 'solid' : 'see-through'}</b>`, `Make the plate ${solid ? 'see-through' : 'solid'}`, bounds ?? card, false, () => onChange({ plate: solid ? 'see-through' : 'solid' }, solid ? 'See-through plate' : 'Solid plate')],
-  ].filter(([, , target]) => target).map(([html, aria, target, round, act]) => {
+  ];
+  // A saved B01 or U04 keeps the drawing it was made with; moving it to the fixed card is a person's choice.
+  if (fixedRevision !== undefined && design.nativeRevision !== fixedRevision) {
+    const b01 = String(design.study).endsWith(':b01'), what = b01 ? 'upright disc' : 'smaller manufacturer';
+    actions.push([`✦ Use the fixed card <b>(${what})</b>`, `Use the fixed card: ${b01 ? 'the disc photo is drawn upright' : 'the manufacturer is smaller than the flight numbers'}`, b01 ? layout.photo : (layout.other?.[0] ?? card), b01, () => onChange({ revision: fixedRevision }, 'Fixed card applied')]);
+  }
+  const controls = actions.filter(([, , target]) => target).map(([html, aria, target, round, act]) => {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'ce-act'; b.innerHTML = html; b.title = aria; b.setAttribute('aria-label', aria);
     const hint = el('div', `ce-hint${round ? ' round' : ''}`);
     const show = on => hint.classList.toggle('on', on);
@@ -83,7 +89,7 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
     if (!layer.isConnected) return stop();
     const m = view(), hw = holder.clientWidth, hh = holder.clientHeight;
     put(box, card, m); at(knob, corner.x, corner.y, m, hw, hh);
-    for (const { hint, target } of actions) put(hint, { x: target.x - 6 / m.s, y: target.y - 6 / m.s, w: target.w + 12 / m.s, h: target.h + 12 / m.s }, m);
+    for (const { hint, target } of controls) put(hint, { x: target.x - 6 / m.s, y: target.y - 6 / m.s, w: target.w + 12 / m.s, h: target.h + 12 / m.s }, m);
   }
   const resize = new ResizeObserver(place), watch = new MutationObserver(place);
   resize.observe(holder); watch.observe(svg, { attributes: true, attributeFilter: ['viewBox', 'style', 'class'] });

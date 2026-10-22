@@ -61,3 +61,17 @@ node --test local/test/thro-discstudio-adapter.test.mjs local/test/thro-discstud
 These checks establish mapping, placement and byte correspondence. Browser
 rendering, integrated persistence and human visual acceptance require separate
 executed evidence. This package adds no hosted authentication or telemetry.
+
+## Thro card revisions
+
+`thro-card-core-r2.js` is Thro-owned and pinned under `throFiles` in `SOURCE-PIN.json`, beside the
+unchanged native files. It differs from `card-renderer-core.js` in exactly two drawings: B01's hero
+disc is upright, and U04's manufacturer is fitted from 30 px so it sits below the flight numbers.
+`renderDiscStudioCard({ ..., revision: 2 })` uses it for `b01` and `u04` only; a request without a
+revision draws exactly as DiscStudio 6.6.1, and any other revision is refused.
+
+DiscStudio's sticker sizer caches each sized card by `cardRasterIdentity`, which knows nothing of
+revisions. The adapter keeps that identity unchanged for revision 1 and tags it with the revision
+otherwise; without that, whichever revision of a disc and layout was drawn first is served for both.
+`local/test/thro-card-revision-browser.mjs` draws both revisions in both orders and fails on that.
+Every result reports the revision it drew, and `native-cards.mjs` refuses one that does not match.

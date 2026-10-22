@@ -58,7 +58,8 @@ const sourcePin = JSON.parse(fs.readFileSync(cardVendorFile('SOURCE-PIN.json'), 
 if (sourcePin.schema !== 'thro-discstudio-vendor-pin@1' || sourcePin.nativeFiles?.length !== 15 || sourcePin.adapter?.path !== 'thro-adapter.mjs') {
   throw Error('Invalid DiscStudio card vendor source pin.');
 }
-const pinnedCardFiles = [...sourcePin.nativeFiles, sourcePin.adapter];
+// throFiles: Thro-owned card files (card revisions) pinned beside the unchanged native ones.
+const pinnedCardFiles = [...sourcePin.nativeFiles, ...(sourcePin.throFiles ?? []), sourcePin.adapter];
 const vendorNames = new Set();
 for (const item of pinnedCardFiles) {
   if (typeof item.path !== 'string' || item.path.includes('\\') || item.path.startsWith('/') || item.path.split('/').some(part => !part || part === '..') || vendorNames.has(item.path)) {

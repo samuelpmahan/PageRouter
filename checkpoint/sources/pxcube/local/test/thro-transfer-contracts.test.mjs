@@ -118,7 +118,7 @@ test('saved native PNG remains inspectable when its recipe build is unsupported 
   // Deliberately only a synthetic header carrier, not a browser-pixel claim.
   const header = Buffer.alloc(33); Buffer.from('89504e470d0a1a0a', 'hex').copy(header); header.write('IHDR', 12); header.writeUInt32BE(1920, 16); header.writeUInt32BE(1080, 20);
   const png = `data:image/png;base64,${header.toString('base64')}`;
-  const renderGraphic = createNativeRenderer(async request => ({ svg: `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" href="${png}"/></svg>`, width: 1920, height: 1080, build: identity.nativeRendererBuild, placement: { scale: request.scale, dx: 0, dy: 0 } }));
+  const renderGraphic = createNativeRenderer(async request => ({ svg: `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" href="${png}"/></svg>`, width: 1920, height: 1080, build: identity.nativeRendererBuild, revision: request.revision ?? 1, placement: { scale: request.scale, dx: 0, dy: 0 } }));
   const workspace = await openWorkspace({ storage: storage(), locks, fixture, renderGraphic });
   const design = nativeDesign(workspace.model.context.design, 'discstudio:b01');
   await workspace.change({ design }); await workspace.keep(await workspace.single(workspace.model.context.selectedDisc, design));
@@ -196,7 +196,7 @@ test('plate and nudge: defaults, exact round-trip, invalid active/dormant/captur
   const header = Buffer.alloc(33); Buffer.from('89504e470d0a1a0a', 'hex').copy(header); header.write('IHDR', 12); header.writeUInt32BE(1920, 16); header.writeUInt32BE(1080, 20);
   const png = `data:image/png;base64,${header.toString('base64')}`, requests = [];
   // The synthetic adapter clamps like the real one would: requested nudge and resulting placement differ on purpose.
-  const renderGraphic = createNativeRenderer(async request => { requests.push(request); return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" href="${png}"/></svg>`, width: 1920, height: 1080, build: identity.nativeRendererBuild, placement: { scale: request.scale, dx: request.nudge ? 0.25 : 0, dy: 0 } }; });
+  const renderGraphic = createNativeRenderer(async request => { requests.push(request); return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" href="${png}"/></svg>`, width: 1920, height: 1080, build: identity.nativeRendererBuild, revision: request.revision ?? 1, placement: { scale: request.scale, dx: request.nudge ? 0.25 : 0, dy: 0 } }; });
   const CAP = 'thro-card-appearance@1';
   const contextNode = raw => { const pair = raw.bindings.filter(([name]) => /^ds\.px\.studio\.demo\.\d+\.context$/.test(name)).at(-1); return raw.nodes.find(item => item.id === pair[1]); };
   const editContext = (raw, fn) => { const node = contextNode(raw), context = decode(node.material); fn(context); delete node.calculation; delete node.inputs; node.material = encode(context); };
@@ -254,4 +254,110 @@ test('plate and nudge: defaults, exact round-trip, invalid active/dormant/captur
   await refuses(hidden, 'THRO_PACKAGE_INVALID', 'hidden-capability');
   const future = structuredClone(styledPackage); future.compatibility.requiredCapabilities.push('thro-card-appearance@2'); seal(future);
   await refuses(future, 'THRO_PACKAGE_UNSUPPORTED', 'unknown-consumer');
+});
+
+test('card revision 2 (B01 upright disc, U04 smaller manufacturer): fresh designs get it, saved ones keep revision 1 until chosen, and packages declare it (synthetic producer, no browser-pixel claim)', async () => {
+  const { createNativeRenderer, nativeDesign, nativeControlDesign, nativeCardRequest } = await import(new URL('native-cards.mjs', runtime));
+  const manifest = JSON.parse(fs.readFileSync(new URL('prepared-fixture.json', runtime)));
+  const fixture = manifest.discs.map(disc => ({ ...disc, depiction: { kind: 'photo', name: disc.name, src: `data:image/webp;base64,${fs.readFileSync(new URL(disc.file, runtime)).toString('base64')}` } }));
+  const header = Buffer.alloc(33); Buffer.from('89504e470d0a1a0a', 'hex').copy(header); header.write('IHDR', 12); header.writeUInt32BE(1920, 16); header.writeUInt32BE(1080, 20);
+  const png = `data:image/png;base64,${header.toString('base64')}`, requests = [];
+  const renderGraphic = createNativeRenderer(async request => { requests.push(request); return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" href="${png}"/></svg>`, width: 1920, height: 1080, build: identity.nativeRendererBuild, revision: request.revision ?? 1, placement: { scale: request.scale, dx: 0, dy: 0 } }; });
+  const CAP = 'thro-card-revision@2/b01';
+  const contextNode = raw => { const pair = raw.bindings.filter(([name]) => /^ds\.px\.studio\.demo\.\d+\.context$/.test(name)).at(-1); return raw.nodes.find(item => item.id === pair[1]); };
+  const editContext = (raw, fn) => { const node = contextNode(raw), context = decode(node.material); fn(context); delete node.calculation; delete node.inputs; node.material = encode(context); };
+  const refuses = async (value, code, label) => { const target = storage(); await assert.rejects(api.adoptWorkspacePackage({ storage: target, locks, key: `thro.test:${label}`, package: value, renderGraphic }), code ? { code } : undefined, label); assert.equal(target.values.size, 0, `${label} wrote nothing`); };
+
+  // Fresh layouts start at their latest revision; layouts that never changed have none.
+  const start = (await openWorkspace({ storage: storage(), locks, fixture })).model.context.design;
+  assert.equal(nativeDesign(start, 'discstudio:b01').nativeRevision, 2);
+  assert.equal(nativeDesign(start, 'discstudio:u04').nativeRevision, 2);
+  assert.ok(!Object.hasOwn(nativeDesign(start, 'discstudio:b02'), 'nativeRevision'));
+  // A saved revision-1 design stays revision 1 when re-derived, and moves only when a person asks.
+  const saved = { ...nativeDesign(start, 'discstudio:b01') }; delete saved.nativeRevision;
+  assert.ok(!Object.hasOwn(nativeDesign(saved, 'discstudio:b01'), 'nativeRevision'), 'same layout keeps revision 1');
+  assert.equal(nativeControlDesign(saved, { study: 'discstudio:b01', revision: 2 }).nativeRevision, 2, 'explicit choice moves it');
+  assert.ok(!Object.hasOwn(nativeControlDesign(saved, { study: 'discstudio:b01', revision: 3 }), 'nativeRevision'), 'unknown revision ignored');
+
+  // Revision 2 flows into the request, the kept card and the package requirement, and round-trips exactly.
+  const fresh = await openWorkspace({ storage: storage(), locks, fixture, renderGraphic });
+  const design = nativeDesign(fresh.model.context.design, 'discstudio:b01');
+  await fresh.change({ design });
+  const kept = await fresh.keep(await fresh.single(fresh.model.context.selectedDisc, design));
+  assert.equal(requests.at(-1).revision, 2); assert.equal(kept.capture.graphic.provenance.revision, 2);
+  const revised = await fresh.exportPackage({ identity });
+  assert.ok(revised.compatibility.requiredCapabilities.includes(CAP));
+  const target = storage(), key = 'thro.test:revision-roundtrip';
+  await api.adoptWorkspacePackage({ storage: target, locks, key, package: revised, renderGraphic });
+  const reopened = await openWorkspace({ storage: target, locks, key, renderGraphic });
+  assert.equal(reopened.model.context.design.nativeRevision, 2);
+  assert.deepEqual(reopened.model.value(kept.address), kept.capture, 'kept image bytes and provenance preserved exactly');
+
+  // A revision-1 recipe needs nothing new and draws revision 1.
+  const old = await openWorkspace({ storage: storage(), locks, fixture, renderGraphic });
+  await old.change({ design: saved });
+  const oldKept = await old.keep(await old.single(old.model.context.selectedDisc, saved));
+  assert.equal(requests.at(-1).revision, undefined); assert.ok(!Object.hasOwn(oldKept.capture.graphic.provenance, 'revision'));
+  const oldPackage = await old.exportPackage({ identity });
+  assert.ok(!oldPackage.compatibility.requiredCapabilities.some(item => item.startsWith('thro-card-revision@')));
+  await api.adoptWorkspacePackage({ storage: storage(), locks, key: 'thro.test:revision-1', package: oldPackage, renderGraphic });
+
+  // Malformed revisions fail with zero writes, and nothing can hide or invent the requirement.
+  for (const [label, fn] of [
+    ['revision-3', context => { context.design.nativeRevision = 3; }],
+    ['revision-on-unchanged-layout', context => { context.design = { ...context.design, study: 'discstudio:b02' }; }],
+    ['revision-string', context => { context.singleDesign.nativeRevision = '2'; }],
+  ]) await refuses(rewritten(revised, raw => editContext(raw, fn)), null, label);
+  const mismatch = rewritten(revised, raw => {
+    const captureNode = raw.nodes.find(node => node.material && decode(node.material)?.schema === 'studio-graphic@1'), capture = decode(captureNode.material);
+    delete capture.graphic.provenance.revision; capture.hash = sha(capture.graphic.svg);
+    delete captureNode.calculation; delete captureNode.inputs; captureNode.material = encode(capture);
+    const graphicId = raw.bindings.find(([name]) => name === capture.source.graphic)[1], graphicNode = raw.nodes.find(node => node.id === graphicId);
+    delete graphicNode.calculation; delete graphicNode.inputs; graphicNode.material = encode(capture.graphic);
+  });
+  await refuses(mismatch, null, 'provenance-revision-dropped');
+  const hidden = structuredClone(revised); hidden.compatibility.requiredCapabilities = hidden.compatibility.requiredCapabilities.filter(item => item !== CAP); seal(hidden);
+  await refuses(hidden, 'THRO_PACKAGE_INVALID', 'hidden-revision');
+  const future = structuredClone(revised); future.compatibility.requiredCapabilities.push('thro-card-revision@3/b01'); seal(future);
+  await refuses(future, 'THRO_PACKAGE_UNSUPPORTED', 'unknown-revision-consumer');
+  assert.throws(() => nativeCardRequest({ disc: fresh.model.experience.shelf()[0].disc, resolved: fresh.model.experience.resolve(fresh.model.experience.shelf()[0].disc), design: { ...design, nativeRevision: 3 } }), /revision/);
+});
+
+test('regression (f1525a4): plate/nudge/revision checks never skip the native or legacy design check', async () => {
+  const { createNativeRenderer, nativeDesign } = await import(new URL('native-cards.mjs', runtime));
+  const manifest = JSON.parse(fs.readFileSync(new URL('prepared-fixture.json', runtime)));
+  const fixture = manifest.discs.map(disc => ({ ...disc, depiction: { kind: 'photo', name: disc.name, src: `data:image/webp;base64,${fs.readFileSync(new URL(disc.file, runtime)).toString('base64')}` } }));
+  const header = Buffer.alloc(33); Buffer.from('89504e470d0a1a0a', 'hex').copy(header); header.write('IHDR', 12); header.writeUInt32BE(1920, 16); header.writeUInt32BE(1080, 20);
+  const png = `data:image/png;base64,${header.toString('base64')}`;
+  const renderGraphic = createNativeRenderer(async request => ({ svg: `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" href="${png}"/></svg>`, width: 1920, height: 1080, build: identity.nativeRendererBuild, revision: request.revision ?? 1, placement: { scale: request.scale, dx: 0, dy: 0 } }));
+  // A native design saved before the card editor existed carries no plate, nudge or revision key.
+  const before = await openWorkspace({ storage: storage(), locks, fixture, renderGraphic });
+  const design = nativeDesign(before.model.context.design, 'discstudio:b02');
+  for (const key of ['nativePlate', 'nativeNudge', 'nativeRevision']) delete design[key];
+  await before.change({ design });
+  const packageValue = await before.exportPackage({ identity });
+  await api.adoptWorkspacePackage({ storage: storage(), locks, key: 'thro.test:pre-editor-native', package: packageValue, renderGraphic });
+  // A legacy design with an unknown study is refused even when it also carries a valid nudge.
+  const forged = rewritten(packageValue, raw => {
+    const pair = raw.bindings.filter(([name]) => /^ds\.px\.studio\.demo\.\d+\.context$/.test(name)).at(-1), node = raw.nodes.find(item => item.id === pair[1]), context = decode(node.material);
+    context.legacyDesign = { ...context.legacyDesign, study: 'future-layout', nativeNudge: { x: 0, y: 0 } }; delete node.calculation; delete node.inputs; node.material = encode(context);
+  });
+  const target = storage(); await assert.rejects(api.adoptWorkspacePackage({ storage: target, locks, key: 'thro.test:legacy-with-nudge', package: forged, renderGraphic }), /Unsupported legacy design/); assert.equal(target.values.size, 0);
+});
+
+test('a card renderer that does not confirm the asked revision is refused (a stale adapter cannot silently draw the old card)', async () => {
+  const { createNativeRenderer, nativeDesign } = await import(new URL('native-cards.mjs', runtime));
+  const manifest = JSON.parse(fs.readFileSync(new URL('prepared-fixture.json', runtime)));
+  const fixture = manifest.discs.map(disc => ({ ...disc, depiction: { kind: 'photo', name: disc.name, src: `data:image/webp;base64,${fs.readFileSync(new URL(disc.file, runtime)).toString('base64')}` } }));
+  const header = Buffer.alloc(33); Buffer.from('89504e470d0a1a0a', 'hex').copy(header); header.write('IHDR', 12); header.writeUInt32BE(1920, 16); header.writeUInt32BE(1080, 20);
+  const png = `data:image/png;base64,${header.toString('base64')}`;
+  // An adapter from before card revisions: it reports no revision, so it drew revision 1.
+  const stale = createNativeRenderer(async request => ({ svg: `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" href="${png}"/></svg>`, width: 1920, height: 1080, build: identity.nativeRendererBuild, placement: { scale: request.scale, dx: 0, dy: 0 } }));
+  const workspace = await openWorkspace({ storage: storage(), locks, fixture });
+  const disc = workspace.model.value(workspace.model.context.selectedDisc), resolved = workspace.model.experience.resolve(disc);
+  const design = nativeDesign(workspace.model.context.design, 'discstudio:b01');
+  assert.equal(design.nativeRevision, 2);
+  await assert.rejects(stale({ disc, resolved, design }), /another revision/);
+  const saved = { ...design }; delete saved.nativeRevision;
+  await stale({ disc, resolved, design: saved });
 });
