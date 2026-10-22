@@ -18,6 +18,7 @@ const runtimeFiles = [
   'preview-frame.mjs',
   'prepared-fixture.mjs',
   'prepared-fixture.json',
+  'lineup-lab.html',
 ];
 
 if (path.resolve(process.cwd()) !== root) {

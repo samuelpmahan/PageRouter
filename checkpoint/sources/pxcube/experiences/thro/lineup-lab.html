@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>thro lineup lab</title>
+<style>
+  :root { --bg: #0d140f; --panel: #16201a; --ink: #eef3ea; --muted: #9fb0a3; --lime: #c8f49d; --bad: #ff7a5c; --line: #2a3a30; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.45 system-ui, sans-serif; }
+  main { max-width: 1240px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  .lead { color: var(--muted); margin: 0 0 24px; max-width: 70ch; }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin: 0 0 18px; }
+  h2 { font-size: 17px; margin: 0 0 2px; }
+  .meta { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
+  .frame { width: 100%; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden;
+    background: repeating-conic-gradient(#26302a 0% 25%, #1c241f 0% 50%) 0 0 / 24px 24px; }
+  .frame img { width: 100%; height: 100%; display: block; }
+  .check { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
+  .check b.ok { color: var(--lime); } .check b.no { color: var(--bad); }
+  .status { color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Lineups, one engine</h1>
+  <p class="lead">Every card here is the exact DiscStudio card the disc gets in Single, sized by DiscStudio's sticker step at one shared scale and set in a row by DiscStudio's frame renderer. Under each: the rule check (disc image &gt; mold name &gt; flight numbers &gt; everything else) for every card in it.</p>
+  <div id="lab"><p class="status">Drawing lineups…</p></div>
+</main>
+<script type="module">
+  const A = await import('./vendor/discstudio-cards/thro-adapter.mjs');
+  const fixture = await (await fetch('./prepared-fixture.json')).json();
+  // Flight numbers as thro shows them: DiscStudio's catalogue, then the fixture's cited corrections (Servo speed 6.5, from MVP).
+  const { resolveCardDisc } = await import('./vendor/discstudio-cards/card-renderer-core.js?v=28ac2b39fab85255');
+  const { getMoldDetails } = await import('./vendor/discstudio-cards/mold-library.js?v=28ac2b39fab85255');
+  const discs = [];
+  for (const d of fixture.discs) {
+    const base = { id: d.id, mold: d.mold, name: d.name, manufacturer: d.manufacturer, plastic: d.plastic ?? null, weight: d.weight ?? null };
+    const catalogue = (await resolveCardDisc({ getMoldDetails, loadImage: async () => null }, { ...A.cardFromThroDisc(base, { photoSrc: d.file }) })).flights ?? [null, null, null, null];
+    const flights = ['speed', 'glide', 'turn', 'fade'].map((field, i) => d.flightOverrides?.[field] ?? catalogue[i]);
+    discs.push({ disc: base, photoSrc: d.file, flights });
+  }
+  const four = [...discs, { ...discs[0], disc: { ...discs[0].disc, id: discs[0].disc.id + '-copy' } }];
+  const variants = [
+    ['Battle · 2 discs · U05 Glass drawer', discs.slice(0, 2), { preset: 'u05' }],
+    ['Battle · 2 discs · U05, Buzzz SS up now', discs.slice(0, 2), { preset: 'u05', emphasis: 1 }],
+    ['Battle · 2 discs · B03 Framed hero', discs.slice(0, 2), { preset: 'b03' }],
+    ['Bag · 3 discs · U05 Glass drawer', discs, { preset: 'u05' }],
+    ['Bag · 3 discs · U02 Stacked poster', discs, { preset: 'u02' }],
+    ['Bag · 3 discs · U01 Compact scorebug', discs, { preset: 'u01' }],
+    ['Bag · 4 discs · U05 (the fourth is a second Servo copy)', four, { preset: 'u05' }],
+  ];
+  const lab = document.getElementById('lab'); lab.innerHTML = '';
+  const verdict = card => {
+    const d = card.photo?.w ?? 0, n = card.name?.size ?? 0, f = card.numbers?.size ?? 0, o = Math.max(0, ...card.other.map(x => x.size));
+    return d > n && n > f && f > o && !card.photo?.skewed;
+  };
+  for (const [title, cards, options] of variants) {
+    const section = document.createElement('section');
+    section.innerHTML = `<h2>${title}</h2><p class="meta">Drawing…</p><div class="frame"></div>`;
+    lab.append(section);
+    try {
+      const t = performance.now(), result = await A.renderDiscStudioLineup({ cards, ...options }), ms = Math.round(performance.now() - t);
+      const img = new Image(); img.alt = title; img.src = URL.createObjectURL(result.png); section.querySelector('.frame').append(img);
+      section.querySelector('.meta').textContent = `${result.width} × ${result.height} · card scale ${result.scales.map(s => Math.round(s * 100) + '%').join(' / ')} · drawn in ${ms} ms`;
+      const checks = result.layout.map((card, i) => `${cards[i].disc.name}: <b class="${verdict(card) ? 'ok' : 'no'}">${verdict(card) ? 'pass' : 'fail'}</b> (disc ${Math.round(card.photo?.w ?? 0)} · name ${Math.round(card.name?.size ?? 0)} · numbers ${Math.round(card.numbers?.size ?? 0)} · other ${Math.round(Math.max(0, ...card.other.map(x => x.size)))} px)`);
+      section.insertAdjacentHTML('beforeend', `<p class="check">${checks.join(' &nbsp;·&nbsp; ')}</p>`);
+      section.dataset.result = JSON.stringify({ title, pass: result.layout.every(verdict) });
+    } catch (error) { section.querySelector('.meta').textContent = `Could not draw: ${error.message}`; section.dataset.result = JSON.stringify({ title, error: error.message }); }
+  }
+  document.body.dataset.done = 'true';
+</script>
+</body>
+</html>

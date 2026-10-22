@@ -156,37 +156,75 @@ export function resolveCardPlacement(placement, footprint, scale = DEFAULT_CARD_
  *  Optional scale applies only to panel-default, retaining its native corner anchor.
  *  Returns { svg, width, height, png, layout, preset, orientation, appearance, placement, build }.
  *  layout: { photo, name, numbers, other } boxes in canvas pixels, as drawn. */
-export async function renderDiscStudioCard({ disc, photoSrc, flights, preset = 'b01', appearance, placement = 'panel-default', scale = DEFAULT_CARD_SCALE }) {
-  if (placement === 'panel-default') validatePanelScale(scale);
+/** Draw one native card on its own full-size canvas, once. DiscStudio's renderCardBlob makes
+ *  exactly these calls; keeping the canvas lets its layout be read and its pixels be reused
+ *  for placement instead of drawing the whole card a second time. */
+async function drawNativeCard({ disc, photoSrc, flights, preset, appearance }) {
   const { id, orientation } = presetById(preset);
   const look = validateCardAppearance({ ...defaultCardAppearance(id), ...(appearance ?? {}) });
   const card = cardFromThroDisc(disc, { photoSrc, flights });
   const { w: width, h: height } = CARD_SIZE[orientation];
-  // The native card, drawn once. DiscStudio's renderCardBlob makes exactly these calls;
-  // drawing it here keeps the canvas, so its layout can be read and its pixels reused
-  // for placement instead of drawing the whole card a second time.
   recordCanvasDrawing();
-  const nativeCanvas = newCanvas(width, height), nativeContext = nativeCanvas.getContext('2d');
-  if (!nativeContext) throw new Error('Canvas2D is unavailable in this browser.');
+  const canvas = newCanvas(width, height), context = canvas.getContext('2d');
+  if (!context) throw new Error('Canvas2D is unavailable in this browser.');
   await ensureCardFonts();
-  await drawCard(nativeContext, card, orientation, id, { loadImage, getMoldDetails, strictPhoto: true, createCanvas: newCanvas, frameRenderer: browserFrames }, look);
-  const nativePng = await canvasBlob(nativeCanvas), nativeItems = drawn.get(nativeCanvas)?.items ?? [];
-  const nativeBounds = rasterAlphaBounds(nativeContext.getImageData(0, 0, width, height).data, width, height);
-  const footprint = placement === 'panel-default' ? { width, height, alphaBounds: [...nativeBounds] } : undefined;
+  await drawCard(context, card, orientation, id, { loadImage, getMoldDetails, strictPhoto: true, createCanvas: newCanvas, frameRenderer: browserFrames }, look);
+  const png = await canvasBlob(canvas), items = drawn.get(canvas)?.items ?? [];
+  const bounds = rasterAlphaBounds(context.getImageData(0, 0, width, height).data, width, height);
+  return { id, orientation, look, card, width, height, png, items, bounds, moldName: card.renderer?.moldName ?? disc.name };
+}
+/** DiscStudio's sticker step, from a PNG already made: the card cropped to its pixels at this scale. */
+const stickerFor = async (native, scale) => sizeBrowserSticker(await blobImage(native.png), native.width, native.height, native.bounds, cardRasterIdentity(native.card, native.orientation, native.id, native.look), scale);
+const toSticker = (native, sticker, origin) => new DOMMatrix([sticker.scale, 0, 0, sticker.scale, origin.x - native.bounds[0] * sticker.scale - sticker.cropOffset.x, origin.y - native.bounds[1] * sticker.scale - sticker.cropOffset.y]);
+const svgFor = async (png, width, height) => `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><image width="${width}" height="${height}" href="${await toDataUrl(png)}"/></svg>`;
+
+export async function renderDiscStudioCard({ disc, photoSrc, flights, preset = 'b01', appearance, placement = 'panel-default', scale = DEFAULT_CARD_SCALE }) {
+  if (placement === 'panel-default') validatePanelScale(scale);
+  const native = await drawNativeCard({ disc, photoSrc, flights, preset, appearance }), { width, height } = native;
+  const footprint = placement === 'panel-default' ? { width, height, alphaBounds: [...native.bounds] } : undefined;
   const transform = resolveCardPlacement(placement, footprint, scale);
-  let png = nativePng, toPlaced = new DOMMatrix();
+  let png = native.png, toPlaced = new DOMMatrix();
   if (!(transform.scale === 1 && transform.dx === 0 && transform.dy === 0)) {
     // DiscStudio's renderPlacedCardBlob, from the PNG already made: size the sticker, then place it.
-    const sticker = sizeBrowserSticker(await blobImage(nativePng), width, height, nativeBounds, cardRasterIdentity(card, orientation, id, look), transform.scale);
+    const sticker = await stickerFor(native, transform.scale);
     const origin = stickerOrigin({ width, height, nativeBounds: sticker.nativeBounds, placement: transform, sticker });
     const placed = newCanvas(width, height), context = placed.getContext('2d');
     if (!context) throw new Error('Canvas2D is unavailable in this browser.');
     browserFrames.seek(context, { width, height, layers: [{ ...imageLayer('placement-card', sticker.identity, sticker.canvas, sticker.width, sticker.height), ...origin }] }, 0);
     png = await canvasBlob(placed);
-    const k = transform.scale;
-    toPlaced = new DOMMatrix([k, 0, 0, k, origin.x - nativeBounds[0] * k - sticker.cropOffset.x, origin.y - nativeBounds[1] * k - sticker.cropOffset.y]);
+    toPlaced = toSticker(native, sticker, origin);
   }
-  const layout = layoutOf(nativeItems.map(item => itemThrough(item, toPlaced)), card.renderer?.moldName ?? disc.name);
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><image width="${width}" height="${height}" href="${await toDataUrl(png)}"/></svg>`;
-  return { svg, width, height, png, layout, preset: id, orientation, appearance: look, placement: transform, build };
+  const layout = layoutOf(native.items.map(item => itemThrough(item, toPlaced)), native.moldName);
+  return { svg: await svgFor(png, width, height), width, height, png, layout, preset: native.id, orientation: native.orientation, appearance: native.look, placement: transform, build };
+}
+
+/** A lineup (Battle or Bag): 2–4 DiscStudio cards, each drawn by the same renderer as a Single
+ *  card, sized with DiscStudio's sticker step at one shared scale and set in a row along the
+ *  bottom of a 1920 × 1080 frame by DiscStudio's frame renderer. Nothing is redrawn or restyled:
+ *  every card is exactly the card it would be on its own. emphasis: index of a card shown full
+ *  size while the others step back to `rest` of it (Battle's "whose turn"). */
+export async function renderDiscStudioLineup({ cards, preset = 'u05', width = 1920, height = 1080, margin = 48, gap = 40, emphasis = null, rest = 0.82 }) {
+  if (!Array.isArray(cards) || cards.length < 2 || cards.length > 4) throw Error('A lineup needs 2 to 4 discs.');
+  const natives = [];
+  for (const request of cards) natives.push(await drawNativeCard({ ...request, preset: request.preset ?? preset }));
+  const weight = natives.map((_, i) => emphasis === null || emphasis === i ? 1 : rest);
+  const sumW = natives.reduce((total, n, i) => total + (n.bounds[2] - n.bounds[0]) * weight[i], 0), maxH = Math.max(...natives.map((n, i) => (n.bounds[3] - n.bounds[1]) * weight[i]));
+  const base = Math.min(1.5 , (width - margin * 2 - gap * (natives.length - 1)) / sumW, (height - margin * 2) / maxH);
+  if (base * Math.min(...weight) < 0.5) throw Error('These cards cannot share one frame at a readable size.');
+  const stickers = [];
+  for (const [i, native] of natives.entries()) stickers.push(await stickerFor(native, Math.min(1.5, Math.round(base * weight[i] * 1000) / 1000)));
+  const row = stickers.reduce((total, s) => total + s.width, 0) + gap * (stickers.length - 1);
+  let x = Math.round((width - row) / 2);
+  const layers = [], layout = [];
+  for (const [i, sticker] of stickers.entries()) {
+    const origin = { x, y: height - margin - sticker.height };
+    layers.push({ ...imageLayer(`lineup-card-${i}`, sticker.identity, sticker.canvas, sticker.width, sticker.height), ...origin });
+    layout.push(layoutOf(natives[i].items.map(item => itemThrough(item, toSticker(natives[i], sticker, origin))), natives[i].moldName));
+    x += sticker.width + gap;
+  }
+  const canvas = newCanvas(width, height), context = canvas.getContext('2d');
+  if (!context) throw new Error('Canvas2D is unavailable in this browser.');
+  browserFrames.seek(context, { width, height, layers }, 0);
+  const png = await canvasBlob(canvas);
+  return { svg: await svgFor(png, width, height), width, height, png, layout, presets: natives.map(n => n.id), scales: stickers.map(s => s.scale), build };
 }
