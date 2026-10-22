@@ -58,6 +58,7 @@ function showConflict(error) {
     THRO_STORAGE_CHANGED: 'The draft changed before saving. Your pending draft is retained.',
   };
   $('conflict').hidden = false;
+  document.body.classList.add('has-conflict'); // the fixed export bar must not cover the recovery actions
   $('conflict').classList.remove('is-recovered');
   $('conflict-title').textContent = headings[conflict.code] ?? 'This save stopped. Your pending draft is retained.';
   $('reload-latest').hidden = false;
@@ -65,7 +66,7 @@ function showConflict(error) {
   message(conflict.code === 'THRO_STORAGE_UNCERTAIN' ? 'Save not confirmed. Your pending draft is retained below.' : 'Not saved. Your pending draft is retained below.', true);
   root.querySelectorAll('button,input,select').forEach(control => { control.disabled = true; });
   $('conflict').setAttribute('tabindex', '-1');
-  $('conflict').scrollIntoView({ block: 'nearest' });
+  $('conflict').scrollIntoView({ block: 'center' });
   $('conflict').focus({ preventScroll: true });
   diagnostics();
 }
@@ -359,7 +360,8 @@ async function framePortraitPreview(graphic) {
   toggle.hidden = true; // the Close-up / Whole frame switch in the toolbar drives this framing
   if (compact) {
     if (size) {
-      size.closest('.native-primary-controls').before(preview); // above the thumbnail picker, so the card stays in view
+      const anchor = size.closest('.native-primary-controls'); // above the thumbnail picker, so the card stays in view
+      if (anchor.previousElementSibling !== preview) anchor.before(preview); // moving an element blurs focus inside it
       orderGrid(grid, ...[...grid.children].filter(node => node !== controls && node !== shelf), controls, shelf);
     } else {
       orderGrid(grid, preview, shelf, controls);
@@ -677,7 +679,7 @@ $('reload-latest').onclick = () => {
       recoveredDraft = { ...previous, recovery: loaded.recovery ?? null };
       rows = await workspace.model.shelfForDisplay(); adoptContext(); capturedPreview = null; currentResult = null; failedIntent = null; keptResults.clear();
       await renderCurrent(); paint();
-      $('conflict').hidden = false; $('conflict').classList.add('is-recovered');
+      $('conflict').hidden = false; $('conflict').classList.add('is-recovered'); document.body.classList.remove('has-conflict');
       $('conflict-title').textContent = 'Latest saved workspace loaded. Your previous draft is retained.';
       $('conflict-copy').textContent = 'You can continue with the saved workspace. The previous pending draft remains available as a JSON download; it has not been merged or applied.';
       $('reload-latest').hidden = true; message('Latest saved workspace loaded.');
@@ -690,6 +692,7 @@ try {
   const fixture = await loadFixture();
   workspace = await openWorkspace({ storage: localStorage, locks: navigator.locks, fixture });
   rows = await workspace.model.shelfForDisplay(); adoptContext();
+  window.__throStarted?.();
   await renderCurrent(); paint(); setBusy(false); message('Ready. Choose your graphic, then take it to your video.');
   if (debug) {
     window.throQA = Object.freeze({ get workspace() { return workspace; }, get result() { return currentResult; }, get controls() { return structuredClone(ui); }, get busy() { return busy; }, settled: () => queue, inspect: () => workspace.model.inspect() });
@@ -697,6 +700,7 @@ try {
     diagnostics();
   }
 } catch (error) {
+  window.__throStarted?.(); // the app shows its own startup error; the index.html watchdog stands down
   root.setAttribute('aria-busy', 'false');
   root.innerHTML = '<section class="opening startup-error"><h1>Your workspace could not open.</h1><p>Your existing saved data has been preserved. Reload to try again.</p><button type="button" id="retry-open" class="button-primary">Reload workspace</button></section>';
   $('retry-open').onclick = () => location.reload(); message(error.message || String(error), true);

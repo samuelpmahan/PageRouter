@@ -34,6 +34,24 @@
   </section>
   <div id="status" class="app-status" role="status" aria-live="polite">Opening your workspace…</div>
   <details id="diagnostics" class="diagnostics" hidden><summary>Build &amp; Parts diagnostics</summary><pre id="diagnostic-values"></pre></details>
-  <script type="module" src="./thro-app.mjs"></script>
+  <script>
+    // Startup watchdog, outside the module graph: if any module fails to load (for example one
+    // HTTP 502), the app never runs, so this page shows a retry instead of an endless "Getting your
+    // discs ready". It never touches storage, so saved discs and graphics stay as they were.
+    (function () {
+      var started = false, timer;
+      window.__throStarted = function () { started = true; clearTimeout(timer); };
+      window.__throStartupFailed = function (why) {
+        if (started) return; started = true; clearTimeout(timer);
+        var main = document.getElementById('workspace'), status = document.getElementById('status');
+        main.setAttribute('aria-busy', 'false');
+        main.innerHTML = '<section class="opening startup-error"><h1>Your workspace could not open.</h1><p>' + why + ' Your saved discs and graphics are kept in this browser.</p><button type="button" class="button-primary" id="startup-retry">Try again</button></section>';
+        document.getElementById('startup-retry').onclick = function () { location.reload(); };
+        status.textContent = 'The workspace did not finish opening. Nothing was lost.'; status.classList.add('is-error');
+      };
+      timer = setTimeout(function () { window.__throStartupFailed('It took longer than 15 seconds to load.'); }, 15000);
+    })();
+  </script>
+  <script type="module" src="./thro-app.mjs" onerror="window.__throStartupFailed('Part of the page did not load.')"></script>
 </body>
 </html>
