@@ -12,6 +12,8 @@ const runtimeFiles = [
   'thro.css',
   'workspace.mjs',
   'workspace-package.mjs',
+  'transfer-contracts.mjs',
+  'archive-inspection.mjs',
   'locked-storage.mjs',
   'archive-codec.mjs',
   'native-cards.mjs',

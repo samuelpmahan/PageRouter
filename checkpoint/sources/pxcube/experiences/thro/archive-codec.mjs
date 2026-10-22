@@ -101,3 +101,49 @@ export function createArchiveCodec({ pack, unpack } = {}) {
     },
   });
 }
+
+const cellPrefix = 'thro-workspace-cell@2:';
+function metadataCopy(value) {
+  let values = 0;
+  const copy = (item, depth = 0) => {
+    if (++values > 20000 || depth > 64) throw invalid('Workspace metadata exceeds its structural budget.');
+    if (item === null || typeof item === 'string' || typeof item === 'boolean' || typeof item === 'number' && Number.isFinite(item)) return item;
+    if (!item || typeof item !== 'object' || ![Object.prototype, Array.prototype].includes(Object.getPrototypeOf(item))) throw invalid('Workspace metadata must be JSON data.');
+    const out = Array.isArray(item) ? [] : {};
+    for (const key of Reflect.ownKeys(item)) {
+      if (Array.isArray(item) && key === 'length') continue;
+      const field = Object.getOwnPropertyDescriptor(item, key);
+      if (typeof key !== 'string' || ['__proto__', 'constructor', 'prototype'].includes(key) || !field.enumerable || !Object.hasOwn(field, 'value')) throw invalid('Invalid workspace metadata field.');
+      if (Array.isArray(item) && !/^(0|[1-9][0-9]*)$/.test(key)) throw invalid('Invalid workspace metadata array.');
+      out[key] = copy(field.value, depth + 1);
+    }
+    if (Array.isArray(item) && Object.keys(out).length !== item.length) throw invalid('Sparse workspace metadata is unsupported.');
+    return out;
+  };
+  const result = copy(value);
+  if (!result || Array.isArray(result) || Object.keys(result).length !== 2 || !Object.hasOwn(result, 'origin') || !Object.hasOwn(result, 'extensions')
+    || !result.origin || Array.isArray(result.origin) || typeof result.origin !== 'object' || !result.extensions || Array.isArray(result.extensions) || typeof result.extensions !== 'object'
+    || encoder.encode(JSON.stringify(result)).byteLength > 65536) throw invalid('Workspace metadata exceeds its supported envelope.');
+  return result;
+}
+
+/** Per-workspace wrapper: metadata and the existing exact graph commit as one cell. */
+export function createWorkspaceCodec({ pack, unpack, metadata = null } = {}) {
+  const archive = createArchiveCodec({ pack, unpack });
+  let retained = metadata === null ? null : metadataCopy(metadata);
+  return Object.freeze({
+    get metadata() { return retained === null ? null : metadataCopy(retained); },
+    async packArchive(raw) {
+      const packed = await archive.packArchive(raw);
+      return retained === null ? packed : cellPrefix + JSON.stringify({ version: 2, metadata: retained, archive: packed });
+    },
+    async unpackArchive(packed) {
+      if (typeof packed !== 'string' || !packed.startsWith(cellPrefix)) return archive.unpackArchive(packed);
+      if (packed.length > maxContainerBytes + 70000) throw tooLarge();
+      let cell; try { cell = JSON.parse(packed.slice(cellPrefix.length)); } catch { throw invalid('Malformed workspace cell.'); }
+      if (!cell || Array.isArray(cell) || cell.version !== 2 || Object.keys(cell).length !== 3 || !Object.hasOwn(cell, 'metadata') || typeof cell.archive !== 'string') throw invalid('Unsupported workspace cell.');
+      const next = metadataCopy(cell.metadata), raw = await archive.unpackArchive(cell.archive);
+      retained = next; return raw;
+    },
+  });
+}

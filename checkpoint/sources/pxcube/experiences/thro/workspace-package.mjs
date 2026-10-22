@@ -1,5 +1,5 @@
 import { openDemo } from './model.mjs';
-import { createExperience, paintings } from './studio/upload-disc-to-shelf/model.js';
+import { createExperience } from './studio/upload-disc-to-shelf/model.js';
 import { restore } from './studio/upload-disc-to-shelf/persistence.js';
 import { Part } from './studio/part-first-kernel/src/pxc.mjs';
 import { calculations, allCardStudies } from './graphics.mjs';
@@ -7,158 +7,24 @@ import { competitionCalculations } from './competition.mjs';
 import { validateBattleRule } from './renderer/src/constraints.js';
 import { nativeBuild, isNativeStudy, nativeCardRequest, nativeStudy } from './native-cards.mjs';
 import { openLockedArchive } from './locked-storage.mjs';
-import { createArchiveCodec, MAX_ARCHIVE_BYTES } from './archive-codec.mjs';
+import { createWorkspaceCodec } from './archive-codec.mjs';
 import { pack, unpack } from './archive-storage.mjs';
 
-const encoder = new TextEncoder();
-const bad = message => Object.assign(Error(message), { code: 'THRO_PACKAGE_INVALID' });
-const require = (condition, message) => { if (!condition) throw bad(message); };
-const same = (left, right) => JSON.stringify(left) === JSON.stringify(right);
-const dangerous = key => ['__proto__', 'constructor', 'prototype'].includes(key);
-const exactKeys = (value, keys) => value && typeof value === 'object' && !Array.isArray(value)
-  && Object.keys(value).length === keys.length && keys.every(key => Object.hasOwn(value, key));
-const codec = createArchiveCodec({ pack, unpack });
+import { bad, unsupported, require, same, exactKeys, encoder, snapshotJson, digest, digestBytes, envelopeDigest, identity, rawBytes, DATA_SCHEMA, EDIT_PROFILE } from './transfer-contracts.mjs';
+import { preflight, inspectWorkspacePackage, deriveRequirements } from './archive-inspection.mjs';
+export { snapshotJson } from './transfer-contracts.mjs';
+export { inspectWorkspacePackage } from './archive-inspection.mjs';
 
-/** Data only: reject accessors, exotic prototypes and cycles before any await. */
-export function snapshotJson(value) {
-  let count = 0, bytes = 0;
-  const ancestors = new Set();
-  function copy(item, depth) {
-    require(depth <= 64 && ++count <= 500000, 'Package data is too deeply nested or contains too many values.');
-    if (item === null || typeof item === 'boolean') return item;
-    if (typeof item === 'number') { require(Number.isFinite(item), 'Package numbers must be finite.'); return item; }
-    if (typeof item === 'string') { bytes += encoder.encode(item).byteLength; require(bytes <= MAX_ARCHIVE_BYTES + 65536, 'Package data exceeds its byte budget.'); return item; }
-    require(item && typeof item === 'object' && !ancestors.has(item), 'Package inputs must be acyclic plain JSON data.');
-    require(Object.getPrototypeOf(item) === (Array.isArray(item) ? Array.prototype : Object.prototype), 'Package inputs must be plain JSON objects and arrays.');
-    ancestors.add(item);
-    const out = Array.isArray(item) ? [] : {};
-    for (const key of Reflect.ownKeys(item)) {
-      if (Array.isArray(item) && key === 'length') continue;
-      const descriptor = Object.getOwnPropertyDescriptor(item, key);
-      require(typeof key === 'string' && !dangerous(key) && descriptor.enumerable && Object.hasOwn(descriptor, 'value'), 'Package fields must be ordinary JSON values.');
-      require(key.length <= MAX_ARCHIVE_BYTES + 65536, 'Package field names exceed their byte budget.');
-      bytes += encoder.encode(key).byteLength;
-      require(bytes <= MAX_ARCHIVE_BYTES + 65536, 'Package field names exceed their byte budget.');
-      require(!Array.isArray(item) || /^(0|[1-9][0-9]*)$/.test(key), 'Package arrays cannot contain named properties.');
-      out[key] = copy(descriptor.value, depth + 1);
-    }
-    require(!Array.isArray(item) || out.length === item.length && Object.keys(out).length === item.length, 'Package arrays cannot contain holes.');
-    ancestors.delete(item); return out;
-  }
-  return copy(value, 0);
-}
-
-function identity(value) {
-  require(exactKeys(value, ['sourceId', 'artifactId', 'nativeRendererBuild']) && /^[a-f0-9]{64}$/.test(value.sourceId)
-    && /^[a-f0-9]{64}$/.test(value.artifactId) && value.nativeRendererBuild === nativeBuild, 'An explicit compatible source, artifact and native renderer identity is required.');
-  return value;
-}
-async function digestBytes(bytes) {
-  return [...new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))].map(value => value.toString(16).padStart(2, '0')).join('');
-}
-const digest = text => digestBytes(encoder.encode(text));
-function rawBytes(raw) {
-  require(typeof raw === 'string' && raw.length <= MAX_ARCHIVE_BYTES, 'Raw package archive exceeds the 64 MiB limit.');
-  const bytes = encoder.encode(raw).byteLength;
-  require(bytes <= MAX_ARCHIVE_BYTES, 'Raw package archive exceeds the 64 MiB UTF-8 limit.'); return bytes;
-}
-
-export async function createWorkspacePackage({ raw, identity: sourceIdentity, provenance = {} }) {
-  const metadata = snapshotJson({ identity: sourceIdentity, provenance });
-  identity(metadata.identity);
+export async function createWorkspacePackage({ raw, identity: producerIdentity, provenance = {}, origin: retainedOrigin, extensions = {} }) {
+  const metadata = snapshotJson({ origin: retainedOrigin ?? { identity: producerIdentity, provenance }, extensions });
+  identity(metadata.origin.identity);
   require(encoder.encode(JSON.stringify(metadata)).byteLength <= 65536, 'Package metadata exceeds 64 KiB.');
-  const byteLength = rawBytes(raw);
-  return { schema: 'thro-workspace-package@1', version: 1, ...metadata,
+  const byteLength = rawBytes(raw), data = preflight(raw);
+  const compatibility = { dataSchema: DATA_SCHEMA, editProfile: EDIT_PROFILE, requiredCapabilities: deriveRequirements(data) };
+  const envelope = { schema: 'thro-workspace-package@2', version: 2, compatibility, ...metadata,
     archive: { encoding: 'utf-8', byteLength, sha256: await digest(raw), raw } };
-}
-
-// A closed check for this creator's generated SVG/data-URL carriers. This is
-// deliberately not a general SVG sanitizer or an arbitrary document importer.
-function mediaChecker() {
-  const checked = new Set();
-  const tags = new Set(['svg', 'title', 'g', 'rect', 'circle', 'ellipse', 'path', 'line', 'polyline', 'polygon', 'text', 'tspan', 'defs', 'clipPath', 'mask', 'linearGradient', 'radialGradient', 'stop', 'image', 'style', 'filter', 'feGaussianBlur', 'feMerge', 'feMergeNode', 'feColorMatrix', 'feOffset', 'feComposite', 'feFlood', 'feBlend']);
-  function scan(text, depth = 0) {
-    require(depth <= 8, 'Nested generated images exceed the supported depth.');
-    if (checked.has(text)) return;
-    checked.add(text);
-    if (/^data:/i.test(text)) {
-      const svg = /^data:image\/svg\+xml(?:;charset=utf-8)?,(.*)$/s.exec(text);
-      if (svg) { let decoded; try { decoded = decodeURIComponent(svg[1]); } catch { throw bad('Invalid generated SVG data URL.'); } scan(decoded, depth + 1); return; }
-      const image = /^data:image\/(png|jpeg|webp);base64,([A-Za-z0-9+/]+={0,2})$/.exec(text);
-      require(image && image[2].length % 4 === 0, 'Only retained PNG, JPEG and WebP image data is supported.');
-      let bytes; try { bytes = atob(image[2]); } catch { throw bad('Invalid retained image bytes.'); }
-      require(btoa(bytes) === image[2], 'Image data must use canonical base64.');
-      if (image[1] === 'png') require(bytes.startsWith('\x89PNG\r\n\x1a\n') && bytes.length >= 33 && bytes.slice(12, 16) === 'IHDR', 'Invalid retained PNG header.');
-      if (image[1] === 'jpeg') require(bytes.startsWith('\xff\xd8\xff') && bytes.endsWith('\xff\xd9'), 'Invalid retained JPEG header.');
-      if (image[1] === 'webp') {
-        const size = bytes.length >= 12 ? [...bytes.slice(4, 8)].reduce((sum, char, index) => sum + char.charCodeAt(0) * 256 ** index, 0) : 0;
-        require(bytes.startsWith('RIFF') && bytes.slice(8, 12) === 'WEBP' && size + 8 === bytes.length && /^VP8[ LX]$/.test(bytes.slice(12, 16)), 'Invalid retained WebP container.');
-      }
-      return;
-    }
-    if (!/<svg\b/i.test(text)) return;
-    text = text.replace(/^<\?xml version="1\.0" encoding="UTF-8"\?>\s*/, '');
-    require(/^\s*<svg\b/.test(text) && !/<[!?]|\bon[\w:-]*\s*=|\bxml:base\s*=|@import|expression\s*\(/i.test(text), 'Unsupported active or external generated SVG.');
-    require(!/<style\b[^>]*>[\s\S]*?\\[\s\S]*?<\/style\s*>|<[^>]*\\[^>]*>/i.test(text), 'Escaped SVG styles and attributes are outside the generated format.');
-    for (const tag of text.matchAll(/<\/?([A-Za-z][\w:-]*)\b/g)) require(tags.has(tag[1]), 'Unsupported generated SVG element.');
-    require(!/\b(?:href|src)\s*=\s*[^\s"']/i.test(text), 'Generated image references must be quoted.');
-    for (const match of text.matchAll(/\b(?:href|src)\s*=\s*(["'])(.*?)\1/gis)) {
-      require(!match[2].includes('&') && (/^#[A-Za-z_][\w:.-]*$/.test(match[2]) || /^data:image\//.test(match[2])), 'External generated image references are unsupported.');
-      if (match[2].startsWith('data:')) scan(match[2], depth + 1);
-    }
-    for (const match of text.matchAll(/url\(\s*["']?([^\s)'"\u0000-\u001f]+)["']?\s*\)/gi)) require(/^#[A-Za-z_][\w:.-]*$/.test(match[1]), 'External SVG style resources are unsupported.');
-  }
-  return scan;
-}
-
-function preflight(raw, known) {
-  let data; try { data = JSON.parse(raw); } catch { throw bad('The package archive is not JSON.'); }
-  require(exactKeys(data, ['version', 'serial', 'shelfAddress', 'currentSeeds', 'nodes', 'bindings', ...(Object.hasOwn(data ?? {}, 'bagsAddress') ? ['bagsAddress'] : [])])
-    && data.version === 1 && Number.isSafeInteger(data.serial) && data.serial >= 0 && data.serial < Number.MAX_SAFE_INTEGER - 100000
-    && Array.isArray(data.nodes) && data.nodes.length <= 100000 && Array.isArray(data.bindings) && data.bindings.length <= 100000 && Array.isArray(data.currentSeeds), 'Unsupported archive structure or serial budget.');
-  const ids = new Set(), names = new Set(), scan = mediaChecker(); let highestVendorSerial = 0;
-  const pairs = (list, accept, message) => {
-    require(Array.isArray(list), message); const keys = new Set();
-    for (const pair of list) { require(Array.isArray(pair) && pair.length === 2 && typeof pair[0] === 'string' && !dangerous(pair[0]) && !keys.has(pair[0]), message); keys.add(pair[0]); accept(pair[0], pair[1]); }
-  };
-  function material(value, depth = 0, field = '') {
-    require(depth <= 64 && value && typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 1, 'Invalid tagged archive material.');
-    if (Object.hasOwn(value, 'scalar')) {
-      require(value.scalar === null || ['string', 'boolean'].includes(typeof value.scalar) || typeof value.scalar === 'number' && Number.isFinite(value.scalar), 'Invalid archive scalar.');
-      if (typeof value.scalar === 'string') {
-        if (/^(src|href|photoSrc)$/i.test(field)) require(/^data:image\//.test(value.scalar) || paintings.some(item => item.src === value.scalar), 'External or unknown media fields are unsupported.');
-        scan(value.scalar);
-      }
-      return;
-    }
-    if (Object.hasOwn(value, 'part')) { require(ids.has(value.part), 'Unread material Part link.'); return; }
-    if (Object.hasOwn(value, 'array')) { require(Array.isArray(value.array), 'Invalid archive array.'); value.array.forEach(item => material(item, depth + 1)); return; }
-    if (Object.hasOwn(value, 'object')) { pairs(value.object, (key, item) => material(item, depth + 1, key), 'Invalid or duplicate material field.'); return; }
-    throw bad('Unknown archive material tag.');
-  }
-  for (const node of data.nodes) {
-    require(node && Number.isSafeInteger(node.id) && node.id >= 0 && !ids.has(node.id), 'Invalid Part identity.');
-    if (Object.hasOwn(node, 'function')) require(exactKeys(node, ['id', 'function']) && known.has(node.function), 'Unknown package Calculation.');
-    else {
-      const computed = Object.hasOwn(node, 'calculation');
-      require(exactKeys(node, computed ? ['id', 'material', 'calculation', 'inputs'] : ['id', 'material']), 'Unsupported archive node fields.');
-      material(node.material);
-      if (computed) { require(ids.has(node.calculation), 'Unread Calculation link.'); pairs(node.inputs, (_key, id) => require(ids.has(id), 'Unread Calculation input.'), 'Invalid or duplicate Calculation input.'); }
-    }
-    ids.add(node.id);
-  }
-  for (const pair of data.bindings) {
-    require(Array.isArray(pair) && pair.length === 2 && typeof pair[0] === 'string' && /^ds\.px\.[\w.-]+$/.test(pair[0]) && !names.has(pair[0]) && ids.has(pair[1]), 'Invalid archive binding.');
-    const counter = /^ds\.px\.studio\.demo\.(\d+)\./.exec(pair[0]);
-    require(!counter || Number.isSafeInteger(Number(counter[1])) && Number(counter[1]) < Number.MAX_SAFE_INTEGER - 100000, 'Unsafe studio address serial.');
-    const vendorCounter = /(?:^|\.)(?:save|query|bag|depict|edit|keep|review)-(\d+)(?:\.|$)/.exec(pair[0]) ?? /^ds\.px\.painting\.(\d+)$/.exec(pair[0]);
-    if (vendorCounter) { require(Number.isSafeInteger(Number(vendorCounter[1])), 'Unsafe disc allocator address.'); highestVendorSerial = Math.max(highestVendorSerial, Number(vendorCounter[1])); }
-    names.add(pair[0]);
-  }
-  require(data.serial >= highestVendorSerial, 'Archive disc allocator was rewound behind retained physical identities.');
-  require(names.has(data.shelfAddress) && (data.bagsAddress === undefined || names.has(data.bagsAddress)), 'Missing collection head.');
-  pairs(data.currentSeeds, (_id, address) => require(names.has(address), 'Missing current mold.'), 'Invalid current mold list.');
-  return data;
+  envelope.integrity = { algorithm: 'sha256', sha256: await envelopeDigest(envelope) };
+  return envelope;
 }
 
 async function validateWorld(raw, renderGraphic) {
@@ -260,21 +126,23 @@ async function validateWorld(raw, renderGraphic) {
 }
 
 /** Validate completely in disposable memory, then install once into empty CAS. */
-export async function adoptWorkspacePackage({ storage, locks, key, package: input, expectedIdentity, renderGraphic } = {}) {
-  const envelope = snapshotJson(input), expected = snapshotJson(expectedIdentity);
-  require(exactKeys(envelope, ['schema', 'version', 'identity', 'provenance', 'archive']) && envelope.schema === 'thro-workspace-package@1' && envelope.version === 1, 'Unknown workspace package envelope.');
-  identity(envelope.identity); identity(expected); require(Object.keys(expected).every(key => envelope.identity[key] === expected[key]), 'Package build identity differs from the explicitly expected build.');
-  const archive = envelope.archive;
-  require(exactKeys(archive, ['encoding', 'byteLength', 'sha256', 'raw']) && archive.encoding === 'utf-8' && /^[a-f0-9]{64}$/.test(archive.sha256)
-    && Number.isSafeInteger(archive.byteLength) && archive.byteLength === rawBytes(archive.raw), 'Package UTF-8 byte count or archive format is invalid.');
-  require(encoder.encode(JSON.stringify({ identity: envelope.identity, provenance: envelope.provenance })).byteLength <= 65536, 'Package metadata exceeds 64 KiB.');
+export async function adoptWorkspacePackage({ storage, locks, key, package: input, legacyProfile, renderGraphic } = {}) {
+  const envelope = snapshotJson(input);
+  require(envelope && typeof envelope === 'object' && !Array.isArray(envelope), 'Package envelope must be an object.');
+  if (!((envelope.schema === 'thro-workspace-package@1' && envelope.version === 1) || (envelope.schema === 'thro-workspace-package@2' && envelope.version === 2))) throw unsupported('Unknown package format; retain the original bytes.');
+  const metadata = snapshotJson(envelope.version === 1 ? { origin: { identity: envelope.identity, provenance: envelope.provenance }, extensions: {} }
+    : { origin: envelope.origin, extensions: envelope.extensions });
   // Read the held-empty value before the first await. Any later installer wins
   // the locked compare-and-swap; occupied or malformed values are never opened.
   require(typeof storage?.getItem === 'function' && storage.getItem(key) === null, 'Only an empty workspace namespace can adopt a package.');
+  const codec = createWorkspaceCodec({ pack, unpack, metadata });
   const retained = await openLockedArchive(storage, key, { locks, pack: codec.packArchive, unpack: codec.unpackArchive });
-  require(archive.sha256 === await digest(archive.raw), 'Package archive SHA-256 differs from its bytes.');
+  const report = await inspectWorkspacePackage({ package: envelope, legacyProfile });
+  if (!report.editable) throw unsupported(`Workspace cannot be edited by this data profile: ${report.missing.join(', ')}. Original package was not changed.`);
+  const archive = envelope.archive;
   require(retained.committedRaw === null, 'The destination workspace is occupied.');
   await validateWorld(archive.raw, renderGraphic);
   retained.setItem('', archive.raw); await retained.flush();
-  return { key, identity: envelope.identity, provenance: envelope.provenance, archive: { byteLength: archive.byteLength, sha256: archive.sha256 } };
+  return { key, origin: report.origin, extensions: report.extensions, compatibility: report.compatibility,
+    archive: { byteLength: archive.byteLength, sha256: archive.sha256 } };
 }

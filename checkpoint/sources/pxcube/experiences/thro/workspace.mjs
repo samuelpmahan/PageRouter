@@ -3,13 +3,11 @@ import { archive } from './studio/upload-disc-to-shelf/persistence.js';
 import { createExperience, initialDraft } from './studio/upload-disc-to-shelf/model.js';
 import { pack, unpack } from './archive-storage.mjs';
 import { openLockedArchive } from './locked-storage.mjs';
-import { createArchiveCodec } from './archive-codec.mjs';
+import { createWorkspaceCodec } from './archive-codec.mjs';
 import { defaultDesign } from './graphics.mjs';
 import { createNativeRenderer, isNativeStudy, isLineupStudy, workspaceDesignChange } from './native-cards.mjs';
 import { validateFlightCorrection } from './prepared-fixture.mjs';
 import { createWorkspacePackage, snapshotJson } from './workspace-package.mjs';
-
-const codec = createArchiveCodec({ pack, unpack });
 
 export const archiveKey = 'thro.v1:prepared-samples:archive';
 const clone = value => structuredClone(value);
@@ -22,6 +20,7 @@ const failure = (code, message) => Object.assign(Error(message), { code });
 // Collection heads in the legacy Experience are mutable. A candidate world
 // isolates those mutations until the complete archive has durably committed.
 export async function openWorkspace({ storage = globalThis.localStorage, locks = globalThis.navigator?.locks, fixture, key = archiveKey, renderGraphic = createNativeRenderer() } = {}) {
+  const codec = createWorkspaceCodec({ pack, unpack });
   const retained = await openLockedArchive(storage, key, { locks, pack: codec.packArchive, unpack: codec.unpackArchive });
   let committedRaw = retained.getItem(''), model, conflict = null, draft = null, queue = Promise.resolve(), pending = 0;
   if (committedRaw === null) {
@@ -92,7 +91,7 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
     async exportPackage({ identity, provenance = {} } = {}) {
       const metadata = snapshotJson({ identity, provenance });
       if (pending || draft || conflict) throw failure('THRO_PACKAGE_BUSY', 'Finish or recover the pending workspace change before exporting a package.');
-      return createWorkspacePackage({ raw: committedRaw, ...metadata });
+      return createWorkspacePackage({ raw: committedRaw, ...metadata, ...(codec.metadata ?? {}) });
     },
     change(changes) {
       return serial({ operation: 'change', context: changes }, async candidate => {
