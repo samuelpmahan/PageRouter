@@ -1,5 +1,6 @@
 // On-card editing for Thro Single cards: the Constraint Lab, merged into Thro.
-// Drag the card to move it from its corner, pull the knob to size it, tap Side, Colour or Plate.
+// Drag the card to move it from its corner, pull the knob to size it; Disc side, Colour and Plate sit in a strip
+// under the preview so no control ever covers the disc photo, mold name or flight numbers (Sam's hierarchy rule).
 // Every gesture becomes one of the card renderer's own inputs (nudge, scale, discSide,
 // highlightTarget, plate). Nothing here draws the card: the preview only moves the
 // existing pixels while a finger is down, and the renderer redraws on release.
@@ -9,11 +10,15 @@ const STYLE = `
 .card-editor .ce-card:active{cursor:grabbing}
 .card-editor .ce-card:focus-visible{outline:3px solid var(--accent,#b5d899)}
 .card-editor .ce-ghost{position:absolute;border:2px solid #fff;border-radius:4px;background:#ffffff14;pointer-events:none}
-.card-editor .ce-badge{position:absolute;pointer-events:auto;transform:translate(-50%,-50%);min-height:30px;min-width:30px;height:30px;padding:0 10px;border-radius:15px;border:2px solid #fff;background:#0b100ddb;color:#fff;font:700 12px/26px system-ui,sans-serif;white-space:nowrap;cursor:pointer;touch-action:manipulation;box-shadow:0 2px 8px #0007}
-.card-editor .ce-badge:hover:not(:disabled){background:#000;border-color:#fff}
-.card-editor .ce-badge.ce-right{transform:translate(6px,-50%)}
+.ce-strip{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 10px;border-top:1px solid #3a493b;background:#1b261e}
+.ce-strip .ce-label{font-size:10px;letter-spacing:1.2px;color:#9fb19a;font-weight:700;margin-right:2px}
+.ce-strip .ce-act{min-height:36px;padding:6px 12px;border-radius:18px;font-size:12px;font-weight:650;border:1px solid #5a6f55;background:#243026;color:#eef3ea;white-space:nowrap}
+.ce-strip .ce-act b{color:var(--accent,#b5d899);font-weight:700}
+.card-editor .ce-hint{position:absolute;border:2px solid var(--accent,#b5d899);border-radius:6px;box-shadow:0 0 0 2px #0009;pointer-events:none;display:none}
+.card-editor .ce-hint.round{border-radius:50%}
+.card-editor .ce-hint.on{display:block}
 .card-editor .ce-knob{position:absolute;pointer-events:auto;width:32px;height:32px;min-height:32px;min-width:32px;margin:-16px 0 0 -16px;padding:0;border-radius:50%;border:3px solid #fff;background:#e2402f;color:#fff;font:700 14px/1 system-ui,sans-serif;touch-action:none;cursor:nwse-resize;box-shadow:0 2px 8px #0007}
-.card-editor.is-dragging .ce-badge,.card-editor.is-dragging .ce-knob{visibility:hidden}
+.card-editor.is-dragging .ce-knob{visibility:hidden}
 `;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const union = boxes => {
@@ -55,31 +60,34 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
   const corner = { x: hugLeft ? card.x + card.w : card.x, y: hugTop ? card.y + card.h : card.y };
   const knob = el('button', 'ce-knob', { type: 'button', textContent: '⤡', title: 'Drag to size the card' });
   knob.setAttribute('aria-label', `Card size ${Math.round(scale0 * 100)}%: drag to change`);
-  const side = design.nativeSide, other = side === 'left' ? 'right' : 'left';
-  const badges = [
-    ['⇄ Side', 'Put the disc on the other side', layout.photo, 'c', () => onChange({ side: other }, `Disc on the ${other}`)],
-    ['# Colour', 'Accent on the tiles or the digits', layout.numbers, 'right', () => onChange({ highlight: design.nativeHighlight === 'tiles' ? 'digits' : 'tiles' }, design.nativeHighlight === 'tiles' ? 'Accent on the digits' : 'Accent on the tiles')],
-    ['Plate', 'Solid or see-through plate', layout.name, 'corner', () => onChange({ plate: design.nativePlate === 'solid' ? 'see-through' : 'solid' }, design.nativePlate === 'solid' ? 'See-through plate' : 'Solid plate')],
-  ].filter(([, , target]) => target).map(([label, aria, target, where, act]) => {
-    const b = el('button', `ce-badge${where === 'right' ? ' ce-right' : ''}`, { type: 'button', textContent: label, title: aria }); b.setAttribute('aria-label', aria);
-    b.addEventListener('pointerdown', e => e.stopPropagation()); b.addEventListener('click', e => { e.stopPropagation(); act(); });
-    return { b, target, where };
+  const side = design.nativeSide, other = side === 'left' ? 'right' : 'left', tiles = design.nativeHighlight === 'tiles', solid = design.nativePlate === 'solid';
+  // The strip names each control's current state; hovering or focusing one outlines the piece it changes.
+  holder.parentElement?.querySelector(':scope > .ce-strip')?.remove();
+  const strip = document.createElement('div'); strip.className = 'ce-strip'; strip.setAttribute('role', 'group'); strip.setAttribute('aria-label', 'Card controls');
+  strip.innerHTML = '<span class="ce-label">ON THE CARD</span>';
+  holder.after(strip);
+  const actions = [
+    [`⇄ Disc <b>${side === 'left' ? 'left' : 'right'}</b>`, `Put the disc on the ${other}`, layout.photo, true, () => onChange({ side: other }, `Disc on the ${other}`)],
+    [`# Accent on <b>${tiles ? 'tiles' : 'digits'}</b>`, `Put the accent on the ${tiles ? 'digits' : 'tiles'}`, layout.numbers, false, () => onChange({ highlight: tiles ? 'digits' : 'tiles' }, tiles ? 'Accent on the digits' : 'Accent on the tiles')],
+    [`Plate <b>${solid ? 'solid' : 'see-through'}</b>`, `Make the plate ${solid ? 'see-through' : 'solid'}`, bounds ?? card, false, () => onChange({ plate: solid ? 'see-through' : 'solid' }, solid ? 'See-through plate' : 'Solid plate')],
+  ].filter(([, , target]) => target).map(([html, aria, target, round, act]) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'ce-act'; b.innerHTML = html; b.title = aria; b.setAttribute('aria-label', aria);
+    const hint = el('div', `ce-hint${round ? ' round' : ''}`);
+    const show = on => hint.classList.toggle('on', on);
+    b.addEventListener('pointerenter', () => show(true)); b.addEventListener('pointerleave', () => show(false));
+    b.addEventListener('focus', () => show(true)); b.addEventListener('blur', () => show(false));
+    b.addEventListener('click', act); strip.appendChild(b);
+    return { hint, target };
   });
   function place() {
     if (!layer.isConnected) return stop();
     const m = view(), hw = holder.clientWidth, hh = holder.clientHeight;
     put(box, card, m); at(knob, corner.x, corner.y, m, hw, hh);
-    for (const { b, target: t, where } of badges) {
-      const awayFromDisc = layout.photo.x + layout.photo.w / 2 > t.x + t.w / 2;
-      // Colour sits just past the end of the numbers row, so a sticky bar under the preview never hides it.
-      if (where === 'right') { Object.assign(b.style, { left: `${Math.min(m.x(t.x + t.w), hw - b.offsetWidth - 10)}px`, top: `${clamp(m.y(t.y + t.h / 2), 16, hh - 16)}px` }); continue; }
-      const x = where === 'c' ? t.x + t.w / 2 : awayFromDisc ? t.x : t.x + t.w, y = where === 'c' ? t.y + t.h / 2 : t.y;
-      at(b, x, y, m, hw, hh);
-    }
+    for (const { hint, target } of actions) put(hint, { x: target.x - 6 / m.s, y: target.y - 6 / m.s, w: target.w + 12 / m.s, h: target.h + 12 / m.s }, m);
   }
   const resize = new ResizeObserver(place), watch = new MutationObserver(place);
   resize.observe(holder); watch.observe(svg, { attributes: true, attributeFilter: ['viewBox', 'style', 'class'] });
-  function stop() { resize.disconnect(); watch.disconnect(); }
+  function stop() { resize.disconnect(); watch.disconnect(); strip.remove(); }
   place();
 
   function track(target, e, move, up) {
@@ -119,4 +127,9 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
       (moved, cancelled) => { ghost.remove(); knob.textContent = '⤡'; place(); if (moved && !cancelled && next !== scale0) onChange({ scale: next }, `Card at ${Math.round(next * 100)}%`); });
   });
   return () => { stop(); layer.remove(); };
+}
+/** Remove the editor and its strip (kept versions, Battle and Bag show no controls). */
+export function detachCardEditor(holder) {
+  holder.querySelector(':scope > .card-editor')?.remove();
+  holder.parentElement?.querySelector(':scope > .ce-strip')?.remove();
 }

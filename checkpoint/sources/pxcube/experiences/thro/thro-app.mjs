@@ -1,6 +1,6 @@
 import { openWorkspace } from './workspace.mjs';
 import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, cardLayout } from './native-cards.mjs';
-import { attachCardEditor } from './card-editor.mjs';
+import { attachCardEditor, detachCardEditor } from './card-editor.mjs';
 import { alphaBounds, fitArtwork } from './preview-frame.mjs';
 import { loadFixture } from './prepared-fixture.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
@@ -435,7 +435,7 @@ window.visualViewport?.addEventListener('resize', schedulePortraitFrame);
 // On-card editing (the Constraint Lab, merged into Thro): only on the live Single card, never on a kept version.
 function editCard(holder, graphic) {
   const editable = ui.mode === 'single' && !capturedPreview && !hasConflict() && isNativeStudy(ui.design.study) && graphic?.provenance?.rasterOnly === true;
-  if (!editable) return;
+  if (!editable) { detachCardEditor(holder); return; }
   const svg = holder.querySelector('svg'), design = { ...nativeDesign(ui.design, ui.design.study), ...ui.design };
   // The card's own pixel bounds (plate included) are the drag target; the renderer's layout places the taps.
   rasterBounds(graphic.svg).then(bounds => {
