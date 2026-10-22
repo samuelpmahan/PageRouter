@@ -654,7 +654,7 @@ function bind() {
     ui.mode = button.dataset.mode;
     if (ui.mode !== 'single' && ui.selection.length === 0) ui.selection = rows.slice(0, 2).map(row => row.address);
     const remembered = isNativeStudy(ui.design.study) || isNativeStudy(context().singleDesign?.study);
-    change({ throMode: ui.mode, graphicsPurpose: ui.mode === 'single' ? 'spotlight' : 'competition', selection: [...ui.selection] }, remembered ? ui.mode === 'single' ? 'Saved. Your Single card treatment is restored.' : 'Saved. This lineup uses its own composition; your native Single treatment is kept.' : 'Saved. Your graphic is ready.');
+    change({ throMode: ui.mode, graphicsPurpose: ui.mode === 'single' ? 'spotlight' : 'competition', selection: [...ui.selection] }, remembered ? ui.mode === 'single' ? 'Saved. Your Single card treatment is restored.' : ui.mode === 'bag' ? 'Saved. Each disc in the lineup is its own card. Your Single card stays as you left it.' : 'Saved. Battle has its own layouts for now. Your Single card stays as you left it.' : 'Saved. Your graphic is ready.');
   });
   document.querySelectorAll('[data-disc]').forEach(button => button.onclick = () => {
     const address = button.dataset.disc;
