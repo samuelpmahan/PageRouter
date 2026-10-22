@@ -74,3 +74,11 @@
 .spot-bottom-center{width:34%}
 @media(max-width:760px){.placement-frame{max-width:320px}.placement-spot{min-height:44px}}
 .placement-spot{width:30%}.spot-top-left,.spot-bottom-left{left:3%}.spot-top-right,.spot-bottom-right{right:3%}.spot-bottom-center{left:35%;width:30%}
+
+/* Download confirmation, shown where the person just tapped. */
+.export-bar{flex-wrap:wrap}.downloaded{flex:0 0 100%;display:flex;gap:11px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:#1b2a18;border:1px solid #4f6b3f}
+.downloaded-mark{flex:0 0 22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--accent);color:#1c2b19;font-size:13px;font-weight:800}
+.downloaded strong{font-size:12px;color:#e3f5d2}.downloaded p{font-size:11px!important;line-height:1.5;color:#b8c9ad!important;margin-top:3px}
+.downloaded-file{font-family:ui-monospace,monospace;font-size:10px;color:#d6e6c9;overflow-wrap:anywhere}
+@media(max-width:760px){.downloaded{padding:8px 10px}.downloaded p{font-size:10.5px!important}}
+@media(max-width:1180px){.export-bar>div.downloaded{display:flex}.export-bar>div.export-copy{display:none}}
