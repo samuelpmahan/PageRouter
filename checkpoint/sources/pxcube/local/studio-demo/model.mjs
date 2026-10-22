@@ -148,8 +148,53 @@ export async function openDemo(storage,{renderGraphic}={}) {
     const address=await compose(base+'capture','fn.studio.competitionCapture',{graphic:result.address,design:result.designAddress,material:result.materialAddress,hash,source});
     await patch({graphics:[...value(contextAddress).graphics,address]});return {address,capture:value(address)};
   }
+  // Opt-in for owning callers that have already produced a current preview.
+  // Retain every old Part and every explicit Keep; reuse only its proven graph.
+  // Eligibility has no writes. A new address aliases the same graphic Part so
+  // Single captureIdentity stays distinct without copying the rendering DAG.
+  async function tryRetainCapture(result,{previewSources,matchesGraphic, mount}={}) {
+    const same=(left,right)=>JSON.stringify(left)===JSON.stringify(right);
+    const design=result.design;
+    if(!previewSources || !same(previewSources.design,design) || typeof mount!=='string')return null;
+    const preview=result.graphic;
+    if(typeof preview?.svg!=='string'||!Number.isInteger(preview.width)||!Number.isInteger(preview.height)||preview.width<1||preview.height<1||preview.width>4096||preview.height>4096)return null;
+    const imported=new Set(value(contextAddress).imported??[]);
+    for(const address of [...value(contextAddress).graphics].reverse()) {
+      const retained=value(address),source=retained?.source;
+      if(retained?.schema!=='studio-graphic@1'||source?.mount!==mount||!same(retained.design,design)||retained.graphic?.svg!==preview.svg||retained.graphic.width!==preview.width||retained.graphic.height!==preview.height)continue;
+      // Normal v1 captures also become literals on working restore. Existing
+      // import identities opt out; source bindings/materials remain the proof,
+      // not a claimed original capture Calculation witness.
+      if(imported.has(captureIdentity(retained)))continue;
+      let graphicPart,designPart,discPart,materialPart,resolved;
+      try {
+        graphicPart=pxc.get(source.graphic);designPart=pxc.get(source.design);
+        if(!same(graphicPart.value,retained.graphic)||!same(designPart.value,design))continue;
+        if(result.discAddress && !result.materialAddress && source.disc===result.discAddress && !source.material) {
+          discPart=pxc.get(source.disc);
+          if(!same(discPart.value,previewSources.disc)||!same(discPart.value,retained.specimen?.disc)||!same(previewSources.resolved,retained.specimen?.resolved))continue;
+          const base=pxc.get(discPart.value.mold),calculation=pxc.get('fn.read');
+          const matches=pxc.entries().filter(([,part])=>part.composition?.calculation===calculation&&part.composition.inputs.base===base&&part.composition.inputs.own===discPart&&same(part.value,previewSources.resolved));
+          resolved=matches.find(([name])=>name===retained.graphic.provenance?.resolvedAddress)??matches[0];
+          if(!resolved)continue;
+        } else if(result.materialAddress && !result.discAddress && source.material===result.materialAddress && !source.disc) {
+          materialPart=pxc.get(source.material);
+          if(!same(materialPart.value,previewSources.material)||!same(materialPart.value,retained.competition))continue;
+        } else continue;
+      } catch { continue; } // Historical sources missing owning Parts use fresh rendering.
+      if(retained.hash!==await sha256(retained.graphic.svg))continue;
+      const matched=matchesGraphic
+        ? await matchesGraphic({retained:retained.graphic,preview,source,design,disc:discPart?.value,resolved:resolved?.[1].value,resolvedAddress:resolved?.[0]})
+        : same(retained.graphic,preview);
+      if(!matched)continue;
+      const alias=fresh()+'retainedGraphic';pxc.set(alias,graphicPart);
+      const reused={address:alias,designAddress:source.design,graphic:graphicPart.value,...(discPart?{discAddress:source.disc,resolvedAddress:resolved[0]}:{materialAddress:source.material})};
+      return discPart?capture(reused,mount):captureCompetition(reused,mount);
+    }
+    return null;
+  }
   return {
-    experience,pxc,value,render,capture,importCapture,patch,startCompetition,editCompetition,renderCompetition,captureCompetition,
+    experience,pxc,value,render,capture,importCapture,patch,startCompetition,editCompetition,renderCompetition,captureCompetition,tryRetainCapture,
     async studyCards(){
       const previews=[];
       for(const study of compositionStudies){

@@ -1,5 +1,6 @@
 import { openWorkspace } from './workspace.mjs';
 import { nativeStudies, isNativeStudy, nativeStudy, nativeControlDesign } from './native-cards.mjs';
+import { alphaBounds, fitArtwork } from './preview-frame.mjs';
 import { loadFixture } from './prepared-fixture.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
 import { esc } from './renderer/src/presentation.js';
@@ -12,6 +13,7 @@ let workspace, rows = [], currentResult = null, capturedPreview = null;
 let queue = Promise.resolve(), busy = false, failedIntent = null, recoveredDraft = null, buildInfo = null;
 let ui = { mode: 'single', selectedDisc: null, selection: [], design: { ...defaultDesign }, bagName: '', background: 'checker' };
 const keptResults = new Map();
+let portraitDetail = true, portraitFrameRequest = 0, portraitBoundsCache = null, portraitReflowFrame = 0;
 const text = value => esc(String(value ?? ''));
 const message = (value, error = false) => { $('status').textContent = value; $('status').classList.toggle('is-error', error); };
 const context = () => workspace.model.context;
@@ -116,7 +118,7 @@ function controlsMarkup() {
   const picker = `${ui.mode === 'single' ? `<optgroup label="DiscStudio cards">${nativeStudies.map(study => option(study.id, study.name, design.study)).join('')}</optgroup>` : ''}<optgroup label="Lineup compositions">${compositionStudies.map(study => option(study.id, study.name, design.study)).join('')}</optgroup>`;
   if (isNativeStudy(design.study)) {
     const selected = nativeStudy(design.study), scale = design.nativeScale ?? .66;
-    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">YOUR TREATMENT</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><label>Composition<select id="composition">${picker}</select></label><p class="subtle">DiscStudio card pixels, kept with this exact disc. Placement stays anchored to the layout.</p><label>Card size <output id="native-scale-value">${Math.round(scale * 100)}%</output><input id="native-scale" type="range" min="0.5" max="1.5" step="0.01" value="${scale}" aria-label="Native card size"></label><div class="field-pair canvas-fields"><label>Canvas<select id="orientation" disabled>${option(selected.orientation, selected.orientation === 'portrait' ? 'Portrait' : 'Landscape', selected.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><p class="subtle">Canvas dimensions follow the selected card layout.</p><div class="field-pair"><label>Disc side<select id="native-side">${option('left', 'Left', design.nativeSide ?? selected.side)}${option('right', 'Right', design.nativeSide ?? selected.side)}</select></label><label>Highlight<select id="native-highlight">${option('digits', 'Digits', design.nativeHighlight ?? selected.highlight)}${option('tiles', 'Tile blocks', design.nativeHighlight ?? selected.highlight)}</select></label></div></form></aside>`;
+    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">YOUR TREATMENT</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><div class="native-primary-controls"><label>Composition<select id="composition">${picker}</select></label><p class="subtle">DiscStudio card pixels, kept with this exact disc. Placement stays anchored to the layout.</p><label>Card size <output id="native-scale-value">${Math.round(scale * 100)}%</output><input id="native-scale" type="range" min="0.5" max="1.5" step="0.01" value="${scale}" aria-label="Native card size"></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation" disabled>${option(selected.orientation, selected.orientation === 'portrait' ? 'Portrait' : 'Landscape', selected.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><p class="subtle">Canvas dimensions follow the selected card layout.</p><div class="field-pair"><label>Disc side<select id="native-side">${option('left', 'Left', design.nativeSide ?? selected.side)}${option('right', 'Right', design.nativeSide ?? selected.side)}</select></label><label>Highlight<select id="native-highlight">${option('digits', 'Digits', design.nativeHighlight ?? selected.highlight)}${option('tiles', 'Tile blocks', design.nativeHighlight ?? selected.highlight)}</select></label></div></form></aside>`;
   }
   return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">YOUR TREATMENT</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><label>Composition<select id="composition">${picker}</select></label><div class="field-pair placement-fields"><label>Placement<select id="placement">${[['bottom-left', 'Bottom left'], ['bottom-center', 'Bottom center'], ['bottom-right', 'Bottom right'], ['top-left', 'Top left'], ['top-right', 'Top right']].map(([v, name]) => option(v, name, design.placement)).join('')}</select></label><label>Width<select id="composition-size">${compositionSizeStudies.map(size => option(size.id, size.id === 'balanced' ? 'Preferred' : size.id === 'full-width' ? 'Maximum' : 'Compact', design.compositionSize)).join('')}</select></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation">${option('landscape', 'Landscape', design.orientation)}${option('portrait', 'Portrait', design.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><label>Title <span class="optional">optional</span><input id="graphic-title" maxlength="80" value="${text(design.title)}" placeholder="For the next shot"></label><details class="fine-tuning"><summary>More control</summary><div class="field-pair"><label>Background<input id="background" type="color" value="${text(design.background)}"></label><label>Text<input id="foreground" type="color" value="${text(design.foreground)}"></label></div><label>Canvas background<select id="frame">${option('none', 'Transparent', design.frame)}${option('filled', 'Solid', design.frame)}</select></label><div class="field-pair"><label>X offset <span class="optional">px</span><input id="offset-x" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetX) || 0}"></label><label>Y offset <span class="optional">px</span><input id="offset-y" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetY) || 0}"></label></div></details></form>${battleMarkup()}${bagMarkup()}</aside>`;
 }
@@ -125,6 +127,96 @@ function capturesMarkup() {
   const captures = context().graphics ?? [];
   return `<section class="captures panel" aria-labelledby="captures-title"><div class="section-heading"><div><span class="eyebrow">READY WHEN YOU ARE</span><h2 id="captures-title">Kept graphics <span class="inline-count">${captures.length}</span></h2></div><span class="subtle">Exact saved versions</span></div>${captures.length ? `<div class="capture-list">${captures.slice().reverse().map(address => { const capture = value(address); return `<button type="button" class="capture-choice ${capturedPreview?.address === address ? 'is-selected' : ''}" data-capture="${text(address)}" aria-pressed="${capturedPreview?.address === address}"><span class="capture-thumbnail"><img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(capture.graphic.svg)}" alt="" loading="lazy"></span><span><strong>${text(capture.title)}</strong><small>${capture.graphic.width} × ${capture.graphic.height}</small></span><span class="capture-arrow" aria-hidden="true">↗</span></button>`; }).join('')}</div>` : '<p class="empty-note">Keep a graphic to come back to its exact version.</p>'}</section>`;
 }
+
+async function portraitBounds(graphic, holder) {
+  if (portraitBoundsCache?.svg === graphic.svg) return portraitBoundsCache.promise;
+  const source = holder.querySelector('image')?.getAttribute('href');
+  if (!source?.startsWith('data:image/png;base64,')) throw Error('No self-contained native preview image.');
+  const promise = (async () => {
+    const image = new Image(); image.src = source; await image.decode();
+    if (image.naturalWidth !== graphic.width || image.naturalHeight !== graphic.height) throw Error('Preview image dimensions differ from its canvas.');
+    const canvas = document.createElement('canvas'); canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
+    const pixels = canvas.getContext('2d', { willReadFrequently: true }); pixels.drawImage(image, 0, 0);
+    const bounds = alphaBounds(pixels.getImageData(0, 0, canvas.width, canvas.height));
+    if (!bounds) throw Error('No native artwork pixels to frame.');
+    return bounds;
+  })();
+  portraitBoundsCache = { svg: graphic.svg, promise };
+  return promise;
+}
+
+async function framePortraitPreview(graphic) {
+  const request = ++portraitFrameRequest;
+  const grid = root.querySelector('.studio-grid'), preview = root.querySelector('.preview-column');
+  const controls = root.querySelector('.controls-panel'), shelf = root.querySelector('.shelf');
+  if (!grid || !preview || !controls || !shelf) return;
+  const size = $('native-scale'), holder = $('graphic-preview'), toggle = $('preview-framing');
+  const title = $('preview-title'), note = $('preview-note');
+  title.dataset.standardTitle ??= title.textContent;
+  const compact = Boolean(graphic?.provenance?.rasterOnly && graphic.width === 1080 && graphic.height === 1920 && matchMedia('(max-width:760px)').matches);
+  root.classList.toggle('compact-native-portrait', compact);
+  root.classList.toggle('compact-native-controls', compact && Boolean(size));
+  holder.classList.remove('artwork-detail');
+  holder.dataset.previewFraming = 'canvas';
+  toggle.hidden = !compact;
+  if (compact) {
+    if (size) {
+      size.closest('.native-primary-controls').after(preview);
+      grid.append(controls, shelf);
+    } else {
+      grid.append(preview, shelf, controls);
+    }
+  } else {
+    grid.append(shelf, preview, controls);
+    title.textContent = title.dataset.standardTitle;
+    note.textContent = note.dataset.standardNote;
+    return;
+  }
+  const fullCanvas = () => {
+    title.textContent = capturedPreview ? 'Kept version: canvas' : 'Full canvas';
+    toggle.textContent = 'Artwork detail';
+    toggle.setAttribute('aria-label', 'Show artwork detail preview');
+    note.textContent = `${capturedPreview ? 'Kept version. Your current design stays available. ' : ''}Full canvas. Preview backgrounds are not exported.`;
+  };
+  fullCanvas();
+  if (!portraitDetail) return;
+  holder.dataset.previewFraming = 'loading';
+  try {
+    const bounds = await portraitBounds(graphic, holder);
+    if (request !== portraitFrameRequest || holder !== $('graphic-preview') || graphic !== currentGraphic()) return;
+    title.textContent = capturedPreview ? 'Kept version: detail' : 'Artwork detail';
+    toggle.textContent = 'Full canvas';
+    toggle.setAttribute('aria-label', 'Show full canvas preview');
+    const available = root.querySelector('.export-bar').getBoundingClientRect().top - holder.getBoundingClientRect().top - 12;
+    if (available < 80) {
+      holder.dataset.previewFraming = 'canvas';
+      fullCanvas();
+      note.textContent += ' Scroll to inspect the canvas around the export notice.';
+      return;
+    }
+    const height = Math.min(240, available);
+    const fit = fitArtwork({ canvasWidth: graphic.width, canvasHeight: graphic.height, bounds, width: holder.parentElement.clientWidth, height });
+    for (const [name, number] of Object.entries({ 'canvas-width': graphic.width, 'canvas-height': graphic.height, 'frame-scale': fit.scale, 'frame-x': fit.x, 'frame-y': fit.y, 'frame-height': height })) holder.style.setProperty(`--portrait-${name}`, String(number));
+    holder.classList.add('artwork-detail');
+    holder.dataset.previewFraming = 'detail';
+    title.textContent = capturedPreview ? 'Kept version: detail' : 'Artwork detail';
+    toggle.textContent = 'Full canvas';
+    toggle.setAttribute('aria-label', 'Show full canvas preview');
+    note.textContent = `${capturedPreview ? 'Kept version. Your current design stays available. ' : ''}Zoomed artwork preview. Full canvas shows the exact exported placement.`;
+  } catch {
+    if (request !== portraitFrameRequest || holder !== $('graphic-preview') || graphic !== currentGraphic()) return;
+    if (portraitBoundsCache?.svg === graphic.svg) portraitBoundsCache = null;
+    holder.dataset.previewFraming = 'canvas';
+    fullCanvas();
+    note.textContent += ' Artwork detail is unavailable; your export is unchanged.';
+  }
+}
+function schedulePortraitFrame() {
+  if (portraitReflowFrame) cancelAnimationFrame(portraitReflowFrame);
+  portraitReflowFrame = requestAnimationFrame(() => { portraitReflowFrame = 0; framePortraitPreview(currentGraphic()); });
+}
+addEventListener('resize', schedulePortraitFrame);
+window.visualViewport?.addEventListener('resize', schedulePortraitFrame);
 
 function paintPreview() {
   const graphic = currentGraphic(), holder = $('graphic-preview');
@@ -145,6 +237,8 @@ function paintPreview() {
   $('download-svg').setAttribute('aria-label', raster ? 'Download SVG containing raster image' : 'Download editable SVG');
   if (raster) $('preview-note').textContent = capturedPreview ? 'Kept native card pixels. Your current design stays available.' : 'Native card pixels on a transparent canvas. The SVG contains this raster image.';
   document.querySelectorAll('[data-preview-background]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.previewBackground === ui.background)));
+  $('preview-note').dataset.standardNote = $('preview-note').textContent;
+  framePortraitPreview(graphic);
 }
 
 async function renderCurrent() {
@@ -153,7 +247,7 @@ async function renderCurrent() {
 }
 
 function paint() {
-  root.innerHTML = `<section class="workspace-heading"><div><span class="eyebrow">GOOD TO GO</span><h1>Your discs. Your next video.</h1></div><nav class="mode-nav" aria-label="Graphic type">${[['single', 'Single'], ['battle', 'Battle'], ['bag', 'Bag lineup']].map(([mode, label]) => `<button type="button" data-mode="${mode}" aria-pressed="${ui.mode === mode}">${label}</button>`).join('')}</nav></section><div class="studio-grid">${shelfMarkup()}<section class="preview-column" aria-labelledby="preview-title"><div class="preview-heading"><div><span class="eyebrow">THE ACTUAL GRAPHIC</span><h2 id="preview-title">${capturedPreview ? 'A kept version' : ui.mode === 'single' ? 'One disc. Ready for its moment.' : ui.mode === 'battle' ? 'Set the scene.' : 'Your selected lineup.'}</h2></div><button id="return-live" type="button" class="text-button" hidden>Back to current image</button></div><div class="preview-shell"><div class="preview-toolbar"><span id="preview-dimensions"></span><div class="background-switch" aria-label="Preview background">${[['checker', 'Checkerboard'], ['light', 'Light'], ['dark', 'Dark']].map(([v, label]) => `<button type="button" data-preview-background="${v}" aria-label="${label} preview background" aria-pressed="${ui.background === v}" title="${label}"><span class="swatch swatch-${v}" aria-hidden="true"></span></button>`).join('')}</div></div><div id="graphic-preview" data-testid="graphic-preview" class="graphic-preview"></div><div class="preview-bottom"><span class="transparency-dot" aria-hidden="true"></span><strong id="preview-kind"></strong><span>SVG → exact PNG</span></div></div><p id="preview-note" class="preview-note"></p><div class="export-bar"><div><span class="eyebrow">TAKE IT TO YOUR VIDEO</span><p>Download keeps this exact version.</p></div><div class="export-actions"><button id="keep-graphic" type="button" data-needs-ready class="button-secondary">Keep version</button><button id="download-png" type="button" data-needs-ready class="button-primary">Download PNG <span aria-hidden="true">↓</span></button><button id="download-svg" type="button" data-needs-ready class="svg-button" aria-label="Download editable SVG">SVG</button></div></div></section>${controlsMarkup()}</div>${capturesMarkup()}`;
+  root.innerHTML = `<section class="workspace-heading"><div><span class="eyebrow">GOOD TO GO</span><h1>Your discs. Your next video.</h1></div><nav class="mode-nav" aria-label="Graphic type">${[['single', 'Single'], ['battle', 'Battle'], ['bag', 'Bag lineup']].map(([mode, label]) => `<button type="button" data-mode="${mode}" aria-pressed="${ui.mode === mode}">${label}</button>`).join('')}</nav></section><div class="studio-grid">${shelfMarkup()}<section class="preview-column" aria-labelledby="preview-title"><div class="preview-heading"><div><span class="eyebrow">THE ACTUAL GRAPHIC</span><h2 id="preview-title">${capturedPreview ? 'A kept version' : ui.mode === 'single' ? 'One disc. Ready for its moment.' : ui.mode === 'battle' ? 'Set the scene.' : 'Your selected lineup.'}</h2></div><button id="return-live" type="button" class="text-button" hidden>Back to current image</button></div><div class="preview-shell"><div class="preview-toolbar"><span id="preview-dimensions"></span><button id="preview-framing" type="button" class="preview-framing-toggle" aria-label="Toggle artwork detail and full canvas preview" hidden>Full canvas</button><div class="background-switch" aria-label="Preview background">${[['checker', 'Checkerboard'], ['light', 'Light'], ['dark', 'Dark']].map(([v, label]) => `<button type="button" data-preview-background="${v}" aria-label="${label} preview background" aria-pressed="${ui.background === v}" title="${label}"><span class="swatch swatch-${v}" aria-hidden="true"></span></button>`).join('')}</div></div><div id="graphic-preview" data-testid="graphic-preview" class="graphic-preview"></div><div class="preview-bottom"><span class="transparency-dot" aria-hidden="true"></span><strong id="preview-kind"></strong><span>SVG → exact PNG</span></div></div><p id="preview-note" class="preview-note"></p><div class="export-bar"><div><span class="eyebrow">TAKE IT TO YOUR VIDEO</span><p>Download keeps this exact version.</p></div><div class="export-actions"><button id="keep-graphic" type="button" data-needs-ready class="button-secondary">Keep version</button><button id="download-png" type="button" data-needs-ready class="button-primary">Download PNG <span aria-hidden="true">↓</span></button><button id="download-svg" type="button" data-needs-ready class="svg-button" aria-label="Download editable SVG">SVG</button></div></div></section>${controlsMarkup()}</div>${capturesMarkup()}`;
   paintPreview();
   bind();
   paintExportFailure();
@@ -178,6 +272,7 @@ function failedCapture(record) {
 function paintExportFailure({ focus = false } = {}) {
   const bar = root.querySelector('.export-bar');
   if (!bar) return;
+  schedulePortraitFrame();
   let notice = $('export-failure');
   if (!notice) {
     notice = document.createElement('section');
@@ -289,6 +384,7 @@ function bind() {
   });
   $('design-form').onsubmit = event => event.preventDefault();
   $('design-form').onchange = () => { ui.design = readDesign(); change({ design: structuredClone(ui.design) }); };
+  $('preview-framing').onclick = () => { portraitDetail = $('graphic-preview').dataset.previewFraming !== 'detail'; framePortraitPreview(currentGraphic()); };
   if ($('native-scale')) $('native-scale').oninput = event => { $('native-scale-value').textContent = `${Math.round(Number(event.target.value) * 100)}%`; };
   document.querySelectorAll('[data-preview-background]').forEach(button => button.onclick = () => { ui.background = button.dataset.previewBackground; paintPreview(); });
   $('keep-graphic').onclick = () => run(async () => { await keepCurrent(true); paint(); message('Kept. This exact version is ready below, even after reload.'); }, { kind: 'keep', ui });

@@ -14,6 +14,7 @@ const runtimeFiles = [
   'locked-storage.mjs',
   'archive-codec.mjs',
   'native-cards.mjs',
+  'preview-frame.mjs',
   'prepared-fixture.mjs',
   'prepared-fixture.json',
 ];

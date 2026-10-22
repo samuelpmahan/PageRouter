@@ -3,6 +3,9 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
 import { openWorkspace, archiveKey } from './dist/workspace.mjs';
+import { createArchiveCodec } from './dist/archive-codec.mjs';
+import { pack, unpack } from './dist/archive-storage.mjs';
+import { captureIdentity } from './dist/model.mjs';
 
 const manifest = JSON.parse(fs.readFileSync(new URL('./prepared-fixture.json', import.meta.url)));
 const fixture = manifest.discs.map(disc => {
@@ -256,4 +259,156 @@ test('a rejected native design preserves committed state and permits a corrected
   const afterCorrection = await openWorkspace({ storage: backing, locks: lock, fixture, renderGraphic });
   assert.deepEqual(afterCorrection.model.context.design, corrected);
   await nativePreview(afterCorrection);
+});
+
+const archiveCodec = createArchiveCodec({ pack, unpack });
+const rawGraph = async backing => JSON.parse(await archiveCodec.unpackArchive(backing.getItem(archiveKey)));
+const materialFunctionCount = (graph, name) => {
+  const functions = new Map(graph.nodes.filter(node => node.function).map(node => [node.id, node.function]));
+  return graph.nodes.filter(node => functions.get(node.calculation) === name).length;
+};
+function addressedWorkspaceGraphic(input) {
+  if (!input.design.study.startsWith('discstudio:')) return null;
+  return { ...structuredClone(nativeWorkspaceGraphic), provenance: {
+    schema: 'thro-native-card@1', renderer: 'discstudio-cards', rendererBuild: '28ac2b39fab85255',
+    preset: 'b01', physicalDiscId: input.disc.id, discAddress: input.discAddress,
+    designAddress: input.designAddress, resolvedAddress: input.resolvedAddress,
+    preparedPhotoSha256: createHash('sha256').update(Buffer.from(input.disc.depiction.src.split(',')[1], 'base64')).digest('hex'),
+    appearance: { discSide: 'right', highlightTarget: 'digits', accentColor: input.design.accent },
+    placement: { scale: 0.66, dx: 0, dy: 0 }, rasterOnly: true,
+  } };
+}
+
+test('retained native Keep preserves history and full owning provenance without another render graph', async () => {
+  const backing = storage(), lock = locks();
+  let validations = 0;
+  const renderGraphic = async input => { validations++; return addressedWorkspaceGraphic(input); };
+  const workspace = await openWorkspace({ storage: backing, locks: lock, fixture, renderGraphic });
+  await workspace.change({ design: nativeWorkspaceDesign(workspace) });
+  const initial = await workspace.single(workspace.model.context.selectedDisc);
+  const first = await workspace.keep(initial);
+  const oldPacked = backing.getItem(archiveKey), oldCapture = structuredClone(first.capture);
+  const beforeGraph = await rawGraph(backing);
+  const beforeRaw = await archiveCodec.unpackArchive(oldPacked);
+  const readOnly = await openWorkspace({ storage: backing, locks: lock, fixture, renderGraphic });
+  assert.equal(backing.getItem(archiveKey), oldPacked, 'old v1 archive opening performs no write');
+  const preview = await readOnly.single(readOnly.model.context.selectedDisc);
+  assert.notEqual(preview.graphic.provenance.designAddress, first.capture.graphic.provenance.designAddress, 'fresh preview owns different addresses');
+  const validationsBefore = validations;
+  const second = await readOnly.keep(preview);
+  const afterGraph = await rawGraph(backing), afterRaw = await archiveCodec.unpackArchive(backing.getItem(archiveKey));
+  assert.equal(validations, validationsBefore + 1, 'reuse still executes native renderer validation');
+  assert.equal(materialFunctionCount(afterGraph, 'fn.read'), materialFunctionCount(beforeGraph, 'fn.read'), 'reuse must not retain another resolved facts Part');
+  const photoBytes = Buffer.byteLength(fixture[0].depiction.src);
+  assert.ok(Buffer.byteLength(afterRaw)-Buffer.byteLength(beforeRaw) < photoBytes*2+50000, 'repeat Keep stores the new snapshot, not another native graphic/resolved graph');
+  assert.notEqual(second.address, first.address);
+  assert.notEqual(captureIdentity(second.capture), captureIdentity(first.capture), 'explicit Keep remains externally distinct');
+  assert.deepEqual(second.capture.graphic, oldCapture.graphic, 'owning provenance is preserved exactly');
+  assert.deepEqual(second.capture.design, oldCapture.design);
+  assert.deepEqual(second.capture.specimen, oldCapture.specimen);
+  assert.strictEqual(readOnly.model.pxc.get(second.capture.source.graphic), readOnly.model.pxc.get(first.capture.source.graphic), 'fresh address aliases the same retained graphic Part');
+  assert.deepEqual(readOnly.model.value(first.address), oldCapture, 'all prior capture values remain exact');
+  const afterPacked = backing.getItem(archiveKey);
+  const reopened = await openWorkspace({ storage: backing, locks: lock, fixture, renderGraphic });
+  assert.equal(backing.getItem(archiveKey), afterPacked, 'reopening saved aliases performs no write');
+  assert.deepEqual(reopened.model.context.graphics, [first.address, second.address]);
+  assert.deepEqual(reopened.model.value(first.address), oldCapture);
+  assert.deepEqual(reopened.model.value(second.address), second.capture);
+  assert.strictEqual(reopened.model.pxc.get(second.capture.source.graphic), reopened.model.pxc.get(first.capture.source.graphic));
+});
+
+test('retained legacy and Battle Keeps append snapshots without copying their scene trees', async () => {
+  const backing = storage(), lock = locks();
+  const workspace = await openWorkspace({ storage: backing, locks: lock, fixture });
+  for (const mode of ['single', 'battle']) {
+    const preview = mode === 'single' ? await workspace.single(workspace.model.context.selectedDisc) : await workspace.battle(workspace.model.context.selection.slice(0,2));
+    const first = await workspace.keep(preview), oldCapture = structuredClone(first.capture);
+    const before = await rawGraph(backing);
+    const nextPreview = mode === 'single' ? await workspace.single(workspace.model.context.selectedDisc) : await workspace.battle(workspace.model.context.selection.slice(0,2));
+    const second = await workspace.keep(nextPreview), after = await rawGraph(backing);
+    for (const fn of ['fn.studio.card', 'fn.studio.canvasScene', 'fn.studio.layeredCompositionScene', 'fn.studio.competitionScene']) {
+      assert.equal(materialFunctionCount(after,fn), materialFunctionCount(before,fn), `${mode} repeated Keep cannot add another ${fn} tree`);
+    }
+    assert.notEqual(first.address,second.address);
+    assert.notEqual(captureIdentity(first.capture),captureIdentity(second.capture));
+    assert.deepEqual(second.capture.graphic,oldCapture.graphic);
+    assert.deepEqual(second.capture.design,oldCapture.design);
+    assert.deepEqual(second.capture.specimen ?? second.capture.competition,oldCapture.specimen ?? oldCapture.competition);
+    assert.deepEqual(workspace.model.value(first.address),oldCapture);
+  }
+  const reopened = await openWorkspace({ storage: backing, locks: lock, fixture });
+  assert.equal(reopened.model.context.graphics.length,4);
+});
+
+test('a retained native validation failure cannot replace stored bytes or erase Keep intent', async () => {
+  const backing=storage(),lock=locks(); let fail=false;
+  const renderGraphic=async input=>{if(fail && input.design.study.startsWith('discstudio:'))throw Error('Synthetic retained geometry failure');return addressedWorkspaceGraphic(input);};
+  const workspace=await openWorkspace({storage:backing,locks:lock,fixture,renderGraphic});
+  await workspace.change({design:nativeWorkspaceDesign(workspace)});
+  await workspace.keep(await workspace.single(workspace.model.context.selectedDisc));
+  const preview=await workspace.single(workspace.model.context.selectedDisc),before=backing.getItem(archiveKey),head=workspace.model.contextAddress;
+  fail=true;
+  await assert.rejects(workspace.keep(preview),/Synthetic retained geometry failure/);
+  assert.equal(backing.getItem(archiveKey),before);
+  assert.equal(workspace.model.contextAddress,head);
+  assert.equal(workspace.model.context.graphics.length,1);
+  assert.deepEqual(workspace.draft,{operation:'keep',discAddress:preview.discAddress,materialAddress:undefined,design:preview.design});
+});
+
+const archiveMaterial = item => item===null || ['string','boolean','number'].includes(typeof item) ? {scalar:item}
+  : Array.isArray(item) ? {array:item.map(archiveMaterial)} : {object:Object.entries(item).map(([key,value])=>[key,archiveMaterial(value)])};
+
+test('ineligible retained Keep falls back to fresh rendering and keeps the SVG rejection guard', async () => {
+  const backing=storage(),lock=locks();let renders=0;
+  const renderGraphic=async input=>{renders++;return addressedWorkspaceGraphic(input);};
+  let workspace=await openWorkspace({storage:backing,locks:lock,fixture,renderGraphic});
+  await workspace.change({design:nativeWorkspaceDesign(workspace)});
+  const first=await workspace.keep(await workspace.single(workspace.model.context.selectedDisc));
+  const invalid=structuredClone(first.capture);invalid.source.disc=workspace.model.experience.shelf()[1].address;
+  const graph=await rawGraph(backing),id=new Map(graph.bindings).get(first.address);
+  graph.nodes.find(node=>node.id===id).material=archiveMaterial(invalid);
+  backing.setItem(archiveKey,await archiveCodec.packArchive(JSON.stringify(graph)));
+  workspace=await openWorkspace({storage:backing,locks:lock,fixture,renderGraphic});
+  const preview=await workspace.single(workspace.model.context.selectedDisc),beforeRenders=renders;
+  const second=await workspace.keep(preview);
+  assert.equal(renders,beforeRenders+1,'an ineligible retained capture uses fresh candidate rendering');
+  assert.notStrictEqual(workspace.model.pxc.get(second.capture.source.graphic),workspace.model.pxc.get(first.capture.source.graphic));
+  assert.ok(!workspace.model.pxc.entries().some(([address])=>address.endsWith('.retainedGraphic')),'an ineligible capture never adds a reuse alias');
+  assert.deepEqual(workspace.model.value(first.address),invalid);
+  assert.equal(workspace.model.context.graphics.length,2);
+
+  const changed={...await workspace.single(workspace.model.context.selectedDisc)};
+  changed.graphic={...changed.graphic,svg:changed.graphic.svg+' '};
+  const before=backing.getItem(archiveKey),head=workspace.model.contextAddress;
+  await assert.rejects(workspace.keep(changed),{code:'THRO_PREVIEW_CHANGED'});
+  assert.equal(backing.getItem(archiveKey),before);
+  assert.equal(workspace.model.contextAddress,head);
+  assert.deepEqual(workspace.draft,{operation:'keep',discAddress:changed.discAddress,materialAddress:undefined,design:changed.design});
+});
+
+test('unbound preview sources fall back without creating a reuse alias', async () => {
+  const workspace=await openWorkspace({storage:storage(),locks:locks(),fixture,renderGraphic:addressedWorkspaceGraphic});
+  await workspace.change({design:nativeWorkspaceDesign(workspace)});
+  const first=await workspace.keep(await workspace.single(workspace.model.context.selectedDisc));
+  const preview=await workspace.single(workspace.model.context.selectedDisc);
+  const second=await workspace.keep({...preview,resolvedAddress:preview.resolvedAddress+'.missing'});
+  assert.notStrictEqual(workspace.model.pxc.get(second.capture.source.graphic),workspace.model.pxc.get(first.capture.source.graphic));
+  assert.equal(workspace.model.context.graphics.length,2);
+});
+
+test('a stale retained Keep preserves the newer commit and complete pending intent', async () => {
+  const backing=storage(),lock=locks();
+  const initial=await openWorkspace({storage:backing,locks:lock,fixture,renderGraphic:addressedWorkspaceGraphic});
+  await initial.change({design:nativeWorkspaceDesign(initial)});
+  await initial.keep(await initial.single(initial.model.context.selectedDisc));
+  const stale=await openWorkspace({storage:backing,locks:lock,fixture,renderGraphic:addressedWorkspaceGraphic});
+  const newer=await openWorkspace({storage:backing,locks:lock,fixture,renderGraphic:addressedWorkspaceGraphic});
+  const preview=await stale.single(stale.model.context.selectedDisc),head=stale.model.contextAddress;
+  await newer.change({name:'Newer retained capture owner'});
+  const winning=backing.getItem(archiveKey);
+  await assert.rejects(stale.keep(preview),{code:'THRO_STORAGE_CONFLICT'});
+  assert.equal(backing.getItem(archiveKey),winning);
+  assert.equal(stale.model.contextAddress,head);
+  assert.equal(stale.model.context.graphics.length,1);
+  assert.deepEqual(stale.draft,{operation:'keep',discAddress:preview.discAddress,materialAddress:undefined,design:preview.design});
 });

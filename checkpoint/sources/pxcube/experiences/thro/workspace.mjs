@@ -129,12 +129,42 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
     },
     keep(result) {
       const design = result.design ?? model.value(result.designAddress);
+      const requested = { ...result, design: clone(design), graphic: clone(result.graphic) };
+      let previewSources = null;
+      try {
+        previewSources = clone({ design: model.value(result.designAddress), ...(result.materialAddress
+          ? { material: model.value(result.materialAddress) }
+          : { disc: model.value(result.discAddress), resolved: model.value(result.resolvedAddress) }) });
+      } catch { /* An unbound preview can still use the original fresh-render path. */ }
       return serial({ operation: 'keep', discAddress: result.discAddress, materialAddress: result.materialAddress, design }, async candidate => {
-        const rebuilt = result.materialAddress
-          ? await candidate.renderCompetition(design, result.materialAddress)
-          : await candidate.render(result.discAddress, design);
-        if (rebuilt.graphic.svg !== result.graphic.svg) throw failure('THRO_PREVIEW_CHANGED', 'The prepared output changed. Review the current preview before keeping it.');
-        return result.materialAddress
+        const retained = await candidate.tryRetainCapture(requested, { previewSources, mount: 'thro.prepared-samples',
+          async matchesGraphic({ retained, preview, source, disc, resolved, resolvedAddress }) {
+            const same = (left, right) => JSON.stringify(left) === JSON.stringify(right);
+            if (!isNativeStudy(design.study)) return same(retained, preview);
+            // Validate native geometry/pixels again without creating bound Parts.
+            // The renderer receives the retained owning addresses, so its whole
+            // output (including every provenance field) must remain exact.
+            const validated = await renderGraphic({ discAddress: source.disc, disc, design,
+              designAddress: source.design, resolvedAddress, resolved, purpose: 'single' });
+            if (!validated || !same(validated, retained)) return false;
+            const old = retained.provenance, current = preview.provenance;
+            if (old?.schema !== 'thro-native-card@1') return false;
+            if (current?.schema !== old.schema || old.discAddress !== source.disc || old.physicalDiscId !== disc.id
+              || old.designAddress !== source.design || old.resolvedAddress !== resolvedAddress
+              || current.discAddress !== requested.discAddress || current.physicalDiscId !== disc.id
+              || current.designAddress !== requested.designAddress || current.resolvedAddress !== requested.resolvedAddress) return false;
+            // Only these two address strings may differ. Their bound preview
+            // values were checked against the exact retained design/facts.
+            return same(retained, { ...preview, provenance: { ...current,
+              designAddress: old.designAddress, resolvedAddress: old.resolvedAddress } });
+          },
+        });
+        if (retained) return retained;
+        const rebuilt = requested.materialAddress
+          ? await candidate.renderCompetition(design, requested.materialAddress)
+          : await candidate.render(requested.discAddress, design);
+        if (rebuilt.graphic.svg !== requested.graphic.svg) throw failure('THRO_PREVIEW_CHANGED', 'The prepared output changed. Review the current preview before keeping it.');
+        return requested.materialAddress
           ? candidate.captureCompetition(rebuilt, 'thro.prepared-samples')
           : candidate.capture(rebuilt, 'thro.prepared-samples');
       });

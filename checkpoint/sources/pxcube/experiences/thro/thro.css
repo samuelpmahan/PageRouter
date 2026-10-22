@@ -41,3 +41,32 @@
 
 /* Exact pinned ChainSpot C1/C2 header mark, used as the O in thro. */
 .wordmark-mark{display:inline-block;width:.58em;height:.58em;vertical-align:-.025em;letter-spacing:normal}
+
+.native-primary-controls{display:contents}
+.preview-framing-toggle{min-height:44px;padding:4px 6px;font-size:10px}
+/* Phone-only display framing. The original SVG and export remain unchanged. */
+@media(max-width:760px){
+  .compact-native-controls .controls-panel{padding:0;border:0;background:none}
+  .compact-native-controls .controls-panel>.section-heading,
+  .compact-native-controls #design-form>.subtle,
+  .compact-native-controls .native-primary-controls>.subtle{display:none}
+  .compact-native-controls #design-form{margin:0;gap:10px}
+  .compact-native-controls .native-primary-controls>label:has(#native-scale){display:grid;grid-template-columns:1fr auto;gap:4px}
+  .compact-native-controls #native-scale{grid-column:1 / -1;margin:0;min-height:44px}
+  .compact-native-portrait .preview-toolbar{gap:4px;padding-inline:6px}
+  .compact-native-portrait #preview-dimensions{font-size:9px}
+  .compact-native-portrait .graphic-preview{width:min(100%,16.875svh,152px);margin-inline:auto}
+  .compact-native-portrait .graphic-preview.artwork-detail{width:100%;height:calc(var(--portrait-frame-height)*1px);aspect-ratio:auto!important}
+  .compact-native-portrait .artwork-detail>svg{inset:auto;left:0;top:0;width:calc(var(--portrait-canvas-width)*1px);height:calc(var(--portrait-canvas-height)*1px);transform-origin:0 0;transform:translate(calc(var(--portrait-frame-x)*1px),calc(var(--portrait-frame-y)*1px)) scale(var(--portrait-frame-scale))}
+  .compact-native-portrait .preview-note{margin-bottom:0}
+}
+@media(max-width:760px) and (max-height:760px){
+  .compact-native-portrait .workspace-heading>div{display:none}
+  #workspace.compact-native-portrait{padding-top:12px}
+  .compact-native-portrait .workspace-heading{margin-bottom:10px}
+  .compact-native-portrait .mode-nav{margin-top:0}
+  .compact-native-controls .native-primary-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+  .compact-native-controls .native-primary-controls>label{min-width:0}
+  .compact-native-controls #composition{font-size:12px}
+  .compact-native-portrait .preview-heading h2{font-size:18px}
+}
