@@ -1,5 +1,5 @@
 import { openWorkspace } from './workspace.mjs';
-import { nativeStudies, isNativeStudy, nativeStudy, nativeControlDesign } from './native-cards.mjs';
+import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign } from './native-cards.mjs';
 import { alphaBounds, fitArtwork } from './preview-frame.mjs';
 import { loadFixture } from './prepared-fixture.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
@@ -11,8 +11,9 @@ const debug = new URLSearchParams(location.search).get('debug') === '1';
 const root = $('workspace');
 let workspace, rows = [], currentResult = null, capturedPreview = null;
 let queue = Promise.resolve(), busy = false, failedIntent = null, recoveredDraft = null, buildInfo = null;
-let ui = { mode: 'single', selectedDisc: null, selection: [], design: { ...defaultDesign }, bagName: '', background: 'checker' };
+let ui = { mode: 'single', selectedDisc: null, selection: [], design: { ...defaultDesign }, bagName: '', background: 'checker', view: 'closeup' };
 const keptResults = new Map();
+let lastDownload = null; // the confirmation shown inside the export bar after a download or keep
 let portraitDetail = true, portraitFrameRequest = 0, portraitBoundsCache = null, portraitReflowFrame = 0;
 const text = value => esc(String(value ?? ''));
 const message = (value, error = false) => { $('status').textContent = value; $('status').classList.toggle('is-error', error); };
@@ -21,14 +22,15 @@ const value = address => workspace.model.value(address);
 const currentGraphic = () => capturedPreview?.capture.graphic ?? currentResult?.graphic;
 const hasConflict = () => Boolean(workspace?.conflict);
 const option = (v, label, chosen) => `<option value="${text(v)}" ${v === chosen ? 'selected' : ''}>${text(label)}</option>`;
-const facts = row => [row.disc.plastic || 'Plastic unspecified', row.disc.weight == null ? 'Weight unspecified' : `${row.disc.weight} g`].join(' · ');
+const facts = row => [row.disc.plastic, row.disc.weight == null ? null : `${row.disc.weight} g`].filter(Boolean).join(' · ');
 const rowName = row => row?.seed?.name ?? row?.disc?.nickname ?? 'Prepared disc';
 const resultKey = result => result?.address ?? result?.graphic?.svg;
 
 function setBusy(next) {
   busy = next;
   root.setAttribute('aria-busy', String(next));
-  document.querySelectorAll('[data-needs-ready]').forEach(button => { button.disabled = next || hasConflict() || !currentGraphic(); });
+  // Busy does not disable these: run() queues actions, so a tap during a save waits its turn instead of being lost.
+  document.querySelectorAll('[data-needs-ready]').forEach(button => { button.disabled = hasConflict() || !currentGraphic(); });
   if ($('retry-export')) $('retry-export').disabled = next || hasConflict();
   $('reload-latest').disabled = next;
   if (hasConflict()) root.querySelectorAll('button,input,select').forEach(control => { control.disabled = true; });
@@ -92,9 +94,9 @@ function adoptContext() {
 
 function shelfMarkup() {
   const multiple = ui.mode !== 'single';
-  return `<aside class="shelf panel" aria-labelledby="shelf-title"><div class="section-heading"><div><span class="eyebrow">THE MATERIAL</span><h2 id="shelf-title">Your prepared discs</h2></div><span class="count">${rows.length}</span></div><p class="subtle">${multiple ? 'Choose 2–4 exact copies for this image.' : 'Pick the disc you want on screen.'}</p><div class="disc-shelf" data-testid="prepared-shelf">${rows.map((row, index) => {
+  return `<aside class="shelf panel" aria-labelledby="shelf-title"><div class="section-heading"><div><span class="eyebrow">STEP 1 · PICK</span><h2 id="shelf-title">Your discs</h2></div><span class="count">${rows.length}</span></div><p class="subtle">${multiple ? 'Choose 2–4 exact copies for this image.' : 'Pick the disc you want on screen.'}</p><div class="disc-shelf" data-testid="prepared-shelf">${rows.map((row, index) => {
     const selected = multiple ? ui.selection.includes(row.address) : ui.selectedDisc === row.address;
-    return `<button type="button" class="disc-choice ${selected ? 'is-selected' : ''}" data-disc="${text(row.address)}" aria-pressed="${selected}" aria-label="${text(row.seed.manufacturer)} ${text(rowName(row))}, ${text(facts(row))}"><span class="disc-thumb"><img src="${text(row.art)}" alt="" loading="${index < 4 ? 'eager' : 'lazy'}"><span class="selection-mark" aria-hidden="true">${selected ? '✓' : '+'}</span></span><span class="disc-copy"><span class="disc-maker">${text(row.seed.manufacturer)}</span><strong>${text(rowName(row))}</strong><span>${text(facts(row))}</span></span></button>`;
+    return `<button type="button" class="disc-choice ${selected ? 'is-selected' : ''}" data-disc="${text(row.address)}" aria-pressed="${selected}" aria-label="${text(row.seed.manufacturer)} ${text(rowName(row))}${facts(row) ? `, ${text(facts(row))}` : ''}"><span class="disc-thumb"><img src="${text(row.art)}" alt="" loading="${index < 4 ? 'eager' : 'lazy'}"><span class="selection-mark" aria-hidden="true">${selected ? '✓' : '+'}</span></span><span class="disc-copy"><span class="disc-maker">${text(row.seed.manufacturer)}</span><strong>${text(rowName(row))}</strong>${facts(row) ? `<span>${text(facts(row))}</span>` : ''}</span></button>`;
   }).join('')}</div>${multiple ? `<div class="lineup-total"><strong>${ui.selection.length} selected</strong><span>2–4-disc graphic</span></div>` : ''}</aside>`;
 }
 
@@ -113,19 +115,178 @@ function bagMarkup() {
   return `<section class="bag-controls"><h3>Keep this named bag</h3><p class="subtle">This image shows a selected 2–4-disc lineup. Saved bags retain their exact copies and order.</p><label>Bag name<input id="bag-name" maxlength="80" value="${text(ui.bagName)}" placeholder="My video lineup"></label><button type="button" id="save-bag" class="button-secondary">Save bag</button>${bags.length ? `<label>Open saved bag<select id="saved-bag"><option value="">Choose a bag</option>${bags.map(({ address, bag }) => option(address, `${bag.name} · ${bag.discIds.length} copies`, '')).join('')}</select></label>` : ''}</section>`;
 }
 
+// ---- Layout names ----
+const allStudies = () => [...nativeStudies, ...compositionStudies];
+const studyName = id => allStudies().find(study => study.id === id)?.name;
+// "DiscStudio B01 - Hero rail" reads as "B01 Hero rail" under its "DiscStudio cards" heading.
+const shortStudyName = study => isNativeStudy(study.id) ? study.name.replace(/^DiscStudio\s+/, '').replace(/\s+-\s+/, ' ') : study.name;
+function keptDetail(capture) {
+  const design = capture.design ?? {}, parts = [studyName(design.study), design.title ? `“${design.title}”` : null, `${capture.graphic.width} × ${capture.graphic.height}`];
+  return parts.filter(Boolean).join(' · ');
+}
+
+// ---- Close-up framing ----
+// Frames the on-screen preview on the graphic itself instead of the whole canvas.
+// Only the preview changes; downloads always use the exact full canvas.
+// Vector graphics are measured from their laid-out SVG groups; DiscStudio's raster
+// cards are measured from their transparent pixels with Dab's alphaBounds.
+const rasterBoundsCache = new Map();
+function rasterBounds(svg) {
+  if (rasterBoundsCache.has(svg)) return rasterBoundsCache.get(svg);
+  const promise = (async () => {
+    const source = /href="(data:image\/png;base64,[^"]+)"/.exec(svg)?.[1];
+    if (!source) return null;
+    const image = new Image(); image.src = source; await image.decode();
+    const canvas = document.createElement('canvas'); canvas.width = image.naturalWidth; canvas.height = image.naturalHeight;
+    const pixels = canvas.getContext('2d', { willReadFrequently: true }); pixels.drawImage(image, 0, 0);
+    return alphaBounds(pixels.getImageData(0, 0, canvas.width, canvas.height));
+  })().catch(() => null);
+  if (rasterBoundsCache.size > 40) rasterBoundsCache.delete(rasterBoundsCache.keys().next().value);
+  rasterBoundsCache.set(svg, promise);
+  return promise;
+}
+function applyCrop(holder, graphic, box, force) {
+  const svg = holder.querySelector('svg');
+  if (!svg) return;
+  let { x, y, w, h } = box;
+  if (w > graphic.width * .9 && h > graphic.height * .9) { if (force) holder.style.aspectRatio = ''; return; } // already fills the canvas
+  const pad = Math.max(w, h) * .06;
+  x = Math.max(0, x - pad); y = Math.max(0, y - pad);
+  w = Math.min(graphic.width - x, w + pad * 2); h = Math.min(graphic.height - y, h + pad * 2);
+  svg.setAttribute('viewBox', `${x.toFixed(1)} ${y.toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)}`);
+  if (force) { holder.style.aspectRatio = ''; return; } // thumbnails keep their fixed box; the cropped view is centred inside it
+  holder.style.aspectRatio = `${w.toFixed(1)} / ${h.toFixed(1)}`;
+  holder.classList.add('is-closeup');
+}
+const compactPortrait = graphic => Boolean(graphic?.provenance?.rasterOnly && graphic.width === 1080 && graphic.height === 1920 && matchMedia('(max-width:760px)').matches);
+function closeUp(holder, graphic, force = false) {
+  const svg = holder.querySelector('svg');
+  if (!svg || (!force && ui.view !== 'closeup')) return;
+  if (graphic.provenance?.rasterOnly) {
+    if (!force && compactPortrait(graphic)) return; // Dab's portrait framing handles phones (framePortraitPreview)
+    rasterBounds(graphic.svg).then(bounds => {
+      if (!bounds || holder.querySelector('svg') !== svg) return;
+      applyCrop(holder, graphic, { x: bounds.x, y: bounds.y, w: bounds.width, h: bounds.height }, force);
+    });
+    return;
+  }
+  const frame = svg.getBoundingClientRect();
+  if (!frame.width || !frame.height) return;
+  let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity;
+  for (const child of svg.children) {
+    if (['defs', 'style', 'title', 'desc'].includes(child.tagName.toLowerCase())) continue;
+    const box = child.getBoundingClientRect();
+    if (!box.width || !box.height) continue;
+    left = Math.min(left, box.left); top = Math.min(top, box.top); right = Math.max(right, box.right); bottom = Math.max(bottom, box.bottom);
+  }
+  if (!Number.isFinite(left)) return;
+  const scale = graphic.width / frame.width;
+  applyCrop(holder, graphic, { x: (left - frame.left) * scale, y: (top - frame.top) * scale, w: (right - left) * scale, h: (bottom - top) * scale }, force);
+}
+
+// ---- Composition thumbnails: each layout rendered with the disc on screen ----
+// Several inline SVGs share one document, so their clip-path and mask ids must not collide.
+const uniqueIds = (svg, prefix) => svg
+  .replace(/\bid="([^"]+)"/g, (_m, id) => `id="${prefix}${id}"`)
+  .replace(/url\(#([^)]+)\)/g, (_m, id) => `url(#${prefix}${id})`)
+  .replace(/\b(xlink:href|href)="#([^"]+)"/g, (_m, attr, id) => `${attr}="#${prefix}${id}"`);
+let thumbToken = 0;
+function thumbDesign(id) {
+  if (isNativeStudy(id)) return nativeDesign(ui.design, id);
+  const base = isNativeStudy(ui.design.study) ? { ...defaultDesign, ...context().legacyDesign } : ui.design;
+  return { ...base, study: id, frame: 'none', title: '' };
+}
+async function paintCompositionThumbs() {
+  const token = ++thumbToken, disc = ui.mode === 'single' ? ui.selectedDisc : (ui.selection[0] ?? ui.selectedDisc);
+  if (!disc) return;
+  const studies = ui.mode === 'single' ? allStudies() : compositionStudies;
+  // The chosen layout first, then the rest in order, so the visible one is never last to appear.
+  const ordered = [...studies.filter(study => study.id === ui.design.study), ...studies.filter(study => study.id !== ui.design.study)];
+  for (const study of ordered) {
+    const slot = document.querySelector(`[data-study-thumb="${CSS.escape(study.id)}"]`);
+    if (!slot) continue;
+    try {
+      const result = await workspace.single(disc, thumbDesign(study.id));
+      if (token !== thumbToken || !slot.isConnected) return;
+      slot.innerHTML = uniqueIds(result.graphic.svg, `thumb-${study.id.replace(/[^a-z0-9-]/gi, '-')}-`);
+      slot.style.aspectRatio = `${result.graphic.width} / ${result.graphic.height}`;
+      closeUp(slot, result.graphic, true);
+    } catch { slot.classList.add('is-unavailable'); }
+  }
+}
+
+// ---- Accent swatches: one sampled from the disc, then a fixed palette ----
+const palette = [['#a6edda', 'Mint'], ['#c8f49d', 'Lime'], ['#ffd166', 'Gold'], ['#ff7a45', 'Orange'], ['#ff4d6d', 'Red'], ['#c77dff', 'Violet'], ['#4cc9f0', 'Sky'], ['#f6f3e9', 'Chalk']];
+let discColour = null; // { disc, colour }
+function swatchMarkup(chosen) {
+  const sampled = discColour && discColour.disc === (ui.mode === 'single' ? ui.selectedDisc : ui.selection[0]) ? discColour.colour : null;
+  const same = (a, b) => String(a).toLowerCase() === String(b).toLowerCase();
+  return `<button type="button" class="swatch-choice swatch-match" data-accent="${text(sampled ?? '')}" aria-pressed="${Boolean(sampled && same(sampled, chosen))}" ${sampled ? '' : 'disabled'} title="Match the disc colour"><span style="background:${text(sampled ?? '#556052')}"></span>Match disc</button>${palette.map(([value, name]) => `<button type="button" class="swatch-choice" data-accent="${value}" aria-pressed="${same(value, chosen)}" aria-label="${name}" title="${name}"><span style="background:${value}"></span></button>`).join('')}`;
+}
+function sampleDiscColour() {
+  const disc = ui.mode === 'single' ? ui.selectedDisc : ui.selection[0];
+  const img = document.querySelector(`[data-disc="${CSS.escape(disc ?? '')}"] img`);
+  if (!img || discColour?.disc === disc) return;
+  const read = () => {
+    try {
+      const size = 48, canvas = document.createElement('canvas'); canvas.width = canvas.height = size;
+      const ctx = canvas.getContext('2d', { willReadFrequently: true }); ctx.drawImage(img, 0, 0, size, size);
+      const data = ctx.getImageData(0, 0, size, size).data, bins = Array.from({ length: 24 }, () => ({ weight: 0, pixels: [] }));
+      for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
+        const dx = x - size / 2, dy = y - size / 2; if (dx * dx + dy * dy > (size * .42) ** 2) continue; // inside the rim only
+        const i = (y * size + x) * 4, R = data[i], G = data[i + 1], B = data[i + 2], A = data[i + 3];
+        const max = Math.max(R, G, B), min = Math.min(R, G, B), sat = max ? (max - min) / max : 0;
+        if (A < 200 || max < 60 || sat < .3) continue; // skip shadows, glare and grey stamp ink
+        const d = max - min, hue = max === R ? ((G - B) / d + 6) % 6 : max === G ? (B - R) / d + 2 : (R - G) / d + 4;
+        const bin = bins[Math.floor(hue / 6 * 24) % 24]; bin.weight += sat * max; bin.pixels.push([R, G, B, max]);
+      }
+      const top = bins.reduce((best, bin) => bin.weight > best.weight ? bin : best);
+      if (top.pixels.length < 12) return;
+      // The plastic's own colour: the brightest third of the dominant hue, so shadows don't muddy it.
+      const bright = top.pixels.sort((a, b) => b[3] - a[3]).slice(0, Math.max(6, Math.ceil(top.pixels.length / 3)));
+      let r = 0, g = 0, b = 0; for (const [R, G, B] of bright) { r += R; g += G; b += B; }
+      const n = bright.length, lift = Math.min(1.6, 235 / Math.max(1, r / n, g / n, b / n)); // indoor photos read darker than the plastic looks on screen
+      const hex = v => Math.min(255, Math.round(v / n * lift)).toString(16).padStart(2, '0');
+      discColour = { disc, colour: `#${hex(r)}${hex(g)}${hex(b)}` };
+      const group = document.querySelector('.swatches'); if (group) { group.innerHTML = swatchMarkup(ui.design.accent); bindSwatches(); }
+    } catch { /* An unreadable photo simply leaves Match disc disabled. */ }
+  };
+  if (img.complete && img.naturalWidth) read(); else img.addEventListener('load', read, { once: true });
+}
+function bindSwatches() {
+  document.querySelectorAll('[data-accent]').forEach(button => button.onclick = () => {
+    if (!button.dataset.accent) return;
+    $('accent').value = button.dataset.accent;
+    ui.design = readDesign(); change({ design: structuredClone(ui.design) }, `Accent set to ${button.getAttribute('aria-label') ?? 'the disc colour'}. Your graphic is ready.`);
+  });
+}
+
+// ---- Confirmation inside the export bar, where the person just tapped ----
+function clearNoticeLater() {
+  const shown = lastDownload?.at; // clears itself so it never hides the preview for long
+  setTimeout(() => { if (lastDownload?.at === shown) { lastDownload = null; document.querySelector('.downloaded')?.remove(); } }, 9000);
+}
+function downloadedMarkup() {
+  if (!lastDownload || Date.now() - lastDownload.at > 9000) return '';
+  if (lastDownload.kind === 'keep') return `<div class="downloaded" role="status"><span class="downloaded-mark" aria-hidden="true">✓</span><div><strong>${lastDownload.already ? 'Already kept' : 'Kept this exact version'}</strong><p>It stays in this browser after reload. <a href="#captures-title" class="jump-kept">Show kept graphics</a></p></div></div>`;
+  const d = lastDownload, next = d.format === 'png' ? (d.transparent ? 'Drop it on the track above your footage; the checkerboard areas stay see-through.' : 'Drop it on the track above your footage.') : 'Open it in your editor or design tool.';
+  return `<div class="downloaded" role="status"><span class="downloaded-mark" aria-hidden="true">✓</span><div><strong>Downloaded ${d.format.toUpperCase()} · ${d.width} × ${d.height}</strong><p><span class="downloaded-file">${text(d.filename)}</span> ${next}</p></div></div>`;
+}
+
 function controlsMarkup() {
   const design = ui.design;
-  const picker = `${ui.mode === 'single' ? `<optgroup label="DiscStudio cards">${nativeStudies.map(study => option(study.id, study.name, design.study)).join('')}</optgroup>` : ''}<optgroup label="Lineup compositions">${compositionStudies.map(study => option(study.id, study.name, design.study)).join('')}</optgroup>`;
+  const choice = study => `<button type="button" role="radio" class="composition-choice" data-study="${text(study.id)}" aria-checked="${study.id === design.study}" title="${text(study.note ?? study.name)}"><span class="composition-thumb" data-study-thumb="${text(study.id)}"></span><span class="composition-name">${text(shortStudyName(study))}</span></button>`;
+  const picker = `<fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}">${ui.mode === 'single' ? `<p class="composition-group">DiscStudio cards</p><div class="composition-picker" role="radiogroup" aria-label="DiscStudio cards">${nativeStudies.map(choice).join('')}</div><p class="composition-group">Compositions</p>` : ''}<div class="composition-picker" role="radiogroup" aria-label="Compositions">${compositionStudies.map(choice).join('')}</div></fieldset>`;
   if (isNativeStudy(design.study)) {
     const selected = nativeStudy(design.study), scale = design.nativeScale ?? .66;
-    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">YOUR TREATMENT</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><div class="native-primary-controls"><label>Composition<select id="composition">${picker}</select></label><p class="subtle">DiscStudio card pixels, kept with this exact disc. Placement stays anchored to the layout.</p><label>Card size <output id="native-scale-value">${Math.round(scale * 100)}%</output><input id="native-scale" type="range" min="0.5" max="1.5" step="0.01" value="${scale}" aria-label="Native card size"></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation" disabled>${option(selected.orientation, selected.orientation === 'portrait' ? 'Portrait' : 'Landscape', selected.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><p class="subtle">Canvas dimensions follow the selected card layout.</p><div class="field-pair"><label>Disc side<select id="native-side">${option('left', 'Left', design.nativeSide ?? selected.side)}${option('right', 'Right', design.nativeSide ?? selected.side)}</select></label><label>Highlight<select id="native-highlight">${option('digits', 'Digits', design.nativeHighlight ?? selected.highlight)}${option('tiles', 'Tile blocks', design.nativeHighlight ?? selected.highlight)}</select></label></div></form></aside>`;
+    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><div class="native-primary-controls">${picker}<p class="subtle">DiscStudio card pixels, kept with this exact disc. Placement stays anchored to the layout.</p><label>Card size <output id="native-scale-value">${Math.round(scale * 100)}%</output><input id="native-scale" type="range" min="0.5" max="1.5" step="0.01" value="${scale}" aria-label="Native card size"></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation" disabled>${option(selected.orientation, selected.orientation === 'portrait' ? 'Portrait' : 'Landscape', selected.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div><p class="subtle">Canvas dimensions follow the selected card layout.</p><div class="field-pair"><label>Disc side<select id="native-side">${option('left', 'Left', design.nativeSide ?? selected.side)}${option('right', 'Right', design.nativeSide ?? selected.side)}</select></label><label>Highlight<select id="native-highlight">${option('digits', 'Digits', design.nativeHighlight ?? selected.highlight)}${option('tiles', 'Tile blocks', design.nativeHighlight ?? selected.highlight)}</select></label></div></form></aside>`;
   }
-  return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">YOUR TREATMENT</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><label>Composition<select id="composition">${picker}</select></label><div class="field-pair placement-fields"><label>Placement<select id="placement">${[['bottom-left', 'Bottom left'], ['bottom-center', 'Bottom center'], ['bottom-right', 'Bottom right'], ['top-left', 'Top left'], ['top-right', 'Top right']].map(([v, name]) => option(v, name, design.placement)).join('')}</select></label><label>Width<select id="composition-size">${compositionSizeStudies.map(size => option(size.id, size.id === 'balanced' ? 'Preferred' : size.id === 'full-width' ? 'Maximum' : 'Compact', design.compositionSize)).join('')}</select></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation">${option('landscape', 'Landscape', design.orientation)}${option('portrait', 'Portrait', design.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><label>Title <span class="optional">optional</span><input id="graphic-title" maxlength="80" value="${text(design.title)}" placeholder="For the next shot"></label><details class="fine-tuning"><summary>More control</summary><div class="field-pair"><label>Background<input id="background" type="color" value="${text(design.background)}"></label><label>Text<input id="foreground" type="color" value="${text(design.foreground)}"></label></div><label>Canvas background<select id="frame">${option('none', 'Transparent', design.frame)}${option('filled', 'Solid', design.frame)}</select></label><div class="field-pair"><label>X offset <span class="optional">px</span><input id="offset-x" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetX) || 0}"></label><label>Y offset <span class="optional">px</span><input id="offset-y" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetY) || 0}"></label></div></details></form>${battleMarkup()}${bagMarkup()}</aside>`;
+  return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form">${picker}<div class="field-pair placement-fields"><fieldset class="placement-field"><legend>Placement <span class="optional">${text(({ 'bottom-left': 'Bottom left', 'bottom-center': 'Bottom center', 'bottom-right': 'Bottom right', 'top-left': 'Top left', 'top-right': 'Top right' })[design.placement] ?? '')}</span></legend><input type="hidden" id="placement" value="${text(design.placement)}"><div class="placement-frame" role="radiogroup" aria-label="Where the graphic sits in the video frame">${[['top-left', 'Top left'], ['top-right', 'Top right'], ['bottom-left', 'Bottom left'], ['bottom-center', 'Bottom center'], ['bottom-right', 'Bottom right']].map(([v, name]) => `<button type="button" role="radio" class="placement-spot spot-${v}" data-placement="${v}" aria-checked="${v === design.placement}" aria-label="${name}" title="${name}"><span aria-hidden="true"></span></button>`).join('')}</div></fieldset><label>Width<select id="composition-size">${compositionSizeStudies.map(size => option(size.id, size.id === 'balanced' ? 'Preferred' : size.id === 'full-width' ? 'Maximum' : 'Compact', design.compositionSize)).join('')}</select></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation">${option('landscape', 'Landscape', design.orientation)}${option('portrait', 'Portrait', design.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div><label>Title <span class="optional">optional</span><input id="graphic-title" maxlength="80" value="${text(design.title)}" placeholder="For the next shot"></label><details class="fine-tuning"><summary>More control</summary><div class="field-pair"><label>Background<input id="background" type="color" value="${text(design.background)}"></label><label>Text<input id="foreground" type="color" value="${text(design.foreground)}"></label></div><label>Canvas background<select id="frame">${option('none', 'Transparent', design.frame)}${option('filled', 'Solid', design.frame)}</select></label><div class="field-pair"><label>X offset <span class="optional">px</span><input id="offset-x" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetX) || 0}"></label><label>Y offset <span class="optional">px</span><input id="offset-y" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetY) || 0}"></label></div></details></form>${battleMarkup()}${bagMarkup()}</aside>`;
 }
 
 function capturesMarkup() {
   const captures = context().graphics ?? [];
-  return `<section class="captures panel" aria-labelledby="captures-title"><div class="section-heading"><div><span class="eyebrow">READY WHEN YOU ARE</span><h2 id="captures-title">Kept graphics <span class="inline-count">${captures.length}</span></h2></div><span class="subtle">Exact saved versions</span></div>${captures.length ? `<div class="capture-list">${captures.slice().reverse().map(address => { const capture = value(address); return `<button type="button" class="capture-choice ${capturedPreview?.address === address ? 'is-selected' : ''}" data-capture="${text(address)}" aria-pressed="${capturedPreview?.address === address}"><span class="capture-thumbnail"><img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(capture.graphic.svg)}" alt="" loading="lazy"></span><span><strong>${text(capture.title)}</strong><small>${capture.graphic.width} × ${capture.graphic.height}</small></span><span class="capture-arrow" aria-hidden="true">↗</span></button>`; }).join('')}</div>` : '<p class="empty-note">Keep a graphic to come back to its exact version.</p>'}</section>`;
+  return `<section class="captures panel" aria-labelledby="captures-title"><div class="section-heading"><div><span class="eyebrow">READY WHEN YOU ARE</span><h2 id="captures-title">Kept graphics <span class="inline-count">${captures.length}</span></h2></div><span class="subtle">Exact saved versions</span></div>${captures.length ? `<div class="capture-list">${captures.slice().reverse().map(address => { const capture = value(address); return `<button type="button" class="capture-choice ${capturedPreview?.address === address ? 'is-selected' : ''}" data-capture="${text(address)}" aria-pressed="${capturedPreview?.address === address}"><span class="capture-thumbnail"><img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(capture.graphic.svg)}" alt="" loading="lazy"></span><span><strong>${text(capture.title)}</strong><small>${text(keptDetail(capture))}</small></span><span class="capture-arrow" aria-hidden="true">↗</span></button>`; }).join('')}</div>` : '<p class="empty-note">Keep a graphic to come back to its exact version.</p>'}</section>`;
 }
 
 async function portraitBounds(graphic, holder) {
@@ -145,6 +306,13 @@ async function portraitBounds(graphic, holder) {
   return promise;
 }
 
+// Re-appending a node that is already in place still blurs whatever had focus inside it,
+// so only move the grid's children when their order actually differs.
+function orderGrid(grid, ...nodes) {
+  if (nodes.length === grid.children.length && nodes.every((node, index) => grid.children[index] === node)) return;
+  grid.append(...nodes);
+}
+
 async function framePortraitPreview(graphic) {
   const request = ++portraitFrameRequest;
   const grid = root.querySelector('.studio-grid'), preview = root.querySelector('.preview-column');
@@ -158,16 +326,16 @@ async function framePortraitPreview(graphic) {
   root.classList.toggle('compact-native-controls', compact && Boolean(size));
   holder.classList.remove('artwork-detail');
   holder.dataset.previewFraming = 'canvas';
-  toggle.hidden = !compact;
+  toggle.hidden = true; // the Close-up / Whole frame switch in the toolbar drives this framing
   if (compact) {
     if (size) {
-      size.closest('.native-primary-controls').after(preview);
-      grid.append(controls, shelf);
+      size.closest('.native-primary-controls').before(preview); // above the thumbnail picker, so the card stays in view
+      orderGrid(grid, ...[...grid.children].filter(node => node !== controls && node !== shelf), controls, shelf);
     } else {
-      grid.append(preview, shelf, controls);
+      orderGrid(grid, preview, shelf, controls);
     }
   } else {
-    grid.append(shelf, preview, controls);
+    orderGrid(grid, shelf, preview, controls);
     title.textContent = title.dataset.standardTitle;
     note.textContent = note.dataset.standardNote;
     return;
@@ -179,7 +347,7 @@ async function framePortraitPreview(graphic) {
     note.textContent = `${capturedPreview ? 'Kept version. Your current design stays available. ' : ''}Full canvas. Preview backgrounds are not exported.`;
   };
   fullCanvas();
-  if (!portraitDetail) return;
+  if (ui.view !== 'closeup') return;
   holder.dataset.previewFraming = 'loading';
   try {
     const bounds = await portraitBounds(graphic, holder);
@@ -224,14 +392,23 @@ function paintPreview() {
   holder.innerHTML = graphic?.svg ?? '<div class="empty-preview"><span aria-hidden="true">↗</span><h3>Build your lineup.</h3><p>Choose 2–4 prepared discs to see your graphic.</p></div>';
   holder.style.aspectRatio = graphic ? `${graphic.width} / ${graphic.height}` : '16 / 9';
   holder.className = `graphic-preview preview-${ui.background}`;
+  if (graphic) {
+    closeUp(holder, graphic);
+    holder.setAttribute('role', 'img');
+    const disc = rows.find(row => row.address === ui.selectedDisc);
+    holder.setAttribute('aria-label', `${ui.mode === 'single' && disc ? `${disc.seed.manufacturer} ${rowName(disc)}` : 'Lineup'} graphic, ${studyName(ui.design.study) ?? 'custom'} layout, ${graphic.width} by ${graphic.height}`);
+    holder.querySelector('svg')?.setAttribute('aria-hidden', 'true');
+  }
+  document.querySelectorAll('[data-preview-view]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.previewView === ui.view)));
   $('preview-dimensions').textContent = graphic ? `${graphic.width} × ${graphic.height}` : '1920 × 1080';
   $('preview-kind').textContent = graphic ? (capturedPreview?.capture.design.frame ?? ui.design.frame) === 'none' ? 'Transparent PNG' : 'Solid background' : 'Choose your lineup';
-  $('preview-note').textContent = capturedPreview ? 'Kept version · your current design stays available.' : 'The background below is preview only. Your exported graphic uses its exact canvas.';
+  const framing = graphic && ui.view === 'closeup' ? ` Close-up shows the graphic larger; your download is the full ${graphic.width} × ${graphic.height} frame.` : '';
+  $('preview-note').textContent = (capturedPreview ? 'Kept version · your current design stays available.' : 'The background is preview only.') + framing;
   $('return-live').hidden = !capturedPreview;
   $('keep-graphic').hidden = Boolean(capturedPreview);
-  $('download-png').disabled = busy || hasConflict() || !graphic;
-  $('keep-graphic').disabled = busy || hasConflict() || !graphic;
-  $('download-svg').disabled = busy || hasConflict() || !graphic;
+  $('download-png').disabled = hasConflict() || !graphic;
+  $('keep-graphic').disabled = hasConflict() || !graphic;
+  $('download-svg').disabled = hasConflict() || !graphic;
   const raster = graphic?.provenance?.rasterOnly === true;
   $('download-svg').textContent = raster ? 'SVG image' : 'SVG';
   $('download-svg').setAttribute('aria-label', raster ? 'Download SVG containing raster image' : 'Download editable SVG');
@@ -246,10 +423,30 @@ async function renderCurrent() {
   currentResult = ui.mode === 'single' ? await workspace.single(ui.selectedDisc, ui.design) : ui.selection.length >= 2 && ui.selection.length <= 4 ? await workspace.battle(ui.selection, ui.design) : null;
 }
 
+const focusKeys = ['disc', 'mode', 'study', 'placement', 'accent', 'previewView', 'previewBackground', 'capture'];
+function focusToken() {
+  const el = document.activeElement;
+  if (!el || el === document.body || !root.contains(el)) return null;
+  if (el.id) return `#${CSS.escape(el.id)}`;
+  for (const key of focusKeys) if (el.dataset?.[key] != null) return `[data-${key.replace(/[A-Z]/g, c => '-' + c.toLowerCase())}="${CSS.escape(el.dataset[key])}"]`;
+  return null;
+}
+
 function paint() {
-  root.innerHTML = `<section class="workspace-heading"><div><span class="eyebrow">GOOD TO GO</span><h1>Your discs. Your next video.</h1></div><nav class="mode-nav" aria-label="Graphic type">${[['single', 'Single'], ['battle', 'Battle'], ['bag', 'Bag lineup']].map(([mode, label]) => `<button type="button" data-mode="${mode}" aria-pressed="${ui.mode === mode}">${label}</button>`).join('')}</nav></section><div class="studio-grid">${shelfMarkup()}<section class="preview-column" aria-labelledby="preview-title"><div class="preview-heading"><div><span class="eyebrow">THE ACTUAL GRAPHIC</span><h2 id="preview-title">${capturedPreview ? 'A kept version' : ui.mode === 'single' ? 'One disc. Ready for its moment.' : ui.mode === 'battle' ? 'Set the scene.' : 'Your selected lineup.'}</h2></div><button id="return-live" type="button" class="text-button" hidden>Back to current image</button></div><div class="preview-shell"><div class="preview-toolbar"><span id="preview-dimensions"></span><button id="preview-framing" type="button" class="preview-framing-toggle" aria-label="Toggle artwork detail and full canvas preview" hidden>Full canvas</button><div class="background-switch" aria-label="Preview background">${[['checker', 'Checkerboard'], ['light', 'Light'], ['dark', 'Dark']].map(([v, label]) => `<button type="button" data-preview-background="${v}" aria-label="${label} preview background" aria-pressed="${ui.background === v}" title="${label}"><span class="swatch swatch-${v}" aria-hidden="true"></span></button>`).join('')}</div></div><div id="graphic-preview" data-testid="graphic-preview" class="graphic-preview"></div><div class="preview-bottom"><span class="transparency-dot" aria-hidden="true"></span><strong id="preview-kind"></strong><span>SVG → exact PNG</span></div></div><p id="preview-note" class="preview-note"></p><div class="export-bar"><div><span class="eyebrow">TAKE IT TO YOUR VIDEO</span><p>Download keeps this exact version.</p></div><div class="export-actions"><button id="keep-graphic" type="button" data-needs-ready class="button-secondary">Keep version</button><button id="download-png" type="button" data-needs-ready class="button-primary">Download PNG <span aria-hidden="true">↓</span></button><button id="download-svg" type="button" data-needs-ready class="svg-button" aria-label="Download editable SVG">SVG</button></div></div></section>${controlsMarkup()}</div>${capturesMarkup()}`;
+  const keepBar = root.querySelector('.export-bar'), refocus = focusToken();
+  root.innerHTML = `<section class="workspace-heading"><div><span class="eyebrow">GOOD TO GO</span><h1>Your discs. Your next video.</h1></div><nav class="mode-nav" aria-label="Graphic type">${[['single', 'Single'], ['battle', 'Battle'], ['bag', 'Bag lineup']].map(([mode, label]) => `<button type="button" data-mode="${mode}" aria-pressed="${ui.mode === mode}">${label}</button>`).join('')}</nav></section><div class="studio-grid">${shelfMarkup()}<section class="preview-column" aria-labelledby="preview-title"><div class="preview-heading"><div><span class="eyebrow">YOUR GRAPHIC</span><h2 id="preview-title">${capturedPreview ? 'A kept version' : ui.mode === 'single' ? 'One disc. Ready for its moment.' : ui.mode === 'battle' ? 'Set the scene.' : 'Your selected lineup.'}</h2></div><button id="return-live" type="button" class="text-button" hidden>Back to current image</button></div><div class="preview-shell"><div class="preview-toolbar"><div class="view-switch" role="group" aria-label="Preview framing">${[['closeup', 'Close-up'], ['frame', 'Whole frame']].map(([v, label]) => `<button type="button" data-preview-view="${v}" aria-pressed="${ui.view === v}">${label}</button>`).join('')}</div><span id="preview-dimensions" class="preview-dimensions"></span><button id="preview-framing" type="button" class="preview-framing-toggle" aria-label="Toggle artwork detail and full canvas preview" hidden>Full canvas</button><div class="background-switch" aria-label="Preview background">${[['checker', 'Checkerboard'], ['light', 'Light'], ['dark', 'Dark']].map(([v, label]) => `<button type="button" data-preview-background="${v}" aria-label="${label} preview background" aria-pressed="${ui.background === v}" title="${label}"><span class="swatch swatch-${v}" aria-hidden="true"></span></button>`).join('')}</div></div><div id="graphic-preview" data-testid="graphic-preview" class="graphic-preview"></div><div class="preview-bottom"><span class="transparency-dot" aria-hidden="true"></span><strong id="preview-kind"></strong></div></div><p id="preview-note" class="preview-note"></p><div class="export-bar">${downloadedMarkup()}<div class="export-copy"><span class="eyebrow">STEP 3 · TAKE IT TO YOUR VIDEO</span><p>Download keeps this exact version.</p></div><div class="export-actions"><button id="keep-graphic" type="button" data-needs-ready class="button-secondary">Keep version</button><button id="download-png" type="button" data-needs-ready class="button-primary">Download PNG <span aria-hidden="true">↓</span></button><button id="download-svg" type="button" data-needs-ready class="svg-button" aria-label="Download editable SVG">SVG</button></div></div></section>${controlsMarkup()}</div>${capturesMarkup()}`;
+  if (keepBar) { // the same buttons stay under the finger even if a save repaints mid-tap
+    const fresh = root.querySelector('.export-bar');
+    keepBar.querySelector('.downloaded')?.remove();
+    const note = fresh.querySelector('.downloaded'); if (note) keepBar.prepend(note);
+    fresh.replaceWith(keepBar);
+  }
   paintPreview();
   bind();
+  if (refocus) root.querySelector(refocus)?.focus({ preventScroll: true });
+  paintCompositionThumbs();
+  bindSwatches();
+  sampleDiscColour();
   paintExportFailure();
   diagnostics();
 }
@@ -342,7 +539,9 @@ async function download(format, retainedCapture = null) {
     record = { status: 'Bytes ready', downloadRequested: false, capture: held.address, svgHash: capture.hash, format, width: capture.graphic.width, height: capture.graphic.height, byteLength: blob.size, hash, filename };
     await workspace.recordExport(record);
     downloadBlob(blob, filename);
+    lastDownload = { kind: 'download', filename, format, width: capture.graphic.width, height: capture.graphic.height, transparent: (capture.design?.frame ?? 'none') === 'none', at: Date.now() };
     paint();
+    clearNoticeLater();
     message(`${format.toUpperCase()} ready · ${capture.graphic.width} × ${capture.graphic.height}. Download requested.`);
   } catch (error) {
     if (!hasConflict() && !record) { try { await workspace.recordExport({ status: 'Failed', capture: held.address, svgHash: capture.hash, format, error: String(error) }); } catch { /* Preserve the original failure and any workspace conflict. */ } }
@@ -384,10 +583,29 @@ function bind() {
   });
   $('design-form').onsubmit = event => event.preventDefault();
   $('design-form').onchange = () => { ui.design = readDesign(); change({ design: structuredClone(ui.design) }); };
-  $('preview-framing').onclick = () => { portraitDetail = $('graphic-preview').dataset.previewFraming !== 'detail'; framePortraitPreview(currentGraphic()); };
+  $('preview-framing').onclick = () => { ui.view = $('graphic-preview').dataset.previewFraming === 'detail' ? 'frame' : 'closeup'; paintPreview(); };
+  document.querySelectorAll('[data-preview-view]').forEach(button => button.onclick = () => { ui.view = button.dataset.previewView; paintPreview(); });
+  document.querySelectorAll('[data-study]').forEach(button => button.onclick = () => {
+    if ($('composition').value === button.dataset.study) return;
+    $('composition').value = button.dataset.study;
+    document.querySelectorAll('[data-study]').forEach(item => item.setAttribute('aria-checked', String(item === button)));
+    ui.design = readDesign(); change({ design: structuredClone(ui.design) }, `${button.querySelector('.composition-name').textContent} applied. Your graphic is ready.`);
+  });
+  document.querySelectorAll('[data-placement]').forEach(button => button.onclick = () => {
+    if ($('placement').value === button.dataset.placement) return;
+    $('placement').value = button.dataset.placement;
+    document.querySelectorAll('[data-placement]').forEach(item => item.setAttribute('aria-checked', String(item === button)));
+    ui.design = readDesign(); change({ design: structuredClone(ui.design) }, `Moved to ${button.getAttribute('aria-label').toLowerCase()}. Your graphic is ready.`);
+  });
   if ($('native-scale')) $('native-scale').oninput = event => { $('native-scale-value').textContent = `${Math.round(Number(event.target.value) * 100)}%`; };
   document.querySelectorAll('[data-preview-background]').forEach(button => button.onclick = () => { ui.background = button.dataset.previewBackground; paintPreview(); });
-  $('keep-graphic').onclick = () => run(async () => { await keepCurrent(true); paint(); message('Kept. This exact version is ready below, even after reload.'); }, { kind: 'keep', ui });
+  $('keep-graphic').onclick = () => run(async () => {
+    const existing = capturedPreview ? null : currentResult ? workspace.existingCapture(currentResult) : null; // keeping the same graphic twice adds nothing
+    if (!existing) await keepCurrent(true);
+    lastDownload = { kind: 'keep', already: Boolean(existing), at: Date.now() };
+    paint(); clearNoticeLater();
+    message(existing ? 'Already kept. That exact version is in Kept graphics.' : 'Kept. This exact version is in Kept graphics, even after reload.');
+  }, { kind: 'keep', ui });
   $('download-png').onclick = () => run(() => download('png'), { kind: 'download', format: 'png', ui });
   $('download-svg').onclick = () => run(() => download('svg'), { kind: 'download', format: 'svg', ui });
   $('return-live').onclick = () => { capturedPreview = null; paint(); };
