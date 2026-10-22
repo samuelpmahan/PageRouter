@@ -5,9 +5,9 @@ import { createThroWorld, decide, SITE_FILL, OPEN, hierarchyVerdict } from '../.
 
 test('the site runs under its fill and says what each mode offers', () => {
   const { site, choices, receipt } = decide(createThroWorld());
-  assert.deepEqual(site, { single: 'cards', bag: 'lineups', battle: 'layouts', revision: 1 });
+  assert.deepEqual(site, { single: 'cards', bag: 'lineups', battle: 'layouts', revision: 2 });
   assert.equal(choices['thro.single.layouts'].rung, 'contract fill', 'a decided choice comes from the fill');
-  assert.equal(choices['thro.card.revision'].rung, 'only implementation', 'one implementation is not a decision yet');
+  assert.equal(choices['thro.card.revision'].rung, 'contract fill', 'two card revisions: the fill decides');
   assert.deepEqual(Object.keys(receipt.fillReach).sort(), Object.keys(SITE_FILL).sort());
 });
 
@@ -17,12 +17,13 @@ test('with no fill, a decision with two alternatives is AMBIGUOUS: open, in the 
 
 test('switching an alternative changes only that decision', () => {
   const { site } = decide(createThroWorld(), { ...SITE_FILL, 'thro.battle.engine': 'thro.battle.engine/formats' });
-  assert.deepEqual(site, { single: 'cards', bag: 'lineups', battle: 'formats', revision: 1 });
+  assert.deepEqual(site, { single: 'cards', bag: 'lineups', battle: 'formats', revision: 2 });
 });
 
 test("Sam's rule is a check contract proven by real measurements", () => {
   const world = createThroWorld(), proofs = world.prove('thro.rule');
-  assert.ok(proofs.length === 3 && proofs.every(p => p.ok), proofs.map(p => p.detail).join('; '));
+  assert.ok(proofs.length === 7 && proofs.every(p => p.ok), proofs.map(p => p.detail).join('; '));
+  assert.match(hierarchyVerdict({ photo: { w: 277, angle: 12 }, name: { size: 69 }, numbers: { size: 29 }, other: [] }).reason, /rotated 12°/);
   assert.match(hierarchyVerdict({ photo: { w: 238 }, name: { size: 57 }, numbers: { size: 22 }, other: [{ text: 'MVP', size: 25 }] }).reason, /"MVP".*bigger than the flight numbers/);
 });
 

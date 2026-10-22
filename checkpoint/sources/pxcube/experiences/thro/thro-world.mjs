@@ -15,11 +15,12 @@ export const SITE_FILL = Object.freeze({
   'thro.single.layouts': 'thro.single.layouts/one-renderer',
   'thro.bag.layouts': 'thro.bag.layouts/thro-lineups',
   'thro.battle.engine': 'thro.battle.engine/layouts-with-points',
+  'thro.card.revision': 'thro.card.revision/thro-r2',
 });
 /** Decisions still open: a choice is in the fill so the site can run, but it is waiting on someone. */
 export const OPEN = Object.freeze({
   'thro.battle.engine': 'dab: the saved-data shape for the formats model (mailbox, 17:27); then Sam picks',
-  'thro.card.revision': 'claude-a9 to hand over claude/thro-renderer-r2 (6814a4d: B01 upright, U04 below the numbers); then Sam picks',
+  'thro.card.revision': 'Sam: visual review of revision 2 (B01 upright, U04 manufacturer below the numbers); dab: integration receipt once 8dcb656 is pushed',
 });
 
 const enumOf = (...values) => ({ type: values.every(v => typeof v === 'number') ? 'integer' : 'string', enum: values });
@@ -34,6 +35,8 @@ export function hierarchyVerdict(layout) {
   if (!(numbers > other.size)) return { accepted: false, reason: `"${other.text}" (${Math.round(other.size)} px) is bigger than the flight numbers (${Math.round(numbers)} px).` };
   if (labels.length) return { accepted: false, reason: `Flight numbers carry no labels; found "${labels.map(l => l.text).join('", "')}".` };
   if (layout?.photo?.skewed) return { accepted: false, reason: 'The disc photo is squashed or skewed.' };
+  const angle = layout?.photo?.angle ?? 0;
+  if (Math.abs(angle) > 0.5) return { accepted: false, reason: `The disc photo is rotated ${Math.round(angle)}°; it is always drawn upright.` };
   return { accepted: true, reason: `Disc ${Math.round(disc)} > name ${Math.round(name)} > numbers ${Math.round(numbers)} > everything else ${Math.round(other.size)}.` };
 }
 
@@ -52,6 +55,11 @@ export function createThroWorld() {
       { name: 'B01 Servo as drawn (iter-16)', in: { layout: { photo: { w: 277, skewed: false }, name: { size: 53 }, numbers: { size: 22 }, other: [{ text: 'Neutron', size: 17 }] } }, out: { accepted: true } },
       { name: 'U04 Servo as drawn: the manufacturer outranks the numbers', in: { layout: { photo: { w: 238, skewed: false }, name: { size: 57 }, numbers: { size: 22 }, other: [{ text: 'MVP', size: 25 }] } }, out: { accepted: false } },
       { name: 'a labelled flight number', in: { layout: { photo: { w: 300 }, name: { size: 60 }, numbers: { size: 30 }, other: [{ text: 'speed', size: 12 }] } }, out: { accepted: false } },
+      // Measured by local/test/thro-card-revision-browser.mjs on the Servo photo, card at 66% (frame pixels).
+      { name: 'B01 Servo, card revision 1: the disc is tilted 12°', in: { layout: { photo: { w: 277, angle: 12, skewed: false }, name: { size: 69 }, numbers: { size: 29 }, other: [{ text: 'Neutron', size: 22 }] } }, out: { accepted: false } },
+      { name: 'B01 Servo, card revision 2: upright', in: { layout: { photo: { w: 277, angle: 0, skewed: false }, name: { size: 69 }, numbers: { size: 29 }, other: [{ text: 'Neutron', size: 22 }] } }, out: { accepted: true } },
+      { name: 'U04 Servo, card revision 1: MVP (34 px) outranks the numbers (29 px)', in: { layout: { photo: { w: 238, skewed: false }, name: { size: 74 }, numbers: { size: 29 }, other: [{ text: 'MVP', size: 34 }] } }, out: { accepted: false } },
+      { name: 'U04 Servo, card revision 2: MVP (20 px) below the numbers', in: { layout: { photo: { w: 238, skewed: false }, name: { size: 74 }, numbers: { size: 29 }, other: [{ text: 'MVP', size: 20 }] } }, out: { accepted: true } },
     ] });
   world.implement({ id: 'thro.rule/hierarchy', implements: 'thro.rule', description: 'Measured from the layout the card renderer records as it draws.',
     origin: { by: 'Sam', iters: [16], commits: ['131edd6'] }, run: ({ layout }) => hierarchyVerdict(layout.value) });
@@ -74,9 +82,10 @@ export function createThroWorld() {
       { id: 'formats', value: { engine: 'formats' }, choice: 'One model: entries × holes; each format (Round, Closest to the pin, Skins) is a class with compare(a, b) → int.', origin: { by: 'Sam · claude-ed', iters: [21, 22], commits: ['ce81a93', '76e98a8', '6f768e4'] } },
     ] });
   decision({ id: 'thro.card.revision', question: 'Which revision of the card drawing?', out: { revision: enumOf(1, 2) },
-    why: 'B01 tilts the disc 12° and U04 draws the manufacturer bigger than the flight numbers; revision 2 fixes both (dab assigned, claude-a9).',
+    why: 'B01 tilts the disc 12° and U04 draws the manufacturer bigger than the flight numbers; revision 2 fixes both (dab assigned, claude-a9). The revision decided here is what new B01 and U04 cards draw; a saved card keeps its own until "Use the fixed card" is chosen in the card editor.',
     alternatives: [
       { id: 'discstudio-6.6.1', value: { revision: 1 }, choice: 'The pinned DiscStudio 6.6.1 cards, byte-identical.', origin: { by: 'dab · claude-ed', iters: [15, 16], commits: ['a3319df', '131edd6'] } },
+      { id: 'thro-r2', value: { revision: 2 }, choice: 'Card revision 2 for B01 and U04: the disc upright, the manufacturer below the flight numbers. The other nine layouts draw exactly as 6.6.1.', origin: { by: 'dab (assigned) · claude-a9', commits: ['8dcb656'] } },
     ] });
 
   // ---- The site: one composition; each step is a decision, named by the part of the site it shapes.
