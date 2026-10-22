@@ -126,3 +126,6 @@
 .composition-picker+.composition-group{margin-top:12px}
 .composition-thumb.is-unavailable::after{content:"Unavailable";animation:none;border:0;width:auto;height:auto;font-size:10px;color:var(--muted)}
 .capture-thumbnail{position:relative}.capture-thumbnail>svg{position:absolute;inset:0;width:100%;height:100%}
+/* F12: the SVG download is a full-size target */
+.export-actions .svg-button{min-width:48px;min-height:44px;padding:8px 10px;font-size:11px;border:1px solid #4f6448;border-radius:9px}
+@media(max-width:760px){.export-actions:has(#keep-graphic[hidden]){grid-template-columns:1fr auto}}

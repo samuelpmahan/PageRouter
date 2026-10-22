@@ -13,6 +13,10 @@ let workspace, rows = [], currentResult = null, capturedPreview = null;
 let queue = Promise.resolve(), busy = false, failedIntent = null, recoveredDraft = null, buildInfo = null;
 let ui = { mode: 'single', selectedDisc: null, selection: [], design: { ...defaultDesign }, bagName: '', background: 'checker', view: 'closeup' };
 const keptResults = new Map();
+const remembered = (() => { try { return JSON.parse(localStorage.getItem('thro-preview') || '{}'); } catch { return {}; } })();
+if (['checker', 'light', 'dark'].includes(remembered.background)) ui.background = remembered.background;
+if (['closeup', 'frame'].includes(remembered.view)) ui.view = remembered.view;
+const rememberPreview = () => { try { localStorage.setItem('thro-preview', JSON.stringify({ background: ui.background, view: ui.view })); } catch { /* storage unavailable: the choice lasts until reload */ } };
 let lastDownload = null; // the confirmation shown inside the export bar after a download or keep
 let portraitDetail = true, portraitFrameRequest = 0, portraitBoundsCache = null, portraitReflowFrame = 0;
 const text = value => esc(String(value ?? ''));
@@ -566,7 +570,7 @@ async function download(format, retainedCapture = null) {
 }
 
 function bindCaptureChoices() {
-  document.querySelectorAll('[data-capture]').forEach(button => button.onclick = () => { capturedPreview = { address: button.dataset.capture, capture: value(button.dataset.capture) }; paint(); $('preview-title').focus?.(); });
+  document.querySelectorAll('[data-capture]').forEach(button => button.onclick = () => { capturedPreview = { address: button.dataset.capture, capture: value(button.dataset.capture) }; paint(); $('graphic-preview')?.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); $('preview-title').focus?.(); });
 }
 
 function refreshCaptures() {
@@ -599,7 +603,7 @@ function bind() {
   $('design-form').onsubmit = event => event.preventDefault();
   $('design-form').onchange = () => { ui.design = readDesign(); change({ design: structuredClone(ui.design) }); };
   $('preview-framing').onclick = () => { ui.view = $('graphic-preview').dataset.previewFraming === 'detail' ? 'frame' : 'closeup'; paintPreview(); };
-  document.querySelectorAll('[data-preview-view]').forEach(button => button.onclick = () => { ui.view = button.dataset.previewView; paintPreview(); });
+  document.querySelectorAll('[data-preview-view]').forEach(button => button.onclick = () => { ui.view = button.dataset.previewView; rememberPreview(); paintPreview(); });
   document.querySelectorAll('[data-study]').forEach(button => button.onclick = () => {
     if ($('composition').value === button.dataset.study) return;
     $('composition').value = button.dataset.study;
@@ -613,7 +617,7 @@ function bind() {
     ui.design = readDesign(); change({ design: structuredClone(ui.design) }, `Moved to ${button.getAttribute('aria-label').toLowerCase()}. Your graphic is ready.`);
   });
   if ($('native-scale')) $('native-scale').oninput = event => { $('native-scale-value').textContent = `${Math.round(Number(event.target.value) * 100)}%`; };
-  document.querySelectorAll('[data-preview-background]').forEach(button => button.onclick = () => { ui.background = button.dataset.previewBackground; paintPreview(); });
+  document.querySelectorAll('[data-preview-background]').forEach(button => button.onclick = () => { ui.background = button.dataset.previewBackground; rememberPreview(); paintPreview(); });
   $('keep-graphic').onclick = () => run(async () => {
     const existing = capturedPreview ? null : currentResult ? workspace.existingCapture(currentResult) : null; // keeping the same graphic twice adds nothing
     if (!existing) await keepCurrent(true);
