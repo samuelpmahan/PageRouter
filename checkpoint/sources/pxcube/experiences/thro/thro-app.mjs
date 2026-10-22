@@ -112,7 +112,7 @@ function bagMarkup() {
 
 function controlsMarkup() {
   const design = ui.design;
-  return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">YOUR TREATMENT</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><label>Composition<select id="composition">${compositionStudies.map(study => option(study.id, study.name, design.study)).join('')}</select></label><div class="field-pair placement-fields"><label>Placement<select id="placement">${[['bottom-left', 'Bottom left'], ['bottom-center', 'Bottom center'], ['bottom-right', 'Bottom right'], ['top-left', 'Top left'], ['top-right', 'Top right']].map(([v, name]) => option(v, name, design.placement)).join('')}</select></label><label>Width<select id="composition-size">${compositionSizeStudies.map(size => option(size.id, size.id === 'balanced' ? 'Preferred' : size.id === 'full-width' ? 'Maximum' : 'Compact', design.compositionSize)).join('')}</select></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation">${option('landscape', 'Landscape', design.orientation)}${option('portrait', 'Portrait', design.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><label>Title <span class="optional">optional</span><input id="graphic-title" maxlength="80" value="${text(design.title)}" placeholder="For the next shot"></label><details class="fine-tuning"><summary>More control</summary><div class="field-pair"><label>Background<input id="background" type="color" value="${text(design.background)}"></label><label>Text<input id="foreground" type="color" value="${text(design.foreground)}"></label></div><label>Canvas background<select id="frame">${option('none', 'Transparent', design.frame)}${option('filled', 'Solid', design.frame)}</select></label><div class="field-pair"><label>X offset <span class="optional">px</span><input id="offset-x" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetX) || 0}"></label><label>Y offset <span class="optional">px</span><input id="offset-y" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetY) || 0}"></label></div></details></form>${battleMarkup()}${bagMarkup()}</aside>`;
+  return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">YOUR TREATMENT</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}"><div class="composition-picker" role="radiogroup" aria-label="Composition">${compositionStudies.map(study => `<button type="button" role="radio" class="composition-choice" data-study="${text(study.id)}" aria-checked="${study.id === design.study}" title="${text(study.note ?? study.name)}"><span class="composition-thumb" data-study-thumb="${text(study.id)}"></span><span class="composition-name">${text(study.name)}</span></button>`).join('')}</div></fieldset><div class="field-pair placement-fields"><label>Placement<select id="placement">${[['bottom-left', 'Bottom left'], ['bottom-center', 'Bottom center'], ['bottom-right', 'Bottom right'], ['top-left', 'Top left'], ['top-right', 'Top right']].map(([v, name]) => option(v, name, design.placement)).join('')}</select></label><label>Width<select id="composition-size">${compositionSizeStudies.map(size => option(size.id, size.id === 'balanced' ? 'Preferred' : size.id === 'full-width' ? 'Maximum' : 'Compact', design.compositionSize)).join('')}</select></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation">${option('landscape', 'Landscape', design.orientation)}${option('portrait', 'Portrait', design.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><label>Title <span class="optional">optional</span><input id="graphic-title" maxlength="80" value="${text(design.title)}" placeholder="For the next shot"></label><details class="fine-tuning"><summary>More control</summary><div class="field-pair"><label>Background<input id="background" type="color" value="${text(design.background)}"></label><label>Text<input id="foreground" type="color" value="${text(design.foreground)}"></label></div><label>Canvas background<select id="frame">${option('none', 'Transparent', design.frame)}${option('filled', 'Solid', design.frame)}</select></label><div class="field-pair"><label>X offset <span class="optional">px</span><input id="offset-x" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetX) || 0}"></label><label>Y offset <span class="optional">px</span><input id="offset-y" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetY) || 0}"></label></div></details></form>${battleMarkup()}${bagMarkup()}</aside>`;
 }
 
 function capturesMarkup() {
@@ -122,9 +122,9 @@ function capturesMarkup() {
 
 // Close-up: frame the preview on the graphic itself instead of the whole canvas.
 // Only the on-screen preview changes; downloads always use the exact full canvas.
-function closeUp(holder, graphic) {
+function closeUp(holder, graphic, force = false) {
   const svg = holder.querySelector('svg');
-  if (!svg || ui.view !== 'closeup') return;
+  if (!svg || (!force && ui.view !== 'closeup')) return;
   const frame = svg.getBoundingClientRect();
   if (!frame.width || !frame.height) return;
   let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity;
@@ -137,13 +137,38 @@ function closeUp(holder, graphic) {
   if (!Number.isFinite(left)) return;
   const scale = graphic.width / frame.width;
   let x = (left - frame.left) * scale, y = (top - frame.top) * scale, w = (right - left) * scale, h = (bottom - top) * scale;
-  if (w > graphic.width * .9 && h > graphic.height * .9) return; // already fills the canvas
+  if (w > graphic.width * .9 && h > graphic.height * .9) { if (force) holder.style.aspectRatio = ''; return; } // already fills the canvas
   const pad = Math.max(w, h) * .06;
   x = Math.max(0, x - pad); y = Math.max(0, y - pad);
   w = Math.min(graphic.width - x, w + pad * 2); h = Math.min(graphic.height - y, h + pad * 2);
   svg.setAttribute('viewBox', `${x.toFixed(1)} ${y.toFixed(1)} ${w.toFixed(1)} ${h.toFixed(1)}`);
+  if (force) { holder.style.aspectRatio = ''; return; } // thumbnails keep their fixed box; the cropped view is centered inside it
   holder.style.aspectRatio = `${w.toFixed(1)} / ${h.toFixed(1)}`;
   holder.classList.add('is-closeup');
+}
+
+// Several inline SVGs share one document, so their clip-path and mask ids must not collide.
+const uniqueIds = (svg, prefix) => svg
+  .replace(/\bid="([^"]+)"/g, (_m, id) => `id="${prefix}${id}"`)
+  .replace(/url\(#([^)]+)\)/g, (_m, id) => `url(#${prefix}${id})`)
+  .replace(/\b(xlink:href|href)="#([^"]+)"/g, (_m, attr, id) => `${attr}="#${prefix}${id}"`);
+
+// Composition thumbnails: each study rendered with the disc on screen, cropped to the graphic.
+let thumbToken = 0;
+async function paintCompositionThumbs() {
+  const token = ++thumbToken, disc = ui.mode === 'single' ? ui.selectedDisc : (ui.selection[0] ?? ui.selectedDisc);
+  if (!disc) return;
+  for (const study of compositionStudies) {
+    const slot = document.querySelector(`[data-study-thumb="${CSS.escape(study.id)}"]`);
+    if (!slot) return;
+    try {
+      const result = await workspace.single(disc, { ...ui.design, study: study.id, frame: 'none', title: '' });
+      if (token !== thumbToken || !slot.isConnected) return;
+      slot.innerHTML = uniqueIds(result.graphic.svg, `thumb-${study.id}-`);
+      slot.style.aspectRatio = `${result.graphic.width} / ${result.graphic.height}`;
+      closeUp(slot, result.graphic, true);
+    } catch { slot.classList.add('is-unavailable'); }
+  }
 }
 
 function paintPreview() {
@@ -175,6 +200,7 @@ function paint() {
   root.innerHTML = `<section class="workspace-heading"><div><span class="eyebrow">GOOD TO GO</span><h1>Your discs. Your next video.</h1></div><nav class="mode-nav" aria-label="Graphic type">${[['single', 'Single'], ['battle', 'Battle'], ['bag', 'Bag lineup']].map(([mode, label]) => `<button type="button" data-mode="${mode}" aria-pressed="${ui.mode === mode}">${label}</button>`).join('')}</nav></section><div class="studio-grid">${shelfMarkup()}<section class="preview-column" aria-labelledby="preview-title"><div class="preview-heading"><div><span class="eyebrow">THE ACTUAL GRAPHIC</span><h2 id="preview-title">${capturedPreview ? 'A kept version' : ui.mode === 'single' ? 'One disc. Ready for its moment.' : ui.mode === 'battle' ? 'Set the scene.' : 'Your selected lineup.'}</h2></div><button id="return-live" type="button" class="text-button" hidden>Back to current image</button></div><div class="preview-shell"><div class="preview-toolbar"><div class="view-switch" role="group" aria-label="Preview framing">${[['closeup', 'Close-up'], ['frame', 'Whole frame']].map(([v, label]) => `<button type="button" data-preview-view="${v}" aria-pressed="${ui.view === v}">${label}</button>`).join('')}</div><span id="preview-dimensions" class="preview-dimensions"></span><div class="background-switch" aria-label="Preview background">${[['checker', 'Checkerboard'], ['light', 'Light'], ['dark', 'Dark']].map(([v, label]) => `<button type="button" data-preview-background="${v}" aria-label="${label} preview background" aria-pressed="${ui.background === v}" title="${label}"><span class="swatch swatch-${v}" aria-hidden="true"></span></button>`).join('')}</div></div><div id="graphic-preview" data-testid="graphic-preview" class="graphic-preview"></div><div class="preview-bottom"><span class="transparency-dot" aria-hidden="true"></span><strong id="preview-kind"></strong></div></div><p id="preview-note" class="preview-note"></p><div class="export-bar"><div><span class="eyebrow">TAKE IT TO YOUR VIDEO</span><p>Download keeps this exact version.</p></div><div class="export-actions"><button id="keep-graphic" type="button" data-needs-ready class="button-secondary">Keep version</button><button id="download-png" type="button" data-needs-ready class="button-primary">Download PNG <span aria-hidden="true">↓</span></button><button id="download-svg" type="button" data-needs-ready class="svg-button" aria-label="Download editable SVG">SVG</button></div></div></section>${controlsMarkup()}</div>${capturesMarkup()}`;
   paintPreview();
   bind();
+  paintCompositionThumbs();
   paintExportFailure();
   diagnostics();
 }
@@ -304,6 +330,12 @@ function bind() {
   $('design-form').onchange = () => { ui.design = readDesign(); change({ design: structuredClone(ui.design) }); };
   document.querySelectorAll('[data-preview-background]').forEach(button => button.onclick = () => { ui.background = button.dataset.previewBackground; paintPreview(); });
   document.querySelectorAll('[data-preview-view]').forEach(button => button.onclick = () => { ui.view = button.dataset.previewView; paintPreview(); });
+  document.querySelectorAll('[data-study]').forEach(button => button.onclick = () => {
+    if ($('composition').value === button.dataset.study) return;
+    $('composition').value = button.dataset.study;
+    document.querySelectorAll('[data-study]').forEach(item => item.setAttribute('aria-checked', String(item === button)));
+    ui.design = readDesign(); change({ design: structuredClone(ui.design) }, `${button.querySelector('.composition-name').textContent} applied. Your graphic is ready.`);
+  });
   $('keep-graphic').onclick = () => run(async () => { await keepCurrent(true); paint(); message('Kept. This exact version is ready below, even after reload.'); }, { kind: 'keep', ui });
   $('download-png').onclick = () => run(() => download('png'), { kind: 'download', format: 'png', ui });
   $('download-svg').onclick = () => run(() => download('svg'), { kind: 'download', format: 'svg', ui });
