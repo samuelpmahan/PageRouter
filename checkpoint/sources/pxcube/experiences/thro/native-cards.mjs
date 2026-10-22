@@ -79,6 +79,11 @@ async function preparedPhotoDigest(source) {
   const bytes = Uint8Array.from(atob(source.slice(source.indexOf(',') + 1)), character => character.charCodeAt(0));
   return Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', bytes))).map(value => value.toString(16).padStart(2, '0')).join('');
 }
+// What each card drew and where (disc photo, mold name, flight numbers, everything else),
+// kept beside the graphic rather than in it: the stored graphic contract stays exactly as it was.
+// Keyed by the card's PNG data, which survives the SVG being re-serialised on screen.
+const layouts = new Map(), pixelsOf = svg => /href=["'](data:image\/png;base64,[^"']+)/.exec(String(svg))?.[1] ?? String(svg);
+export const cardLayout = svgOrHref => layouts.get(pixelsOf(svgOrHref)) ?? null;
 export function createNativeRenderer(renderCard = async request => {
   const adapter = await import('./vendor/discstudio-cards/thro-adapter.mjs');
   return adapter.renderDiscStudioCard(request);
@@ -93,6 +98,7 @@ export function createNativeRenderer(renderCard = async request => {
     if (typeof result.svg !== 'string' || !/href=["']data:image\/png;base64,/.test(result.svg) || /href=["'](?:https?:|blob:)/i.test(result.svg)) throw Error('Native output must contain its retained PNG pixels.');
     // Explicit allowlist: the adapter's Blob and any browser objects never enter
     // the owning model or archive. Source addresses remain actual owning Parts.
+    if (result.layout) { layouts.set(pixelsOf(result.svg), result.layout); if (layouts.size > 60) layouts.delete(layouts.keys().next().value); }
     return { svg: result.svg, width: result.width, height: result.height, provenance: {
       schema: 'thro-native-card@1', renderer: 'discstudio-cards', rendererBuild: nativeBuild,
       preset: request.preset, physicalDiscId: input.disc.id, discAddress: input.discAddress,
