@@ -121,7 +121,7 @@ const studyName = id => allStudies().find(study => study.id === id)?.name;
 // "DiscStudio B01 - Hero rail" reads as "B01 Hero rail" under its "DiscStudio cards" heading.
 const shortStudyName = study => isNativeStudy(study.id) ? study.name.replace(/^DiscStudio\s+/, '').replace(/\s+-\s+/, ' ') : study.name;
 function keptDetail(capture) {
-  const design = capture.design ?? {}, parts = [studyName(design.study), design.title ? `“${design.title}”` : null, `${capture.graphic.width} × ${capture.graphic.height}`];
+  const design = capture.design ?? {}, study = allStudies().find(item => item.id === design.study), parts = [study ? shortStudyName(study) : null, design.title ? `“${design.title}”` : null, `${capture.graphic.width} × ${capture.graphic.height}`];
   return parts.filter(Boolean).join(' · ');
 }
 
@@ -275,7 +275,7 @@ function downloadedMarkup() {
 
 function controlsMarkup() {
   const design = ui.design;
-  const choice = study => `<button type="button" role="radio" class="composition-choice" data-study="${text(study.id)}" aria-checked="${study.id === design.study}" title="${text(study.note ?? study.name)}"><span class="composition-thumb" data-study-thumb="${text(study.id)}"></span><span class="composition-name">${text(shortStudyName(study))}</span></button>`;
+  const choice = study => `<button type="button" role="radio" class="composition-choice" data-study="${text(study.id)}" aria-checked="${study.id === design.study}" title="${text(study.note ?? study.name)}"><span class="composition-thumb" data-study-thumb="${text(study.id)}" aria-hidden="true"></span><span class="composition-name">${text(shortStudyName(study))}</span></button>`;
   const picker = `<fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}">${ui.mode === 'single' ? `<p class="composition-group">DiscStudio cards</p><div class="composition-picker" role="radiogroup" aria-label="DiscStudio cards">${nativeStudies.map(choice).join('')}</div><p class="composition-group">Compositions</p>` : ''}<div class="composition-picker" role="radiogroup" aria-label="Compositions">${compositionStudies.map(choice).join('')}</div></fieldset>`;
   if (isNativeStudy(design.study)) {
     const selected = nativeStudy(design.study), scale = design.nativeScale ?? .66;
@@ -284,9 +284,22 @@ function controlsMarkup() {
   return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form">${picker}<div class="field-pair placement-fields"><fieldset class="placement-field"><legend>Placement <span class="optional">${text(({ 'bottom-left': 'Bottom left', 'bottom-center': 'Bottom center', 'bottom-right': 'Bottom right', 'top-left': 'Top left', 'top-right': 'Top right' })[design.placement] ?? '')}</span></legend><input type="hidden" id="placement" value="${text(design.placement)}"><div class="placement-frame" role="radiogroup" aria-label="Where the graphic sits in the video frame">${[['top-left', 'Top left'], ['top-right', 'Top right'], ['bottom-left', 'Bottom left'], ['bottom-center', 'Bottom center'], ['bottom-right', 'Bottom right']].map(([v, name]) => `<button type="button" role="radio" class="placement-spot spot-${v}" data-placement="${v}" aria-checked="${v === design.placement}" aria-label="${name}" title="${name}"><span aria-hidden="true"></span></button>`).join('')}</div></fieldset><label>Width<select id="composition-size">${compositionSizeStudies.map(size => option(size.id, size.id === 'balanced' ? 'Preferred' : size.id === 'full-width' ? 'Maximum' : 'Compact', design.compositionSize)).join('')}</select></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation">${option('landscape', 'Landscape', design.orientation)}${option('portrait', 'Portrait', design.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div><label>Title <span class="optional">optional</span><input id="graphic-title" maxlength="80" value="${text(design.title)}" placeholder="For the next shot"></label><details class="fine-tuning"><summary>More control</summary><div class="field-pair"><label>Background<input id="background" type="color" value="${text(design.background)}"></label><label>Text<input id="foreground" type="color" value="${text(design.foreground)}"></label></div><label>Canvas background<select id="frame">${option('none', 'Transparent', design.frame)}${option('filled', 'Solid', design.frame)}</select></label><div class="field-pair"><label>X offset <span class="optional">px</span><input id="offset-x" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetX) || 0}"></label><label>Y offset <span class="optional">px</span><input id="offset-y" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetY) || 0}"></label></div></details></form>${battleMarkup()}${bagMarkup()}</aside>`;
 }
 
+// Kept thumbnails render inline and crop to the graphic, like the composition thumbnails.
+function paintKeptThumbs() {
+  document.querySelectorAll('[data-capture-thumb]').forEach((slot, index) => {
+    try {
+      const capture = value(slot.dataset.captureThumb);
+      slot.innerHTML = uniqueIds(capture.graphic.svg, `kept-${index}-`);
+      slot.querySelector('svg')?.setAttribute('aria-hidden', 'true');
+      slot.style.aspectRatio = `${capture.graphic.width} / ${capture.graphic.height}`;
+      closeUp(slot, capture.graphic, true);
+    } catch { slot.classList.add('is-unavailable'); }
+  });
+}
+
 function capturesMarkup() {
   const captures = context().graphics ?? [];
-  return `<section class="captures panel" aria-labelledby="captures-title"><div class="section-heading"><div><span class="eyebrow">READY WHEN YOU ARE</span><h2 id="captures-title">Kept graphics <span class="inline-count">${captures.length}</span></h2></div><span class="subtle">Exact saved versions</span></div>${captures.length ? `<div class="capture-list">${captures.slice().reverse().map(address => { const capture = value(address); return `<button type="button" class="capture-choice ${capturedPreview?.address === address ? 'is-selected' : ''}" data-capture="${text(address)}" aria-pressed="${capturedPreview?.address === address}"><span class="capture-thumbnail"><img src="data:image/svg+xml;charset=utf-8,${encodeURIComponent(capture.graphic.svg)}" alt="" loading="lazy"></span><span><strong>${text(capture.title)}</strong><small>${text(keptDetail(capture))}</small></span><span class="capture-arrow" aria-hidden="true">↗</span></button>`; }).join('')}</div>` : '<p class="empty-note">Keep a graphic to come back to its exact version.</p>'}</section>`;
+  return `<section class="captures panel" aria-labelledby="captures-title"><div class="section-heading"><div><span class="eyebrow">READY WHEN YOU ARE</span><h2 id="captures-title">Kept graphics <span class="inline-count">${captures.length}</span></h2></div><span class="subtle">Exact saved versions</span></div>${captures.length ? `<div class="capture-list">${captures.slice().reverse().map(address => { const capture = value(address); return `<button type="button" class="capture-choice ${capturedPreview?.address === address ? 'is-selected' : ''}" data-capture="${text(address)}" aria-pressed="${capturedPreview?.address === address}"><span class="capture-thumbnail" data-capture-thumb="${text(address)}" aria-hidden="true"></span><span><strong>${text(capture.title)}</strong><small>${text(keptDetail(capture))}</small></span><span class="capture-arrow" aria-hidden="true">↗</span></button>`; }).join('')}</div>` : '<p class="empty-note">Keep a graphic to come back to its exact version.</p>'}</section>`;
 }
 
 async function portraitBounds(graphic, holder) {
@@ -445,6 +458,7 @@ function paint() {
   bind();
   if (refocus) root.querySelector(refocus)?.focus({ preventScroll: true });
   paintCompositionThumbs();
+  paintKeptThumbs();
   bindSwatches();
   sampleDiscColour();
   paintExportFailure();
@@ -560,6 +574,7 @@ function refreshCaptures() {
   if (!section) return;
   section.outerHTML = capturesMarkup();
   bindCaptureChoices();
+  paintKeptThumbs();
 }
 
 function bind() {
