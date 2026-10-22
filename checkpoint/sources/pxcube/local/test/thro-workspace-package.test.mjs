@@ -16,6 +16,11 @@ const fixture = manifest.discs.map(disc => ({ ...disc, depiction: { kind: 'photo
 const storage = () => { const values = new Map(); return { getItem: key => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), values }; };
 const locks = () => ({ request: async (_name, _options, action) => action() });
 const hash = text => createHash('sha256').update(text).digest('hex');
+const canonical = value => value === null || typeof value !== 'object' ? JSON.stringify(value) : Array.isArray(value) ? `[${value.map(canonical).join(',')}]` : `{${Object.keys(value).sort().map(key => `${JSON.stringify(key)}:${canonical(value[key])}`).join(',')}}`;
+function seal(value) {
+  const { raw: _raw, ...archive } = value.archive;
+  value.integrity = { algorithm: 'sha256', sha256: hash(canonical({ schema: value.schema, version: value.version, compatibility: value.compatibility, origin: value.origin, extensions: value.extensions, archive })) }; return value;
+}
 async function prepared() {
   const backing = storage(), lock = locks(), workspace = await openWorkspace({ storage: backing, locks: lock, fixture });
   assert.equal(typeof workspace.exportPackage, 'function', 'committed package export must be available');
@@ -28,7 +33,7 @@ async function prepared() {
 }
 function rewrite(packageValue, transform) {
   const copy = structuredClone(packageValue), raw = JSON.parse(copy.archive.raw);
-  transform(raw); copy.archive.raw = JSON.stringify(raw); copy.archive.byteLength = Buffer.byteLength(copy.archive.raw); copy.archive.sha256 = hash(copy.archive.raw); return copy;
+  transform(raw); copy.archive.raw = JSON.stringify(raw); copy.archive.byteLength = Buffer.byteLength(copy.archive.raw); copy.archive.sha256 = hash(copy.archive.raw); return seal(copy);
 }
 function decode(value) { if (Object.hasOwn(value, 'scalar')) return value.scalar; if (value.array) return value.array.map(decode); if (value.object) return Object.fromEntries(value.object.map(([k, v]) => [k, decode(v)])); return { part: value.part }; }
 function encode(value) { if (value === null || typeof value !== 'object') return { scalar: value }; if (Array.isArray(value)) return { array: value.map(encode) }; return { object: Object.entries(value).map(([k, v]) => [k, encode(v)]) }; }
@@ -49,8 +54,8 @@ function syntheticPng(width, height) {
 
 test('a curated package adopts into one empty namespace with real legacy captures and exact cutout bytes', async () => {
   const { workspace, rows, kept, packageValue } = await prepared();
-  assert.equal(packageValue.schema, 'thro-workspace-package@1');
-  assert.equal(packageValue.version, 1);
+  assert.equal(packageValue.schema, 'thro-workspace-package@2');
+  assert.equal(packageValue.version, 2);
   assert.equal(packageValue.archive.encoding, 'utf-8');
   assert.equal(packageValue.archive.byteLength, Buffer.byteLength(packageValue.archive.raw));
   assert.equal(packageValue.archive.sha256, hash(packageValue.archive.raw));
@@ -180,11 +185,11 @@ test('export refuses queued work, failed draft and stale-owner conflict', async 
   await assert.rejects(workspace.exportPackage({ identity }), { code: 'THRO_PACKAGE_BUSY' });
 });
 
-test('adoption rejects each mismatched build identity and corrupt raw bytes without writing', async () => {
+test('app identity differences do not block a supported data profile; corrupt raw bytes still reject', async () => {
   const { packageValue } = await prepared();
   for (const field of Object.keys(identity)) {
     const backing = storage(), expectedIdentity = { ...identity, [field]: field === 'nativeRendererBuild' ? 'another-build' : 'f'.repeat(64) };
-    await assert.rejects(api.adoptWorkspacePackage({ storage: backing, locks: locks(), key: 'thro.test:identity', package: packageValue, expectedIdentity })); assert.equal(backing.values.size, 0);
+    await api.adoptWorkspacePackage({ storage: backing, locks: locks(), key: 'thro.test:identity', package: packageValue, expectedIdentity }); assert.equal(backing.values.size, 1);
   }
   const corrupt = structuredClone(packageValue); corrupt.archive.raw += ' ';
   const backing = storage(); await assert.rejects(api.adoptWorkspacePackage({ storage: backing, locks: locks(), key: 'thro.test:hash', package: corrupt, expectedIdentity: identity })); assert.equal(backing.values.size, 0);
@@ -195,7 +200,7 @@ test('plain JSON snapshots reject executable metadata and do not observe caller 
   await assert.rejects(workspace.exportPackage({ identity, provenance: { bad: () => {} } }));
   const backing = storage(), input = structuredClone(packageValue), expected = { ...identity };
   const adopting = api.adoptWorkspacePackage({ storage: backing, locks: locks(), key: 'thro.test:snapshot', package: input, expectedIdentity: expected });
-  input.archive.raw = '{}'; input.identity.sourceId = 'f'.repeat(64); expected.artifactId = 'e'.repeat(64);
+  input.archive.raw = '{}'; input.origin.identity.sourceId = 'f'.repeat(64); expected.artifactId = 'e'.repeat(64);
   await adopting;
   const reopened = await openWorkspace({ storage: backing, locks: locks(), key: 'thro.test:snapshot' }); assert.equal(reopened.model.experience.shelf().length, 3);
 });
