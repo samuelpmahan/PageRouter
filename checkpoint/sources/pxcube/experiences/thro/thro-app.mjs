@@ -1,5 +1,5 @@
 import { openWorkspace } from './workspace.mjs';
-import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign } from './native-cards.mjs';
+import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy } from './native-cards.mjs';
 import { alphaBounds, fitArtwork } from './preview-frame.mjs';
 import { loadFixture } from './prepared-fixture.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
@@ -108,6 +108,14 @@ function shelfMarkup() {
 function battleMarkup() {
   if (ui.mode === 'single' || !context().competitionAddress) return '';
   const material = value(context().competitionAddress), state = material.states[0];
+  if (isLineupStudy(ui.design.study)) {
+    // A DiscStudio lineup draws no points or turn text: one disc can be featured (full size, the
+    // rest step back), and each disc can keep its own accent.
+    return `<section class="battle-controls"><div class="section-heading"><h3>Lineup treatment</h3></div><label>Feature one disc<select id="battle-turn">${option('', 'All the same size', state.highlight ?? '')}${material.entries.map(entry => option(entry.id, entry.name, state.highlight)).join('')}</select></label>${material.entries.map(entry => {
+      const appearance = material.styles?.[entry.id];
+      return `<div class="battle-entry"><strong>${text(entry.name)}</strong><div class="entry-fields"><input type="hidden" data-entry-size="${text(entry.id)}" value="${appearance?.scale ?? 1}"><label class="entry-accent">Accent<input type="color" data-entry-color="${text(entry.id)}" value="${text(appearance?.accent ?? ui.design.accent)}"></label></div></div>`;
+    }).join('')}</section>`;
+  }
   return `<section class="battle-controls"><div class="section-heading"><h3>${ui.mode === 'bag' ? 'Lineup treatment' : 'Turn & points'}</h3><button type="button" class="text-button" data-battle-equal>Equal sizes</button></div><label>Whose turn?<select id="battle-turn">${option('', 'Show the lineup', state.highlight ?? '')}${material.entries.map(entry => option(entry.id, entry.name, state.highlight)).join('')}</select></label>${material.entries.map(entry => {
     const appearance = material.styles?.[entry.id], scale = appearance?.scale ?? (material.emphasizeTurn && state.highlight && state.highlight !== entry.id ? .65 : 1);
     return `<div class="battle-entry"><strong>${text(entry.name)}</strong><div class="entry-fields"><label>Points<input type="number" data-points="${text(entry.id)}" min="-9999" max="9999" step="1" value="${state.scores[entry.id] ?? 0}"></label><label>Size<select data-entry-size="${text(entry.id)}">${[.45, .65, .8, 1, 1.2, 1.5, scale].filter((v, i, all) => all.indexOf(v) === i).sort((a, b) => a - b).map(v => option(String(v), `${Math.round(v * 100)}%`, String(scale))).join('')}</select></label><label class="entry-accent">Accent<input type="color" data-entry-color="${text(entry.id)}" value="${text(appearance?.accent ?? (state.highlight === entry.id && material.emphasizeTurn ? '#ffd166' : ui.design.accent))}"></label></div></div>`;
@@ -121,7 +129,7 @@ function bagMarkup() {
 }
 
 // ---- Layout names ----
-const allStudies = () => [...nativeStudies, ...compositionStudies];
+const allStudies = () => [...nativeStudies, ...lineupStudies, ...compositionStudies];
 const studyName = id => allStudies().find(study => study.id === id)?.name;
 // "DiscStudio B01 - Hero rail" reads as "B01 Hero rail" under its "DiscStudio cards" heading.
 const shortStudyName = study => isNativeStudy(study.id) ? study.name.replace(/^DiscStudio\s+/, '').replace(/\s+-\s+/, ' ') : study.name;
@@ -197,17 +205,19 @@ const uniqueIds = (svg, prefix) => svg
 let thumbToken = 0;
 function thumbDesign(id) {
   if (isNativeStudy(id)) return nativeDesign(ui.design, id);
+  if (isLineupStudy(id)) return { ...ui.design, study: id };
   const base = isNativeStudy(ui.design.study) ? { ...defaultDesign, ...context().legacyDesign } : ui.design;
   return { ...base, study: id, frame: 'none', title: '', placement: 'bottom-left', compositionOffsetX: 0, compositionOffsetY: 0, compositionSize: 'balanced' };
 }
 // Rendered thumbnails are cached by everything that changes how they look, so a repaint
 // never blanks the picker; a stale thumbnail stays visible (dimmed) while its new one renders.
 const thumbCache = new Map(), lastThumb = new Map();
-const thumbKey = (disc, id) => { const d = thumbDesign(id); return JSON.stringify([disc, id, d.accent, d.foreground, d.background, d.nativeSide ?? null, d.nativeHighlight ?? null, d.nativeScale ?? null]); };
+const thumbKey = (disc, id) => { const d = thumbDesign(id); return JSON.stringify([disc, id, isLineupStudy(id) ? [ui.selection, context().competitionAddress] : null, d.accent, d.foreground, d.background, d.nativeSide ?? null, d.nativeHighlight ?? null, d.nativeScale ?? null]); };
 async function paintCompositionThumbs() {
   const token = ++thumbToken, disc = ui.mode === 'single' ? ui.selectedDisc : (ui.selection[0] ?? ui.selectedDisc);
   if (!disc) return;
-  const studies = ui.mode === 'single' ? nativeStudies : compositionStudies, misses = [];
+  const studies = studiesFor(ui.mode), misses = [];
+  if (ui.mode === 'bag' && (ui.selection.length < 2 || ui.selection.length > 4)) return;
   for (const study of studies) { // instant pass: cached, else the last version dimmed
     const slot = document.querySelector(`[data-study-thumb="${CSS.escape(study.id)}"]`);
     if (!slot) continue;
@@ -220,7 +230,7 @@ async function paintCompositionThumbs() {
   misses.sort((a, b) => (b.study.id === ui.design.study) - (a.study.id === ui.design.study) || isNativeStudy(a.study.id) - isNativeStudy(b.study.id));
   for (const { study, slot, key } of misses) {
     try {
-      const result = await workspace.single(disc, thumbDesign(study.id));
+      const result = isLineupStudy(study.id) ? await workspace.battle(ui.selection, thumbDesign(study.id)) : await workspace.single(disc, thumbDesign(study.id));
       if (token !== thumbToken || !slot.isConnected) return;
       slot.innerHTML = uniqueIds(result.graphic.svg, `thumb-${study.id.replace(/[^a-z0-9-]/gi, '-')}-`);
       slot.style.aspectRatio = `${result.graphic.width} / ${result.graphic.height}`;
@@ -294,7 +304,10 @@ function downloadedMarkup() {
 function controlsMarkup() {
   const design = ui.design;
   const choice = study => `<button type="button" role="radio" class="composition-choice" data-study="${text(study.id)}" aria-checked="${study.id === design.study}" title="${text(study.note ?? study.name)}"><span class="composition-thumb" data-study-thumb="${text(study.id)}" aria-hidden="true"></span><span class="composition-name">${text(shortStudyName(study))}</span></button>`;
-  const picker = `<fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}">${ui.mode === 'single' ? `<div class="composition-picker" role="radiogroup" aria-label="Card layouts">${nativeStudies.map(choice).join('')}</div>` : `<p class="composition-group">Lineup layouts</p><div class="composition-picker" role="radiogroup" aria-label="Lineup layouts">${compositionStudies.map(choice).join('')}</div>`}</fieldset>`;
+  const picker = `<fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}">${ui.mode === 'single' ? `<div class="composition-picker" role="radiogroup" aria-label="Card layouts">${nativeStudies.map(choice).join('')}</div>` : `<p class="composition-group">${ui.mode === 'bag' ? 'DiscStudio lineups' : 'Lineup layouts'}</p><div class="composition-picker" role="radiogroup" aria-label="Lineup layouts">${studiesFor(ui.mode).map(choice).join('')}</div>`}</fieldset>`;
+  if (isLineupStudy(design.study)) {
+    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form">${picker}<p class="subtle">Each disc is its exact DiscStudio card, set side by side in one 1920 × 1080 frame.</p><div class="field-pair canvas-fields"><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div></form>${battleMarkup()}${bagMarkup()}</aside>`;
+  }
   if (isNativeStudy(design.study)) {
     const selected = nativeStudy(design.study), scale = design.nativeScale ?? .66;
     return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><div class="native-primary-controls">${picker}<p class="subtle">DiscStudio card pixels, kept with this exact disc. Placement stays anchored to the layout.</p><label>Card size <output id="native-scale-value">${Math.round(scale * 100)}%</output><input id="native-scale" type="range" min="0.5" max="1.5" step="0.01" value="${scale}" aria-label="Native card size"></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation" disabled>${option(selected.orientation, selected.orientation === 'portrait' ? 'Portrait' : 'Landscape', selected.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div><p class="subtle">Canvas dimensions follow the selected card layout.</p><div class="field-pair"><label>Disc side<select id="native-side">${option('left', 'Left', design.nativeSide ?? selected.side)}${option('right', 'Right', design.nativeSide ?? selected.side)}</select></label><label>Highlight<select id="native-highlight">${option('digits', 'Digits', design.nativeHighlight ?? selected.highlight)}${option('tiles', 'Tile blocks', design.nativeHighlight ?? selected.highlight)}</select></label></div></form></aside>`;
@@ -534,6 +547,8 @@ function paintExportFailure({ focus = false } = {}) {
 
 function readDesign() {
   const study = $('composition').value;
+  if (isLineupStudy(study)) return { ...ui.design, study, accent: $('accent')?.value ?? ui.design.accent };
+  if (isLineupStudy(ui.design.study)) return { ...ui.design, study };
   if (isNativeStudy(study)) {
     return nativeControlDesign(ui.design, { study, scale: $('native-scale') ? Number($('native-scale').value) : undefined, side: $('native-side')?.value, highlight: $('native-highlight')?.value, accent: $('accent')?.value });
   }
@@ -543,9 +558,22 @@ function readDesign() {
 
 // One engine: every Single card is composed by the DiscStudio card renderer. A Single design that
 // still names a legacy composition (saved before this change) moves to the B01 card once.
+// Bag lineups come from the same renderer (DiscStudio lineups). Battle keeps its own layouts until
+// the scoring design is settled, and never inherits a lineup study.
+const studiesFor = mode => mode === 'single' ? nativeStudies : mode === 'bag' ? lineupStudies : compositionStudies;
+// The last lineup layout chosen in Bag comes back after a trip to Battle (this browser only).
+function rememberedLineup() {
+  try { const id = localStorage.getItem('thro-lineup'); if (lineupStudies.some(study => study.id === id)) return id; } catch { /* storage unavailable */ }
+  return lineupStudies[0].id;
+}
 async function ensureOneEngine() {
-  if (ui.mode !== 'single' || isNativeStudy(ui.design.study)) return;
-  ui.design = nativeDesign(ui.design, 'discstudio:b01');
+  if (isLineupStudy(ui.design.study)) { try { localStorage.setItem('thro-lineup', ui.design.study); } catch { /* storage unavailable */ } }
+  let next = null;
+  if (ui.mode === 'single' && !isNativeStudy(ui.design.study)) next = nativeDesign(ui.design, 'discstudio:b01');
+  else if (ui.mode === 'bag' && !isLineupStudy(ui.design.study)) next = { ...ui.design, study: rememberedLineup() };
+  else if (ui.mode === 'battle' && isLineupStudy(ui.design.study)) next = { ...ui.design, study: compositionStudies[0].id };
+  if (!next) return;
+  ui.design = next;
   await workspace.change({ design: structuredClone(ui.design) });
 }
 

@@ -122,6 +122,19 @@ export async function openDemo(storage,{renderGraphic}={}) {
   async function renderCompetition(design=value(contextAddress).design,materialAddress=value(contextAddress).competitionAddress) {
     const key=JSON.stringify([materialAddress,design]);if(competitionRenders.has(key))return competitionRenders.get(key);
     const base=fresh(),material=value(materialAddress),request=put(base+'design',design);
+    // Optional whole-lineup renderer (thro: DiscStudio cards). It returns null for designs it does not own.
+    if(renderGraphic?.lineup) {
+      const entries=[];
+      for(const e of material.entries){const resolved=await compose(fresh()+'resolved','fn.read',{base:value(e.address).mold,own:e.address});entries.push({...e,disc:value(e.address),resolvedAddress:resolved,resolved:value(resolved)});}
+      const supplied=await renderGraphic.lineup({materialAddress,material,design,designAddress:request,entries});
+      if(supplied!=null) {
+        const {svg,width,height,provenance}=supplied;
+        if(typeof svg!=='string'||!Number.isInteger(width)||!Number.isInteger(height)||width<1||height<1||width>4096||height>4096)throw Error('Lineup renderer returned invalid material.');
+        const address=put(base+'competitionGraphic',{svg,width,height,...(provenance?{provenance}:{})});
+        const rendered={address,designAddress:request,materialAddress,graphic:value(address)};
+        competitionRenders.set(key,rendered);return rendered;
+      }
+    }
     const standings=await compose(base+'standings','fn.battle.standings',{material:materialAddress,rules:put(base+'rules',material.constraints)});
     const inputs={material:materialAddress,design:request};
     let frame;

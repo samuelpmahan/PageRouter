@@ -5,7 +5,7 @@ import { pack, unpack } from './archive-storage.mjs';
 import { openLockedArchive } from './locked-storage.mjs';
 import { createArchiveCodec } from './archive-codec.mjs';
 import { defaultDesign } from './graphics.mjs';
-import { createNativeRenderer, isNativeStudy, workspaceDesignChange } from './native-cards.mjs';
+import { createNativeRenderer, isNativeStudy, isLineupStudy, workspaceDesignChange } from './native-cards.mjs';
 import { validateFlightCorrection } from './prepared-fixture.mjs';
 import { createWorkspacePackage, snapshotJson } from './workspace-package.mjs';
 
@@ -121,7 +121,11 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
       const current = model.context.competitionAddress;
       const addresses = current ? model.value(current).entries.map(entry => entry.address) : [];
       if (JSON.stringify(addresses) !== JSON.stringify(selection)) {
-        await serial({ operation: 'start-battle', selection, design }, candidate => candidate.startCompetition(selection));
+        await serial({ operation: 'start-battle', selection, design }, async candidate => {
+          await candidate.startCompetition(selection);
+          // A new Bag lineup starts with every disc the same size; featuring one is a choice.
+          if (isLineupStudy(design?.study)) await candidate.editCompetition({ kind: 'turn', id: null });
+        });
       }
       const result = await model.renderCompetition(design);
       return { ...result, design: clone(design) };

@@ -15,6 +15,17 @@ export const nativeStudies = Object.freeze(definitions.map(([preset, name]) => O
   highlight: preset === 'u01' || preset === 'u02' || preset.startsWith('b') ? 'digits' : 'tiles',
   accent: /^(u03|u04|b0)/.test(preset) ? '#c8f23d' : '#8fe3ae',
 })));
+// Lineups (Bag): 2–4 of the same DiscStudio cards in one frame. Portrait-family cards only:
+// they stay readable at 3–4 across, and U04 is left out until it meets the hierarchy rule.
+const lineupDefinitions = [['u05', 'Glass drawer'], ['u02', 'Stacked poster'], ['u01', 'Compact scorebug'], ['u03-front', 'Disc in front'], ['u03-behind', 'Disc behind']];
+export const lineupStudies = Object.freeze(lineupDefinitions.map(([preset, name]) => Object.freeze({
+  id: `discstudio-lineup:${preset}`, preset, name: `${preset.toUpperCase()} ${name}`, cardStudy: `discstudio:${preset}` })));
+export const isLineupStudy = study => typeof study === 'string' && study.startsWith('discstudio-lineup:');
+export function lineupStudy(study) {
+  const result = lineupStudies.find(item => item.id === study);
+  if (!result) throw Error('Choose a known DiscStudio lineup layout.');
+  return result;
+}
 export const isNativeStudy = study => typeof study === 'string' && study.startsWith('discstudio:');
 export function nativeStudy(study) {
   const result = nativeStudies.find(item => item.id === study);
@@ -87,8 +98,11 @@ export const cardLayout = svgOrHref => layouts.get(pixelsOf(svgOrHref)) ?? null;
 export function createNativeRenderer(renderCard = async request => {
   const adapter = await import('./vendor/discstudio-cards/thro-adapter.mjs');
   return adapter.renderDiscStudioCard(request);
+}, renderLineup = async request => {
+  const adapter = await import('./vendor/discstudio-cards/thro-adapter.mjs');
+  return adapter.renderDiscStudioLineup(request);
 }) {
-  return async input => {
+  const single = async input => {
     if (!isNativeStudy(input.design?.study)) return null;
     if (input.purpose && input.purpose !== 'single') throw Error('DiscStudio card layouts are available in Single. Choose a lineup composition for Battle or Bag.');
     const request = nativeCardRequest(input), result = await renderCard(request);
@@ -107,4 +121,29 @@ export function createNativeRenderer(renderCard = async request => {
       appearance: { ...request.appearance }, placement: { ...result.placement }, rasterOnly: true,
     } };
   };
+  // Bag: each entry is the exact request its Single card would make, set in one frame.
+  // Per-entry accents from the lineup treatment carry over; the featured disc (whose turn)
+  // stays full size while the rest step back. No points or turn text is drawn.
+  single.lineup = async ({ material, design, entries }) => {
+    if (!isLineupStudy(design?.study)) return null;
+    const selected = lineupStudy(design.study), state = material.states?.[0];
+    const requests = entries.map(entry => {
+      const cardDesign = nativeDesign({ ...design, study: selected.cardStudy, rendererBuild: nativeBuild }, selected.cardStudy);
+      const accent = material.styles?.[entry.id]?.accent ?? design.accent ?? cardDesign.accent;
+      return nativeCardRequest({ disc: entry.disc, resolved: entry.resolved, design: { ...cardDesign, accent, rendererBuild: nativeBuild } });
+    });
+    const featured = state?.highlight ? entries.findIndex(entry => entry.id === state.highlight) : -1;
+    const result = await renderLineup({ cards: requests.map(({ disc, photoSrc, flights, appearance }) => ({ disc, photoSrc, flights, appearance })), preset: selected.preset, emphasis: featured >= 0 ? featured : null });
+    if (result.build !== nativeBuild) throw Error('Native renderer build does not match this saved lineup.');
+    if (result.width !== 1920 || result.height !== 1080 || typeof result.svg !== 'string' || !/href=["']data:image\/png;base64,/.test(result.svg) || /href=["'](?:https?:|blob:)/i.test(result.svg)) throw Error('Native lineup must contain its retained PNG pixels.');
+    if (result.layout) { layouts.set(pixelsOf(result.svg), result.layout); if (layouts.size > 60) layouts.delete(layouts.keys().next().value); }
+    const photos = [];
+    for (const request of requests) photos.push(await preparedPhotoDigest(request.photoSrc));
+    return { svg: result.svg, width: result.width, height: result.height, provenance: {
+      schema: 'thro-native-lineup@1', renderer: 'discstudio-cards', rendererBuild: nativeBuild, preset: selected.preset,
+      physicalDiscIds: entries.map(entry => entry.disc.id), preparedPhotoSha256: photos,
+      appearances: requests.map(request => ({ ...request.appearance })), featured: featured >= 0 ? featured : null, scales: [...result.scales], rasterOnly: true,
+    } };
+  };
+  return single;
 }
