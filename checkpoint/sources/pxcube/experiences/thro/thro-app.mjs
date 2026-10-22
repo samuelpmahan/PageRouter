@@ -207,7 +207,7 @@ const thumbKey = (disc, id) => { const d = thumbDesign(id); return JSON.stringif
 async function paintCompositionThumbs() {
   const token = ++thumbToken, disc = ui.mode === 'single' ? ui.selectedDisc : (ui.selection[0] ?? ui.selectedDisc);
   if (!disc) return;
-  const studies = ui.mode === 'single' ? allStudies() : compositionStudies, misses = [];
+  const studies = ui.mode === 'single' ? nativeStudies : compositionStudies, misses = [];
   for (const study of studies) { // instant pass: cached, else the last version dimmed
     const slot = document.querySelector(`[data-study-thumb="${CSS.escape(study.id)}"]`);
     if (!slot) continue;
@@ -294,7 +294,7 @@ function downloadedMarkup() {
 function controlsMarkup() {
   const design = ui.design;
   const choice = study => `<button type="button" role="radio" class="composition-choice" data-study="${text(study.id)}" aria-checked="${study.id === design.study}" title="${text(study.note ?? study.name)}"><span class="composition-thumb" data-study-thumb="${text(study.id)}" aria-hidden="true"></span><span class="composition-name">${text(shortStudyName(study))}</span></button>`;
-  const picker = `<fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}">${ui.mode === 'single' ? `<p class="composition-group">DiscStudio cards</p><div class="composition-picker" role="radiogroup" aria-label="DiscStudio cards">${nativeStudies.map(choice).join('')}</div><p class="composition-group">Compositions</p>` : ''}<div class="composition-picker" role="radiogroup" aria-label="Compositions">${compositionStudies.map(choice).join('')}</div></fieldset>`;
+  const picker = `<fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}">${ui.mode === 'single' ? `<div class="composition-picker" role="radiogroup" aria-label="Card layouts">${nativeStudies.map(choice).join('')}</div>` : `<p class="composition-group">Lineup layouts</p><div class="composition-picker" role="radiogroup" aria-label="Lineup layouts">${compositionStudies.map(choice).join('')}</div>`}</fieldset>`;
   if (isNativeStudy(design.study)) {
     const selected = nativeStudy(design.study), scale = design.nativeScale ?? .66;
     return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><div class="native-primary-controls">${picker}<p class="subtle">DiscStudio card pixels, kept with this exact disc. Placement stays anchored to the layout.</p><label>Card size <output id="native-scale-value">${Math.round(scale * 100)}%</output><input id="native-scale" type="range" min="0.5" max="1.5" step="0.01" value="${scale}" aria-label="Native card size"></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation" disabled>${option(selected.orientation, selected.orientation === 'portrait' ? 'Portrait' : 'Landscape', selected.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div><p class="subtle">Canvas dimensions follow the selected card layout.</p><div class="field-pair"><label>Disc side<select id="native-side">${option('left', 'Left', design.nativeSide ?? selected.side)}${option('right', 'Right', design.nativeSide ?? selected.side)}</select></label><label>Highlight<select id="native-highlight">${option('digits', 'Digits', design.nativeHighlight ?? selected.highlight)}${option('tiles', 'Tile blocks', design.nativeHighlight ?? selected.highlight)}</select></label></div></form></aside>`;
@@ -541,9 +541,17 @@ function readDesign() {
   return { ...ui.design, study, placement: $('placement').value, compositionSize: $('composition-size').value, orientation: $('orientation').value, accent: $('accent').value, title: $('graphic-title').value, background: $('background').value, foreground: $('foreground').value, frame: $('frame').value, compositionOffsetX: Number($('offset-x').value), compositionOffsetY: Number($('offset-y').value) };
 }
 
+// One engine: every Single card is composed by the DiscStudio card renderer. A Single design that
+// still names a legacy composition (saved before this change) moves to the B01 card once.
+async function ensureOneEngine() {
+  if (ui.mode !== 'single' || isNativeStudy(ui.design.study)) return;
+  ui.design = nativeDesign(ui.design, 'discstudio:b01');
+  await workspace.change({ design: structuredClone(ui.design) });
+}
+
 function change(patch, note = 'Saved. Your graphic is ready.') {
   capturedPreview = null;
-  return run(async () => { await workspace.change(patch); ui.design = { ...defaultDesign, ...context().design }; await renderCurrent(); paint(); message(note); }, { kind: 'change', patch, ui });
+  return run(async () => { await workspace.change(patch); ui.design = { ...defaultDesign, ...context().design }; await ensureOneEngine(); await renderCurrent(); paint(); message(note); }, { kind: 'change', patch, ui });
 }
 
 async function keepCurrent(explicit = false) {
@@ -693,6 +701,7 @@ try {
   workspace = await openWorkspace({ storage: localStorage, locks: navigator.locks, fixture });
   rows = await workspace.model.shelfForDisplay(); adoptContext();
   window.__throStarted?.();
+  await ensureOneEngine();
   await renderCurrent(); paint(); setBusy(false); message('Ready. Choose your graphic, then take it to your video.');
   if (debug) {
     window.throQA = Object.freeze({ get workspace() { return workspace; }, get result() { return currentResult; }, get controls() { return structuredClone(ui); }, get busy() { return busy; }, settled: () => queue, inspect: () => workspace.model.inspect() });
