@@ -1,5 +1,29 @@
 export const fixtureId = 'thro-prepared-samples-v1';
 
+const flightFields = new Set(['speed', 'glide', 'turn', 'fade']);
+const citationKeys = ['sourceKind', 'url', 'verifiedOn'];
+
+export function validateFlightCorrection(disc) {
+  const hasOverrides = Object.hasOwn(disc, 'flightOverrides');
+  const hasCitation = Object.hasOwn(disc, 'flightCitation');
+  if (!hasOverrides && !hasCitation) return null;
+  const overrides = disc.flightOverrides, citation = disc.flightCitation;
+  if (!hasOverrides || !hasCitation || !overrides || typeof overrides !== 'object' || Array.isArray(overrides)
+    || !citation || typeof citation !== 'object' || Array.isArray(citation)) throw Error('Invalid prepared flight correction.');
+  const fields = Object.keys(overrides);
+  if (!fields.length || fields.some(field => !flightFields.has(field))
+    || fields.some(field => !Number.isFinite(overrides[field]))) throw Error('Invalid prepared flight correction.');
+  if (Object.keys(citation).length !== citationKeys.length || citationKeys.some(key => !Object.hasOwn(citation, key))
+    || citation.sourceKind !== 'manufacturer' || typeof citation.url !== 'string'
+    || !/^https:\/\/[a-z0-9.-]+\/[a-z0-9/_-]*\/?$/i.test(citation.url)
+    || typeof citation.verifiedOn !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(citation.verifiedOn)
+    || Number.isNaN(Date.parse(`${citation.verifiedOn}T00:00:00.000Z`))
+    || new Date(`${citation.verifiedOn}T00:00:00.000Z`).toISOString().slice(0, 10) !== citation.verifiedOn) {
+    throw Error('Invalid prepared flight correction.');
+  }
+  return Object.freeze({ flightOverrides: Object.freeze({ ...overrides }), flightCitation: Object.freeze({ ...citation }) });
+}
+
 function asDataUrl(bytes) {
   let binary = '';
   for (let offset = 0; offset < bytes.length; offset += 8192) binary += String.fromCharCode(...bytes.subarray(offset, offset + 8192));
@@ -12,6 +36,7 @@ export async function loadFixture({ fetcher = globalThis.fetch, base = new URL('
   const manifest = await response.json();
   if (manifest.schema !== 'thro-prepared-fixture@1' || manifest.fixtureId !== fixtureId || manifest.fixtureOnly !== true || !Array.isArray(manifest.discs) || manifest.discs.length !== 3) throw Error('Unknown prepared sample manifest.');
   return Promise.all(manifest.discs.map(async disc => {
+    validateFlightCorrection(disc);
     if (!/^assets\/discs\/[a-z0-9-]+\.webp$/.test(disc.file) || !/^[a-f0-9]{64}$/.test(disc.sha256) || !/^[a-z0-9-]+$/.test(disc.mold)) throw Error('Invalid prepared sample identity.');
     const image = await fetcher(new URL(disc.file, base));
     if (!image.ok) throw Error(`Prepared sample unavailable (${image.status}).`);

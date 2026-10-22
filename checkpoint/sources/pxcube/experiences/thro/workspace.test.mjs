@@ -6,6 +6,7 @@ import { openWorkspace, archiveKey } from './dist/workspace.mjs';
 import { createArchiveCodec } from './dist/archive-codec.mjs';
 import { pack, unpack } from './dist/archive-storage.mjs';
 import { captureIdentity } from './dist/model.mjs';
+import { loadFixture } from './dist/prepared-fixture.mjs';
 
 const manifest = JSON.parse(fs.readFileSync(new URL('./prepared-fixture.json', import.meta.url)));
 const fixture = manifest.discs.map(disc => {
@@ -13,6 +14,7 @@ const fixture = manifest.discs.map(disc => {
   assert.equal(createHash('sha256').update(bytes).digest('hex'), disc.sha256);
   return { ...disc, depiction: { kind: 'photo', src: `data:image/webp;base64,${bytes.toString('base64')}`, name: disc.name } };
 });
+const legacyFixture = fixture.map(({ flightOverrides, flightCitation, ...item }) => item);
 function storage() {
   const values = new Map();
   return { getItem: key => values.get(key) ?? null, setItem: (key, value) => values.set(key, value), values };
@@ -46,6 +48,78 @@ test('prepared photos, exact bag membership and retained captures survive reopen
   assert.equal(reopened.model.experience.bags().length, 1);
   assert.equal(reopened.model.value(kept.address).graphic.svg, preview.graphic.svg);
   assert.equal(reopened.model.context.design.accent, '#ff00aa');
+});
+
+const servoCitation = Object.freeze({ sourceKind: 'manufacturer', url: 'https://mvpdiscsports.com/discs/servo/', verifiedOn: '2026-10-22' });
+const servoFlightFixture = fixture.map(item => item.id === 'sample-servo'
+  ? { ...item, flightOverrides: { speed: 6.5 }, flightCitation: servoCitation }
+  : item);
+
+test('validated prepared Servo facts reach native render and retained capture without changing the seed catalog', async () => {
+  const backing = storage(), lock = locks();
+  let renderedResolved;
+  const renderGraphic = async input => {
+    if (!input.design.study.startsWith('discstudio:')) return null;
+    renderedResolved = structuredClone(input.resolved);
+    return addressedWorkspaceGraphic(input);
+  };
+  const workspace = await openWorkspace({ storage: backing, locks: lock, fixture: servoFlightFixture, renderGraphic });
+  const row = workspace.model.experience.shelf().find(item => item.seed.name === 'Servo');
+  assert.equal(workspace.model.experience.seedAt(row.disc.mold).speed, 7, 'the catalog seed remains the original value');
+  assert.equal(workspace.model.experience.resolve(row.disc).speed, 6.5);
+  assert.deepEqual(row.disc.flightCitation, servoCitation);
+
+  const design = nativeWorkspaceDesign(workspace);
+  await workspace.change({ design });
+  const preview = await workspace.single(row.address);
+  assert.equal(renderedResolved.speed, 6.5, 'the renderer receives the prepared override');
+  assert.deepEqual(renderedResolved.flightCitation, servoCitation, 'the field citation follows resolved facts');
+  const kept = await workspace.keep(preview);
+  assert.equal(kept.capture.specimen.resolved.speed, 6.5);
+  assert.deepEqual(kept.capture.specimen.disc.flightCitation, servoCitation);
+});
+
+test('prepared fixture accepts only finite cited flight overrides and rejects null or missing citations', async () => {
+  const bytesByFile = new Map(manifest.discs.map(disc => [disc.file, fs.readFileSync(new URL(disc.file, import.meta.url))]));
+  async function loadWith(change) {
+    const candidate = structuredClone(manifest);
+    change(candidate.discs[0]);
+    return loadFixture({ base: new URL('./', import.meta.url), fetcher: async url => {
+      if (url.pathname.endsWith('/prepared-fixture.json')) return { ok: true, json: async () => candidate };
+      const relative = decodeURIComponent(url.pathname.split('/').slice(-3).join('/'));
+      const bytes = bytesByFile.get(relative);
+      if (!bytes) throw Error(`Unexpected fixture request: ${url}`);
+      return { ok: true, arrayBuffer: async () => bytes };
+    } });
+  }
+  const invalid = [
+    disc => { disc.flightOverrides = { speed: null }; disc.flightCitation = servoCitation; },
+    disc => { disc.flightOverrides = { speed: Number.NaN }; disc.flightCitation = servoCitation; },
+    disc => { disc.flightOverrides = { speed: 6.5 }; delete disc.flightCitation; },
+    disc => { disc.flightOverrides = { speed: 6.5 }; disc.flightCitation = null; },
+    disc => { disc.flightOverrides = { speed: 6.5 }; disc.flightCitation = { ...servoCitation, sourceKind: '' }; },
+    disc => { disc.flightOverrides = { speed: 6.5, unknown: 2 }; disc.flightCitation = servoCitation; },
+  ];
+  for (const [index, mutate] of invalid.entries()) await assert.rejects(loadWith(mutate), /Invalid prepared flight correction/, `invalid correction ${index}`);
+  const loaded = await loadWith(disc => { disc.flightOverrides = { speed: 6.5 }; disc.flightCitation = servoCitation; });
+  assert.deepEqual(loaded[0].flightOverrides, { speed: 6.5 });
+  assert.deepEqual(loaded[0].flightCitation, servoCitation);
+  const backing = storage();
+  await assert.rejects(openWorkspace({ storage: backing, locks: locks(), fixture: [{ ...fixture[0], flightOverrides: { speed: null }, flightCitation: servoCitation }] }), /Invalid prepared flight correction/);
+  assert.equal(backing.getItem(archiveKey), null, 'an invalid direct fixture cannot seed any archive bytes');
+});
+
+test('an existing prepared archive is not migrated by a later fixture correction', async () => {
+  const backing = storage(), lock = locks();
+  const original = await openWorkspace({ storage: backing, locks: lock, fixture: legacyFixture });
+  const oldBytes = backing.getItem(archiveKey);
+  const oldServo = original.model.experience.shelf().find(item => item.seed.name === 'Servo');
+  assert.equal(original.model.experience.resolve(oldServo.disc).speed, 7);
+
+  const reopened = await openWorkspace({ storage: backing, locks: lock, fixture: servoFlightFixture });
+  assert.equal(backing.getItem(archiveKey), oldBytes, 'existing archive bytes remain exactly unchanged');
+  const reopenedServo = reopened.model.experience.shelf().find(item => item.seed.name === 'Servo');
+  assert.equal(reopened.model.experience.resolve(reopenedServo.disc).speed, 7, 'only a freshly seeded workspace receives the correction');
 });
 
 test('stale bag save preserves newer archive, committed heads and complete pending intent', async () => {

@@ -6,6 +6,7 @@ import { openLockedArchive } from './locked-storage.mjs';
 import { createArchiveCodec } from './archive-codec.mjs';
 import { defaultDesign } from './graphics.mjs';
 import { createNativeRenderer, isNativeStudy, workspaceDesignChange } from './native-cards.mjs';
+import { validateFlightCorrection } from './prepared-fixture.mjs';
 
 const codec = createArchiveCodec({ pack, unpack });
 
@@ -29,7 +30,9 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
     for (const item of fixture) {
       const mold = seed.seedOptions().find(row => row.seed.id === item.mold);
       if (!mold) throw Error(`Prepared sample mold is missing: ${item.mold}.`);
-      await seed.save({ ...initialDraft(), mold: mold.address, nickname: '', plastic: item.plastic, weight: item.weight }, item.depiction);
+      const correction = validateFlightCorrection(item);
+      await seed.save({ ...initialDraft(), mold: mold.address, nickname: '', plastic: item.plastic, weight: item.weight,
+        ...(correction?.flightOverrides ?? {}), ...(correction ? { flightCitation: correction.flightCitation } : {}) }, item.depiction);
     }
     const staged = memory(archive(seededState));
     model = await openDemo(staged, { renderGraphic });
