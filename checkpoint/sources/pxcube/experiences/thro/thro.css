@@ -129,3 +129,4 @@
 /* F12: the SVG download is a full-size target */
 .export-actions .svg-button{min-width:48px;min-height:44px;padding:8px 10px;font-size:11px;border:1px solid #4f6448;border-radius:9px}
 @media(max-width:760px){.export-actions:has(#keep-graphic[hidden]){grid-template-columns:1fr auto}}
+.composition-thumb.is-stale>svg{opacity:.5;filter:saturate(.6)}

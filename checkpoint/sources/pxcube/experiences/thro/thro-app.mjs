@@ -168,11 +168,10 @@ function closeUp(holder, graphic, force = false) {
   if (!svg || (!force && ui.view !== 'closeup')) return;
   if (graphic.provenance?.rasterOnly) {
     if (!force && compactPortrait(graphic)) return; // Dab's portrait framing handles phones (framePortraitPreview)
-    rasterBounds(graphic.svg).then(bounds => {
+    return rasterBounds(graphic.svg).then(bounds => {
       if (!bounds || holder.querySelector('svg') !== svg) return;
       applyCrop(holder, graphic, { x: bounds.x, y: bounds.y, w: bounds.width, h: bounds.height }, force);
     });
-    return;
   }
   const frame = svg.getBoundingClientRect();
   if (!frame.width || !frame.height) return;
@@ -198,23 +197,37 @@ let thumbToken = 0;
 function thumbDesign(id) {
   if (isNativeStudy(id)) return nativeDesign(ui.design, id);
   const base = isNativeStudy(ui.design.study) ? { ...defaultDesign, ...context().legacyDesign } : ui.design;
-  return { ...base, study: id, frame: 'none', title: '' };
+  return { ...base, study: id, frame: 'none', title: '', placement: 'bottom-left', compositionOffsetX: 0, compositionOffsetY: 0, compositionSize: 'balanced' };
 }
+// Rendered thumbnails are cached by everything that changes how they look, so a repaint
+// never blanks the picker; a stale thumbnail stays visible (dimmed) while its new one renders.
+const thumbCache = new Map(), lastThumb = new Map();
+const thumbKey = (disc, id) => { const d = thumbDesign(id); return JSON.stringify([disc, id, d.accent, d.foreground, d.background, d.nativeSide ?? null, d.nativeHighlight ?? null, d.nativeScale ?? null]); };
 async function paintCompositionThumbs() {
   const token = ++thumbToken, disc = ui.mode === 'single' ? ui.selectedDisc : (ui.selection[0] ?? ui.selectedDisc);
   if (!disc) return;
-  const studies = ui.mode === 'single' ? allStudies() : compositionStudies;
-  // The chosen layout first, then the rest in order, so the visible one is never last to appear.
-  const ordered = [...studies.filter(study => study.id === ui.design.study), ...studies.filter(study => study.id !== ui.design.study)];
-  for (const study of ordered) {
+  const studies = ui.mode === 'single' ? allStudies() : compositionStudies, misses = [];
+  for (const study of studies) { // instant pass: cached, else the last version dimmed
     const slot = document.querySelector(`[data-study-thumb="${CSS.escape(study.id)}"]`);
     if (!slot) continue;
+    const key = thumbKey(disc, study.id), hit = thumbCache.get(key);
+    if (hit) { slot.innerHTML = hit; continue; }
+    if (lastThumb.has(study.id)) { slot.innerHTML = lastThumb.get(study.id); slot.classList.add('is-stale'); }
+    misses.push({ study, slot, key });
+  }
+  // The chosen layout first, then the fast vector compositions, then the DiscStudio raster cards.
+  misses.sort((a, b) => (b.study.id === ui.design.study) - (a.study.id === ui.design.study) || isNativeStudy(a.study.id) - isNativeStudy(b.study.id));
+  for (const { study, slot, key } of misses) {
     try {
       const result = await workspace.single(disc, thumbDesign(study.id));
       if (token !== thumbToken || !slot.isConnected) return;
       slot.innerHTML = uniqueIds(result.graphic.svg, `thumb-${study.id.replace(/[^a-z0-9-]/gi, '-')}-`);
       slot.style.aspectRatio = `${result.graphic.width} / ${result.graphic.height}`;
-      closeUp(slot, result.graphic, true);
+      await closeUp(slot, result.graphic, true);
+      if (!slot.isConnected) return;
+      thumbCache.set(key, slot.innerHTML); lastThumb.set(study.id, slot.innerHTML);
+      if (thumbCache.size > 200) thumbCache.delete(thumbCache.keys().next().value);
+      slot.classList.remove('is-stale', 'is-unavailable');
     } catch { slot.classList.add('is-unavailable'); }
   }
 }
