@@ -26,7 +26,8 @@ const resultKey = result => result?.address ?? result?.graphic?.svg;
 function setBusy(next) {
   busy = next;
   root.setAttribute('aria-busy', String(next));
-  document.querySelectorAll('[data-needs-ready]').forEach(button => { button.disabled = next || hasConflict() || !currentGraphic(); });
+  // Busy does not disable these: run() queues actions, so a tap during a save waits its turn instead of being lost.
+  document.querySelectorAll('[data-needs-ready]').forEach(button => { button.disabled = hasConflict() || !currentGraphic(); });
   if ($('retry-export')) $('retry-export').disabled = next || hasConflict();
   $('reload-latest').disabled = next;
   if (hasConflict()) root.querySelectorAll('button,input,select').forEach(control => { control.disabled = true; });
@@ -232,9 +233,9 @@ function paintPreview() {
   $('preview-note').textContent = (capturedPreview ? 'Kept version · your current design stays available.' : 'The background is preview only.') + framing;
   $('return-live').hidden = !capturedPreview;
   $('keep-graphic').hidden = Boolean(capturedPreview);
-  $('download-png').disabled = busy || hasConflict() || !graphic;
-  $('keep-graphic').disabled = busy || hasConflict() || !graphic;
-  $('download-svg').disabled = busy || hasConflict() || !graphic;
+  $('download-png').disabled = hasConflict() || !graphic;
+  $('keep-graphic').disabled = hasConflict() || !graphic;
+  $('download-svg').disabled = hasConflict() || !graphic;
   document.querySelectorAll('[data-preview-background]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.previewBackground === ui.background)));
 }
 
@@ -249,10 +250,28 @@ function downloadedMarkup() {
   return `<div class="downloaded" role="status"><span class="downloaded-mark" aria-hidden="true">✓</span><div><strong>Downloaded ${d.format.toUpperCase()} · ${d.width} × ${d.height}</strong><p><span class="downloaded-file">${text(d.filename)}</span> ${next}</p></div></div>`;
 }
 
+// Which control had focus, as something that survives a rebuild of the workspace markup.
+const focusKeys = ['disc', 'mode', 'study', 'placement', 'accent', 'previewView', 'previewBackground', 'capture'];
+function focusToken() {
+  const el = document.activeElement;
+  if (!el || el === document.body || !root.contains(el)) return null;
+  if (el.id) return `#${CSS.escape(el.id)}`;
+  for (const key of focusKeys) if (el.dataset?.[key] != null) return `[data-${key.replace(/[A-Z]/g, c => '-' + c.toLowerCase())}="${CSS.escape(el.dataset[key])}"]`;
+  return null;
+}
+
 function paint() {
+  const keepBar = root.querySelector('.export-bar'), refocus = focusToken();
   root.innerHTML = `<section class="workspace-heading"><div><span class="eyebrow">GOOD TO GO</span><h1>Your discs. Your next video.</h1></div><nav class="mode-nav" aria-label="Graphic type">${[['single', 'Single'], ['battle', 'Battle'], ['bag', 'Bag lineup']].map(([mode, label]) => `<button type="button" data-mode="${mode}" aria-pressed="${ui.mode === mode}">${label}</button>`).join('')}</nav></section><div class="studio-grid">${shelfMarkup()}<section class="preview-column" aria-labelledby="preview-title"><div class="preview-heading"><div><span class="eyebrow">THE ACTUAL GRAPHIC</span><h2 id="preview-title">${capturedPreview ? 'A kept version' : ui.mode === 'single' ? 'One disc. Ready for its moment.' : ui.mode === 'battle' ? 'Set the scene.' : 'Your selected lineup.'}</h2></div><button id="return-live" type="button" class="text-button" hidden>Back to current image</button></div><div class="preview-shell"><div class="preview-toolbar"><div class="view-switch" role="group" aria-label="Preview framing">${[['closeup', 'Close-up'], ['frame', 'Whole frame']].map(([v, label]) => `<button type="button" data-preview-view="${v}" aria-pressed="${ui.view === v}">${label}</button>`).join('')}</div><span id="preview-dimensions" class="preview-dimensions"></span><div class="background-switch" aria-label="Preview background">${[['checker', 'Checkerboard'], ['light', 'Light'], ['dark', 'Dark']].map(([v, label]) => `<button type="button" data-preview-background="${v}" aria-label="${label} preview background" aria-pressed="${ui.background === v}" title="${label}"><span class="swatch swatch-${v}" aria-hidden="true"></span></button>`).join('')}</div></div><div id="graphic-preview" data-testid="graphic-preview" class="graphic-preview"></div><div class="preview-bottom"><span class="transparency-dot" aria-hidden="true"></span><strong id="preview-kind"></strong></div></div><p id="preview-note" class="preview-note"></p><div class="export-bar">${downloadedMarkup()}<div class="export-copy"><span class="eyebrow">TAKE IT TO YOUR VIDEO</span><p>Download keeps this exact version.</p></div><div class="export-actions"><button id="keep-graphic" type="button" data-needs-ready class="button-secondary">Keep version</button><button id="download-png" type="button" data-needs-ready class="button-primary">Download PNG <span aria-hidden="true">↓</span></button><button id="download-svg" type="button" data-needs-ready class="svg-button" aria-label="Download editable SVG">SVG</button></div></div></section>${controlsMarkup()}</div>${capturesMarkup()}`;
+  if (keepBar) { // the same buttons stay under the finger even if a save repaints mid-tap
+    const fresh = root.querySelector('.export-bar');
+    keepBar.querySelector('.downloaded')?.remove();
+    const note = fresh.querySelector('.downloaded'); if (note) keepBar.prepend(note);
+    fresh.replaceWith(keepBar);
+  }
   paintPreview();
   bind();
+  if (refocus) root.querySelector(refocus)?.focus({ preventScroll: true });
   paintCompositionThumbs();
   bindSwatches();
   sampleDiscColour();
