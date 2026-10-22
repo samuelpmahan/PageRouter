@@ -62,3 +62,15 @@
 @keyframes thro-spin{to{transform:rotate(360deg)}}
 @media(max-width:1180px) and (min-width:761px){.composition-field{grid-column:1 / -1}.composition-picker{grid-template-columns:repeat(5,minmax(0,1fr))}}
 @media(max-width:760px){.composition-picker{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+/* Placement: tap where the graphic sits in a miniature 16:9 video frame. */
+.placement-field{border:0;margin:0;padding:0;min-width:0}.placement-field legend{padding:0;margin-bottom:8px;color:#c9d3c8;font-size:12px;font-weight:650}
+.placement-frame{position:relative;width:100%;aspect-ratio:16 / 9;border-radius:8px;border:1px solid #405043;background:linear-gradient(160deg,#2a3a2c,#141d17)}
+.placement-spot{position:absolute;display:grid;place-items:center;min-height:0;width:34%;height:24%;padding:0;border-radius:6px;border:1px dashed #5d6f58;background:#ffffff08}
+.placement-spot>span{width:70%;height:42%;border-radius:3px;background:#5d6f58}
+.placement-spot[aria-checked=true]{border:1px solid var(--accent);background:#c8f49d22}.placement-spot[aria-checked=true]>span{background:var(--accent)}
+.placement-spot:hover:not(:disabled){background:#ffffff14}
+.spot-top-left{left:4%;top:6%}.spot-top-right{right:4%;top:6%}.spot-bottom-left{left:4%;bottom:6%}.spot-bottom-center{left:33%;bottom:6%}.spot-bottom-right{right:4%;bottom:6%}
+.spot-bottom-center{width:34%}
+@media(max-width:760px){.placement-frame{max-width:320px}.placement-spot{min-height:44px}}
+.placement-spot{width:30%}.spot-top-left,.spot-bottom-left{left:3%}.spot-top-right,.spot-bottom-right{right:3%}.spot-bottom-center{left:35%;width:30%}
