@@ -11,7 +11,8 @@ const STYLE = `
 .card-editor .ce-ghost{position:absolute;border:2px solid #fff;border-radius:4px;background:#ffffff14;pointer-events:none}
 .card-editor .ce-badge{position:absolute;pointer-events:auto;transform:translate(-50%,-50%);min-height:30px;min-width:30px;height:30px;padding:0 10px;border-radius:15px;border:2px solid #fff;background:#0b100ddb;color:#fff;font:700 12px/26px system-ui,sans-serif;white-space:nowrap;cursor:pointer;touch-action:manipulation;box-shadow:0 2px 8px #0007}
 .card-editor .ce-badge:hover:not(:disabled){background:#000;border-color:#fff}
-.card-editor .ce-knob{position:absolute;pointer-events:auto;width:32px;height:32px;margin:-16px 0 0 -16px;padding:0;border-radius:50%;border:3px solid #fff;background:#e2402f;color:#fff;font:700 14px/1 system-ui,sans-serif;touch-action:none;cursor:nwse-resize;box-shadow:0 2px 8px #0007}
+.card-editor .ce-badge.ce-right{transform:translate(6px,-50%)}
+.card-editor .ce-knob{position:absolute;pointer-events:auto;width:32px;height:32px;min-height:32px;min-width:32px;margin:-16px 0 0 -16px;padding:0;border-radius:50%;border:3px solid #fff;background:#e2402f;color:#fff;font:700 14px/1 system-ui,sans-serif;touch-action:none;cursor:nwse-resize;box-shadow:0 2px 8px #0007}
 .card-editor.is-dragging .ce-badge,.card-editor.is-dragging .ce-knob{visibility:hidden}
 `;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -57,10 +58,10 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
   const side = design.nativeSide, other = side === 'left' ? 'right' : 'left';
   const badges = [
     ['⇄ Side', 'Put the disc on the other side', layout.photo, 'c', () => onChange({ side: other }, `Disc on the ${other}`)],
-    ['# Colour', 'Accent on the tiles or the digits', layout.numbers, 'below', () => onChange({ highlight: design.nativeHighlight === 'tiles' ? 'digits' : 'tiles' }, design.nativeHighlight === 'tiles' ? 'Accent on the digits' : 'Accent on the tiles')],
+    ['# Colour', 'Accent on the tiles or the digits', layout.numbers, 'right', () => onChange({ highlight: design.nativeHighlight === 'tiles' ? 'digits' : 'tiles' }, design.nativeHighlight === 'tiles' ? 'Accent on the digits' : 'Accent on the tiles')],
     ['Plate', 'Solid or see-through plate', layout.name, 'corner', () => onChange({ plate: design.nativePlate === 'solid' ? 'see-through' : 'solid' }, design.nativePlate === 'solid' ? 'See-through plate' : 'Solid plate')],
   ].filter(([, , target]) => target).map(([label, aria, target, where, act]) => {
-    const b = el('button', 'ce-badge', { type: 'button', textContent: label, title: aria }); b.setAttribute('aria-label', aria);
+    const b = el('button', `ce-badge${where === 'right' ? ' ce-right' : ''}`, { type: 'button', textContent: label, title: aria }); b.setAttribute('aria-label', aria);
     b.addEventListener('pointerdown', e => e.stopPropagation()); b.addEventListener('click', e => { e.stopPropagation(); act(); });
     return { b, target, where };
   });
@@ -70,8 +71,9 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
     put(box, card, m); at(knob, corner.x, corner.y, m, hw, hh);
     for (const { b, target: t, where } of badges) {
       const awayFromDisc = layout.photo.x + layout.photo.w / 2 > t.x + t.w / 2;
-      const x = where === 'c' ? t.x + t.w / 2 : where === 'below' ? t.x + t.w / 2 : awayFromDisc ? t.x : t.x + t.w;
-      const y = where === 'c' ? t.y + t.h / 2 : where === 'below' ? t.y + t.h + 20 / m.s : t.y;
+      // Colour sits just past the end of the numbers row, so a sticky bar under the preview never hides it.
+      if (where === 'right') { Object.assign(b.style, { left: `${Math.min(m.x(t.x + t.w), hw - b.offsetWidth - 10)}px`, top: `${clamp(m.y(t.y + t.h / 2), 16, hh - 16)}px` }); continue; }
+      const x = where === 'c' ? t.x + t.w / 2 : awayFromDisc ? t.x : t.x + t.w, y = where === 'c' ? t.y + t.h / 2 : t.y;
       at(b, x, y, m, hw, hh);
     }
   }
