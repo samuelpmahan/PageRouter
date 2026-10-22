@@ -23,6 +23,8 @@ const runtimeFiles = [
   'prepared-fixture.json',
   'lineup-lab.html',
   'battle-lab.html',
+  'dtree.mjs',
+  'dtree.json',
 ];
 
 if (path.resolve(process.cwd()) !== root) {
