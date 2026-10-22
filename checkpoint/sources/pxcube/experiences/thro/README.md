@@ -153,3 +153,13 @@ or mode can commit, so a failed render cannot replace the last valid archive.
 Changing native layout uses that layout's own side/highlight defaults while
 keeping size and accent intent. Editing controls within one layout retains
 the explicitly selected side and highlight.
+
+### Card plate and nudge (on-card editing)
+
+Single designs may carry `nativePlate` (`see-through` or `solid`) and `nativeNudge` (`{x, y}` in
+canvas pixels, finite, each −1920 through 1920; fractions allowed). Omitted fields keep the old
+defaults. Adoption validates any supplied value in the active, dormant and captured designs and
+refuses malformed values with zero writes; nothing is normalised. Content that uses a solid plate
+or a nonzero nudge requires `thro-card-appearance@1`, derived from the content: the renderer build
+id alone is not enough, because an older adapter recognises that build but ignores both fields.
+A kept card's provenance records the requested `nudge` beside the clamped `placement`.

@@ -10,7 +10,14 @@ export const exactKeys = (value, keys) => value && typeof value === 'object' && 
 export const DATA_SCHEMA = 'thro-workspace-state@1';
 export const EDIT_PROFILE = 'thro-prepared-workspace@1';
 export const LEGACY_V1_PROFILE = 'thro-delivered-workspace-v1@1';
-export const capabilities = Object.freeze(['parts-archive@1', 'prepared-disc@1', 'versioned-bags@1', 'studio-single-svg@1', 'studio-lineup-svg@1', 'discstudio-card-png@1', 'export-record@1']);
+// thro-card-appearance@1: a native design or card uses a solid plate or a nudge. The same renderer build id is
+// not enough: an older adapter recognises that build but ignores both fields, so content declares the semantics.
+export const capabilities = Object.freeze(['parts-archive@1', 'prepared-disc@1', 'versioned-bags@1', 'studio-single-svg@1', 'studio-lineup-svg@1', 'discstudio-card-png@1', 'export-record@1', 'thro-card-appearance@1']);
+export const NUDGE_LIMIT = 1920;
+/** Plate and nudge as retained: omitted means the old defaults; a supplied value must be exact, never normalised. */
+export const validPlate = value => value === 'see-through' || value === 'solid';
+export const validNudge = value => exactKeys(value, ['x', 'y']) && [value.x, value.y].every(n => typeof n === 'number' && Number.isFinite(n) && Math.abs(n) <= NUDGE_LIMIT);
+export const usesCardAppearance = design => design?.nativePlate === 'solid' || Boolean(design?.nativeNudge && (design.nativeNudge.x || design.nativeNudge.y));
 export const calculationNames = new Set(`fn.addReference fn.addToShelf fn.createBag fn.find fn.paintRecipe fn.read fn.renderDepiction fn.renderPainting fn.selectPainting fn.shelfQuery fn.shelfRows fn.tick oc.create oc.destroy oc.update fn.studio.canvasDesign fn.studio.canvasFields fn.studio.canvasFrame fn.studio.canvasScene fn.studio.capture fn.studio.card fn.studio.cardPreset fn.studio.cardPreview fn.studio.cardTokens fn.studio.compositionDefinition fn.studio.compositionFields fn.studio.compositionLayers fn.studio.cornerMetadata fn.studio.cornerStudy fn.studio.cornerTypography fn.studio.exportRecord fn.studio.frame fn.studio.graphic fn.studio.graphicArt fn.studio.graphicDesign fn.studio.graphicFields fn.studio.layeredCompositionDefinition fn.studio.layeredCompositionPreview fn.studio.layeredCompositionScene fn.studio.moldHeading fn.studio.reorderSelection fn.studio.scene fn.studio.svgDigest fn.studio.unlabelledArt fn.studio.unlabelledCard fn.studio.competitionAppearance fn.studio.competitionCapture fn.studio.competitionDesign fn.studio.competitionDraft fn.studio.competitionEdit fn.studio.competitionFields fn.studio.competitionPreset fn.studio.competitionPresetPanel fn.studio.competitionScene fn.studio.competitionTreatment fn.studio.competitionTreatmentPanel fn.battle.entry fn.battle.standings`.split(' '));
 const presets = ['u01', 'u02', 'u03-front', 'u03-behind', 'u04', 'u05', 'b01', 'b02', 'b03', 'b04', 'b05'];
 export const supportsCapability = item => capabilities.includes(item) || presets.some(preset => item === `discstudio-recipe@28ac2b39fab85255/${preset}`);

@@ -131,6 +131,8 @@ export function createNativeRenderer(renderCard = async request => {
       designAddress: input.designAddress, resolvedAddress: input.resolvedAddress,
       preparedPhotoSha256: await preparedPhotoDigest(request.photoSrc),
       appearance: { ...request.appearance }, placement: { ...result.placement }, rasterOnly: true,
+      // the nudge the design asked for, kept apart from the placement the adapter's clamp produced
+      ...(request.nudge ? { nudge: { ...request.nudge } } : {}),
     } };
   };
   // Bag: each entry is the exact request its Single card would make, set in one frame.

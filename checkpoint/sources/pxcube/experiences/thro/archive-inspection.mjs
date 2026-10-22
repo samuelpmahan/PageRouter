@@ -1,5 +1,5 @@
 import { MAX_ARCHIVE_BYTES } from './archive-codec.mjs';
-import { bad, require, same, dangerous, exactKeys, encoder, snapshotJson, digest, envelopeDigest, identity, rawBytes, DATA_SCHEMA, EDIT_PROFILE, LEGACY_V1_PROFILE, supportsCapability, supportsLegacyProducer, calculationNames } from './transfer-contracts.mjs';
+import { bad, require, same, dangerous, exactKeys, encoder, snapshotJson, digest, envelopeDigest, identity, rawBytes, DATA_SCHEMA, EDIT_PROFILE, LEGACY_V1_PROFILE, supportsCapability, supportsLegacyProducer, calculationNames, usesCardAppearance } from './transfer-contracts.mjs';
 const paintings = ['pressed-fern', 'chevron-run', 'contour-basin'].map(name => ({ src: `./art/${name}.svg` }));
 
 // A closed check for this creator's generated SVG/data-URL carriers. This is
@@ -123,7 +123,10 @@ export function deriveRequirements(data) {
     const item = reader.nodeValue(node.id);
     for (const design of [item, item?.design, item?.singleDesign, item?.legacyDesign]) if (design?.study?.startsWith('discstudio:')) {
       requirements.add('discstudio-card-png@1'); requirements.add(`discstudio-recipe@${design.rendererBuild}/${design.study.slice('discstudio:'.length)}`);
+      if (usesCardAppearance(design)) requirements.add('thro-card-appearance@1');
     }
+    const provenance = item?.graphic?.provenance;
+    if (provenance?.schema === 'thro-native-card@1' && (provenance.appearance?.plate === 'solid' || Object.hasOwn(provenance, 'nudge'))) requirements.add('thro-card-appearance@1');
     if (item?.schema === 'studio-graphic@1') requirements.add(item.source?.material ? 'studio-lineup-svg@1' : item.graphic?.provenance?.rasterOnly ? 'discstudio-card-png@1' : 'studio-single-svg@1');
   }
   if (!reader.context.design?.study?.startsWith('discstudio:')) requirements.add('studio-single-svg@1');

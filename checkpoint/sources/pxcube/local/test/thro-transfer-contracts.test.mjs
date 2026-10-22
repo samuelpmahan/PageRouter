@@ -188,3 +188,70 @@ test('static inspection retains original envelope and never substitutes an execu
   });
   await assert.rejects(api.inspectWorkspacePackage({ package: active }), { code: 'THRO_PACKAGE_INVALID' });
 });
+
+test('plate and nudge: defaults, exact round-trip, invalid active/dormant/captured values and unknown consumers (synthetic producer, no browser-pixel claim)', async () => {
+  const { createNativeRenderer, nativeDesign } = await import(new URL('native-cards.mjs', runtime));
+  const manifest = JSON.parse(fs.readFileSync(new URL('prepared-fixture.json', runtime)));
+  const fixture = manifest.discs.map(disc => ({ ...disc, depiction: { kind: 'photo', name: disc.name, src: `data:image/webp;base64,${fs.readFileSync(new URL(disc.file, runtime)).toString('base64')}` } }));
+  const header = Buffer.alloc(33); Buffer.from('89504e470d0a1a0a', 'hex').copy(header); header.write('IHDR', 12); header.writeUInt32BE(1920, 16); header.writeUInt32BE(1080, 20);
+  const png = `data:image/png;base64,${header.toString('base64')}`, requests = [];
+  // The synthetic adapter clamps like the real one would: requested nudge and resulting placement differ on purpose.
+  const renderGraphic = createNativeRenderer(async request => { requests.push(request); return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" href="${png}"/></svg>`, width: 1920, height: 1080, build: identity.nativeRendererBuild, placement: { scale: request.scale, dx: request.nudge ? 0.25 : 0, dy: 0 } }; });
+  const CAP = 'thro-card-appearance@1';
+  const contextNode = raw => { const pair = raw.bindings.filter(([name]) => /^ds\.px\.studio\.demo\.\d+\.context$/.test(name)).at(-1); return raw.nodes.find(item => item.id === pair[1]); };
+  const editContext = (raw, fn) => { const node = contextNode(raw), context = decode(node.material); fn(context); delete node.calculation; delete node.inputs; node.material = encode(context); };
+  const refuses = async (value, code, label) => { const target = storage(); await assert.rejects(api.adoptWorkspacePackage({ storage: target, locks, key: `thro.test:${label}`, package: value, renderGraphic }), code ? { code } : undefined, label); assert.equal(target.values.size, 0, `${label} wrote nothing`); };
+
+  // 1. Omitted fields keep the old defaults and need no new capability.
+  const plain = await openWorkspace({ storage: storage(), locks, fixture, renderGraphic });
+  await plain.change({ design: nativeDesign(plain.model.context.design, 'discstudio:b01') });
+  await plain.keep(await plain.single(plain.model.context.selectedDisc));
+  const plainPackage = await plain.exportPackage({ identity });
+  assert.ok(!plainPackage.compatibility.requiredCapabilities.includes(CAP));
+  assert.equal(requests.at(-1).nudge, undefined); assert.equal(requests.at(-1).appearance.plate, undefined);
+  await api.adoptWorkspacePackage({ storage: storage(), locks, key: 'thro.test:plain-defaults', package: plainPackage, renderGraphic });
+
+  // 2. Solid plate and a fractional, nonzero nudge round-trip exactly, with the requested nudge kept apart from the clamped placement.
+  const styled = await openWorkspace({ storage: storage(), locks, fixture, renderGraphic });
+  const design = { ...nativeDesign(styled.model.context.design, 'discstudio:b01'), nativePlate: 'solid', nativeNudge: { x: 12.5, y: -40.25 } };
+  await styled.change({ design });
+  const kept = await styled.keep(await styled.single(styled.model.context.selectedDisc, design));
+  assert.deepEqual(requests.at(-1).nudge, { x: 12.5, y: -40.25 }); assert.equal(requests.at(-1).appearance.plate, 'solid');
+  assert.deepEqual(kept.capture.graphic.provenance.nudge, { x: 12.5, y: -40.25 });
+  assert.equal(kept.capture.graphic.provenance.placement.dx, 0.25, 'placement is the clamp result, not the request');
+  const styledPackage = await styled.exportPackage({ identity });
+  assert.ok(styledPackage.compatibility.requiredCapabilities.includes(CAP));
+  const target = storage(), key = 'thro.test:styled-roundtrip';
+  await api.adoptWorkspacePackage({ storage: target, locks, key, package: styledPackage, renderGraphic });
+  const reopened = await openWorkspace({ storage: target, locks, key, renderGraphic });
+  assert.equal(reopened.model.context.design.nativePlate, 'solid');
+  assert.deepEqual(reopened.model.context.design.nativeNudge, { x: 12.5, y: -40.25 });
+  assert.deepEqual(reopened.model.value(kept.address), kept.capture, 'saved image and provenance preserved exactly');
+
+  // 3. Malformed supplied values fail adoption with zero writes, wherever the design is retained.
+  for (const [label, fn] of [
+    ['active-plate', context => { context.design.nativePlate = 'glass'; }],
+    ['active-nudge-range', context => { context.design.nativeNudge = { x: 1920.5, y: 0 }; }],
+    ['active-nudge-shape', context => { context.design.nativeNudge = { x: 1, y: 2, z: 3 }; }],
+    ['dormant-nudge-string', context => { context.singleDesign.nativeNudge = { x: '4', y: 0 }; }],
+    ['dormant-plate-null', context => { context.singleDesign.nativePlate = null; }],
+  ]) await refuses(rewritten(styledPackage, raw => editContext(raw, fn)), null, label);
+  const captured = rewritten(styledPackage, raw => {
+    const captureNode = raw.nodes.find(node => node.material && decode(node.material)?.schema === 'studio-graphic@1'), capture = decode(captureNode.material);
+    capture.design.nativeNudge = { x: Number.MAX_VALUE, y: 0 };
+    delete captureNode.calculation; delete captureNode.inputs; captureNode.material = encode(capture);
+    const designId = raw.bindings.find(([name]) => name === capture.source.design)[1], designNode = raw.nodes.find(node => node.id === designId);
+    delete designNode.calculation; delete designNode.inputs; designNode.material = encode(capture.design);
+  });
+  await refuses(captured, null, 'captured-nudge');
+
+  // A design alone (nothing kept yet) already declares the requirement.
+  const draft = await openWorkspace({ storage: storage(), locks, fixture, renderGraphic });
+  await draft.change({ design: { ...nativeDesign(draft.model.context.design, 'discstudio:b01'), nativeNudge: { x: 0, y: 8 } } });
+  assert.ok((await draft.exportPackage({ identity })).compatibility.requiredCapabilities.includes(CAP), 'an unkept nudge is witnessed');
+  // 4. Content that uses plate or nudge cannot hide that requirement, and an unknown appearance contract is refused.
+  const hidden = structuredClone(styledPackage); hidden.compatibility.requiredCapabilities = hidden.compatibility.requiredCapabilities.filter(item => item !== CAP); seal(hidden);
+  await refuses(hidden, 'THRO_PACKAGE_INVALID', 'hidden-capability');
+  const future = structuredClone(styledPackage); future.compatibility.requiredCapabilities.push('thro-card-appearance@2'); seal(future);
+  await refuses(future, 'THRO_PACKAGE_UNSUPPORTED', 'unknown-consumer');
+});
