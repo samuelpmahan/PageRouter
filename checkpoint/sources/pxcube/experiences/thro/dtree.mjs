@@ -131,14 +131,14 @@ async function start() {
   // The screen: one PxC run from the site's decisions down to the card on screen and the rule on its measured layout (thro-app runScreen).
   function screenNode() {
     const sc = window.__thro?.screen;
-    if (!sc) return `<div class="dt-node"><p class="dt-q"><span class="dt-chip active">Run</span>What is on screen <code>thro.screen</code></p><p class="dt-why">Runs for a Single card; switch to Single to see it.</p></div>`;
+    if (!sc) return `<div class="dt-node"><p class="dt-q"><span class="dt-chip active">Run</span>What is on screen <code>thro.screen</code></p><p class="dt-why">Runs for a Single card or a Bag lineup; Battle isn't in the world yet.</p></div>`;
     if (sc.error) return `<div class="dt-node"><p class="dt-q"><span class="dt-chip open">Run</span>What is on screen <code>thro.screen</code></p><p class="dt-wait">${esc(sc.error)}</p></div>`;
     const o = sc.outputs, r = sc.receipt, st = sc.stats;
     let picture = '';
     try { picture = traceToSvg(r.trace, world.part, { title: `thro.screen, run ${r.runId}: the site's decisions, this card's recipe, the rule on what was drawn`, receipt: r, valueChars: 52, expand: n => world.node(n.cachedFrom.run, n.cachedFrom.call) }); } catch (e) { picture = `<p class="dt-wait">${esc(e.message)}</p>`; }
-    return `<div class="dt-node" id="dt-screen"><p class="dt-q"><span class="dt-chip active">Run ${esc(r.runId)}</span>What is on screen, and does it keep the rule? <code>thro.screen</code></p>
-      <p class="dt-c">${esc(o.recipe.preset.toUpperCase())} · ${esc(o.recipe.disc.manufacturer)} ${esc(o.recipe.disc.name)}${o.recipe.revision ? ` · revision ${o.recipe.revision}` : ''}</p>
-      <p class="dt-why">Recipe Part <code>${esc(sc.recipeHash)}</code>: the same recipe always draws the same pixels.</p>
+    return `<div class="dt-node" id="dt-screen"><p class="dt-q"><span class="dt-chip active">Run ${esc(r.runId)}</span>What is on screen, and does it keep the rule? <code>${o.recipe.cards ? 'thro.screen.lineup' : 'thro.screen'}</code></p>
+      <p class="dt-c">${o.recipe.cards ? `Lineup ${esc(o.recipe.preset.toUpperCase())} · ${o.recipe.cards.map(c => esc(c.disc.name)).join(', ')}${o.recipe.featured !== null ? ` · featured: ${esc(o.recipe.cards[o.recipe.featured]?.disc.name)}` : ''}` : `${esc(o.recipe.preset.toUpperCase())} · ${esc(o.recipe.disc.manufacturer)} ${esc(o.recipe.disc.name)}${o.recipe.revision ? ` · revision ${o.recipe.revision}` : ''}`}</p>
+      <p class="dt-why">${o.recipe.cards ? `Lineup recipe Part <code>${esc(sc.recipeHash)}</code>, built from ${o.recipe.cards.length} card recipe Parts, one per disc` : `Recipe Part <code>${esc(sc.recipeHash)}</code>`}: the same recipe always draws the same pixels.</p>
       <p class="dt-verdict">Rule on what was drawn: <b class="${o.accepted ? 'ok' : 'no'}">${o.accepted ? 'passes' : 'fails'}</b>. ${esc(o.reason)}</p>
       <p class="dt-ev">Card pixels this session: <span>${sc.pixels.drawn} drawn</span><span>${sc.pixels.reused} reused by recipe hash</span> · kernel: <span>${st.cacheHits} reused</span><span>${st.cacheMisses} computed</span><span>${st.parts} Parts</span></p>
       <details><summary>The kernel's picture of this run</summary><div class="dt-trace">${picture}</div></details></div>`;

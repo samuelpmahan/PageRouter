@@ -118,6 +118,28 @@ export function createThroWorld() {
       { name: 'card', call: 'thro.card.revision', slot: 'card', bind: {} },
     ],
     returns: { single: 'single.source', bag: 'bag.source', battle: 'battle.engine', revision: 'card.revision' } });
+  // ---- A lineup (Bag): one thro.card.recipe per disc, so each disc is its own Part, gathered with the lineup's own settings.
+  // The plan (which design each disc gets, which disc is featured) comes from native-cards.mjs nativeLineupPlan, as the renderer's does.
+  const slots = [0, 1, 2, 3, 4].map(i => `thro.card.recipe#card${i}`);
+  world.contract({ id: 'thro.lineup.recipe', description: 'What exactly does this lineup draw?',
+    notes: 'Each disc is its own card recipe; the lineup is their composition with its layout and its featured disc.',
+    in: { preset: { type: 'string' }, featured: { oneOf: [{ type: 'integer' }, { type: 'null' }] }, cards: { type: 'array', minItems: 2, maxItems: 5 } }, out: { recipe: { type: 'object' } } });
+  world.implement({ id: 'thro.lineup.recipe/cards', implements: 'thro.lineup.recipe', uses: slots, description: 'One card recipe per disc, gathered.',
+    origin: { by: 'claude-ed (rung 3)', iters: [29] },
+    run: ({ preset, featured, cards }, ctx) => {
+      const recipes = cards.value.map((_, i) => ctx.call('thro.card.recipe', { disc: ctx.at(cards, i, 'disc'), facts: ctx.at(cards, i, 'facts'), design: ctx.at(cards, i, 'design'), photo: ctx.at(cards, i, 'photo') }, { slot: `card${i}` }).recipe);
+      return { recipe: ctx.gather({ preset, featured, cards: recipes.map(r => ({ disc: ctx.at(r, 'disc'), flights: ctx.at(r, 'flights'), appearance: ctx.at(r, 'appearance'), photo: ctx.at(r, 'photo') })) }) };
+    } });
+  // Sam's rule on every card the lineup drew (the renderer measures each one).
+  world.contract({ id: 'thro.lineup.rule', kind: 'check', description: 'Does every card in the lineup keep the rule?',
+    in: { layouts: { type: 'array', minItems: 2, maxItems: 5 } }, out: { accepted: { type: 'boolean' }, reason: { type: 'string' } } });
+  world.implement({ id: 'thro.lineup.rule/every-card', implements: 'thro.lineup.rule', uses: [0, 1, 2, 3, 4].map(i => `thro.rule#card${i}`), description: 'thro.rule on each card.',
+    run: ({ layouts }, ctx) => {
+      const verdicts = layouts.value.map((_, i) => ctx.call('thro.rule', { layout: ctx.at(layouts, i) }, { slot: `card${i}` }));
+      const failing = verdicts.map((v, i) => [i, v]).filter(([, v]) => !v.accepted.value);
+      return { accepted: !failing.length, reason: failing.length ? failing.map(([i, v]) => `Card ${i + 1}: ${v.reason.value}`).join(' ') : `All ${verdicts.length} cards keep the rule.` };
+    } });
+
   // ---- The screen: one run from the site's decisions down to the card on screen and Sam's rule on it.
   // The layout is what the renderer measured while drawing that recipe, so the rule judges the actual card.
   world.contract({ id: 'thro.screen', description: 'What is on screen, and does it keep the rule?',
@@ -130,12 +152,22 @@ export function createThroWorld() {
       { name: 'rule', call: 'thro.rule', bind: { layout: '$in.layout' } },
     ],
     returns: { single: 'site.single', bag: 'site.bag', battle: 'site.battle', revision: 'site.revision', recipe: 'card.recipe', accepted: 'rule.accepted', reason: 'rule.reason' } });
+  world.contract({ id: 'thro.screen.lineup', description: 'What is on screen (a lineup), and does every card keep the rule?',
+    in: { preset: { type: 'string' }, featured: { oneOf: [{ type: 'integer' }, { type: 'null' }] }, cards: { type: 'array' }, layouts: { type: 'array' } },
+    out: { single: { type: 'string' }, bag: { type: 'string' }, battle: { type: 'string' }, revision: { type: 'integer' }, recipe: { type: 'object' }, accepted: { type: 'boolean' }, reason: { type: 'string' } } });
+  world.compose({ id: 'thro.screen.lineup/thro', implements: 'thro.screen.lineup',
+    steps: [
+      { name: 'site', call: 'thro.site', bind: {} },
+      { name: 'lineup', call: 'thro.lineup.recipe', bind: { preset: '$in.preset', featured: '$in.featured', cards: '$in.cards' } },
+      { name: 'rule', call: 'thro.lineup.rule', bind: { layouts: '$in.layouts' } },
+    ],
+    returns: { single: 'site.single', bag: 'site.bag', battle: 'site.battle', revision: 'site.revision', recipe: 'lineup.recipe', accepted: 'rule.accepted', reason: 'rule.reason' } });
   return world;
 }
 
 /** Run the screen: the site under the fill, the card on screen, and the rule on its measured layout. */
 export function screen(world, inputs, fill = SITE_FILL) {
-  const { outputs, receipt } = world.run('thro.screen', inputs, { fill: { ...fill }, landing: 'none' });
+  const { outputs, receipt } = world.run(inputs.cards ? 'thro.screen.lineup' : 'thro.screen', inputs, { fill: { ...fill }, landing: 'none' });
   return { outputs, receipt, recipeHash: receipt.outputs.recipe }; // the receipt names every output by its Part hash
 }
 

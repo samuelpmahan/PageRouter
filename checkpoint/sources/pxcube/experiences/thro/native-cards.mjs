@@ -136,6 +136,21 @@ async function preparedPhotoDigest(source) {
 // Keyed by the card's PNG data, which survives the SVG being re-serialised on screen.
 const layouts = new Map(), pixelsOf = svg => /href=["'](data:image\/png;base64,[^"']+)/.exec(String(svg))?.[1] ?? String(svg);
 export const cardLayout = svgOrHref => layouts.get(pixelsOf(svgOrHref)) ?? null;
+/** A lineup: which card design each disc gets (its own accent if the lineup treatment set one) and which disc is featured.
+ *  The lineup renderer and thro-world.mjs (thro.lineup.recipe) both start from this plan. */
+export function nativeLineupPlan({ material, design, entries }) {
+  const selected = lineupStudy(design.study), state = material.states?.[0];
+  const cards = entries.map(entry => {
+    const cardDesign = nativeDesign({ ...design, study: selected.cardStudy, rendererBuild: nativeBuild }, selected.cardStudy);
+    const accent = material.styles?.[entry.id]?.accent ?? design.accent ?? cardDesign.accent;
+    return { disc: entry.disc, resolved: entry.resolved, design: { ...cardDesign, accent, rendererBuild: nativeBuild } };
+  });
+  const featured = state?.highlight ? entries.findIndex(entry => entry.id === state.highlight) : -1;
+  return { preset: selected.preset, featured: featured >= 0 ? featured : null, cards };
+}
+/** What the lineup renderer draws from, without photo bytes: the lineup recipe Part. */
+export const lineupRequestRecipe = (plan, requests, photos) => ({ preset: plan.preset, featured: plan.featured,
+  cards: requests.map((request, i) => { const { depiction, ...disc } = request.disc; return { disc, flights: request.flights, appearance: request.appearance, photo: photos[i] }; }) });
 /** The recipe inside a renderer request (photo by SHA-256), and the hash the kernel gives that Part. */
 export const requestRecipe = (request, photo) => { const { disc: { depiction, ...disc }, photoSrc, ...rest } = request; return { disc, ...rest, photo }; };
 export const recipePartHash = recipe => hashString(canonical(recipe));
@@ -180,25 +195,27 @@ export function createNativeRenderer(renderCard = async request => {
   // Bag: each entry is the exact request its Single card would make, set in one frame.
   // Per-entry accents from the lineup treatment carry over; the featured disc (whose turn)
   // stays full size while the rest step back. No points or turn text is drawn.
+  // Bag: each entry is the exact request its Single card would make, set in one frame (nativeLineupPlan).
+  // Pixels are cached per renderer by the hash the kernel gives the lineup recipe Part (thro.lineup.recipe).
+  const lineupPixels = new Map();
   single.lineup = async ({ material, design, entries }) => {
     if (!isLineupStudy(design?.study)) return null;
-    const selected = lineupStudy(design.study), state = material.states?.[0];
-    const requests = entries.map(entry => {
-      const cardDesign = nativeDesign({ ...design, study: selected.cardStudy, rendererBuild: nativeBuild }, selected.cardStudy);
-      const accent = material.styles?.[entry.id]?.accent ?? design.accent ?? cardDesign.accent;
-      return nativeCardRequest({ disc: entry.disc, resolved: entry.resolved, design: { ...cardDesign, accent, rendererBuild: nativeBuild } });
-    });
-    const featured = state?.highlight ? entries.findIndex(entry => entry.id === state.highlight) : -1;
-    const result = await renderLineup({ cards: requests.map(({ disc, photoSrc, flights, appearance }) => ({ disc, photoSrc, flights, appearance })), preset: selected.preset, emphasis: featured >= 0 ? featured : null });
+    const plan = nativeLineupPlan({ material, design, entries });
+    const requests = plan.cards.map(card => nativeCardRequest(card));
+    const photos = [];
+    for (const request of requests) photos.push(await preparedPhotoDigest(request.photoSrc));
+    const key = recipePartHash(lineupRequestRecipe(plan, requests, photos));
+    const cached = lineupPixels.get(key);
+    const result = cached ?? await renderLineup({ cards: requests.map(({ disc, photoSrc, flights, appearance }) => ({ disc, photoSrc, flights, appearance })), preset: plan.preset, emphasis: plan.featured });
     if (result.build !== nativeBuild) throw Error('Native renderer build does not match this saved lineup.');
     if (result.width !== 1920 || result.height !== 1080 || typeof result.svg !== 'string' || !/href=["']data:image\/png;base64,/.test(result.svg) || /href=["'](?:https?:|blob:)/i.test(result.svg)) throw Error('Native lineup must contain its retained PNG pixels.');
     if (result.layout) { layouts.set(pixelsOf(result.svg), result.layout); if (layouts.size > 60) layouts.delete(layouts.keys().next().value); }
-    const photos = [];
-    for (const request of requests) photos.push(await preparedPhotoDigest(request.photoSrc));
+    if (cached) pixelStats.reused++;
+    else { lineupPixels.set(key, result); pixelStats.drawn++; if (lineupPixels.size > 20) lineupPixels.delete(lineupPixels.keys().next().value); }
     return { svg: result.svg, width: result.width, height: result.height, provenance: {
-      schema: 'thro-native-lineup@1', renderer: 'discstudio-cards', rendererBuild: nativeBuild, preset: selected.preset,
+      schema: 'thro-native-lineup@1', renderer: 'discstudio-cards', rendererBuild: nativeBuild, preset: plan.preset,
       physicalDiscIds: entries.map(entry => entry.disc.id), preparedPhotoSha256: photos,
-      appearances: requests.map(request => ({ ...request.appearance })), featured: featured >= 0 ? featured : null, scales: [...result.scales], rasterOnly: true,
+      appearances: requests.map(request => ({ ...request.appearance })), featured: plan.featured, scales: [...result.scales], rasterOnly: true,
     } };
   };
   return single;

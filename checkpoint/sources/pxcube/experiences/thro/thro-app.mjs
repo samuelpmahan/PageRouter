@@ -1,5 +1,5 @@
 import { openWorkspace } from './workspace.mjs';
-import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, cardLayout, latestCardRevision, useSiteCardRevision, pixelStats } from './native-cards.mjs';
+import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, cardLayout, latestCardRevision, useSiteCardRevision, pixelStats, nativeLineupPlan } from './native-cards.mjs';
 import { attachCardEditor, detachCardEditor } from './card-editor.mjs';
 import { createThroWorld, decide, screen, SITE_FILL } from './thro-world.mjs';
 import { alphaBounds, fitArtwork } from './preview-frame.mjs';
@@ -492,6 +492,18 @@ function runScreen() {
   window.__thro.screen = null;
   try {
     const graphic = currentResult?.graphic;
+    const pickFacts = f => ({ name: f.name, manufacturer: f.manufacturer, speed: f.speed ?? null, glide: f.glide ?? null, turn: f.turn ?? null, fade: f.fade ?? null });
+    const pickDisc = d => ({ id: d.id, mold: d.mold, plastic: d.plastic ?? null, weight: d.weight ?? null });
+    if (ui.mode === 'bag' && isLineupStudy(ui.design.study) && graphic?.provenance?.schema === 'thro-native-lineup@1') {
+      const material = value(currentResult.materialAddress), layouts = cardLayout(graphic.svg);
+      if (!Array.isArray(layouts)) return;
+      const entries = material.entries.map(entry => { const disc = value(entry.address); return { id: entry.id, disc, resolved: workspace.model.experience.resolve(disc) }; });
+      const plan = nativeLineupPlan({ material, design: ui.design, entries });
+      const inputs = { preset: plan.preset, featured: plan.featured, layouts,
+        cards: plan.cards.map((card, i) => ({ disc: pickDisc(card.disc), facts: pickFacts(card.resolved), design: card.design, photo: graphic.provenance.preparedPhotoSha256[i] })) };
+      window.__thro.screen = { ...screen(throWorld, inputs, viewerFill()), stats: throWorld.stats(), pixels: { ...pixelStats } };
+      return;
+    }
     if (ui.mode !== 'single' || !graphic?.provenance?.rasterOnly || !isNativeStudy(ui.design.study)) return;
     const layout = cardLayout(graphic.svg), disc = value(currentResult.discAddress), facts = value(currentResult.resolvedAddress);
     if (!layout || Array.isArray(layout)) return;
