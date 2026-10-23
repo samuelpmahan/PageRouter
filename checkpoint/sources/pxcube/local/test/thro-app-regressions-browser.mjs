@@ -92,13 +92,17 @@ await check('bag-lineup', async ({ p, tap }) => {
   return f;
 });
 
-// Card editor: only the drag outline and size knob sit on the card; dragging changes the card.
+// Card editor (Sam, 23 Oct 09:52): Side, Colour and Plate sit on the card where they act, each paired with a control in the strip
+// that groups and names them; dragging changes the card. (It used to assert that no control covers the card: the hierarchy
+// scaffold applied as law, which is what Sam called "what MUST BE instead of what COULD BE".)
 await check('card-editor', async ({ p }) => {
   const f = [];
   await p.goto(base.href, { waitUntil: 'networkidle' }); await ready(p);
   if (!(await p.locator('.ce-card').count())) { f.push('the card editor should be on the Single preview'); return f; }
   const onCard = await p.locator('#graphic-preview .card-editor button, #graphic-preview .card-editor [role="button"]').evaluateAll(els => els.filter(e => !e.classList.contains('ce-knob') && !e.classList.contains('ce-hint') && e.textContent.trim()).map(e => e.textContent.trim()));
-  expect(f, !onCard.length, `controls should not cover the card: ${onCard.join(', ')}`);
+  expect(f, ['⇄ Side', '# Colour', 'Plate'].every(l => onCard.includes(l)), `Side, Colour and Plate should be on the card: ${onCard.join(', ')}`);
+  const strip = await p.locator('.ce-strip .ce-act').count();
+  expect(f, strip >= 3 && strip === onCard.length, `each on-card control should have its strip twin (${onCard.length} on the card, ${strip} in the strip)`);
   await p.locator('#graphic-preview').scrollIntoViewIfNeeded();
   const pixels = () => p.evaluate(() => document.querySelector('#graphic-preview image')?.getAttribute('href')?.length);
   const before = await pixels(), box = await p.locator('.ce-card').boundingBox();

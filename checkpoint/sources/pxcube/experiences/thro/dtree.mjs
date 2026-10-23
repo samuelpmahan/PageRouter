@@ -17,7 +17,8 @@ import { traceToSvg } from './pxc/view.mjs';
 const css = `
 .dtree-button{position:fixed;left:16px;bottom:16px;z-index:60;min-height:44px;padding:0 16px;border-radius:22px;border:1px solid #3d5141;background:#101812;color:#e9f1e4;font:700 14px/1 system-ui,sans-serif;letter-spacing:.04em;box-shadow:0 6px 20px #0008;cursor:pointer}
 .dtree-button b{color:#ffd166}
-@media (max-width:760px){.dtree-button{bottom:104px}}
+/* On phones the button sits in the header and scrolls away with it: pinned over the preview it covered the card (Sam's phone, 23 Oct). */
+@media (max-width:760px){.dtree-button{position:absolute;top:14px;bottom:auto;left:auto;right:16px;min-height:36px;padding:0 12px;font-size:13px}}
 .dtree{position:fixed;top:0;right:0;bottom:0;width:min(460px,100vw);z-index:70;background:#0f1611;color:#e9f1e4;border-left:1px solid #2a3a30;box-shadow:-12px 0 40px #000a;display:flex;flex-direction:column;font:14px/1.45 system-ui,sans-serif}
 .dtree[hidden]{display:none}
 .dtree header{display:flex;align-items:center;gap:8px;padding:14px 16px;border-bottom:1px solid #2a3a30}
@@ -294,7 +295,7 @@ async function start() {
     // Under the preview when it is in view; otherwise pinned above the bottom of the screen, where the person is working (phones).
     const r = preview.getBoundingClientRect(), inView = r.bottom > 40 && r.bottom + 80 < innerHeight;
     Object.assign(toast.style, inView ? { position: 'absolute', left: `${Math.max(16, r.left + scrollX)}px`, top: `${r.bottom + scrollY + 8}px`, bottom: '' }
-      : { position: 'fixed', left: '16px', top: '', bottom: `${innerWidth <= 760 ? 164 : 76}px` });
+      : { position: 'fixed', left: '16px', top: '', bottom: `${innerWidth <= 760 ? 104 : 76}px` });
     clearTimeout(toastTimer); toastTimer = setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => { toast.hidden = true; }, 320); }, 5200);
   }
   function onScreen() {

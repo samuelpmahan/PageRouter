@@ -1,6 +1,8 @@
 // On-card editing for Thro Single cards: the Constraint Lab, merged into Thro.
-// Drag the card to move it from its corner, pull the knob to size it; Disc side, Colour and Plate sit in a strip
-// under the preview so no control ever covers the disc photo, mold name or flight numbers (Sam's hierarchy rule).
+// Drag the card to move it from its corner, pull the knob to size it, tap Side, Colour or Plate on the card where each one acts
+// (the first Constraint Lab, f75a060; Sam, 23 Oct: "immediate sensorimotor feedback is just as important to ground symbols for
+// humans as it is for agents"). The strip under the preview groups the same controls and names their state; each strip control
+// and its badge on the card are one action, and pointing at either outlines the piece it changes and lights its twin.
 // Every gesture becomes one of the card renderer's own inputs (nudge, scale, discSide,
 // highlightTarget, plate). Nothing here draws the card: the preview only moves the
 // existing pixels while a finger is down, and the renderer redraws on release.
@@ -17,8 +19,13 @@ const STYLE = `
 .card-editor .ce-hint{position:absolute;border:2px solid var(--accent,#b5d899);border-radius:6px;box-shadow:0 0 0 2px #0009;pointer-events:none;display:none}
 .card-editor .ce-hint.round{border-radius:50%}
 .card-editor .ce-hint.on{display:block}
+.card-editor .ce-badge{position:absolute;pointer-events:auto;transform:translate(-50%,-50%);min-height:30px;min-width:30px;height:30px;padding:0 10px;border-radius:15px;border:2px solid #fff;background:#0b100ddb;color:#fff;font:700 12px/26px system-ui,sans-serif;white-space:nowrap;cursor:pointer;touch-action:manipulation;box-shadow:0 2px 8px #0007}
+.card-editor .ce-badge:hover:not(:disabled),.card-editor .ce-badge.lit{background:#000;border-color:var(--accent,#b5d899)}
+.card-editor .ce-badge.ce-right{transform:translate(6px,-50%)}
+.ce-strip .ce-act.lit{border-color:var(--accent,#b5d899);background:#2c3a2e}
+@media (pointer:coarse){.card-editor .ce-badge{min-height:40px;height:40px;line-height:36px;border-radius:20px;padding:0 12px}}
 .card-editor .ce-knob{position:absolute;pointer-events:auto;width:32px;height:32px;min-height:32px;min-width:32px;margin:-16px 0 0 -16px;padding:0;border-radius:50%;border:3px solid #fff;background:#e2402f;color:#fff;font:700 14px/1 system-ui,sans-serif;touch-action:none;cursor:nwse-resize;box-shadow:0 2px 8px #0007}
-.card-editor.is-dragging .ce-knob{visibility:hidden}
+.card-editor.is-dragging .ce-knob,.card-editor.is-dragging .ce-badge{visibility:hidden}
 `;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const union = boxes => {
@@ -67,29 +74,41 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
   strip.innerHTML = '<span class="ce-label">ON THE CARD</span>';
   holder.after(strip);
   const actions = [
-    [`⇄ Disc <b>${side === 'left' ? 'left' : 'right'}</b>`, `Put the disc on the ${other}`, layout.photo, true, () => onChange({ side: other }, `Disc on the ${other}`)],
-    [`# Accent on <b>${tiles ? 'tiles' : 'digits'}</b>`, `Put the accent on the ${tiles ? 'digits' : 'tiles'}`, layout.numbers, false, () => onChange({ highlight: tiles ? 'digits' : 'tiles' }, tiles ? 'Accent on the digits' : 'Accent on the tiles')],
-    [`Plate <b>${solid ? 'solid' : 'see-through'}</b>`, `Make the plate ${solid ? 'see-through' : 'solid'}`, bounds ?? card, false, () => onChange({ plate: solid ? 'see-through' : 'solid' }, solid ? 'See-through plate' : 'Solid plate')],
+    [`⇄ Disc <b>${side === 'left' ? 'left' : 'right'}</b>`, `Put the disc on the ${other}`, layout.photo, true, () => onChange({ side: other }, `Disc on the ${other}`), '⇄ Side', 'c'],
+    [`# Accent on <b>${tiles ? 'tiles' : 'digits'}</b>`, `Put the accent on the ${tiles ? 'digits' : 'tiles'}`, layout.numbers, false, () => onChange({ highlight: tiles ? 'digits' : 'tiles' }, tiles ? 'Accent on the digits' : 'Accent on the tiles'), '# Colour', 'right'],
+    [`Plate <b>${solid ? 'solid' : 'see-through'}</b>`, `Make the plate ${solid ? 'see-through' : 'solid'}`, bounds ?? card, false, () => onChange({ plate: solid ? 'see-through' : 'solid' }, solid ? 'See-through plate' : 'Solid plate'), 'Plate', 'corner', layout.name],
   ];
   // A saved B01 or U04 keeps the drawing it was made with; moving it to the fixed card is a person's choice.
   if (fixedRevision !== undefined && design.nativeRevision !== fixedRevision) {
     const b01 = String(design.study).endsWith(':b01'), what = b01 ? 'upright disc' : 'smaller manufacturer';
-    actions.push([`✦ Use the fixed card <b>(${what})</b>`, `Use the fixed card: ${b01 ? 'the disc photo is drawn upright' : 'the manufacturer is smaller than the flight numbers'}`, b01 ? layout.photo : (layout.other?.[0] ?? card), b01, () => onChange({ revision: fixedRevision }, 'Fixed card applied')]);
+    actions.push([`✦ Use the fixed card <b>(${what})</b>`, `Use the fixed card: ${b01 ? 'the disc photo is drawn upright' : 'the manufacturer is smaller than the flight numbers'}`, b01 ? layout.photo : (layout.other?.[0] ?? card), b01, () => onChange({ revision: fixedRevision }, 'Fixed card applied'), '✦ Fixed', b01 ? 'below' : 'right']);
   }
-  const controls = actions.filter(([, , target]) => target).map(([html, aria, target, round, act]) => {
+  const controls = actions.filter(([, , target]) => target).map(([html, aria, target, round, act, label, where, anchorBox]) => {
     const b = document.createElement('button'); b.type = 'button'; b.className = 'ce-act'; b.innerHTML = html; b.title = aria; b.setAttribute('aria-label', aria);
     const hint = el('div', `ce-hint${round ? ' round' : ''}`);
-    const show = on => hint.classList.toggle('on', on);
-    b.addEventListener('pointerenter', () => show(true)); b.addEventListener('pointerleave', () => show(false));
-    b.addEventListener('focus', () => show(true)); b.addEventListener('blur', () => show(false));
+    // The same action, on the card where it acts.
+    const badge = el('button', `ce-badge${where === 'right' ? ' ce-right' : ''}`, { type: 'button', textContent: label, title: aria }); badge.setAttribute('aria-label', aria);
+    const show = on => { hint.classList.toggle('on', on); badge.classList.toggle('lit', on); b.classList.toggle('lit', on); };
+    for (const t of [b, badge]) {
+      t.addEventListener('pointerenter', () => show(true)); t.addEventListener('pointerleave', () => show(false));
+      t.addEventListener('focus', () => show(true)); t.addEventListener('blur', () => show(false));
+    }
+    badge.addEventListener('pointerdown', e => e.stopPropagation()); badge.addEventListener('click', e => { e.stopPropagation(); act(); });
     b.addEventListener('click', act); strip.appendChild(b);
-    return { hint, target };
+    return { hint, target, badge, where, at: anchorBox ?? target };
   });
   function place() {
     if (!layer.isConnected) return stop();
     const m = view(), hw = holder.clientWidth, hh = holder.clientHeight;
     put(box, card, m); at(knob, corner.x, corner.y, m, hw, hh);
-    for (const { hint, target } of controls) put(hint, { x: target.x - 6 / m.s, y: target.y - 6 / m.s, w: target.w + 12 / m.s, h: target.h + 12 / m.s }, m);
+    for (const { hint, target, badge, where, at: t } of controls) {
+      put(hint, { x: target.x - 6 / m.s, y: target.y - 6 / m.s, w: target.w + 12 / m.s, h: target.h + 12 / m.s }, m);
+      // Colour sits just past the end of the numbers row, so a bar under the preview never hides it (2213cc3).
+      if (where === 'right') { Object.assign(badge.style, { left: `${Math.min(m.x(t.x + t.w), hw - badge.offsetWidth - 10)}px`, top: `${clamp(m.y(t.y + t.h / 2), 16, hh - 16)}px` }); continue; }
+      const awayFromDisc = layout.photo.x + layout.photo.w / 2 > t.x + t.w / 2;
+      const x = where === 'c' || where === 'below' ? t.x + t.w / 2 : awayFromDisc ? t.x : t.x + t.w, y = where === 'c' ? t.y + t.h / 2 : where === 'below' ? t.y + t.h : t.y;
+      at(badge, x, y, m, hw, hh);
+    }
   }
   const resize = new ResizeObserver(place), watch = new MutationObserver(place);
   resize.observe(holder); watch.observe(svg, { attributes: true, attributeFilter: ['viewBox', 'style', 'class'] });

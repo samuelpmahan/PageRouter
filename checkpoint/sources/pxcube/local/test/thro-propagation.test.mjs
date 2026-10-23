@@ -111,7 +111,7 @@ test('the person sets the order and the purpose; the demonstration follows them,
   const theirs = guarantees(world, run, { order: ['name', 'disc', 'numbers', 'other'], purpose: { card: 'A poster for my shop wall.' } }).find(g => g.cause === 'final');
   assert.equal(theirs.demonstration.for, 'A poster for my shop wall.');
   assert.equal(theirs.ok, false, 'this card reads disc first, not name first');
-  assert.match(theirs.demonstration.thus, /^Not served in your order\. the disc \(277 px\) is read before the name Servo \(69 px\), so the viewer gets which disc it is before the name Servo\./);
+  assert.match(theirs.demonstration.thus, /^Not served in your order\. The disc \(277 px\) is read before the name Servo \(69 px\), so the viewer gets which disc it is before the name Servo\./);
   assert.match(theirs.demonstration.does, /read as disc, name, numbers, everything else/, 'the measured order is a plain fact');
   assert.equal(run.outputs.accepted, true, 'the scaffold check (for agents) is untouched by a person\'s order');
   const loud = screen(world, single({ study: 'discstudio:u04' }, { photo: { w: 238 }, name: { size: 74 }, numbers: { size: 29 }, other: [{ text: 'MVP', size: 34 }] }));

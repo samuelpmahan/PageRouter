@@ -426,7 +426,8 @@ function finalCause(run, viewer = {}) {
   const own = intended.join() !== PARTS.join();
   const sizes = r => `disc photo ${px(r.disc)}, the name ${r.nameText} ${px(r.name)}, the numbers ${r.numbersText} ${px(r.numbers)}, the largest other text${r.other.text ? ` ("${r.other.text}")` : ''} ${px(r.other.size)}; read as ${partWords(measuredOrder(r))}`;
   const does = recipe.cards ? `Card by card: ${reads.map((r, i) => `${i + 1}. ${r.nameText}: ${sizes(r)}`).join('; ')}.` : `On this card: ${sizes(reads[0])}.`;
-  const misreads = reads.map((r, i) => { const why = misread(r, intended); return why ? `${recipe.cards ? `Card ${i + 1}: ` : ''}${why}` : ''; }).filter(Boolean);
+  const sentence = t => t.charAt(0).toUpperCase() + t.slice(1);
+  const misreads = reads.map((r, i) => { const why = misread(r, intended); return why ? (recipe.cards ? `Card ${i + 1}: ${why}` : sentence(why)) : ''; }).filter(Boolean);
   const ok = misreads.length === 0;
   const inOrder = r => intended.map(p => say(r, p)).join(', then ');
   const thus = ok

@@ -24,9 +24,13 @@ const css = `
 .rh-ghost{position:fixed;z-index:80;pointer-events:none;transform:translate(-50%,-50%) scale(1.15)}
 `;
 const KEY = 'thro-handles';
-let on = false, dragging = false; try { on = localStorage.getItem(KEY) === 'on'; } catch { /* default off */ }
+// Out of the default view (Sam, 23 Oct 09:43–09:52): dragging these changed an order in storage and nothing on the card. Until they act on
+// the card itself they appear only with ?handles in the address.
+const enabled = new URLSearchParams(location.search).has('handles');
+let on = false, dragging = false; try { on = enabled && localStorage.getItem(KEY) === 'on'; } catch { /* default off */ }
 
 async function start() {
+  if (!enabled) return;
   for (let i = 0; i < 100 && !window.__thro; i++) await new Promise(r => setTimeout(r, 100));
   if (!window.__thro) return;
   const style = document.createElement('style'); style.textContent = css; document.head.append(style);

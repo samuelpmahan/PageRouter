@@ -5,6 +5,7 @@
 // Usage: node thro-handles-browser.mjs http://localhost:8766/ [screenshot-dir]. Env: PLAYWRIGHT_MODULE, CHROMIUM_PATH.
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ?? 'playwright');
 const base = new URL(process.argv[2] ?? 'http://localhost:8766/'), shots = process.argv[3];
+base.searchParams.set('handles', ''); // out of the default view since 23 Oct 09:52; reachable with ?handles
 const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 const failures = [], notes = [];
 const expect = (width, ok, message) => { if (!ok) failures.push(`${width}: ${message}`); };
