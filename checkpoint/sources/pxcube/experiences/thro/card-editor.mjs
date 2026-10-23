@@ -55,7 +55,9 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
   const view = () => {
     const vb = svg.viewBox?.baseVal, v = vb && vb.width ? vb : { x: 0, y: 0, width: W, height: H };
     const r = svg.getBoundingClientRect(), h = holder.getBoundingClientRect(), s = Math.min(r.width / v.width, r.height / v.height);
-    const ox = r.left - h.left + (r.width - v.width * s) / 2, oy = r.top - h.top + (r.height - v.height * s) / 2;
+    // Where the preview sits without the drag's own offset (the box and badges carry that offset themselves).
+    const [tx = 0, ty = 0] = (svg.style.translate || '').split(' ').map(parseFloat).map(n => (Number.isFinite(n) ? n : 0));
+    const ox = r.left - tx - h.left + (r.width - v.width * s) / 2, oy = r.top - ty - h.top + (r.height - v.height * s) / 2;
     return { s, x: x => ox + (x - v.x) * s, y: y => oy + (y - v.y) * s };
   };
   const put = (e, b, m) => Object.assign(e.style, { left: `${m.x(b.x)}px`, top: `${m.y(b.y)}px`, width: `${b.w * m.s}px`, height: `${b.h * m.s}px` });
@@ -135,12 +137,22 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
     // keep the card inside the frame; a nudge within 32 px of the corner snaps back to it
     const x = clamp(card.x + dx, 0, W - card.w) - card.x, y = clamp(card.y + dy, 0, H - card.h) - card.y;
     const next = { x: Math.round(nudge0.x + x), y: Math.round(nudge0.y + y) }, home = Math.hypot(next.x, next.y) < 32;
-    onChange({ nudge: home ? { x: 0, y: 0 } : next }, home ? 'Back in its corner' : 'Card moved');
+    const to = home ? { x: 0, y: 0 } : next;
+    if (to.x === nudge0.x && to.y === nudge0.y) return null; // where it already is: nothing to redraw
+    onChange({ nudge: to }, home ? 'Back in its corner' : 'Card moved');
+    return { x: to.x - nudge0.x, y: to.y - nudge0.y }; // where the new card will be drawn, from where this one is
   };
   box.addEventListener('pointerdown', e => {
     const m = view(); let dx = 0, dy = 0;
     track(box, e, (x, y) => { dx = x; dy = y; svg.style.translate = `${x}px ${y}px`; box.style.translate = `${x}px ${y}px`; },
-      (moved, cancelled) => { svg.style.translate = ''; box.style.translate = ''; if (moved && !cancelled) { begin('Move'); commitNudge(dx / m.s, dy / m.s); } });
+      (moved, cancelled) => {
+        const to = moved && !cancelled ? (begin('Move'), commitNudge(dx / m.s, dy / m.s)) : null;
+        // The card stays where the finger left it (or settles into its corner) until the redrawn card replaces it; it never
+        // jumps back to where it started while the new pixels are drawn. A redraw that never comes lets go after 2 s.
+        const at = to ? `${to.x * m.s}px ${to.y * m.s}px` : '';
+        svg.style.translate = at; box.style.translate = at; layer.classList.toggle('is-dragging', Boolean(to)); // badges come back on the new card
+        if (to) setTimeout(() => { if (svg.isConnected) { svg.style.translate = ''; box.style.translate = ''; layer.classList.remove('is-dragging'); } }, 2000);
+      });
   });
   box.addEventListener('keydown', e => {
     const step = e.shiftKey ? 40 : 8, d = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key];

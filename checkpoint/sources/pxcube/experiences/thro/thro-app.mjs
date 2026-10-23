@@ -177,14 +177,29 @@ function applyCrop(holder, graphic, box, force) {
   holder.style.aspectRatio = `${w.toFixed(1)} / ${h.toFixed(1)}`;
   holder.classList.add('is-closeup');
 }
+// A card moved by dragging is framed with where it was (the union of the two frames), so it is seen moving within the frame
+// instead of being re-centred where it started. Every other change frames the card alone; a different disc, layout, mode or
+// view starts afresh.
+let editFrame = null;
+function frameFor(graphic, bounds) {
+  const key = JSON.stringify([ui.mode, ui.selectedDisc, ui.design.study, graphic.width, graphic.height, ui.view, Boolean(capturedPreview)]);
+  if (!bounds) return bounds;
+  if (editFrame?.key === key && !capturedPreview && activeGesture()?.label === 'Move') {
+    const a = editFrame.box, x = Math.min(a.x, bounds.x), y = Math.min(a.y, bounds.y);
+    bounds = { x, y, width: Math.max(a.x + a.width, bounds.x + bounds.width) - x, height: Math.max(a.y + a.height, bounds.y + bounds.height) - y };
+  }
+  editFrame = { key, box: bounds };
+  return bounds;
+}
 const compactPortrait = graphic => Boolean(graphic?.provenance?.rasterOnly && graphic.width === 1080 && graphic.height === 1920 && matchMedia('(max-width:760px)').matches);
 function closeUp(holder, graphic, force = false) {
   const svg = holder.querySelector('svg');
   if (!svg || (!force && ui.view !== 'closeup')) return;
   if (graphic.provenance?.rasterOnly) {
     if (!force && compactPortrait(graphic)) return; // Dab's portrait framing handles phones (framePortraitPreview)
-    return rasterBounds(graphic.svg).then(bounds => {
-      if (!bounds || holder.querySelector('svg') !== svg) return;
+    return rasterBounds(graphic.svg).then(found => {
+      if (!found || holder.querySelector('svg') !== svg) return;
+      const bounds = force ? found : frameFor(graphic, found);
       applyCrop(holder, graphic, { x: bounds.x, y: bounds.y, w: bounds.width, h: bounds.height }, force);
     });
   }
@@ -433,7 +448,7 @@ async function framePortraitPreview(graphic) {
   if (ui.view !== 'closeup') return;
   holder.dataset.previewFraming = 'loading';
   try {
-    const bounds = await span('frame the close-up', () => portraitBounds(graphic, holder));
+    const bounds = frameFor(graphic, await span('frame the close-up', () => portraitBounds(graphic, holder)));
     if (request !== portraitFrameRequest || holder !== $('graphic-preview') || graphic !== currentGraphic()) return;
     title.textContent = capturedPreview ? 'Kept version: detail' : 'Artwork detail';
     toggle.textContent = 'Full canvas';
