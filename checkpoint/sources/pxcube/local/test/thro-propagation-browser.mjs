@@ -31,7 +31,7 @@ for (const width of [1280, 390]) {
   const palette = p.locator('.swatch-choice:not(.swatch-match)');
   const a = await step('accent A', () => tap(palette.nth(1)));
   expect(width, /^accent: /.test(a.latest.what), `accent A should say what changed, said "${a.latest.what}"`);
-  expect(width, a.latest.recomputed.join() === 'card recipe', `accent A should recompute only the card recipe, recomputed ${a.latest.recomputed.join(', ')}`);
+  expect(width, a.latest.recomputed.join() === 'card recipe,the photo check', `accent A should recompute only the card recipe and the photo check on it, recomputed ${a.latest.recomputed.join(', ')}`);
   expect(width, a.latest.reused.includes("the site's decisions"), 'accent A should reuse the site\'s decisions');
   expect(width, a.latest.pixel === 'drawn', `accent A pixels should be drawn, were ${a.latest.pixel}`);
   expect(width, a.toast?.includes('Recomputed: card recipe'), `the toast should show what accent A did, showed ${a.toast}`);
@@ -50,8 +50,9 @@ for (const width of [1280, 390]) {
   const d = await step('another disc', () => tap(discs.first()));
   expect(width, d.latest.what.includes('disc: '), `a disc change should name the disc, said "${d.latest.what}"`);
   expect(width, d.latest.recomputed.includes('card recipe'), 'a disc change should recompute the card recipe');
+  expect(width, /photo: the MVP Servo, Neutron photo \(servo\.jpg.* → the Discraft Buzzz SS, Z FLX photo \(buzzz-ss\.jpg/.test(d.latest.what), `a disc change should name both photos, said "${d.latest.what}"`);
   const l = await step('layout U04', () => tap(p.locator('[data-study="discstudio:u04"]')));
-  expect(width, l.latest.what.startsWith('layout: Hero rail → Kinetic name (and with it: '), `a layout change should name the layouts and what came with U04, said "${l.latest.what}"`);
+  expect(width, l.latest.what.startsWith("layout: Hero rail → Kinetic name (and with it: "), `a layout change should name the layouts and what came with U04, said "${l.latest.what}"`);
   // Bag: a lineup is one card recipe per disc. An accent change is said once for every card.
   await tap(p.locator('[data-mode="bag"]')); await p.waitForTimeout(2500);
   for (let i = 0; i < await p.locator('[data-disc]').count(); i++) if (await p.locator('[data-disc]').nth(i).getAttribute('aria-pressed') !== 'true') { await tap(p.locator('[data-disc]').nth(i)); await p.waitForTimeout(1500); }

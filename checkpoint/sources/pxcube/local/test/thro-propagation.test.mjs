@@ -2,14 +2,17 @@
 // what it recomputed and reused comes from the run's trace; what is on screen carries the four guarantees (the four causes).
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createThroWorld, screen, propagation, guarantees, recipeDefinition, definitionDiff } from '../../experiences/thro/thro-world.mjs';
+import fs from 'node:fs';
+import { createThroWorld, screen, propagation, guarantees, recipeDefinition, definitionDiff, photoDefinition } from '../../experiences/thro/thro-world.mjs';
 import { nativeBuild } from '../../experiences/thro/native-cards.mjs';
 
 const photo = 'b720aca1a38562e5ccba1e1ea5f82d4429d790fde1a983fad2b773b7b0c5ef2e';
 const servo = { id: 'sample-servo', mold: 'mvp--servo', plastic: 'Neutron', weight: null };
 const facts = { name: 'Servo', manufacturer: 'MVP', speed: 6.5, glide: 5, turn: -1, fade: 2 };
 const upright = { photo: { w: 277, angle: 0 }, name: { size: 69 }, numbers: { size: 29 }, other: [{ text: 'Neutron', size: 22 }] };
-const single = (design, layout = upright) => ({ disc: servo, facts, design: { rendererBuild: nativeBuild, ...design }, photo, layout });
+const fixture = JSON.parse(fs.readFileSync(new URL('../../experiences/thro/prepared-fixture.json', import.meta.url))).discs;
+const servoPhoto = photoDefinition(fixture.find(d => d.id === 'sample-servo'));
+const single = (design, layout = upright, photos = [servoPhoto]) => ({ disc: servo, facts, design: { rendererBuild: nativeBuild, ...design }, photo, layout, photos });
 const read = run => propagation(run.receipt).map(n => `${n.cached ? 'reused' : 'computed'} ${n.contract}${n.slot ? `#${n.slot}` : ''}`);
 
 test('an accent change recomputes only the card recipe; going back to an earlier accent reuses the whole run', () => {
@@ -17,8 +20,8 @@ test('an accent change recomputes only the card recipe; going back to an earlier
   const first = screen(world, single({ study: 'discstudio:b01', accent: '#c8f23d', nativeRevision: 2 }));
   assert.ok(read(first).every(line => line.startsWith('computed')));
   const red = screen(world, single({ study: 'discstudio:b01', accent: '#e4572e', nativeRevision: 2 }));
-  assert.deepEqual(read(red), ['reused thro.site', 'computed thro.card.recipe', 'reused thro.rule']);
-  assert.deepEqual(definitionDiff(recipeDefinition(first.outputs.recipe), recipeDefinition(red.outputs.recipe)), ['accent: #c8f23d → #e4572e']);
+  assert.deepEqual(read(red), ['reused thro.site', 'computed thro.card.recipe', 'reused thro.rule', 'computed thro.photo.material']);
+  assert.deepEqual(definitionDiff(recipeDefinition(first.outputs.recipe), recipeDefinition(red.outputs.recipe)), ["accent: the layout's own (#c8f23d) → custom #e4572e"]);
   const back = screen(world, single({ study: 'discstudio:b01', accent: '#c8f23d', nativeRevision: 2 }));
   const [whole] = propagation(back.receipt);
   assert.equal(whole.whole, true);
@@ -46,7 +49,9 @@ test('a lineup: the same change on every card is said once, a disc swap names it
   assert.deepEqual(read(swapped).filter(l => l.includes('card.recipe')), ['reused thro.card.recipe#card0', 'computed thro.card.recipe#card1', 'reused thro.card.recipe#card2']);
   assert.deepEqual(definitionDiff(recipeDefinition(a.outputs.recipe), recipeDefinition(swapped.outputs.recipe)), ['disc (card 2): MVP Buzzz, Neutron → MVP Wraith, Neutron']);
   const red = screen(world, lineup([card('a', 'Servo'), card('d', 'Wraith'), card('c', 'Roc3')], '#e4572e'));
-  assert.deepEqual(definitionDiff(recipeDefinition(swapped.outputs.recipe), recipeDefinition(red.outputs.recipe)), ['accent (cards 1, 2, 3): #c8f23d → #e4572e']);
+  assert.deepEqual(definitionDiff(recipeDefinition(swapped.outputs.recipe), recipeDefinition(red.outputs.recipe)), ['accent (cards 1, 2, 3): custom #c8f23d → custom #e4572e']);
+  const lime = screen(world, lineup([card('a', 'Servo'), card('d', 'Wraith'), card('c', 'Roc3')], '#c8f49d')), rose = screen(world, lineup([card('a', 'Servo'), card('d', 'Wraith'), card('c', 'Roc3')], '#ff4d6d'));
+  assert.deepEqual(definitionDiff(recipeDefinition(lime.outputs.recipe), recipeDefinition(rose.outputs.recipe)), ['accent (cards 1, 2, 3): Lime → Red'], 'palette colours by name');
 });
 
 test('the four guarantees: a card saved before the fix fails the efficient one, and a lineup says it cannot tell yet', () => {
@@ -76,4 +81,26 @@ test('the final cause is demonstrated, not asserted: what it is for, the premise
   assert.match(loud.demonstration.thus, /"MVP" \(34 px\) is read before the flight numbers \(29 px\)/);
   const tilted = guarantees(world, screen(world, single({ study: 'discstudio:b01' }, { ...upright, photo: { w: 277, angle: 12 } }))).find(g => g.cause === 'final');
   assert.match(tilted.demonstration.thus, /turned 12°, so the face a viewer recognises it by is not upright/);
+});
+
+test('a photo is defined by its disc, source and preparation; the hash is only the check, and the pixels do not move', async () => {
+  const { nativeCardRecipe } = await import('../../experiences/thro/native-cards.mjs');
+  assert.equal(servoPhoto.source, 'servo.jpg');
+  assert.equal(servoPhoto.of, 'MVP Servo, Neutron');
+  const world = createThroWorld();
+  const run = screen(world, single({ study: 'discstudio:b01', nativeRevision: 2 }));
+  const named = recipeDefinition(run.outputs.recipe, run.receipt.inputValues.photos).find(f => f.key === 'photo').value;
+  assert.match(named, /^the MVP Servo, Neutron photo \(servo\.jpg, cut to a 1013 × 1013 disc by ellipse refit \(version 2\)/);
+  const material = guarantees(world, run).find(g => g.cause === 'material');
+  assert.equal(material.ok, true);
+  assert.match(material.what, /the photo drawn is the one its definition names: the MVP Servo, Neutron photo/);
+  // the recipe (and so the pixel key) is exactly what it was: the definition rides beside it, not in it
+  assert.deepEqual(run.outputs.recipe, { ...nativeCardRecipe({ disc: servo, resolved: facts, design: { rendererBuild: nativeBuild, study: 'discstudio:b01', nativeRevision: 2 } }), photo });
+  const swapped = guarantees(world, screen(world, single({ study: 'discstudio:b01', nativeRevision: 2 }, upright, [photoDefinition(fixture.find(d => d.id === 'sample-buzzz-ss'))]))).find(g => g.cause === 'material');
+  assert.equal(swapped.ok, false, 'drawing the Servo bytes as the Buzzz SS photo fails the material check');
+  const unknown = guarantees(world, screen(world, single({ study: 'discstudio:b01', nativeRevision: 2 }, upright, [null]))).find(g => g.cause === 'material');
+  assert.equal(unknown.ok, null, 'a photo with no definition is unknown, not failed');
+  const buzzz = photoDefinition(fixture.find(d => d.id === 'sample-buzzz-ss'));
+  const b = screen(world, { ...single({ study: 'discstudio:b01', nativeRevision: 2 }), disc: { ...servo, id: 'sample-buzzz-ss' }, photo: buzzz.sha256, photos: [buzzz] });
+  assert.ok(definitionDiff(recipeDefinition(run.outputs.recipe, [servoPhoto]), recipeDefinition(b.outputs.recipe, [buzzz])).some(l => /^photo: the MVP Servo, Neutron photo .* → the Discraft Buzzz SS, Z FLX photo \(buzzz-ss\.jpg/.test(l)));
 });

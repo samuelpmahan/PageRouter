@@ -1,7 +1,7 @@
 import { openWorkspace } from './workspace.mjs';
-import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, cardLayout, latestCardRevision, useSiteCardRevision, pixelStats, nativeLineupPlan } from './native-cards.mjs';
+import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, cardLayout, latestCardRevision, useSiteCardRevision, pixelStats, nativeLineupPlan, accentPalette } from './native-cards.mjs';
 import { attachCardEditor, detachCardEditor } from './card-editor.mjs';
-import { createThroWorld, decide, screen, SITE_FILL } from './thro-world.mjs';
+import { createThroWorld, decide, screen, SITE_FILL, photoDefinition } from './thro-world.mjs';
 import { alphaBounds, fitArtwork } from './preview-frame.mjs';
 import { loadFixture } from './prepared-fixture.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
@@ -11,7 +11,7 @@ import { pngFromSvg, sha256, downloadBlob } from './renderer/src/media.js';
 const $ = id => document.getElementById(id);
 const debug = new URLSearchParams(location.search).get('debug') === '1';
 const root = $('workspace');
-let workspace, rows = [], currentResult = null, capturedPreview = null;
+let workspace, rows = [], currentResult = null, capturedPreview = null, fixtureDiscs = []; // fixtureDiscs: the prepared records, which define each photo
 let queue = Promise.resolve(), busy = false, failedIntent = null, recoveredDraft = null, buildInfo = null;
 let ui = { mode: 'single', selectedDisc: null, selection: [], design: { ...defaultDesign }, bagName: '', background: 'checker', view: 'closeup' };
 const keptResults = new Map();
@@ -246,7 +246,7 @@ async function paintCompositionThumbs() {
 }
 
 // ---- Accent swatches: one sampled from the disc, then a fixed palette ----
-const palette = [['#a6edda', 'Mint'], ['#c8f49d', 'Lime'], ['#ffd166', 'Gold'], ['#ff7a45', 'Orange'], ['#ff4d6d', 'Red'], ['#c77dff', 'Violet'], ['#4cc9f0', 'Sky'], ['#f6f3e9', 'Chalk']];
+const palette = accentPalette; // named in native-cards.mjs, so the world names accents the same way
 let discColour = null; // { disc, colour }
 function swatchMarkup(chosen) {
   const sampled = discColour && discColour.disc === (ui.mode === 'single' ? ui.selectedDisc : ui.selection[0]) ? discColour.colour : null;
@@ -500,7 +500,8 @@ function runScreen() {
       const entries = material.entries.map(entry => { const disc = value(entry.address); return { id: entry.id, disc, resolved: workspace.model.experience.resolve(disc) }; });
       const plan = nativeLineupPlan({ material, design: ui.design, entries });
       const inputs = { preset: plan.preset, featured: plan.featured, layouts,
-        cards: plan.cards.map((card, i) => ({ disc: pickDisc(card.disc), facts: pickFacts(card.resolved), design: card.design, photo: graphic.provenance.preparedPhotoSha256[i] })) };
+        cards: plan.cards.map((card, i) => ({ disc: pickDisc(card.disc), facts: pickFacts(card.resolved), design: card.design, photo: graphic.provenance.preparedPhotoSha256[i] })),
+        photos: plan.cards.map(card => photoOf(card.disc)) };
       return announce(screen(throWorld, inputs, viewerFill()));
     }
     if (ui.mode !== 'single' || !graphic?.provenance?.rasterOnly || !isNativeStudy(ui.design.study)) return;
@@ -508,10 +509,14 @@ function runScreen() {
     if (!layout || Array.isArray(layout)) return;
     const inputs = { disc: { id: disc.id, mold: disc.mold, plastic: disc.plastic ?? null, weight: disc.weight ?? null },
       facts: { name: facts.name, manufacturer: facts.manufacturer, speed: facts.speed ?? null, glide: facts.glide ?? null, turn: facts.turn ?? null, fade: facts.fade ?? null },
-      design: structuredClone(ui.design), photo: graphic.provenance.preparedPhotoSha256, layout };
+      design: structuredClone(ui.design), photo: graphic.provenance.preparedPhotoSha256, layout, photos: [photoOf(disc)] };
     return announce(screen(throWorld, inputs, viewerFill()));
   } catch (error) { window.__thro.screen = { error: String(error) }; }
 }
+// A photo's definition (which disc, which source photo, which preparation) from its prepared record, found by which disc it is
+// (mold and plastic, as a person names a disc), never by the photo's hash: that would make the material check prove itself.
+// Null when no record or more than one matches.
+const photoOf = disc => { const found = fixtureDiscs.filter(record => `ds.px.seed.${record.mold}` === disc.mold && (record.plastic ?? null) === (disc.plastic ?? null)); return found.length === 1 ? photoDefinition(found[0]) : null; };
 // Each screen run says whether this exact recipe's pixels were drawn now or reused, and tells the DTree (rung 4: what a change did).
 function announce(run) {
   window.__thro.screen = { ...run, stats: throWorld.stats(), pixels: { drawn: pixelStats.drawn, reused: pixelStats.reused }, pixel: pixelStats.byRecipe.get(run.recipeHash) ?? null };
@@ -800,7 +805,7 @@ $('reload-latest').onclick = () => {
 };
 
 try {
-  const fixture = await loadFixture();
+  const fixture = await loadFixture(); fixtureDiscs = fixture;
   workspace = await openWorkspace({ storage: localStorage, locks: navigator.locks, fixture });
   rows = await workspace.model.shelfForDisplay(); adoptContext();
   window.__throStarted?.();

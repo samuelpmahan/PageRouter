@@ -154,6 +154,9 @@ export const lineupRequestRecipe = (plan, requests, photos) => ({ preset: plan.p
 /** The recipe inside a renderer request (photo by SHA-256), and the hash the kernel gives that Part. */
 export const requestRecipe = (request, photo) => { const { disc: { depiction, ...disc }, photoSrc, ...rest } = request; return { disc, ...rest, photo }; };
 export const recipePartHash = recipe => hashString(canonical(recipe));
+/** The accent palette, by name (the app's swatches and the world's definitions read this one list). */
+export const accentPalette = Object.freeze([['#a6edda', 'Mint'], ['#c8f49d', 'Lime'], ['#ffd166', 'Gold'], ['#ff7a45', 'Orange'], ['#ff4d6d', 'Red'], ['#c77dff', 'Violet'], ['#4cc9f0', 'Sky'], ['#f6f3e9', 'Chalk']].map(pair => Object.freeze(pair)));
+export const accentName = hex => accentPalette.find(([value]) => value.toLowerCase() === String(hex).toLowerCase())?.[1] ?? null;
 export const pixelStats = { drawn: 0, reused: 0, byRecipe: new Map() }; // byRecipe: recipe Part hash → 'drawn' | 'reused', the latest outcome for it
 const notePixels = (key, cached) => { pixelStats[cached ? 'reused' : 'drawn']++; pixelStats.byRecipe.delete(key); pixelStats.byRecipe.set(key, cached ? 'reused' : 'drawn'); if (pixelStats.byRecipe.size > 80) pixelStats.byRecipe.delete(pixelStats.byRecipe.keys().next().value); };
 export function createNativeRenderer(renderCard = async request => {

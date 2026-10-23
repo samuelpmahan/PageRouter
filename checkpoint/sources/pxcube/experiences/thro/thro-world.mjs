@@ -9,7 +9,7 @@
 // The kernel decides; the DiscStudio card renderer draws whatever recipe was decided (it is async canvas
 // work, and kernel runs are synchronous), so pixels stay outside the world and recipes stay inside it.
 import { createWorld } from './pxc/kernel.mjs';
-import { nativeCardRecipe, nativeBuild, cardRevisions, nativeStudies, lineupStudies } from './native-cards.mjs';
+import { nativeCardRecipe, nativeBuild, cardRevisions, nativeStudies, lineupStudies, accentName } from './native-cards.mjs';
 
 /** The site's decisions: the fill. Who decided each, and when, is on the implementation it names. */
 export const SITE_FILL = Object.freeze({
@@ -51,7 +51,7 @@ export function createThroWorld() {
   // ---- Sam's rule: a check, proven by real measurements from the renderer.
   world.contract({ id: 'thro.rule', kind: 'check', in: { layout: { type: 'object' } }, out: { accepted: { type: 'boolean' }, reason: { type: 'string' } },
     description: 'What matters most on a card?',
-    notes: 'DISC IMAGE > MOLD NAME > FLIGHT NUMBERS > everything else. Flight numbers carry no labels: written like a score, 6.5 · 5 · −1 · 2. (Sam, 22 Oct)',
+    notes: 'DISC IMAGE > MOLD NAME > FLIGHT NUMBERS > everything else. Flight numbers carry no labels: written like a score, 6.5 · 5 · −1 · 2. (Sam, 22 Oct.) A working scaffold, not a law of design: it keeps agent-made cards consistent and makes agents drop what does not matter. It binds agents; on a person\'s own card it is a reference line they can overrule. (Sam, 22 Oct, 23:31)',
     examples: [
       { name: 'B01 Servo as drawn (iter-16)', in: { layout: { photo: { w: 277, skewed: false }, name: { size: 53 }, numbers: { size: 22 }, other: [{ text: 'Neutron', size: 17 }] } }, out: { accepted: true } },
       { name: 'U04 Servo as drawn: the manufacturer outranks the numbers', in: { layout: { photo: { w: 238, skewed: false }, name: { size: 57 }, numbers: { size: 22 }, other: [{ text: 'MVP', size: 25 }] } }, out: { accepted: false } },
@@ -140,34 +140,62 @@ export function createThroWorld() {
       return { accepted: !failing.length, reason: failing.length ? failing.map(([i, v]) => `Card ${i + 1}: ${v.reason.value}`).join(' ') : `All ${verdicts.length} cards keep the rule.` };
     } });
 
+  // ---- The material guarantee as a check: the bytes drawn are the bytes the photo's definition names.
+  // A photo is defined by which disc it shows, its source file and its preparation; the SHA-256 is only how the bytes are checked.
+  const servoPhoto = { disc: 'sample-servo', of: 'MVP Servo, Neutron', source: 'servo.jpg', prepared: 'assets/discs/sample-servo.webp', size: '1013 × 1013', preparation: 'ellipse refit (version 2), turned 3°', build: 'a9ba3f6b86f5fb1e', sha256: servo.photo };
+  world.contract({ id: 'thro.photo.material', kind: 'check', description: 'Is each photo drawn the one its definition names?',
+    notes: 'The recipe carries the prepared bytes\' SHA-256; the definition says which photo that should be. Same bytes: the photo is what it says it is.',
+    in: { photos: { type: 'array' }, recipe: { type: 'object' } }, out: { accepted: { type: 'boolean' }, reason: { type: 'string' } },
+    examples: [
+      { name: 'the Servo card drawn from the Servo photo', in: { photos: [servoPhoto], recipe: { photo: servo.photo } }, out: { accepted: true } },
+      { name: 'the Servo card drawn from other bytes', in: { photos: [servoPhoto], recipe: { photo: 'd1d03b92'.padEnd(64, '0') } }, out: { accepted: false } },
+      { name: 'a photo with no definition yet', in: { photos: [null], recipe: { photo: servo.photo } }, out: { accepted: false } },
+    ] });
+  world.implement({ id: 'thro.photo.material/sha256', implements: 'thro.photo.material', description: 'Compare the bytes drawn with the bytes each definition names, by SHA-256.',
+    origin: { by: 'claude-ed (rung 5)', iters: [33] },
+    run: ({ photos, recipe }) => {
+      const cards = recipe.value.cards ?? [recipe.value], defs = photos.value, lineup = Boolean(recipe.value.cards);
+      const problems = cards.map((card, i) => {
+        const def = defs[i], at = lineup ? `Card ${i + 1}: ` : '';
+        if (!def) return `${at}this photo has no definition yet; only its bytes are known.`;
+        if (def.sha256 !== card.photo) return `${at}the bytes drawn are not ${photoWords(def)}.`;
+        return null;
+      }).filter(Boolean);
+      return problems.length ? { accepted: false, reason: problems.join(' ') }
+        : { accepted: true, reason: `${cards.length === 1 ? 'The photo drawn is' : 'Each photo drawn is'} the one its definition names: ${defs.slice(0, cards.length).map(photoWords).join('; ')}.` };
+    } });
+
   // ---- The screen: one run from the site's decisions down to the card on screen and Sam's rule on it.
   // The layout is what the renderer measured while drawing that recipe, so the rule judges the actual card.
   world.contract({ id: 'thro.screen', description: 'What is on screen, and does it keep the rule?',
-    in: { disc: { type: 'object' }, facts: { type: 'object' }, design: { type: 'object' }, photo: { type: 'string' }, layout: { type: 'object' } },
-    out: { single: { type: 'string' }, bag: { type: 'string' }, battle: { type: 'string' }, revision: { type: 'integer' }, recipe: { type: 'object' }, accepted: { type: 'boolean' }, reason: { type: 'string' } } });
+    in: { disc: { type: 'object' }, facts: { type: 'object' }, design: { type: 'object' }, photo: { type: 'string' }, layout: { type: 'object' }, photos: { type: 'array' } },
+    out: { single: { type: 'string' }, bag: { type: 'string' }, battle: { type: 'string' }, revision: { type: 'integer' }, recipe: { type: 'object' }, accepted: { type: 'boolean' }, reason: { type: 'string' }, material: { type: 'boolean' }, materialReason: { type: 'string' } } });
   world.compose({ id: 'thro.screen/thro', implements: 'thro.screen',
     steps: [
       { name: 'site', call: 'thro.site', bind: {} },
       { name: 'card', call: 'thro.card.recipe', bind: { disc: '$in.disc', facts: '$in.facts', design: '$in.design', photo: '$in.photo' } },
       { name: 'rule', call: 'thro.rule', bind: { layout: '$in.layout' } },
+      { name: 'photos', call: 'thro.photo.material', bind: { photos: '$in.photos', recipe: 'card.recipe' } },
     ],
-    returns: { single: 'site.single', bag: 'site.bag', battle: 'site.battle', revision: 'site.revision', recipe: 'card.recipe', accepted: 'rule.accepted', reason: 'rule.reason' } });
+    returns: { single: 'site.single', bag: 'site.bag', battle: 'site.battle', revision: 'site.revision', recipe: 'card.recipe', accepted: 'rule.accepted', reason: 'rule.reason', material: 'photos.accepted', materialReason: 'photos.reason' } });
   world.contract({ id: 'thro.screen.lineup', description: 'What is on screen (a lineup), and does every card keep the rule?',
-    in: { preset: { type: 'string' }, featured: { oneOf: [{ type: 'integer' }, { type: 'null' }] }, cards: { type: 'array' }, layouts: { type: 'array' } },
-    out: { single: { type: 'string' }, bag: { type: 'string' }, battle: { type: 'string' }, revision: { type: 'integer' }, recipe: { type: 'object' }, accepted: { type: 'boolean' }, reason: { type: 'string' } } });
+    in: { preset: { type: 'string' }, featured: { oneOf: [{ type: 'integer' }, { type: 'null' }] }, cards: { type: 'array' }, layouts: { type: 'array' }, photos: { type: 'array' } },
+    out: { single: { type: 'string' }, bag: { type: 'string' }, battle: { type: 'string' }, revision: { type: 'integer' }, recipe: { type: 'object' }, accepted: { type: 'boolean' }, reason: { type: 'string' }, material: { type: 'boolean' }, materialReason: { type: 'string' } } });
   world.compose({ id: 'thro.screen.lineup/thro', implements: 'thro.screen.lineup',
     steps: [
       { name: 'site', call: 'thro.site', bind: {} },
       { name: 'lineup', call: 'thro.lineup.recipe', bind: { preset: '$in.preset', featured: '$in.featured', cards: '$in.cards' } },
       { name: 'rule', call: 'thro.lineup.rule', bind: { layouts: '$in.layouts' } },
+      { name: 'photos', call: 'thro.photo.material', bind: { photos: '$in.photos', recipe: 'lineup.recipe' } },
     ],
-    returns: { single: 'site.single', bag: 'site.bag', battle: 'site.battle', revision: 'site.revision', recipe: 'lineup.recipe', accepted: 'rule.accepted', reason: 'rule.reason' } });
+    returns: { single: 'site.single', bag: 'site.bag', battle: 'site.battle', revision: 'site.revision', recipe: 'lineup.recipe', accepted: 'rule.accepted', reason: 'rule.reason', material: 'photos.accepted', materialReason: 'photos.reason' } });
   return world;
 }
 
 /** Run the screen: the site under the fill, the card on screen, and the rule on its measured layout. */
 export function screen(world, inputs, fill = SITE_FILL) {
-  const { outputs, receipt } = world.run(inputs.cards ? 'thro.screen.lineup' : 'thro.screen', inputs, { fill: { ...fill }, landing: 'none' });
+  const photos = inputs.photos ?? (inputs.cards ?? [inputs]).map(() => null); // a photo with no definition says so
+  const { outputs, receipt } = world.run(inputs.cards ? 'thro.screen.lineup' : 'thro.screen', { ...inputs, photos }, { fill: { ...fill }, landing: 'none' });
   return { outputs, receipt, recipeHash: receipt.outputs.recipe }; // the receipt names every output by its Part hash
 }
 
@@ -182,36 +210,49 @@ export function decide(world, fill = SITE_FILL) {
 // The Part hash is only an index for "same definition?" and a check that the bytes match; it is never shown as what a thing is.
 const num = v => (v === null || v === undefined ? '–' : String(v).replace('-', '−'));
 const discName = d => [d?.manufacturer, d?.name].filter(Boolean).join(' ') + (d?.plastic ? `, ${d.plastic}` : '');
-const photoName = h => (typeof h === 'string' && /^[0-9a-f]{64}$/.test(h) ? `known only by its hash (${h.slice(0, 8)}…)` : 'missing');
+const photoName = (h, def) => (def && def.sha256 === h ? photoWords(def) : typeof h === 'string' && /^[0-9a-f]{64}$/.test(h) ? `known only by its hash (${h.slice(0, 8)}…)` : 'missing');
+/** How a photo is said: which disc, which source, which preparation. */
+export function photoWords(def) { return `the ${def.of} photo (${def.source ?? 'source unknown'}${def.size ? `, cut to a ${def.size} disc` : ''}${def.preparation ? ` by ${def.preparation}` : ''})`; }
+/** A photo's definition from its prepared record: which disc, the source photo, the preparation. The SHA-256 is kept only as the check. */
+export function photoDefinition(record) {
+  if (!record || !/^[0-9a-f]{64}$/.test(record.sha256 ?? '')) return null;
+  const refit = record.preparation?.refit, turn = refit?.rotation ? Math.round(refit.rotation * 180 / Math.PI) : 0;
+  return { disc: record.id, of: `${record.manufacturer} ${record.name}${record.plastic ? `, ${record.plastic}` : ''}`, source: record.original ?? null, prepared: record.file ?? null,
+    size: record.width && record.height ? `${record.width} × ${record.height}` : null,
+    preparation: refit ? `${refit.kind === 'ellipse' ? 'ellipse' : 'circle'} refit (version ${refit.version})${turn ? `, turned ${turn}°` : ''}` : null,
+    build: record.preparation?.sourceBuild ?? null, sha256: record.sha256 };
+}
+// An accent is said by its palette name; the layout's own accent as such; anything else is a custom colour.
+const accentWords = (hex, study) => accentName(hex) ?? (study && String(study.accent).toLowerCase() === String(hex).toLowerCase() ? `the layout's own (${hex})` : hex === undefined ? undefined : `custom ${hex}`);
 // A layout is named by what it is (Hero rail), not its code (B01); the code is a name by convention, like a hash.
 const layoutName = (id, list) => { const study = list.find(s => s.id === id); return study ? String(study.label ?? study.name).replace(/^[A-Z0-9-]+(?: ·)? /, '') : id; };
-function cardFeatures(r, prefix = '', label = '') {
+function cardFeatures(r, prefix = '', label = '', photo = null) {
   const a = r.appearance ?? {}, f = [], study = nativeStudies.find(s => s.id === `discstudio:${r.preset}`);
   // A proprium: side and highlight follow from the layout when they are its own; otherwise they were chosen.
   const add = (key, name, value, follows) => { if (value !== undefined) f.push({ key: prefix + key, label: label + name, value, ...(follows ? { follows: 'layout' } : {}) }); };
   add('disc', 'disc', discName(r.disc));
   add('flights', 'flight numbers', (r.flights ?? []).map(num).join(' · '));
-  add('accent', 'accent', a.accentColor);
+  add('accent', 'accent', accentWords(a.accentColor, study));
   add('side', 'disc side', a.discSide, study && a.discSide === study.side);
   add('highlight', 'highlight', a.highlightTarget, study && a.highlightTarget === study.highlight);
   add('plate', 'plate', a.plate);
-  add('photo', 'photo', photoName(r.photo));
+  add('photo', 'photo', photoName(r.photo, photo));
   return f;
 }
 /** A recipe's definition: its features in order, each { key, label, value }. Two recipes with the same definition are the same card. */
-export function recipeDefinition(recipe) {
+export function recipeDefinition(recipe, photos = []) {
   if (!recipe) return [];
   if (recipe.cards) return [
     { key: 'kind', label: 'graphic', value: 'Bag lineup' },
     { key: 'layout', label: 'layout', value: layoutName(`discstudio-lineup:${recipe.preset}`, lineupStudies) },
     { key: 'discs', label: 'discs', value: recipe.cards.map(c => c.disc?.name).join(', ') },
     { key: 'featured', label: 'featured', value: recipe.featured === null || recipe.featured === undefined ? 'none' : recipe.cards[recipe.featured]?.disc?.name },
-    ...recipe.cards.flatMap((c, i) => cardFeatures(c, `card${i + 1}.`, `card ${i + 1} `)),
+    ...recipe.cards.flatMap((c, i) => cardFeatures(c, `card${i + 1}.`, `card ${i + 1} `, photos[i])),
   ];
   return [
     { key: 'kind', label: 'graphic', value: 'Single card' },
     { key: 'layout', label: 'layout', value: layoutName(`discstudio:${recipe.preset}`, nativeStudies) },
-    ...cardFeatures(recipe),
+    ...cardFeatures(recipe, '', '', photos[0]),
     { key: 'size', label: 'size', value: recipe.scale === undefined ? undefined : `${Math.round(recipe.scale * 100)}%` },
     { key: 'position', label: 'position', value: recipe.nudge ? `${num(recipe.nudge.x)}, ${num(recipe.nudge.y)}` : 'as laid out' },
     { key: 'drawing', label: 'drawing', value: `revision ${recipe.revision ?? 1}` },
@@ -234,8 +275,8 @@ export function definitionDiff(before, after) {
     if (!groups.has(g)) groups.set(g, { feature, from: x?.value ?? 'none', to: y?.value ?? 'none', cards: [] });
     if (m) groups.get(g).cards.push(Number(m[1]));
   }
-  // A photo has no definition yet, only a hash: say that it changed, not two strings of hex.
-  const lines = [...groups.values()].map(g => `${g.feature}${g.cards.length ? (g.cards.length > 1 ? ` (cards ${g.cards.join(', ')})` : ` (card ${g.cards[0]})`) : ''}: ${g.feature === 'photo' ? 'a different photo, known only by its hash' : `${g.from} → ${g.to}`}`);
+  // A photo with no definition is known only by its hash: say that it changed, not two strings of hex.
+  const lines = [...groups.values()].map(g => `${g.feature}${g.cards.length ? (g.cards.length > 1 ? ` (cards ${g.cards.join(', ')})` : ` (card ${g.cards[0]})`) : ''}: ${g.feature === 'photo' && /known only by its hash/.test(g.to) ? 'a different photo, known only by its hash' : `${g.from} → ${g.to}`}`);
   if (withLayout.length) lines[lines.findIndex(l => l.startsWith('layout: '))] += ` (and with it: ${withLayout.join(', ')})`;
   return lines;
 }
@@ -254,7 +295,6 @@ export function propagation(receipt) {
  * have, what made it, and what it is for. ok is true, false, or null when the world cannot say yet. */
 export function guarantees(world, run) {
   const o = run.outputs, recipe = o.recipe, cards = recipe.cards ?? [recipe];
-  const hashed = cards.filter(c => /^[0-9a-f]{64}$/.test(c.photo ?? '')).length;
   const proofs = world.prove('thro.card.recipe');
   const makers = propagation(run.receipt).filter(n => !n.contract.startsWith('thro.screen'));
   const madeBy = [...new Set(makers.map(n => n.impl))];
@@ -267,8 +307,9 @@ export function guarantees(world, run) {
       : { ok: false, what: `Drawn with card revision ${have}; the site now draws revision ${want}. This card was saved before the fix and keeps its drawing until you choose.` };
   }
   return [
-    { cause: 'material', question: 'What is it made from?', ok: hashed === cards.length,
-      what: `${cards.map(c => discName(c.disc)).join('; ')}: the disc facts, plus ${cards.length === 1 ? 'the prepared photo' : `${cards.length} prepared photos`}, each known only by its hash for now.` },
+    // Checked in the world (thro.photo.material): unknown, not failed, when a photo has no definition yet.
+    { cause: 'material', question: 'What is it made from?', ok: (run.receipt.inputValues?.photos ?? []).slice(0, cards.length).some(p => !p) ? null : o.material,
+      what: `The disc facts for ${cards.map(c => discName(c.disc)).join('; ')}, and ${o.materialReason.charAt(0).toLowerCase()}${o.materialReason.slice(1)}` },
     { cause: 'formal', question: 'What shape must it have?', ok: proofs.length > 0 && proofs.every(p => p.ok),
       what: `The recipe has the shape thro.card.recipe declares; its ${proofs.length} examples prove the implementation (${proofs.filter(p => p.ok).length}/${proofs.length}).` },
     { cause: 'efficient', question: 'What made it, and is that what the site decided?', ...efficient },
@@ -281,7 +322,9 @@ export function guarantees(world, run) {
 export const PURPOSE = Object.freeze({
   card: 'Someone watching a disc golf video knows at a glance which disc is being thrown and how it flies.',
   lineup: 'Someone watching compares these discs side by side, reading each one the same way.',
-  reading: 'The eye reads a graphic biggest first, so the order of sizes is the order of reading. A disc is recognised by its face, upright, and a flight number needs no label to be read as one. (True for the most part, as design rules are: break it only where the card still does its job and you can say why.)',
+  reading: 'Bigger usually reads first, a disc is recognised by its face upright, and a flight number needs no label. A rule of thumb about reading, not a law.',
+  // What the rule is for, and whom it binds (Sam, 22 Oct, 23:31): a pragmatic scaffold, kept visible as one so it never hardens into what must be.
+  scaffold: 'Sam\'s order (disc image, mold name, flight numbers, everything else) is a working scaffold: it keeps agent-made cards consistent and makes agents drop what does not matter. It binds agents. A card can break it and still serve its purpose.',
 });
 const px = v => `${Math.round(v ?? 0)} px`;
 function readingOf(layout, name, flights) {
@@ -308,7 +351,7 @@ function finalCause(run) {
   const thus = o.accepted
     ? (recipe.cards ? `Every card is read in the same order (${reads.map(order).join('; ')}), so like is compared with like.` : `A viewer sees ${order(reads[0])}: the order the purpose needs.`)
     : `Not served. ${reads.map((r, i) => { const why = misread(r); return why ? `${recipe.cards ? `Card ${i + 1}: ` : ''}${why}` : ''; }).filter(Boolean).join(' ') || o.reason}`;
-  const demonstration = { for: recipe.cards ? PURPOSE.lineup : PURPOSE.card, because: PURPOSE.reading, does, thus };
+  const demonstration = { for: recipe.cards ? PURPOSE.lineup : PURPOSE.card, because: PURPOSE.reading, scaffold: PURPOSE.scaffold, does, thus };
   return { cause: 'final', question: 'What is it for, and does it do it?', ok: o.accepted, demonstration,
     what: `This is for: ${demonstration.for} Because: ${demonstration.because} It does: ${demonstration.does} Thus: ${demonstration.thus}${o.accepted ? ' QED.' : ''}` };
 }
