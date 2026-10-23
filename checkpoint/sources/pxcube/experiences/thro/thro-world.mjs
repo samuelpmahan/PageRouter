@@ -272,6 +272,43 @@ export function guarantees(world, run) {
     { cause: 'formal', question: 'What shape must it have?', ok: proofs.length > 0 && proofs.every(p => p.ok),
       what: `The recipe has the shape thro.card.recipe declares; its ${proofs.length} examples prove the implementation (${proofs.filter(p => p.ok).length}/${proofs.length}).` },
     { cause: 'efficient', question: 'What made it, and is that what the site decided?', ...efficient },
-    { cause: 'final', question: 'Does it do what it\'s for?', ok: o.accepted, what: `Sam's rule: ${o.reason}` },
+    finalCause(run),
   ];
+}
+
+// ---- The final cause, demonstrated (Sam, 22 Oct: '"I followed the rule" is a copout. This is for… It does… Thus… QED').
+// The purpose is the major premise; the rule is not the reason, it is the purpose applied through one premise about reading.
+export const PURPOSE = Object.freeze({
+  card: 'Someone watching a disc golf video knows at a glance which disc is being thrown and how it flies.',
+  lineup: 'Someone watching compares these discs side by side, reading each one the same way.',
+  reading: 'The eye reads a graphic biggest first, so the order of sizes is the order of reading. A disc is recognised by its face, upright, and a flight number needs no label to be read as one. (True for the most part, as design rules are: break it only where the card still does its job and you can say why.)',
+});
+const px = v => `${Math.round(v ?? 0)} px`;
+function readingOf(layout, name, flights) {
+  const other = (layout?.other ?? []).reduce((best, item) => (item.size > best.size ? item : best), { size: 0, text: '' });
+  return { angle: layout?.photo?.angle ?? 0, skewed: Boolean(layout?.photo?.skewed), labels: (layout?.other ?? []).filter(item => /^(speed|glide|turn|fade)$/i.test(String(item.text).trim())).map(item => item.text), disc: layout?.photo?.w ?? 0, name: layout?.name?.size ?? 0, numbers: layout?.numbers?.size ?? 0, other, nameText: name, numbersText: (flights ?? []).map(num).join(' · ') };
+}
+// What a viewer reads out of order, as a consequence for the purpose (null when the sizes keep the reading order).
+function misread(r) {
+  if (!(r.disc > r.name)) return `the name ${r.nameText} (${px(r.name)}) is read before the disc (${px(r.disc)}), so the viewer reads a word before seeing which disc it is.`;
+  if (!(r.name > r.numbers)) return `the numbers (${px(r.numbers)}) are read before the name ${r.nameText} (${px(r.name)}), so how it flies comes before which disc it is.`;
+  if (r.labels.length) return `the numbers carry labels ("${r.labels.join('", "')}"), so the viewer reads words where a glance should do.`;
+  if (r.skewed) return 'the disc photo is squashed, so the face a viewer recognises a disc by is distorted.';
+  if (Math.abs(r.angle) > 0.5) return `the disc is turned ${Math.round(r.angle)}°, so the face a viewer recognises it by is not upright.`;
+  if (!(r.numbers > r.other.size)) return `"${r.other.text}" (${px(r.other.size)}) is read before the flight numbers (${px(r.numbers)}), so the viewer gets "${r.other.text}" before how the disc flies.`;
+  return null;
+}
+function finalCause(run) {
+  const o = run.outputs, recipe = o.recipe, inputs = run.receipt.inputValues ?? {};
+  const cards = recipe.cards ?? [recipe], layouts = recipe.cards ? inputs.layouts ?? [] : [inputs.layout];
+  const reads = cards.map((c, i) => readingOf(layouts[i], c.disc?.name, c.flights));
+  const sizes = r => `disc photo ${px(r.disc)}, the name ${r.nameText} ${px(r.name)}, the numbers ${r.numbersText} ${px(r.numbers)}, the largest other text${r.other.text ? ` ("${r.other.text}")` : ''} ${px(r.other.size)}`;
+  const does = recipe.cards ? `Card by card: ${reads.map((r, i) => `${i + 1}. ${r.nameText}: ${sizes(r)}`).join('; ')}.` : `On this card: ${sizes(reads[0])}.`;
+  const order = r => `the disc, then ${r.nameText}, then ${r.numbersText}, and only then anything else`;
+  const thus = o.accepted
+    ? (recipe.cards ? `Every card is read in the same order (${reads.map(order).join('; ')}), so like is compared with like.` : `A viewer sees ${order(reads[0])}: the order the purpose needs.`)
+    : `Not served. ${reads.map((r, i) => { const why = misread(r); return why ? `${recipe.cards ? `Card ${i + 1}: ` : ''}${why}` : ''; }).filter(Boolean).join(' ') || o.reason}`;
+  const demonstration = { for: recipe.cards ? PURPOSE.lineup : PURPOSE.card, because: PURPOSE.reading, does, thus };
+  return { cause: 'final', question: 'What is it for, and does it do it?', ok: o.accepted, demonstration,
+    what: `This is for: ${demonstration.for} Because: ${demonstration.because} It does: ${demonstration.does} Thus: ${demonstration.thus}${o.accepted ? ' QED.' : ''}` };
 }

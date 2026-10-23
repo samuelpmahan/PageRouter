@@ -61,3 +61,19 @@ test('the four guarantees: a card saved before the fix fails the efficient one, 
   const lineup = guarantees(world, screen(world, { preset: 'l01', featured: null, layouts: [upright, upright], cards: [card, { ...card, disc: { ...servo, id: 'b' } }] }));
   assert.equal(lineup.find(g => g.cause === 'efficient').ok, null);
 });
+
+test('the final cause is demonstrated, not asserted: what it is for, the premise, what this card does, thus', () => {
+  const world = createThroWorld();
+  const fine = guarantees(world, screen(world, single({ study: 'discstudio:b01', nativeRevision: 2 }))).find(g => g.cause === 'final');
+  assert.ok(fine.ok);
+  assert.match(fine.demonstration.for, /knows at a glance which disc/);
+  assert.match(fine.demonstration.does, /disc photo 277 px, the name Servo 69 px, the numbers 6\.5 · 5 · −1 · 2 29 px/);
+  assert.match(fine.demonstration.thus, /sees the disc, then Servo, then 6\.5 · 5 · −1 · 2/);
+  assert.ok(!/Sam's rule:/.test(fine.what), 'the rule is not the reason');
+  const u04 = { photo: { w: 238 }, name: { size: 74 }, numbers: { size: 29 }, other: [{ text: 'MVP', size: 34 }] };
+  const loud = guarantees(world, screen(world, single({ study: 'discstudio:u04' }, u04))).find(g => g.cause === 'final');
+  assert.equal(loud.ok, false);
+  assert.match(loud.demonstration.thus, /"MVP" \(34 px\) is read before the flight numbers \(29 px\)/);
+  const tilted = guarantees(world, screen(world, single({ study: 'discstudio:b01' }, { ...upright, photo: { w: 277, angle: 12 } }))).find(g => g.cause === 'final');
+  assert.match(tilted.demonstration.thus, /turned 12°, so the face a viewer recognises it by is not upright/);
+});

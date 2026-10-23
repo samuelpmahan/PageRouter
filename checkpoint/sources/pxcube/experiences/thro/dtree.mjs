@@ -57,7 +57,7 @@ const css = `
 .dtree .dt-re{color:#ffd166}.dtree .dt-ru{color:#c8f49d}
 .dtree .dt-g{display:grid;grid-template-columns:auto 1fr;gap:4px 8px;margin:8px 0 0;font-size:12px;align-items:start}
 .dtree .dt-g .dt-chip{margin:1px 0 0}.dtree .dt-chip.cause{background:#2d3a31;color:#e9f1e4}
-.dtree .dt-g p{margin:0}.dtree .dt-g b.ok{color:#c8f49d}.dtree .dt-g b.no{color:#ff9e80}.dtree .dt-g b.unknown{color:#ffd166}
+.dtree .dt-g p{margin:0}.dtree .dt-proof{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:3px}.dtree .dt-proof li{margin:0}.dtree .dt-proof em{font-style:normal;font-weight:800;color:#c8f49d;margin-right:4px}.dtree .dt-qed{margin:2px 0 0;font-weight:800;letter-spacing:.12em;color:#c8f49d;font-size:11px}.dtree .dt-g b.ok{color:#c8f49d}.dtree .dt-g b.no{color:#ff9e80}.dtree .dt-g b.unknown{color:#ffd166}
 .dtree .dt-def{margin:6px 0 0;font-size:12px;color:#cfe3c9}.dtree .dt-def span{display:inline-block;margin:2px 6px 0 0}.dtree .dt-def em{font-style:normal;color:#7f9384}
 .dtree-toast{position:absolute;z-index:58;max-width:min(560px,calc(100vw - 32px));padding:9px 12px;border-radius:10px;background:#101812;color:#e9f1e4;border:1px solid #3d5141;box-shadow:0 8px 24px #0007;font:12px/1.4 system-ui,sans-serif;pointer-events:none;transition:opacity .3s}
 .dtree-toast b{display:block;font-size:13px;color:#fff}.dtree-toast .dt-re{color:#ffd166}.dtree-toast .dt-ru{color:#c8f49d}
@@ -160,7 +160,9 @@ async function start() {
     const def = recipeDefinition(o.recipe).filter(f => f.key !== 'kind');
     const shownDef = lineup ? def.filter(f => !/\.(flights|side|highlight|photo|plate)$/.test(f.key)) : def;
     const gs = guarantees(world, sc), mark = ok => ok === true ? '<b class="ok">✓</b>' : ok === false ? '<b class="no">✗</b>' : '<b class="unknown">?</b>';
-    const guaranteeRows = `<div class="dt-g">${gs.map(g => `<span class="dt-chip cause">${esc(g.cause)}</span><p>${mark(g.ok)} <b>${esc(g.question)}</b> ${esc(g.what)}</p>`).join('')}</div>`;
+    // The final cause is a demonstration, not a verdict: what it is for, the premise, what it does, thus.
+    const proof = d => `<ol class="dt-proof"><li><em>This is for</em> ${esc(d.for)}</li><li><em>Because</em> ${esc(d.because)}</li><li><em>It does</em> ${esc(d.does)}</li><li><em>Thus</em> ${esc(d.thus)}</li></ol>`;
+    const guaranteeRows = `<div class="dt-g">${gs.map(g => `<span class="dt-chip cause">${esc(g.cause)}</span><div><p>${mark(g.ok)} <b>${esc(g.question)}</b> ${g.demonstration ? '' : esc(g.what)}</p>${g.demonstration ? `${proof(g.demonstration)}${g.ok ? '<p class="dt-qed">QED</p>' : ''}` : ''}</div>`).join('')}</div>`;
     return `<div class="dt-node" id="dt-screen"><p class="dt-q"><span class="dt-chip active">Run ${esc(r.runId)}</span>What is on screen, and does it keep the rule? <code>${o.recipe.cards ? 'thro.screen.lineup' : 'thro.screen'}</code></p>
       <p class="dt-c">${o.recipe.cards ? `Lineup ${esc(recipeDefinition(o.recipe).find(f => f.key === 'layout')?.value)} · ${o.recipe.cards.map(c => esc(c.disc.name)).join(', ')}${o.recipe.featured !== null ? ` · featured: ${esc(o.recipe.cards[o.recipe.featured]?.disc.name)}` : ''}` : `${esc(recipeDefinition(o.recipe).find(f => f.key === 'layout')?.value)} · ${esc(o.recipe.disc.manufacturer)} ${esc(o.recipe.disc.name)}${o.recipe.revision ? ` · revision ${o.recipe.revision}` : ''}`}</p>
       <p class="dt-why">${lineup ? `What this lineup is, built from ${o.recipe.cards.length} card recipes, one per disc` : 'What this card is'}: the same definition always draws the same pixels.</p>
