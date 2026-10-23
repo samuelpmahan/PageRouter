@@ -7,6 +7,15 @@
   <title>thro — your graphics, ready</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%23c8f49d' stroke-width='3'%3E%3Ccircle cx='16' cy='16' r='13'/%3E%3Ccircle cx='16' cy='16' r='5.75'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./thro.css">
+  <script>
+    // ?scratch: the notebook embeds thro to measure it. Everything this page would store goes to memory and is gone when the
+    // frame closes; your saved work and settings are never read or written.
+    if (new URLSearchParams(location.search).has('scratch')) {
+      const m = new Map();
+      const s = { getItem: k => (m.has(k) ? m.get(k) : null), setItem: (k, v) => { m.set(k, String(v)); }, removeItem: k => { m.delete(k); }, clear: () => m.clear(), key: i => [...m.keys()][i] ?? null, get length() { return m.size; } };
+      Object.defineProperty(window, 'localStorage', { value: s, configurable: true });
+    }
+  </script>
 </head>
 <body>
   <header class="app-header">

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>thro notebook: conservation</title>
+<link rel="icon" href="data:,">
+<style>
+:root{--bg:#0d140f;--panel:#151f18;--line:#2a3a30;--ink:#e9f1e4;--muted:#9fb0a3;--lime:#c8f49d;--gold:#ffd166;--pink:#ff7ab6;--red:#ff9e80;--sky:#4cc9f0;--violet:#c77dff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#0d140fee;backdrop-filter:blur(6px);border-bottom:1px solid var(--line);padding:10px 16px}
+header h1{margin:0;font-size:19px}header h1 small{font-size:13px;font-weight:500;color:var(--muted)}
+header a{color:var(--lime)}
+nav.pages{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap}
+nav.pages a,nav.pages span{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 10px;color:var(--muted);text-decoration:none}
+nav.pages .on{border-color:var(--lime);color:var(--lime)}
+main{padding:8px 16px 56px;max-width:1240px;margin:0 auto}
+h2{font-size:22px;margin:18px 0 2px}h2+.dated{color:var(--muted);font-size:12px;margin:0 0 10px}
+h3{font-size:15px;margin:18px 0 6px;color:var(--lime);letter-spacing:.02em}
+p{margin:6px 0;max-width:84ch}
+ol.laws{margin:6px 0;padding-left:22px;max-width:90ch}ol.laws li{margin:6px 0}
+.grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.grid{grid-template-columns:1fr}}
+.frame{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#0b100d}
+.frame iframe{display:block;width:100%;height:760px;border:0}
+.controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0}
+button{min-height:40px;padding:0 14px;border-radius:10px;border:1px solid var(--line);background:#1b281f;color:var(--ink);font:600 14px system-ui,sans-serif;cursor:pointer}
+button.primary{background:var(--lime);color:#14200f;border-color:var(--lime)}
+#status{color:var(--muted);font-size:13px}
+table{border-collapse:collapse;width:100%;margin:6px 0;font-size:13.5px}
+th,td{border-bottom:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:12px}
+td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.equation{font:600 16px/1.5 ui-monospace,monospace;background:#121b15;border-radius:8px;padding:8px 12px;display:inline-block}
+.pass{color:var(--lime);font-weight:700}.fail{color:var(--red);font-weight:700}.muted{color:var(--muted)}
+.g{border:1px solid var(--line);border-radius:10px;padding:8px 10px;margin:8px 0;background:var(--panel)}
+.g .head{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;font-size:13px}
+.g .head b{font-size:14px}
+.bar{position:relative;height:22px;border-radius:4px;background:#ffffff10;margin:6px 0;overflow:hidden}
+.bar i{position:absolute;top:0;bottom:0;border-right:1px solid #0d140f}
+.bar i.rem{background:repeating-linear-gradient(135deg,#9fb0a355 0 4px,#9fb0a322 4px 8px)}
+.g table{font-size:12.5px;margin:2px 0}
+.g td.rem{color:#d6e0d3;font-style:italic}
+.tag{display:inline-block;border-radius:5px;padding:0 6px;font-size:11.5px;font-weight:700}
+.tag.painted{background:#2c3a2e;color:var(--lime)}.tag.superseded{background:#3a3326;color:var(--gold)}.tag.unchanged{background:#2a2f3a;color:var(--sky)}.tag.failed{background:#3a2626;color:var(--red)}
+</style>
+</head>
+<body>
+<header>
+  <h1>thro engineering notebook <small>· <a href="./?dtree">back to thro</a></small></h1>
+  <nav class="pages" aria-label="Pages"><a href="./notebook.html">1 · Datasheet: where are the card's pixels</a><span class="on">2 · Conservation</span></nav>
+</header>
+<main>
+  <h2>Page 2 · Conservation over every gesture</h2>
+  <p class="dated">Opened 23 Oct 2026 by claude-ed at Sam's direction ("that's what spans are for: is this conserved over this span?"). The thro on the left is the real site running on a throwaway workspace in memory: your saved work and settings are never read or written. Use the card yourself or run the gauge; every gesture is booked.</p>
+
+  <h3>The laws</h3>
+  <ol class="laws">
+    <li><b>Gestures are conserved.</b> Every gesture that begins ends exactly once and says how: <span class="tag painted">painted</span> its pixels, <span class="tag superseded">superseded</span> by a newer gesture, <span class="tag unchanged">unchanged</span> (nothing to redraw), or <span class="tag failed">failed</span>. So begun = painted + superseded + unchanged + failed + open, and open is 0 once things settle. A gesture still open after 3 seconds is a violation, counted.</li>
+    <li><b>Time balances.</b> A gesture's total is its top-level stages plus its remainders. Each remainder is named by where it sits (between which two stages), not by a guess at what is inside it. Stages that overlap are not sequential, and the overlap is shown, not hidden.</li>
+    <li><b>Final pixels are painted exactly once.</b> A gesture that paints puts its final pixels on screen once; painting the same pixels again in a row is a duplicate.</li>
+  </ol>
+
+  <div class="grid">
+    <div>
+      <div class="controls"><button type="button" class="primary" id="run">Run the gauge (9 gestures)</button><span id="status">Opening thro…</span></div>
+      <div class="frame"><iframe id="thro" title="thro, on a throwaway workspace" src="./?scratch"></iframe></div>
+    </div>
+    <div>
+      <h3>Law 1 · The books</h3>
+      <p><span class="equation" id="equation">—</span></p>
+      <table id="books"><thead><tr><th>Begun</th><th>Painted</th><th>Superseded</th><th>Unchanged</th><th>Failed</th><th>Open</th><th>Open past 3 s</th></tr></thead><tbody><tr><td colspan="7" class="muted">No gesture yet.</td></tr></tbody></table>
+      <h3>Law 3 · Paints</h3>
+      <p id="paints" class="muted">No painted gesture yet.</p>
+      <h3>Law 2 · Time, gesture by gesture</h3>
+      <p class="muted">Solid blocks are thro's own stages; hatched blocks are remainders, named by where they sit. Newest first. Remainders under 0.5 ms are left out of the lists, not out of the sums.</p>
+      <div id="ledgers"></div>
+    </div>
+  </div>
+</main>
+<script type="module" src="./notebook-conservation.mjs"></script>
+</body>
+</html>

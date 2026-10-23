@@ -7,7 +7,7 @@ import { loadFixture } from './prepared-fixture.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
 import { esc } from './renderer/src/presentation.js';
 import { pngFromSvg, sha256, downloadBlob } from './renderer/src/media.js';
-import { span, end as endGesture, active as activeGesture, gestures } from './timing.mjs';
+import { span, end as endGesture, active as activeGesture, settle as settleGesture, gestures, books } from './timing.mjs';
 
 const $ = id => document.getElementById(id);
 const debug = new URLSearchParams(location.search).get('debug') === '1';
@@ -684,7 +684,7 @@ let decided;
 try { decided = decide(throWorld, viewerFill()); } catch { decided = decide(throWorld, SITE_FILL); } // a stale switch never stops the site
 const site = decided.site;
 useSiteCardRevision(site.revision); // new cards start at the decided revision; saved ones keep their own
-window.__thro = { world: throWorld, fill: viewerFill(), decided, verdict: null, timing: gestures };
+window.__thro = { world: throWorld, fill: viewerFill(), decided, verdict: null, timing: gestures, books };
 const studiesFor = mode => mode === 'single' ? (site.single === 'cards' ? nativeStudies : compositionStudies)
   : mode === 'bag' ? (site.bag === 'lineups' ? lineupStudies : compositionStudies) : compositionStudies;
 const offers = (mode, study) => studiesFor(mode).some(item => item.id === study);
@@ -715,26 +715,38 @@ async function ensureOneEngine() {
 // cached), painted, and the save follows behind it. Keep and Download queue behind the save, so nothing unsaved is kept.
 let shownChange = 0, paintedSvg = null;
 const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 0)));
+// Paints are recorded on the gesture that asked for them (conservation law 3: its final pixels are painted exactly once).
+let svgSerial = 0; const svgIds = new Map();
+const svgId = svg => { if (!svgIds.has(svg)) { svgIds.set(svg, ++svgSerial); if (svgIds.size > 60) svgIds.delete(svgIds.keys().next().value); } return svgIds.get(svg); };
+function paintFor(gesture, when) { span('paint the page', () => paint()); gesture?.paints.push({ when, pixels: svgId(paintedSvg) }); }
 function change(patch, note = 'Saved. Your graphic is ready.') {
   capturedPreview = null;
-  const token = ++shownChange;
+  const token = ++shownChange, gesture = activeGesture();
   const quick = ui.mode === 'single' && !hasConflict() && Object.keys(patch).length === 1 && isNativeStudy(patch.design?.study);
   const shown = quick && (async () => {
     try {
       const result = await span('draw the card', () => workspace.single(ui.selectedDisc, patch.design));
-      if (token !== shownChange || hasConflict() || result.graphic?.svg === paintedSvg) return;
-      currentResult = result; span('run the screen through PxC', () => runScreen()); span('paint the page', () => paint());
+      if (token !== shownChange || hasConflict()) return;
+      if (result.graphic?.svg === paintedSvg) { settleGesture('unchanged', gesture); return; } // the same pixels are already on screen
+      currentResult = result; span('run the screen through PxC', () => runScreen()); paintFor(gesture, 'shown');
     } catch { /* the save below draws it again and reports any failure */ }
   })();
   return run(async () => {
-    // The save waits for the card to be drawn and that frame to be on screen, so it never holds up the pixels.
-    if (shown) { await shown; await nextFrame(); }
-    await span('save the change', () => workspace.change(patch)); ui.design = { ...defaultDesign, ...context().design };
-    await span('check the engine', () => ensureOneEngine()); await span('draw the card', () => renderCurrent());
-    // A newer change paints itself; the same pixels already on screen are not painted twice.
-    if (!quick || (token === shownChange && currentGraphic()?.svg !== paintedSvg)) span('paint the page', () => paint());
-    else diagnostics();
-    message(note);
+    try {
+      // The save waits for the card to be drawn and that frame to be on screen, so it never holds up the pixels.
+      if (shown) { await shown; await nextFrame(); }
+      await span('save the change', () => workspace.change(patch)); ui.design = { ...defaultDesign, ...context().design };
+      await span('check the engine', () => ensureOneEngine()); await span('draw the card', () => renderCurrent());
+      // A newer change paints itself; the same pixels already on screen are not painted twice.
+      if (!quick || (token === shownChange && currentGraphic()?.svg !== paintedSvg)) paintFor(gesture, 'after the save');
+      else diagnostics();
+      if (gesture && token === shownChange && gesture.outcome !== 'unchanged') {
+        const final = svgId(currentGraphic()?.svg), p = gesture.paints;
+        gesture.paintLaw = { paints: p.length, ofFinal: p.filter(x => x.pixels === final).length, duplicates: p.filter((x, i) => i > 0 && x.pixels === p[i - 1].pixels).length };
+        dispatchEvent(new CustomEvent('thro:books'));
+      }
+      message(note);
+    } catch (error) { settleGesture('failed', gesture); throw error; }
   }, { kind: 'change', patch, ui });
 }
 
@@ -885,7 +897,8 @@ $('reload-latest').onclick = () => {
 
 try {
   const fixture = await loadFixture(); fixtureDiscs = fixture;
-  workspace = await openWorkspace({ storage: localStorage, locks: navigator.locks, fixture });
+  // ?scratch (the notebook's embedded thro): a throwaway workspace in memory, under its own key and lock; saved work is never touched.
+  workspace = await openWorkspace({ storage: localStorage, locks: navigator.locks, fixture, ...(new URLSearchParams(location.search).has('scratch') ? { key: 'thro.scratch:prepared-samples' } : {}) });
   rows = await workspace.model.shelfForDisplay(); adoptContext();
   window.__throStarted?.();
   await ensureOneEngine();

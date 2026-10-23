@@ -28,7 +28,7 @@ const STYLE = `
 .card-editor .ce-knob{position:absolute;pointer-events:auto;width:32px;height:32px;min-height:32px;min-width:32px;margin:-16px 0 0 -16px;padding:0;border-radius:50%;border:3px solid #fff;background:#e2402f;color:#fff;font:700 14px/1 system-ui,sans-serif;touch-action:none;cursor:nwse-resize;box-shadow:0 2px 8px #0007}
 .card-editor.is-dragging .ce-knob,.card-editor.is-dragging .ce-badge{visibility:hidden}
 `;
-import { begin } from './timing.mjs';
+import { begin, settle } from './timing.mjs';
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const union = boxes => {
   const list = boxes.filter(b => b && Number.isFinite(b.x) && b.w > 0 && b.h > 0);
@@ -147,6 +147,7 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
     track(box, e, (x, y) => { dx = x; dy = y; svg.style.translate = `${x}px ${y}px`; box.style.translate = `${x}px ${y}px`; },
       (moved, cancelled) => {
         const to = moved && !cancelled ? (begin('Move'), commitNudge(dx / m.s, dy / m.s)) : null;
+        if (moved && !cancelled && !to) settle('unchanged'); // dropped where it already was: nothing to redraw
         // The card stays where the finger left it (or settles into its corner) until the redrawn card replaces it; it never
         // jumps back to where it started while the new pixels are drawn. A redraw that never comes lets go after 2 s.
         const at = to ? `${to.x * m.s}px ${to.y * m.s}px` : '';
@@ -156,7 +157,7 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
   });
   box.addEventListener('keydown', e => {
     const step = e.shiftKey ? 40 : 8, d = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key];
-    if (!d) return; e.preventDefault(); commitNudge(d[0], d[1]);
+    if (!d) return; e.preventDefault(); begin('Nudge (keys)'); if (!commitNudge(d[0], d[1])) settle('unchanged');
   });
   // Size: a ghost shows the new size from the corner the card hugs; on release the scale goes to the renderer.
   knob.addEventListener('pointerdown', e => {
