@@ -36,5 +36,5 @@ for (const width of [1280, 390]) {
 }
 await browser.close();
 console.log(notes.join('\n'));
-console.log(failures.length ? `FAIL\n${failures.join('\n')}` : 'PASS: every way is summed by the Lab, follows the person\'s order, and each way is a handle');
+console.log(failures.length ? `FAIL\n${failures.join('\n')}` : 'PASS: every way is summed by the kernel (world.sum, world.evaluate), follows the person\'s order, and each way is a handle');
 process.exit(failures.length ? 1 : 0);

@@ -185,6 +185,22 @@ export function createThroWorld() {
       return { order: next };
     } });
 
+  // ---- Every way this disc could be a card (rung 8): each Single layout is an implementation of one contract, so world.sum runs
+  // them all and records the provenance polynomial (kernel seq 62); ways.mjs evaluates it in the Lab's semirings. A layout's
+  // measurements come from the thumbnail the renderer already drew; a layout with none is a missing term, not a guess.
+  world.contract({ id: 'thro.card.way', description: 'Does this layout keep the order, and how comfortably?',
+    notes: 'One implementation per Single layout: another way to draw this disc as a card.',
+    in: { layouts: { type: 'object' }, disc: { type: 'object' }, intended: { type: 'array', minItems: 4, maxItems: 4 } },
+    out: { keeps: { type: 'boolean' }, margin: { type: 'number' }, quiet: { type: 'number' } } });
+  for (const study of nativeStudies) world.implement({ id: `thro.card.way/${study.id.replace('discstudio:', '')}`, implements: 'thro.card.way',
+    description: String(study.label ?? study.id), origin: { by: 'claude-ed (rung 8)', iters: [36] },
+    run: ({ layouts, disc, intended }) => {
+      const layout = layouts.value[study.id];
+      if (!layout) throw Error(`${study.id} has not been measured for this disc`);
+      const reading = readingOf(layout, disc.value.name, disc.value.flights), fit = orderFit(reading, intended.value);
+      return { keeps: fit.keeps, margin: fit.margin, quiet: Math.round(reading.other.size * 10) / 10 };
+    } });
+
   // ---- The screen: one run from the site's decisions down to the card on screen and Sam's rule on it.
   // The layout is what the renderer measured while drawing that recipe, so the rule judges the actual card.
   world.contract({ id: 'thro.screen', description: 'What is on screen, and does it keep the rule?',

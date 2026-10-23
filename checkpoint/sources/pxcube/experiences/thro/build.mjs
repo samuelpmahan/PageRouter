@@ -26,9 +26,6 @@ const runtimeFiles = [
   'dtree.mjs',
   'handles.mjs',
   'ways.mjs',
-  'lab/runtime.mjs',
-  'lab/semiring.mjs',
-  'lab/PIN.json',
   'viewer.mjs',
   'dtree.json',
   'thro-world.mjs',
@@ -38,6 +35,9 @@ const runtimeFiles = [
   'pxc/canonical.mjs',
   'pxc/schema.mjs',
   'pxc/view.mjs',
+  'pxc/lab/runtime.mjs',
+  'pxc/lab/semiring.mjs',
+  'pxc/lab/PIN.json',
 ];
 
 if (path.resolve(process.cwd()) !== root) {

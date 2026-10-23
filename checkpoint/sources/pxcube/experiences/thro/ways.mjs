@@ -1,52 +1,51 @@
-// Every way this disc could be a card (rung 7; Sam, 23 Oct: "constraint lab is literally defining another way? Each card style
-// and option defines outputs in another way"). The second use of Capability Lab's semiring capabilities (vendored in ./lab).
+// Every way this disc could be a card (rung 7, on the kernel since rung 8; Sam, 23 Oct: "constraint lab is literally defining
+// another way? Each card style and option defines outputs in another way").
 //
-// The card for this disc is a sum over layouts: Σ_L (layout L × L keeps your order). One polynomial, evaluated in five semirings
-// by the Lab's own provenance.evaluate, answers five questions without drawing anything new (every layout's measurements come
-// from the thumbnails the renderer already drew):
+// Each Single layout is an implementation of thro.card.way, so world.sum runs them all and records the provenance polynomial:
+// one term per layout that was measured (kernel seq 62, sublated from Capability Lab's semirings). The polynomial is computed
+// once; world.evaluate maps it into five semirings afterwards, running nothing:
 //   boolean   can this disc be a card that keeps your order at all
 //   counting  how many layouts do
 //   viterbi   which keeps it most comfortably (comfort = 1 − 1/margin, margin = the smallest size ratio between neighbours)
 //   tropical  which keeps it with the quietest extras (cost = the largest other text, in px)
 //   lineage   which layouts, and which order, the answer rests on
 // It reads; it changes nothing on the card, and it never says what you should pick.
-import { createRegistry } from './lab/runtime.mjs';
-import { capabilities as semiringCapabilities } from './lab/semiring.mjs';
-import { PARTS, readingOf, orderFit } from './thro-world.mjs';
+import { PARTS } from './thro-world.mjs';
 
-let registry = null;
-const lab = () => (registry ??= createRegistry(semiringCapabilities, { source: 'capability-lab (vendored in thro/lab, PIN.json)', version: '1' }));
 const orderLabel = order => `order ${order.map(p => ({ disc: 'disc', name: 'name', numbers: 'numbers', other: 'rest' })[p]).join(' > ')}`;
 
-/** layouts: [{ study, name, layout }] for one disc; disc: { name, flights }; intended: the person's order (or the scaffold). */
-export function everyWay({ layouts, disc, intended = PARTS }) {
-  const ways = layouts.filter(l => l.layout).map(l => {
-    const reading = readingOf(l.layout, disc.name, disc.flights), fit = orderFit(reading, intended);
-    return { study: l.study, name: l.name, keeps: fit.keeps, margin: fit.margin, quiet: Math.round(reading.other.size * 10) / 10, comfort: fit.keeps ? 1 - 1 / fit.margin : 0 };
+/** world: a thro world; layouts: [{ study, name, layout }] for one disc; disc: { name, flights }; intended: the person's order. */
+export function everyWay({ world, layouts, disc, intended = PARTS }) {
+  const measured = Object.fromEntries(layouts.filter(l => l.layout).map(l => [l.study, l.layout]));
+  const names = Object.fromEntries(layouts.map(l => [l.study, l.name]));
+  const { polynomial, terms } = world.sum('thro.card.way', { layouts: measured, disc: { name: disc.name, flights: disc.flights }, intended: [...intended] });
+  const studyOf = impl => `discstudio:${impl.replace('thro.card.way/', '')}`;
+  const ways = terms.filter(t => t.monomial).map(t => {
+    const { keeps, margin, quiet } = t.outputs;
+    return { study: studyOf(t.impl), impl: t.impl, name: names[studyOf(t.impl)] ?? t.impl, keeps, margin, quiet, comfort: keeps ? 1 - 1 / margin : 0 };
   });
-  const polynomial = ways.map(w => [`layout:${w.study}`, `keeps:${w.study}`]);
-  const values = {
-    boolean: ways.flatMap(w => [{ variable: `layout:${w.study}` }, ...(w.keeps ? [{ variable: `keeps:${w.study}` }] : [])]),
-    counting: ways.flatMap(w => [{ variable: `layout:${w.study}`, weight: 1 }, ...(w.keeps ? [{ variable: `keeps:${w.study}`, weight: 1 }] : [])]),
-    viterbi: ways.flatMap(w => [{ variable: `layout:${w.study}`, weight: 1 }, ...(w.keeps ? [{ variable: `keeps:${w.study}`, weight: w.comfort }] : [])]),
-    tropical: ways.flatMap(w => [{ variable: `layout:${w.study}`, weight: w.quiet }, ...(w.keeps ? [{ variable: `keeps:${w.study}`, weight: 0 }] : [])]),
-    lineage: ways.flatMap(w => [{ variable: `layout:${w.study}`, labels: [w.name] }, ...(w.keeps ? [{ variable: `keeps:${w.study}`, labels: [orderLabel(intended)] }] : [])]),
-  };
   if (!polynomial.length) return { ways, polynomial, answers: null };
-  const evaluate = semiring => lab().execute('provenance.evaluate', { semiring, polynomial, values: values[semiring] });
-  const runs = Object.fromEntries(Object.keys(values).map(s => [s, evaluate(s)]));
-  const winner = semiring => { const r = runs[semiring].result; if (!r.value.present) return null; const i = r.terms.findIndex(t => t.value.present && t.value.weight === r.value.weight); return i < 0 ? null : ways[i].study; };
+  // The valuation says what each way is worth in each semiring; a way that does not keep the order is left out: the semiring's zero.
+  const keeping = ways.filter(w => w.keeps);
+  const valuation = {
+    boolean: Object.fromEntries(keeping.map(w => [w.impl, true])),
+    counting: Object.fromEntries(keeping.map(w => [w.impl, { weight: 1 }])),
+    viterbi: Object.fromEntries(keeping.map(w => [w.impl, { weight: w.comfort }])),
+    tropical: Object.fromEntries(keeping.map(w => [w.impl, { weight: w.quiet }])),
+    lineage: Object.fromEntries(keeping.map(w => [w.impl, { labels: [w.name, orderLabel(intended)] }])),
+  };
+  const result = Object.fromEntries(Object.entries(valuation).map(([semiring, v]) => [semiring, world.evaluate(polynomial, semiring, v)]));
+  const winner = semiring => { const r = result[semiring]; if (!r.value.present) return null; const i = r.terms.findIndex(t => t.value.present && t.value.weight === r.value.weight); return i < 0 ? null : ways[i].study; };
   const answers = {
-    possible: runs.boolean.result.value.present,
-    count: runs.counting.result.value.weight ?? 0,
+    possible: result.boolean.value.present,
+    count: result.counting.value.weight ?? 0,
     of: ways.length,
     mostComfortable: winner('viterbi'),
-    comfort: runs.viterbi.result.value.weight ?? 0,
+    comfort: result.viterbi.value.weight ?? 0,
     quietest: winner('tropical'),
-    quiet: runs.tropical.result.value.weight ?? null,
-    restsOn: runs.lineage.result.value.labels ?? [],
-    calls: Object.values(runs).reduce((n, r) => n + countCalls(r.trace), 0),
+    quiet: result.tropical.value.weight ?? null,
+    restsOn: (result.lineage.value.labels ?? []).filter(l => !l.startsWith('order ')).concat((result.lineage.value.labels ?? []).filter(l => l.startsWith('order '))),
+    polynomial: polynomial.length,
   };
   return { ways, polynomial, answers };
 }
-const countCalls = trace => (trace?.calls ?? []).reduce((n, c) => n + 1 + countCalls(c), 0);

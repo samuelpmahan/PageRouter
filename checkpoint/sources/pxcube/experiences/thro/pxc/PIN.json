@@ -1,27 +1,42 @@
 {
-  "schema": "thro-pxc-kernel-pin@1",
-  "source": "work/pxc-kernel/src (PxC kernel v0.6, see work/pxc-kernel/KERNEL.md)",
-  "sourceCommit": "dcc1bee84551f5c7a533b80f921d0a21519e8a11",
-  "files": [
-    {
-      "path": "kernel.mjs",
-      "bytes": 61842,
-      "sha256": "725d29779634e43ae12f9ce5c7d21c99cd6247f6800e132899f72334149a46ae"
-    },
-    {
-      "path": "canonical.mjs",
-      "bytes": 3832,
-      "sha256": "e521bc5cc1ec045a8550b4ecbeb8a0d670aabb98e0298fd7e0500b6f79d16b56"
-    },
-    {
-      "path": "schema.mjs",
-      "bytes": 4293,
-      "sha256": "dbdbba8586454f4754cf67350b986272e7bb1a4c1e706ec0634a87eae44220cb"
-    },
-    {
-      "path": "view.mjs",
-      "bytes": 28503,
-      "sha256": "9b217dc1a09dfb4d4e69e261b1f89b61ad8c73e5638360114b2b88a9c01e5113"
-    }
-  ]
+ "schema": "thro-pxc-kernel-pin@1",
+ "source": "work/pxc-kernel/src (PxC kernel v0.6 + sum/evaluate, seq 62, branch claude/pxc-kernel-sum; see work/pxc-kernel/KERNEL.md)",
+ "sourceCommit": "043425a",
+ "files": [
+  {
+   "path": "kernel.mjs",
+   "bytes": 66021,
+   "sha256": "2b7efbf573e9bbba6c5a7eaef93826e88b4b94797a11b4b3edba33b83a2330b1"
+  },
+  {
+   "path": "canonical.mjs",
+   "bytes": 3832,
+   "sha256": "e521bc5cc1ec045a8550b4ecbeb8a0d670aabb98e0298fd7e0500b6f79d16b56"
+  },
+  {
+   "path": "schema.mjs",
+   "bytes": 4293,
+   "sha256": "dbdbba8586454f4754cf67350b986272e7bb1a4c1e706ec0634a87eae44220cb"
+  },
+  {
+   "path": "view.mjs",
+   "bytes": 28503,
+   "sha256": "9b217dc1a09dfb4d4e69e261b1f89b61ad8c73e5638360114b2b88a9c01e5113"
+  },
+  {
+   "path": "lab/runtime.mjs",
+   "bytes": 28487,
+   "sha256": "dea6bdac9b338bf4a75e547f4daafaa3bbcd208d2d428efa5944335f9712ba76"
+  },
+  {
+   "path": "lab/semiring.mjs",
+   "bytes": 16850,
+   "sha256": "6927052bda15a96ebf5a4b893417b5af17b11ecc73bb0bda9724648c39185198"
+  },
+  {
+   "path": "lab/PIN.json",
+   "bytes": 660,
+   "sha256": "d93fa8b96b84ca2cd77737c498169ed26d605c35011f00ca3e4d668ac4a228c1"
+  }
+ ]
 }

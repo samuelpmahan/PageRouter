@@ -202,18 +202,18 @@ async function start() {
       <p class="dt-verdict">The card on screen: ${v ? `<b class="${v.accepted ? 'ok' : 'no'}">${v.accepted ? 'passes' : 'fails'}</b>. ${esc(v.reason)}` : 'not a single card right now.'}</p>${v && !v.accepted ? blame(v) : ''}
       <button type="button" class="dt-show" data-show="thro.rule">Show on the page</button></div>`;
   }
-  // ---- Every way this disc could be a card (rung 7): a sum over the layouts, evaluated by Capability Lab's provenance.evaluate.
+  // ---- Every way this disc could be a card (rung 7; on the kernel's world.sum and world.evaluate since rung 8).
   function waysNode() {
     const sc = window.__thro?.screen; if (!sc || sc.error || sc.outputs.recipe.cards) return '';
     seeThumbs();
     const layouts = [...thumbs].filter(([study]) => study.startsWith('discstudio:')).map(([study, svg]) => ({ study, name: String(nativeStudies.find(n => n.id === study)?.label ?? study).replace(/^[A-Z0-9-]+ · /, ''), layout: cardLayout(svg.outerHTML) }));
     const intended = viewer().order ?? undefined, own = Boolean(viewer().order);
-    const { ways, answers } = everyWay({ layouts, disc: { name: sc.outputs.recipe.disc.name, flights: sc.outputs.recipe.flights }, intended });
+    const { ways, answers } = everyWay({ world, layouts, disc: { name: sc.outputs.recipe.disc.name, flights: sc.outputs.recipe.flights }, intended });
     if (!answers) return '';
     const current = `discstudio:${sc.outputs.recipe.preset}`;
     const tile = w => `<button type="button" class="dt-way ${w.keeps ? '' : 'off'} ${w.study === answers.mostComfortable ? 'comfy' : ''} ${w.study === answers.quietest ? 'quiet' : ''}" data-way="${esc(w.study)}" title="${esc(w.name)}${w.study === current ? ' (on screen)' : ''}"><span class="pic-study" data-pic-study="${esc(w.study)}"></span><small>${w.keeps ? `×${w.margin.toFixed(2)}` : '–'}${w.study === current ? ' ●' : ''}</small></button>`;
     return `<h3>Every way this disc could be a card</h3>
-      <p class="dt-about">Σ over the layouts of (layout × keeps ${own ? 'your' : 'the scaffold'} order), one sum evaluated in five semirings by Capability Lab's <code>provenance.evaluate</code> (${answers.calls} traced calls). ×n: each part is at least n times the next. ● on screen.</p>
+      <p class="dt-about">Σ over the layouts of (layout × keeps ${own ? 'your' : 'the scaffold'} order), one <code>world.sum</code> over ${answers.polynomial} ways, its polynomial evaluated in five semirings by <code>world.evaluate</code> (the kernel's, from Capability Lab). ×n: each part is at least n times the next. ● on screen.</p>
       <div class="dt-ways-sum"><span><span class="dt-big">${answers.count}/${answers.of}</span> keep ${own ? 'your' : 'the scaffold'} order</span>
         ${answers.mostComfortable ? `<span class="dt-key"><i style="outline:3px solid #ffd166"></i> most room ×${(1 / (1 - answers.comfort)).toFixed(2)}</span>` : ''}
         ${answers.quietest ? `<span class="dt-key"><i style="outline:2px dashed #e9f1e4"></i> quietest extras ${answers.quiet} px</span>` : ''}
