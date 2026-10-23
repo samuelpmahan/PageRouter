@@ -28,6 +28,17 @@ const worstEdge = (p, q) => (p && q ? Math.max(...edges(p).map((v, i) => Math.ab
 
 // Premises for C's tolerance: one screen pixel at the close-up's zoom. The zoom was measured on iter-43 at Sam's 1540×784
 // window (the preview shows 1.172 screen pixels per canvas pixel; 1280×900: 1.056; 390 phone: 0.551).
+// Three channels, one vote per card (Sam, 23 Oct: "why do they need three sensors and not just two"). With two that disagree you
+// know something is wrong but not which; with three, the two that agree outvote the third. A and B share the decode of the PNG
+// (a common mode: for any fault before the scan they are one channel); C is the dissimilar channel, the renderer's own report.
+function vote(r, T) {
+  const ab = exact(r.a, r.b), ac = worstEdge(r.c, r.a) <= T, bc = worstEdge(r.c, r.b) <= T;
+  if (ab && ac && bc) return { tag: '3 of 3 agree', ok: true };
+  if (ab) return { tag: 'C outvoted by A and B', ok: false, out: 'C' };
+  if (ac) return { tag: 'B outvoted by A and C', ok: false, out: 'B' };
+  if (bc) return { tag: 'A outvoted by B and C', ok: false, out: 'A' };
+  return { tag: 'no majority', ok: false, out: '?' };
+}
 const tol = () => { const v = Number($('#tol').value); return Number.isFinite(v) && v >= 0 ? v : 0; };
 
 async function main() {
@@ -78,7 +89,11 @@ function paint(rows) {
     `<tr><td><span class="sw b"></span>B</td><td>${abExact} of ${n} exactly equal to A</td><td class="num">${Math.max(...rows.map(r => worstEdge(r.b, r.a)))}</td><td class="num">${ms(median(rows.map(r => r.scanB)))} scan</td><td>${verdict(abExact === n)}</td></tr>`,
     `<tr><td><span class="sw c"></span>C</td><td>${cExact} of ${n} exactly; ${cWithin} of ${n} within ${T}</td><td class="num">${cWorst.toFixed(1)}</td><td class="num">0 (no decode)</td><td>${verdict(cWithin === n)} at ${T}</td></tr>`,
   ].join('');
-  $('#readback').innerHTML = `A and B each also need the PNG decoded and read back: <b>${ms(median(rows.map(r => r.readback)))}</b> per card (median), which C never pays.`;
+  const votes = rows.map(r => vote(r, T)), unanimous = votes.filter(v => v.ok).length;
+  const outvoted = ['A', 'B', 'C', '?'].map(k => [k, votes.filter(v => v.out === k).length]).filter(([, n]) => n);
+  $('#readback').innerHTML = `A and B each also need the PNG decoded and read back: <b>${ms(median(rows.map(r => r.readback)))}</b> per card (median), which C never pays.</p>
+    <p><b>The vote, card by card:</b> ${unanimous} of ${n} cards 3 of 3${outvoted.length ? `; ${outvoted.map(([k, m]) => (k === '?' ? `${m} with no majority` : `${k} outvoted on ${m}`)).join(', ')}` : ''}. <span class="${unanimous === n ? 'pass' : 'fail'}">${unanimous === n ? '✓' : '✗'}</span>
+    A and B share the decode, so for a fault before the scan (a wrong decode, a wrong canvas size) they are one channel and agree with each other while both are wrong; only C, which never decodes, would outvote them there. For a fault in the scan itself they are two independent channels.`;
   // Which way C is off: outside the pixels (outline a little loose) or inside (outline cuts the card).
   const inside = rows.filter(r => r.c && r.a && (r.c.x > r.a.x || r.c.y > r.a.y || r.c.x + r.c.w < r.a.x + r.a.w || r.c.y + r.c.h < r.a.y + r.a.h)).length;
   const worst = rows.reduce((p, r) => (worstEdge(r.c, r.a) > worstEdge(p.c, p.a) ? r : p), rows[0]);
@@ -93,7 +108,7 @@ function paint(rows) {
     const d = worstEdge(r.c, r.a);
     return `<figure><div class="pic" style="aspect-ratio:${x1 - x0}/${y1 - y0}"><img alt="" style="width:${(100 * r.W / (x1 - x0)).toFixed(3)}%;margin-left:${(-100 * x0 / (x1 - x0)).toFixed(3)}%;margin-top:${(-100 * y0 / (x1 - x0)).toFixed(3)}%" src="${r.src}">
       <svg viewBox="${x0} ${y0} ${x1 - x0} ${y1 - y0}" preserveAspectRatio="none" aria-hidden="true"><g fill="none" vector-effect="non-scaling-stroke">${rect(r.a, 'a')}${rect(r.b, 'b')}${rect(r.c, 'c')}</g></svg></div>
-      <figcaption><span class="t">${esc(r.disc)} · ${esc(r.layout.toUpperCase())} · ${esc(r.placement)}</span><span class="d">A = B ${exact(r.a, r.b) ? 'exactly' : 'NO'} · C off by ${d.toFixed(1)} px <span class="${d <= T ? 'pass' : 'fail'}">${d <= T ? '✓' : '✗'}</span></span></figcaption></figure>`;
+      <figcaption><span class="t">${esc(r.disc)} · ${esc(r.layout.toUpperCase())} · ${esc(r.placement)}</span><span class="d">${(v => `<span class="${v.ok ? 'pass' : 'fail'}">${v.tag}</span>`)(vote(r, T))} · C off by ${d.toFixed(1)} px</span></figcaption></figure>`;
   }).join('');
 }
 const style = document.createElement('style');
