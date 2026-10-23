@@ -19,6 +19,8 @@ const visibleText = p => p.evaluate(() => {
     if (!text || !el || el.closest('script,style,#dtree,[hidden],[aria-hidden="true"]')) continue;
     const r = el.getBoundingClientRect(), cs = getComputedStyle(el);
     if (!r.width || !r.height || cs.visibility === 'hidden' || cs.display === 'none' || Number(cs.opacity) === 0) continue;
+    // Screen-reader-only text (clipped to nothing, or 1 px) is heard, not read, by a sighted first visitor.
+    if ((r.width <= 1 && r.height <= 1) || /rect\(0(px)?,? 0(px)?,? 0(px)?,? 0(px)?\)/.test(cs.clip)) continue;
     seen.push(text);
   }
   // Labels a screen reader would also read are words to someone too; buttons' visible text is already above.

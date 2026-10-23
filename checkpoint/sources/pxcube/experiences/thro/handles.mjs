@@ -100,9 +100,11 @@ async function start() {
   let queued = false; const soon = () => { if (queued) return; queued = true; requestAnimationFrame(() => { queued = false; draw(); }); };
   addEventListener('thro:screen', soon); addEventListener('thro:viewer', soon); addEventListener('resize', soon);
   // The app repaints the preview (framing, background, layout) without a screen run: follow the SVG, not the event.
-  const ours = n => n.nodeType !== 1 || n === layer || n === toggle || n.classList?.contains('rh-ghost') || n.classList?.contains('dtree-toast') || n.classList?.contains('dtree-lit');
-  const relevant = m => !layer.contains(m.target) && m.target !== toggle && (m.attributeName === 'viewBox' || (m.type === 'childList' && ![...m.addedNodes, ...m.removedNodes].every(ours)));
-  new MutationObserver(records => { if (records.some(relevant)) soon(); })
+  // Redraw only when the preview itself changed: a new preview SVG (the app repainted it) or a new viewBox (framing). Other page
+  // changes, such as layout thumbnails finishing, must not replace a handle under a finger.
+  let seenSvg = null, seenBox = null;
+  const previewChanged = () => { const svg = document.querySelector('#graphic-preview svg'), box = svg?.getAttribute('viewBox') ?? null; const changed = svg !== seenSvg || box !== seenBox; seenSvg = svg; seenBox = box; return changed; };
+  new MutationObserver(() => { if (previewChanged()) soon(); })
     .observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['viewBox'] });
   window.__handles = { draw, toggle: v => { on = v ?? !on; draw(); }, state: () => ({ on, parts: [...layer.querySelectorAll('.rh-part')].map(p => ({ part: p.dataset.part, card: Number(p.dataset.card), fact: Number(p.querySelector('.rh-fact').textContent), mine: Number(p.querySelector('.rh-handle').textContent), box: p.getBoundingClientRect().toJSON() })) }) };
   draw();
