@@ -38,3 +38,9 @@ A derived fact carries a polynomial of the inputs it came from: × for inputs us
 - Demonstrate, do not assert: "this is for … because … it does … thus", with measured numbers.
 - Sam's rules of thumb are scaffolds for agents, not laws; record them as such.
 - Convivial: show what could be, never tell the person what they are allowed to do.
+
+## And the other way: what thro needs from ChainSpot's PxC (added 23 Oct, 11:05)
+
+A tap on a thro card took about a second and nothing measured it (Sam, 10:18: "Is this instrumented? Why not?"). The PageRouter kernel (v0.6, `work/pxc-kernel`) could not have: its receipts carry no clock, and it has no asynchronous completion (on its waiting list). The slow work (drawing a canvas, encoding a PNG, saving, painting) was therefore plain code outside PxC. thro now times it by hand (`experiences/thro/timing.mjs`), which is the wrong direction.
+
+ChainSpot's gateway already does this for every operation: `startedAtMs` and `durationMs` on the Receipt, the frozen calculations it bound, declared against actual reads and writes, probes, and `executeCompiledPlanAsync` for browser work (`chainspot-toolkit/source/provider/packages/alg/src/exec/gateway.ts`, `contract.ts`). thro is the second use. Please say what in that receipt is ChainSpot-specific and what belongs in the kernel, so the timed, asynchronous receipt can be sublated and `timing.mjs` deleted.
