@@ -300,6 +300,15 @@ async function start() {
     const r = preview.getBoundingClientRect(), inView = r.bottom > 40 && r.bottom + 80 < innerHeight;
     Object.assign(toast.style, inView ? { position: 'absolute', left: `${Math.max(16, r.left + scrollX)}px`, top: `${r.bottom + scrollY + 8}px`, bottom: '' }
       : { position: 'fixed', left: '16px', top: '', bottom: `${innerWidth <= 760 ? 104 : 76}px` });
+    // Never over Keep version or Download: if the toast meets the export bar, it covers only the bar's own words, left of its
+    // buttons (not the card just changed); where that space is too narrow, it sits just above the bar.
+    toast.style.maxWidth = '';
+    const barEl = document.querySelector('.export-bar'), bar = barEl?.getBoundingClientRect(), t = toast.getBoundingClientRect();
+    if (bar && bar.height && t.bottom > bar.top && t.top < bar.bottom && t.right > bar.left && t.left < bar.right) {
+      const actions = barEl.querySelector('.export-actions')?.getBoundingClientRect(), room = (actions?.left ?? bar.right) - bar.left - 20;
+      if (room >= 240) Object.assign(toast.style, { position: 'fixed', left: `${bar.left + 8}px`, maxWidth: `${room}px`, top: '', bottom: `${Math.max(8, innerHeight - bar.bottom + 6)}px` });
+      else Object.assign(toast.style, { position: 'fixed', left: `${Math.max(16, bar.left)}px`, maxWidth: '', top: '', bottom: `${Math.max(8, innerHeight - bar.top + 8)}px` });
+    }
     clearTimeout(toastTimer); toastTimer = setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => { toast.hidden = true; }, 320); }, 5200);
   }
   function onScreen() {
