@@ -123,6 +123,12 @@ v0.4 additions:
 - cached verdicts name their check;
 - `driveToSvg` shows `cached ← run r` and ✓/✗ counts per tick., `driveToSvg(receipts, world.part, { title, describe })`, `traceHtml([svg, ...])`. Output provenance is drawn as purple brackets in the right gutter. Screenshot with `python3 verify/shoot.py <abs.html> <abs.png> [width]`.
 
+## Sum and evaluate (seq 62, proposed on branch claude/pxc-kernel-sum)
+
+`world.sum(contractId, inputs, { fill?, … })` runs every implementation of the contract, each pinned by a fill so each has its own receipt and cache entries, and returns `{ polynomial, terms: [{ impl, monomial, outputs, receipt } | { impl, monomial: null, error, receipt }], receipt: { kind: 'sum', contract, polynomial, terms } }`. A term's monomial is its implementation followed by every implementation its trace called (cache hits are read through the node they came from, so the polynomial is the same cached or not). Inputs are shared by every term and factor out. A way that throws contributes no term.
+
+`world.evaluate(polynomial, semiring, valuation)` maps the polynomial into one of Capability Lab's semirings: `boolean` (can it), `counting` (how many ways), `tropical` (cheapest; weights are costs), `viterbi` (most reliable; weights in [0, 1]), `lineage` (which inputs; labels). `valuation` maps a variable to `true`, `{ weight }` or `{ labels }`; an unnamed variable is the semiring's zero, so leaving a variable out is deleting it. It returns `{ value, terms }` and runs nothing in the world. The algebra is the Lab's (`src/lab/`, byte-identical, `src/lab/PIN.json`). `ctx.sum` inside an implementation is not here yet.
+
 ## Still not in the kernel (deliberately)
 
 Demand / `request(n)`, async completion, a fitted-model kind (use an `x-role` annotation; a second entry using it promotes it), objectives on contracts, named shared schemas, implementation parameters, slices, a clock binding for compositions, nested clocks, graded checks, collect with initial state or a count Ref, a tick segment in paths, filters over arrays, looping compositions. Merging identical decisions in the record was declined (seq 51). Each has one requesting entry so far. If your migration shows a second real need for one, record it in FRICTION.md.

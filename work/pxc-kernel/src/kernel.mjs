@@ -1,4 +1,4 @@
-// PxC kernel v0.6.
+// PxC kernel v0.6, plus sum and evaluate (seq 62, branch claude/pxc-kernel-sum; a proposal until Sam merges it).
 //
 // Nouns (each one's reason is in ledger/necessity.jsonl):
 //   Part            content-addressed immutable value (hash of canonical JSON)
@@ -14,6 +14,10 @@
 
 import { canonical, deepFreeze, fail, hashString, seededRandom, KernelError } from './canonical.mjs';
 import { checkSchema, compatible, validate } from './schema.mjs';
+// Semirings come from Capability Lab, byte-identical (src/lab/PIN.json): the kernel evaluates provenance with the Lab's own
+// provenance.evaluate rather than a second implementation of the algebra (seq 62).
+import { createRegistry as createLabRegistry } from './lab/runtime.mjs';
+import { capabilities as semiringCapabilities, semirings as SEMIRINGS } from './lab/semiring.mjs';
 
 export { KernelError };
 
@@ -571,6 +575,51 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
     return { outputs, refs, trace, receipt };
   }
 
+  // ---------------------------------------------------------------- sum (seq 62)
+  // Every registered implementation of a contract is another way to the same output. sum runs each one (pinned by a fill, so each
+  // has its own receipt and cache entries, exactly as run) and records the provenance polynomial: one term per way that ran, each
+  // term the product of the implementation and every implementation its trace called. Inputs are shared by every term, so they
+  // factor out. A way that throws contributes no term; its error stays in its own failed receipt. ℕ[X] is the free semiring, so the
+  // polynomial is the master record: evaluate maps it into any semiring afterwards without running anything again.
+  function sum(contractId, inputs, options = {}) {
+    if (!contracts.has(contractId)) fail(`unknown contract ${contractId}`, 'UNKNOWN_CONTRACT');
+    const ways = implementationsOf(contractId);
+    if (!ways.length) fail(`${contractId} has no implementations to sum`, 'NO_IMPLEMENTATION');
+    const terms = ways.map((impl) => {
+      try {
+        const r = run(contractId, inputs, { ...options, fill: { ...(options.fill ?? {}), [contractId]: impl.id } });
+        return { impl: impl.id, monomial: monomialOf(r.trace), outputs: r.outputs, receipt: r.receipt };
+      } catch (error) {
+        return { impl: impl.id, monomial: null, error: { code: error.code ?? 'IMPL_ERROR', message: error.message }, receipt: error.receipt ?? null };
+      }
+    });
+    const polynomial = terms.filter((t) => t.monomial).map((t) => t.monomial);
+    const receipt = deepFreeze({ kind: 'sum', contract: contractId, polynomial,
+      terms: terms.map((t) => ({ impl: t.impl, runId: t.receipt?.runId ?? null, status: t.monomial ? 'ok' : 'failed', ...(t.error ? { error: t.error } : {}) })) });
+    return { polynomial, terms, receipt };
+  }
+  /** The variables of one way: its implementation, then every implementation its trace called (a cache hit counts as its node). */
+  function monomialOf(trace) {
+    // A cache hit has no children of its own: read them from the node it came from, so a way's monomial is the same cached or not.
+    const full = (n) => { let m = n; for (let i = 0; m.cached && m.cachedFrom && i < 64; i++) m = node(m.cachedFrom.run, m.cachedFrom.call) ?? { ...m, cached: false }; return m; };
+    const used = new Set();
+    const walk = (n) => { for (const c of full(n).calls ?? []) { used.add(c.impl); walk(c); } };
+    walk(trace);
+    return [trace.impl, ...[...used].filter((v) => v !== trace.impl).sort()];
+  }
+  let labRegistry = null;
+  /** Evaluate a provenance polynomial in one of the Lab's semirings (a homomorphism out of ℕ[X]). valuation maps a variable to
+   *  true (present), { weight } or { labels }; a variable it does not name is the semiring's zero. Runs nothing in this world. */
+  function evaluate(polynomial, semiring, valuation = {}) {
+    if (!SEMIRINGS.includes(semiring)) fail(`unknown semiring ${semiring}; one of ${SEMIRINGS.join(', ')}`, 'UNKNOWN_SEMIRING');
+    if (!Array.isArray(polynomial) || polynomial.some((m) => !Array.isArray(m) || !m.length)) fail('a polynomial is a list of non-empty monomials', 'BAD_POLYNOMIAL');
+    if (!polynomial.length) return { value: { present: false }, terms: [] };
+    const values = Object.entries(valuation).filter(([, v]) => v !== false && v !== undefined && v !== null)
+      .map(([variable, v]) => ({ variable, ...(v === true ? {} : v) }));
+    labRegistry ??= createLabRegistry(semiringCapabilities, { source: 'capability-lab (pxc-kernel src/lab, PIN.json)', version: '1' });
+    return labRegistry.execute('provenance.evaluate', { semiring, polynomial, values }).result;
+  }
+
   /** Every check in a trace, including those inside cache hits (stored on the entry when it was made). */
   function collectVerdicts(trace) {
     const out = [];
@@ -987,7 +1036,7 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
   }
 
   return Object.freeze({
-    name, contract, implement, compose, select, implementationsOf, run, drive, replay, prove, ledger, node, ref,
+    name, contract, implement, compose, select, implementationsOf, run, sum, evaluate, drive, replay, prove, ledger, node, ref,
     contracts: () => [...contracts.values()],
     implementations: () => [...impls.values()],
     runs: () => [...runs],

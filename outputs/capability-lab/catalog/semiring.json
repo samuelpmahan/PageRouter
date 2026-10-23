@@ -1,0 +1,1555 @@
+[
+  {
+    "id": "semiring.add",
+    "title": "Semiring sum of two matrices",
+    "description": "Combine two weighted graphs on the same nodes entry by entry with the semiring's ⊕ (or, +, min, max or union): two alternative routes become one entry.",
+    "kind": "atomic",
+    "dependsOn": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "semiring": {
+          "type": "string",
+          "enum": [
+            "boolean",
+            "counting",
+            "tropical",
+            "viterbi",
+            "lineage"
+          ]
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        },
+        "left": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "to": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "weight": {
+                "type": "number"
+              },
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "right": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "to": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "weight": {
+                "type": "number"
+              },
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "semiring",
+        "size",
+        "left",
+        "right"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "sum": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "to": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "weight": {
+                "type": "number"
+              },
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "sum"
+      ],
+      "additionalProperties": false
+    },
+    "formula": "(L ⊕ R)[i][j] = L[i][j] ⊕ R[i][j]; an absent entry is the semiring zero",
+    "caveats": [
+      "Matrices are edge lists; an absent entry is zero (false, 0, +∞, 0 or no lineage).",
+      "An entry may appear once per matrix."
+    ],
+    "examples": [
+      {
+        "input": {
+          "semiring": "tropical",
+          "size": 2,
+          "left": [
+            {
+              "from": 0,
+              "to": 1,
+              "weight": 5
+            }
+          ],
+          "right": [
+            {
+              "from": 0,
+              "to": 1,
+              "weight": 3
+            },
+            {
+              "from": 1,
+              "to": 0,
+              "weight": 2
+            }
+          ]
+        },
+        "expected": {
+          "sum": [
+            {
+              "from": 0,
+              "to": 1,
+              "weight": 3
+            },
+            {
+              "from": 1,
+              "to": 0,
+              "weight": 2
+            }
+          ]
+        }
+      },
+      {
+        "input": {
+          "semiring": "counting",
+          "size": 2,
+          "left": [
+            {
+              "from": 0,
+              "to": 1,
+              "weight": 2
+            }
+          ],
+          "right": [
+            {
+              "from": 0,
+              "to": 1,
+              "weight": 3
+            }
+          ]
+        },
+        "expected": {
+          "sum": [
+            {
+              "from": 0,
+              "to": 1,
+              "weight": 5
+            }
+          ]
+        }
+      },
+      {
+        "input": {
+          "semiring": "lineage",
+          "size": 1,
+          "left": [
+            {
+              "from": 0,
+              "to": 0,
+              "labels": [
+                "corner"
+              ]
+            }
+          ],
+          "right": [
+            {
+              "from": 0,
+              "to": 0,
+              "labels": [
+                "edges"
+              ]
+            }
+          ]
+        },
+        "expected": {
+          "sum": [
+            {
+              "from": 0,
+              "to": 0,
+              "labels": [
+                "corner",
+                "edges"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "semiring.product",
+    "title": "Semiring matrix product",
+    "description": "Multiply two weighted graphs: every two-step path i → k → j, combined with ⊗ along the path and ⊕ across paths. The same product counts paths, finds reachability, cheapest or most reliable paths, or which inputs were used, depending only on the semiring.",
+    "kind": "atomic",
+    "dependsOn": [],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "semiring": {
+          "type": "string",
+          "enum": [
+            "boolean",
+            "counting",
+            "tropical",
+            "viterbi",
+            "lineage"
+          ]
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        },
+        "left": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "to": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "weight": {
+                "type": "number"
+              },
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "right": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "to": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "weight": {
+                "type": "number"
+              },
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "semiring",
+        "size",
+        "left",
+        "right"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "product": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "to": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "weight": {
+                "type": "number"
+              },
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "product"
+      ],
+      "additionalProperties": false
+    },
+    "formula": "(L ⊗ R)[i][j] = ⊕ₖ L[i][k] ⊗ R[k][j]",
+    "caveats": [
+      "Sparse: work grows with the edges, not n³.",
+      "Floating-point sums and products follow IEEE-754; tropical and viterbi examples use exactly representable values."
+    ],
+    "examples": [
+      {
+        "input": {
+          "semiring": "counting",
+          "size": 4,
+          "left": [
+            {
+              "from": 0,
+              "to": 1
+            },
+            {
+              "from": 1,
+              "to": 2
+            },
+            {
+              "from": 0,
+              "to": 2
+            },
+            {
+              "from": 2,
+              "to": 3
+            },
+            {
+              "from": 1,
+              "to": 3
+            }
+          ],
+          "right": [
+            {
+              "from": 0,
+              "to": 1
+            },
+            {
+              "from": 1,
+              "to": 2
+            },
+            {
+              "from": 0,
+              "to": 2
+            },
+            {
+              "from": 2,
+              "to": 3
+            },
+            {
+              "from": 1,
+              "to": 3
+            }
+          ]
+        },
+        "expected": {
+          "product": [
+            {
+              "from": 0,
+              "to": 2,
+              "weight": 1
+            },
+            {
+              "from": 0,
+              "to": 3,
+              "weight": 2
+            },
+            {
+              "from": 1,
+              "to": 3,
+              "weight": 1
+            }
+          ]
+        }
+      },
+      {
+        "input": {
+          "semiring": "tropical",
+          "size": 4,
+          "left": [
+            {
+              "from": 0,
+              "to": 1,
+              "weight": 4
+            },
+            {
+              "from": 1,
+              "to": 2,
+              "weight": 1
+            },
+            {
+              "from": 0,
+              "to": 2,
+              "weight": 7
+            },
+            {
+              "from": 2,
+              "to": 3,
+              "weight": 2
+            },
+            {
+              "from": 1,
+              "to": 3,
+              "weight": 6
+            }
+          ],
+          "right": [
+            {
+              "from": 0,
+              "to": 1,
+              "weight": 4
+            },
+            {
+              "from": 1,
+              "to": 2,
+              "weight": 1
+            },
+            {
+              "from": 0,
+              "to": 2,
+              "weight": 7
+            },
+            {
+              "from": 2,
+              "to": 3,
+              "weight": 2
+            },
+            {
+              "from": 1,
+              "to": 3,
+              "weight": 6
+            }
+          ]
+        },
+        "expected": {
+          "product": [
+            {
+              "from": 0,
+              "to": 2,
+              "weight": 5
+            },
+            {
+              "from": 0,
+              "to": 3,
+              "weight": 9
+            },
+            {
+              "from": 1,
+              "to": 3,
+              "weight": 3
+            }
+          ]
+        }
+      },
+      {
+        "input": {
+          "semiring": "viterbi",
+          "size": 4,
+          "left": [
+            {
+              "from": 0,
+              "to": 1,
+              "weight": 0.9
+            },
+            {
+              "from": 1,
+              "to": 3,
+              "weight": 0.8
+            },
+            {
+              "from": 0,
+              "to": 2,
+              "weight": 0.5
+            },
+            {
+              "from": 2,
+              "to": 3,
+              "weight": 1
+            }
+          ],
+          "right": [
+            {
+              "from": 0,
+              "to": 1,
+              "weight": 0.9
+            },
+            {
+              "from": 1,
+              "to": 3,
+              "weight": 0.8
+            },
+            {
+              "from": 0,
+              "to": 2,
+              "weight": 0.5
+            },
+            {
+              "from": 2,
+              "to": 3,
+              "weight": 1
+            }
+          ]
+        },
+        "expected": {
+          "product": [
+            {
+              "from": 0,
+              "to": 3,
+              "weight": 0.7200000000000001
+            }
+          ]
+        }
+      },
+      {
+        "input": {
+          "semiring": "boolean",
+          "size": 3,
+          "left": [
+            {
+              "from": 0,
+              "to": 1
+            }
+          ],
+          "right": [
+            {
+              "from": 1,
+              "to": 2
+            }
+          ]
+        },
+        "expected": {
+          "product": [
+            {
+              "from": 0,
+              "to": 2
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "semiring.power",
+    "title": "Paths of exactly k steps",
+    "description": "Raise a weighted graph to the k-th power with the semiring product: every path of exactly k steps, combined as the semiring says.",
+    "kind": "composed",
+    "dependsOn": [
+      "semiring.product"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "semiring": {
+          "type": "string",
+          "enum": [
+            "boolean",
+            "counting",
+            "tropical",
+            "viterbi",
+            "lineage"
+          ]
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "to": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "weight": {
+                "type": "number"
+              },
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "k": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        }
+      },
+      "required": [
+        "semiring",
+        "size",
+        "edges",
+        "k"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "power": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "to": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "weight": {
+                "type": "number"
+              },
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "power"
+      ],
+      "additionalProperties": false
+    },
+    "formula": "Aᵏ = I ⊗ A ⊗ … ⊗ A (k factors of A)",
+    "examples": [
+      {
+        "input": {
+          "semiring": "counting",
+          "size": 4,
+          "edges": [
+            {
+              "from": 0,
+              "to": 1
+            },
+            {
+              "from": 1,
+              "to": 2
+            },
+            {
+              "from": 0,
+              "to": 2
+            },
+            {
+              "from": 2,
+              "to": 3
+            },
+            {
+              "from": 1,
+              "to": 3
+            }
+          ],
+          "k": 3
+        },
+        "expected": {
+          "power": [
+            {
+              "from": 0,
+              "to": 3,
+              "weight": 1
+            }
+          ]
+        }
+      },
+      {
+        "input": {
+          "semiring": "tropical",
+          "size": 4,
+          "edges": [
+            {
+              "from": 0,
+              "to": 1,
+              "weight": 4
+            },
+            {
+              "from": 1,
+              "to": 2,
+              "weight": 1
+            },
+            {
+              "from": 0,
+              "to": 2,
+              "weight": 7
+            },
+            {
+              "from": 2,
+              "to": 3,
+              "weight": 2
+            },
+            {
+              "from": 1,
+              "to": 3,
+              "weight": 6
+            }
+          ],
+          "k": 3
+        },
+        "expected": {
+          "power": [
+            {
+              "from": 0,
+              "to": 3,
+              "weight": 7
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "semiring.closure",
+    "title": "Every path up to n steps",
+    "description": "Combine all paths of 1 to n steps with ⊕: reachability, the number of paths, the cheapest or the most reliable path between every pair of nodes.",
+    "kind": "composed",
+    "dependsOn": [
+      "semiring.product",
+      "semiring.add"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "semiring": {
+          "type": "string",
+          "enum": [
+            "boolean",
+            "counting",
+            "tropical",
+            "viterbi",
+            "lineage"
+          ]
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 256
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "to": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "weight": {
+                "type": "number"
+              },
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "steps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        }
+      },
+      "required": [
+        "semiring",
+        "size",
+        "edges",
+        "steps"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "closure": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "from": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "to": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "weight": {
+                "type": "number"
+              },
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "from",
+              "to"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "closure"
+      ],
+      "additionalProperties": false
+    },
+    "formula": "A ⊕ A² ⊕ … ⊕ Aⁿ",
+    "examples": [
+      {
+        "input": {
+          "semiring": "boolean",
+          "size": 4,
+          "edges": [
+            {
+              "from": 0,
+              "to": 1
+            },
+            {
+              "from": 1,
+              "to": 2
+            },
+            {
+              "from": 0,
+              "to": 2
+            },
+            {
+              "from": 2,
+              "to": 3
+            },
+            {
+              "from": 1,
+              "to": 3
+            }
+          ],
+          "steps": 3
+        },
+        "expected": {
+          "closure": [
+            {
+              "from": 0,
+              "to": 1
+            },
+            {
+              "from": 0,
+              "to": 2
+            },
+            {
+              "from": 0,
+              "to": 3
+            },
+            {
+              "from": 1,
+              "to": 2
+            },
+            {
+              "from": 1,
+              "to": 3
+            },
+            {
+              "from": 2,
+              "to": 3
+            }
+          ]
+        }
+      },
+      {
+        "input": {
+          "semiring": "tropical",
+          "size": 4,
+          "edges": [
+            {
+              "from": 0,
+              "to": 1,
+              "weight": 4
+            },
+            {
+              "from": 1,
+              "to": 2,
+              "weight": 1
+            },
+            {
+              "from": 0,
+              "to": 2,
+              "weight": 7
+            },
+            {
+              "from": 2,
+              "to": 3,
+              "weight": 2
+            },
+            {
+              "from": 1,
+              "to": 3,
+              "weight": 6
+            }
+          ],
+          "steps": 3
+        },
+        "expected": {
+          "closure": [
+            {
+              "from": 0,
+              "to": 1,
+              "weight": 4
+            },
+            {
+              "from": 0,
+              "to": 2,
+              "weight": 5
+            },
+            {
+              "from": 0,
+              "to": 3,
+              "weight": 7
+            },
+            {
+              "from": 1,
+              "to": 2,
+              "weight": 1
+            },
+            {
+              "from": 1,
+              "to": 3,
+              "weight": 3
+            },
+            {
+              "from": 2,
+              "to": 3,
+              "weight": 2
+            }
+          ]
+        }
+      },
+      {
+        "input": {
+          "semiring": "counting",
+          "size": 4,
+          "edges": [
+            {
+              "from": 0,
+              "to": 1
+            },
+            {
+              "from": 1,
+              "to": 2
+            },
+            {
+              "from": 0,
+              "to": 2
+            },
+            {
+              "from": 2,
+              "to": 3
+            },
+            {
+              "from": 1,
+              "to": 3
+            }
+          ],
+          "steps": 3
+        },
+        "expected": {
+          "closure": [
+            {
+              "from": 0,
+              "to": 1,
+              "weight": 1
+            },
+            {
+              "from": 0,
+              "to": 2,
+              "weight": 2
+            },
+            {
+              "from": 0,
+              "to": 3,
+              "weight": 3
+            },
+            {
+              "from": 1,
+              "to": 2,
+              "weight": 1
+            },
+            {
+              "from": 1,
+              "to": 3,
+              "weight": 2
+            },
+            {
+              "from": 2,
+              "to": 3,
+              "weight": 1
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "provenance.evaluate",
+    "title": "Evaluate a provenance polynomial",
+    "description": "A derived fact carries a sum of products of the inputs it came from: × for inputs used together, + for another way to the same fact. Evaluate it in any semiring: is it derived, in how many ways, at what least cost, with what best confidence, from which inputs. Each product is also reported, so the winning way is visible.",
+    "kind": "composed",
+    "dependsOn": [
+      "semiring.product",
+      "semiring.add"
+    ],
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "semiring": {
+          "type": "string",
+          "enum": [
+            "boolean",
+            "counting",
+            "tropical",
+            "viterbi",
+            "lineage"
+          ]
+        },
+        "polynomial": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "variable": {
+                "type": "string"
+              },
+              "weight": {
+                "type": "number"
+              },
+              "labels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "variable"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "semiring",
+        "polynomial",
+        "values"
+      ],
+      "additionalProperties": false
+    },
+    "outputSchema": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "object",
+          "properties": {
+            "present": {
+              "type": "boolean"
+            },
+            "weight": {
+              "type": "number"
+            },
+            "labels": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "present"
+          ],
+          "additionalProperties": false
+        },
+        "terms": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "monomial": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "value": {
+                "type": "object",
+                "properties": {
+                  "present": {
+                    "type": "boolean"
+                  },
+                  "weight": {
+                    "type": "number"
+                  },
+                  "labels": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "present"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "monomial",
+              "value"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "value",
+        "terms"
+      ],
+      "additionalProperties": false
+    },
+    "formula": "p = Σᵢ Πⱼ xᵢⱼ, each x read as a 1×1 matrix; a variable without a value is the semiring zero",
+    "caveats": [
+      "A variable with no value is absent (false, 0, +∞, 0 or no lineage), so a product using it vanishes.",
+      "Values: weight for counting, tropical and viterbi; labels for lineage; presence alone for boolean."
+    ],
+    "examples": [
+      {
+        "input": {
+          "semiring": "tropical",
+          "polynomial": [
+            [
+              "corner",
+              "rectangle"
+            ],
+            [
+              "edge1",
+              "edge2",
+              "rectangle"
+            ],
+            [
+              "anchor",
+              "map"
+            ]
+          ],
+          "values": [
+            {
+              "variable": "corner",
+              "weight": 30
+            },
+            {
+              "variable": "rectangle",
+              "weight": 0
+            },
+            {
+              "variable": "edge1",
+              "weight": 40
+            },
+            {
+              "variable": "edge2",
+              "weight": 40
+            },
+            {
+              "variable": "anchor",
+              "weight": 120
+            },
+            {
+              "variable": "map",
+              "weight": 5
+            }
+          ]
+        },
+        "expected": {
+          "value": {
+            "present": true,
+            "weight": 30
+          },
+          "terms": [
+            {
+              "monomial": [
+                "corner",
+                "rectangle"
+              ],
+              "value": {
+                "present": true,
+                "weight": 30
+              }
+            },
+            {
+              "monomial": [
+                "edge1",
+                "edge2",
+                "rectangle"
+              ],
+              "value": {
+                "present": true,
+                "weight": 80
+              }
+            },
+            {
+              "monomial": [
+                "anchor",
+                "map"
+              ],
+              "value": {
+                "present": true,
+                "weight": 125
+              }
+            }
+          ]
+        }
+      },
+      {
+        "input": {
+          "semiring": "boolean",
+          "polynomial": [
+            [
+              "corner",
+              "rectangle"
+            ],
+            [
+              "edge1",
+              "edge2",
+              "rectangle"
+            ]
+          ],
+          "values": [
+            {
+              "variable": "rectangle"
+            },
+            {
+              "variable": "edge1"
+            },
+            {
+              "variable": "edge2"
+            }
+          ]
+        },
+        "expected": {
+          "value": {
+            "present": true
+          },
+          "terms": [
+            {
+              "monomial": [
+                "corner",
+                "rectangle"
+              ],
+              "value": {
+                "present": false
+              }
+            },
+            {
+              "monomial": [
+                "edge1",
+                "edge2",
+                "rectangle"
+              ],
+              "value": {
+                "present": true
+              }
+            }
+          ]
+        }
+      },
+      {
+        "input": {
+          "semiring": "counting",
+          "polynomial": [
+            [
+              "corner",
+              "rectangle"
+            ],
+            [
+              "edge1",
+              "edge2",
+              "rectangle"
+            ],
+            [
+              "anchor",
+              "map"
+            ]
+          ],
+          "values": [
+            {
+              "variable": "corner"
+            },
+            {
+              "variable": "rectangle"
+            },
+            {
+              "variable": "edge1"
+            },
+            {
+              "variable": "edge2"
+            },
+            {
+              "variable": "anchor"
+            },
+            {
+              "variable": "map"
+            }
+          ]
+        },
+        "expected": {
+          "value": {
+            "present": true,
+            "weight": 3
+          },
+          "terms": [
+            {
+              "monomial": [
+                "corner",
+                "rectangle"
+              ],
+              "value": {
+                "present": true,
+                "weight": 1
+              }
+            },
+            {
+              "monomial": [
+                "edge1",
+                "edge2",
+                "rectangle"
+              ],
+              "value": {
+                "present": true,
+                "weight": 1
+              }
+            },
+            {
+              "monomial": [
+                "anchor",
+                "map"
+              ],
+              "value": {
+                "present": true,
+                "weight": 1
+              }
+            }
+          ]
+        }
+      },
+      {
+        "input": {
+          "semiring": "lineage",
+          "polynomial": [
+            [
+              "corner",
+              "rectangle"
+            ],
+            [
+              "anchor",
+              "map"
+            ]
+          ],
+          "values": [
+            {
+              "variable": "corner",
+              "labels": [
+                "frame 12"
+              ]
+            },
+            {
+              "variable": "rectangle",
+              "labels": [
+                "tee spec"
+              ]
+            },
+            {
+              "variable": "anchor",
+              "labels": [
+                "frame 12"
+              ]
+            },
+            {
+              "variable": "map",
+              "labels": [
+                "course 7"
+              ]
+            }
+          ]
+        },
+        "expected": {
+          "value": {
+            "present": true,
+            "labels": [
+              "course 7",
+              "frame 12",
+              "tee spec"
+            ]
+          },
+          "terms": [
+            {
+              "monomial": [
+                "corner",
+                "rectangle"
+              ],
+              "value": {
+                "present": true,
+                "labels": [
+                  "frame 12",
+                  "tee spec"
+                ]
+              }
+            },
+            {
+              "monomial": [
+                "anchor",
+                "map"
+              ],
+              "value": {
+                "present": true,
+                "labels": [
+                  "course 7",
+                  "frame 12"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,14 @@
+{
+ "schema": "pxc-kernel-lab-pin@1",
+ "why": "The kernel evaluates provenance with Capability Lab's own semiring capabilities (seq 62): first use in the Lab, second use in thro (ways.mjs), sublated here. Change them in the Lab and re-copy; test/kernel-sum.test.mjs fails if these drift from outputs/capability-lab.",
+ "files": {
+  "runtime.mjs": {
+   "from": "outputs/capability-lab/src/runtime/index.mjs",
+   "sha256": "dea6bdac9b338bf4a75e547f4daafaa3bbcd208d2d428efa5944335f9712ba76"
+  },
+  "semiring.mjs": {
+   "from": "outputs/capability-lab/src/semiring/index.mjs",
+   "sha256": "6927052bda15a96ebf5a4b893417b5af17b11ecc73bb0bda9724648c39185198"
+  }
+ }
+}
