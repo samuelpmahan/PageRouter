@@ -26,13 +26,14 @@ test('an accent change recomputes only the card recipe; going back to an earlier
   assert.equal(back.recipeHash, first.recipeHash);
 });
 
-test('a change is told by features, and a layout change names every feature it moved', () => {
+test('a change is told by features: layouts by name, and what follows from a layout said with it', () => {
   const world = createThroWorld();
   const b01 = screen(world, single({ study: 'discstudio:b01', nativeRevision: 2 }));
   const u04 = screen(world, single({ study: 'discstudio:u04', nativeRevision: 2 }));
   const diff = definitionDiff(recipeDefinition(b01.outputs.recipe), recipeDefinition(u04.outputs.recipe));
-  assert.ok(diff.includes('layout: B01 → U04'));
-  assert.ok(diff.includes('disc side: right → left'));
+  assert.deepEqual(diff, ['layout: Hero rail → Kinetic name (and with it: disc side left, highlight tiles)'], 'layouts by name; what comes with a layout is said with it');
+  const chosen = definitionDiff(recipeDefinition(b01.outputs.recipe), recipeDefinition(screen(world, single({ study: 'discstudio:b01', nativeRevision: 2, nativeSide: 'left' })).outputs.recipe));
+  assert.deepEqual(chosen, ['disc side: right → left'], 'a side set by hand is a choice of its own');
   assert.ok(!diff.some(line => /[0-9a-f]{16}/.test(line)), 'no hash in what a change says');
 });
 

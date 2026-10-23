@@ -9,7 +9,7 @@
 // The kernel decides; the DiscStudio card renderer draws whatever recipe was decided (it is async canvas
 // work, and kernel runs are synchronous), so pixels stay outside the world and recipes stay inside it.
 import { createWorld } from './pxc/kernel.mjs';
-import { nativeCardRecipe, nativeBuild, cardRevisions } from './native-cards.mjs';
+import { nativeCardRecipe, nativeBuild, cardRevisions, nativeStudies, lineupStudies } from './native-cards.mjs';
 
 /** The site's decisions: the fill. Who decided each, and when, is on the implementation it names. */
 export const SITE_FILL = Object.freeze({
@@ -183,14 +183,17 @@ export function decide(world, fill = SITE_FILL) {
 const num = v => (v === null || v === undefined ? '–' : String(v).replace('-', '−'));
 const discName = d => [d?.manufacturer, d?.name].filter(Boolean).join(' ') + (d?.plastic ? `, ${d.plastic}` : '');
 const photoName = h => (typeof h === 'string' && /^[0-9a-f]{64}$/.test(h) ? `known only by its hash (${h.slice(0, 8)}…)` : 'missing');
+// A layout is named by what it is (Hero rail), not its code (B01); the code is a name by convention, like a hash.
+const layoutName = (id, list) => { const study = list.find(s => s.id === id); return study ? String(study.label ?? study.name).replace(/^[A-Z0-9-]+(?: ·)? /, '') : id; };
 function cardFeatures(r, prefix = '', label = '') {
-  const a = r.appearance ?? {}, f = [];
-  const add = (key, name, value) => { if (value !== undefined) f.push({ key: prefix + key, label: label + name, value }); };
+  const a = r.appearance ?? {}, f = [], study = nativeStudies.find(s => s.id === `discstudio:${r.preset}`);
+  // A proprium: side and highlight follow from the layout when they are its own; otherwise they were chosen.
+  const add = (key, name, value, follows) => { if (value !== undefined) f.push({ key: prefix + key, label: label + name, value, ...(follows ? { follows: 'layout' } : {}) }); };
   add('disc', 'disc', discName(r.disc));
   add('flights', 'flight numbers', (r.flights ?? []).map(num).join(' · '));
   add('accent', 'accent', a.accentColor);
-  add('side', 'disc side', a.discSide);
-  add('highlight', 'highlight', a.highlightTarget);
+  add('side', 'disc side', a.discSide, study && a.discSide === study.side);
+  add('highlight', 'highlight', a.highlightTarget, study && a.highlightTarget === study.highlight);
   add('plate', 'plate', a.plate);
   add('photo', 'photo', photoName(r.photo));
   return f;
@@ -200,14 +203,14 @@ export function recipeDefinition(recipe) {
   if (!recipe) return [];
   if (recipe.cards) return [
     { key: 'kind', label: 'graphic', value: 'Bag lineup' },
-    { key: 'layout', label: 'layout', value: String(recipe.preset).toUpperCase() },
+    { key: 'layout', label: 'layout', value: layoutName(`discstudio-lineup:${recipe.preset}`, lineupStudies) },
     { key: 'discs', label: 'discs', value: recipe.cards.map(c => c.disc?.name).join(', ') },
     { key: 'featured', label: 'featured', value: recipe.featured === null || recipe.featured === undefined ? 'none' : recipe.cards[recipe.featured]?.disc?.name },
     ...recipe.cards.flatMap((c, i) => cardFeatures(c, `card${i + 1}.`, `card ${i + 1} `)),
   ];
   return [
     { key: 'kind', label: 'graphic', value: 'Single card' },
-    { key: 'layout', label: 'layout', value: String(recipe.preset).toUpperCase() },
+    { key: 'layout', label: 'layout', value: layoutName(`discstudio:${recipe.preset}`, nativeStudies) },
     ...cardFeatures(recipe),
     { key: 'size', label: 'size', value: recipe.scale === undefined ? undefined : `${Math.round(recipe.scale * 100)}%` },
     { key: 'position', label: 'position', value: recipe.nudge ? `${num(recipe.nudge.x)}, ${num(recipe.nudge.y)}` : 'as laid out' },
@@ -220,17 +223,21 @@ export function definitionDiff(before, after) {
   const kind = d => d.find(x => x.key === 'kind')?.value;
   if (kind(before) !== kind(after)) return [`${kind(before)} → ${kind(after)}`];
   const at = d => new Map(d.map(x => [x.key, x])), a = at(before), b = at(after), groups = new Map();
+  const layoutChanged = a.get('layout')?.value !== b.get('layout')?.value, withLayout = [];
   for (const key of new Set([...a.keys(), ...b.keys()])) {
     const x = a.get(key), y = b.get(key);
     if (x?.value === y?.value) continue;
     if (key === 'discs' && x && y && x.value.split(', ').length === y.value.split(', ').length) continue; // each card says its own disc
+    if (layoutChanged && y?.follows === 'layout' && !/^card\d+\./.test(key)) { withLayout.push(`${y.label} ${y.value}`); continue; } // came with the new layout
     const m = /^card(\d+)\.(.+)$/.exec(key), feature = m ? (x ?? y).label.replace(/^card \d+ /, '') : (x ?? y).label;
     const g = `${feature}\u0000${x?.value ?? 'none'}\u0000${y?.value ?? 'none'}`;
     if (!groups.has(g)) groups.set(g, { feature, from: x?.value ?? 'none', to: y?.value ?? 'none', cards: [] });
     if (m) groups.get(g).cards.push(Number(m[1]));
   }
   // A photo has no definition yet, only a hash: say that it changed, not two strings of hex.
-  return [...groups.values()].map(g => `${g.feature}${g.cards.length ? (g.cards.length > 1 ? ` (cards ${g.cards.join(', ')})` : ` (card ${g.cards[0]})`) : ''}: ${g.feature === 'photo' ? 'a different photo, known only by its hash' : `${g.from} → ${g.to}`}`);
+  const lines = [...groups.values()].map(g => `${g.feature}${g.cards.length ? (g.cards.length > 1 ? ` (cards ${g.cards.join(', ')})` : ` (card ${g.cards[0]})`) : ''}: ${g.feature === 'photo' ? 'a different photo, known only by its hash' : `${g.from} → ${g.to}`}`);
+  if (withLayout.length) lines[lines.findIndex(l => l.startsWith('layout: '))] += ` (and with it: ${withLayout.join(', ')})`;
+  return lines;
 }
 
 /** What a run recomputed and what it reused, from its receipt's trace: every call beneath the root, in order. */

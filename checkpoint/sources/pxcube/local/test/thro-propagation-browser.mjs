@@ -51,7 +51,7 @@ for (const width of [1280, 390]) {
   expect(width, d.latest.what.includes('disc: '), `a disc change should name the disc, said "${d.latest.what}"`);
   expect(width, d.latest.recomputed.includes('card recipe'), 'a disc change should recompute the card recipe');
   const l = await step('layout U04', () => tap(p.locator('[data-study="discstudio:u04"]')));
-  expect(width, l.latest.what.includes('layout: B01 → U04'), `a layout change should say B01 → U04, said "${l.latest.what}"`);
+  expect(width, l.latest.what.startsWith('layout: Hero rail → Kinetic name (and with it: '), `a layout change should name the layouts and what came with U04, said "${l.latest.what}"`);
   // Bag: a lineup is one card recipe per disc. An accent change is said once for every card.
   await tap(p.locator('[data-mode="bag"]')); await p.waitForTimeout(2500);
   for (let i = 0; i < await p.locator('[data-disc]').count(); i++) if (await p.locator('[data-disc]').nth(i).getAttribute('aria-pressed') !== 'true') { await tap(p.locator('[data-disc]').nth(i)); await p.waitForTimeout(1500); }
