@@ -165,6 +165,26 @@ export function createThroWorld() {
         : { accepted: true, reason: `${cards.length === 1 ? 'The photo drawn is' : 'Each photo drawn is'} the one its definition names: ${defs.slice(0, cards.length).map(photoWords).join('; ')}.` };
     } });
 
+  // ---- The person's reading order (rung 6): swapping two parts is a capability, so a handle on the card and a script invoke the same
+  // thing and get the same order (Capability Lab's question: can a UI and a script consume the same capability?). null = the scaffold.
+  const parts = ['disc', 'name', 'numbers', 'other'];
+  world.contract({ id: 'thro.reading.order', description: 'Which part of a card does this person mean to be read first, second, third, fourth?',
+    notes: 'Swap two parts of the order. Starts from Sam\'s scaffold when the person has not set one. The scaffold itself is unchanged: it still checks agent-made cards.',
+    in: { order: { oneOf: [{ type: 'array', minItems: 4, maxItems: 4, items: { type: 'string', enum: parts } }, { type: 'null' }] }, swap: { type: 'array', minItems: 2, maxItems: 2, items: { type: 'string', enum: parts } } },
+    out: { order: { type: 'array', minItems: 4, maxItems: 4, items: { type: 'string', enum: parts } } },
+    examples: [
+      { name: 'the name onto the disc, from the scaffold', in: { order: null, swap: ['name', 'disc'] }, out: { order: ['name', 'disc', 'numbers', 'other'] } },
+      { name: 'everything else above the numbers', in: { order: ['disc', 'name', 'numbers', 'other'], swap: ['other', 'numbers'] }, out: { order: ['disc', 'name', 'other', 'numbers'] } },
+      { name: 'swapping back restores the scaffold', in: { order: ['name', 'disc', 'numbers', 'other'], swap: ['disc', 'name'] }, out: { order: ['disc', 'name', 'numbers', 'other'] } },
+    ] });
+  world.implement({ id: 'thro.reading.order/swap', implements: 'thro.reading.order', description: 'Exchange the two parts\' places.', origin: { by: 'Sam (handles) · claude-ed (rung 6)', iters: [34] },
+    run: ({ order, swap }) => {
+      const next = [...(order.value ?? parts)], [a, b] = swap.value, i = next.indexOf(a), j = next.indexOf(b);
+      if (i < 0 || j < 0 || new Set(next).size !== parts.length) throw Error('An order names each of disc, name, numbers and everything else once.');
+      [next[i], next[j]] = [next[j], next[i]];
+      return { order: next };
+    } });
+
   // ---- The screen: one run from the site's decisions down to the card on screen and Sam's rule on it.
   // The layout is what the renderer measured while drawing that recipe, so the rule judges the actual card.
   world.contract({ id: 'thro.screen', description: 'What is on screen, and does it keep the rule?',
@@ -229,14 +249,14 @@ const layoutName = (id, list) => { const study = list.find(s => s.id === id); re
 function cardFeatures(r, prefix = '', label = '', photo = null) {
   const a = r.appearance ?? {}, f = [], study = nativeStudies.find(s => s.id === `discstudio:${r.preset}`);
   // A proprium: side and highlight follow from the layout when they are its own; otherwise they were chosen.
-  const add = (key, name, value, follows) => { if (value !== undefined) f.push({ key: prefix + key, label: label + name, value, ...(follows ? { follows: 'layout' } : {}) }); };
-  add('disc', 'disc', discName(r.disc));
+  const add = (key, name, value, follows, picture) => { if (value !== undefined) f.push({ key: prefix + key, label: label + name, value, ...(follows ? { follows: 'layout' } : {}), ...(picture ? { picture } : {}) }); };
+  add('disc', 'disc', discName(r.disc), false, { disc: r.disc?.id });
   add('flights', 'flight numbers', (r.flights ?? []).map(num).join(' · '));
-  add('accent', 'accent', accentWords(a.accentColor, study));
+  add('accent', 'accent', accentWords(a.accentColor, study), false, a.accentColor ? { color: a.accentColor } : null);
   add('side', 'disc side', a.discSide, study && a.discSide === study.side);
   add('highlight', 'highlight', a.highlightTarget, study && a.highlightTarget === study.highlight);
   add('plate', 'plate', a.plate);
-  add('photo', 'photo', photoName(r.photo, photo));
+  add('photo', 'photo', photoName(r.photo, photo), false, { disc: r.disc?.id });
   return f;
 }
 /** A recipe's definition: its features in order, each { key, label, value }. Two recipes with the same definition are the same card. */
@@ -244,14 +264,14 @@ export function recipeDefinition(recipe, photos = []) {
   if (!recipe) return [];
   if (recipe.cards) return [
     { key: 'kind', label: 'graphic', value: 'Bag lineup' },
-    { key: 'layout', label: 'layout', value: layoutName(`discstudio-lineup:${recipe.preset}`, lineupStudies) },
+    { key: 'layout', label: 'layout', value: layoutName(`discstudio-lineup:${recipe.preset}`, lineupStudies), picture: { study: `discstudio-lineup:${recipe.preset}` } },
     { key: 'discs', label: 'discs', value: recipe.cards.map(c => c.disc?.name).join(', ') },
     { key: 'featured', label: 'featured', value: recipe.featured === null || recipe.featured === undefined ? 'none' : recipe.cards[recipe.featured]?.disc?.name },
     ...recipe.cards.flatMap((c, i) => cardFeatures(c, `card${i + 1}.`, `card ${i + 1} `, photos[i])),
   ];
   return [
     { key: 'kind', label: 'graphic', value: 'Single card' },
-    { key: 'layout', label: 'layout', value: layoutName(`discstudio:${recipe.preset}`, nativeStudies) },
+    { key: 'layout', label: 'layout', value: layoutName(`discstudio:${recipe.preset}`, nativeStudies), picture: { study: `discstudio:${recipe.preset}` } },
     ...cardFeatures(recipe, '', '', photos[0]),
     { key: 'size', label: 'size', value: recipe.scale === undefined ? undefined : `${Math.round(recipe.scale * 100)}%` },
     { key: 'position', label: 'position', value: recipe.nudge ? `${num(recipe.nudge.x)}, ${num(recipe.nudge.y)}` : 'as laid out' },
@@ -259,10 +279,13 @@ export function recipeDefinition(recipe, photos = []) {
   ].filter(x => x.value !== undefined);
 }
 /** What changed between two definitions, feature by feature (same change on every card is said once). */
-export function definitionDiff(before, after) {
+/** What changed between two definitions, as structured changes: { feature, cards, from, to, fromPicture, toPicture, with, line }.
+ * The same change on every card is one change; what came with a new layout is said with the layout. Pictures are what the change is
+ * of (a colour, a layout, a disc), so a page can show it without words. */
+export function definitionChanges(before, after) {
   if (!before.length) return [];
   const kind = d => d.find(x => x.key === 'kind')?.value;
-  if (kind(before) !== kind(after)) return [`${kind(before)} → ${kind(after)}`];
+  if (kind(before) !== kind(after)) return [{ feature: 'graphic', cards: [], from: kind(before), to: kind(after), with: [], line: `${kind(before)} → ${kind(after)}` }];
   const at = d => new Map(d.map(x => [x.key, x])), a = at(before), b = at(after), groups = new Map();
   const layoutChanged = a.get('layout')?.value !== b.get('layout')?.value, withLayout = [];
   for (const key of new Set([...a.keys(), ...b.keys()])) {
@@ -272,14 +295,21 @@ export function definitionDiff(before, after) {
     if (layoutChanged && y?.follows === 'layout' && !/^card\d+\./.test(key)) { withLayout.push(`${y.label} ${y.value}`); continue; } // came with the new layout
     const m = /^card(\d+)\.(.+)$/.exec(key), feature = m ? (x ?? y).label.replace(/^card \d+ /, '') : (x ?? y).label;
     const g = `${feature}\u0000${x?.value ?? 'none'}\u0000${y?.value ?? 'none'}`;
-    if (!groups.has(g)) groups.set(g, { feature, from: x?.value ?? 'none', to: y?.value ?? 'none', cards: [] });
+    if (!groups.has(g)) groups.set(g, { feature, from: x?.value ?? 'none', to: y?.value ?? 'none', fromPicture: x?.picture ?? null, toPicture: y?.picture ?? null, cards: [], with: [] });
     if (m) groups.get(g).cards.push(Number(m[1]));
   }
-  // A photo with no definition is known only by its hash: say that it changed, not two strings of hex.
-  const lines = [...groups.values()].map(g => `${g.feature}${g.cards.length ? (g.cards.length > 1 ? ` (cards ${g.cards.join(', ')})` : ` (card ${g.cards[0]})`) : ''}: ${g.feature === 'photo' && /known only by its hash/.test(g.to) ? 'a different photo, known only by its hash' : `${g.from} → ${g.to}`}`);
-  if (withLayout.length) lines[lines.findIndex(l => l.startsWith('layout: '))] += ` (and with it: ${withLayout.join(', ')})`;
-  return lines;
+  const changes = [...groups.values()];
+  if (withLayout.length) changes.find(c => c.feature === 'layout').with = withLayout;
+  for (const c of changes) {
+    const where = c.cards.length ? (c.cards.length > 1 ? ` (cards ${c.cards.join(', ')})` : ` (card ${c.cards[0]})`) : '';
+    // A photo with no definition is known only by its hash: say that it changed, not two strings of hex.
+    const what = c.feature === 'photo' && /known only by its hash/.test(c.to) ? 'a different photo, known only by its hash' : `${c.from} → ${c.to}`;
+    c.line = `${c.feature}${where}: ${what}${c.with.length ? ` (and with it: ${c.with.join(', ')})` : ''}`;
+  }
+  return changes;
 }
+/** What changed between two definitions, one line per change. */
+export function definitionDiff(before, after) { return definitionChanges(before, after).map(c => c.line); }
 
 /** What a run recomputed and what it reused, from its receipt's trace: every call beneath the root, in order. */
 export function propagation(receipt) {
@@ -293,7 +323,7 @@ export function propagation(receipt) {
 
 /** The four causes as guarantees on what is on screen (Aristotle, via Sam, 22 Oct): what it is made from, what shape it must
  * have, what made it, and what it is for. ok is true, false, or null when the world cannot say yet. */
-export function guarantees(world, run) {
+export function guarantees(world, run, viewer = {}) {
   const o = run.outputs, recipe = o.recipe, cards = recipe.cards ?? [recipe];
   const proofs = world.prove('thro.card.recipe');
   const makers = propagation(run.receipt).filter(n => !n.contract.startsWith('thro.screen'));
@@ -313,7 +343,7 @@ export function guarantees(world, run) {
     { cause: 'formal', question: 'What shape must it have?', ok: proofs.length > 0 && proofs.every(p => p.ok),
       what: `The recipe has the shape thro.card.recipe declares; its ${proofs.length} examples prove the implementation (${proofs.filter(p => p.ok).length}/${proofs.length}).` },
     { cause: 'efficient', question: 'What made it, and is that what the site decided?', ...efficient },
-    finalCause(run),
+    finalCause(run, viewer),
   ];
 }
 
@@ -327,31 +357,48 @@ export const PURPOSE = Object.freeze({
   scaffold: 'Sam\'s order (disc image, mold name, flight numbers, everything else) is a working scaffold: it keeps agent-made cards consistent and makes agents drop what does not matter. It binds agents. A card can break it and still serve its purpose.',
 });
 const px = v => `${Math.round(v ?? 0)} px`;
-function readingOf(layout, name, flights) {
+export function readingOf(layout, name, flights) {
   const other = (layout?.other ?? []).reduce((best, item) => (item.size > best.size ? item : best), { size: 0, text: '' });
   return { angle: layout?.photo?.angle ?? 0, skewed: Boolean(layout?.photo?.skewed), labels: (layout?.other ?? []).filter(item => /^(speed|glide|turn|fade)$/i.test(String(item.text).trim())).map(item => item.text), disc: layout?.photo?.w ?? 0, name: layout?.name?.size ?? 0, numbers: layout?.numbers?.size ?? 0, other, nameText: name, numbersText: (flights ?? []).map(num).join(' · ') };
 }
-// What a viewer reads out of order, as a consequence for the purpose (null when the sizes keep the reading order).
-function misread(r) {
-  if (!(r.disc > r.name)) return `the name ${r.nameText} (${px(r.name)}) is read before the disc (${px(r.disc)}), so the viewer reads a word before seeing which disc it is.`;
-  if (!(r.name > r.numbers)) return `the numbers (${px(r.numbers)}) are read before the name ${r.nameText} (${px(r.name)}), so how it flies comes before which disc it is.`;
+// The parts of a card in Sam's scaffold order. A viewer may set their own order; the measured order is a plain fact either way.
+export const PARTS = Object.freeze(['disc', 'name', 'numbers', 'other']);
+const measure = (r, part) => (part === 'disc' ? r.disc : part === 'other' ? r.other.size : r[part]);
+const say = (r, part) => (part === 'disc' ? 'the disc' : part === 'name' ? `the name ${r.nameText}` : part === 'numbers' ? `the numbers ${r.numbersText}` : r.other.text ? `"${r.other.text}"` : 'everything else');
+const gives = (r, part) => (part === 'disc' ? 'which disc it is' : part === 'name' ? `the name ${r.nameText}` : part === 'numbers' ? 'how it flies' : r.other.text ? `"${r.other.text}"` : 'everything else');
+/** The order a card is actually read in: its parts by measured size, biggest first (ties keep the scaffold order). */
+export function measuredOrder(r) { return [...PARTS].sort((a, b) => measure(r, b) - measure(r, a) || PARTS.indexOf(a) - PARTS.indexOf(b)); }
+// What a viewer reads out of the intended order, as a consequence for the purpose (null when the card keeps it).
+function misread(r, intended = PARTS) {
+  for (let i = 0; i + 1 < intended.length; i++) {
+    const a = intended[i], b = intended[i + 1];
+    if (!(measure(r, a) > measure(r, b))) return `${say(r, b)} (${px(measure(r, b))}) is read before ${say(r, a)} (${px(measure(r, a))}), so the viewer gets ${gives(r, b)} before ${gives(r, a)}.`;
+  }
   if (r.labels.length) return `the numbers carry labels ("${r.labels.join('", "')}"), so the viewer reads words where a glance should do.`;
   if (r.skewed) return 'the disc photo is squashed, so the face a viewer recognises a disc by is distorted.';
   if (Math.abs(r.angle) > 0.5) return `the disc is turned ${Math.round(r.angle)}°, so the face a viewer recognises it by is not upright.`;
-  if (!(r.numbers > r.other.size)) return `"${r.other.text}" (${px(r.other.size)}) is read before the flight numbers (${px(r.numbers)}), so the viewer gets "${r.other.text}" before how the disc flies.`;
   return null;
 }
-function finalCause(run) {
+const partWords = order => order.map(p => ({ disc: 'disc', name: 'name', numbers: 'numbers', other: 'everything else' })[p]).join(', ');
+/** viewer: { order, purpose: { card, lineup } }, set by the person on the page; absent means the site's purpose and Sam's scaffold order. */
+function finalCause(run, viewer = {}) {
   const o = run.outputs, recipe = o.recipe, inputs = run.receipt.inputValues ?? {};
   const cards = recipe.cards ?? [recipe], layouts = recipe.cards ? inputs.layouts ?? [] : [inputs.layout];
   const reads = cards.map((c, i) => readingOf(layouts[i], c.disc?.name, c.flights));
-  const sizes = r => `disc photo ${px(r.disc)}, the name ${r.nameText} ${px(r.name)}, the numbers ${r.numbersText} ${px(r.numbers)}, the largest other text${r.other.text ? ` ("${r.other.text}")` : ''} ${px(r.other.size)}`;
+  const intended = Array.isArray(viewer.order) && viewer.order.length === PARTS.length && PARTS.every(p => viewer.order.includes(p)) ? viewer.order : PARTS;
+  const own = intended.join() !== PARTS.join();
+  const sizes = r => `disc photo ${px(r.disc)}, the name ${r.nameText} ${px(r.name)}, the numbers ${r.numbersText} ${px(r.numbers)}, the largest other text${r.other.text ? ` ("${r.other.text}")` : ''} ${px(r.other.size)}; read as ${partWords(measuredOrder(r))}`;
   const does = recipe.cards ? `Card by card: ${reads.map((r, i) => `${i + 1}. ${r.nameText}: ${sizes(r)}`).join('; ')}.` : `On this card: ${sizes(reads[0])}.`;
-  const order = r => `the disc, then ${r.nameText}, then ${r.numbersText}, and only then anything else`;
-  const thus = o.accepted
-    ? (recipe.cards ? `Every card is read in the same order (${reads.map(order).join('; ')}), so like is compared with like.` : `A viewer sees ${order(reads[0])}: the order the purpose needs.`)
-    : `Not served. ${reads.map((r, i) => { const why = misread(r); return why ? `${recipe.cards ? `Card ${i + 1}: ` : ''}${why}` : ''; }).filter(Boolean).join(' ') || o.reason}`;
-  const demonstration = { for: recipe.cards ? PURPOSE.lineup : PURPOSE.card, because: PURPOSE.reading, scaffold: PURPOSE.scaffold, does, thus };
-  return { cause: 'final', question: 'What is it for, and does it do it?', ok: o.accepted, demonstration,
-    what: `This is for: ${demonstration.for} Because: ${demonstration.because} It does: ${demonstration.does} Thus: ${demonstration.thus}${o.accepted ? ' QED.' : ''}` };
+  const misreads = reads.map((r, i) => { const why = misread(r, intended); return why ? `${recipe.cards ? `Card ${i + 1}: ` : ''}${why}` : ''; }).filter(Boolean);
+  const ok = misreads.length === 0;
+  const inOrder = r => intended.map(p => say(r, p)).join(', then ');
+  const thus = ok
+    ? (recipe.cards ? `Every card is read in the same order (${reads.map(inOrder).join('; ')}), so like is compared with like.` : `A viewer gets ${inOrder(reads[0])}: the order ${own ? 'you set' : 'the purpose needs'}.`)
+    : `Not served${own ? ' in your order' : ''}. ${misreads.join(' ')}`;
+  const purpose = recipe.cards ? viewer.purpose?.lineup ?? PURPOSE.lineup : viewer.purpose?.card ?? PURPOSE.card;
+  const because = `${own ? `Your order: ${partWords(intended)}. ` : ''}${PURPOSE.reading}`;
+  const scaffold = `${PURPOSE.scaffold}${own ? ` Your order differs from it; the scaffold still checks agent-made cards.` : ''}`;
+  const demonstration = { for: purpose, because, scaffold, does, thus, own, intended, purposeOwn: purpose !== (recipe.cards ? PURPOSE.lineup : PURPOSE.card) };
+  return { cause: 'final', question: 'What is it for, and does it do it?', ok, demonstration,
+    what: `This is for: ${demonstration.for} Because: ${demonstration.because} It does: ${demonstration.does} Thus: ${demonstration.thus}${ok ? ' QED.' : ''}` };
 }

@@ -24,6 +24,8 @@ const runtimeFiles = [
   'lineup-lab.html',
   'battle-lab.html',
   'dtree.mjs',
+  'handles.mjs',
+  'viewer.mjs',
   'dtree.json',
   'thro-world.mjs',
   'fill-matrix.html',

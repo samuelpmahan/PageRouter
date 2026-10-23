@@ -7,7 +7,8 @@
 // Rung 4: after every change, what the change did in the world: which features of the card changed (its definition, never a
 // hash), which contracts recomputed and which were reused, and whether the pixels were drawn or reused. A toast under the
 // preview and a short list here. Edges are labelled by kind; what is on screen carries the four guarantees (the four causes).
-import { OPEN, SITE_FILL, propagation, guarantees, recipeDefinition, definitionDiff } from './thro-world.mjs';
+import { OPEN, SITE_FILL, propagation, guarantees, recipeDefinition, definitionChanges } from './thro-world.mjs';
+import { viewer, setPurpose, resetOrder } from './viewer.mjs';
 import { cardLayout } from './native-cards.mjs';
 import { traceToSvg } from './pxc/view.mjs';
 
@@ -62,6 +63,14 @@ const css = `
 .dtree-toast{position:absolute;z-index:58;max-width:min(560px,calc(100vw - 32px));padding:9px 12px;border-radius:10px;background:#101812;color:#e9f1e4;border:1px solid #3d5141;box-shadow:0 8px 24px #0007;font:12px/1.4 system-ui,sans-serif;pointer-events:none;transition:opacity .3s}
 .dtree-toast b{display:block;font-size:13px;color:#fff}.dtree-toast .dt-re{color:#ffd166}.dtree-toast .dt-ru{color:#c8f49d}
 .dtree-toast[hidden]{display:none}
+.dtree .dt-pics,.dtree-toast .dt-pics{display:flex;flex-wrap:wrap;gap:6px 14px;margin:2px 0 4px}
+.dt-pic{display:inline-flex;align-items:center;gap:6px}.dt-pic>i{font-style:normal;color:#9fb0a3;font-weight:800}
+.pic-sw{display:inline-block;width:26px;height:26px;border-radius:50%;border:2px solid #ffffffcc;box-shadow:0 1px 4px #0008}
+.pic-disc{width:34px;height:34px;border-radius:50%;object-fit:cover;box-shadow:0 1px 4px #0008}
+.pic-study{display:inline-block;width:64px;height:36px;border-radius:5px;overflow:hidden;background:#0b100c;border:1px solid #ffffff33}.pic-study svg{width:100%;height:100%;display:block}
+.dt-cap{font-size:11px;color:#9fb0a3}.dtree-toast .dt-cap{color:#cfe3c9}
+.dtree .dt-purpose{border-bottom:1px dashed #c8f49d;outline:none;cursor:text}.dtree .dt-purpose:focus{background:#c8f49d1f;border-bottom-style:solid}
+.dtree .dt-undo{min-height:24px!important;padding:0 6px!important;margin-left:6px;font-size:12px!important;vertical-align:1px}
 .dtree-lit{position:absolute;z-index:65;pointer-events:none;border:3px solid #c8f49d;border-radius:12px;box-shadow:0 0 0 9999px #0006,0 0 24px #c8f49d88}
 .dtree-lit span{position:absolute;left:-3px;top:-28px;background:#c8f49d;color:#10180f;font:700 12px/1 system-ui,sans-serif;padding:6px 8px;border-radius:7px;white-space:nowrap;max-width:80vw;overflow:hidden;text-overflow:ellipsis}
 `;
@@ -159,9 +168,10 @@ async function start() {
     try { picture = traceToSvg(r.trace, world.part, { title, receipt: r, valueChars: 52, expand: n => world.node(n.cachedFrom.run, n.cachedFrom.call) }); } catch (e) { picture = `<p class="dt-wait">${esc(e.message)}</p>`; }
     const def = recipeDefinition(o.recipe, r.inputValues?.photos).filter(f => f.key !== 'kind');
     const shownDef = lineup ? def.filter(f => !/\.(flights|side|highlight|photo|plate)$/.test(f.key)) : def;
-    const gs = guarantees(world, sc), mark = ok => ok === true ? '<b class="ok">✓</b>' : ok === false ? '<b class="no">✗</b>' : '<b class="unknown">?</b>';
+    const gs = guarantees(world, sc, viewer()), mark = ok => ok === true ? '<b class="ok">✓</b>' : ok === false ? '<b class="no">✗</b>' : '<b class="unknown">?</b>';
     // The final cause is a demonstration, not a verdict: what it is for, the premise, what it does, thus.
-    const proof = d => `<ol class="dt-proof"><li><em>This is for</em> ${esc(d.for)}</li><li><em>Because</em> ${esc(d.because)}</li>${d.scaffold ? `<li class="dt-scaffold"><em>Scaffold</em> ${esc(d.scaffold)}</li>` : ''}<li><em>It does</em> ${esc(d.does)}</li><li><em>Thus</em> ${esc(d.thus)}</li></ol>`;
+    const kind = lineup ? 'lineup' : 'card';
+    const proof = d => `<ol class="dt-proof"><li><em>This is for</em> <span class="dt-purpose" contenteditable="plaintext-only" spellcheck="false" data-purpose="${kind}" aria-label="What this ${kind} is for (your words)">${esc(d.for)}</span>${d.purposeOwn ? `<button type="button" class="dt-undo" data-purpose-reset="${kind}" aria-label="Back to the site's words">↺</button>` : ''}</li><li><em>Because</em> ${esc(d.because)}${d.own ? '<button type="button" class="dt-undo" data-order-reset aria-label="Back to the scaffold order">↺</button>' : ''}</li>${d.scaffold ? `<li class="dt-scaffold"><em>Scaffold</em> ${esc(d.scaffold)}</li>` : ''}<li><em>It does</em> ${esc(d.does)}</li><li><em>Thus</em> ${esc(d.thus)}</li></ol>`;
     const guaranteeRows = `<div class="dt-g">${gs.map(g => `<span class="dt-chip cause">${esc(g.cause)}</span><div><p>${mark(g.ok)} <b>${esc(g.question)}</b> ${g.demonstration ? '' : esc(g.what)}</p>${g.demonstration ? `${proof(g.demonstration)}${g.ok ? '<p class="dt-qed">QED</p>' : ''}` : ''}</div>`).join('')}</div>`;
     return `<div class="dt-node" id="dt-screen"><p class="dt-q"><span class="dt-chip active">Run ${esc(r.runId)}</span>What is on screen, and does it keep the rule? <code>${o.recipe.cards ? 'thro.screen.lineup' : 'thro.screen'}</code></p>
       <p class="dt-c">${o.recipe.cards ? `Lineup ${esc(recipeDefinition(o.recipe).find(f => f.key === 'layout')?.value)} · ${o.recipe.cards.map(c => esc(c.disc.name)).join(', ')}${o.recipe.featured !== null ? ` · featured: ${esc(o.recipe.cards[o.recipe.featured]?.disc.name)}` : ''}` : `${esc(recipeDefinition(o.recipe).find(f => f.key === 'layout')?.value)} · ${esc(o.recipe.disc.manufacturer)} ${esc(o.recipe.disc.name)}${o.recipe.revision ? ` · revision ${o.recipe.revision}` : ''}`}</p>
@@ -199,25 +209,36 @@ async function start() {
   const changes = []; let lastHash = null;
   function record() {
     const sc = window.__thro?.screen; if (!sc || sc.error) return null;
+    seeThumbs();
     const def = recipeDefinition(sc.outputs.recipe, sc.receipt.inputValues?.photos), prev = changes[0];
     const calls = propagation(sc.receipt).filter(c => !/^thro\.screen/.test(c.contract) || c.whole);
     const entry = { n: (prev?.n ?? 0) + 1, run: sc.receipt.runId, def, hash: sc.recipeHash, first: !prev,
-      diff: prev ? definitionDiff(prev.def, def) : [], recomputed: names(calls.filter(c => !c.cached)), reused: names(calls.filter(c => c.cached)),
+      parts: prev ? definitionChanges(prev.def, def) : [], recomputed: names(calls.filter(c => !c.cached)), reused: names(calls.filter(c => c.cached)),
       whole: calls.find(c => c.whole)?.cachedFrom?.run ?? null, pixel: sc.pixel, accepted: sc.outputs.accepted, times: 1 };
+    entry.diff = entry.parts.map(c => c.line);
     entry.sameAs = prev && entry.hash !== prev.hash ? changes.find(c => c.hash === entry.hash)?.n ?? null : null;
     if (prev && !entry.diff.length && entry.hash === prev.hash) { prev.times++; prev.run = entry.run; return { entry: prev, repeat: true }; }
     changes.unshift(entry); if (changes.length > 6) changes.pop();
     return { entry, repeat: false };
   }
+  // Pictures over words (Sam, 23:31: someone in Sweden with no English): a change is shown as what it is of, a colour, a layout,
+  // a disc, from → to; the words are a caption. Layout thumbnails are the page's own (cloned in after render).
+  const discImg = id => document.querySelector(`[data-disc="ds.px.disc.${CSS.escape(String(id))}"] img`)?.getAttribute('src');
+  const pic = p => !p ? '' : p.color ? `<span class="pic-sw" style="background:${esc(p.color)}"></span>` : p.study ? `<span class="pic-study" data-pic-study="${esc(p.study)}"></span>` : p.disc && discImg(p.disc) ? `<img class="pic-disc" alt="" src="${esc(discImg(p.disc))}">` : '';
+  const pics = e => { const row = (e.parts ?? []).filter(c => pic(c.fromPicture) || pic(c.toPicture)).filter((c, i, all) => !(c.feature === 'photo' && all.some(d => d.feature === 'disc'))).map(c => `<span class="dt-pic">${pic(c.fromPicture)}<i>→</i>${pic(c.toPicture)}</span>`); return row.length ? `<div class="dt-pics">${row.join('')}</div>` : ''; };
+  // The last thumbnail seen for each layout: a change made in Single still shows its layouts after you move to Bag.
+  const thumbs = new Map();
+  const seeThumbs = () => document.querySelectorAll('button[data-study] svg').forEach(svg => thumbs.set(svg.closest('[data-study]').dataset.study, svg.cloneNode(true)));
+  const fillPics = el => { seeThumbs(); el.querySelectorAll('[data-pic-study]').forEach(slot => { const svg = thumbs.get(slot.dataset.picStudy); if (svg && !slot.firstChild) slot.append(svg.cloneNode(true)); }); };
   const what = e => e.first ? 'First draw on this page' : e.diff.length ? e.diff.join(' · ') : 'Nothing in the card changed';
   const pixelWords = e => e.pixel === 'reused' ? 'pixels reused' : e.pixel === 'drawn' ? 'pixels drawn' : 'pixels not recorded';
   const did = e => `${e.recomputed.length ? `<span class="dt-re">Recomputed: ${esc(e.recomputed.join(', '))}</span> · ` : ''}<span class="dt-ru">Reused: ${e.reused.length ? esc(e.reused.join(', ')) : 'nothing'}${e.whole ? ` (asked before, run ${esc(e.whole)})` : ''}</span> · ${pixelWords(e)}${e.sameAs ? ` · the same card as change ${e.sameAs}` : ''}`;
-  const changeItem = (e, i) => `<li class="dt-change ${i === 0 ? 'latest' : ''}"><p class="dt-what"><span class="dt-n">${e.n}</span>${esc(what(e))}${e.times > 1 ? ` <span class="dt-n">×${e.times}</span>` : ''}</p><p>${did(e)}</p><p>Rule: <b class="${e.accepted ? 'ok' : 'no'}" style="color:${e.accepted ? '#c8f49d' : '#ff9e80'}">${e.accepted ? 'passes' : 'fails'}</b> · run ${esc(e.run)}</p></li>`;
+  const changeItem = (e, i) => `<li class="dt-change ${i === 0 ? 'latest' : ''}">${pics(e)}<p class="dt-what"><span class="dt-n">${e.n}</span>${pics(e) ? `<span class="dt-cap">${esc(what(e))}</span>` : esc(what(e))}${e.times > 1 ? ` <span class="dt-n">×${e.times}</span>` : ''}</p><p>${did(e)}</p><p>Rule: <b class="${e.accepted ? 'ok' : 'no'}" style="color:${e.accepted ? '#c8f49d' : '#ff9e80'}">${e.accepted ? 'passes' : 'fails'}</b> · run ${esc(e.run)}</p></li>`;
   const toast = Object.assign(document.createElement('div'), { className: 'dtree-toast', hidden: true }); toast.setAttribute('role', 'status'); toast.setAttribute('aria-live', 'polite');
   document.body.append(toast); let toastTimer = 0;
   function showToast(e) {
     const preview = document.getElementById('graphic-preview'); if (!preview) return;
-    toast.innerHTML = `<b>${esc(what(e))}</b>${did(e)}`; toast.hidden = false; toast.style.opacity = '1';
+    toast.innerHTML = pics(e) ? `${pics(e)}<p class="dt-cap">${esc(what(e))}</p>${did(e)}` : `<b>${esc(what(e))}</b>${did(e)}`; fillPics(toast); toast.hidden = false; toast.style.opacity = '1';
     // Under the preview when it is in view; otherwise pinned above the bottom of the screen, where the person is working (phones).
     const r = preview.getBoundingClientRect(), inView = r.bottom > 40 && r.bottom + 80 < innerHeight;
     Object.assign(toast.style, inView ? { position: 'absolute', left: `${Math.max(16, r.left + scrollX)}px`, top: `${r.bottom + scrollY + 8}px`, bottom: '' }
@@ -245,6 +266,15 @@ async function start() {
     panel.querySelector('[data-reset]')?.addEventListener('click', () => setFill({ ...SITE_FILL }));
     panel.querySelectorAll('[data-show]').forEach(b => b.onclick = () => light(b.dataset.show));
     panel.querySelector('[data-fixcard]')?.addEventListener('click', () => { [...document.querySelectorAll('.ce-strip button')].find(b => /Use the fixed card/.test(b.textContent))?.click(); toggle(false); });
+    fillPics(panel);
+    // The person's own words for what it is for: edited where they are read; empty goes back to the site's.
+    panel.querySelectorAll('[data-purpose]').forEach(el => {
+      const before = el.textContent;
+      el.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); el.blur(); } if (e.key === 'Escape') { el.textContent = before; el.blur(); } });
+      el.addEventListener('blur', () => { if (el.textContent.trim() !== before.trim()) setPurpose(el.dataset.purpose, el.textContent); });
+    });
+    panel.querySelectorAll('[data-purpose-reset]').forEach(b => b.onclick = () => setPurpose(b.dataset.purposeReset, ''));
+    panel.querySelector('[data-order-reset]')?.addEventListener('click', () => resetOrder());
   }
   function setFill(next) {
     const diff = Object.fromEntries(Object.entries(next).filter(([k, v]) => SITE_FILL[k] !== v));
@@ -275,6 +305,7 @@ async function start() {
   addEventListener('resize', unlight);
   if (new URLSearchParams(location.search).has('dtree')) setTimeout(() => toggle(true), 600);
   addEventListener('thro:screen', onScreen);
+  addEventListener('thro:viewer', () => { if (!panel.hidden && !lights.length && !panel.contains(document.activeElement?.closest?.('[data-purpose]'))) paint(); });
   if (window.__thro.screen) onScreen(); // a run that happened before the DTree started
   window.__dtree = { open: openCount, toggle, changes: () => changes.map(c => ({ n: c.n, what: what(c), recomputed: c.recomputed, reused: c.reused, whole: c.whole, pixel: c.pixel, sameAs: c.sameAs, times: c.times })), toast: () => (toast.hidden ? null : toast.textContent), blame: () => { const v = verdict(); return v && !v.accepted ? blame(v) : null; }, decisions: decided.receipt.trace.calls.map(n => ({ contract: n.contract, impl: n.impl, rung: n.chosenBy?.rung })), verdict };
 }

@@ -73,12 +73,12 @@ test('the final cause is demonstrated, not asserted: what it is for, the premise
   assert.ok(fine.ok);
   assert.match(fine.demonstration.for, /knows at a glance which disc/);
   assert.match(fine.demonstration.does, /disc photo 277 px, the name Servo 69 px, the numbers 6\.5 · 5 · −1 · 2 29 px/);
-  assert.match(fine.demonstration.thus, /sees the disc, then Servo, then 6\.5 · 5 · −1 · 2/);
+  assert.match(fine.demonstration.thus, /gets the disc, then the name Servo, then the numbers 6\.5 · 5 · −1 · 2, then "Neutron"/);
   assert.ok(!/Sam's rule:/.test(fine.what), 'the rule is not the reason');
   const u04 = { photo: { w: 238 }, name: { size: 74 }, numbers: { size: 29 }, other: [{ text: 'MVP', size: 34 }] };
   const loud = guarantees(world, screen(world, single({ study: 'discstudio:u04' }, u04))).find(g => g.cause === 'final');
   assert.equal(loud.ok, false);
-  assert.match(loud.demonstration.thus, /"MVP" \(34 px\) is read before the flight numbers \(29 px\)/);
+  assert.match(loud.demonstration.thus, /"MVP" \(34 px\) is read before the numbers 6\.5 · 5 · −1 · 2 \(29 px\), so the viewer gets "MVP" before how it flies/);
   const tilted = guarantees(world, screen(world, single({ study: 'discstudio:b01' }, { ...upright, photo: { w: 277, angle: 12 } }))).find(g => g.cause === 'final');
   assert.match(tilted.demonstration.thus, /turned 12°, so the face a viewer recognises it by is not upright/);
 });
@@ -103,4 +103,28 @@ test('a photo is defined by its disc, source and preparation; the hash is only t
   const buzzz = photoDefinition(fixture.find(d => d.id === 'sample-buzzz-ss'));
   const b = screen(world, { ...single({ study: 'discstudio:b01', nativeRevision: 2 }), disc: { ...servo, id: 'sample-buzzz-ss' }, photo: buzzz.sha256, photos: [buzzz] });
   assert.ok(definitionDiff(recipeDefinition(run.outputs.recipe, [servoPhoto]), recipeDefinition(b.outputs.recipe, [buzzz])).some(l => /^photo: the MVP Servo, Neutron photo .* → the Discraft Buzzz SS, Z FLX photo \(buzzz-ss\.jpg/.test(l)));
+});
+
+test('the person sets the order and the purpose; the demonstration follows them, and the scaffold still binds agents', () => {
+  const world = createThroWorld();
+  const run = screen(world, single({ study: 'discstudio:b01', nativeRevision: 2 }));
+  const theirs = guarantees(world, run, { order: ['name', 'disc', 'numbers', 'other'], purpose: { card: 'A poster for my shop wall.' } }).find(g => g.cause === 'final');
+  assert.equal(theirs.demonstration.for, 'A poster for my shop wall.');
+  assert.equal(theirs.ok, false, 'this card reads disc first, not name first');
+  assert.match(theirs.demonstration.thus, /^Not served in your order\. the disc \(277 px\) is read before the name Servo \(69 px\), so the viewer gets which disc it is before the name Servo\./);
+  assert.match(theirs.demonstration.does, /read as disc, name, numbers, everything else/, 'the measured order is a plain fact');
+  assert.equal(run.outputs.accepted, true, 'the scaffold check (for agents) is untouched by a person\'s order');
+  const loud = screen(world, single({ study: 'discstudio:u04' }, { photo: { w: 238 }, name: { size: 74 }, numbers: { size: 29 }, other: [{ text: 'MVP', size: 34 }] }));
+  const kept = guarantees(world, loud, { order: ['disc', 'name', 'other', 'numbers'] }).find(g => g.cause === 'final');
+  assert.equal(kept.ok, true, 'a card that breaks the scaffold can still serve the order a person chose');
+  assert.equal(loud.outputs.accepted, false);
+});
+
+test('the reading order is a capability: its examples prove, and swapping is the same for any caller', () => {
+  const world = createThroWorld();
+  assert.ok(world.prove('thro.reading.order').every(p => p.ok));
+  const once = world.run('thro.reading.order', { order: null, swap: ['name', 'disc'] }).outputs.order;
+  assert.deepEqual(once, ['name', 'disc', 'numbers', 'other']);
+  assert.deepEqual(world.run('thro.reading.order', { order: once, swap: ['disc', 'name'] }).outputs.order, ['disc', 'name', 'numbers', 'other']);
+  assert.throws(() => world.run('thro.reading.order', { order: null, swap: ['name', 'logo'] }));
 });
