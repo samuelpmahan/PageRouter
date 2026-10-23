@@ -29,6 +29,8 @@ const runtimeFiles = [
   'timing.mjs',
   'revision-review.html',
   'revision-review.mjs',
+  'notebook.html',
+  'notebook.mjs',
   'viewer.mjs',
   'dtree.json',
   'thro-world.mjs',

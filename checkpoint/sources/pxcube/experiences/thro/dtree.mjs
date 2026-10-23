@@ -327,6 +327,7 @@ async function start() {
     const bar = t => `<div class="dt-tbar" role="img" aria-label="${esc(t.label)}: ${Math.round(t.end)} milliseconds"><u style="width:${pct(t.end)}"></u>${t.stages.filter(st => st.depth === 0 && st.start < t.end && STAGE_COLOURS[st.name]).map(st => `<i title="${esc(st.name)} ${Math.round(st.ms)} ms" style="left:${pct(st.start)};width:${pct(Math.min(st.ms, t.end - st.start))};background:${STAGE_COLOURS[st.name]}"></i>`).join('')}<b style="left:${pct(100)}"></b></div>`;
     const used = [...new Set(taps.flatMap(t => t.stages.filter(st => st.depth === 0 && st.start < t.end && STAGE_COLOURS[st.name]).map(st => st.name)))];
     return `<h3>Your last taps, finger to pixels</h3><ol class="dt-taps">${taps.map(t => `<li><span class="dt-tlabel">${esc(t.label)}</span><span class="dt-tms">${Math.round(t.end)} ms</span>${bar(t)}</li>`).join('')}</ol>
+      <p class="dt-about"><a href="./notebook.html" style="color:#c8f49d">The engineering notebook →</a> datasheets for the parts these taps run on, measured in your browser.</p>
       <p class="dt-ways-sum">${used.map(n => `<span class="dt-key"><i style="background:${STAGE_COLOURS[n]}"></i>${esc(n)}</span>`).join('')}<span class="dt-key"><i style="background:none;border-left:2px solid #fff;width:0"></i>100 ms</span></p>`;
   }
 
