@@ -379,6 +379,13 @@ function misread(r, intended = PARTS) {
   if (Math.abs(r.angle) > 0.5) return `the disc is turned ${Math.round(r.angle)}°, so the face a viewer recognises it by is not upright.`;
   return null;
 }
+/** Does a card keep this order, and how comfortably? margin = the smallest size ratio between neighbours in the order
+ * (1.25 means every part is at least 25% bigger than the next); 0 when the card does not keep it. */
+export function orderFit(r, intended = PARTS) {
+  const keeps = misread(r, intended) === null;
+  const margin = keeps ? Math.min(...intended.slice(0, -1).map((a, i) => measure(r, a) / Math.max(1e-9, measure(r, intended[i + 1])))) : 0;
+  return { keeps, margin };
+}
 const partWords = order => order.map(p => ({ disc: 'disc', name: 'name', numbers: 'numbers', other: 'everything else' })[p]).join(', ');
 /** viewer: { order, purpose: { card, lineup } }, set by the person on the page; absent means the site's purpose and Sam's scaffold order. */
 function finalCause(run, viewer = {}) {

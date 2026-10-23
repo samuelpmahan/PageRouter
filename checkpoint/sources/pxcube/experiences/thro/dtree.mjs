@@ -9,6 +9,8 @@
 // preview and a short list here. Edges are labelled by kind; what is on screen carries the four guarantees (the four causes).
 import { OPEN, SITE_FILL, propagation, guarantees, recipeDefinition, definitionChanges } from './thro-world.mjs';
 import { viewer, setPurpose, resetOrder } from './viewer.mjs';
+import { everyWay } from './ways.mjs';
+import { nativeStudies } from './native-cards.mjs';
 import { cardLayout } from './native-cards.mjs';
 import { traceToSvg } from './pxc/view.mjs';
 
@@ -71,6 +73,17 @@ const css = `
 .dt-cap{font-size:11px;color:#9fb0a3}.dtree-toast .dt-cap{color:#cfe3c9}
 .dtree .dt-purpose{border-bottom:1px dashed #c8f49d;outline:none;cursor:text}.dtree .dt-purpose:focus{background:#c8f49d1f;border-bottom-style:solid}
 .dtree .dt-undo{min-height:24px!important;padding:0 6px!important;margin-left:6px;font-size:12px!important;vertical-align:1px}
+.dtree .dt-ways-sum{display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px;margin:4px 4px 8px;font-size:12px;color:#cfe3c9}
+.dtree .dt-big{font-size:22px;font-weight:800;color:#fff}
+.dtree .dt-ways{display:grid;grid-template-columns:repeat(auto-fill,minmax(70px,1fr));gap:8px;margin:0 4px}
+.dtree .dt-way{margin:0;padding:0;border:0;background:none;color:inherit;font:inherit;cursor:pointer;display:grid;gap:3px;justify-items:center;min-height:0}
+.dtree .dt-way .pic-study{width:70px;height:40px}
+.dtree .dt-way.off{opacity:.35}
+.dtree .dt-way.comfy .pic-study{outline:3px solid #ffd166;outline-offset:1px}
+.dtree .dt-way.quiet .pic-study{outline:2px dashed #e9f1e4;outline-offset:1px}
+.dtree .dt-way.comfy.quiet .pic-study{outline:3px solid #ffd166}
+.dtree .dt-way small{font-size:11px;color:#9fb0a3;font-variant-numeric:tabular-nums}
+.dtree .dt-key{display:inline-flex;align-items:center;gap:4px}.dtree .dt-key i{display:inline-block;width:14px;height:9px;border-radius:2px}
 .dtree-lit{position:absolute;z-index:65;pointer-events:none;border:3px solid #c8f49d;border-radius:12px;box-shadow:0 0 0 9999px #0006,0 0 24px #c8f49d88}
 .dtree-lit span{position:absolute;left:-3px;top:-28px;background:#c8f49d;color:#10180f;font:700 12px/1 system-ui,sans-serif;padding:6px 8px;border-radius:7px;white-space:nowrap;max-width:80vw;overflow:hidden;text-overflow:ellipsis}
 `;
@@ -189,6 +202,25 @@ async function start() {
       <p class="dt-verdict">The card on screen: ${v ? `<b class="${v.accepted ? 'ok' : 'no'}">${v.accepted ? 'passes' : 'fails'}</b>. ${esc(v.reason)}` : 'not a single card right now.'}</p>${v && !v.accepted ? blame(v) : ''}
       <button type="button" class="dt-show" data-show="thro.rule">Show on the page</button></div>`;
   }
+  // ---- Every way this disc could be a card (rung 7): a sum over the layouts, evaluated by Capability Lab's provenance.evaluate.
+  function waysNode() {
+    const sc = window.__thro?.screen; if (!sc || sc.error || sc.outputs.recipe.cards) return '';
+    seeThumbs();
+    const layouts = [...thumbs].filter(([study]) => study.startsWith('discstudio:')).map(([study, svg]) => ({ study, name: String(nativeStudies.find(n => n.id === study)?.label ?? study).replace(/^[A-Z0-9-]+ · /, ''), layout: cardLayout(svg.outerHTML) }));
+    const intended = viewer().order ?? undefined, own = Boolean(viewer().order);
+    const { ways, answers } = everyWay({ layouts, disc: { name: sc.outputs.recipe.disc.name, flights: sc.outputs.recipe.flights }, intended });
+    if (!answers) return '';
+    const current = `discstudio:${sc.outputs.recipe.preset}`;
+    const tile = w => `<button type="button" class="dt-way ${w.keeps ? '' : 'off'} ${w.study === answers.mostComfortable ? 'comfy' : ''} ${w.study === answers.quietest ? 'quiet' : ''}" data-way="${esc(w.study)}" title="${esc(w.name)}${w.study === current ? ' (on screen)' : ''}"><span class="pic-study" data-pic-study="${esc(w.study)}"></span><small>${w.keeps ? `×${w.margin.toFixed(2)}` : '–'}${w.study === current ? ' ●' : ''}</small></button>`;
+    return `<h3>Every way this disc could be a card</h3>
+      <p class="dt-about">Σ over the layouts of (layout × keeps ${own ? 'your' : 'the scaffold'} order), one sum evaluated in five semirings by Capability Lab's <code>provenance.evaluate</code> (${answers.calls} traced calls). ×n: each part is at least n times the next. ● on screen.</p>
+      <div class="dt-ways-sum"><span><span class="dt-big">${answers.count}/${answers.of}</span> keep ${own ? 'your' : 'the scaffold'} order</span>
+        ${answers.mostComfortable ? `<span class="dt-key"><i style="outline:3px solid #ffd166"></i> most room ×${(1 / (1 - answers.comfort)).toFixed(2)}</span>` : ''}
+        ${answers.quietest ? `<span class="dt-key"><i style="outline:2px dashed #e9f1e4"></i> quietest extras ${answers.quiet} px</span>` : ''}
+        ${answers.possible ? '' : '<span>No layout here reads in that order; it would take another layout.</span>'}</div>
+      <div class="dt-ways">${ways.map(tile).join('')}</div>
+      <details><summary>What the answer rests on (lineage)</summary><p class="dt-ev">${answers.restsOn.map(l => `<span>${esc(nativeStudies.find(n => n.id === l)?.label ?? l)}</span>`).join('')}</p></details>`;
+  }
   const pastNode = n => `<div class="dt-node"><p class="dt-q"><span class="dt-chip ${esc(n.status)}">${n.status === 'open' ? 'Open' : n.status === 'subsumed' ? 'Subsumed' : 'In the site'}</span>${esc(n.question)}</p><p class="dt-c">${esc(n.choice)}</p>${n.waitingOn ? `<p class="dt-wait">Waiting on ${esc(n.waitingOn)}</p>` : ''}${meta(n)}</div>`;
   const pastBranch = parent => { const kids = past.nodes.filter(n => n.parent === parent); return kids.length ? `<ol>${kids.map(n => `<li>${parent ? '<span class="dt-edge">↑ built on</span>' : ''}${pastNode(n)}${pastBranch(n.id)}</li>`).join('')}</ol>` : ''; };
 
@@ -255,6 +287,7 @@ async function start() {
     const site = decided.receipt.trace;
     panel.innerHTML = `<header><h2>DTree</h2><button type="button" data-close aria-label="Close the decision tree">Close</button></header><div class="dt-body">
       <h3>What your last changes did</h3>${changes.length ? `<ol class="dt-changes">${changes.map(changeItem).join('')}</ol>` : '<p class="dt-about">Change something on a Single card or a Bag lineup: each change shows here, with what it recomputed and what it reused.</p>'}
+      ${waysNode()}
       <h3>The site, decided in PxC</h3><p class="dt-about">One run of <code>${esc(site.contract)}</code> (run ${esc(decided.receipt.runId)}, ${decided.receipt.calls} calls). Each decision is a contract; its alternatives are implementations; the site's choices are its fill.</p>
       <p class="dt-about"><a href="./fill-matrix.html" style="color:#c8f49d">Every fill, checked in a browser →</a> what each switch changes, and which checks it breaks.</p>
       <p class="dt-legend">Edges, by kind: <b>made from</b> (material) · <b>for the sake of</b> (final) · <b>actualized by the fill</b> (potential → actual) · <b>built on</b> (an earlier decision).</p>
@@ -267,6 +300,8 @@ async function start() {
     panel.querySelectorAll('[data-show]').forEach(b => b.onclick = () => light(b.dataset.show));
     panel.querySelector('[data-fixcard]')?.addEventListener('click', () => { [...document.querySelectorAll('.ce-strip button')].find(b => /Use the fixed card/.test(b.textContent))?.click(); toggle(false); });
     fillPics(panel);
+    // A way is also a handle: tapping it puts that layout on screen (the same button the layout picker uses).
+    panel.querySelectorAll('[data-way]').forEach(b => b.onclick = () => document.querySelector(`button[data-study="${CSS.escape(b.dataset.way)}"]`)?.click());
     // The person's own words for what it is for: edited where they are read; empty goes back to the site's.
     panel.querySelectorAll('[data-purpose]').forEach(el => {
       const before = el.textContent;
