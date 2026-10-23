@@ -20,7 +20,7 @@ export function everyWay({ world, layouts, disc, intended = PARTS }) {
   const names = Object.fromEntries(layouts.map(l => [l.study, l.name]));
   const { polynomial, terms } = world.sum('thro.card.way', { layouts: measured, disc: { name: disc.name, flights: disc.flights }, intended: [...intended] });
   const studyOf = impl => `discstudio:${impl.replace('thro.card.way/', '')}`;
-  const ways = terms.filter(t => t.monomial).map(t => {
+  const ways = terms.filter(t => t.monomials.length).map(t => {
     const { keeps, margin, quiet } = t.outputs;
     return { study: studyOf(t.impl), impl: t.impl, name: names[studyOf(t.impl)] ?? t.impl, keeps, margin, quiet, comfort: keeps ? 1 - 1 / margin : 0 };
   });
@@ -48,4 +48,36 @@ export function everyWay({ world, layouts, disc, intended = PARTS }) {
     polynomial: polynomial.length,
   };
   return { ways, polynomial, answers };
+}
+
+/** Every way this lineup could be (rung 10): Σ over lineup layouts (world.sum over thro.lineup.way) of Π over its cards (each card
+ *  keeps the order). The kernel gives the ways; each way's product over its cards is written into its monomial as one variable per
+ *  card (layout#cardN), so world.evaluate multiplies them: boolean (every card keeps it), counting (how many layouts), viterbi
+ *  (product of comforts), tropical (sum of the cards' extras), lineage. layouts: [{ study, name, layout: [one per card] }]. */
+export function everyLineupWay({ world, layouts, cards, intended = PARTS }) {
+  const measured = Object.fromEntries(layouts.filter(l => Array.isArray(l.layout)).map(l => [l.study, l.layout]));
+  const names = Object.fromEntries(layouts.map(l => [l.study, l.name]));
+  const { terms } = world.sum('thro.lineup.way', { layouts: measured, cards: cards.map(c => ({ name: c.name, flights: c.flights })), intended: [...intended] });
+  const studyOf = impl => `discstudio-lineup:${impl.replace('thro.lineup.way/', '')}`;
+  const ways = terms.filter(t => t.monomials.length).map(t => {
+    const fits = t.outputs.fits;
+    return { study: studyOf(t.impl), impl: t.impl, name: names[studyOf(t.impl)] ?? t.impl, fits, keeps: fits.every(f => f.keeps), keeping: fits.filter(f => f.keeps).length,
+      margin: fits.every(f => f.keeps) ? Math.min(...fits.map(f => f.margin)) : 0, cardVars: fits.map((_, i) => `${t.impl}#card${i + 1}`) };
+  });
+  const polynomial = terms.filter(t => t.monomials.length).flatMap(t => t.monomials.map(m => [...m, ...ways.find(w => w.impl === t.impl).cardVars]));
+  if (!polynomial.length) return { ways, polynomial, answers: null };
+  const each = (wayValue, cardValue) => Object.fromEntries(ways.flatMap(w => [[w.impl, wayValue(w)], ...w.fits.map((f, i) => [w.cardVars[i], f.keeps ? cardValue(f, i, w) : null])]).filter(([, v]) => v !== null));
+  const valuation = {
+    boolean: each(() => true, () => true),
+    counting: each(() => ({ weight: 1 }), () => ({ weight: 1 })),
+    viterbi: each(() => ({ weight: 1 }), f => ({ weight: 1 - 1 / f.margin })),
+    tropical: each(() => ({ weight: 0 }), f => ({ weight: f.quiet })),
+    lineage: each(w => ({ labels: [w.name] }), (f, i) => ({ labels: [`card ${i + 1}: ${cards[i].name}`] })),
+  };
+  const result = Object.fromEntries(Object.entries(valuation).map(([semiring, v]) => [semiring, world.evaluate(polynomial, semiring, v)]));
+  const winner = semiring => { const r = result[semiring]; if (!r.value.present) return null; const i = r.terms.findIndex(t => t.value.present && t.value.weight === r.value.weight); return i < 0 ? null : ways[i].study; };
+  return { ways, polynomial, answers: {
+    possible: result.boolean.value.present, count: result.counting.value.weight ?? 0, of: ways.length,
+    mostComfortable: winner('viterbi'), comfort: result.viterbi.value.weight ?? 0, quietest: winner('tropical'), quiet: result.tropical.value.weight ?? null,
+    restsOn: result.lineage.value.labels ?? [], polynomial: polynomial.length, cards: cards.length } };
 }

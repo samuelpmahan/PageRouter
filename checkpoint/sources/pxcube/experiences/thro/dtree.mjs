@@ -9,8 +9,8 @@
 // preview and a short list here. Edges are labelled by kind; what is on screen carries the four guarantees (the four causes).
 import { OPEN, SITE_FILL, propagation, guarantees, recipeDefinition, definitionChanges } from './thro-world.mjs';
 import { viewer, setPurpose, resetOrder } from './viewer.mjs';
-import { everyWay } from './ways.mjs';
-import { nativeStudies } from './native-cards.mjs';
+import { everyWay, everyLineupWay } from './ways.mjs';
+import { nativeStudies, lineupStudies } from './native-cards.mjs';
 import { cardLayout } from './native-cards.mjs';
 import { traceToSvg } from './pxc/view.mjs';
 
@@ -205,8 +205,9 @@ async function start() {
   }
   // ---- Every way this disc could be a card (rung 7; on the kernel's world.sum and world.evaluate since rung 8).
   function waysNode() {
-    const sc = window.__thro?.screen; if (!sc || sc.error || sc.outputs.recipe.cards) return '';
+    const sc = window.__thro?.screen; if (!sc || sc.error) return '';
     seeThumbs();
+    if (sc.outputs.recipe.cards) return lineupWaysNode(sc);
     const layouts = [...thumbs].filter(([study]) => study.startsWith('discstudio:')).map(([study, svg]) => ({ study, name: String(nativeStudies.find(n => n.id === study)?.label ?? study).replace(/^[A-Z0-9-]+ · /, ''), layout: cardLayout(svg.outerHTML) }));
     const intended = viewer().order ?? undefined, own = Boolean(viewer().order);
     const { ways, answers } = everyWay({ world, layouts, disc: { name: sc.outputs.recipe.disc.name, flights: sc.outputs.recipe.flights }, intended });
@@ -221,6 +222,24 @@ async function start() {
         ${answers.possible ? '' : '<span>No layout here reads in that order; it would take another layout.</span>'}</div>
       <div class="dt-ways">${ways.map(tile).join('')}</div>
       <details><summary>What the answer rests on (lineage)</summary><p class="dt-ev">${answers.restsOn.map(l => `<span>${esc(nativeStudies.find(n => n.id === l)?.label ?? l)}</span>`).join('')}</p></details>`;
+  }
+  // Bag: Σ over lineup layouts of Π over the cards (every card keeps the order), on world.sum and world.evaluate.
+  function lineupWaysNode(sc) {
+    const cards = sc.outputs.recipe.cards.map(c => ({ name: c.disc.name, flights: c.flights }));
+    const layouts = [...thumbs].filter(([study]) => study.startsWith('discstudio-lineup:')).map(([study, svg]) => ({ study, name: String(lineupStudies.find(n => n.id === study)?.name ?? study).replace(/^[A-Z0-9-]+ /, ''), layout: cardLayout(svg.outerHTML) }));
+    const own = Boolean(viewer().order);
+    let result; try { result = everyLineupWay({ world, layouts, cards, intended: viewer().order ?? undefined }); } catch (e) { return `<h3>Every way this lineup could be</h3><p class="dt-wait">${esc(e.message)}</p>`; }
+    const { ways, answers } = result; if (!answers) return '';
+    const current = `discstudio-lineup:${sc.outputs.recipe.preset}`;
+    const tile = w => `<button type="button" class="dt-way ${w.keeps ? '' : 'off'} ${w.study === answers.mostComfortable ? 'comfy' : ''} ${w.study === answers.quietest ? 'quiet' : ''}" data-way="${esc(w.study)}" title="${esc(w.name)}${w.study === current ? ' (on screen)' : ''}"><span class="pic-study" data-pic-study="${esc(w.study)}"></span><small>${w.keeping}/${w.fits.length}${w.keeps ? ` ×${w.margin.toFixed(2)}` : ''}${w.study === current ? ' ●' : ''}</small></button>`;
+    return `<h3>Every way this lineup could be</h3>
+      <p class="dt-about">Σ over the lineup layouts of Π over the ${answers.cards} cards (each keeps ${own ? 'your' : 'the scaffold'} order): <code>world.sum</code> gives the ways, each way's cards multiply in its monomial, <code>world.evaluate</code> answers. n/${answers.cards}: cards that keep it; ×n: the tightest card's room. ● on screen.</p>
+      <div class="dt-ways-sum"><span><span class="dt-big">${answers.count}/${answers.of}</span> keep ${own ? 'your' : 'the scaffold'} order on every card</span>
+        ${answers.mostComfortable ? '<span class="dt-key"><i style="outline:3px solid #ffd166"></i> most room</span>' : ''}
+        ${answers.quietest ? `<span class="dt-key"><i style="outline:2px dashed #e9f1e4"></i> quietest extras ${Math.round(answers.quiet)} px in all</span>` : ''}
+        ${answers.possible ? '' : '<span>No lineup layout here keeps that order on every card.</span>'}</div>
+      <div class="dt-ways">${ways.map(tile).join('')}</div>
+      <details><summary>What the answer rests on (lineage)</summary><p class="dt-ev">${answers.restsOn.map(l => `<span>${esc(l)}</span>`).join('')}</p></details>`;
   }
   const pastNode = n => `<div class="dt-node"><p class="dt-q"><span class="dt-chip ${esc(n.status)}">${n.status === 'open' ? 'Open' : n.status === 'subsumed' ? 'Subsumed' : 'In the site'}</span>${esc(n.question)}</p><p class="dt-c">${esc(n.choice)}</p>${n.waitingOn ? `<p class="dt-wait">Waiting on ${esc(n.waitingOn)}</p>` : ''}${meta(n)}</div>`;
   const pastBranch = parent => { const kids = past.nodes.filter(n => n.parent === parent); return kids.length ? `<ol>${kids.map(n => `<li>${parent ? '<span class="dt-edge">↑ built on</span>' : ''}${pastNode(n)}${pastBranch(n.id)}</li>`).join('')}</ol>` : ''; };

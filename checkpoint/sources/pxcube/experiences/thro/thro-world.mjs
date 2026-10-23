@@ -201,6 +201,20 @@ export function createThroWorld() {
       return { keeps: fit.keeps, margin: fit.margin, quiet: Math.round(reading.other.size * 10) / 10 };
     } });
 
+  // ---- Every way this lineup could be (rung 10): each lineup layout is an implementation (the ways, +); within a way, every card
+  // has to keep the order (the cards, ×). The cards' factors are reported per card so ways.mjs can write them into the polynomial.
+  world.contract({ id: 'thro.lineup.way', description: 'Does every card in this lineup layout keep the order, and how comfortably?',
+    notes: 'One implementation per lineup layout; the lineup is the product of its cards.',
+    in: { layouts: { type: 'object' }, cards: { type: 'array', minItems: 2, maxItems: 5 }, intended: { type: 'array', minItems: 4, maxItems: 4 } },
+    out: { fits: { type: 'array' } } });
+  for (const study of lineupStudies) world.implement({ id: `thro.lineup.way/${study.preset}`, implements: 'thro.lineup.way',
+    description: String(study.name), origin: { by: 'claude-ed (rung 10)', iters: [38] },
+    run: ({ layouts, cards, intended }) => {
+      const drawn = layouts.value[study.id];
+      if (!Array.isArray(drawn) || drawn.length !== cards.value.length) throw Error(`${study.id} has not been measured for these ${cards.value.length} discs`);
+      return { fits: cards.value.map((card, i) => { const r = readingOf(drawn[i], card.name, card.flights), fit = orderFit(r, intended.value); return { keeps: fit.keeps, margin: fit.margin, quiet: Math.round(r.other.size * 10) / 10 }; }) };
+    } });
+
   // ---- The screen: one run from the site's decisions down to the card on screen and Sam's rule on it.
   // The layout is what the renderer measured while drawing that recipe, so the rule judges the actual card.
   world.contract({ id: 'thro.screen', description: 'What is on screen, and does it keep the rule?',

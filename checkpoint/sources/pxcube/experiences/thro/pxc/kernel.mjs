@@ -44,6 +44,7 @@ const DEFAULT_LIMITS = Object.freeze({ maxCalls: 200_000, maxDepth: 256 });
 const CONTRACT_FIELDS = new Set(['id', 'kind', 'in', 'out', 'examples', 'tolerance', 'description', 'notes']);
 const IMPL_FIELDS = new Set(['id', 'implements', 'version', 'uses', 'run', 'pure', 'description', 'assembly', 'origin', 'examples']);
 const TICK_DEP = '@tick';
+const SUM_DEP = '\u0000sum:'; // ctx.sum depends on the set of implementations of its contract, not on one choice (seq 62)
 const CONFLICT = '\u0000conflict'; // a flat dependency that resolved two ways in one subtree never validates
 
 // Relational conditions (v0.4): a condition is a relation over Refs already present, not a contract.
@@ -588,24 +589,33 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
     const terms = ways.map((impl) => {
       try {
         const r = run(contractId, inputs, { ...options, fill: { ...(options.fill ?? {}), [contractId]: impl.id } });
-        return { impl: impl.id, monomial: monomialOf(r.trace), outputs: r.outputs, receipt: r.receipt };
+        return { impl: impl.id, monomials: polynomialOf(r.trace), outputs: r.outputs, receipt: r.receipt };
       } catch (error) {
-        return { impl: impl.id, monomial: null, error: { code: error.code ?? 'IMPL_ERROR', message: error.message }, receipt: error.receipt ?? null };
+        return { impl: impl.id, monomials: [], error: { code: error.code ?? 'IMPL_ERROR', message: error.message }, receipt: error.receipt ?? null };
       }
     });
-    const polynomial = terms.filter((t) => t.monomial).map((t) => t.monomial);
+    const polynomial = terms.flatMap((t) => t.monomials);
     const receipt = deepFreeze({ kind: 'sum', contract: contractId, polynomial,
-      terms: terms.map((t) => ({ impl: t.impl, runId: t.receipt?.runId ?? null, status: t.monomial ? 'ok' : 'failed', ...(t.error ? { error: t.error } : {}) })) });
+      terms: terms.map((t) => ({ impl: t.impl, runId: t.receipt?.runId ?? null, status: t.error ? 'failed' : 'ok', monomials: t.monomials.length, ...(t.error ? { error: t.error } : {}) })) });
     return { polynomial, terms, receipt };
   }
-  /** The variables of one way: its implementation, then every implementation its trace called (a cache hit counts as its node). */
-  function monomialOf(trace) {
-    // A cache hit has no children of its own: read them from the node it came from, so a way's monomial is the same cached or not.
+  /**
+   * The provenance polynomial of a trace node, expanded (seq 62): its implementation × the polynomial of each ordinary call ×
+   * Σ over each ctx.sum's ways. A monomial is a set of implementation ids, the node's own first (a variable used twice counts
+   * once). A cache hit is read through the node it came from, so the polynomial is the same cached or not.
+   */
+  function polynomialOf(trace) {
     const full = (n) => { let m = n; for (let i = 0; m.cached && m.cachedFrom && i < 64; i++) m = node(m.cachedFrom.run, m.cachedFrom.call) ?? { ...m, cached: false }; return m; };
-    const used = new Set();
-    const walk = (n) => { for (const c of full(n).calls ?? []) { used.add(c.impl); walk(c); } };
-    walk(trace);
-    return [trace.impl, ...[...used].filter((v) => v !== trace.impl).sort()];
+    const times = (A, B) => A.flatMap((a) => B.map((b) => [...new Set([...a, ...b])]));
+    const tidy = (m, head) => [head, ...m.filter((v) => v !== head).sort()];
+    const of = (n) => {
+      const src = full(n), inSum = new Set((src.sums ?? []).flatMap((s) => s.terms.map((t) => t.call)));
+      let poly = [[n.impl]];
+      for (const c of src.calls ?? []) if (!inSum.has(c.id) && !c.error) poly = times(poly, of(c));
+      for (const s of src.sums ?? []) poly = times(poly, s.terms.filter((t) => !t.error && t.call !== null).flatMap((t) => of((src.calls ?? []).find((c) => c.id === t.call))));
+      return poly.map((m) => tidy(m, n.impl));
+    };
+    return of(trace);
   }
   let labRegistry = null;
   /** Evaluate a provenance polynomial in one of the Lab's semirings (a homomorphism out of ℕ[X]). valuation maps a variable to
@@ -676,6 +686,7 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
       let seen = new Set(); // fill keys this entry's validation consulted; they count as used only if the entry is served
       const flatOk = (e) => e.deps.every(([res, v]) => {
         if (res === TICK_DEP) return true;
+        if (res.startsWith(SUM_DEP)) return implementationsOf(res.slice(SUM_DEP.length).split('#')[0]).map((i) => i.id).join(',') === v;
         const [cid, sl] = res.split('#');
         try { return choose(cid, fill, sl, seen).id === v; } catch { return false; }
       });
@@ -718,6 +729,35 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
         checkSlot(target, opts?.slot);
         const normalized = Object.fromEntries(Object.entries(args ?? {}).map(([p, v]) => [p, mint(v, { kind: 'computed' }, runId, `${target}.in.${p}`)]));
         return invoke(target, normalized, frame, depth + 1, state, fill, runId, opts?.slot, false);
+      },
+      /**
+       * ctx.sum(contract, args, { slot }) (seq 62): every implementation of the contract, each as its own child call (pinned by
+       * extending the fill), as another way to the same output. Returns [{ impl, outputs } | { impl, error }]; a throwing way is
+       * recorded, not thrown. The node records the sum, so the provenance polynomial multiplies through it: this node's
+       * polynomial is its implementation × its other calls × Σ over each sum's ways. The node's cache entry depends on the set of
+       * implementations, so it stays valid until one is added or removed.
+       */
+      sum(target, args, opts) {
+        if (!impl.uses.includes(target)) fault(`${impl.id} summed undeclared contract ${target}`, 'UNDECLARED_CALL');
+        checkSlot(target, opts?.slot);
+        const normalized = Object.fromEntries(Object.entries(args ?? {}).map(([p, v]) => [p, mint(v, { kind: 'computed' }, runId, `${target}.in.${p}`)]));
+        const key = slotKey(target, opts?.slot), ways = implementationsOf(target);
+        const had = frame.deps.has(key), before = frame.deps.get(key), hadP = frame.pdeps?.has(key), beforeP = frame.pdeps?.get(key);
+        const terms = ways.map((way) => {
+          const at = node.calls.length;
+          try {
+            const outputs = invoke(target, normalized, frame, depth + 1, state, { ...(fill ?? {}), [key]: way.id }, runId, opts?.slot, false);
+            return { impl: way.id, call: node.calls[at].id, outputs };
+          } catch (error) {
+            return { impl: way.id, call: node.calls[at]?.id ?? null, error: { code: error.code ?? 'IMPL_ERROR', message: error.message } };
+          }
+        });
+        // The sum used every way on purpose: record that, instead of a conflict between the ways' individual choices.
+        if (had) frame.deps.set(key, before); else frame.deps.delete(key);
+        if (frame.pdeps) { if (hadP) frame.pdeps.set(key, beforeP); else frame.pdeps.delete(key); }
+        setDep(frame.deps, `${SUM_DEP}${key}`, ways.map((w) => w.id).join(','));
+        (node.sums ??= []).push({ contract: target, slot: opts?.slot ?? null, terms: terms.map(({ impl: i, call, error }) => ({ impl: i, call, ...(error ? { error } : {}) })) });
+        return terms.map(({ impl: i, outputs, error }) => (error ? { impl: i, error } : { impl: i, outputs }));
       },
       at(ref, ...path) {
         if (!isRef(ref)) fault('ctx.at needs a Ref', 'NOT_A_REF');

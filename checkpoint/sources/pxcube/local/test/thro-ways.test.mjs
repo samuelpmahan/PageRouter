@@ -4,7 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
-import { everyWay } from '../../experiences/thro/ways.mjs';
+import { everyWay, everyLineupWay } from '../../experiences/thro/ways.mjs';
 import { readingOf, orderFit, PARTS, createThroWorld } from '../../experiences/thro/thro-world.mjs';
 import { createRegistry } from '../../experiences/thro/pxc/lab/runtime.mjs';
 import { capabilities as labSemirings } from '../../experiences/thro/pxc/lab/semiring.mjs';
@@ -68,4 +68,32 @@ test('a layout that was not measured is a missing term, not a guess', () => {
   const { polynomial, answers } = everyWay({ world, layouts: some, disc });
   assert.equal(polynomial.length, 4);
   assert.equal(answers.of, 4);
+});
+
+// Bag: measured by the renderer for Servo, Buzzz SS and Anchor in the three lineup layouts the page draws (iter-37).
+const lineupMeasured = { u05: [[478, 115.7, 47.8, 37.7], [478, 95.6, 47.8, 37.7], [478, 110.7, 47.8, 37.7]], u02: [[506, 126.4, 50.6, 37.9], [506, 101.1, 50.6, 37.9], [506, 116.3, 50.6, 37.9]], u01: [[480, 121.3, 48, 35.4], [480, 101.1, 48, 35.4], [480, 116.3, 48, 35.4]] };
+const lineupCards = [{ name: 'Servo', flights: [6.5, 5, -1, 2] }, { name: 'Buzzz SS', flights: [5, 4, -2, 1] }, { name: 'Anchor', flights: [5, 4, 0, 3] }];
+const lineupLayouts = Object.entries(lineupMeasured).map(([id, cards]) => ({ study: `discstudio-lineup:${id}`, name: id, layout: cards.map(([photo, name, numbers, other]) => ({ photo: { w: photo }, name: { size: name }, numbers: { size: numbers }, other: [{ text: 'MVP', size: other }] })) }));
+
+test('a lineup is a sum over its layouts of the product of its cards, and every answer matches a plain recount', () => {
+  for (const intended of [PARTS, ['disc', 'name', 'other', 'numbers'], ['name', 'disc', 'numbers', 'other']]) {
+    const { answers, polynomial, ways } = everyLineupWay({ world, layouts: lineupLayouts, cards: lineupCards, intended });
+    const plain = lineupLayouts.map(l => l.layout.map((layout, i) => orderFit(readingOf(layout, lineupCards[i].name, lineupCards[i].flights), intended)));
+    const all = plain.map(fits => fits.every(f => f.keeps));
+    assert.equal(answers.count, all.filter(Boolean).length, intended.join(' > '));
+    assert.equal(answers.possible, all.some(Boolean));
+    assert.deepEqual(ways.map(w => w.keeps), all);
+    assert.ok(polynomial.every(m => m.length === 1 + lineupCards.length), 'each way multiplies its three cards');
+    if (answers.possible) {
+      const comfort = plain.map(fits => (fits.every(f => f.keeps) ? fits.reduce((p, f) => p * (1 - 1 / f.margin), 1) : 0));
+      assert.ok(Math.abs(answers.comfort - Math.max(...comfort)) < 1e-12);
+      const quiet = lineupLayouts.map((l, k) => (all[k] ? l.layout.reduce((sum, x) => sum + Math.round(x.other[0].size * 10) / 10, 0) : Infinity));
+      assert.ok(Math.abs(answers.quiet - Math.min(...quiet)) < 1e-9);
+    }
+  }
+});
+
+test('a lineup layout not measured for these discs is a missing term', () => {
+  const { answers } = everyLineupWay({ world, layouts: lineupLayouts.slice(0, 2), cards: lineupCards });
+  assert.equal(answers.of, 2);
 });

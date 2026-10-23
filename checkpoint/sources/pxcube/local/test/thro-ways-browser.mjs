@@ -30,7 +30,14 @@ for (const width of [1280, 390]) {
   await p.locator('#dtree [data-way="discstudio:u04"]').click();
   await p.waitForFunction(() => window.__thro.screen?.outputs?.recipe?.preset === 'u04', null, { timeout: 20000 }).catch(() => null);
   expect(width, await p.evaluate(() => window.__thro.screen?.outputs?.recipe?.preset) === 'u04', 'tapping a way should put that layout on screen');
-  notes.push(`${width}: ${first.big} keep the scaffold order; name first ${swapped.big}`);
+  // Bag: Σ over lineup layouts of Π over the cards.
+  await p.evaluate(() => window.__dtree.toggle(false));
+  await p.locator('[data-mode="bag"]').click(); await p.waitForFunction(() => window.__thro.screen?.outputs?.recipe?.cards, null, { timeout: 30000 }); await p.waitForTimeout(2500);
+  await p.evaluate(() => window.__dtree.toggle(true)); await p.waitForTimeout(600);
+  const bag = await p.evaluate(() => ({ h: [...document.querySelectorAll('#dtree h3')].map(h => h.textContent).find(t => /lineup could be/.test(t)), tiles: document.querySelectorAll('#dtree .dt-way').length, pics: [...document.querySelectorAll('#dtree .dt-way .pic-study')].filter(x => x.querySelector('svg')).length, big: document.querySelector('#dtree .dt-big')?.textContent }));
+  expect(width, bag.h && bag.tiles >= 2 && bag.pics === bag.tiles && /^\d+\/\d+$/.test(bag.big ?? ''), `Bag should show every way the lineup could be: ${JSON.stringify(bag)}`);
+  if (shots) { const section = p.locator('#dtree .dt-ways'); await section.scrollIntoViewIfNeeded(); const box = await section.boundingBox(); await p.screenshot({ path: `${shots}/rung10-lineup-ways-${width}.png`, clip: { x: box.x - 8, y: Math.max(0, box.y - 170), width: Math.min(box.width + 16, width - box.x + 8), height: box.height + 220 } }); }
+  notes.push(`${width}: ${first.big} keep the scaffold order; name first ${swapped.big}; Bag ${bag.big} lineup layouts keep it on every card`);
   expect(width, !errors.length, `page errors: ${errors.join(' | ')}`);
   await context.close();
 }
