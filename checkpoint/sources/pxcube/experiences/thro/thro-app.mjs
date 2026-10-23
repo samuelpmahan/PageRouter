@@ -7,6 +7,7 @@ import { loadFixture } from './prepared-fixture.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
 import { esc } from './renderer/src/presentation.js';
 import { pngFromSvg, sha256, downloadBlob } from './renderer/src/media.js';
+import { span, end as endGesture, active as activeGesture, gestures } from './timing.mjs';
 
 const $ = id => document.getElementById(id);
 const debug = new URLSearchParams(location.search).get('debug') === '1';
@@ -148,6 +149,9 @@ function keptDetail(capture) {
 const rasterBoundsCache = new Map();
 function rasterBounds(svg) {
   if (rasterBoundsCache.has(svg)) return rasterBoundsCache.get(svg);
+  // The renderer reported where the card's pixels are: no decode. Only an older drawing without that report is decoded.
+  const drawn = cardLayout(svg)?.card, size = /<svg[^>]*\swidth="(\d+)"[^>]*\sheight="(\d+)"/.exec(svg);
+  if (drawn && size) return Promise.resolve(pixelBox(drawn, { width: Number(size[1]), height: Number(size[2]) }));
   const promise = (async () => {
     const source = /href="(data:image\/png;base64,[^"]+)"/.exec(svg)?.[1];
     if (!source) return null;
@@ -214,7 +218,29 @@ function thumbDesign(id) {
 // Rendered thumbnails are cached by everything that changes how they look, so a repaint
 // never blanks the picker; a stale thumbnail stays visible (dimmed) while its new one renders.
 const thumbCache = new Map(), lastThumb = new Map();
+let retiredThumbs = new Map(); // the thumbnail slots of the page just replaced, by layout
 const thumbKey = (disc, id) => { const d = thumbDesign(id); return JSON.stringify([disc, id, isLineupStudy(id) ? [ui.selection, context().competitionAddress] : null, d.accent, d.foreground, d.background, d.nativeSide ?? null, d.nativeHighlight ?? null, d.nativeScale ?? null, d.nativePlate ?? null, d.nativeRevision ?? null]); };
+// Idle means no tap is being answered and no save is running, not only a free moment between them (a draw waits on the
+// PNG encoder; a thumbnail started in that gap would make the card wait).
+const idle = async () => {
+  for (;;) {
+    await queue; await new Promise(resolve => (window.requestIdleCallback ? requestIdleCallback(() => resolve(), { timeout: 1000 }) : setTimeout(resolve, 60)));
+    if (!activeGesture() && !busy) return;
+    await new Promise(resolve => setTimeout(resolve, 80));
+  }
+};
+// What one tap on the card could make, drawn while nothing else is happening, so the tap finds its pixels ready.
+// The same designs the badges ask for (card-editor.mjs: Side, Colour, Plate); nothing is shown or saved.
+async function prewarmCard(token) {
+  if (ui.mode !== 'single' || capturedPreview || !isNativeStudy(ui.design.study)) return;
+  const d = { ...nativeDesign(ui.design, ui.design.study), ...ui.design };
+  const taps = [{ side: d.nativeSide === 'left' ? 'right' : 'left' }, { highlight: d.nativeHighlight === 'tiles' ? 'digits' : 'tiles' }, { plate: d.nativePlate === 'solid' ? 'see-through' : 'solid' }];
+  for (const tap of taps) {
+    await idle();
+    if (token !== thumbToken || capturedPreview) return;
+    try { await span('draw what a tap could make', () => workspace.single(ui.selectedDisc, nativeControlDesign(ui.design, { study: ui.design.study, ...tap }))); } catch { /* the tap itself will report it */ }
+  }
+}
 async function paintCompositionThumbs() {
   const token = ++thumbToken, disc = ui.mode === 'single' ? ui.selectedDisc : (ui.selection[0] ?? ui.selectedDisc);
   if (!disc) return;
@@ -223,22 +249,28 @@ async function paintCompositionThumbs() {
   for (const study of studies) { // instant pass: cached, else the last version dimmed
     const slot = document.querySelector(`[data-study-thumb="${CSS.escape(study.id)}"]`);
     if (!slot) continue;
-    const key = thumbKey(disc, study.id), hit = thumbCache.get(key);
-    if (hit) { slot.innerHTML = hit; continue; }
+    const key = thumbKey(disc, study.id), hit = thumbCache.get(key), old = retiredThumbs.get(study.id);
+    // The thumbnail already on the page is moved into the new page as it is: no re-parsing or re-decoding its pixels.
+    if (hit && old?.dataset.thumbKey === key && old.firstChild) { slot.replaceChildren(...old.childNodes); slot.dataset.thumbKey = key; continue; }
+    if (hit) { slot.innerHTML = hit; slot.dataset.thumbKey = key; continue; }
     if (lastThumb.has(study.id)) { slot.innerHTML = lastThumb.get(study.id); slot.classList.add('is-stale'); }
     misses.push({ study, slot, key });
   }
   // The chosen layout first, then the fast vector compositions, then the DiscStudio raster cards.
   misses.sort((a, b) => (b.study.id === ui.design.study) - (a.study.id === ui.design.study) || isNativeStudy(a.study.id) - isNativeStudy(b.study.id));
+  await prewarmCard(token);
   for (const { study, slot, key } of misses) {
+    // Each redraw waits until the page is idle, so a thumbnail never holds up the next tap on the card.
+    await idle();
+    if (token !== thumbToken || !slot.isConnected) return;
     try {
-      const result = isLineupStudy(study.id) ? await workspace.battle(ui.selection, thumbDesign(study.id)) : await workspace.single(disc, thumbDesign(study.id));
+      const result = await span('redraw a layout thumbnail', () => isLineupStudy(study.id) ? workspace.battle(ui.selection, thumbDesign(study.id)) : workspace.single(disc, thumbDesign(study.id)));
       if (token !== thumbToken || !slot.isConnected) return;
       slot.innerHTML = uniqueIds(result.graphic.svg, `thumb-${study.id.replace(/[^a-z0-9-]/gi, '-')}-`);
       slot.style.aspectRatio = `${result.graphic.width} / ${result.graphic.height}`;
       await closeUp(slot, result.graphic, true);
       if (!slot.isConnected) return;
-      thumbCache.set(key, slot.innerHTML); lastThumb.set(study.id, slot.innerHTML);
+      thumbCache.set(key, slot.innerHTML); lastThumb.set(study.id, slot.innerHTML); slot.dataset.thumbKey = key;
       if (thumbCache.size > 200) thumbCache.delete(thumbCache.keys().next().value);
       slot.classList.remove('is-stale', 'is-unavailable');
     } catch { slot.classList.add('is-unavailable'); }
@@ -335,8 +367,12 @@ function capturesMarkup() {
   return `<section class="captures panel" aria-labelledby="captures-title"><div class="section-heading"><div><span class="eyebrow">READY WHEN YOU ARE</span><h2 id="captures-title">Kept graphics <span class="inline-count">${captures.length}</span></h2></div><span class="subtle">Exact saved versions</span></div>${captures.length ? `<div class="capture-list">${captures.slice().reverse().map(address => { const capture = value(address); return `<button type="button" class="capture-choice ${capturedPreview?.address === address ? 'is-selected' : ''}" data-capture="${text(address)}" aria-pressed="${capturedPreview?.address === address}"><span class="capture-thumbnail" data-capture-thumb="${text(address)}" aria-hidden="true"></span><span><strong>${text(capture.title)}</strong><small>${text(keptDetail(capture))}</small></span><span class="capture-arrow" aria-hidden="true">↗</span></button>`; }).join('')}</div>` : '<p class="empty-note">Keep a graphic to come back to its exact version.</p>'}</section>`;
 }
 
+// The renderer's card box in whole canvas pixels, inside the canvas (the same shape alphaBounds gives).
+const pixelBox = (b, g) => { const x = Math.max(0, Math.floor(b.x)), y = Math.max(0, Math.floor(b.y)); return { x, y, width: Math.min(g.width, Math.ceil(b.x + b.w)) - x, height: Math.min(g.height, Math.ceil(b.y + b.h)) - y }; };
 async function portraitBounds(graphic, holder) {
   if (portraitBoundsCache?.svg === graphic.svg) return portraitBoundsCache.promise;
+  const drawn = cardLayout(graphic.svg)?.card; // reported by the renderer: no second decode of the PNG
+  if (drawn) { portraitBoundsCache = { svg: graphic.svg, promise: Promise.resolve(pixelBox(drawn, graphic)) }; return portraitBoundsCache.promise; }
   const source = holder.querySelector('image')?.getAttribute('href');
   if (!source?.startsWith('data:image/png;base64,')) throw Error('No self-contained native preview image.');
   const promise = (async () => {
@@ -397,7 +433,7 @@ async function framePortraitPreview(graphic) {
   if (ui.view !== 'closeup') return;
   holder.dataset.previewFraming = 'loading';
   try {
-    const bounds = await portraitBounds(graphic, holder);
+    const bounds = await span('frame the close-up', () => portraitBounds(graphic, holder));
     if (request !== portraitFrameRequest || holder !== $('graphic-preview') || graphic !== currentGraphic()) return;
     title.textContent = capturedPreview ? 'Kept version: detail' : 'Artwork detail';
     toggle.textContent = 'Full canvas';
@@ -439,18 +475,22 @@ function editCard(holder, graphic) {
   if (!editable) { detachCardEditor(holder); return; }
   const svg = holder.querySelector('svg'), design = { ...nativeDesign(ui.design, ui.design.study), ...ui.design };
   // The card's own pixel bounds (plate included) are the drag target; the renderer's layout places the taps.
-  rasterBounds(graphic.svg).then(bounds => {
+  const gesture = activeGesture(), drawn = cardLayout(graphic.svg)?.card;
+  // The renderer reports where the card's pixels are; only an older drawing without that report is decoded to find them.
+  (drawn ? Promise.resolve(pixelBox(drawn, graphic)) : span('find the card pixels', () => rasterBounds(graphic.svg))).then(bounds => {
     if (holder.querySelector('svg') !== svg || graphic !== currentGraphic()) return;
-    attachCardEditor(holder, { graphic, layout: cardLayout(graphic.svg), bounds: bounds && { x: bounds.x, y: bounds.y, w: bounds.width, h: bounds.height }, design, fixedRevision: latestCardRevision(ui.design.study), onChange: (controls, note) => {
+    span('put the handles on the card', () => attachCardEditor(holder, { graphic, layout: cardLayout(graphic.svg), bounds: bounds && { x: bounds.x, y: bounds.y, w: bounds.width, h: bounds.height }, design, fixedRevision: latestCardRevision(ui.design.study), onChange: (controls, note) => {
       ui.design = nativeControlDesign(ui.design, { study: ui.design.study, ...controls });
       change({ design: structuredClone(ui.design) }, `${note}. Your graphic is ready.`);
-    } });
+    } }));
+    endGesture(gesture);
   });
 }
 
 function paintPreview() {
   const graphic = currentGraphic(), holder = $('graphic-preview');
   if (!holder) return;
+  paintedSvg = graphic?.svg ?? null;
   holder.innerHTML = graphic?.svg ?? '<div class="empty-preview"><span aria-hidden="true">↗</span><h3>Build your lineup.</h3><p>Choose 2–4 prepared discs to see your graphic.</p></div>';
   holder.style.aspectRatio = graphic ? `${graphic.width} / ${graphic.height}` : '16 / 9';
   holder.className = `graphic-preview preview-${ui.background}`;
@@ -484,7 +524,7 @@ function paintPreview() {
 async function renderCurrent() {
   if (!rows.length) throw Error('No prepared discs are available in this fixture.');
   currentResult = ui.mode === 'single' ? await workspace.single(ui.selectedDisc, ui.design) : ui.selection.length >= 2 && ui.selection.length <= 4 ? await workspace.battle(ui.selection, ui.design) : null;
-  runScreen();
+  span('run the screen through PxC', () => runScreen());
 }
 // One PxC run for what's on screen: the site's decisions, the card's recipe, and Sam's rule on the layout the renderer measured.
 // It reads only; the graphic and the workspace are untouched. The DTree shows it.
@@ -534,7 +574,8 @@ function focusToken() {
 
 function paint() {
   const keepBar = root.querySelector('.export-bar'), refocus = focusToken();
-  root.innerHTML = `<section class="workspace-heading"><div><span class="eyebrow">GOOD TO GO</span><h1>Your discs. Your next video.</h1></div><nav class="mode-nav" aria-label="Graphic type">${[['single', 'Single'], ['battle', 'Battle'], ['bag', 'Bag lineup']].map(([mode, label]) => `<button type="button" data-mode="${mode}" aria-pressed="${ui.mode === mode}">${label}</button>`).join('')}</nav></section><div class="studio-grid">${shelfMarkup()}<section class="preview-column" aria-labelledby="preview-title"><div class="preview-heading"><div><span class="eyebrow">YOUR GRAPHIC</span><h2 id="preview-title">${capturedPreview ? 'A kept version' : ui.mode === 'single' ? 'One disc. Ready for its moment.' : ui.mode === 'battle' ? 'Set the scene.' : 'Your selected lineup.'}</h2></div><button id="return-live" type="button" class="text-button" hidden>Back to current image</button></div><div class="preview-shell"><div class="preview-toolbar"><div class="view-switch" role="group" aria-label="Preview framing">${[['closeup', 'Close-up'], ['frame', 'Whole frame']].map(([v, label]) => `<button type="button" data-preview-view="${v}" aria-pressed="${ui.view === v}">${label}</button>`).join('')}</div><span id="preview-dimensions" class="preview-dimensions"></span><button id="preview-framing" type="button" class="preview-framing-toggle" aria-label="Toggle artwork detail and full canvas preview" hidden>Full canvas</button><div class="background-switch" aria-label="Preview background">${[['checker', 'Checkerboard'], ['light', 'Light'], ['dark', 'Dark']].map(([v, label]) => `<button type="button" data-preview-background="${v}" aria-label="${label} preview background" aria-pressed="${ui.background === v}" title="${label}"><span class="swatch swatch-${v}" aria-hidden="true"></span></button>`).join('')}</div></div><div id="graphic-preview" data-testid="graphic-preview" class="graphic-preview"></div><div class="preview-bottom"><span class="transparency-dot" aria-hidden="true"></span><strong id="preview-kind"></strong></div></div><p id="preview-note" class="preview-note"></p><div class="export-bar">${downloadedMarkup()}<div class="export-copy"><span class="eyebrow">STEP 3 · TAKE IT TO YOUR VIDEO</span><p>Download keeps this exact version.</p></div><div class="export-actions"><button id="keep-graphic" type="button" data-needs-ready class="button-secondary">Keep version</button><button id="download-png" type="button" data-needs-ready class="button-primary">Download PNG <span aria-hidden="true">↓</span></button><button id="download-svg" type="button" data-needs-ready class="svg-button" aria-label="Download editable SVG">SVG</button></div></div></section>${controlsMarkup()}</div>${capturesMarkup()}`;
+  retiredThumbs = new Map([...root.querySelectorAll('[data-study-thumb]')].map(slot => [slot.dataset.studyThumb, slot]));
+  span('rebuild the page', () => root.innerHTML = `<section class="workspace-heading"><div><span class="eyebrow">GOOD TO GO</span><h1>Your discs. Your next video.</h1></div><nav class="mode-nav" aria-label="Graphic type">${[['single', 'Single'], ['battle', 'Battle'], ['bag', 'Bag lineup']].map(([mode, label]) => `<button type="button" data-mode="${mode}" aria-pressed="${ui.mode === mode}">${label}</button>`).join('')}</nav></section><div class="studio-grid">${shelfMarkup()}<section class="preview-column" aria-labelledby="preview-title"><div class="preview-heading"><div><span class="eyebrow">YOUR GRAPHIC</span><h2 id="preview-title">${capturedPreview ? 'A kept version' : ui.mode === 'single' ? 'One disc. Ready for its moment.' : ui.mode === 'battle' ? 'Set the scene.' : 'Your selected lineup.'}</h2></div><button id="return-live" type="button" class="text-button" hidden>Back to current image</button></div><div class="preview-shell"><div class="preview-toolbar"><div class="view-switch" role="group" aria-label="Preview framing">${[['closeup', 'Close-up'], ['frame', 'Whole frame']].map(([v, label]) => `<button type="button" data-preview-view="${v}" aria-pressed="${ui.view === v}">${label}</button>`).join('')}</div><span id="preview-dimensions" class="preview-dimensions"></span><button id="preview-framing" type="button" class="preview-framing-toggle" aria-label="Toggle artwork detail and full canvas preview" hidden>Full canvas</button><div class="background-switch" aria-label="Preview background">${[['checker', 'Checkerboard'], ['light', 'Light'], ['dark', 'Dark']].map(([v, label]) => `<button type="button" data-preview-background="${v}" aria-label="${label} preview background" aria-pressed="${ui.background === v}" title="${label}"><span class="swatch swatch-${v}" aria-hidden="true"></span></button>`).join('')}</div></div><div id="graphic-preview" data-testid="graphic-preview" class="graphic-preview"></div><div class="preview-bottom"><span class="transparency-dot" aria-hidden="true"></span><strong id="preview-kind"></strong></div></div><p id="preview-note" class="preview-note"></p><div class="export-bar">${downloadedMarkup()}<div class="export-copy"><span class="eyebrow">STEP 3 · TAKE IT TO YOUR VIDEO</span><p>Download keeps this exact version.</p></div><div class="export-actions"><button id="keep-graphic" type="button" data-needs-ready class="button-secondary">Keep version</button><button id="download-png" type="button" data-needs-ready class="button-primary">Download PNG <span aria-hidden="true">↓</span></button><button id="download-svg" type="button" data-needs-ready class="svg-button" aria-label="Download editable SVG">SVG</button></div></div></section>${controlsMarkup()}</div>${capturesMarkup()}`);
   if (ui.mode === 'battle' && site.battle === 'formats') { // the decided Battle engine: one model, formats as classes
     root.querySelector('.studio-grid').outerHTML = `<section class="battle-formats panel"><iframe src="./battle-lab.html?embedded=1" title="Battle: Round, Closest to the pin, Skins"></iframe></section>`;
     root.querySelector('.captures')?.remove();
@@ -546,15 +587,15 @@ function paint() {
     const note = fresh.querySelector('.downloaded'); if (note) keepBar.prepend(note);
     fresh.replaceWith(keepBar);
   }
-  paintPreview();
-  bind();
+  span('show the new card', () => paintPreview());
+  span('bind the controls', () => bind());
   if (refocus) root.querySelector(refocus)?.focus({ preventScroll: true });
-  paintCompositionThumbs();
-  paintKeptThumbs();
+  span('put the thumbnails back', () => paintCompositionThumbs());
+  span('kept thumbnails', () => paintKeptThumbs());
   bindSwatches();
-  sampleDiscColour();
+  span('sample the disc colour', () => sampleDiscColour());
   paintExportFailure();
-  diagnostics();
+  span('diagnostics', () => diagnostics());
 }
 
 function lastExportFailure() {
@@ -628,7 +669,7 @@ let decided;
 try { decided = decide(throWorld, viewerFill()); } catch { decided = decide(throWorld, SITE_FILL); } // a stale switch never stops the site
 const site = decided.site;
 useSiteCardRevision(site.revision); // new cards start at the decided revision; saved ones keep their own
-window.__thro = { world: throWorld, fill: viewerFill(), decided, verdict: null };
+window.__thro = { world: throWorld, fill: viewerFill(), decided, verdict: null, timing: gestures };
 const studiesFor = mode => mode === 'single' ? (site.single === 'cards' ? nativeStudies : compositionStudies)
   : mode === 'bag' ? (site.bag === 'lineups' ? lineupStudies : compositionStudies) : compositionStudies;
 const offers = (mode, study) => studiesFor(mode).some(item => item.id === study);
@@ -654,9 +695,32 @@ async function ensureOneEngine() {
   await workspace.change({ design: structuredClone(ui.design) });
 }
 
+// A change to the live Single card is on screen before it is saved (Sam, 23 Oct: "Make it not take almost a full second"):
+// the card is drawn from the committed workspace exactly as the save will draw it (the save re-checks it and finds the pixels
+// cached), painted, and the save follows behind it. Keep and Download queue behind the save, so nothing unsaved is kept.
+let shownChange = 0, paintedSvg = null;
+const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => setTimeout(resolve, 0)));
 function change(patch, note = 'Saved. Your graphic is ready.') {
   capturedPreview = null;
-  return run(async () => { await workspace.change(patch); ui.design = { ...defaultDesign, ...context().design }; await ensureOneEngine(); await renderCurrent(); paint(); message(note); }, { kind: 'change', patch, ui });
+  const token = ++shownChange;
+  const quick = ui.mode === 'single' && !hasConflict() && Object.keys(patch).length === 1 && isNativeStudy(patch.design?.study);
+  const shown = quick && (async () => {
+    try {
+      const result = await span('draw the card', () => workspace.single(ui.selectedDisc, patch.design));
+      if (token !== shownChange || hasConflict() || result.graphic?.svg === paintedSvg) return;
+      currentResult = result; span('run the screen through PxC', () => runScreen()); span('paint the page', () => paint());
+    } catch { /* the save below draws it again and reports any failure */ }
+  })();
+  return run(async () => {
+    // The save waits for the card to be drawn and that frame to be on screen, so it never holds up the pixels.
+    if (shown) { await shown; await nextFrame(); }
+    await span('save the change', () => workspace.change(patch)); ui.design = { ...defaultDesign, ...context().design };
+    await span('check the engine', () => ensureOneEngine()); await span('draw the card', () => renderCurrent());
+    // A newer change paints itself; the same pixels already on screen are not painted twice.
+    if (!quick || (token === shownChange && currentGraphic()?.svg !== paintedSvg)) span('paint the page', () => paint());
+    else diagnostics();
+    message(note);
+  }, { kind: 'change', patch, ui });
 }
 
 async function keepCurrent(explicit = false) {

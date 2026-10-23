@@ -22,11 +22,13 @@ const STYLE = `
 .card-editor .ce-badge{position:absolute;pointer-events:auto;transform:translate(-50%,-50%);min-height:30px;min-width:30px;height:30px;padding:0 10px;border-radius:15px;border:2px solid #fff;background:#0b100ddb;color:#fff;font:700 12px/26px system-ui,sans-serif;white-space:nowrap;cursor:pointer;touch-action:manipulation;box-shadow:0 2px 8px #0007}
 .card-editor .ce-badge:hover:not(:disabled),.card-editor .ce-badge.lit{background:#000;border-color:var(--accent,#b5d899)}
 .card-editor .ce-badge.ce-right{transform:translate(6px,-50%)}
+.card-editor .ce-badge.ce-pressed,.ce-strip .ce-act.ce-pressed{background:var(--accent,#b5d899);border-color:#fff;color:#0b100d}
 .ce-strip .ce-act.lit{border-color:var(--accent,#b5d899);background:#2c3a2e}
 @media (pointer:coarse){.card-editor .ce-badge{min-height:40px;height:40px;line-height:36px;border-radius:20px;padding:0 12px}}
 .card-editor .ce-knob{position:absolute;pointer-events:auto;width:32px;height:32px;min-height:32px;min-width:32px;margin:-16px 0 0 -16px;padding:0;border-radius:50%;border:3px solid #fff;background:#e2402f;color:#fff;font:700 14px/1 system-ui,sans-serif;touch-action:none;cursor:nwse-resize;box-shadow:0 2px 8px #0007}
 .card-editor.is-dragging .ce-knob,.card-editor.is-dragging .ce-badge{visibility:hidden}
 `;
+import { begin } from './timing.mjs';
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const union = boxes => {
   const list = boxes.filter(b => b && Number.isFinite(b.x) && b.w > 0 && b.h > 0);
@@ -93,8 +95,12 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
       t.addEventListener('pointerenter', () => show(true)); t.addEventListener('pointerleave', () => show(false));
       t.addEventListener('focus', () => show(true)); t.addEventListener('blur', () => show(false));
     }
-    badge.addEventListener('pointerdown', e => e.stopPropagation()); badge.addEventListener('click', e => { e.stopPropagation(); act(); });
-    b.addEventListener('click', act); strip.appendChild(b);
+    // The gesture starts when the finger lands (pointerdown), not when the click is delivered after it lifts.
+    let landed = null;
+    for (const t of [b, badge]) t.addEventListener('pointerdown', e => { landed = e.timeStamp; if (t === badge) e.stopPropagation(); });
+    // Pressed at once, in the same frame as the tap; the new card replaces the whole layer when it is drawn.
+    const go = e => { e.stopPropagation(); begin(label, landed ?? e.timeStamp); landed = null; badge.classList.add('ce-pressed'); b.classList.add('ce-pressed'); act(); };
+    badge.addEventListener('click', go); b.addEventListener('click', go); strip.appendChild(b);
     return { hint, target, badge, where, at: anchorBox ?? target };
   });
   function place() {
@@ -134,7 +140,7 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
   box.addEventListener('pointerdown', e => {
     const m = view(); let dx = 0, dy = 0;
     track(box, e, (x, y) => { dx = x; dy = y; svg.style.translate = `${x}px ${y}px`; box.style.translate = `${x}px ${y}px`; },
-      (moved, cancelled) => { svg.style.translate = ''; box.style.translate = ''; if (moved && !cancelled) commitNudge(dx / m.s, dy / m.s); });
+      (moved, cancelled) => { svg.style.translate = ''; box.style.translate = ''; if (moved && !cancelled) { begin('Move'); commitNudge(dx / m.s, dy / m.s); } });
   });
   box.addEventListener('keydown', e => {
     const step = e.shiftKey ? 40 : 8, d = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] }[e.key];
@@ -149,7 +155,7 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
       Object.assign(knob.style, { left: `${x1}px`, top: `${y1}px`, visibility: 'visible' }); knob.textContent = `${Math.round(s * 100)}`; };
     draw(scale0);
     track(knob, e, (dx, dy) => { next = Math.round(clamp(scale0 * Math.hypot(kx + dx - ax, ky + dy - ay) / d0, 0.5, 1.5) * 100) / 100; draw(next); },
-      (moved, cancelled) => { ghost.remove(); knob.textContent = '⤡'; place(); if (moved && !cancelled && next !== scale0) onChange({ scale: next }, `Card at ${Math.round(next * 100)}%`); });
+      (moved, cancelled) => { ghost.remove(); knob.textContent = '⤡'; place(); if (moved && !cancelled && next !== scale0) begin('Size'), onChange({ scale: next }, `Card at ${Math.round(next * 100)}%`); });
   });
   return () => { stop(); layer.remove(); };
 }

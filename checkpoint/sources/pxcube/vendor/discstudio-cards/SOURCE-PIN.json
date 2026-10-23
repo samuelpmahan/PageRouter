@@ -49,8 +49,8 @@
   "adapter": {
     "path": "thro-adapter.mjs",
     "upstreamSha256": "4594bf5f0a3f31aa16677e4b899f3bbd4b49ffe3e2c26c1f93b157d5197438be",
-    "bytes": 19826,
-    "sha256": "04db177c758fe82b146aa3d5715b1b58c924eba18e6817e5f8c03c98ccb61913",
+    "bytes": 20279,
+    "sha256": "3d0b1a46dfd43ee97886a2a6de331933d80a4ccdf823ef4ad50406d498c48120",
     "upstreamGitCorrespondence": "The adapter was supplied in the handoff ZIP; it is not part of the native Git checkpoint above.",
     "localChanges": [
       "Do not prefix an already addressed ds.px.seed. mold ID again.",
@@ -60,7 +60,8 @@
       "Add renderDiscStudioLineup: 2-4 native cards, each drawn exactly as a Single card, sized by the DiscStudio sticker step at one shared scale and set in a row by the DiscStudio frame renderer.",
       "Accept an optional panel-default nudge {x, y} in canvas pixels, applied from the native corner anchor through the native clampTransform; an omitted nudge leaves placement unchanged.",
       "Dispatch card revision 2 (b01, u04 only) to the pinned Thro-owned thro-card-core-r2.js; a recipe without a revision draws with the unchanged native core; any other revision is refused.",
-      "Key the sticker cache by card revision for revisions after 1 (revision 1 keeps DiscStudio's identity), so a card drawn at one revision is never served for another."
+      "Key the sticker cache by card revision for revisions after 1 (revision 1 keeps DiscStudio's identity), so a card drawn at one revision is never served for another.",
+      "Report the card's visible pixel bounds (plate included) as layout.card, measured on the native canvas and carried through the placement, so the page does not decode the PNG again to find the card; card pixels are unchanged."
     ]
   }
 }

@@ -214,6 +214,10 @@ export async function renderDiscStudioCard({ disc, photoSrc, flights, preset = '
     toPlaced = toSticker(native, sticker, origin);
   }
   const layout = layoutOf(native.items.map(item => itemThrough(item, toPlaced)), native.moldName);
+  // The card's visible pixels (plate included), from the bounds measured on the native canvas, carried through the
+  // placement: the page needs not decode the PNG again to find the card.
+  const [x0, y0, x1, y1] = native.bounds, at = boxThrough(toPlaced, x0, y0, x1, y1);
+  layout.card = round({ x: Math.max(0, at.x), y: Math.max(0, at.y), w: Math.min(width, at.x + at.w) - Math.max(0, at.x), h: Math.min(height, at.y + at.h) - Math.max(0, at.y) });
   return { svg: await svgFor(png, width, height), width, height, png, layout, preset: native.id, orientation: native.orientation, appearance: native.look, placement: transform, build, revision: native.revision };
 }
 

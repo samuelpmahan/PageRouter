@@ -84,6 +84,9 @@ const css = `
 .dtree .dt-way.quiet .pic-study{outline:2px dashed #e9f1e4;outline-offset:1px}
 .dtree .dt-way.comfy.quiet .pic-study{outline:3px solid #ffd166}
 .dtree .dt-way small{font-size:11px;color:#9fb0a3;font-variant-numeric:tabular-nums}
+.dtree .dt-taps{list-style:none;margin:6px 0;padding:0;display:grid;gap:6px}.dtree .dt-taps li{display:grid;grid-template-columns:auto 1fr;gap:2px 8px;align-items:center;font-size:12px}
+.dtree .dt-tlabel{color:#eef3ea;font-weight:700}.dtree .dt-tms{justify-self:end;color:#cfe3c9;font-variant-numeric:tabular-nums}
+.dtree .dt-tbar{grid-column:1/-1;position:relative;height:14px;border-radius:3px;background:#ffffff14;overflow:hidden}.dtree .dt-tbar u{position:absolute;left:0;top:0;bottom:0;background:#ffffff2e}.dtree .dt-tbar i{position:absolute;top:0;bottom:0;min-width:2px}.dtree .dt-tbar b{position:absolute;top:-2px;bottom:-2px;border-left:2px solid #fff}
 .dtree .dt-key{display:inline-flex;align-items:center;gap:4px}.dtree .dt-key i{display:inline-block;width:14px;height:9px;border-radius:2px}
 .dtree-lit{position:absolute;z-index:65;pointer-events:none;border:3px solid #c8f49d;border-radius:12px;box-shadow:0 0 0 9999px #0006,0 0 24px #c8f49d88}
 .dtree-lit span{position:absolute;left:-3px;top:-28px;background:#c8f49d;color:#10180f;font:700 12px/1 system-ui,sans-serif;padding:6px 8px;border-radius:7px;white-space:nowrap;max-width:80vw;overflow:hidden;text-overflow:ellipsis}
@@ -281,7 +284,8 @@ async function start() {
   const pics = e => { const row = (e.parts ?? []).filter(c => pic(c.fromPicture) || pic(c.toPicture)).filter((c, i, all) => !(c.feature === 'photo' && all.some(d => d.feature === 'disc'))).map(c => `<span class="dt-pic">${pic(c.fromPicture)}<i>→</i>${pic(c.toPicture)}</span>`); return row.length ? `<div class="dt-pics">${row.join('')}</div>` : ''; };
   // The last thumbnail seen for each layout: a change made in Single still shows its layouts after you move to Bag.
   const thumbs = new Map();
-  const seeThumbs = () => document.querySelectorAll('button[data-study] svg').forEach(svg => thumbs.set(svg.closest('[data-study]').dataset.study, svg.cloneNode(true)));
+  // Kept by reference (a repaint replaces the node, so the old one stays as it was); only a picture actually shown is cloned.
+  const seeThumbs = () => document.querySelectorAll('button[data-study] svg').forEach(svg => thumbs.set(svg.closest('[data-study]').dataset.study, svg));
   const fillPics = el => { seeThumbs(); el.querySelectorAll('[data-pic-study]').forEach(slot => { const svg = thumbs.get(slot.dataset.picStudy); if (svg && !slot.firstChild) slot.append(svg.cloneNode(true)); }); };
   const what = e => e.first ? 'First draw on this page' : e.diff.length ? e.diff.join(' · ') : 'Nothing in the card changed';
   const pixelWords = e => e.pixel === 'reused' ? 'pixels reused' : e.pixel === 'drawn' ? 'pixels drawn' : 'pixels not recorded';
@@ -304,10 +308,24 @@ async function start() {
     if (!panel.hidden && !lights.length) paint();
   }
 
+  // How long each tap took, finger to pixels (timing.mjs): one bar per tap on the same scale, a block per stage, the frame
+  // the eye calls instant (100 ms) marked. Measured on this device, in this browser, each time.
+  const STAGE_COLOURS = { 'draw the card': '#ff9e80', 'run the screen through PxC': '#c77dff', 'paint the page': '#4cc9f0', 'put the handles on the card': '#c8f49d', 'find the card pixels': '#ffd166', 'save the change': '#7d8a80' };
+  function timingNode() {
+    const taps = (window.__thro?.timing ?? []).slice(-5).reverse();
+    if (!taps.length) return '<h3>Your last taps, finger to pixels</h3><p class="dt-about">Tap Side, Colour or Plate on the card, or drag it: each tap is timed here, stage by stage, on this device.</p>';
+    const scale = Math.max(400, ...taps.map(t => t.end)), pct = ms => `${(100 * ms / scale).toFixed(2)}%`;
+    const bar = t => `<div class="dt-tbar" role="img" aria-label="${esc(t.label)}: ${Math.round(t.end)} milliseconds"><u style="width:${pct(t.end)}"></u>${t.stages.filter(st => st.depth === 0 && st.start < t.end && STAGE_COLOURS[st.name]).map(st => `<i title="${esc(st.name)} ${Math.round(st.ms)} ms" style="left:${pct(st.start)};width:${pct(Math.min(st.ms, t.end - st.start))};background:${STAGE_COLOURS[st.name]}"></i>`).join('')}<b style="left:${pct(100)}"></b></div>`;
+    const used = [...new Set(taps.flatMap(t => t.stages.filter(st => st.depth === 0 && st.start < t.end && STAGE_COLOURS[st.name]).map(st => st.name)))];
+    return `<h3>Your last taps, finger to pixels</h3><ol class="dt-taps">${taps.map(t => `<li><span class="dt-tlabel">${esc(t.label)}</span><span class="dt-tms">${Math.round(t.end)} ms</span>${bar(t)}</li>`).join('')}</ol>
+      <p class="dt-ways-sum">${used.map(n => `<span class="dt-key"><i style="background:${STAGE_COLOURS[n]}"></i>${esc(n)}</span>`).join('')}<span class="dt-key"><i style="background:none;border-left:2px solid #fff;width:0"></i>100 ms</span></p>`;
+  }
+
   function paint() {
     const site = decided.receipt.trace;
     panel.innerHTML = `<header><h2>DTree</h2><button type="button" data-close aria-label="Close the decision tree">Close</button></header><div class="dt-body">
       <h3>What your last changes did</h3>${changes.length ? `<ol class="dt-changes">${changes.map(changeItem).join('')}</ol>` : '<p class="dt-about">Change something on a Single card or a Bag lineup: each change shows here, with what it recomputed and what it reused.</p>'}
+      ${timingNode()}
       ${waysNode()}
       <h3>The site, decided in PxC</h3><p class="dt-about">One run of <code>${esc(site.contract)}</code> (run ${esc(decided.receipt.runId)}, ${decided.receipt.calls} calls). Each decision is a contract; its alternatives are implementations; the site's choices are its fill.</p>
       <p class="dt-about"><a href="./fill-matrix.html" style="color:#c8f49d">Every fill, checked in a browser →</a> what each switch changes, and which checks it breaks.</p>
@@ -361,6 +379,7 @@ async function start() {
   addEventListener('resize', unlight);
   if (new URLSearchParams(location.search).has('dtree')) setTimeout(() => toggle(true), 600);
   addEventListener('thro:screen', onScreen);
+  addEventListener('thro:timing', () => { if (!panel.hidden && !lights.length) paint(); });
   addEventListener('thro:viewer', () => { if (!panel.hidden && !lights.length && !panel.contains(document.activeElement?.closest?.('[data-purpose]'))) paint(); });
   if (window.__thro.screen) onScreen(); // a run that happened before the DTree started
   window.__dtree = { open: openCount, toggle, changes: () => changes.map(c => ({ n: c.n, what: what(c), recomputed: c.recomputed, reused: c.reused, whole: c.whole, pixel: c.pixel, sameAs: c.sameAs, times: c.times })), toast: () => (toast.hidden ? null : toast.textContent), blame: () => { const v = verdict(); return v && !v.accepted ? blame(v) : null; }, decisions: decided.receipt.trace.calls.map(n => ({ contract: n.contract, impl: n.impl, rung: n.chosenBy?.rung })), verdict };

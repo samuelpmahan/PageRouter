@@ -8,6 +8,7 @@ import { defaultDesign } from './graphics.mjs';
 import { createNativeRenderer, isNativeStudy, isLineupStudy, workspaceDesignChange } from './native-cards.mjs';
 import { validateFlightCorrection } from './prepared-fixture.mjs';
 import { createWorkspacePackage, snapshotJson } from './workspace-package.mjs';
+import { span } from './timing.mjs';
 
 export const archiveKey = 'thro.v1:prepared-samples:archive';
 const clone = value => structuredClone(value);
@@ -58,10 +59,9 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
       const staged = memory(committedRaw);
       let candidate;
       try {
-        candidate = await openDemo(staged, { renderGraphic });
-        const result = await action(candidate);
-        retained.setItem('', staged.raw);
-        await retained.flush();
+        candidate = await span('open a copy of the workspace', () => openDemo(staged, { renderGraphic }));
+        const result = await span('apply it to the copy', () => action(candidate));
+        await span('write it to storage', async () => { retained.setItem('', staged.raw); await retained.flush(); });
         committedRaw = staged.raw;
         model = candidate;
         draft = null;
@@ -100,7 +100,7 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
           && ['design', 'selectedDisc', 'throMode'].some(key => Object.hasOwn(changes, key))) {
           // patch() wrote only the private staging store. A native geometry,
           // photo or renderer failure must precede the outer durable flush.
-          await candidate.render(next.selectedDisc, next.design);
+          await span('check the card draws', () => candidate.render(next.selectedDisc, next.design));
         }
         return next;
       });

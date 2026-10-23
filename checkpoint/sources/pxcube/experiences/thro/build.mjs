@@ -26,6 +26,7 @@ const runtimeFiles = [
   'dtree.mjs',
   'handles.mjs',
   'ways.mjs',
+  'timing.mjs',
   'revision-review.html',
   'revision-review.mjs',
   'viewer.mjs',

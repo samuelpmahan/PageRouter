@@ -1,11 +1,14 @@
 // The card editor as Sam uses it (23 Oct): the handles are on the card and the card changes under the finger.
 // Real touch on a phone (CDP touch events, not a mouse) at 390 × 844, plus Sam's window (1540 × 784) and 1280 × 900 with a mouse.
 // Tapping the Side badge on the card flips the disc to the other side; tapping Colour moves the accent; dragging the card moves it;
-// each strip control and its on-card badge are one action (pointing at one lights the other). Usage: node … URL [shots].
+// each strip control and its on-card badge are one action (pointing at one lights the other); each tap reaches the screen
+// within a budget the page measures itself (THRO_TAP_BUDGET_MS, default 300). Usage: node … URL [shots].
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ?? 'playwright');
 const base = new URL(process.argv[2] ?? 'http://localhost:8766/'), shots = process.argv[3];
 const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 const failures = [], notes = [];
+// Finger to pixels, measured by the page itself (timing.mjs). Before 23 Oct a tap took about a second and nothing measured it.
+const BUDGET = Number(process.env.THRO_TAP_BUDGET_MS ?? 300);
 const expect = (label, ok, message) => { if (!ok) failures.push(`${label}: ${message}`); };
 const sizes = [{ label: 'phone 390 (touch)', width: 390, height: 844, touch: true }, { label: "Sam's window 1540×784", width: 1540, height: 784 }, { label: '1280×900', width: 1280, height: 900 }];
 for (const size of sizes) {
@@ -14,7 +17,10 @@ for (const size of sizes) {
   p.on('pageerror', e => errors.push(String(e)));
   await p.goto(base.href, { waitUntil: 'networkidle' });
   await p.waitForFunction(() => window.__thro?.screen && document.querySelector('.card-editor .ce-badge'), null, { timeout: 30000 });
+  await p.waitForTimeout(3000); // the page draws what a tap could make while it is idle
   const cdp = size.touch ? await context.newCDPSession(p) : null;
+  const lastTap = label => p.waitForFunction(l => window.__thro.timing?.at(-1)?.label === l, label, { timeout: 5000 }).catch(() => null)
+    .then(() => p.evaluate(() => { const g = window.__thro.timing?.at(-1); return g ? { label: g.label, ms: Math.round(g.end) } : null; }));
   const tapAt = async (x, y) => { if (cdp) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] }); await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); } else await p.mouse.click(x, y); };
   const dragFrom = async (x0, y0, x1, y1) => {
     if (cdp) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: x0, y: y0 }] }); for (let i = 1; i <= 12; i++) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x0 + (x1 - x0) * i / 12, y: y0 + (y1 - y0) * i / 12 }] }); await p.waitForTimeout(16); } await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); }
@@ -34,12 +40,14 @@ for (const size of sizes) {
   // Tap Side on the card: the disc goes to the other side.
   let before = await appearance(); let b = await badge('⇄ Side');
   await tapAt(b.x + b.width / 2, b.y + b.height / 2); await settled(before);
-  let after = await appearance();
+  let after = await appearance(); const sideTap = await lastTap('⇄ Side');
+  expect(L, sideTap?.label === '⇄ Side' && sideTap.ms <= BUDGET, `tapping Side should put the new card on screen within ${BUDGET} ms, took ${JSON.stringify(sideTap)}`);
   expect(L, after.side && after.side !== before.side, `tapping Side on the card should flip the disc side (${before.side} → ${after.side})`);
   // Tap Colour on the card: the accent moves between digits and tiles.
   before = after; b = await badge('# Colour');
   await tapAt(b.x + b.width / 2, b.y + b.height / 2); await settled(before);
-  after = await appearance();
+  after = await appearance(); const colourTap = await lastTap('# Colour');
+  expect(L, colourTap?.label === '# Colour' && colourTap.ms <= BUDGET, `tapping Colour should put the new card on screen within ${BUDGET} ms, took ${JSON.stringify(colourTap)}`);
   expect(L, after.highlight && after.highlight !== before.highlight, `tapping Colour on the card should move the accent (${before.highlight} → ${after.highlight})`);
   // Drag the card itself: it moves (the renderer gets a nudge), and the page does not scroll on a phone.
   before = after; const card = await p.locator('.card-editor .ce-card').boundingBox(); const y0 = await p.evaluate(() => scrollY);
@@ -54,7 +62,7 @@ for (const size of sizes) {
     expect(L, await p.locator('.card-editor .ce-badge.lit').count() === 1, 'pointing at a strip control should light its badge on the card');
   }
   if (shots) await p.locator('#graphic-preview').screenshot({ path: `${shots}/oncard-after-${size.width}.png` });
-  notes.push(`${L}: badges ${labels.join(', ')}; side ${before.side ?? '?'}, accent ${after.highlight}, nudge ${JSON.stringify(after.nudge)}, scrolled ${scrolled}`);
+  notes.push(`${L}: Side ${sideTap?.ms} ms, Colour ${colourTap?.ms} ms finger to pixels; badges ${labels.join(', ')}; side ${before.side ?? '?'}, accent ${after.highlight}, nudge ${JSON.stringify(after.nudge)}, scrolled ${scrolled}`);
   expect(L, !errors.length, `page errors: ${errors.join(' | ')}`);
   await context.close();
 }

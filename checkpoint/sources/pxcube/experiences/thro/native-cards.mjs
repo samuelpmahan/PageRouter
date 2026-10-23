@@ -1,4 +1,5 @@
 import { canonical, hashString } from './pxc/canonical.mjs';
+import { span } from './timing.mjs';
 // Native card pixels are an optional Single treatment. The renderer/catalog
 // module graph is imported only when one of these explicit studies is used.
 export const nativeBuild = '28ac2b39fab85255';
@@ -166,14 +167,18 @@ export function createNativeRenderer(renderCard = async request => {
   const adapter = await import('./vendor/discstudio-cards/thro-adapter.mjs');
   return adapter.renderDiscStudioLineup(request);
 }) {
-  const pixels = new Map(); // per renderer: a card enters only after it passed every check below
+  const pixels = new Map(), inflight = new Map(); // per renderer: a card enters pixels only after it passed every check below
   const single = async input => {
     if (!isNativeStudy(input.design?.study)) return null;
     if (input.purpose && input.purpose !== 'single') throw Error('Thro card layouts are available in Single. Choose a lineup composition for Battle or Bag.');
-    const request = nativeCardRequest(input), photo = await preparedPhotoDigest(request.photoSrc);
+    const request = nativeCardRequest(input), photo = await span('hash the disc photo', () => preparedPhotoDigest(request.photoSrc));
     // Same recipe, same pixels: the key is the hash the PxC kernel gives the recipe Part (thro.card.recipe's output).
     const key = recipePartHash(requestRecipe(request, photo));
-    const cached = pixels.get(key), result = cached ?? await renderCard(request);
+    // A card being drawn is drawn once: a second request for the same recipe waits for the same drawing.
+    const cached = pixels.get(key);
+    let drawing = cached ? null : inflight.get(key);
+    if (!cached && !drawing) { drawing = span('draw the pixels', () => renderCard(request)); inflight.set(key, drawing); drawing.finally(() => inflight.delete(key)).catch(() => {}); }
+    const result = cached ?? await drawing;
     const portrait = nativeStudy(input.design.study).orientation === 'portrait';
     if (result.build !== nativeBuild) throw Error('Native renderer build does not match this saved design.');
     // A renderer that does not report a revision drew revision 1; one that ignored the asked revision is refused.
