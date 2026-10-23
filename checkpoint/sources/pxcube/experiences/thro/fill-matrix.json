@@ -1,0 +1,784 @@
+{
+ "when": "2026-10-23 00:20 UTC",
+ "base": "http://localhost:8766/",
+ "decisions": [
+  {
+   "id": "thro.single.layouts",
+   "question": "How are Single cards composed?",
+   "impls": [
+    "thro.single.layouts/one-renderer",
+    "thro.single.layouts/vector-compositions"
+   ]
+  },
+  {
+   "id": "thro.bag.layouts",
+   "question": "What does a Bag lineup look like?",
+   "impls": [
+    "thro.bag.layouts/thro-lineups",
+    "thro.bag.layouts/vector-compositions"
+   ]
+  },
+  {
+   "id": "thro.battle.engine",
+   "question": "How does Battle work?",
+   "impls": [
+    "thro.battle.engine/layouts-with-points",
+    "thro.battle.engine/formats"
+   ]
+  },
+  {
+   "id": "thro.card.revision",
+   "question": "Which revision of the card drawing?",
+   "impls": [
+    "thro.card.revision/discstudio-6.6.1",
+    "thro.card.revision/thro-r2"
+   ]
+  }
+ ],
+ "checks": [
+  {
+   "id": "opens",
+   "label": "Opens"
+  },
+  {
+   "id": "single",
+   "label": "Single offers"
+  },
+  {
+   "id": "download",
+   "label": "First-tap download"
+  },
+  {
+   "id": "bag",
+   "label": "Bag lineup"
+  },
+  {
+   "id": "battle",
+   "label": "Battle"
+  },
+  {
+   "id": "rule",
+   "label": "Rule on Single cards"
+  }
+ ],
+ "rows": [
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/one-renderer",
+    "thro.bag.layouts": "thro.bag.layouts/thro-lineups",
+    "thro.battle.engine": "thro.battle.engine/layouts-with-points",
+    "thro.card.revision": "thro.card.revision/discstudio-6.6.1"
+   },
+   "key": "one-renderer · thro-lineups · layouts-with-points · discstudio-6.6.1",
+   "site": false,
+   "shows": {
+    "single": "cards",
+    "bag": "lineups",
+    "battle": "layouts",
+    "revision": 1
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "11 layouts, all cards expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-15e4b661.png"
+    },
+    "rule": {
+     "ok": false,
+     "note": "U04: \"MVP\" (34 px) is bigger than the flight numbers (29 px). · B01: The disc photo is rotated 12°; it is always drawn upright."
+    },
+    "bag": {
+     "ok": true,
+     "note": "5 layouts (lineups), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "9 layouts, 3 points fields"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/one-renderer",
+    "thro.bag.layouts": "thro.bag.layouts/thro-lineups",
+    "thro.battle.engine": "thro.battle.engine/layouts-with-points",
+    "thro.card.revision": "thro.card.revision/thro-r2"
+   },
+   "key": "one-renderer · thro-lineups · layouts-with-points · thro-r2",
+   "site": true,
+   "shows": {
+    "single": "cards",
+    "bag": "lineups",
+    "battle": "layouts",
+    "revision": 2
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "11 layouts, all cards expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-e1c53615.png"
+    },
+    "rule": {
+     "ok": true,
+     "note": "11/11 cards pass"
+    },
+    "bag": {
+     "ok": true,
+     "note": "5 layouts (lineups), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "9 layouts, 3 points fields"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/one-renderer",
+    "thro.bag.layouts": "thro.bag.layouts/thro-lineups",
+    "thro.battle.engine": "thro.battle.engine/formats",
+    "thro.card.revision": "thro.card.revision/discstudio-6.6.1"
+   },
+   "key": "one-renderer · thro-lineups · formats · discstudio-6.6.1",
+   "site": false,
+   "shows": {
+    "single": "cards",
+    "bag": "lineups",
+    "battle": "formats",
+    "revision": 1
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "11 layouts, all cards expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-15e4b661.png"
+    },
+    "rule": {
+     "ok": false,
+     "note": "U04: \"MVP\" (34 px) is bigger than the flight numbers (29 px). · B01: The disc photo is rotated 12°; it is always drawn upright."
+    },
+    "bag": {
+     "ok": true,
+     "note": "5 layouts (lineups), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "formats editor in the site, rule true"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/one-renderer",
+    "thro.bag.layouts": "thro.bag.layouts/thro-lineups",
+    "thro.battle.engine": "thro.battle.engine/formats",
+    "thro.card.revision": "thro.card.revision/thro-r2"
+   },
+   "key": "one-renderer · thro-lineups · formats · thro-r2",
+   "site": false,
+   "shows": {
+    "single": "cards",
+    "bag": "lineups",
+    "battle": "formats",
+    "revision": 2
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "11 layouts, all cards expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-e1c53615.png"
+    },
+    "rule": {
+     "ok": true,
+     "note": "11/11 cards pass"
+    },
+    "bag": {
+     "ok": true,
+     "note": "5 layouts (lineups), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "formats editor in the site, rule true"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/one-renderer",
+    "thro.bag.layouts": "thro.bag.layouts/vector-compositions",
+    "thro.battle.engine": "thro.battle.engine/layouts-with-points",
+    "thro.card.revision": "thro.card.revision/discstudio-6.6.1"
+   },
+   "key": "one-renderer · vector-compositions · layouts-with-points · discstudio-6.6.1",
+   "site": false,
+   "shows": {
+    "single": "cards",
+    "bag": "compositions",
+    "battle": "layouts",
+    "revision": 1
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "11 layouts, all cards expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-15e4b661.png"
+    },
+    "rule": {
+     "ok": false,
+     "note": "U04: \"MVP\" (34 px) is bigger than the flight numbers (29 px). · B01: The disc photo is rotated 12°; it is always drawn upright."
+    },
+    "bag": {
+     "ok": true,
+     "note": "9 layouts (compositions), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "9 layouts, 3 points fields"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/one-renderer",
+    "thro.bag.layouts": "thro.bag.layouts/vector-compositions",
+    "thro.battle.engine": "thro.battle.engine/layouts-with-points",
+    "thro.card.revision": "thro.card.revision/thro-r2"
+   },
+   "key": "one-renderer · vector-compositions · layouts-with-points · thro-r2",
+   "site": false,
+   "shows": {
+    "single": "cards",
+    "bag": "compositions",
+    "battle": "layouts",
+    "revision": 2
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "11 layouts, all cards expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-e1c53615.png"
+    },
+    "rule": {
+     "ok": true,
+     "note": "11/11 cards pass"
+    },
+    "bag": {
+     "ok": true,
+     "note": "9 layouts (compositions), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "9 layouts, 3 points fields"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/one-renderer",
+    "thro.bag.layouts": "thro.bag.layouts/vector-compositions",
+    "thro.battle.engine": "thro.battle.engine/formats",
+    "thro.card.revision": "thro.card.revision/discstudio-6.6.1"
+   },
+   "key": "one-renderer · vector-compositions · formats · discstudio-6.6.1",
+   "site": false,
+   "shows": {
+    "single": "cards",
+    "bag": "compositions",
+    "battle": "formats",
+    "revision": 1
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "11 layouts, all cards expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-15e4b661.png"
+    },
+    "rule": {
+     "ok": false,
+     "note": "U04: \"MVP\" (34 px) is bigger than the flight numbers (29 px). · B01: The disc photo is rotated 12°; it is always drawn upright."
+    },
+    "bag": {
+     "ok": true,
+     "note": "9 layouts (compositions), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "formats editor in the site, rule true"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/one-renderer",
+    "thro.bag.layouts": "thro.bag.layouts/vector-compositions",
+    "thro.battle.engine": "thro.battle.engine/formats",
+    "thro.card.revision": "thro.card.revision/thro-r2"
+   },
+   "key": "one-renderer · vector-compositions · formats · thro-r2",
+   "site": false,
+   "shows": {
+    "single": "cards",
+    "bag": "compositions",
+    "battle": "formats",
+    "revision": 2
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "11 layouts, all cards expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-e1c53615.png"
+    },
+    "rule": {
+     "ok": true,
+     "note": "11/11 cards pass"
+    },
+    "bag": {
+     "ok": true,
+     "note": "9 layouts (compositions), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "formats editor in the site, rule true"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/vector-compositions",
+    "thro.bag.layouts": "thro.bag.layouts/thro-lineups",
+    "thro.battle.engine": "thro.battle.engine/layouts-with-points",
+    "thro.card.revision": "thro.card.revision/discstudio-6.6.1"
+   },
+   "key": "vector-compositions · thro-lineups · layouts-with-points · discstudio-6.6.1",
+   "site": false,
+   "shows": {
+    "single": "compositions",
+    "bag": "lineups",
+    "battle": "layouts",
+    "revision": 1
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "9 layouts, all vector compositions expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-66531218.png"
+    },
+    "rule": {
+     "ok": null,
+     "note": "Not measured: vector compositions have no recorded card layout."
+    },
+    "bag": {
+     "ok": true,
+     "note": "5 layouts (lineups), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "9 layouts, 3 points fields"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/vector-compositions",
+    "thro.bag.layouts": "thro.bag.layouts/thro-lineups",
+    "thro.battle.engine": "thro.battle.engine/layouts-with-points",
+    "thro.card.revision": "thro.card.revision/thro-r2"
+   },
+   "key": "vector-compositions · thro-lineups · layouts-with-points · thro-r2",
+   "site": false,
+   "shows": {
+    "single": "compositions",
+    "bag": "lineups",
+    "battle": "layouts",
+    "revision": 2
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "9 layouts, all vector compositions expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-66531218.png"
+    },
+    "rule": {
+     "ok": null,
+     "note": "Not measured: vector compositions have no recorded card layout."
+    },
+    "bag": {
+     "ok": true,
+     "note": "5 layouts (lineups), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "9 layouts, 3 points fields"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/vector-compositions",
+    "thro.bag.layouts": "thro.bag.layouts/thro-lineups",
+    "thro.battle.engine": "thro.battle.engine/formats",
+    "thro.card.revision": "thro.card.revision/discstudio-6.6.1"
+   },
+   "key": "vector-compositions · thro-lineups · formats · discstudio-6.6.1",
+   "site": false,
+   "shows": {
+    "single": "compositions",
+    "bag": "lineups",
+    "battle": "formats",
+    "revision": 1
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "9 layouts, all vector compositions expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-66531218.png"
+    },
+    "rule": {
+     "ok": null,
+     "note": "Not measured: vector compositions have no recorded card layout."
+    },
+    "bag": {
+     "ok": true,
+     "note": "5 layouts (lineups), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "formats editor in the site, rule true"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/vector-compositions",
+    "thro.bag.layouts": "thro.bag.layouts/thro-lineups",
+    "thro.battle.engine": "thro.battle.engine/formats",
+    "thro.card.revision": "thro.card.revision/thro-r2"
+   },
+   "key": "vector-compositions · thro-lineups · formats · thro-r2",
+   "site": false,
+   "shows": {
+    "single": "compositions",
+    "bag": "lineups",
+    "battle": "formats",
+    "revision": 2
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "9 layouts, all vector compositions expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-66531218.png"
+    },
+    "rule": {
+     "ok": null,
+     "note": "Not measured: vector compositions have no recorded card layout."
+    },
+    "bag": {
+     "ok": true,
+     "note": "5 layouts (lineups), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "formats editor in the site, rule true"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/vector-compositions",
+    "thro.bag.layouts": "thro.bag.layouts/vector-compositions",
+    "thro.battle.engine": "thro.battle.engine/layouts-with-points",
+    "thro.card.revision": "thro.card.revision/discstudio-6.6.1"
+   },
+   "key": "vector-compositions · vector-compositions · layouts-with-points · discstudio-6.6.1",
+   "site": false,
+   "shows": {
+    "single": "compositions",
+    "bag": "compositions",
+    "battle": "layouts",
+    "revision": 1
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "9 layouts, all vector compositions expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-66531218.png"
+    },
+    "rule": {
+     "ok": null,
+     "note": "Not measured: vector compositions have no recorded card layout."
+    },
+    "bag": {
+     "ok": true,
+     "note": "9 layouts (compositions), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "9 layouts, 3 points fields"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/vector-compositions",
+    "thro.bag.layouts": "thro.bag.layouts/vector-compositions",
+    "thro.battle.engine": "thro.battle.engine/layouts-with-points",
+    "thro.card.revision": "thro.card.revision/thro-r2"
+   },
+   "key": "vector-compositions · vector-compositions · layouts-with-points · thro-r2",
+   "site": false,
+   "shows": {
+    "single": "compositions",
+    "bag": "compositions",
+    "battle": "layouts",
+    "revision": 2
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "9 layouts, all vector compositions expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-66531218.png"
+    },
+    "rule": {
+     "ok": null,
+     "note": "Not measured: vector compositions have no recorded card layout."
+    },
+    "bag": {
+     "ok": true,
+     "note": "9 layouts (compositions), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "9 layouts, 3 points fields"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/vector-compositions",
+    "thro.bag.layouts": "thro.bag.layouts/vector-compositions",
+    "thro.battle.engine": "thro.battle.engine/formats",
+    "thro.card.revision": "thro.card.revision/discstudio-6.6.1"
+   },
+   "key": "vector-compositions · vector-compositions · formats · discstudio-6.6.1",
+   "site": false,
+   "shows": {
+    "single": "compositions",
+    "bag": "compositions",
+    "battle": "formats",
+    "revision": 1
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "9 layouts, all vector compositions expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-66531218.png"
+    },
+    "rule": {
+     "ok": null,
+     "note": "Not measured: vector compositions have no recorded card layout."
+    },
+    "bag": {
+     "ok": true,
+     "note": "9 layouts (compositions), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "formats editor in the site, rule true"
+    }
+   }
+  },
+  {
+   "fill": {
+    "thro.single.layouts": "thro.single.layouts/vector-compositions",
+    "thro.bag.layouts": "thro.bag.layouts/vector-compositions",
+    "thro.battle.engine": "thro.battle.engine/formats",
+    "thro.card.revision": "thro.card.revision/thro-r2"
+   },
+   "key": "vector-compositions · vector-compositions · formats · thro-r2",
+   "site": false,
+   "shows": {
+    "single": "compositions",
+    "bag": "compositions",
+    "battle": "formats",
+    "revision": 2
+   },
+   "result": {
+    "opens": {
+     "ok": true,
+     "note": "Ready"
+    },
+    "single": {
+     "ok": true,
+     "note": "9 layouts, all vector compositions expected"
+    },
+    "download": {
+     "ok": true,
+     "note": "thro-mvp-servo-1920x1080-66531218.png"
+    },
+    "rule": {
+     "ok": null,
+     "note": "Not measured: vector compositions have no recorded card layout."
+    },
+    "bag": {
+     "ok": true,
+     "note": "9 layouts (compositions), drawn, kept"
+    },
+    "battle": {
+     "ok": true,
+     "note": "formats editor in the site, rule true"
+    }
+   }
+  }
+ ],
+ "gradient": [
+  {
+   "decision": "thro.single.layouts",
+   "question": "How are Single cards composed?",
+   "from": "thro.single.layouts/one-renderer",
+   "to": "thro.single.layouts/vector-compositions",
+   "flips": [
+    {
+     "id": "rule",
+     "label": "Rule on Single cards",
+     "from": true,
+     "to": null,
+     "note": "Not measured: vector compositions have no recorded card layout."
+    }
+   ]
+  },
+  {
+   "decision": "thro.bag.layouts",
+   "question": "What does a Bag lineup look like?",
+   "from": "thro.bag.layouts/thro-lineups",
+   "to": "thro.bag.layouts/vector-compositions",
+   "flips": []
+  },
+  {
+   "decision": "thro.battle.engine",
+   "question": "How does Battle work?",
+   "from": "thro.battle.engine/layouts-with-points",
+   "to": "thro.battle.engine/formats",
+   "flips": []
+  },
+  {
+   "decision": "thro.card.revision",
+   "question": "Which revision of the card drawing?",
+   "from": "thro.card.revision/thro-r2",
+   "to": "thro.card.revision/discstudio-6.6.1",
+   "flips": [
+    {
+     "id": "rule",
+     "label": "Rule on Single cards",
+     "from": true,
+     "to": false,
+     "note": "U04: \"MVP\" (34 px) is bigger than the flight numbers (29 px). · B01: The disc photo is rotated 12°; it is always drawn upright."
+    }
+   ]
+  }
+ ]
+}

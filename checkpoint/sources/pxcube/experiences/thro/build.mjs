@@ -26,6 +26,8 @@ const runtimeFiles = [
   'dtree.mjs',
   'dtree.json',
   'thro-world.mjs',
+  'fill-matrix.html',
+  'fill-matrix.json',
   'pxc/kernel.mjs',
   'pxc/canonical.mjs',
   'pxc/schema.mjs',

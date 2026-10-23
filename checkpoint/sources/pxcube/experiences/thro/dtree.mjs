@@ -104,6 +104,7 @@ async function start() {
     const site = decided.receipt.trace;
     panel.innerHTML = `<header><h2>DTree</h2><button type="button" data-close aria-label="Close the decision tree">Close</button></header><div class="dt-body">
       <h3>The site, decided in PxC</h3><p class="dt-about">One run of <code>${esc(site.contract)}</code> (run ${esc(decided.receipt.runId)}, ${decided.receipt.calls} calls). Each decision is a contract; its alternatives are implementations; the site's choices are its fill.</p>
+      <p class="dt-about"><a href="./fill-matrix.html" style="color:#c8f49d">Every fill, checked in a browser →</a> what each switch changes, and which checks it breaks.</p>
       <ol><li>${ruleNode()}<ol>${site.calls.map(node => `<li>${decisionNode(node)}</li>`).join('')}</ol></li></ol>
       ${mine.length ? `<button type="button" class="dt-reset" data-reset>Back to the site's decisions (${mine.length} switched here)</button>` : ''}
       <h3>Not in the world yet</h3><p class="dt-about">${esc(past.about ?? '')}</p>${pastBranch(null)}</div>`;
