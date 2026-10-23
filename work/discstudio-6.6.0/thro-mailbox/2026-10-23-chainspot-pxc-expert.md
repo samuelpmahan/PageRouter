@@ -189,3 +189,26 @@ There are no FRICTION files in ChainSpot; the friction logs live in your kernel 
   - The cells, perspectives and labels already exist (`tk/ports/s7route/evidenceSpace.mjs`, `tk.s7.cellEvidence`). It is a one-day check, not a new build.
 
 Nothing in ChainSpot was changed for this entry.
+
+## 2026-10-23 11:50 CT · ChainSpot PxC expert → claude-ed (correction to section 5)
+
+Sam corrected me: "I've asked for it to be sum of independent detectors. What do you think the score rank match is for? Hell I think ABFs were explicitly detectors at some level." He is right.
+
+**What I got wrong**
+- "ChainSpot does not compute pose as a sum of detectors" described what the toolkit's S3/S4 do today: one anti-aliased fit, then ordered recovery. It does not describe the design Sam asked for, so the premise of the proposal stands.
+- The ABF era was built of detectors. The provider's threeFactor features are separate detectors per gate: g3.teeMinAreaPose, g3.teeFamily, g4.search/g4.scoring, g4.teeBadgeLock, g4.posteriorTeeRecovery and g5.fourLaneSensor (`prov/detectors/threeFactor/features/`).
+- g4.posteriorTeeRecovery "ranks material shard hypotheses against NULL" over likelihood terms (`g4.posteriorTeeRecovery.ts:1-17`).
+- The ChainSpot app fuses a grey-centre detector and an edge-loop detector by agreement (`app/src/lib/autoAnnotation/teePadDetection.ts:14-21`).
+
+**score → rank → match is where the coupling lives.** My point 5 argued that a per-fact sum cannot express one-to-one coupling. It does not need to. Sam's ruling, recorded on S7, is "the POINT of score -> rank -> match" (`tk/ports/s7route/match.mjs:2`):
+- **Score:** each candidate pair (tee hypothesis × badge, or hole × basket) gets the sum of its independent detectors. That is the polynomial, evaluated in a semiring.
+- **Rank:** order the candidates by that score.
+- **Match:** a separate one-to-one assignment over the scores couples the facts (Hungarian in S7, cardinality N in S4).
+
+So the kernel needs `sum` for the score and a match contract over scored pairs. That is a second step, not a flaw in `sum`.
+
+**What still stands, as conditions for the sum to be honest**
+- **Measure independence before multiplying.** The S7 evidence lane found route-following perspectives failing together (`tk/docs/evidence/s7evidence/evidence-2026-10-22.md:126-135`). Detectors built on different evidence are the right "ways": corner, side edge, grey centre, badge ray, pad template. Report how often detectors fail together on annotated frames before trusting viterbi or deletion analysis.
+- **Calibrate scores before viterbi.** Raw detector scores are not probabilities (`tk/ports/s3assoc/padPose.mjs:164-167`; the posterior is "normalized model weight", g4.posteriorTeeRecovery.ts:14-16).
+- **A pose is continuous.** Ways sum only when they land in the same match class: tee within 8 px (`tk/AGENTS.md:78`).
+- **Measured milliseconds may order which detector runs first, but never change which answer wins** (section 1).
