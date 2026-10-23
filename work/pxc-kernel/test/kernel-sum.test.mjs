@@ -82,10 +82,10 @@ test('4. a way that throws is a missing term with its error in its receipt; the 
   const world = poseWorld({ broken: true }), result = sumPose(world);
   assert.equal(result.polynomial.length, 3);
   const broken = result.terms.find(t => t.impl === 'pose/broken');
-  assert.equal(broken.monomial, null);
+  assert.deepEqual(broken.monomials, []);
   assert.match(broken.error.message, /the detector crashed/);
   assert.equal(broken.receipt.status, 'failed');
-  assert.deepEqual(result.receipt.terms.find(t => t.impl === 'pose/broken'), { impl: 'pose/broken', runId: broken.receipt.runId, status: 'failed', error: broken.error });
+  assert.deepEqual(result.receipt.terms.find(t => t.impl === 'pose/broken'), { impl: 'pose/broken', runId: broken.receipt.runId, status: 'failed', monomials: 0, error: broken.error });
 });
 
 test('5. cache: summing twice reuses every term, and the polynomial is the same cached or not', () => {
@@ -103,6 +103,68 @@ test('6. call under a fill is the fill\'s term of sum; AMBIGUOUS comes from run,
     const chosen = world.run('pose', { frame: 7 }, { fill: { ...pinSlots, pose: way }, cache: false });
     const term = result.terms.find(t => t.impl === way);
     assert.deepEqual(chosen.outputs, term.outputs, way);
-    assert.deepEqual([chosen.trace.impl, ...chosen.trace.calls.map(c => c.impl)].sort(), [...term.monomial].sort(), `${way}: the run uses exactly its term's variables`);
+    assert.deepEqual([chosen.trace.impl, ...chosen.trace.calls.map(c => c.impl)].sort(), [...term.monomials[0]].sort(), `${way}: the run uses exactly its term's variables`);
   }
+});
+
+// ---- ctx.sum: a way that is itself a sum (ChainSpot: a pose implementation summing its detectors).
+function nestedWorld({ brokenDetector = false } = {}) {
+  const world = createWorld({ name: 'nested' });
+  const num = { type: 'number' };
+  world.contract({ id: 'corner', in: { frame: num }, out: { at: num } });
+  world.implement({ id: 'corner/harris', implements: 'corner', run: ({ frame }) => ({ at: frame.value + 1 }) });
+  world.implement({ id: 'corner/fast', implements: 'corner', run: ({ frame }) => ({ at: frame.value + 1 }) });
+  if (brokenDetector) world.implement({ id: 'corner/broken', implements: 'corner', run: () => { throw new Error('no corner'); } });
+  world.contract({ id: 'rectangle', in: { frame: num }, out: { size: num } });
+  world.implement({ id: 'rectangle/spec', implements: 'rectangle', run: () => ({ size: 152 }) });
+  world.contract({ id: 'pose', in: { frame: num }, out: { found: num } });
+  // corner way: (harris + fast) × rectangle; anchor way: no detectors
+  world.implement({ id: 'pose/corner', implements: 'pose', uses: ['corner', 'rectangle'], run: ({ frame }, ctx) => {
+    const found = ctx.sum('corner', { frame }).filter(t => t.outputs).length; ctx.call('rectangle', { frame }); return { found }; } });
+  world.implement({ id: 'pose/anchor', implements: 'pose', run: () => ({ found: 1 }) });
+  return world;
+}
+
+test('ctx.sum: a way that sums its detectors expands into one monomial per detector (distributivity)', () => {
+  const world = nestedWorld(), { polynomial, terms } = world.sum('pose', { frame: 3 });
+  assert.deepEqual(polynomial, [['pose/corner', 'corner/harris', 'rectangle/spec'], ['pose/corner', 'corner/fast', 'rectangle/spec'], ['pose/anchor']]);
+  assert.equal(terms.find(t => t.impl === 'pose/corner').monomials.length, 2);
+  assert.equal(terms.find(t => t.impl === 'pose/corner').outputs.found, 2, 'the implementation saw both detectors\' results');
+  // Distributivity: evaluating the expanded polynomial equals evaluating the factored form by hand, in every semiring.
+  const w = { 'pose/corner': 2, 'corner/harris': 30, 'corner/fast': 12, 'rectangle/spec': 0, 'pose/anchor': 120 };
+  const val = Object.fromEntries(Object.entries(w).map(([k, v]) => [k, { weight: v }]));
+  assert.equal(world.evaluate(polynomial, 'tropical', val).value.weight, Math.min(2 + Math.min(30, 12) + 0, 120));
+  const p = { 'pose/corner': 1, 'corner/harris': 0.9, 'corner/fast': 0.6, 'rectangle/spec': 1, 'pose/anchor': 0.5 };
+  assert.equal(world.evaluate(polynomial, 'viterbi', Object.fromEntries(Object.entries(p).map(([k, v]) => [k, { weight: v }]))).value.weight, Math.max(1 * Math.max(0.9, 0.6) * 1, 0.5));
+  assert.equal(world.evaluate(polynomial, 'counting', Object.fromEntries(Object.keys(w).map(k => [k, { weight: 1 }]))).value.weight, 1 * (1 + 1) * 1 + 1);
+});
+
+test('ctx.sum: deleting a detector removes only the monomials through it; losing all corners leaves the anchor way', () => {
+  const world = nestedWorld(), { polynomial } = world.sum('pose', { frame: 3 });
+  const all = Object.fromEntries(polynomial.flat().map(v => [v, { weight: 1 }]));
+  const count = gone => world.evaluate(polynomial, 'counting', Object.fromEntries(Object.entries(all).filter(([k]) => !gone.includes(k)))).value;
+  assert.deepEqual(count([]), { present: true, weight: 3 });
+  assert.deepEqual(count(['corner/harris']), { present: true, weight: 2 });
+  assert.deepEqual(count(['corner/harris', 'corner/fast']), { present: true, weight: 1 });
+  assert.deepEqual(count(['rectangle/spec']), { present: true, weight: 1 }, 'no rectangle: both corner monomials go, the anchor stays');
+});
+
+test('ctx.sum: a detector that throws is a missing inner term, and the way still runs', () => {
+  const world = nestedWorld({ brokenDetector: true }), { polynomial, terms } = world.sum('pose', { frame: 3 });
+  assert.equal(terms.find(t => t.impl === 'pose/corner').outputs.found, 2);
+  assert.equal(polynomial.filter(m => m[0] === 'pose/corner').length, 2);
+  assert.ok(!polynomial.flat().includes('corner/broken'));
+  const node = terms.find(t => t.impl === 'pose/corner').receipt.trace;
+  assert.match(node.sums[0].terms.find(t => t.impl === 'corner/broken').error.message, /no corner/);
+});
+
+test('ctx.sum: a second sum is served from the cache, and stays valid until a detector is added', () => {
+  const world = nestedWorld(), first = world.sum('pose', { frame: 3 }), second = world.sum('pose', { frame: 3 });
+  const corner = r => r.terms.find(t => t.impl === 'pose/corner').receipt.trace;
+  assert.equal(corner(second).cached, true, 'the way that summed is itself reusable');
+  assert.deepEqual(second.polynomial, first.polynomial, 'the same polynomial, read through the cache');
+  world.implement({ id: 'corner/new', implements: 'corner', run: ({ frame }) => ({ at: frame.value }) });
+  const third = world.sum('pose', { frame: 3 });
+  assert.equal(corner(third).cached, false, 'a new detector invalidates it');
+  assert.equal(third.polynomial.filter(m => m[0] === 'pose/corner').length, 3);
 });
