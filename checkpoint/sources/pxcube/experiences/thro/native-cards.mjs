@@ -1,3 +1,4 @@
+import { canonical, hashString } from './pxc/canonical.mjs';
 // Native card pixels are an optional Single treatment. The renderer/catalog
 // module graph is imported only when one of these explicit studies is used.
 export const nativeBuild = '28ac2b39fab85255';
@@ -135,6 +136,10 @@ async function preparedPhotoDigest(source) {
 // Keyed by the card's PNG data, which survives the SVG being re-serialised on screen.
 const layouts = new Map(), pixelsOf = svg => /href=["'](data:image\/png;base64,[^"']+)/.exec(String(svg))?.[1] ?? String(svg);
 export const cardLayout = svgOrHref => layouts.get(pixelsOf(svgOrHref)) ?? null;
+/** The recipe inside a renderer request (photo by SHA-256), and the hash the kernel gives that Part. */
+export const requestRecipe = (request, photo) => { const { disc: { depiction, ...disc }, photoSrc, ...rest } = request; return { disc, ...rest, photo }; };
+export const recipePartHash = recipe => hashString(canonical(recipe));
+export const pixelStats = { drawn: 0, reused: 0 };
 export function createNativeRenderer(renderCard = async request => {
   const adapter = await import('./vendor/discstudio-cards/thro-adapter.mjs');
   return adapter.renderDiscStudioCard(request);
@@ -142,10 +147,14 @@ export function createNativeRenderer(renderCard = async request => {
   const adapter = await import('./vendor/discstudio-cards/thro-adapter.mjs');
   return adapter.renderDiscStudioLineup(request);
 }) {
+  const pixels = new Map(); // per renderer: a card enters only after it passed every check below
   const single = async input => {
     if (!isNativeStudy(input.design?.study)) return null;
     if (input.purpose && input.purpose !== 'single') throw Error('Thro card layouts are available in Single. Choose a lineup composition for Battle or Bag.');
-    const request = nativeCardRequest(input), result = await renderCard(request);
+    const request = nativeCardRequest(input), photo = await preparedPhotoDigest(request.photoSrc);
+    // Same recipe, same pixels: the key is the hash the PxC kernel gives the recipe Part (thro.card.recipe's output).
+    const key = recipePartHash(requestRecipe(request, photo));
+    const cached = pixels.get(key), result = cached ?? await renderCard(request);
     const portrait = nativeStudy(input.design.study).orientation === 'portrait';
     if (result.build !== nativeBuild) throw Error('Native renderer build does not match this saved design.');
     // A renderer that does not report a revision drew revision 1; one that ignored the asked revision is refused.
@@ -155,11 +164,13 @@ export function createNativeRenderer(renderCard = async request => {
     // Explicit allowlist: the adapter's Blob and any browser objects never enter
     // the owning model or archive. Source addresses remain actual owning Parts.
     if (result.layout) { layouts.set(pixelsOf(result.svg), result.layout); if (layouts.size > 60) layouts.delete(layouts.keys().next().value); }
+    if (cached) pixelStats.reused++;
+    else { pixels.set(key, result); pixelStats.drawn++; if (pixels.size > 40) pixels.delete(pixels.keys().next().value); }
     return { svg: result.svg, width: result.width, height: result.height, provenance: {
       schema: 'thro-native-card@1', renderer: 'discstudio-cards', rendererBuild: nativeBuild,
       preset: request.preset, physicalDiscId: input.disc.id, discAddress: input.discAddress,
       designAddress: input.designAddress, resolvedAddress: input.resolvedAddress,
-      preparedPhotoSha256: await preparedPhotoDigest(request.photoSrc),
+      preparedPhotoSha256: photo,
       appearance: { ...request.appearance }, placement: { ...result.placement }, rasterOnly: true,
       // the nudge the design asked for, kept apart from the placement the adapter's clamp produced
       ...(request.nudge ? { nudge: { ...request.nudge } } : {}),

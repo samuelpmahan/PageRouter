@@ -1,7 +1,7 @@
 import { openWorkspace } from './workspace.mjs';
-import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, cardLayout, latestCardRevision, useSiteCardRevision } from './native-cards.mjs';
+import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, cardLayout, latestCardRevision, useSiteCardRevision, pixelStats } from './native-cards.mjs';
 import { attachCardEditor, detachCardEditor } from './card-editor.mjs';
-import { createThroWorld, decide, SITE_FILL } from './thro-world.mjs';
+import { createThroWorld, decide, screen, SITE_FILL } from './thro-world.mjs';
 import { alphaBounds, fitArtwork } from './preview-frame.mjs';
 import { loadFixture } from './prepared-fixture.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
@@ -484,6 +484,22 @@ function paintPreview() {
 async function renderCurrent() {
   if (!rows.length) throw Error('No prepared discs are available in this fixture.');
   currentResult = ui.mode === 'single' ? await workspace.single(ui.selectedDisc, ui.design) : ui.selection.length >= 2 && ui.selection.length <= 4 ? await workspace.battle(ui.selection, ui.design) : null;
+  runScreen();
+}
+// One PxC run for what's on screen: the site's decisions, the card's recipe, and Sam's rule on the layout the renderer measured.
+// It reads only; the graphic and the workspace are untouched. The DTree shows it.
+function runScreen() {
+  window.__thro.screen = null;
+  try {
+    const graphic = currentResult?.graphic;
+    if (ui.mode !== 'single' || !graphic?.provenance?.rasterOnly || !isNativeStudy(ui.design.study)) return;
+    const layout = cardLayout(graphic.svg), disc = value(currentResult.discAddress), facts = value(currentResult.resolvedAddress);
+    if (!layout || Array.isArray(layout)) return;
+    const inputs = { disc: { id: disc.id, mold: disc.mold, plastic: disc.plastic ?? null, weight: disc.weight ?? null },
+      facts: { name: facts.name, manufacturer: facts.manufacturer, speed: facts.speed ?? null, glide: facts.glide ?? null, turn: facts.turn ?? null, fade: facts.fade ?? null },
+      design: structuredClone(ui.design), photo: graphic.provenance.preparedPhotoSha256, layout };
+    window.__thro.screen = { ...screen(throWorld, inputs, viewerFill()), stats: throWorld.stats(), pixels: { ...pixelStats } };
+  } catch (error) { window.__thro.screen = { error: String(error) }; }
 }
 
 const focusKeys = ['disc', 'mode', 'study', 'placement', 'accent', 'previewView', 'previewBackground', 'capture'];

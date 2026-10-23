@@ -6,6 +6,7 @@
 // Decisions made before the world existed are listed from dtree.json until each becomes a contract.
 import { OPEN, SITE_FILL } from './thro-world.mjs';
 import { cardLayout } from './native-cards.mjs';
+import { traceToSvg } from './pxc/view.mjs';
 
 const css = `
 .dtree-button{position:fixed;left:16px;bottom:16px;z-index:60;min-height:44px;padding:0 16px;border-radius:22px;border:1px solid #3d5141;background:#101812;color:#e9f1e4;font:700 14px/1 system-ui,sans-serif;letter-spacing:.04em;box-shadow:0 6px 20px #0008;cursor:pointer}
@@ -40,6 +41,7 @@ const css = `
 .dtree .dt-verdict{margin:6px 0 0;font-size:12px}.dtree .dt-verdict b.ok{color:#c8f49d}.dtree .dt-verdict b.no{color:#ff9e80}
 .dtree .dt-show{margin-top:8px;min-height:32px;font-size:12px}
 .dtree .dt-reset{margin:8px 4px 0}
+.dtree details{margin-top:8px}.dtree summary{cursor:pointer;color:#c8f49d;font-size:12px}.dtree .dt-trace{overflow:auto;background:#fff;border-radius:8px;margin-top:6px;max-height:60vh}.dtree .dt-trace svg{display:block}
 .dtree .dt-ev{margin:4px 0 0;font-size:11px;color:#9fb0a3}.dtree .dt-ev span{display:inline-block;background:#2d3a31;color:#e9f1e4;border-radius:5px;padding:1px 6px;margin:2px 4px 0 0}
 .dtree .dt-blame{margin:8px 0 0;padding:8px 10px;border-radius:8px;background:#2a1a14;border:1px solid #ff9e80;font-size:12px}.dtree .dt-blame b{color:#ff9e80}.dtree .dt-blame button{margin-top:6px;min-height:32px;font-size:12px}
 .dtree-lit{position:absolute;z-index:65;pointer-events:none;border:3px solid #c8f49d;border-radius:12px;box-shadow:0 0 0 9999px #0006,0 0 24px #c8f49d88}
@@ -126,6 +128,21 @@ async function start() {
     const show = AFFECTS[node.contract] ? `<button type="button" class="dt-show" data-show="${esc(node.contract)}">Show on the page</button>` : '';
     return `<div class="dt-node" id="dt-${esc(node.contract)}"><p class="dt-q"><span class="dt-chip ${status}">${label}</span>${esc(contract?.description)} <code>${esc(node.contract)}#${esc(node.slot)}</code></p><p class="dt-c">${esc(chosen?.description)}</p><p class="dt-why">Chosen: ${why}.</p>${contract?.notes ? `<p class="dt-why">${esc(contract.notes)}</p>` : ''}${open ? `<p class="dt-wait">Waiting on ${esc(open)}</p>` : ''}${impls.length > 1 ? '' : meta(chosen?.origin)}${alts}${show}</div>`;
   }
+  // The screen: one PxC run from the site's decisions down to the card on screen and the rule on its measured layout (thro-app runScreen).
+  function screenNode() {
+    const sc = window.__thro?.screen;
+    if (!sc) return `<div class="dt-node"><p class="dt-q"><span class="dt-chip active">Run</span>What is on screen <code>thro.screen</code></p><p class="dt-why">Runs for a Single card; switch to Single to see it.</p></div>`;
+    if (sc.error) return `<div class="dt-node"><p class="dt-q"><span class="dt-chip open">Run</span>What is on screen <code>thro.screen</code></p><p class="dt-wait">${esc(sc.error)}</p></div>`;
+    const o = sc.outputs, r = sc.receipt, st = sc.stats;
+    let picture = '';
+    try { picture = traceToSvg(r.trace, world.part, { title: `thro.screen, run ${r.runId}: the site's decisions, this card's recipe, the rule on what was drawn`, receipt: r, valueChars: 52, expand: n => world.node(n.cachedFrom.run, n.cachedFrom.call) }); } catch (e) { picture = `<p class="dt-wait">${esc(e.message)}</p>`; }
+    return `<div class="dt-node" id="dt-screen"><p class="dt-q"><span class="dt-chip active">Run ${esc(r.runId)}</span>What is on screen, and does it keep the rule? <code>thro.screen</code></p>
+      <p class="dt-c">${esc(o.recipe.preset.toUpperCase())} · ${esc(o.recipe.disc.manufacturer)} ${esc(o.recipe.disc.name)}${o.recipe.revision ? ` · revision ${o.recipe.revision}` : ''}</p>
+      <p class="dt-why">Recipe Part <code>${esc(sc.recipeHash)}</code>: the same recipe always draws the same pixels.</p>
+      <p class="dt-verdict">Rule on what was drawn: <b class="${o.accepted ? 'ok' : 'no'}">${o.accepted ? 'passes' : 'fails'}</b>. ${esc(o.reason)}</p>
+      <p class="dt-ev">Card pixels this session: <span>${sc.pixels.drawn} drawn</span><span>${sc.pixels.reused} reused by recipe hash</span> · kernel: <span>${st.cacheHits} reused</span><span>${st.cacheMisses} computed</span><span>${st.parts} Parts</span></p>
+      <details><summary>The kernel's picture of this run</summary><div class="dt-trace">${picture}</div></details></div>`;
+  }
   function ruleNode() {
     const rule = world.contracts().find(c => c.id === 'thro.rule'), v = verdict();
     return `<div class="dt-node" id="dt-thro.rule"><p class="dt-q"><span class="dt-chip active">Check</span>${esc(rule.description)} <code>thro.rule</code></p><p class="dt-c">${esc(rule.notes)}</p>
@@ -141,7 +158,7 @@ async function start() {
     panel.innerHTML = `<header><h2>DTree</h2><button type="button" data-close aria-label="Close the decision tree">Close</button></header><div class="dt-body">
       <h3>The site, decided in PxC</h3><p class="dt-about">One run of <code>${esc(site.contract)}</code> (run ${esc(decided.receipt.runId)}, ${decided.receipt.calls} calls). Each decision is a contract; its alternatives are implementations; the site's choices are its fill.</p>
       <p class="dt-about"><a href="./fill-matrix.html" style="color:#c8f49d">Every fill, checked in a browser →</a> what each switch changes, and which checks it breaks.</p>
-      <ol><li>${ruleNode()}<ol>${site.calls.map(node => `<li>${decisionNode(node)}</li>`).join('')}</ol></li></ol>
+      <ol><li>${screenNode()}</li><li>${ruleNode()}<ol>${site.calls.map(node => `<li>${decisionNode(node)}</li>`).join('')}</ol></li></ol>
       ${mine.length ? `<button type="button" class="dt-reset" data-reset>Back to the site's decisions (${mine.length} switched here)</button>` : ''}
       <h3>Not in the world yet</h3><p class="dt-about">${esc(past.about ?? '')}</p>${pastBranch(null)}</div>`;
     panel.querySelector('[data-close]').onclick = () => toggle(false);

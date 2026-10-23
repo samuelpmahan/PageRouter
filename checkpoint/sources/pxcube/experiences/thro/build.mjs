@@ -31,6 +31,7 @@ const runtimeFiles = [
   'pxc/kernel.mjs',
   'pxc/canonical.mjs',
   'pxc/schema.mjs',
+  'pxc/view.mjs',
 ];
 
 if (path.resolve(process.cwd()) !== root) {

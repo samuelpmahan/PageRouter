@@ -118,7 +118,25 @@ export function createThroWorld() {
       { name: 'card', call: 'thro.card.revision', slot: 'card', bind: {} },
     ],
     returns: { single: 'single.source', bag: 'bag.source', battle: 'battle.engine', revision: 'card.revision' } });
+  // ---- The screen: one run from the site's decisions down to the card on screen and Sam's rule on it.
+  // The layout is what the renderer measured while drawing that recipe, so the rule judges the actual card.
+  world.contract({ id: 'thro.screen', description: 'What is on screen, and does it keep the rule?',
+    in: { disc: { type: 'object' }, facts: { type: 'object' }, design: { type: 'object' }, photo: { type: 'string' }, layout: { type: 'object' } },
+    out: { single: { type: 'string' }, bag: { type: 'string' }, battle: { type: 'string' }, revision: { type: 'integer' }, recipe: { type: 'object' }, accepted: { type: 'boolean' }, reason: { type: 'string' } } });
+  world.compose({ id: 'thro.screen/thro', implements: 'thro.screen',
+    steps: [
+      { name: 'site', call: 'thro.site', bind: {} },
+      { name: 'card', call: 'thro.card.recipe', bind: { disc: '$in.disc', facts: '$in.facts', design: '$in.design', photo: '$in.photo' } },
+      { name: 'rule', call: 'thro.rule', bind: { layout: '$in.layout' } },
+    ],
+    returns: { single: 'site.single', bag: 'site.bag', battle: 'site.battle', revision: 'site.revision', recipe: 'card.recipe', accepted: 'rule.accepted', reason: 'rule.reason' } });
   return world;
+}
+
+/** Run the screen: the site under the fill, the card on screen, and the rule on its measured layout. */
+export function screen(world, inputs, fill = SITE_FILL) {
+  const { outputs, receipt } = world.run('thro.screen', inputs, { fill: { ...fill }, landing: 'none' });
+  return { outputs, receipt, recipeHash: receipt.outputs.recipe }; // the receipt names every output by its Part hash
 }
 
 /** Run the site under a fill. Returns what it shows, the receipt, and, per decision, the choice and why. */
