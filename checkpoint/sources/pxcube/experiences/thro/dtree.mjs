@@ -4,7 +4,10 @@
 // Switching an alternative changes the fill for this browser and re-runs the site. Sam's rule is a check contract:
 // its proofs, and its verdict on the card on screen, come from the world too.
 // Decisions made before the world existed are listed from dtree.json until each becomes a contract.
-import { OPEN, SITE_FILL } from './thro-world.mjs';
+// Rung 4: after every change, what the change did in the world: which features of the card changed (its definition, never a
+// hash), which contracts recomputed and which were reused, and whether the pixels were drawn or reused. A toast under the
+// preview and a short list here. Edges are labelled by kind; what is on screen carries the four guarantees (the four causes).
+import { OPEN, SITE_FILL, propagation, guarantees, recipeDefinition, definitionDiff } from './thro-world.mjs';
 import { cardLayout } from './native-cards.mjs';
 import { traceToSvg } from './pxc/view.mjs';
 
@@ -44,6 +47,21 @@ const css = `
 .dtree details{margin-top:8px}.dtree summary{cursor:pointer;color:#c8f49d;font-size:12px}.dtree .dt-trace{overflow:auto;background:#fff;border-radius:8px;margin-top:6px;max-height:60vh}.dtree .dt-trace svg{display:block}
 .dtree .dt-ev{margin:4px 0 0;font-size:11px;color:#9fb0a3}.dtree .dt-ev span{display:inline-block;background:#2d3a31;color:#e9f1e4;border-radius:5px;padding:1px 6px;margin:2px 4px 0 0}
 .dtree .dt-blame{margin:8px 0 0;padding:8px 10px;border-radius:8px;background:#2a1a14;border:1px solid #ff9e80;font-size:12px}.dtree .dt-blame b{color:#ff9e80}.dtree .dt-blame button{margin-top:6px;min-height:32px;font-size:12px}
+.dtree .dt-edge{display:block;margin:8px 0 -2px 4px;font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#7f9384}
+.dtree .dt-legend{margin:2px 4px 8px;color:#7f9384;font-size:11px}.dtree .dt-legend b{color:#9fb0a3}
+.dtree .dt-changes{display:grid;gap:6px}
+.dtree .dt-change{padding:8px 10px;border-radius:9px;background:#151f18;border:1px solid #223027;font-size:12px}
+.dtree .dt-change.latest{border-color:#c8f49d}
+.dtree .dt-change p{margin:0}.dtree .dt-change .dt-what{font-weight:700;color:#e9f1e4;font-size:13px}
+.dtree .dt-change .dt-n{color:#7f9384;font-weight:700;margin-right:6px}
+.dtree .dt-re{color:#ffd166}.dtree .dt-ru{color:#c8f49d}
+.dtree .dt-g{display:grid;grid-template-columns:auto 1fr;gap:4px 8px;margin:8px 0 0;font-size:12px;align-items:start}
+.dtree .dt-g .dt-chip{margin:1px 0 0}.dtree .dt-chip.cause{background:#2d3a31;color:#e9f1e4}
+.dtree .dt-g p{margin:0}.dtree .dt-g b.ok{color:#c8f49d}.dtree .dt-g b.no{color:#ff9e80}.dtree .dt-g b.unknown{color:#ffd166}
+.dtree .dt-def{margin:6px 0 0;font-size:12px;color:#cfe3c9}.dtree .dt-def span{display:inline-block;margin:2px 6px 0 0}.dtree .dt-def em{font-style:normal;color:#7f9384}
+.dtree-toast{position:absolute;z-index:58;max-width:min(560px,calc(100vw - 32px));padding:9px 12px;border-radius:10px;background:#101812;color:#e9f1e4;border:1px solid #3d5141;box-shadow:0 8px 24px #0007;font:12px/1.4 system-ui,sans-serif;pointer-events:none;transition:opacity .3s}
+.dtree-toast b{display:block;font-size:13px;color:#fff}.dtree-toast .dt-re{color:#ffd166}.dtree-toast .dt-ru{color:#c8f49d}
+.dtree-toast[hidden]{display:none}
 .dtree-lit{position:absolute;z-index:65;pointer-events:none;border:3px solid #c8f49d;border-radius:12px;box-shadow:0 0 0 9999px #0006,0 0 24px #c8f49d88}
 .dtree-lit span{position:absolute;left:-3px;top:-28px;background:#c8f49d;color:#10180f;font:700 12px/1 system-ui,sans-serif;padding:6px 8px;border-radius:7px;white-space:nowrap;max-width:80vw;overflow:hidden;text-overflow:ellipsis}
 `;
@@ -135,13 +153,22 @@ async function start() {
     if (sc.error) return `<div class="dt-node"><p class="dt-q"><span class="dt-chip open">Run</span>What is on screen <code>thro.screen</code></p><p class="dt-wait">${esc(sc.error)}</p></div>`;
     const o = sc.outputs, r = sc.receipt, st = sc.stats;
     let picture = '';
-    try { picture = traceToSvg(r.trace, world.part, { title: `thro.screen, run ${r.runId}: the site's decisions, this card's recipe, the rule on what was drawn`, receipt: r, valueChars: 52, expand: n => world.node(n.cachedFrom.run, n.cachedFrom.call) }); } catch (e) { picture = `<p class="dt-wait">${esc(e.message)}</p>`; }
+    const lineup = Boolean(o.recipe.cards);
+    const title = lineup ? `thro.screen.lineup, run ${r.runId}: the site's decisions, one card recipe per disc gathered into the lineup's recipe, the rule on every card drawn`
+      : `thro.screen, run ${r.runId}: the site's decisions, this card's recipe, the rule on what was drawn`;
+    try { picture = traceToSvg(r.trace, world.part, { title, receipt: r, valueChars: 52, expand: n => world.node(n.cachedFrom.run, n.cachedFrom.call) }); } catch (e) { picture = `<p class="dt-wait">${esc(e.message)}</p>`; }
+    const def = recipeDefinition(o.recipe).filter(f => f.key !== 'kind');
+    const shownDef = lineup ? def.filter(f => !/\.(flights|side|highlight|photo|plate)$/.test(f.key)) : def;
+    const gs = guarantees(world, sc), mark = ok => ok === true ? '<b class="ok">✓</b>' : ok === false ? '<b class="no">✗</b>' : '<b class="unknown">?</b>';
+    const guaranteeRows = `<div class="dt-g">${gs.map(g => `<span class="dt-chip cause">${esc(g.cause)}</span><p>${mark(g.ok)} <b>${esc(g.question)}</b> ${esc(g.what)}</p>`).join('')}</div>`;
     return `<div class="dt-node" id="dt-screen"><p class="dt-q"><span class="dt-chip active">Run ${esc(r.runId)}</span>What is on screen, and does it keep the rule? <code>${o.recipe.cards ? 'thro.screen.lineup' : 'thro.screen'}</code></p>
       <p class="dt-c">${o.recipe.cards ? `Lineup ${esc(o.recipe.preset.toUpperCase())} · ${o.recipe.cards.map(c => esc(c.disc.name)).join(', ')}${o.recipe.featured !== null ? ` · featured: ${esc(o.recipe.cards[o.recipe.featured]?.disc.name)}` : ''}` : `${esc(o.recipe.preset.toUpperCase())} · ${esc(o.recipe.disc.manufacturer)} ${esc(o.recipe.disc.name)}${o.recipe.revision ? ` · revision ${o.recipe.revision}` : ''}`}</p>
-      <p class="dt-why">${o.recipe.cards ? `Lineup recipe Part <code>${esc(sc.recipeHash)}</code>, built from ${o.recipe.cards.length} card recipe Parts, one per disc` : `Recipe Part <code>${esc(sc.recipeHash)}</code>`}: the same recipe always draws the same pixels.</p>
+      <p class="dt-why">${lineup ? `What this lineup is, built from ${o.recipe.cards.length} card recipes, one per disc` : 'What this card is'}: the same definition always draws the same pixels.</p>
+      <p class="dt-def">${shownDef.map(f => `<span><em>${esc(f.label)}</em> ${esc(f.value)}</span>`).join('')}</p>
+      <span class="dt-edge">Its four guarantees · the four causes</span>${guaranteeRows}
       <p class="dt-verdict">Rule on what was drawn: <b class="${o.accepted ? 'ok' : 'no'}">${o.accepted ? 'passes' : 'fails'}</b>. ${esc(o.reason)}</p>
       <p class="dt-ev">Card pixels this session: <span>${sc.pixels.drawn} drawn</span><span>${sc.pixels.reused} reused by recipe hash</span> · kernel: <span>${st.cacheHits} reused</span><span>${st.cacheMisses} computed</span><span>${st.parts} Parts</span></p>
-      <details><summary>The kernel's picture of this run</summary><div class="dt-trace">${picture}</div></details></div>`;
+      <details><summary>The kernel's picture of this run</summary><p class="dt-ev">Index only, not identity: recipe Part <code>${esc(sc.recipeHash)}</code></p><div class="dt-trace">${picture}</div></details></div>`;
   }
   function ruleNode() {
     const rule = world.contracts().find(c => c.id === 'thro.rule'), v = verdict();
@@ -151,14 +178,64 @@ async function start() {
       <button type="button" class="dt-show" data-show="thro.rule">Show on the page</button></div>`;
   }
   const pastNode = n => `<div class="dt-node"><p class="dt-q"><span class="dt-chip ${esc(n.status)}">${n.status === 'open' ? 'Open' : n.status === 'subsumed' ? 'Subsumed' : 'In the site'}</span>${esc(n.question)}</p><p class="dt-c">${esc(n.choice)}</p>${n.waitingOn ? `<p class="dt-wait">Waiting on ${esc(n.waitingOn)}</p>` : ''}${meta(n)}</div>`;
-  const pastBranch = parent => { const kids = past.nodes.filter(n => n.parent === parent); return kids.length ? `<ol>${kids.map(n => `<li>${pastNode(n)}${pastBranch(n.id)}</li>`).join('')}</ol>` : ''; };
+  const pastBranch = parent => { const kids = past.nodes.filter(n => n.parent === parent); return kids.length ? `<ol>${kids.map(n => `<li>${parent ? '<span class="dt-edge">↑ built on</span>' : ''}${pastNode(n)}${pastBranch(n.id)}</li>`).join('')}</ol>` : ''; };
+
+
+  // ---- What each change did (rung 4). Names are short forms of the contracts; slots card0–4 read as cards 1–5.
+  const SHORT = { 'thro.site': "the site's decisions", 'thro.single.layouts': 'Single layouts', 'thro.bag.layouts': 'Bag layouts', 'thro.battle.engine': 'Battle engine',
+    'thro.card.revision': 'card revision', 'thro.card.recipe': 'card recipe', 'thro.rule': 'the rule', 'thro.lineup.recipe': 'lineup recipe', 'thro.lineup.rule': 'the rule on every card',
+    'thro.screen': 'everything', 'thro.screen.lineup': 'everything' };
+  const names = calls => {
+    const groups = new Map();
+    for (const c of calls) {
+      const card = /^card(\d)$/.exec(c.slot ?? ''), base = SHORT[c.contract] ?? c.contract;
+      if (!groups.has(base)) groups.set(base, []);
+      if (card) groups.get(base).push(Number(card[1]) + 1);
+    }
+    return [...groups].map(([base, cards]) => cards.length ? `${base === 'the rule' ? 'the rule on card' : base}${cards.length > 1 ? 's' : ''} ${cards.join(', ')}` : base);
+  };
+  const changes = []; let lastHash = null;
+  function record() {
+    const sc = window.__thro?.screen; if (!sc || sc.error) return null;
+    const def = recipeDefinition(sc.outputs.recipe), prev = changes[0];
+    const calls = propagation(sc.receipt).filter(c => !/^thro\.screen/.test(c.contract) || c.whole);
+    const entry = { n: (prev?.n ?? 0) + 1, run: sc.receipt.runId, def, hash: sc.recipeHash, first: !prev,
+      diff: prev ? definitionDiff(prev.def, def) : [], recomputed: names(calls.filter(c => !c.cached)), reused: names(calls.filter(c => c.cached)),
+      whole: calls.find(c => c.whole)?.cachedFrom?.run ?? null, pixel: sc.pixel, accepted: sc.outputs.accepted, times: 1 };
+    entry.sameAs = prev && entry.hash !== prev.hash ? changes.find(c => c.hash === entry.hash)?.n ?? null : null;
+    if (prev && !entry.diff.length && entry.hash === prev.hash) { prev.times++; prev.run = entry.run; return { entry: prev, repeat: true }; }
+    changes.unshift(entry); if (changes.length > 6) changes.pop();
+    return { entry, repeat: false };
+  }
+  const what = e => e.first ? 'First draw on this page' : e.diff.length ? e.diff.join(' · ') : 'Nothing in the card changed';
+  const pixelWords = e => e.pixel === 'reused' ? 'pixels reused' : e.pixel === 'drawn' ? 'pixels drawn' : 'pixels not recorded';
+  const did = e => `${e.recomputed.length ? `<span class="dt-re">Recomputed: ${esc(e.recomputed.join(', '))}</span> · ` : ''}<span class="dt-ru">Reused: ${e.reused.length ? esc(e.reused.join(', ')) : 'nothing'}${e.whole ? ` (asked before, run ${esc(e.whole)})` : ''}</span> · ${pixelWords(e)}${e.sameAs ? ` · the same card as change ${e.sameAs}` : ''}`;
+  const changeItem = (e, i) => `<li class="dt-change ${i === 0 ? 'latest' : ''}"><p class="dt-what"><span class="dt-n">${e.n}</span>${esc(what(e))}${e.times > 1 ? ` <span class="dt-n">×${e.times}</span>` : ''}</p><p>${did(e)}</p><p>Rule: <b class="${e.accepted ? 'ok' : 'no'}" style="color:${e.accepted ? '#c8f49d' : '#ff9e80'}">${e.accepted ? 'passes' : 'fails'}</b> · run ${esc(e.run)}</p></li>`;
+  const toast = Object.assign(document.createElement('div'), { className: 'dtree-toast', hidden: true }); toast.setAttribute('role', 'status'); toast.setAttribute('aria-live', 'polite');
+  document.body.append(toast); let toastTimer = 0;
+  function showToast(e) {
+    const preview = document.getElementById('graphic-preview'); if (!preview) return;
+    toast.innerHTML = `<b>${esc(what(e))}</b>${did(e)}`; toast.hidden = false; toast.style.opacity = '1';
+    // Under the preview when it is in view; otherwise pinned above the bottom of the screen, where the person is working (phones).
+    const r = preview.getBoundingClientRect(), inView = r.bottom > 40 && r.bottom + 80 < innerHeight;
+    Object.assign(toast.style, inView ? { position: 'absolute', left: `${Math.max(16, r.left + scrollX)}px`, top: `${r.bottom + scrollY + 8}px`, bottom: '' }
+      : { position: 'fixed', left: '16px', top: '', bottom: `${innerWidth <= 760 ? 164 : 76}px` });
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => { toast.hidden = true; }, 320); }, 5200);
+  }
+  function onScreen() {
+    const r = record(); if (!r) return;
+    if (!r.repeat && !r.entry.first) setTimeout(() => showToast(r.entry), 120); // after the preview settles
+    if (!panel.hidden && !lights.length) paint();
+  }
 
   function paint() {
     const site = decided.receipt.trace;
     panel.innerHTML = `<header><h2>DTree</h2><button type="button" data-close aria-label="Close the decision tree">Close</button></header><div class="dt-body">
+      <h3>What your last changes did</h3>${changes.length ? `<ol class="dt-changes">${changes.map(changeItem).join('')}</ol>` : '<p class="dt-about">Change something on a Single card or a Bag lineup: each change shows here, with what it recomputed and what it reused.</p>'}
       <h3>The site, decided in PxC</h3><p class="dt-about">One run of <code>${esc(site.contract)}</code> (run ${esc(decided.receipt.runId)}, ${decided.receipt.calls} calls). Each decision is a contract; its alternatives are implementations; the site's choices are its fill.</p>
       <p class="dt-about"><a href="./fill-matrix.html" style="color:#c8f49d">Every fill, checked in a browser →</a> what each switch changes, and which checks it breaks.</p>
-      <ol><li>${screenNode()}</li><li>${ruleNode()}<ol>${site.calls.map(node => `<li>${decisionNode(node)}</li>`).join('')}</ol></li></ol>
+      <p class="dt-legend">Edges, by kind: <b>made from</b> (material) · <b>for the sake of</b> (final) · <b>actualized by the fill</b> (potential → actual) · <b>built on</b> (an earlier decision).</p>
+      <ol><li>${screenNode()}</li><li><span class="dt-edge">↑ judged for the sake of</span>${ruleNode()}<ol>${site.calls.map(node => `<li><span class="dt-edge">↑ for the sake of the rule · actualized by the fill</span>${decisionNode(node)}</li>`).join('')}</ol></li></ol>
       ${mine.length ? `<button type="button" class="dt-reset" data-reset>Back to the site's decisions (${mine.length} switched here)</button>` : ''}
       <h3>Not in the world yet</h3><p class="dt-about">${esc(past.about ?? '')}</p>${pastBranch(null)}</div>`;
     panel.querySelector('[data-close]').onclick = () => toggle(false);
@@ -195,6 +272,8 @@ async function start() {
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) { toggle(false); button.focus(); } });
   addEventListener('resize', unlight);
   if (new URLSearchParams(location.search).has('dtree')) setTimeout(() => toggle(true), 600);
-  window.__dtree = { open: openCount, toggle, blame: () => { const v = verdict(); return v && !v.accepted ? blame(v) : null; }, decisions: decided.receipt.trace.calls.map(n => ({ contract: n.contract, impl: n.impl, rung: n.chosenBy?.rung })), verdict };
+  addEventListener('thro:screen', onScreen);
+  if (window.__thro.screen) onScreen(); // a run that happened before the DTree started
+  window.__dtree = { open: openCount, toggle, changes: () => changes.map(c => ({ n: c.n, what: what(c), recomputed: c.recomputed, reused: c.reused, whole: c.whole, pixel: c.pixel, sameAs: c.sameAs, times: c.times })), toast: () => (toast.hidden ? null : toast.textContent), blame: () => { const v = verdict(); return v && !v.accepted ? blame(v) : null; }, decisions: decided.receipt.trace.calls.map(n => ({ contract: n.contract, impl: n.impl, rung: n.chosenBy?.rung })), verdict };
 }
 start();

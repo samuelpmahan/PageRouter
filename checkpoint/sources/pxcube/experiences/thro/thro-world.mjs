@@ -9,7 +9,7 @@
 // The kernel decides; the DiscStudio card renderer draws whatever recipe was decided (it is async canvas
 // work, and kernel runs are synchronous), so pixels stay outside the world and recipes stay inside it.
 import { createWorld } from './pxc/kernel.mjs';
-import { nativeCardRecipe, nativeBuild } from './native-cards.mjs';
+import { nativeCardRecipe, nativeBuild, cardRevisions } from './native-cards.mjs';
 
 /** The site's decisions: the fill. Who decided each, and when, is on the implementation it names. */
 export const SITE_FILL = Object.freeze({
@@ -176,4 +176,95 @@ export function decide(world, fill = SITE_FILL) {
   const { outputs, receipt, trace } = world.run('thro.site', {}, { fill: { ...fill }, landing: 'none' });
   const choices = Object.fromEntries(trace.calls.map(node => [node.contract, { impl: node.impl, slot: node.slot, rung: node.chosenBy?.rung, key: node.chosenBy?.key }]));
   return { site: outputs, receipt, choices };
+}
+
+// ---- Reading a run (rung 4). Identity is the definition: a recipe's named features, each set by some decision.
+// The Part hash is only an index for "same definition?" and a check that the bytes match; it is never shown as what a thing is.
+const num = v => (v === null || v === undefined ? '–' : String(v).replace('-', '−'));
+const discName = d => [d?.manufacturer, d?.name].filter(Boolean).join(' ') + (d?.plastic ? `, ${d.plastic}` : '');
+const photoName = h => (typeof h === 'string' && /^[0-9a-f]{64}$/.test(h) ? `known only by its hash (${h.slice(0, 8)}…)` : 'missing');
+function cardFeatures(r, prefix = '', label = '') {
+  const a = r.appearance ?? {}, f = [];
+  const add = (key, name, value) => { if (value !== undefined) f.push({ key: prefix + key, label: label + name, value }); };
+  add('disc', 'disc', discName(r.disc));
+  add('flights', 'flight numbers', (r.flights ?? []).map(num).join(' · '));
+  add('accent', 'accent', a.accentColor);
+  add('side', 'disc side', a.discSide);
+  add('highlight', 'highlight', a.highlightTarget);
+  add('plate', 'plate', a.plate);
+  add('photo', 'photo', photoName(r.photo));
+  return f;
+}
+/** A recipe's definition: its features in order, each { key, label, value }. Two recipes with the same definition are the same card. */
+export function recipeDefinition(recipe) {
+  if (!recipe) return [];
+  if (recipe.cards) return [
+    { key: 'kind', label: 'graphic', value: 'Bag lineup' },
+    { key: 'layout', label: 'layout', value: String(recipe.preset).toUpperCase() },
+    { key: 'discs', label: 'discs', value: recipe.cards.map(c => c.disc?.name).join(', ') },
+    { key: 'featured', label: 'featured', value: recipe.featured === null || recipe.featured === undefined ? 'none' : recipe.cards[recipe.featured]?.disc?.name },
+    ...recipe.cards.flatMap((c, i) => cardFeatures(c, `card${i + 1}.`, `card ${i + 1} `)),
+  ];
+  return [
+    { key: 'kind', label: 'graphic', value: 'Single card' },
+    { key: 'layout', label: 'layout', value: String(recipe.preset).toUpperCase() },
+    ...cardFeatures(recipe),
+    { key: 'size', label: 'size', value: recipe.scale === undefined ? undefined : `${Math.round(recipe.scale * 100)}%` },
+    { key: 'position', label: 'position', value: recipe.nudge ? `${num(recipe.nudge.x)}, ${num(recipe.nudge.y)}` : 'as laid out' },
+    { key: 'drawing', label: 'drawing', value: `revision ${recipe.revision ?? 1}` },
+  ].filter(x => x.value !== undefined);
+}
+/** What changed between two definitions, feature by feature (same change on every card is said once). */
+export function definitionDiff(before, after) {
+  if (!before.length) return [];
+  const kind = d => d.find(x => x.key === 'kind')?.value;
+  if (kind(before) !== kind(after)) return [`${kind(before)} → ${kind(after)}`];
+  const at = d => new Map(d.map(x => [x.key, x])), a = at(before), b = at(after), groups = new Map();
+  for (const key of new Set([...a.keys(), ...b.keys()])) {
+    const x = a.get(key), y = b.get(key);
+    if (x?.value === y?.value) continue;
+    if (key === 'discs' && x && y && x.value.split(', ').length === y.value.split(', ').length) continue; // each card says its own disc
+    const m = /^card(\d+)\.(.+)$/.exec(key), feature = m ? (x ?? y).label.replace(/^card \d+ /, '') : (x ?? y).label;
+    const g = `${feature}\u0000${x?.value ?? 'none'}\u0000${y?.value ?? 'none'}`;
+    if (!groups.has(g)) groups.set(g, { feature, from: x?.value ?? 'none', to: y?.value ?? 'none', cards: [] });
+    if (m) groups.get(g).cards.push(Number(m[1]));
+  }
+  // A photo has no definition yet, only a hash: say that it changed, not two strings of hex.
+  return [...groups.values()].map(g => `${g.feature}${g.cards.length ? (g.cards.length > 1 ? ` (cards ${g.cards.join(', ')})` : ` (card ${g.cards[0]})`) : ''}: ${g.feature === 'photo' ? 'a different photo, known only by its hash' : `${g.from} → ${g.to}`}`);
+}
+
+/** What a run recomputed and what it reused, from its receipt's trace: every call beneath the root, in order. */
+export function propagation(receipt) {
+  const calls = [];
+  const walk = node => { for (const n of node.calls ?? []) { calls.push({ contract: n.contract, slot: n.slot ?? null, impl: n.impl, cached: n.cached === true, cachedFrom: n.cachedFrom ?? null }); if (!n.cached) walk(n); } };
+  const root = receipt?.trace;
+  if (root?.cached) return [{ contract: root.contract, slot: null, impl: root.impl, cached: true, cachedFrom: root.cachedFrom ?? null, whole: true }]; // the whole run was asked before
+  if (root) walk(root);
+  return calls;
+}
+
+/** The four causes as guarantees on what is on screen (Aristotle, via Sam, 22 Oct): what it is made from, what shape it must
+ * have, what made it, and what it is for. ok is true, false, or null when the world cannot say yet. */
+export function guarantees(world, run) {
+  const o = run.outputs, recipe = o.recipe, cards = recipe.cards ?? [recipe];
+  const hashed = cards.filter(c => /^[0-9a-f]{64}$/.test(c.photo ?? '')).length;
+  const proofs = world.prove('thro.card.recipe');
+  const makers = propagation(run.receipt).filter(n => !n.contract.startsWith('thro.screen'));
+  const madeBy = [...new Set(makers.map(n => n.impl))];
+  let efficient;
+  if (recipe.cards) efficient = { ok: null, what: 'The lineup renderer is handed each card without its drawing revision, so the world can\'t yet say which drawing each card in a lineup used.' };
+  else if (!(recipe.preset in cardRevisions)) efficient = { ok: true, what: `Made by ${madeBy.length} implementations, each chosen by the site's fill or the only one. ${String(recipe.preset).toUpperCase()} has one drawing, so the card revision doesn't apply.` };
+  else {
+    const have = recipe.revision ?? 1, want = o.revision;
+    efficient = have === want ? { ok: true, what: `Drawn with card revision ${have}, the one the site decided (thro.card.revision).` }
+      : { ok: false, what: `Drawn with card revision ${have}; the site now draws revision ${want}. This card was saved before the fix and keeps its drawing until you choose.` };
+  }
+  return [
+    { cause: 'material', question: 'What is it made from?', ok: hashed === cards.length,
+      what: `${cards.map(c => discName(c.disc)).join('; ')}: the disc facts, plus ${cards.length === 1 ? 'the prepared photo' : `${cards.length} prepared photos`}, each known only by its hash for now.` },
+    { cause: 'formal', question: 'What shape must it have?', ok: proofs.length > 0 && proofs.every(p => p.ok),
+      what: `The recipe has the shape thro.card.recipe declares; its ${proofs.length} examples prove the implementation (${proofs.filter(p => p.ok).length}/${proofs.length}).` },
+    { cause: 'efficient', question: 'What made it, and is that what the site decided?', ...efficient },
+    { cause: 'final', question: 'Does it do what it\'s for?', ok: o.accepted, what: `Sam's rule: ${o.reason}` },
+  ];
 }

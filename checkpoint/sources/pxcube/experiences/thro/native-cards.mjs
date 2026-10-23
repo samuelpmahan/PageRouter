@@ -154,7 +154,8 @@ export const lineupRequestRecipe = (plan, requests, photos) => ({ preset: plan.p
 /** The recipe inside a renderer request (photo by SHA-256), and the hash the kernel gives that Part. */
 export const requestRecipe = (request, photo) => { const { disc: { depiction, ...disc }, photoSrc, ...rest } = request; return { disc, ...rest, photo }; };
 export const recipePartHash = recipe => hashString(canonical(recipe));
-export const pixelStats = { drawn: 0, reused: 0 };
+export const pixelStats = { drawn: 0, reused: 0, byRecipe: new Map() }; // byRecipe: recipe Part hash → 'drawn' | 'reused', the latest outcome for it
+const notePixels = (key, cached) => { pixelStats[cached ? 'reused' : 'drawn']++; pixelStats.byRecipe.delete(key); pixelStats.byRecipe.set(key, cached ? 'reused' : 'drawn'); if (pixelStats.byRecipe.size > 80) pixelStats.byRecipe.delete(pixelStats.byRecipe.keys().next().value); };
 export function createNativeRenderer(renderCard = async request => {
   const adapter = await import('./vendor/discstudio-cards/thro-adapter.mjs');
   return adapter.renderDiscStudioCard(request);
@@ -179,8 +180,8 @@ export function createNativeRenderer(renderCard = async request => {
     // Explicit allowlist: the adapter's Blob and any browser objects never enter
     // the owning model or archive. Source addresses remain actual owning Parts.
     if (result.layout) { layouts.set(pixelsOf(result.svg), result.layout); if (layouts.size > 60) layouts.delete(layouts.keys().next().value); }
-    if (cached) pixelStats.reused++;
-    else { pixels.set(key, result); pixelStats.drawn++; if (pixels.size > 40) pixels.delete(pixels.keys().next().value); }
+    notePixels(key, cached);
+    if (!cached) { pixels.set(key, result); if (pixels.size > 40) pixels.delete(pixels.keys().next().value); }
     return { svg: result.svg, width: result.width, height: result.height, provenance: {
       schema: 'thro-native-card@1', renderer: 'discstudio-cards', rendererBuild: nativeBuild,
       preset: request.preset, physicalDiscId: input.disc.id, discAddress: input.discAddress,
@@ -210,8 +211,8 @@ export function createNativeRenderer(renderCard = async request => {
     if (result.build !== nativeBuild) throw Error('Native renderer build does not match this saved lineup.');
     if (result.width !== 1920 || result.height !== 1080 || typeof result.svg !== 'string' || !/href=["']data:image\/png;base64,/.test(result.svg) || /href=["'](?:https?:|blob:)/i.test(result.svg)) throw Error('Native lineup must contain its retained PNG pixels.');
     if (result.layout) { layouts.set(pixelsOf(result.svg), result.layout); if (layouts.size > 60) layouts.delete(layouts.keys().next().value); }
-    if (cached) pixelStats.reused++;
-    else { lineupPixels.set(key, result); pixelStats.drawn++; if (lineupPixels.size > 20) lineupPixels.delete(lineupPixels.keys().next().value); }
+    notePixels(key, cached);
+    if (!cached) { lineupPixels.set(key, result); if (lineupPixels.size > 20) lineupPixels.delete(lineupPixels.keys().next().value); }
     return { svg: result.svg, width: result.width, height: result.height, provenance: {
       schema: 'thro-native-lineup@1', renderer: 'discstudio-cards', rendererBuild: nativeBuild, preset: plan.preset,
       physicalDiscIds: entries.map(entry => entry.disc.id), preparedPhotoSha256: photos,

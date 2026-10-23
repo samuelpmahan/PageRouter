@@ -501,8 +501,7 @@ function runScreen() {
       const plan = nativeLineupPlan({ material, design: ui.design, entries });
       const inputs = { preset: plan.preset, featured: plan.featured, layouts,
         cards: plan.cards.map((card, i) => ({ disc: pickDisc(card.disc), facts: pickFacts(card.resolved), design: card.design, photo: graphic.provenance.preparedPhotoSha256[i] })) };
-      window.__thro.screen = { ...screen(throWorld, inputs, viewerFill()), stats: throWorld.stats(), pixels: { ...pixelStats } };
-      return;
+      return announce(screen(throWorld, inputs, viewerFill()));
     }
     if (ui.mode !== 'single' || !graphic?.provenance?.rasterOnly || !isNativeStudy(ui.design.study)) return;
     const layout = cardLayout(graphic.svg), disc = value(currentResult.discAddress), facts = value(currentResult.resolvedAddress);
@@ -510,8 +509,13 @@ function runScreen() {
     const inputs = { disc: { id: disc.id, mold: disc.mold, plastic: disc.plastic ?? null, weight: disc.weight ?? null },
       facts: { name: facts.name, manufacturer: facts.manufacturer, speed: facts.speed ?? null, glide: facts.glide ?? null, turn: facts.turn ?? null, fade: facts.fade ?? null },
       design: structuredClone(ui.design), photo: graphic.provenance.preparedPhotoSha256, layout };
-    window.__thro.screen = { ...screen(throWorld, inputs, viewerFill()), stats: throWorld.stats(), pixels: { ...pixelStats } };
+    return announce(screen(throWorld, inputs, viewerFill()));
   } catch (error) { window.__thro.screen = { error: String(error) }; }
+}
+// Each screen run says whether this exact recipe's pixels were drawn now or reused, and tells the DTree (rung 4: what a change did).
+function announce(run) {
+  window.__thro.screen = { ...run, stats: throWorld.stats(), pixels: { drawn: pixelStats.drawn, reused: pixelStats.reused }, pixel: pixelStats.byRecipe.get(run.recipeHash) ?? null };
+  dispatchEvent(new CustomEvent('thro:screen'));
 }
 
 const focusKeys = ['disc', 'mode', 'study', 'placement', 'accent', 'previewView', 'previewBackground', 'capture'];
