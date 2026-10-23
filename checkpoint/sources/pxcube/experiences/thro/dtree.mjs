@@ -166,7 +166,8 @@ async function start() {
       return `<div class="dt-alt ${isChosen ? 'chosen' : ''}"><em>${isChosen ? 'LIVE HERE' : gone ? 'SUBSUMED' : 'ALTERNATIVE'}</em>${esc(impl.description)}${meta(impl.origin)}${isChosen ? '' : evidenceLine(node.contract, impl.id)}${isChosen ? '' : `<button type="button" data-switch="${esc(node.contract)}" data-impl="${esc(impl.id)}">Switch the site to this (your browser)</button>`}</div>`;
     }).join('')}</div>` : '';
     const show = AFFECTS[node.contract] ? `<button type="button" class="dt-show" data-show="${esc(node.contract)}">Show on the page</button>` : '';
-    return `<div class="dt-node" id="dt-${esc(node.contract)}"><p class="dt-q"><span class="dt-chip ${status}">${label}</span>${esc(contract?.description)} <code>${esc(node.contract)}#${esc(node.slot)}</code></p><p class="dt-c">${esc(chosen?.description)}</p><p class="dt-why">Chosen: ${why}.</p>${contract?.notes ? `<p class="dt-why">${esc(contract.notes)}</p>` : ''}${open ? `<p class="dt-wait">Waiting on ${esc(open)}</p>` : ''}${impls.length > 1 ? '' : meta(chosen?.origin)}${alts}${show}</div>`;
+    const review = node.contract === 'thro.card.revision' ? '<p class="dt-meta"><a href="./revision-review.html">Every card, revision 1 beside revision 2 →</a></p>' : '';
+    return `<div class="dt-node" id="dt-${esc(node.contract)}"><p class="dt-q"><span class="dt-chip ${status}">${label}</span>${esc(contract?.description)} <code>${esc(node.contract)}#${esc(node.slot)}</code></p><p class="dt-c">${esc(chosen?.description)}</p><p class="dt-why">Chosen: ${why}.</p>${contract?.notes ? `<p class="dt-why">${esc(contract.notes)}</p>` : ''}${open ? `<p class="dt-wait">Waiting on ${esc(open)}</p>` : ''}${impls.length > 1 ? '' : meta(chosen?.origin)}${alts}${review}${show}</div>`;
   }
   // The screen: one PxC run from the site's decisions down to the card on screen and the rule on its measured layout (thro-app runScreen).
   function screenNode() {
