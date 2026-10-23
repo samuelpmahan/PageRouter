@@ -96,10 +96,11 @@ export function workspaceDesignChange(context, changes, fallback) {
   return { ...changes, design: structuredClone(design), singleDesign: structuredClone(singleDesign ?? design), legacyDesign: structuredClone(legacyDesign) };
 }
 
-export function nativeCardRequest({ disc, resolved, design }) {
+/** What a card draws, without the photo bytes: the recipe. thro-world.mjs runs this same function as the
+ *  implementation of the PxC contract thro.card.recipe, so the world and the renderer share one source of truth. */
+export function nativeCardRecipe({ disc, resolved, design }) {
   const selected = nativeStudy(design.study);
   if (design.rendererBuild !== nativeBuild) throw Error('This native card design requires another renderer build.');
-  if (disc?.depiction?.kind !== 'photo' || !/^data:image\/(?:png|jpeg|webp);base64,/.test(disc.depiction.src)) throw Error('A native card requires the retained prepared photo.');
   const scale = design.nativeScale ?? 0.66;
   if (!Number.isFinite(scale) || scale < 0.5 || scale > 1.5) throw Error('Choose a card size between 50% and 150%.');
   const nudge = design.nativeNudge ?? { x: 0, y: 0 };
@@ -109,15 +110,21 @@ export function nativeCardRequest({ disc, resolved, design }) {
   const revision = design.nativeRevision;
   if (revision !== undefined && revision !== cardRevisions[selected.preset]) throw Error('This card revision is not available for its layout.');
   return {
-    disc: { id: disc.id, mold: disc.mold, name: resolved.name, manufacturer: resolved.manufacturer,
-      plastic: disc.plastic ?? null, weight: disc.weight ?? null, depiction: { ...disc.depiction } },
-    photoSrc: disc.depiction.src,
+    disc: { id: disc.id, mold: disc.mold, name: resolved.name, manufacturer: resolved.manufacturer, plastic: disc.plastic ?? null, weight: disc.weight ?? null },
     flights: ['speed', 'glide', 'turn', 'fade'].map(field => resolved[field] ?? null),
     preset: selected.preset, placement: 'panel-default', scale, appearance,
     // The card keeps its own corner anchor; a nudge moves it from there (canvas pixels).
     ...(nudge.x || nudge.y ? { nudge: { x: nudge.x, y: nudge.y } } : {}),
     ...(revision !== undefined ? { revision } : {}),
   };
+}
+/** The renderer's request: the recipe plus the retained prepared photo. */
+export function nativeCardRequest({ disc, resolved, design }) {
+  nativeStudy(design.study);
+  if (design.rendererBuild !== nativeBuild) throw Error('This native card design requires another renderer build.');
+  if (disc?.depiction?.kind !== 'photo' || !/^data:image\/(?:png|jpeg|webp);base64,/.test(disc.depiction.src)) throw Error('A native card requires the retained prepared photo.');
+  const { disc: facts, ...rest } = nativeCardRecipe({ disc, resolved, design });
+  return { disc: { ...facts, depiction: { ...disc.depiction } }, photoSrc: disc.depiction.src, ...rest };
 }
 async function preparedPhotoDigest(source) {
   const bytes = Uint8Array.from(atob(source.slice(source.indexOf(',') + 1)), character => character.charCodeAt(0));

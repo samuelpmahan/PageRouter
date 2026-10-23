@@ -9,6 +9,7 @@
 // The kernel decides; the DiscStudio card renderer draws whatever recipe was decided (it is async canvas
 // work, and kernel runs are synchronous), so pixels stay outside the world and recipes stay inside it.
 import { createWorld } from './pxc/kernel.mjs';
+import { nativeCardRecipe, nativeBuild } from './native-cards.mjs';
 
 /** The site's decisions: the fill. Who decided each, and when, is on the implementation it names. */
 export const SITE_FILL = Object.freeze({
@@ -87,6 +88,24 @@ export function createThroWorld() {
       { id: 'discstudio-6.6.1', value: { revision: 1 }, choice: 'The pinned DiscStudio 6.6.1 cards, byte-identical.', origin: { by: 'dab · claude-ed', iters: [15, 16], commits: ['a3319df', '131edd6'] } },
       { id: 'thro-r2', value: { revision: 2 }, choice: 'Card revision 2 for B01 and U04: the disc upright, the manufacturer below the flight numbers. The other nine layouts draw exactly as 6.6.1.', origin: { by: 'dab (assigned) · claude-a9', commits: ['8dcb656'] } },
     ] });
+
+  // ---- A card: what exactly it draws. The implementation is the same function the renderer's request is built from
+  // (native-cards.mjs nativeCardRecipe), so the world and the pixels cannot drift apart. The photo enters by its SHA-256.
+  const servo = { disc: { id: 'sample-servo', mold: 'mvp--servo', plastic: 'Neutron', weight: null },
+    facts: { name: 'Servo', manufacturer: 'MVP', speed: 6.5, glide: 5, turn: -1, fade: 2 }, photo: 'b720aca1a38562e5ccba1e1ea5f82d4429d790fde1a983fad2b773b7b0c5ef2e' };
+  const servoFacts = { id: 'sample-servo', mold: 'mvp--servo', name: 'Servo', manufacturer: 'MVP', plastic: 'Neutron', weight: null };
+  world.contract({ id: 'thro.card.recipe', description: 'What exactly does this card draw?',
+    notes: 'Disc facts + design + the prepared photo\'s SHA-256 → the recipe the DiscStudio renderer draws. Same recipe, same pixels.',
+    in: { disc: { type: 'object' }, facts: { type: 'object' }, design: { type: 'object' }, photo: { type: 'string' } }, out: { recipe: { type: 'object' } },
+    examples: [
+      { name: 'B01 Servo, fixed drawing (revision 2), defaults', in: { ...servo, design: { study: 'discstudio:b01', rendererBuild: nativeBuild, nativeRevision: 2, accent: '#c8f23d' } },
+        out: { recipe: { disc: servoFacts, flights: [6.5, 5, -1, 2], preset: 'b01', placement: 'panel-default', scale: 0.66, appearance: { discSide: 'right', highlightTarget: 'digits', accentColor: '#c8f23d' }, revision: 2, photo: servo.photo } } },
+      { name: 'U04 Servo saved before the fix: no revision, solid plate, nudged', in: { ...servo, design: { study: 'discstudio:u04', rendererBuild: nativeBuild, accent: '#a6edda', nativePlate: 'solid', nativeNudge: { x: 40, y: -20 }, nativeScale: 0.8 } },
+        out: { recipe: { disc: servoFacts, flights: [6.5, 5, -1, 2], preset: 'u04', placement: 'panel-default', scale: 0.8, appearance: { discSide: 'left', highlightTarget: 'tiles', accentColor: '#a6edda', plate: 'solid' }, nudge: { x: 40, y: -20 }, photo: servo.photo } } },
+    ] });
+  world.implement({ id: 'thro.card.recipe/discstudio', implements: 'thro.card.recipe', description: 'native-cards.mjs nativeCardRecipe: the function the renderer\'s request is built from.',
+    origin: { by: 'claude-ed (rung 3)', iters: [28] },
+    run: ({ disc, facts, design, photo }) => ({ recipe: { ...nativeCardRecipe({ disc: disc.value, resolved: facts.value, design: design.value }), photo: photo.value } }) });
 
   // ---- The site: one composition; each step is a decision, named by the part of the site it shapes.
   world.contract({ id: 'thro.site', in: {}, description: 'What the site shows.',
