@@ -40,6 +40,8 @@ const css = `
 .dtree .dt-verdict{margin:6px 0 0;font-size:12px}.dtree .dt-verdict b.ok{color:#c8f49d}.dtree .dt-verdict b.no{color:#ff9e80}
 .dtree .dt-show{margin-top:8px;min-height:32px;font-size:12px}
 .dtree .dt-reset{margin:8px 4px 0}
+.dtree .dt-ev{margin:4px 0 0;font-size:11px;color:#9fb0a3}.dtree .dt-ev span{display:inline-block;background:#2d3a31;color:#e9f1e4;border-radius:5px;padding:1px 6px;margin:2px 4px 0 0}
+.dtree .dt-blame{margin:8px 0 0;padding:8px 10px;border-radius:8px;background:#2a1a14;border:1px solid #ff9e80;font-size:12px}.dtree .dt-blame b{color:#ff9e80}.dtree .dt-blame button{margin-top:6px;min-height:32px;font-size:12px}
 .dtree-lit{position:absolute;z-index:65;pointer-events:none;border:3px solid #c8f49d;border-radius:12px;box-shadow:0 0 0 9999px #0006,0 0 24px #c8f49d88}
 .dtree-lit span{position:absolute;left:-3px;top:-28px;background:#c8f49d;color:#10180f;font:700 12px/1 system-ui,sans-serif;padding:6px 8px;border-radius:7px;white-space:nowrap;max-width:80vw;overflow:hidden;text-overflow:ellipsis}
 `;
@@ -61,6 +63,8 @@ async function start() {
   const thro = window.__thro; if (!thro) return;
   const { world, decided } = thro, fill = thro.fill;
   let past = { nodes: [] }; try { past = await (await fetch(new URL('./dtree.json', import.meta.url))).json(); } catch { /* history is optional */ }
+  // Evidence: every fill of the site, checked in a browser (local/test/thro-fill-matrix-browser.mjs → fill-matrix.json).
+  let matrix = null; try { matrix = await (await fetch(new URL('./fill-matrix.json', import.meta.url))).json(); } catch { /* no evidence yet */ }
   const style = document.createElement('style'); style.textContent = css; document.head.append(style);
   const openCount = Object.keys(OPEN).length + past.nodes.filter(n => n.status === 'open').length;
   const button = Object.assign(document.createElement('button'), { type: 'button', className: 'dtree-button' });
@@ -76,6 +80,38 @@ async function start() {
     if (!layout || Array.isArray(layout)) return null;
     try { return world.run('thro.rule', { layout }, { fill: { 'thro.rule': 'thro.rule/hierarchy' } }).outputs; } catch { return null; }
   }
+  // ---- Blame (the backward pass), from the evidence: compare where this viewer is with the same fill switched one decision.
+  const sameFill = (a, b) => Object.keys(SITE_FILL).every(k => a?.[k] === b?.[k]);
+  const rowOf = f => matrix?.rows.find(r => sameFill(r.fill, f));
+  const tick = v => v === true ? '✓' : v === null || v === undefined ? '–' : '✗';
+  const evidenceWhen = () => matrix ? `checked in a browser, ${esc(matrix.when)}` : '';
+  function switchEvidence(contract, impl) {
+    const now = rowOf(fill), there = rowOf({ ...fill, [contract]: impl });
+    if (!now || !there) return null;
+    return matrix.checks.filter(c => now.result[c.id]?.ok !== there.result[c.id]?.ok).map(c => ({ id: c.id, label: c.label, from: now.result[c.id]?.ok, to: there.result[c.id]?.ok, note: there.result[c.id]?.note }));
+  }
+  const evidenceLine = (contract, impl) => {
+    const flips = switchEvidence(contract, impl);
+    if (!flips) return `<p class="dt-ev">Not checked for this combination yet.</p>`;
+    return `<p class="dt-ev">Switching to this (${evidenceWhen()}): ${flips.length ? flips.map(f => `<span>${esc(f.label)} ${tick(f.from)} → ${tick(f.to)}</span>`).join('') : 'no check changes.'}</p>`;
+  };
+  // Which single decision, switched from where this viewer is, makes the failing rule pass?
+  function blame(v) {
+    const card = (document.getElementById('composition')?.value ?? '').replace('discstudio:', '').toUpperCase();
+    const now = rowOf(fill), fails = now?.result.rule?.ok === false && now.result.rule.note.includes(`${card}:`);
+    const fixes = Object.keys(SITE_FILL).flatMap(contract => world.implementationsOf(contract).filter(i => i.id !== fill[contract]).map(i => ({ contract, impl: i, flips: switchEvidence(contract, i.id) })))
+      .filter(x => x.flips?.some(f => f.id === 'rule' && f.from === false && f.to === true));
+    if (!fixes.length) {
+      // A saved card keeps the drawing it was made with (no silent upgrade); the editor offers the fixed drawing as a choice.
+      const fixed = [...document.querySelectorAll('.ce-strip button')].find(b => /Use the fixed card/.test(b.textContent));
+      if (fixed) return `<div class="dt-blame"><b>Responsible: this card was saved with the old drawing.</b> The site already draws new cards with the fix; saved cards keep their drawing until you choose.<br><button type="button" data-fixcard>✦ Use the fixed card for this one</button></div>`;
+      return `<div class="dt-blame"><b>No single switch fixes this.</b> It's in the card itself: keep it as a deliberate exception, or change the card. That call is yours.</div>`;
+    }
+    return fixes.map(x => {
+      const contract = world.contracts().find(c => c.id === x.contract), current = world.implementationsOf(x.contract).find(i => i.id === fill[x.contract]);
+      return `<div class="dt-blame"><b>Responsible: ${esc(contract.description)}</b> <code>${esc(x.contract)}</code><br>Now: ${esc(current?.description)}${fails ? ` The evidence agrees: ${esc(card)} fails under this fill.` : ''}<br>Switching to <b style="color:#c8f49d">${esc(x.impl.description)}</b> makes every Single card pass (${evidenceWhen()}).<br><button type="button" data-switch="${esc(x.contract)}" data-impl="${esc(x.impl.id)}">Switch to the passing alternative (your browser)</button></div>`;
+    }).join('');
+  }
   // One decision node: a contract call from the site's trace.
   function decisionNode(node) {
     const contract = world.contracts().find(c => c.id === node.contract), impls = world.implementationsOf(node.contract);
@@ -85,7 +121,7 @@ async function start() {
     const why = node.chosenBy?.rung === 'only implementation' ? 'the only implementation so far' : switched ? 'your switch (this browser)' : 'decided by the site\'s fill';
     const alts = impls.length > 1 ? `<div class="dt-alts">${impls.map(impl => {
       const isChosen = impl.id === node.impl, gone = !isChosen && impl.origin?.subsumedBy;
-      return `<div class="dt-alt ${isChosen ? 'chosen' : ''}"><em>${isChosen ? 'LIVE HERE' : gone ? 'SUBSUMED' : 'ALTERNATIVE'}</em>${esc(impl.description)}${meta(impl.origin)}${isChosen ? '' : `<button type="button" data-switch="${esc(node.contract)}" data-impl="${esc(impl.id)}">Switch the site to this (your browser)</button>`}</div>`;
+      return `<div class="dt-alt ${isChosen ? 'chosen' : ''}"><em>${isChosen ? 'LIVE HERE' : gone ? 'SUBSUMED' : 'ALTERNATIVE'}</em>${esc(impl.description)}${meta(impl.origin)}${isChosen ? '' : evidenceLine(node.contract, impl.id)}${isChosen ? '' : `<button type="button" data-switch="${esc(node.contract)}" data-impl="${esc(impl.id)}">Switch the site to this (your browser)</button>`}</div>`;
     }).join('')}</div>` : '';
     const show = AFFECTS[node.contract] ? `<button type="button" class="dt-show" data-show="${esc(node.contract)}">Show on the page</button>` : '';
     return `<div class="dt-node" id="dt-${esc(node.contract)}"><p class="dt-q"><span class="dt-chip ${status}">${label}</span>${esc(contract?.description)} <code>${esc(node.contract)}#${esc(node.slot)}</code></p><p class="dt-c">${esc(chosen?.description)}</p><p class="dt-why">Chosen: ${why}.</p>${contract?.notes ? `<p class="dt-why">${esc(contract.notes)}</p>` : ''}${open ? `<p class="dt-wait">Waiting on ${esc(open)}</p>` : ''}${impls.length > 1 ? '' : meta(chosen?.origin)}${alts}${show}</div>`;
@@ -94,7 +130,7 @@ async function start() {
     const rule = world.contracts().find(c => c.id === 'thro.rule'), v = verdict();
     return `<div class="dt-node" id="dt-thro.rule"><p class="dt-q"><span class="dt-chip active">Check</span>${esc(rule.description)} <code>thro.rule</code></p><p class="dt-c">${esc(rule.notes)}</p>
       <p class="dt-verdict">Proven by its examples: ${proofs.map(p => `${esc(p.example)} <b class="${p.ok ? 'ok' : 'no'}">${p.ok ? '✓' : '✗'}</b>`).join(' · ')}</p>
-      <p class="dt-verdict">The card on screen: ${v ? `<b class="${v.accepted ? 'ok' : 'no'}">${v.accepted ? 'passes' : 'fails'}</b>. ${esc(v.reason)}` : 'not a single card right now.'}</p>
+      <p class="dt-verdict">The card on screen: ${v ? `<b class="${v.accepted ? 'ok' : 'no'}">${v.accepted ? 'passes' : 'fails'}</b>. ${esc(v.reason)}` : 'not a single card right now.'}</p>${v && !v.accepted ? blame(v) : ''}
       <button type="button" class="dt-show" data-show="thro.rule">Show on the page</button></div>`;
   }
   const pastNode = n => `<div class="dt-node"><p class="dt-q"><span class="dt-chip ${esc(n.status)}">${n.status === 'open' ? 'Open' : n.status === 'subsumed' ? 'Subsumed' : 'In the site'}</span>${esc(n.question)}</p><p class="dt-c">${esc(n.choice)}</p>${n.waitingOn ? `<p class="dt-wait">Waiting on ${esc(n.waitingOn)}</p>` : ''}${meta(n)}</div>`;
@@ -112,6 +148,7 @@ async function start() {
     panel.querySelectorAll('[data-switch]').forEach(b => b.onclick = () => setFill({ ...fill, [b.dataset.switch]: b.dataset.impl }));
     panel.querySelector('[data-reset]')?.addEventListener('click', () => setFill({ ...SITE_FILL }));
     panel.querySelectorAll('[data-show]').forEach(b => b.onclick = () => light(b.dataset.show));
+    panel.querySelector('[data-fixcard]')?.addEventListener('click', () => { [...document.querySelectorAll('.ce-strip button')].find(b => /Use the fixed card/.test(b.textContent))?.click(); toggle(false); });
   }
   function setFill(next) {
     const diff = Object.fromEntries(Object.entries(next).filter(([k, v]) => SITE_FILL[k] !== v));
@@ -141,6 +178,6 @@ async function start() {
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) { toggle(false); button.focus(); } });
   addEventListener('resize', unlight);
   if (new URLSearchParams(location.search).has('dtree')) setTimeout(() => toggle(true), 600);
-  window.__dtree = { open: openCount, toggle, decisions: decided.receipt.trace.calls.map(n => ({ contract: n.contract, impl: n.impl, rung: n.chosenBy?.rung })), verdict };
+  window.__dtree = { open: openCount, toggle, blame: () => { const v = verdict(); return v && !v.accepted ? blame(v) : null; }, decisions: decided.receipt.trace.calls.map(n => ({ contract: n.contract, impl: n.impl, rung: n.chosenBy?.rung })), verdict };
 }
 start();
