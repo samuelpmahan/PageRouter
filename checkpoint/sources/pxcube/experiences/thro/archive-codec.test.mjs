@@ -96,3 +96,17 @@ test('native gzip compresses repeated actual prepared photo tokens without dropp
   console.log(JSON.stringify({ fixture: 'sample-servo.webp repeated 24 times', rawCharacters: raw.length,
     legacyGzipCharacters: legacy.length, internedGzipCharacters: packed.length, ratio: packed.length / legacy.length }));
 });
+
+// 24 Oct 2026: packArchive scans the raw text once instead of twice. The gauge for that re-implementation: the same input packs to
+// exactly the bytes the two-scan version produced (its SHA-256 below was computed with it), and still round-trips.
+test('one-scan packArchive packs byte-identically to the two-scan version it replaced', async () => {
+  const { createHash } = await import('node:crypto');
+  let seed = 11; const rnd = () => (seed = (seed * 1103515245 + 12345) % 2147483648) / 2147483648;
+  const word = n => Array.from({ length: n }, () => 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdef0123456789+/'[Math.floor(rnd() * 44)]).join('');
+  const pool = Array.from({ length: 9 }, (_, i) => word(300 + i * 211) + (i % 3 ? '' : '\\"esc\\\\aped'));
+  const raw = JSON.stringify({ parts: Array.from({ length: 240 }, (_, i) => ({ i, v: pool[Math.floor(rnd() * pool.length)], w: i % 7 ? null : word(40) })) }, null, 1);
+  assert.equal(raw.length, 291668);
+  const packed = await plain().packArchive(raw);
+  assert.equal(createHash('sha256').update(packed).digest('hex'), 'c85400fbcaeaca88b87fc5a07f8104eb0adb4fd6b346e0846520ee7e45fdc48f');
+  assert.equal(await plain().unpackArchive(packed), raw);
+});

@@ -31,21 +31,22 @@ export function createArchiveCodec({ pack, unpack } = {}) {
   return Object.freeze({
     async packArchive(raw) {
       rawSize(raw);
-      const counts = new Map();
+      // One scan of the raw text: the long tokens and where they are, kept for the second step (it used to scan twice).
+      const counts = new Map(), long = [];
       for (const match of raw.matchAll(quotedTokens)) {
         const token = match[0];
-        if (token.length >= minimumTokenLength) counts.set(token, (counts.get(token) ?? 0) + 1);
+        if (token.length >= minimumTokenLength) { counts.set(token, (counts.get(token) ?? 0) + 1); long.push(match.index, token); }
       }
       const dictionary = [], references = new Map();
       for (const [token, count] of counts) if (count > 1) {
         references.set(token, dictionary.length); dictionary.push(token);
       }
       const segments = []; let cursor = 0;
-      for (const match of raw.matchAll(quotedTokens)) {
-        const reference = references.get(match[0]);
+      for (let i = 0; i < long.length; i += 2) {
+        const index = long[i], token = long[i + 1], reference = references.get(token);
         if (reference === undefined) continue;
-        segments.push(raw.slice(cursor, match.index), reference);
-        cursor = match.index + match[0].length;
+        segments.push(raw.slice(cursor, index), reference);
+        cursor = index + token.length;
       }
       segments.push(raw.slice(cursor));
       const container = JSON.stringify({ version: 1, dictionary, segments });

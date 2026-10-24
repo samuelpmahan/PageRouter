@@ -26,8 +26,14 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
   const places = new Map(), placeKey = (disc, design) => JSON.stringify([disc, design ?? null]);
   // Object.assign keeps the renderer's own entries (renderGraphic.lineup draws Bag and Battle lineups).
   const renderGraphic = Object.assign(input => within(places.get(placeKey(input?.discAddress, input?.design)), () => drawWith(input)), drawWith);
-  const codec = createWorkspaceCodec({ pack, unpack });
-  const retained = await openLockedArchive(storage, key, { locks, pack: codec.packArchive, unpack: codec.unpackArchive });
+  // gzip is its own stage inside 'encode the archive'; what is left there is finding the repeated tokens.
+  const codec = createWorkspaceCodec({ pack: text => span('gzip the archive', () => pack(text)), unpack });
+  // The two steps of a save inside the storage adapter are stages too: encoding the archive (started while 'write it to storage'
+  // runs, so it lands under it) and the locked write after it (given the same place explicitly; saves run one at a time).
+  let savePlace = null;
+  const timedPack = raw => { savePlace = here(); return span('encode the archive', () => codec.packArchive(raw)); };
+  const timedLocks = locks && { request: (name, options, fn) => span('wait for the lock and write', () => locks.request(name, options, fn), savePlace ?? undefined) };
+  const retained = await openLockedArchive(storage, key, { locks: timedLocks, pack: timedPack, unpack: codec.unpackArchive });
   let committedRaw = retained.getItem(''), model, conflict = null, draft = null, queue = Promise.resolve(), pending = 0;
   if (committedRaw === null) {
     if (!Array.isArray(fixture) || fixture.length === 0) throw Error('A prepared sample shelf is required.');
