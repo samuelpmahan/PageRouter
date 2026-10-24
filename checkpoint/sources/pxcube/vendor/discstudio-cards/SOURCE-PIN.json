@@ -44,14 +44,14 @@
     { "path": "frame-seek.mjs", "bytes": 3242, "sha256": "8cdfa3dc52a0f966262143b96f93f3cebae96eda2df56f67acacb6ae971e4625" }
   ],
   "throFiles": [
-    {"path": "thro-card-core-r2.js", "bytes": 51551, "sha256": "42d98e1550bb196c845912906e6df55edaca7378f0587c8cd04eaee8ed35efa1", "derivedFrom": "card-renderer-core.js", "derivedFromSha256": "27f8876f3d387bcfa0e918079464a381256e247426a9d7573424831cec11cdc4", "changes": ["B01: hero disc drawn upright (DiscStudio 6.6.1 drew it at tiltDeg 12).", "U04: manufacturer label fitted from 30 px instead of 52 px, below the 44 px flight numbers.", "U04 frame-layer identities kinetic-v3 to kinetic-v4, so revision-1 rasters are never reused.",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                         "B01 from parts and rules (thro, 24 Oct 2026): solveB01 and renderB01Recipe draw B01 revision 2 from pinned parts (plate width, disc size, disc overhang and lift, number tile, largest name size), deriving the rest by the first Constraint Lab's rules; without pinned parts B01 draws exactly as before and reports its parts (fixedB01Solved) so handles can sit on it."], "usedFor": "Only recipes that ask for card revision 2, on b01 and u04. Every other recipe draws with the unchanged native core."}
+    {"path": "thro-card-core-r2.js", "bytes": 68445, "sha256": "5f16ef4711cb282e1276033cfffc8454915bbbfdf810c00df50857c543093344", "derivedFrom": "card-renderer-core.js", "derivedFromSha256": "27f8876f3d387bcfa0e918079464a381256e247426a9d7573424831cec11cdc4", "changes": ["B01: hero disc drawn upright (DiscStudio 6.6.1 drew it at tiltDeg 12).", "U04: manufacturer label fitted from 30 px instead of 52 px, below the 44 px flight numbers.", "U04 frame-layer identities kinetic-v3 to kinetic-v4, so revision-1 rasters are never reused.",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                         "B01 from parts and rules (thro, 24 Oct 2026): solveB01 and renderB01Recipe draw B01 revision 2 from pinned parts (plate width, disc size, disc overhang and lift, number tile, largest name size), deriving the rest by the first Constraint Lab's rules; without pinned parts B01 draws exactly as before and reports its parts (fixedB01Solved) so handles can sit on it.", "B04 and B05 from parts and rules (CARD_RECIPES, solveB04, solveB05); with no recipe they run the core's own drawing code unchanged and only report where their parts are."], "usedFor": "Only recipes that ask for card revision 2, on b01 and u04. Every other recipe draws with the unchanged native core."}
   ],
   "adapter": {
     "path": "thro-adapter.mjs",
     "upstreamSha256": "4594bf5f0a3f31aa16677e4b899f3bbd4b49ffe3e2c26c1f93b157d5197438be",
-    "bytes": 23008,
-    "sha256": "891b89e317682cabdc269b4740ab8d88a70b3a3f8059cd41976f29d1cf9b19ed",
+    "bytes": 24089,
+    "sha256": "56f52800e9560984c4b064ff981b23a7e61f773556bac1bbcd4710dc7d598976",
     "upstreamGitCorrespondence": "The adapter was supplied in the handoff ZIP; it is not part of the native Git checkpoint above.",
     "localChanges": [
       "Do not prefix an already addressed ds.px.seed. mold ID again.",
@@ -63,7 +63,8 @@
       "Dispatch card revision 2 (b01, u04 only) to the pinned Thro-owned thro-card-core-r2.js; a recipe without a revision draws with the unchanged native core; any other revision is refused.",
       "Key the sticker cache by card revision for revisions after 1 (revision 1 keeps DiscStudio's identity), so a card drawn at one revision is never served for another.",
       "Report the card's visible pixel bounds (plate included) as layout.card, measured on the native canvas and carried through the placement, so the page does not decode the PNG again to find the card; card pixels are unchanged.",
-      "Accept optional pinned parts for B01 revision 2 (refused for any other card), pass them to the renderer, include them in the sticker identity, and report the card's parts (values, default/pinned/derived, handle points through the placement) as layout.recipe."
+      "Accept optional pinned parts for B01 revision 2 (refused for any other card), pass them to the renderer, include them in the sticker identity, and report the card's parts (values, default/pinned/derived, handle points through the placement) as layout.recipe.",
+      "Draw B04 and B05 (one drawing each) with thro-card-core-r2.js, whose code for them is the native core's, unchanged (pixels checked identical); accept pinned parts for them at revision 1, with their own handles (the arc's peak, the zoom circle's rim)."
     ]
   }
 }

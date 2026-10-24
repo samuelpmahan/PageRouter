@@ -3,10 +3,12 @@
 //   ● on the disc centre   moves the disc on the plate's corner      ● on the disc rim   sizes the disc
 //   ▮ on the plate edge    sets the plate's width                      ■ on the last tile   sets the number size
 //   ▲ on the name          sets the largest name size
-// Dragging pins that part; every part not pinned is derived by the renderer's rules (solveB01 in thro-card-core-r2.js) and the card
+// B04 (24 Oct): ● on the arc's peak slides the peak (and the disc on it) along the plate and raises or lowers the arc.
+// B05 (24 Oct): ● on the zoom circle's rim sizes the circle.
+// Dragging pins that part; every part not pinned is derived by the renderer's rules (CARD_RECIPES in thro-card-core-r2.js) and the card
 // re-forms around it. While the finger is down the page solves the same rules and outlines where every part will be; on release the
 // renderer redraws the card. The recipe (each part: its value and whether it is a default, pinned, or derived) is shown under the card.
-import { solveB01, B01_PARTS } from './vendor/discstudio-cards/thro-card-core-r2.js?v=28ac2b39fab85255';
+import { CARD_RECIPES } from './vendor/discstudio-cards/thro-card-core-r2.js?v=28ac2b39fab85255';
 import { begin, settle } from './gestures.mjs';
 
 const STYLE = `
@@ -21,6 +23,7 @@ const STYLE = `
 .card-parts .cp-tri::after{content:"";position:absolute;inset:5px 6px 3px;background:#ff2d55;clip-path:polygon(50% 0,100% 100%,0 100%)}
 .card-parts .cp-ghost{position:absolute;border:2px dashed #fff;pointer-events:none;box-shadow:0 0 0 1px #0007}
 .card-parts .cp-ghost.round{border-radius:50%}
+.card-parts .cp-ghost.coin{border-radius:50%;border-style:dotted}
 .card-parts .cp-tip{position:absolute;pointer-events:none;transform:translate(-50%,calc(-100% - 18px));background:#0b100de8;color:#fff;border:1px solid #ff2d55;border-radius:6px;padding:3px 7px;font:700 12px/1.3 system-ui,sans-serif;white-space:nowrap}
 @media (pointer:coarse){.card-parts .cp-dot{width:34px;height:34px}.card-parts .cp-bar{width:20px;height:56px}.card-parts .cp-square{width:30px;height:30px}.card-parts .cp-tri{width:38px;height:32px}}
 .cp-recipe{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;padding:8px 10px;border-top:1px solid #3a493b;background:#18221b;font:12px/1.4 system-ui,sans-serif;color:#c9d3c8}
@@ -33,18 +36,23 @@ const STYLE = `
 .cp-recipe .cp-msg{flex-basis:100%;color:#ffd166;font-size:11.5px}
 .cp-recipe button{min-height:32px;padding:4px 10px;font-size:11.5px;border-radius:16px}
 `;
-const TITLES = { 'disc-centre': 'Drag to move the disc on the plate corner', 'disc-rim': 'Drag to size the disc', 'plate-edge': 'Drag to set the plate width', tile: 'Drag to set the number size', name: 'Drag up or down to set the largest name size' };
+const TITLES = { 'disc-centre': 'Drag to move the disc on the plate corner', 'disc-rim': 'Drag to size the disc', 'plate-edge': 'Drag to set the plate width', tile: 'Drag to set the number size', name: 'Drag up or down to set the largest name size',
+  peak: 'Drag along to move the peak and its disc; up or down to raise or lower the arc', 'coin-rim': 'Drag to size the zoom circle' };
 const clamp = (v, [a, b]) => Math.max(a, Math.min(b, v)), round3 = v => Math.round(v * 1000) / 1000;
 const DISPLAY = '"DS Card Sans Condensed", "DejaVu Sans Condensed", "Nimbus Sans Narrow", "DejaVu Sans", sans-serif';
 let measurer = null;
 const nameWidthFor = name => px => { measurer ??= document.createElement('canvas').getContext('2d'); measurer.font = `800 ${px}px ${DISPLAY}`; return measurer.measureText(name.toUpperCase()).width; };
-const range = k => [B01_PARTS[k].min, B01_PARTS[k].max];
-const shown = (k, v) => (B01_PARTS[k].unit === 'px' ? `${Math.round(v)} px` : v.toFixed(2));
+const partsOf = recipe => CARD_RECIPES[recipe.layout].parts;
+const shownWith = P => (k, v) => (P[k].unit === 'px' ? `${Math.round(v)} px` : v.toFixed(2));
 
 /** What dragging a handle by (dx, dy) native pixels pins, from the card as it is now drawn (the lab's own rules). */
 export function pinFor(id, recipe, dx, dy) {
-  const g = recipe.native, dir = recipe.dir, v = recipe.values;
+  const g = recipe.native, dir = recipe.dir, P = partsOf(recipe), range = k => [P[k].min, P[k].max];
   const edge = dir > 0 ? g.plate.x + g.plate.w : g.plate.x;
+  // B04: the peak's place along the plate is measured from the plate's own start (its left edge, or its right edge when mirrored).
+  if (id === 'peak') { const start = dir > 0 ? g.plate.x : g.plate.x + g.plate.w;
+    return { peakAt: round3(clamp(dir * (g.arc.peakX + dx - start) / g.plate.w, range('peakAt'))), arcRise: Math.round(clamp(g.arc.tailY - (g.arc.peakY + dy), range('arcRise'))) }; }
+  if (id === 'coin-rim') return { coinD: Math.round(clamp(g.coin.d + dy, range('coinD'))) }; // the circle's top stays with the tiles, so its rim follows the finger
   if (id === 'disc-centre') return { discOX: round3(clamp(dir * (g.disc.cx + dx - edge) / g.disc.d, range('discOX'))), discOY: round3(clamp((g.disc.cy + dy - g.plate.y) / g.disc.d, range('discOY'))) };
   if (id === 'disc-rim') return { discD: Math.round(clamp(g.disc.d + 2 * dir * dx, range('discD'))) };
   if (id === 'plate-edge') return { plateW: Math.round(clamp(g.plate.w + dir * dx, range('plateW'))) };
@@ -59,7 +67,7 @@ export function attachCardParts(holder, layer, { recipe, design, name, view, onC
   if (!document.getElementById('card-parts-style')) { const s = document.createElement('style'); s.id = 'card-parts-style'; s.textContent = STYLE; document.head.appendChild(s); }
   const parts = document.createElement('div'); parts.className = 'card-parts'; layer.appendChild(parts);
   const [a, b, c, d, e, f] = recipe.m, toCanvas = (x, y) => ({ x: a * x + c * y + e, y: b * x + d * y + f });
-  const pinned = { ...(design.nativeParts ?? {}) };
+  const pinned = { ...(design.nativeParts ?? {}) }, R = CARD_RECIPES[recipe.layout], P = R.parts, shown = shownWith(P);
 
   // The recipe, under the card: each part, its value, and whether it is a default, pinned by you, or derived by the rules.
   holder.parentElement?.querySelector(':scope > .cp-recipe')?.remove();
@@ -67,7 +75,7 @@ export function attachCardParts(holder, layer, { recipe, design, name, view, onC
   const strip = holder.parentElement?.querySelector(':scope > .ce-strip');
   (strip ?? holder).after(panel);
   const renderPanel = (values = recipe.values, state = recipe.state, derived = recipe.derived, msgs = recipe.msgs) => {
-    const items = Object.keys(B01_PARTS).map(k => `<span class="cp-part cp-${state[k]}">${B01_PARTS[k].label} <b>${shown(k, values[k])}</b> <span class="cp-state">${state[k]}</span></span>`);
+    const items = Object.keys(P).map(k => `<span class="cp-part cp-${state[k]}">${P[k].label} <b>${shown(k, values[k])}</b> <span class="cp-state">${state[k]}</span></span>`);
     items.push(`<span class="cp-part cp-derived">Plate height <b>${Math.round(derived.plateH)} px</b> <span class="cp-state">derived</span></span>`);
     items.push(`<span class="cp-part cp-derived">Name size <b>${Math.round(derived.namePx)} px</b> <span class="cp-state">derived</span></span>`);
     panel.innerHTML = `<span class="cp-label">RECIPE</span>${items.join('')}${Object.keys(pinned).length ? '<button type="button" class="cp-reset">Let every part follow the rules</button>' : ''}${(msgs ?? []).map(([, m]) => `<span class="cp-msg">${m}</span>`).join('')}`;
@@ -80,7 +88,7 @@ export function attachCardParts(holder, layer, { recipe, design, name, view, onC
     el.setAttribute('aria-label', TITLES[h.id]); el.dataset.part = h.id; parts.appendChild(el); return { h, el };
   });
   const ghosts = { plate: Object.assign(document.createElement('div'), { className: 'cp-ghost' }), disc: Object.assign(document.createElement('div'), { className: 'cp-ghost round' }),
-    tiles: Object.assign(document.createElement('div'), { className: 'cp-ghost' }) };
+    tiles: Object.assign(document.createElement('div'), { className: 'cp-ghost' }), ...(recipe.native.coin ? { coin: Object.assign(document.createElement('div'), { className: 'cp-ghost coin' }) } : {}) };
   const tip = Object.assign(document.createElement('div'), { className: 'cp-tip' });
   const place = () => { const m = view(); for (const { h, el } of handles) Object.assign(el.style, { left: `${m.x(h.x)}px`, top: `${m.y(h.y)}px` }); };
   place();
@@ -88,11 +96,11 @@ export function attachCardParts(holder, layer, { recipe, design, name, view, onC
   // Where every part would be with these pins: the same rules the renderer runs, outlined over the card while dragging.
   const measure = nameWidthFor(name);
   const preview = pins => {
-    const s = solveB01(pins, measure), g = s.geometry, mirror = recipe.dir < 0, mx = x => (mirror ? 1920 - x : x);
+    const s = R.solve(pins, measure), g = s.geometry, mirror = recipe.dir < 0, mx = x => (mirror ? 1920 - x : x);
+    const round = c => { const p = toCanvas(mx(c.cx) - c.d / 2, c.cy - c.d / 2), q = toCanvas(mx(c.cx) + c.d / 2, c.cy + c.d / 2); return { x: p.x, y: p.y, w: q.x - p.x, h: q.y - p.y }; };
     const rect = r => { const x0 = mirror ? 1920 - r.x - r.w : r.x, p = toCanvas(x0, r.y), q = toCanvas(x0 + r.w, r.y + r.h); return { x: p.x, y: p.y, w: q.x - p.x, h: q.y - p.y }; };
-    const disc = (() => { const p = toCanvas(mx(g.disc.cx) - g.disc.d / 2, g.disc.cy - g.disc.d / 2), q = toCanvas(mx(g.disc.cx) + g.disc.d / 2, g.disc.cy + g.disc.d / 2); return { x: p.x, y: p.y, w: q.x - p.x, h: q.y - p.y }; })();
     const t = g.tiles, row = { x: t.x, y: t.y, w: 4 * t.size + 3 * t.gap, h: t.size };
-    return { solved: s, boxes: { plate: rect(g.plate), disc, tiles: rect(row) } };
+    return { solved: s, boxes: { plate: rect(g.plate), disc: round(g.disc), tiles: rect(row), ...(g.coin ? { coin: round(g.coin) } : {}) } };
   };
   const drawGhosts = boxes => { const m = view(); for (const [k, box] of Object.entries(boxes)) { const el = ghosts[k]; if (!el.isConnected) parts.appendChild(el); Object.assign(el.style, { left: `${m.x(box.x)}px`, top: `${m.y(box.y)}px`, width: `${box.w * m.s}px`, height: `${box.h * m.s}px` }); } };
 
@@ -108,7 +116,7 @@ export function attachCardParts(holder, layer, { recipe, design, name, view, onC
         next = { ...pinned, ...pinFor(h.id, recipe, dx, dy) };
         Object.assign(el.style, { left: `${m.x(h.x) + mv.clientX - x0}px`, top: `${m.y(h.y) + mv.clientY - y0}px` });
         const { solved, boxes } = preview(next); drawGhosts(boxes); renderPanel(solved.values, solved.state, solved.derived, solved.msgs);
-        const changed = Object.keys(pinFor(h.id, recipe, 0, 0)).map(p => `${B01_PARTS[p].label} ${shown(p, next[p])}`).join(' · ');
+        const changed = Object.keys(pinFor(h.id, recipe, 0, 0)).map(p => `${P[p].label} ${shown(p, next[p])}`).join(' · ');
         tip.textContent = changed; Object.assign(tip.style, { left: el.style.left, top: el.style.top });
       };
       const up = u => {
@@ -118,7 +126,7 @@ export function attachCardParts(holder, layer, { recipe, design, name, view, onC
         const same = next && Object.keys(next).length === Object.keys(pinned).length && Object.entries(next).every(([p, v]) => pinned[p] === v);
         if (!next || u.type === 'pointercancel' || same) { place(); renderPanel(); if (next && !same) return; return; }
         begin(`Pin ${h.id}`, landed);
-        const what = Object.keys(pinFor(h.id, recipe, 0, 0)).map(p => B01_PARTS[p].label.toLowerCase()).join(' and ');
+        const what = Object.keys(pinFor(h.id, recipe, 0, 0)).map(p => P[p].label.toLowerCase()).join(' and ');
         onChange({ parts: next }, `Pinned the ${what}`);
       };
       addEventListener('pointermove', move, true); addEventListener('pointerup', up, true); addEventListener('pointercancel', up, true);

@@ -62,10 +62,13 @@ export function nativeDesign(previous, study) {
   if (revision !== undefined) design.nativeRevision = revision;
   return design;
 }
-// Parts of a card a person has pinned with its handles (the first Constraint Lab, in the renderer): only B01 at revision 2 is
-// drawn from parts and rules so far. The ranges are the renderer's own (B01_PARTS in thro-card-core-r2.js).
-export const cardParts = Object.freeze({ b01: Object.freeze({
-  plateW: [360, 1100], discD: [160, 700], discOX: [-0.6, 0.6], discOY: [-0.8, 0.45], tile: [40, 120], nameMax: [40, 180] }) });
+// Parts of a card a person has pinned with its handles (the first Constraint Lab, in the renderer): B01 at revision 2, and B04
+// and B05 (one drawing each), are drawn from parts and rules so far. The ranges are the renderer's own (CARD_RECIPES in
+// thro-card-core-r2.js; thro-card-parts.test.mjs checks they agree).
+export const cardParts = Object.freeze({
+  b01: Object.freeze({ plateW: [360, 1100], discD: [160, 700], discOX: [-0.6, 0.6], discOY: [-0.8, 0.45], tile: [40, 120], nameMax: [40, 180] }),
+  b04: Object.freeze({ plateW: [360, 1100], discD: [140, 560], peakAt: [0.25, 0.85], arcRise: [30, 260], tile: [40, 120], nameMax: [40, 180] }),
+  b05: Object.freeze({ plateW: [360, 1100], discD: [160, 640], discOX: [-0.6, 0.6], discOY: [-0.6, 0.9], tile: [40, 120], coinD: [72, 240], nameMax: [40, 180] }) });
 export const partsLayout = design => (isNativeStudy(design?.study) && cardParts[nativeStudy(design.study).preset] && design.nativeRevision === cardRevisions[nativeStudy(design.study).preset] ? nativeStudy(design.study).preset : null);
 export function validParts(parts, preset) {
   const ranges = cardParts[preset];

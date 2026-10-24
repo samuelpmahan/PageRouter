@@ -12,10 +12,10 @@ export const EDIT_PROFILE = 'thro-prepared-workspace@1';
 export const LEGACY_V1_PROFILE = 'thro-delivered-workspace-v1@1';
 // thro-card-appearance@1: a native design or card uses a solid plate or a nudge. The same renderer build id is
 // not enough: an older adapter recognises that build but ignores both fields, so content declares the semantics.
-// thro-card-parts@1/<preset>: a native design or card with parts pinned by its handles (B01 revision 2 only, so far).
+// thro-card-parts@1/<preset>: a native design or card with parts pinned by its handles (B01 revision 2, B04 and B05 so far).
 // A consumer without it cannot draw the card the person made, so it must refuse rather than draw the default.
 export const partsCapability = preset => `thro-card-parts@1/${preset}`;
-export const partsPresets = Object.freeze(['b01']);
+export const partsPresets = Object.freeze(['b01', 'b04', 'b05']);
 export const capabilities = Object.freeze(['parts-archive@1', 'prepared-disc@1', 'versioned-bags@1', 'studio-single-svg@1', 'studio-lineup-svg@1', 'discstudio-card-png@1', 'export-record@1', 'thro-card-appearance@1']);
 export const NUDGE_LIMIT = 1920;
 /** Plate and nudge as retained: omitted means the old defaults; a supplied value must be exact, never normalised. */

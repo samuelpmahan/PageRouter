@@ -9,7 +9,7 @@
 // The kernel decides; the DiscStudio card renderer draws whatever recipe was decided (it is async canvas
 // work, and kernel runs are synchronous), so pixels stay outside the world and recipes stay inside it.
 import { createWorld } from './pxc/kernel.mjs';
-import { nativeCardRecipe, nativeBuild, cardRevisions, nativeStudies, lineupStudies, accentName } from './native-cards.mjs';
+import { nativeCardRecipe, nativeBuild, cardRevisions, cardParts, nativeStudies, lineupStudies, accentName } from './native-cards.mjs';
 
 /** The site's decisions: the fill. Who decided each, and when, is on the implementation it names. */
 export const SITE_FILL = Object.freeze({
@@ -290,7 +290,10 @@ function cardFeatures(r, prefix = '', label = '', photo = null) {
   return f;
 }
 /** A recipe's definition: its features in order, each { key, label, value }. Two recipes with the same definition are the same card. */
-const PART_NAMES = { plateW: ['plate width', 'px'], discD: ['disc size', 'px'], discOX: ['disc overhang', ''], discOY: ['disc lift', ''], tile: ['number tile', 'px'], nameMax: ['largest name size', 'px'] };
+const PART_NAMES = { plateW: ['plate width', 'px'], discD: ['disc size', 'px'], discOX: ['disc overhang', ''], discOY: ['disc lift', ''], peakAt: ['peak along the plate', ''],
+  arcRise: ['arc rise', 'px'], tile: ['number tile', 'px'], coinD: ['zoom circle', 'px'], nameMax: ['largest name size', 'px'] };
+// B05's disc hangs below the plate's top edge, so its offset reads as a drop.
+const partName = (preset, k) => (preset === 'b05' && k === 'discOY' ? 'disc drop' : PART_NAMES[k][0]);
 export function recipeDefinition(recipe, photos = []) {
   if (!recipe) return [];
   if (recipe.cards) return [
@@ -308,7 +311,7 @@ export function recipeDefinition(recipe, photos = []) {
     { key: 'position', label: 'position', value: recipe.nudge ? `${num(recipe.nudge.x)}, ${num(recipe.nudge.y)}` : 'as laid out' },
     { key: 'drawing', label: 'drawing', value: `revision ${recipe.revision ?? 1}` },
     // Parts pinned with the card's handles (card-parts.mjs); a part not pinned follows the rules.
-    ...(recipe.parts ? Object.entries(PART_NAMES).map(([k, [label, unit]]) => ({ key: `part.${k}`, label,
+    ...(recipe.parts ? Object.keys(cardParts[recipe.preset] ?? {}).map(k => [k, partName(recipe.preset, k), PART_NAMES[k][1]]).map(([k, label, unit]) => ({ key: `part.${k}`, label,
       value: Object.hasOwn(recipe.parts, k) ? `${unit ? Math.round(recipe.parts[k]) + ' ' + unit : recipe.parts[k].toFixed(2)} pinned` : 'by the rules' })) : []),
   ].filter(x => x.value !== undefined);
 }

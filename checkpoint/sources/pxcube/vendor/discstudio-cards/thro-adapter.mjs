@@ -17,7 +17,12 @@ export const DEFAULT_CARD_SCALE = 0.66; // what the DiscStudio export panel uses
 /** Thro card revisions: a recipe without a revision draws exactly as DiscStudio 6.6.1 (revision 1).
  *  Revision 2 exists only where the drawing changed (thro-card-core-r2.js): B01 upright disc, U04 smaller manufacturer. */
 export const cardRevisions = Object.freeze({ b01: 2, u04: 2 });
+// B04 and B05 have one drawing (revision 1). thro-card-core-r2.js draws them with the core's own code, unchanged, and reports
+// their parts, so their handles sit on the card; a recipe draws them from parts and rules (24 Oct 2026). The pixels are the
+// same as card-renderer-core.js's (checked byte for byte by thro-card-parts-browser.mjs).
+const partsAtRevision1 = Object.freeze(['b04', 'b05']);
 function coreFor(preset, revision) {
+  if ((revision === undefined || revision === null || revision === 1) && partsAtRevision1.includes(preset)) return drawCardRevision2;
   if (revision === undefined || revision === null || revision === 1) return drawCard;
   if (revision === 2 && cardRevisions[preset] === 2) return drawCardRevision2;
   throw Error(`Card revision ${revision} is not available for layout ${preset}.`);
@@ -172,9 +177,10 @@ export function resolveCardPlacement(placement, footprint, scale = DEFAULT_CARD_
 /** Draw one native card on its own full-size canvas, once. DiscStudio's renderCardBlob makes
  *  exactly these calls; keeping the canvas lets its layout be read and its pixels be reused
  *  for placement instead of drawing the whole card a second time. */
-// Pinned parts (thro, 24 Oct 2026): parts of B01 revision 2 pinned by the person; the renderer derives the rest (solveB01).
-// Only B01 at revision 2 is drawn from parts and rules so far; for any other card pinned parts are refused, never ignored.
-export const recipeLayouts = Object.freeze({ b01: 2 });
+// Pinned parts (thro, 24 Oct 2026): parts of a card pinned by the person; the renderer derives the rest (CARD_RECIPES in
+// thro-card-core-r2.js). B01 at revision 2, and B04 and B05 (one drawing each), are drawn from parts and rules so far; for any
+// other card pinned parts are refused, never ignored.
+export const recipeLayouts = Object.freeze({ b01: 2, b04: 1, b05: 1 });
 const recipeKey = recipe => (recipe ? JSON.stringify(Object.keys(recipe).sort().map(k => [k, recipe[k]])) : null);
 async function drawNativeCard({ disc, photoSrc, flights, preset, appearance, revision, parts = null }) {
   const { id, orientation } = presetById(preset);
@@ -186,7 +192,7 @@ async function drawNativeCard({ disc, photoSrc, flights, preset, appearance, rev
   if (!context) throw new Error('Canvas2D is unavailable in this browser.');
   await ensureCardFonts();
   const recipe = parts && Object.keys(parts).length ? parts : null;
-  if (recipe && recipeLayouts[id] !== revision) throw Error(`Layout ${id} at revision ${revision ?? 1} is not drawn from parts yet.`);
+  if (recipe && recipeLayouts[id] !== (revision ?? 1)) throw Error(`Layout ${id} at revision ${revision ?? 1} is not drawn from parts yet.`);
   const environment = { loadImage, getMoldDetails, strictPhoto: true, createCanvas: newCanvas, frameRenderer: browserFrames, ...(recipe ? { recipe } : {}) };
   await coreFor(id, revision)(context, card, orientation, id, environment, look);
   const png = await canvasBlob(canvas), items = drawn.get(canvas)?.items ?? [];
@@ -238,15 +244,19 @@ function recipeLayout(solved, m, moldName) {
   const g = solved.geometry, dir = solved.side === 'left' ? -1 : 1, t = g.tiles;
   const rowEnd = dir > 0 ? t.x + 4 * t.size + 3 * t.gap : t.x - 4 * t.size - 3 * t.gap;
   const handles = [
-    { id: 'disc-centre', shape: 'dot', part: ['discOX', 'discOY'], ...pt(g.disc.cx, g.disc.cy) },
+    // B04: the disc sits on the arc's peak; the peak's dot slides it along the plate and raises or lowers the arc.
+    solved.layout === 'b04' ? { id: 'peak', shape: 'dot', part: ['peakAt', 'arcRise'], ...pt(g.arc.peakX, g.arc.peakY) }
+      : { id: 'disc-centre', shape: 'dot', part: ['discOX', 'discOY'], ...pt(g.disc.cx, g.disc.cy) },
     { id: 'disc-rim', shape: 'dot', part: ['discD'], ...pt(g.disc.cx + dir * g.disc.d / 2, g.disc.cy) },
-    // The plate's dark panel runs 140 px past the plate toward the disc; the bar sits on the edge you see (it moves with the width).
+    // B05: the zoom circle's rim sizes it.
+    ...(g.coin ? [{ id: 'coin-rim', shape: 'dot', part: ['coinD'], ...pt(g.coin.cx, g.coin.cy + g.coin.d / 2) }] : []),
+    // The plate's dark panel runs past the plate toward the disc; the bar sits on the edge you see (it moves with the width).
     { id: 'plate-edge', shape: 'bar', part: ['plateW'], ...pt(dir > 0 ? g.scrim.x + g.scrim.w : g.scrim.x, g.plate.y + g.plate.h * 0.62) },
     { id: 'tile', shape: 'square', part: ['tile'], ...pt(rowEnd, t.y + t.size) },
     { id: 'name', shape: 'tri', part: ['nameMax'], ...pt(g.name.x, g.name.y - g.name.px * 0.75) },
   ];
   return { layout: solved.layout, name: String(moldName ?? ''), side: solved.side, dir, k: scaleOf(m), m: [m.a, m.b, m.c, m.d, m.e, m.f], fixed: Boolean(solved.fixed), values: solved.values, state: solved.state, derived: solved.derived, msgs: solved.msgs,
-    native: { plate: g.plate, disc: g.disc, tiles: { x: t.x, y: t.y, size: t.size, gap: t.gap }, name: { x: g.name.x, y: g.name.y, px: g.name.px } }, handles };
+    native: { plate: g.plate, disc: g.disc, tiles: { x: t.x, y: t.y, size: t.size, gap: t.gap }, name: { x: g.name.x, y: g.name.y, px: g.name.px }, ...(g.arc ? { arc: g.arc } : {}), ...(g.coin ? { coin: g.coin } : {}) }, handles };
 }
 
 /** A lineup (Battle or Bag): 2–4 DiscStudio cards, each drawn by the same renderer as a Single

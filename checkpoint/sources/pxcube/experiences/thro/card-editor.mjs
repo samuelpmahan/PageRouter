@@ -127,7 +127,7 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
   resize.observe(holder); watch.observe(svg, { attributes: true, attributeFilter: ['viewBox', 'style', 'class'] });
   function stop() { resize.disconnect(); watch.disconnect(); strip.remove(); partsUI?.detach(); }
   place();
-  // Handles on the card's parts, where the renderer reports them (B01 revision 2 so far).
+  // Handles on the card's parts, where the renderer reports them (B01 revision 2, B04 and B05 so far).
   if (layout.recipe) { partsUI = attachCardParts(holder, layer, { recipe: layout.recipe, design, name: layout.recipe.name, view, onChange }); partsUI.place?.(); }
 
   function track(target, e, move, up) {
