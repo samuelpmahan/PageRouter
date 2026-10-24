@@ -172,7 +172,11 @@ export function resolveCardPlacement(placement, footprint, scale = DEFAULT_CARD_
 /** Draw one native card on its own full-size canvas, once. DiscStudio's renderCardBlob makes
  *  exactly these calls; keeping the canvas lets its layout be read and its pixels be reused
  *  for placement instead of drawing the whole card a second time. */
-async function drawNativeCard({ disc, photoSrc, flights, preset, appearance, revision }) {
+// Pinned parts (thro, 24 Oct 2026): parts of B01 revision 2 pinned by the person; the renderer derives the rest (solveB01).
+// Only B01 at revision 2 is drawn from parts and rules so far; for any other card pinned parts are refused, never ignored.
+export const recipeLayouts = Object.freeze({ b01: 2 });
+const recipeKey = recipe => (recipe ? JSON.stringify(Object.keys(recipe).sort().map(k => [k, recipe[k]])) : null);
+async function drawNativeCard({ disc, photoSrc, flights, preset, appearance, revision, parts = null }) {
   const { id, orientation } = presetById(preset);
   const look = validateCardAppearance({ ...defaultCardAppearance(id), ...(appearance ?? {}) });
   const card = cardFromThroDisc(disc, { photoSrc, flights });
@@ -181,25 +185,30 @@ async function drawNativeCard({ disc, photoSrc, flights, preset, appearance, rev
   const canvas = newCanvas(width, height), context = canvas.getContext('2d');
   if (!context) throw new Error('Canvas2D is unavailable in this browser.');
   await ensureCardFonts();
-  await coreFor(id, revision)(context, card, orientation, id, { loadImage, getMoldDetails, strictPhoto: true, createCanvas: newCanvas, frameRenderer: browserFrames }, look);
+  const recipe = parts && Object.keys(parts).length ? parts : null;
+  if (recipe && recipeLayouts[id] !== revision) throw Error(`Layout ${id} at revision ${revision ?? 1} is not drawn from parts yet.`);
+  const environment = { loadImage, getMoldDetails, strictPhoto: true, createCanvas: newCanvas, frameRenderer: browserFrames, ...(recipe ? { recipe } : {}) };
+  await coreFor(id, revision)(context, card, orientation, id, environment, look);
   const png = await canvasBlob(canvas), items = drawn.get(canvas)?.items ?? [];
   const bounds = rasterAlphaBounds(context.getImageData(0, 0, width, height).data, width, height);
-  return { id, orientation, look, card, width, height, png, items, bounds, moldName: card.renderer?.moldName ?? disc.name, revision: revision ?? 1 };
+  return { id, orientation, look, card, width, height, png, items, bounds, moldName: card.renderer?.moldName ?? disc.name, revision: revision ?? 1,
+    ...(recipe ? { recipe } : {}), ...(environment.solved ? { solved: environment.solved } : {}) };
 }
 /** DiscStudio's sticker step, from a PNG already made: the card cropped to its pixels at this scale. */
 // DiscStudio's sticker sizer caches by this identity. Revision 1 keeps DiscStudio's identity exactly; a later
 // revision is part of the identity, or a card drawn at one revision would be served for the other.
 const stickerIdentity = native => {
   const identity = cardRasterIdentity(native.card, native.orientation, native.id, native.look);
+  if (native.recipe) return JSON.stringify(['thro-card-recipe', native.revision, recipeKey(native.recipe), identity]);
   return native.revision === 1 ? identity : JSON.stringify(['thro-card-revision', native.revision, identity]);
 };
 const stickerFor = async (native, scale) => sizeBrowserSticker(await blobImage(native.png), native.width, native.height, native.bounds, stickerIdentity(native), scale);
 const toSticker = (native, sticker, origin) => new DOMMatrix([sticker.scale, 0, 0, sticker.scale, origin.x - native.bounds[0] * sticker.scale - sticker.cropOffset.x, origin.y - native.bounds[1] * sticker.scale - sticker.cropOffset.y]);
 const svgFor = async (png, width, height) => `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><image width="${width}" height="${height}" href="${await toDataUrl(png)}"/></svg>`;
 
-export async function renderDiscStudioCard({ disc, photoSrc, flights, preset = 'b01', appearance, placement = 'panel-default', scale = DEFAULT_CARD_SCALE, nudge = null, revision }) {
+export async function renderDiscStudioCard({ disc, photoSrc, flights, preset = 'b01', appearance, placement = 'panel-default', scale = DEFAULT_CARD_SCALE, nudge = null, revision, parts = null }) {
   if (placement === 'panel-default') validatePanelScale(scale);
-  const native = await drawNativeCard({ disc, photoSrc, flights, preset, appearance, revision }), { width, height } = native;
+  const native = await drawNativeCard({ disc, photoSrc, flights, preset, appearance, revision, parts }), { width, height } = native;
   const footprint = placement === 'panel-default' ? { width, height, alphaBounds: [...native.bounds] } : undefined;
   const transform = resolveCardPlacement(placement, footprint, scale, nudge);
   let png = native.png, toPlaced = new DOMMatrix();
@@ -218,7 +227,26 @@ export async function renderDiscStudioCard({ disc, photoSrc, flights, preset = '
   // placement: the page needs not decode the PNG again to find the card.
   const [x0, y0, x1, y1] = native.bounds, at = boxThrough(toPlaced, x0, y0, x1, y1);
   layout.card = round({ x: Math.max(0, at.x), y: Math.max(0, at.y), w: Math.min(width, at.x + at.w) - Math.max(0, at.x), h: Math.min(height, at.y + at.h) - Math.max(0, at.y) });
+  if (native.solved) layout.recipe = recipeLayout(native.solved, toPlaced, native.moldName);
   return { svg: await svgFor(png, width, height), width, height, png, layout, preset: native.id, orientation: native.orientation, appearance: native.look, placement: transform, build, revision: native.revision };
+}
+
+/** The recipe as the page needs it: each part's value and state, and the handles that change parts, placed where the card is
+ *  (canvas pixels after placement). k: placed pixels per native pixel, to turn a finger's move into native pixels. */
+function recipeLayout(solved, m, moldName) {
+  const pt = (x, y) => ({ x: Math.round((m.a * x + m.c * y + m.e) * 10) / 10, y: Math.round((m.b * x + m.d * y + m.f) * 10) / 10 });
+  const g = solved.geometry, dir = solved.side === 'left' ? -1 : 1, t = g.tiles;
+  const rowEnd = dir > 0 ? t.x + 4 * t.size + 3 * t.gap : t.x - 4 * t.size - 3 * t.gap;
+  const handles = [
+    { id: 'disc-centre', shape: 'dot', part: ['discOX', 'discOY'], ...pt(g.disc.cx, g.disc.cy) },
+    { id: 'disc-rim', shape: 'dot', part: ['discD'], ...pt(g.disc.cx + dir * g.disc.d / 2, g.disc.cy) },
+    // The plate's dark panel runs 140 px past the plate toward the disc; the bar sits on the edge you see (it moves with the width).
+    { id: 'plate-edge', shape: 'bar', part: ['plateW'], ...pt(dir > 0 ? g.scrim.x + g.scrim.w : g.scrim.x, g.plate.y + g.plate.h * 0.62) },
+    { id: 'tile', shape: 'square', part: ['tile'], ...pt(rowEnd, t.y + t.size) },
+    { id: 'name', shape: 'tri', part: ['nameMax'], ...pt(g.name.x, g.name.y - g.name.px * 0.75) },
+  ];
+  return { layout: solved.layout, name: String(moldName ?? ''), side: solved.side, dir, k: scaleOf(m), m: [m.a, m.b, m.c, m.d, m.e, m.f], fixed: Boolean(solved.fixed), values: solved.values, state: solved.state, derived: solved.derived, msgs: solved.msgs,
+    native: { plate: g.plate, disc: g.disc, tiles: { x: t.x, y: t.y, size: t.size, gap: t.gap }, name: { x: g.name.x, y: g.name.y, px: g.name.px } }, handles };
 }
 
 /** A lineup (Battle or Bag): 2–4 DiscStudio cards, each drawn by the same renderer as a Single

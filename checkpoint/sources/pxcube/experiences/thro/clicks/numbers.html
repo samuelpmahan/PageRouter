@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Link Numbers - thro</title>
+<style>
+:root{color-scheme:dark;--ground:#0d140f;--panel:#151f18;--ink:#e9f1e4;--muted:#9fb0a3;--accent:#c8f49d;--line:#263329;--grid:#223026;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);min-width:320px}
+a{color:var(--accent)}
+h1,h2,p{margin:0}
+.wrap{max-width:1040px;margin:0 auto;padding:22px 32px 48px}
+header{display:flex;align-items:baseline;gap:16px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:26px}
+.wordmark{font-size:34px;font-weight:800;letter-spacing:-2.5px;text-decoration:none;color:var(--ink)}
+.wordmark span{color:var(--accent);font-size:18px;vertical-align:top;margin-left:4px}
+.eyebrow{display:block;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:20px;margin-bottom:20px}
+.hero h1{font-size:clamp(22px,3vw,30px);letter-spacing:-.8px;line-height:1.2;margin:8px 0 6px;overflow-wrap:anywhere}
+.total{font-size:clamp(72px,12vw,128px);font-weight:800;letter-spacing:-5px;line-height:.95;color:var(--accent);font-variant-numeric:tabular-nums;margin-top:18px}
+.total-caption{color:var(--ink);font-size:15px;margin-top:8px}
+.subtle{color:var(--muted);font-size:13px;line-height:1.55}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start}
+.stat{background:#111a14;border:1px solid var(--line);border-radius:12px;padding:16px}
+.stat strong{display:block;font-size:30px;letter-spacing:-1px;font-variant-numeric:tabular-nums;margin-top:6px}
+.stat small{display:block;color:var(--muted);font-size:12px;margin-top:4px;line-height:1.4}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+h2{font-size:18px;letter-spacing:-.3px;margin:6px 0 14px}
+.chart{position:relative;margin-top:4px}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.chart .bar{fill:var(--accent);pointer-events:none}
+.chart .bar.zero{fill:#2b3a2f}
+.chart .hit{fill:transparent;cursor:crosshair}
+.chart .hit:hover+.bar,.chart .hit:focus+.bar{fill:#e6ffc9}
+.chart text{fill:var(--muted);font-size:11px;font-family:inherit}
+.chart line{stroke:var(--grid);stroke-width:1}
+.chart-empty{padding:28px 0 8px}
+.tip{position:absolute;pointer-events:none;background:#0a100c;border:1px solid #3a4b3e;border-radius:8px;padding:6px 9px;font-size:12px;white-space:nowrap;transform:translate(-50%,-100%);display:none}
+.tip b{font-variant-numeric:tabular-nums}
+details{margin-top:14px}
+summary{cursor:pointer;color:var(--muted);font-size:13px;min-height:32px;line-height:32px}
+table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+td,th{text-align:left;padding:6px 4px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-weight:600}
+td:last-child,th:last-child{text-align:right}
+.table-scroll{max-height:260px;overflow:auto}
+.rows{display:flex;flex-direction:column;gap:12px}
+.row-label{display:flex;justify-content:space-between;gap:12px;font-size:14px}
+.row-label span:last-child{font-variant-numeric:tabular-nums;color:var(--ink)}
+.row-label small{color:var(--muted)}
+.track{height:8px;background:#0f1711;border-radius:4px;margin-top:6px;overflow:hidden}
+.fill{height:100%;background:var(--accent);border-radius:4px;min-width:2px}
+.ref-list{list-style:none;margin:0;padding:0}
+.ref-list li{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line);font-size:14px}
+.ref-list li:last-child{border-bottom:0}
+.ref-list span:first-child{overflow-wrap:anywhere;min-width:0}
+.ref-list span:last-child{font-variant-numeric:tabular-nums}
+dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 16px;font-size:14px}
+dt{color:var(--muted)}
+dd{margin:0;overflow-wrap:anywhere}
+.privacy{margin-top:20px;border-color:#3a4f33;background:#17231a}
+.privacy ul{margin:10px 0 0;padding-left:20px;line-height:1.65;font-size:14px}
+.privacy li::marker{color:var(--accent)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+button{font:inherit;font-size:14px;font-weight:650;min-height:44px;padding:10px 16px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:#17240f;cursor:pointer}
+button.secondary{background:transparent;color:var(--ink);border-color:#3f5243}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+form{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+input{font:inherit;min-height:44px;flex:1;min-width:0;padding:10px 12px;border-radius:10px;border:1px solid #3f5243;background:#0f1711;color:var(--ink)}
+.status{padding:40px 22px;text-align:center}
+.status h1{font-size:24px;margin-bottom:10px}
+.error h1{color:#ffc9a8}
+[hidden]{display:none!important}
+@media(max-width:760px){
+  .wrap{padding:16px 16px 40px}
+  header{margin-bottom:18px;padding-bottom:12px}
+  .wordmark{font-size:28px}
+  .hero,.grid2{grid-template-columns:1fr;gap:14px}
+  .grid2{margin-top:14px}
+  .panel{padding:18px}
+  .total{letter-spacing:-3px}
+  .stat strong{font-size:24px}
+  .privacy{margin-top:14px}
+  .actions button{flex:1}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="wordmark" href="/">thro<span>&#8599;</span></a>
+    <span class="eyebrow">Click-tracked numbers</span>
+  </header>
+
+  <section id="loading" class="panel status"><p class="subtle">Loading numbers&hellip;</p></section>
+
+  <section id="ask" class="panel status" hidden>
+    <h1>Which link?</h1>
+    <p class="subtle">Enter the 7-character code from the end of a thro link (thro&hellip;/c/<b>code</b>).</p>
+    <form id="ask-form"><input id="ask-code" name="c" autocomplete="off" spellcheck="false" placeholder="e.g. k7m2xqp" aria-label="Link code or tracked link"><button type="submit">Show numbers</button></form>
+  </section>
+
+  <section id="error" class="panel status error" hidden>
+    <h1 id="error-title">Could not load numbers</h1>
+    <p class="subtle" id="error-message"></p>
+  </section>
+
+  <main id="report" hidden>
+    <div class="hero">
+      <section class="panel">
+        <span class="eyebrow">Tracked link</span>
+        <h1 id="label"></h1>
+        <p class="subtle" id="link-line"></p>
+        <div class="total" id="total">0</div>
+        <p class="total-caption" id="total-caption">clicks, all time</p>
+        <p class="subtle" id="asof"></p>
+      </section>
+      <section class="stats" aria-label="Summary">
+        <div class="stat"><span class="eyebrow">Last 90 days</span><strong id="window-total">0</strong><small>clicks counted</small></div>
+        <div class="stat"><span class="eyebrow">From YouTube</span><strong id="youtube-share">0%</strong><small id="youtube-count">0 clicks</small></div>
+        <div class="stat"><span class="eyebrow">Best day</span><strong id="best-day">0</strong><small id="best-day-date">&nbsp;</small></div>
+        <div class="stat"><span class="eyebrow">Daily average</span><strong id="daily-average">0</strong><small id="daily-average-span">&nbsp;</small></div>
+      </section>
+    </div>
+
+    <section class="panel">
+      <span class="eyebrow">Clicks by day (UTC)</span>
+      <h2 id="chart-title">Clicks per day</h2>
+      <div class="chart" id="chart"><div class="tip" id="tip" role="status"></div></div>
+      <details><summary>Show as table</summary><div class="table-scroll"><table><thead><tr><th>Day</th><th>Clicks</th></tr></thead><tbody id="day-table"></tbody></table></div></details>
+    </section>
+
+    <div class="grid2">
+      <section class="panel">
+        <span class="eyebrow">Where clicks came from</span>
+        <h2>Sources, last 90 days</h2>
+        <div class="rows" id="sources"></div>
+        <h2 style="margin-top:22px">Referring sites</h2>
+        <ul class="ref-list" id="referrers"></ul>
+      </section>
+      <section class="panel">
+        <span class="eyebrow">What the link points to</span>
+        <h2>Destination and card</h2>
+        <dl id="details"></dl>
+        <div class="actions">
+          <button id="copy-summary" type="button">Copy summary</button>
+          <button id="copy-link" class="secondary" type="button">Copy tracked link</button>
+        </div>
+        <p class="subtle" id="copy-status" role="status" style="margin-top:10px"></p>
+      </section>
+    </div>
+
+    <section class="panel privacy">
+      <span class="eyebrow">What is counted</span>
+      <h2>One count per visit to the link. Nothing personal.</h2>
+      <ul>
+        <li>Each time someone opens the tracked link, thro saves exactly four things: the link code, the time (UTC), the website they came from (just its name, like <b>www.youtube.com</b>, or nothing if their browser did not say), and whether that was YouTube, another site, or direct.</li>
+        <li>thro does <b>not</b> store IP addresses, devices, browsers, cookies, accounts, or anything else that could identify a person.</li>
+        <li>Because no person is identified, one person opening the link three times counts as three clicks. Link checkers that only peek at the link (HEAD requests) are not counted.</li>
+        <li>Anyone with this page's address can see these numbers, so share it with whoever you are negotiating with.</li>
+      </ul>
+    </section>
+  </main>
+</div>
+<script type="module" src="numbers.mjs"></script>
+</body>
+</html>

@@ -29,6 +29,7 @@ const STYLE = `
 .card-editor.is-dragging .ce-knob,.card-editor.is-dragging .ce-badge{visibility:hidden}
 `;
 import { begin, settle } from './gestures.mjs';
+import { attachCardParts } from './card-parts.mjs';
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const union = boxes => {
   const list = boxes.filter(b => b && Number.isFinite(b.x) && b.w > 0 && b.h > 0);
@@ -78,9 +79,11 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
   strip.innerHTML = '<span class="ce-label">ON THE CARD</span>';
   holder.after(strip);
   const actions = [
-    [`⇄ Disc <b>${side === 'left' ? 'left' : 'right'}</b>`, `Put the disc on the ${other}`, layout.photo, true, () => onChange({ side: other }, `Disc on the ${other}`), '⇄ Side', 'c'],
-    [`# Accent on <b>${tiles ? 'tiles' : 'digits'}</b>`, `Put the accent on the ${tiles ? 'digits' : 'tiles'}`, layout.numbers, false, () => onChange({ highlight: tiles ? 'digits' : 'tiles' }, tiles ? 'Accent on the digits' : 'Accent on the tiles'), '# Colour', 'right'],
-    [`Plate <b>${solid ? 'solid' : 'see-through'}</b>`, `Make the plate ${solid ? 'see-through' : 'solid'}`, bounds ?? card, false, () => onChange({ plate: solid ? 'see-through' : 'solid' }, solid ? 'See-through plate' : 'Solid plate'), 'Plate', 'corner', layout.name],
+    // With handles on the card's parts (card-parts.mjs), the badges step off the handles' spots: Side under the disc, Colour under the
+    // numbers, Plate at the plate's bottom corner.
+    [`⇄ Disc <b>${side === 'left' ? 'left' : 'right'}</b>`, `Put the disc on the ${other}`, layout.photo, true, () => onChange({ side: other }, `Disc on the ${other}`), '⇄ Side', layout.recipe ? 'below' : 'c'],
+    [`# Accent on <b>${tiles ? 'tiles' : 'digits'}</b>`, `Put the accent on the ${tiles ? 'digits' : 'tiles'}`, layout.numbers, false, () => onChange({ highlight: tiles ? 'digits' : 'tiles' }, tiles ? 'Accent on the digits' : 'Accent on the tiles'), '# Colour', layout.recipe ? 'below' : 'right'],
+    [`Plate <b>${solid ? 'solid' : 'see-through'}</b>`, `Make the plate ${solid ? 'see-through' : 'solid'}`, bounds ?? card, false, () => onChange({ plate: solid ? 'see-through' : 'solid' }, solid ? 'See-through plate' : 'Solid plate'), 'Plate', 'corner', layout.recipe ? { x: card.x, y: card.y + card.h, w: card.w, h: 0 } : layout.name],
   ];
   // A saved B01 or U04 keeps the drawing it was made with; moving it to the fixed card is a person's choice.
   if (fixedRevision !== undefined && design.nativeRevision !== fixedRevision) {
@@ -105,8 +108,10 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
     badge.addEventListener('click', go); b.addEventListener('click', go); strip.appendChild(b);
     return { hint, target, badge, where, at: anchorBox ?? target };
   });
+  let partsUI = null;
   function place() {
     if (!layer.isConnected) return stop();
+    partsUI?.place();
     const m = view(), hw = holder.clientWidth, hh = holder.clientHeight;
     put(box, card, m); at(knob, corner.x, corner.y, m, hw, hh);
     for (const { hint, target, badge, where, at: t } of controls) {
@@ -120,8 +125,10 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
   }
   const resize = new ResizeObserver(place), watch = new MutationObserver(place);
   resize.observe(holder); watch.observe(svg, { attributes: true, attributeFilter: ['viewBox', 'style', 'class'] });
-  function stop() { resize.disconnect(); watch.disconnect(); strip.remove(); }
+  function stop() { resize.disconnect(); watch.disconnect(); strip.remove(); partsUI?.detach(); }
   place();
+  // Handles on the card's parts, where the renderer reports them (B01 revision 2 so far).
+  if (layout.recipe) { partsUI = attachCardParts(holder, layer, { recipe: layout.recipe, design, name: layout.recipe.name, view, onChange }); partsUI.place?.(); }
 
   function track(target, e, move, up) {
     if (e.button > 0) return;

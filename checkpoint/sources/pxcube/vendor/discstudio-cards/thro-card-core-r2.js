@@ -671,7 +671,108 @@ function drawAppearanceTiles(ctx     , nums          , x        , y        , til
  * Small rail in the bottom-left corner. The disc breaks out: tilted 12 deg,
  * crossing the rail's top and right edges. One loud color (acid), used once
  * as the rail's left edge. ASYMMETRY · MAXIMAL HERO · ONE LOUD COLOR */
+// ---- B01 from parts and rules (thro, 24 Oct 2026). The first Constraint Lab (Sam, 21 Oct: "click and drag and resize whatever
+// the little piece they want and everything else will reform around it") rebuilt B01 from parts and rules instead of fixed
+// numbers. A recipe pins some parts; every part not pinned is derived from the rules below. With no recipe, B01 draws exactly
+// as before (the fixed numbers). The rules are written so that the starting values reproduce those numbers: plate 620 x 330,
+// disc 420 riding the plate's top-right corner (+40, -60), tiles 74, name up to 104.
+export const B01_PARTS = Object.freeze({
+  plateW: { start: 620, min: 360, max: 1100, label: 'Plate width', unit: 'px' },
+  discD: { start: 420, min: 160, max: 700, label: 'Disc size', unit: 'px' },
+  discOX: { start: 40 / 420, min: -0.6, max: 0.6, label: 'Disc overhang (× disc size)', unit: '' },
+  discOY: { start: -60 / 420, min: -0.8, max: 0.45, label: 'Disc lift (× disc size)', unit: '' },
+  tile: { start: 74, min: 40, max: 120, label: 'Number tile', unit: 'px' },
+  nameMax: { start: 104, min: 40, max: 180, label: 'Largest name size', unit: 'px' },
+});
+const B01_RULES = Object.freeze({ margin: 48, pad: 36, gap: 14, nameTop: 28, plasticGap: 50, tileGap: 30, bottom: 44, rimClear: 24 });
+/** Solve B01 for a recipe. pinned: { part: value } (any subset of B01_PARTS). nameWidth(px): the drawn name's width at px.
+ *  Returns the values, which were derived, and the geometry in the left-anchored frame (the plate at the left margin). */
+export function solveB01(pinned, nameWidth) {
+  const R = B01_RULES, P = B01_PARTS, has = k => Object.hasOwn(pinned ?? {}, k), msgs = [];
+  const clampPart = (k, v) => Math.max(P[k].min, Math.min(P[k].max, v));
+  const val = k => (has(k) && Number.isFinite(pinned[k]) ? clampPart(k, pinned[k]) : P[k].start);
+  const rowW = t => 4 * t + 3 * R.gap;
+  let plateW = val('plateW'), tile = val('tile'), namePx = val('nameMax');
+  const discD = val('discD'), discOX = val('discOX'), discOY = val('discOY');
+  let plate, disc, nameY, plasticY, tilesY, plateH, nameLane = 0;
+  // Where type may run on a band of rows: from the plate's padding to the disc's left edge at those rows, kept clear of the rim.
+  const laneRight = (top, bottom) => {
+    let right = plate.x + plate.w - R.pad; const r = disc.d / 2 + 4;
+    for (let y = top; y <= bottom; y += 4) { const dy = y - disc.cy; if (Math.abs(dy) < r) right = Math.min(right, disc.cx - Math.sqrt(r * r - dy * dy) - R.rimClear); }
+    return right;
+  };
+  for (let pass = 0; pass < 8; pass++) {
+    // Rule: the plate hugs its contents (name, plastic line, tiles), with the same spacing the fixed card uses.
+    const nameBase = R.nameTop + namePx;
+    plateH = Math.round(nameBase + R.plasticGap + R.tileGap + tile + R.bottom);
+    plate = { x: R.margin, y: 1080 - R.margin - plateH, w: plateW, h: plateH };
+    // Rule: the disc rides the plate's top-right corner.
+    disc = { cx: plate.x + plate.w + discOX * discD, cy: plate.y + discOY * discD, d: discD };
+    nameY = plate.y + nameBase; plasticY = nameY + R.plasticGap; tilesY = plasticY + R.tileGap;
+    const nx = plate.x + R.pad;
+    // Rule: the name fills its lane up to its largest size.
+    const lane = laneRight(nameY - namePx * 0.75, nameY) - nx; nameLane = lane;
+    let fitted = val('nameMax'); while (fitted > 24 && nameWidth(fitted) > lane) fitted -= 2;
+    // Rule: the four tiles fit their lane; a pinned tile widens an unpinned plate instead.
+    const tileLane = laneRight(tilesY, tilesY + tile) - nx;
+    let nextTile = tile, nextPlateW = plateW;
+    if (rowW(tile) > tileLane) {
+      if (has('tile') && !has('plateW')) nextPlateW = Math.ceil(plateW + rowW(tile) - tileLane);
+      else nextTile = Math.max(P.tile.min, Math.floor((tileLane - 3 * R.gap) / 4));
+    } else if (!has('tile')) nextTile = Math.min(P.tile.start, Math.floor((tileLane - 3 * R.gap) / 4));
+    nextPlateW = Math.min(P.plateW.max, nextPlateW);
+    const settled = fitted === namePx && nextTile === tile && nextPlateW === plateW;
+    namePx = fitted; tile = nextTile; plateW = nextPlateW;
+    if (settled) break;
+  }
+  if (has('tile') && tile !== val('tile')) msgs.push(['warn', `Number tile held to ${tile}px: there is no room for ${val('tile')}px with the plate width pinned at ${plateW}px.`]);
+  if (has('tile') && plateW !== val('plateW')) msgs.push(['ok', `Plate widened to ${plateW}px to hold ${tile}px tiles.`]);
+  if (namePx < val('nameMax')) msgs.push([has('nameMax') ? 'warn' : 'ok', `Name set at ${namePx}px: it only fits that size beside the disc.`]);
+  if (disc.cy - disc.d / 2 < 0) msgs.push(['warn', 'Disc runs off the top of the frame.']);
+  if (disc.cx + disc.d / 2 > 1920) msgs.push(['warn', 'Disc runs off the side of the frame.']);
+  const values = { plateW, discD, discOX, discOY, tile, nameMax: val('nameMax') };
+  const state = Object.fromEntries(Object.keys(P).map(k => [k, has(k) ? 'pinned' : 'default']));
+  if (plateW !== val('plateW')) state.plateW = 'derived';
+  if (tile !== val('tile')) state.tile = 'derived';
+  return { values, state, derived: { plateH, namePx }, msgs,
+    geometry: { plate, disc, name: { x: plate.x + R.pad, y: nameY, px: namePx, lane: Math.max(40, Math.floor(nameLane)) }, plastic: { x: plate.x + R.pad, y: plasticY, px: 34 },
+      tiles: { x: plate.x + R.pad, y: tilesY, size: tile, gap: R.gap }, scrim: { x: plate.x, y: plate.y, w: plateW + 140, h: plateH } } };
+}
+/** Mirror a left-anchored B01 geometry for a disc on the left (the plate in the bottom-right corner). */
+function mirrorB01(g) {
+  const mx = x => HW - x, rect = r => ({ ...r, x: HW - r.x - r.w });
+  return { plate: rect(g.plate), disc: { ...g.disc, cx: mx(g.disc.cx) }, name: { ...g.name, x: mx(g.name.x) }, plastic: { ...g.plastic, x: mx(g.plastic.x) },
+    tiles: { ...g.tiles, x: mx(g.tiles.x) }, scrim: rect(g.scrim) };
+}
+async function renderB01Recipe(ctx, rd, environment, appearance, pinned) {
+  const right = (appearance?.discSide ?? 'right') === 'left', align = right ? 'right' : 'left', name = String(rd.moldName ?? '').toUpperCase();
+  const nameWidth = px => { ctx.font = `800 ${px}px ${DISPLAY}`; return ctx.measureText(name).width; };
+  const solved = solveB01(pinned, nameWidth), g = right ? mirrorB01(solved.geometry) : solved.geometry, { plate, disc } = g;
+  scrimH(ctx, g.scrim.x, g.scrim.y, g.scrim.w, g.scrim.h, right, appearance);
+  if (appearance?.frame) drawFrame(ctx, g.scrim.x, g.scrim.y, g.scrim.w, g.scrim.h);
+  ctx.fillStyle = appearance?.accentColor ?? ACID;
+  ctx.fillRect(right ? plate.x + plate.w - 6 : plate.x, plate.y, 6, plate.h);
+  await drawHeroDisc(environment, ctx, rd.photoSrc, disc.cx, disc.cy, disc.d, { rim: 'rgba(255,255,255,0.9)', rimWidth: 8 });
+  // The name was fitted to its lane by the solver; the lane is also the canvas guard, as in the fixed card.
+  drawPresetName(ctx, rd.moldName, g.name.x, g.name.y, g.name.lane, g.name.px, align);
+  const pw = plasticLine(rd);
+  if (pw) drawQuietLine(ctx, pw, g.plastic.x, g.plastic.y, 34, align, g.name.lane);
+  drawAppearanceTiles(ctx, flightTiles(rd), g.tiles.x, g.tiles.y, g.tiles.size, g.tiles.gap, Math.round(44 * g.tiles.size / 74), appearance, align);
+  environment.solved = { layout: 'b01', side: right ? 'left' : 'right', ...solved, geometry: g };
+}
+
+// The fixed card's own parts, reported the same way, so its handles sit on it before anything is pinned (drawing unchanged).
+function fixedB01Solved(right) {
+  const P = B01_PARTS, start = Object.fromEntries(Object.keys(P).map(k => [k, P[k].start])), y = 1080 - 48 - 330;
+  const g = { plate: { x: 48, y, w: 620, h: 330 }, disc: { cx: 48 + 620 + 40, cy: y - 60, d: 420 }, name: { x: 84, y: y + 132, px: 104, lane: 400 },
+    plastic: { x: 84, y: y + 182, px: 34 }, tiles: { x: 84, y: y + 212, size: 74, gap: 14 }, scrim: { x: 48, y, w: 760, h: 330 } };
+  return { layout: 'b01', side: right ? 'left' : 'right', values: start, state: Object.fromEntries(Object.keys(P).map(k => [k, 'default'])),
+    derived: { plateH: 330, namePx: 104 }, msgs: [], fixed: true, geometry: right ? mirrorB01(g) : g };
+}
+
 async function renderB01(ctx     , rd              , environment                       , appearance                ) {
+  if (environment?.recipe) return renderB01Recipe(ctx, rd, environment, appearance, environment.recipe);
+  if (environment) environment.solved = fixedB01Solved((appearance?.discSide ?? 'right') === 'left');
   // Card footprint: bottom-left, 620x380.
   const right = (appearance?.discSide ?? 'right') === 'left';
   const cx0 = right ? HW - 48 - 620 : 48, cy0 = HH - 48 - 330, cw = 620, ch = 330;

@@ -1,0 +1,392 @@
+<title>Card Constraint Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a drafting bench. The card frame is the workpiece on the left; the parameter table (pinned vs derived, like a CAD feature tree) sits beside it and drops below on phones. */
+:root {
+  --bench: #e9ece6; --sheet: #f7f8f4; --ink: #1b241f; --ink-2: #4f5d55; --rule: #c8cfc6;
+  --pin: #c8203f; --derived: #4d7a62; --warn: #a86a00; --handle: #ff2d55;
+  --display: "Barlow Semi Condensed", "Arial Narrow", Arial, sans-serif;
+  --body: "Source Sans 3", "Segoe UI", Arial, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bench: #121815; --sheet: #1b2320; --ink: #e5eae5; --ink-2: #a2b0a7; --rule: #33403a; --pin: #ff6680; --derived: #8fc0a2; --warn: #e2a440; color-scheme: dark } }
+:root[data-theme="dark"] { --bench: #121815; --sheet: #1b2320; --ink: #e5eae5; --ink-2: #a2b0a7; --rule: #33403a; --pin: #ff6680; --derived: #8fc0a2; --warn: #e2a440; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bench); color: var(--ink); font: 400 1rem/1.5 var(--body); padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 1.6rem 3rem }
+.wrap { max-width: 1320px; margin: 0 auto; display: grid; gap: 1.2rem }
+h1 { font: 700 clamp(1.9rem, 4vw, 2.6rem)/1.05 var(--display); margin: 0; text-wrap: balance }
+p { margin: 0; max-width: 72ch }
+.eyebrow { font: 600 .75rem/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2) }
+.bench { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 1.2rem; align-items: start }
+@media (max-width: 980px) { .bench { grid-template-columns: 1fr } }
+.stage { min-width: 0; display: grid; gap: .5rem }
+canvas { width: 100%; height: auto; display: block; border: 1px solid var(--rule); touch-action: none; background: #ccd }
+.bar { display: flex; flex-wrap: wrap; gap: .5rem; align-items: center }
+button, select { font: 600 .82rem/1 var(--mono); padding: .55rem .75rem; border: 1.5px solid var(--ink-2); background: var(--sheet); color: var(--ink); cursor: pointer }
+button:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid var(--pin); outline-offset: 2px }
+.tree { background: var(--sheet); border: 1px solid var(--rule); padding: .9rem; display: grid; gap: .7rem; min-width: 0 }
+table { border-collapse: collapse; width: 100%; font-size: .9rem }
+td, th { padding: .38rem .3rem; border-bottom: 1px solid var(--rule); text-align: left; vertical-align: middle }
+th { font: 600 .68rem/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2) }
+td.v { font: 600 .9rem/1 var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap }
+.state { font: 600 .66rem/1 var(--mono); letter-spacing: .05em; text-transform: uppercase; padding: .25rem .4rem; border: 1.5px solid currentColor; white-space: nowrap }
+.state.pinned { color: var(--pin) } .state.derived { color: var(--derived) } .state.default { color: var(--ink-2) }
+td button { padding: .3rem .45rem; font-size: .7rem }
+input[type=number] { width: 4.6rem; font: 600 .85rem var(--mono); padding: .3rem; background: var(--bench); color: var(--ink); border: 1px solid var(--rule) }
+.msgs { display: grid; gap: .35rem }
+.msg { font-size: .88rem; padding: .45rem .6rem; border-left: 4px solid var(--warn); background: var(--bench) }
+.msg.ok { border-color: var(--derived) }
+.legend { display: flex; flex-wrap: wrap; gap: .3rem 1rem; font-size: .85rem; color: var(--ink-2) }
+.legend b { color: var(--handle) }
+textarea { width: 100%; min-height: 8rem; font: 400 .78rem/1.4 var(--mono); background: var(--bench); color: var(--ink); border: 1px solid var(--rule); padding: .5rem }
+</style>
+
+<div class="wrap">
+  <span class="eyebrow">thro · card layout prototype · <span id="layout-name">B01 Hero rail</span></span>
+  <h1>Drag one piece, the card re-forms</h1>
+  <p>Each layout here is rebuilt from parts and rules instead of fixed numbers. Drag a red handle and that value becomes <b>pinned</b>. Everything not pinned is <b>derived</b> from the rules and re-forms around it. The table on the right is the card's recipe. Shown at 100% size on the 1920 × 1080 example scene.</p>
+  <div class="bench">
+    <div class="stage">
+      <div class="bar">
+        <label class="eyebrow" for="layout">Layout</label>
+        <select id="layout"><option value="b01">B01 · Hero rail</option><option value="b04">B04 · Peak mark</option><option value="b05">B05 · Stamp macro</option></select>
+        <label class="eyebrow" for="disc">Disc</label>
+        <select id="disc"><option value="2">MVP Servo · Neutron</option><option value="4">Latitude 64 Anchor · Opto</option><option value="0">Discraft Buzzz SS · Z FLX</option></select>
+        <button id="reset" type="button">Reset to starting values</button>
+        <button id="handles" type="button" aria-pressed="true">Hide handles</button>
+        <label class="eyebrow" for="plate">Plate</label>
+        <select id="plate"><option value="see-through">See-through</option><option value="solid">Solid</option></select>
+        <label class="eyebrow" for="frame-toggle" id="frame-label">Frame</label>
+        <select id="frame-toggle"><option value="off">Off</option><option value="on">On</option></select>
+      </div>
+      <canvas id="frame" width="1920" height="1080" aria-label="Card on the example scene with drag handles"></canvas>
+      <div class="legend" id="legend"></div>
+    </div>
+    <aside class="tree">
+      <span class="eyebrow">Recipe</span>
+      <table><thead><tr><th>Part</th><th>Value</th><th>State</th><th></th></tr></thead><tbody id="rows"></tbody></table>
+      <div class="msgs" id="msgs"></div>
+      <span class="eyebrow">Recipe as text</span>
+      <textarea id="recipe" readonly aria-label="Recipe as JSON"></textarea>
+      <button id="copy" type="button">Copy recipe</button>
+    </aside>
+  </div>
+</div>
+
+<script>
+(() => {
+  const W = 1920, H = 1080;
+  const DISCS = {
+    2: { name: 'Servo', plastic: 'Neutron', flights: [7, 5, -1, 2], src: 'assets/disc2.webp' },
+    4: { name: 'Anchor', plastic: 'Opto', flights: [5, 4, 0, 3], src: 'assets/disc4.webp' },
+    0: { name: 'Buzzz SS', plastic: 'Z FLX', flights: [5, 4, -2, 1], src: 'assets/disc0.webp' },
+  };
+  const COMMON = { margin: 48, pad: 36, gap: 14, accent: '#c8f23d', minTile: 40, maxTile: 120 };
+  const canvas = document.getElementById('frame'), ctx = canvas.getContext('2d'), images = {};
+  const scene = new Image(); scene.src = 'assets/scene.svg'; scene.onload = draw;
+  let layoutKey = 'b01', discKey = '2', showHandles = true, plateMode = 'see-through', frameOn = false, pinned = {}, solved = null;
+  const store = {}; // per-layout pins
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v)), round3 = v => Math.round(v * 1000) / 1000;
+  const rowW = (t, gap = COMMON.gap) => 4 * t + 3 * gap;
+  const NAME_FONT = px => `800 ${px}px "DS Card Sans Condensed", "DejaVu Sans Condensed", sans-serif`;
+  const nameWidth = (text, px) => { ctx.save(); ctx.font = NAME_FONT(px); const w = ctx.measureText(text.toUpperCase()).width; ctx.restore(); return w; };
+  const fitName = (text, maxPx, lane) => { let px = maxPx; while (px > 24 && nameWidth(text, px) > lane) px -= 2; return px; };
+  // Where type may run on a band of rows: from the plate's padding to the disc's
+  // left edge at those rows, kept 24px clear of the rim.
+  function laneRight(plate, disc, top, bottom) {
+    let right = plate.x + plate.w - COMMON.pad, r = disc.d / 2 + 4;
+    for (let y = top; y <= bottom; y += 4) { const dy = y - disc.cy; if (Math.abs(dy) < r) right = Math.min(right, disc.cx - Math.sqrt(r * r - dy * dy) - 24); }
+    return right;
+  }
+  const val = (L, k) => (k in pinned ? pinned[k] : L.defaults[k]);
+  function frameWarnings(s, msgs) {
+    if (s.disc.cy - s.disc.d / 2 < 0) msgs.push(['warn', 'Disc runs off the top of the frame.']);
+    if (s.disc.cx + s.disc.d / 2 > W) msgs.push(['warn', 'Disc runs off the right of the frame.']);
+    if (s.plate.y < H * 0.35) msgs.push(['warn', 'Card now covers more than the bottom two thirds of the shot.']);
+  }
+
+  const LAYOUTS = {
+    // ---------------- B01: name, plastic, tiles stacked; disc rides the plate's top-right corner, tilted 12°.
+    b01: {
+      title: 'B01 Hero rail', ref: '6.6.1: plate 620 × 330, disc 420, tiles 74, name up to 104.',
+      defaults: { plateW: 620, discD: 420, discOX: 40 / 420, discOY: -60 / 420, tile: 74, nameMax: 104 },
+      labels: { plateW: 'Plate width', discD: 'Disc size', discOX: 'Disc overhang (× size)', discOY: 'Disc lift (× size)', tile: 'Number tile', nameMax: 'Largest name size' },
+      legend: [['●', 'disc centre: move it on the plate corner'], ['●', 'disc rim: disc size'], ['▮', 'plate edge: plate width'], ['■', 'last tile: number size'], ['▲', 'name: largest name size']],
+      tilt: 12, frame: true,
+      solve(d, msgs) {
+        const L = this, { margin, pad, gap } = COMMON, plasticPx = 34;
+        let plateW = val(L, 'plateW'), discD = val(L, 'discD'), tile = val(L, 'tile'), namePx = val(L, 'nameMax');
+        let plate, disc, nameY, plasticY, tilesY, plateH, cap;
+        for (let pass = 0; pass < 6; pass++) {
+          cap = namePx * 0.73;
+          plateH = Math.round(pad + cap + 18 + plasticPx + 22 + tile + pad);                       // Rule: the plate hugs its contents.
+          plate = { x: margin, y: H - margin - plateH, w: plateW, h: plateH };
+          disc = { cx: plate.x + plate.w + val(L, 'discOX') * discD, cy: plate.y + val(L, 'discOY') * discD, d: discD }; // Rule: the disc rides the plate's top-right corner.
+          nameY = plate.y + pad + cap; plasticY = nameY + 18 + plasticPx * 0.8; tilesY = plasticY + 22;
+          const nx = plate.x + pad;
+          const fitted = fitName(d.name, val(L, 'nameMax'), laneRight(plate, disc, nameY - cap, nameY) - nx); // Rule: the name fills its lane up to its largest size.
+          const tileLane = laneRight(plate, disc, tilesY, tilesY + tile) - nx;                      // Rule: the four tiles fit their lane.
+          let nextTile = tile, nextPlateW = plateW;
+          if (rowW(tile) > tileLane) {
+            if ('tile' in pinned && !('plateW' in pinned)) nextPlateW = Math.ceil(plateW + rowW(tile) - tileLane);
+            else nextTile = Math.max(COMMON.minTile, Math.floor((tileLane - 3 * gap) / 4));
+          } else if (!('tile' in pinned)) nextTile = Math.min(L.defaults.tile, Math.floor((tileLane - 3 * gap) / 4));
+          const settled = fitted === namePx && nextTile === tile && nextPlateW === plateW;
+          namePx = fitted; tile = nextTile; plateW = nextPlateW; if (settled) break;
+        }
+        if ('tile' in pinned && tile !== pinned.tile) msgs.push(['warn', `Number tile held to ${tile}px: there is no room for ${pinned.tile}px with the plate width pinned at ${plateW}px.`]);
+        if ('tile' in pinned && plateW !== val(L, 'plateW')) msgs.push(['ok', `Plate widened to ${plateW}px to hold ${tile}px tiles.`]);
+        if (namePx < val(L, 'nameMax') && 'nameMax' in pinned) msgs.push(['warn', `Name set at ${namePx}px: ${d.name.toUpperCase()} only fits that size beside the disc.`]);
+        const nx = plate.x + pad;
+        return { plate, disc, namePx, tile, plateW, plateH, name: { x: nx, y: nameY }, plastic: { x: nx, y: plasticY, px: plasticPx }, tiles: { x: nx, y: tilesY, size: tile, gap },
+          shown: { plateW, discD, discOX: val(L, 'discOX'), discOY: val(L, 'discOY'), tile, nameMax: val(L, 'nameMax') }, changed: { plateW: plateW !== L.defaults.plateW, tile: tile !== L.defaults.tile } };
+      },
+      handles(s) { const lastX = s.tiles.x + 3 * (s.tile + COMMON.gap) + s.tile; return [
+        { id: 'disc-centre', x: s.disc.cx, y: s.disc.cy, shape: 'dot' }, { id: 'disc-rim', x: s.disc.cx + s.disc.d / 2, y: s.disc.cy, shape: 'dot' },
+        { id: 'plate-edge', x: s.plate.x + s.plate.w, y: s.plate.y + s.plate.h * 0.62, shape: 'bar' }, { id: 'tile', x: lastX, y: s.tiles.y + s.tile, shape: 'square' },
+        { id: 'name', x: s.name.x, y: s.name.y - s.namePx * 0.73, shape: 'tri' }]; },
+      drag(id, s, dx, dy) {
+        if (id === 'disc-centre') { pinned.discOX = round3((s.disc.cx + dx - (s.plate.x + s.plate.w)) / s.disc.d); pinned.discOY = round3((s.disc.cy + dy - s.plate.y) / s.disc.d); }
+        if (id === 'disc-rim') pinned.discD = clamp(Math.round(s.disc.d + 2 * dx), 160, 700);
+        if (id === 'plate-edge') pinned.plateW = clamp(Math.round(s.plate.w + dx), 360, 1100);
+        if (id === 'tile') pinned.tile = clamp(Math.round(s.tile + dx / 4), COMMON.minTile, COMMON.maxTile);
+        if (id === 'name') pinned.nameMax = clamp(Math.round(s.namePx - dy), 40, 180);
+      },
+      idle: s => `Nothing pinned: starting values. The plate hugs its contents, so it is ${s.plateH}px tall here against 330px in 6.6.1.`,
+    },
+
+    // ---------------- B04: one S-curve with a peak; the disc sits on the peak; numbers under the arc; name along the bottom.
+    b04: {
+      title: 'B04 Peak mark', ref: '6.6.1: plate 620 × 380, disc 280 on the peak at 55%, tiles 62, name up to 88.',
+      defaults: { plateW: 620, discD: 280, peakAt: 0.55, arcRise: 85, tile: 62, nameMax: 88 },
+      labels: { plateW: 'Plate width', discD: 'Disc size', peakAt: 'Peak along plate (× width)', arcRise: 'Arc rise', tile: 'Number tile', nameMax: 'Largest name size' },
+      legend: [['●', 'arc peak: slide it along, raise or lower the arc'], ['●', 'disc rim: disc size'], ['▮', 'plate edge: plate width'], ['■', 'last tile: number size'], ['▲', 'name: largest name size']],
+      tilt: 0, frame: false,
+      solve(d, msgs) {
+        const L = this, { margin, pad, gap } = COMMON, namePad = 44, nameGap = 24, tailGap = 19, peakPad = 82;
+        let plateW = val(L, 'plateW'), tile = val(L, 'tile'), namePx = val(L, 'nameMax'); const discD = val(L, 'discD'), rise = val(L, 'arcRise');
+        let plate, plateH, cap, nameY, tilesY, tailY, peakY, peakX, disc;
+        for (let pass = 0; pass < 6; pass++) {
+          cap = namePx * 0.73;
+          plateH = Math.round(namePad + cap + nameGap + tile + tailGap + rise + peakPad);           // Rule: the plate hugs name, tiles, arc and peak.
+          plate = { x: margin, y: H - margin - plateH, w: plateW, h: plateH };
+          nameY = plate.y + plateH - namePad; tilesY = nameY - cap - nameGap - tile; tailY = tilesY - tailGap; peakY = tailY - rise;
+          peakX = plate.x + plate.w * val(L, 'peakAt');                                            // Rule: the peak sits at its share of the plate width.
+          disc = { cx: peakX, cy: peakY - discD / 2 + 18, d: discD };                                  // Rule: the disc sits on the peak like a ball on a hill.
+          const lane = plateW - 2 * pad;
+          const fitted = fitName(d.name, val(L, 'nameMax'), lane);                                  // Rule: the name gets the full plate width.
+          let nextTile = tile, nextPlateW = plateW;
+          if (rowW(tile) > lane) { if ('tile' in pinned && !('plateW' in pinned)) nextPlateW = Math.ceil(rowW(tile) + 2 * pad); else nextTile = Math.max(COMMON.minTile, Math.floor((lane - 3 * gap) / 4)); }
+          else if (!('tile' in pinned)) nextTile = Math.min(L.defaults.tile, Math.floor((lane - 3 * gap) / 4));
+          const settled = fitted === namePx && nextTile === tile && nextPlateW === plateW;
+          namePx = fitted; tile = nextTile; plateW = nextPlateW; if (settled) break;
+        }
+        if ('tile' in pinned && plateW !== val(L, 'plateW')) msgs.push(['ok', `Plate widened to ${plateW}px to hold ${tile}px tiles.`]);
+        if ('tile' in pinned && tile !== pinned.tile) msgs.push(['warn', `Number tile held to ${tile}px: the plate width is pinned at ${plateW}px.`]);
+        if (namePx < val(L, 'nameMax') && 'nameMax' in pinned) msgs.push(['warn', `Name set at ${namePx}px: ${d.name.toUpperCase()} only fits that size across the plate.`]);
+        if (disc.cy + disc.d / 2 > tilesY - 6) msgs.push(['warn', 'Disc now overlaps the number row: raise the arc or shrink the disc.']);
+        const nx = plate.x + pad;
+        return { plate, disc, namePx, tile, plateW, plateH, name: { x: nx, y: nameY }, tiles: { x: nx, y: tilesY, size: tile, gap },
+          arc: { x0: plate.x + 40, x1: plate.x + plate.w - 30, tailY, peakX, peakY },
+          shown: { plateW, discD, peakAt: val(L, 'peakAt'), arcRise: rise, tile, nameMax: val(L, 'nameMax') }, changed: { plateW: plateW !== L.defaults.plateW, tile: tile !== L.defaults.tile } };
+      },
+      handles(s) { const lastX = s.tiles.x + 3 * (s.tile + COMMON.gap) + s.tile; return [
+        { id: 'peak', x: s.arc.peakX, y: s.arc.peakY, shape: 'dot' }, { id: 'disc-rim', x: s.disc.cx + s.disc.d / 2, y: s.disc.cy, shape: 'dot' },
+        { id: 'plate-edge', x: s.plate.x + s.plate.w, y: s.plate.y + s.plate.h * 0.62, shape: 'bar' }, { id: 'tile', x: lastX, y: s.tiles.y + s.tile, shape: 'square' },
+        { id: 'name', x: s.name.x, y: s.name.y - s.namePx * 0.73, shape: 'tri' }]; },
+      drag(id, s, dx, dy) {
+        if (id === 'peak') { pinned.peakAt = round3(clamp((s.arc.peakX + dx - s.plate.x) / s.plate.w, 0.25, 0.85)); pinned.arcRise = clamp(Math.round(s.arc.tailY - (s.arc.peakY + dy)), 30, 260); }
+        if (id === 'disc-rim') pinned.discD = clamp(Math.round(s.disc.d + 2 * dx), 120, 520);
+        if (id === 'plate-edge') pinned.plateW = clamp(Math.round(s.plate.w + dx), 360, 1100);
+        if (id === 'tile') pinned.tile = clamp(Math.round(s.tile + dx / 4), COMMON.minTile, COMMON.maxTile);
+        if (id === 'name') pinned.nameMax = clamp(Math.round(s.namePx - dy), 40, 180);
+      },
+      idle: s => `Nothing pinned: starting values. Built from name, tiles and arc, the plate is ${s.plateH}px tall against 380px in 6.6.1.`,
+    },
+
+    // ---------------- B05: tiles and zoom coin on top, plastic and name along the bottom; hero disc breaks out right.
+    b05: {
+      title: 'B05 Stamp macro', ref: '6.6.1: plate 600 × 380, disc 340, coin 120, tiles 58, name up to 96.',
+      defaults: { plateW: 600, discD: 340, discOX: 40 / 340, discOY: 130 / 340, tile: 58, coinD: 120, nameMax: 96 },
+      labels: { plateW: 'Plate width', discD: 'Disc size', discOX: 'Disc overhang (× size)', discOY: 'Disc drop (× size)', tile: 'Number tile', coinD: 'Zoom circle', nameMax: 'Largest name size' },
+      legend: [['●', 'disc centre: move the hero'], ['●', 'disc rim: disc size'], ['◍', 'zoom circle rim: circle size'], ['▮', 'plate edge: plate width'], ['■', 'last tile: number size'], ['▲', 'name: largest name size']],
+      tilt: 0, frame: false,
+      solve(d, msgs) {
+        const L = this, { margin, pad } = COMMON, gap = 12, top = 36, coinGap = 24, midGap = 28, plasticPx = 32, plasticGap = 14, namePad = 44;
+        let plateW = val(L, 'plateW'), tile = val(L, 'tile'), coinD = val(L, 'coinD'), namePx = val(L, 'nameMax'); const discD = val(L, 'discD');
+        let plate, plateH, cap, disc, tilesY, coin, plasticY, nameY;
+        for (let pass = 0; pass < 6; pass++) {
+          cap = namePx * 0.73;
+          const topRow = Math.max(tile, coinD - 4);
+          plateH = Math.round(top + topRow + midGap + plasticPx * 0.75 + plasticGap + cap + namePad);   // Rule: the plate hugs the top row, plastic and name.
+          plate = { x: margin, y: H - margin - plateH, w: plateW, h: plateH };
+          disc = { cx: plate.x + plate.w + val(L, 'discOX') * discD, cy: plate.y + val(L, 'discOY') * discD, d: discD };
+          const nx = plate.x + pad; tilesY = plate.y + top;
+          coin = { cx: nx + rowW(tile, gap) + coinGap + coinD / 2, cy: tilesY - 4 + coinD / 2, d: coinD };   // Rule: the zoom circle sits just after the tiles.
+          nameY = plate.y + plateH - namePad; plasticY = nameY - cap - plasticGap;
+          const rowLane = laneRight(plate, disc, coin.cy - coinD / 2, coin.cy + coinD / 2) - nx;   // Rule: tiles + circle stay clear of the hero.
+          const need = rowW(tile, gap) + coinGap + coinD;
+          let nextTile = tile, nextCoin = coinD, nextPlateW = plateW;
+          if (need > rowLane) {                                                                     // Too tight: give up circle first (down to 72px), then tile, unless pinned.
+            let over = need - rowLane;
+            if (('tile' in pinned || 'coinD' in pinned) && !('plateW' in pinned)) nextPlateW = Math.ceil(plateW + over);
+            else {
+              if (!('coinD' in pinned)) { nextCoin = Math.max(72, Math.floor(coinD - over)); over -= coinD - nextCoin; }
+              if (over > 0 && !('tile' in pinned)) nextTile = Math.max(COMMON.minTile, tile - Math.ceil(over / 4));
+            }
+          } else {                                                                                   // Room to spare: grow tile back first, then the circle, up to their starting sizes.
+            let spare = Math.floor(rowLane - need);
+            if (!('tile' in pinned)) { nextTile = Math.min(L.defaults.tile, tile + Math.floor(spare / 4)); spare -= 4 * (nextTile - tile); }
+            if (!('coinD' in pinned)) nextCoin = Math.min(L.defaults.coinD, coinD + spare);
+          }
+          const nameLane = Math.min(plateW - 2 * pad - 80, laneRight(plate, disc, nameY - cap, nameY) - nx); // Rule: the name runs along the bottom, clear of the hero.
+          const fitted = fitName(d.name, val(L, 'nameMax'), nameLane);
+          const settled = fitted === namePx && nextTile === tile && nextCoin === coinD && nextPlateW === plateW;
+          namePx = fitted; tile = nextTile; coinD = nextCoin; plateW = nextPlateW; if (settled) break;
+        }
+        { const nx0 = plate.x + pad, lane = laneRight(plate, disc, coin.cy - coin.d / 2, coin.cy + coin.d / 2) - nx0, over = Math.ceil(rowW(tile, gap) + coinGap + coin.d - lane);
+          if (over > 0) msgs.push(['warn', `Numbers and zoom circle run ${over}px into the disc's 24px clearance: widen the plate or move the disc right.`]); }
+        if (('tile' in pinned || 'coinD' in pinned) && plateW !== val(L, 'plateW')) msgs.push(['ok', `Plate widened to ${plateW}px to hold the tiles and the zoom circle.`]);
+        if (!('coinD' in pinned) && coinD < L.defaults.coinD) msgs.push(['ok', `Zoom circle shrank to ${coinD}px (6.6.1 draws ${L.defaults.coinD}px) to make room beside the disc, which keeps 24px of clearance.`]);
+        if (!('tile' in pinned) && tile < L.defaults.tile) msgs.push(['ok', `Number tile shrank to ${tile}px (6.6.1 draws ${L.defaults.tile}px) to make room beside the disc.`]);
+        if ('tile' in pinned && tile !== pinned.tile) msgs.push(['warn', `Number tile held to ${tile}px: no room beside the zoom circle.`]);
+        if (namePx < val(L, 'nameMax') && 'nameMax' in pinned) msgs.push(['warn', `Name set at ${namePx}px: ${d.name.toUpperCase()} only fits that size.`]);
+        const nx = plate.x + pad;
+        return { plate, disc, namePx, tile, plateW, plateH, coin, name: { x: nx, y: nameY }, plastic: { x: nx, y: plasticY, px: plasticPx }, tiles: { x: nx, y: tilesY, size: tile, gap },
+          shown: { plateW, discD, discOX: val(L, 'discOX'), discOY: val(L, 'discOY'), tile, coinD, nameMax: val(L, 'nameMax') }, changed: { plateW: plateW !== L.defaults.plateW, tile: tile !== L.defaults.tile, coinD: coinD !== L.defaults.coinD } };
+      },
+      handles(s) { const lastX = s.tiles.x + 3 * (s.tile + s.tiles.gap) + s.tile; return [
+        { id: 'disc-centre', x: s.disc.cx, y: s.disc.cy, shape: 'dot' }, { id: 'disc-rim', x: s.disc.cx + s.disc.d / 2, y: s.disc.cy, shape: 'dot' },
+        { id: 'coin-rim', x: s.coin.cx, y: s.coin.cy + s.coin.d / 2, shape: 'dot' },
+        { id: 'plate-edge', x: s.plate.x + s.plate.w, y: s.plate.y + s.plate.h * 0.62, shape: 'bar' }, { id: 'tile', x: lastX, y: s.tiles.y + s.tile, shape: 'square' },
+        { id: 'name', x: s.name.x, y: s.name.y - s.namePx * 0.73, shape: 'tri' }]; },
+      drag(id, s, dx, dy) {
+        if (id === 'disc-centre') { pinned.discOX = round3((s.disc.cx + dx - (s.plate.x + s.plate.w)) / s.disc.d); pinned.discOY = round3((s.disc.cy + dy - s.plate.y) / s.disc.d); }
+        if (id === 'disc-rim') pinned.discD = clamp(Math.round(s.disc.d + 2 * dx), 160, 700);
+        if (id === 'coin-rim') pinned.coinD = clamp(Math.round(s.coin.d + 2 * dy), 72, 220);
+        if (id === 'plate-edge') pinned.plateW = clamp(Math.round(s.plate.w + dx), 360, 1100);
+        if (id === 'tile') pinned.tile = clamp(Math.round(s.tile + dx / 4), COMMON.minTile, COMMON.maxTile);
+        if (id === 'name') pinned.nameMax = clamp(Math.round(s.namePx - dy), 40, 180);
+      },
+      idle: s => `Nothing pinned: starting values. Built from its rows, the plate is ${s.plateH}px tall against 380px in 6.6.1; the extra empty band is gone.`,
+    },
+  };
+
+  function img(src) { if (!images[src]) { const i = new Image(); i.src = src; i.onload = draw; images[src] = i; } return images[src]; }
+  function roundRect(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function photoCircle(src, c, tilt, rim, rimW, macro) {
+    const photo = img(src);
+    ctx.save(); ctx.translate(c.cx, c.cy); if (tilt) ctx.rotate(tilt * Math.PI / 180);
+    ctx.beginPath(); ctx.arc(0, 0, c.d / 2, 0, Math.PI * 2); ctx.save(); ctx.clip();
+    if (photo.complete && photo.naturalWidth) {
+      if (macro) { const iw = photo.naturalWidth, ih = photo.naturalHeight, sz = Math.min(iw, ih) / 2.6, sx = clamp(0.62 * iw - sz / 2, 0, iw - sz), sy = clamp(0.38 * ih - sz / 2, 0, ih - sz); ctx.drawImage(photo, sx, sy, sz, sz, -c.d / 2, -c.d / 2, c.d, c.d); }
+      else ctx.drawImage(photo, -c.d / 2, -c.d / 2, c.d, c.d);
+    } else { ctx.fillStyle = '#1d2b25'; ctx.fill(); }
+    ctx.restore(); ctx.strokeStyle = rim; ctx.lineWidth = rimW; ctx.stroke(); ctx.restore();
+  }
+  function tilesRow(t, nums) {
+    for (let i = 0; i < 4; i++) {
+      const x = t.x + i * (t.size + t.gap);
+      ctx.fillStyle = '#202623'; roundRect(x, t.y, t.size, t.size, 10); ctx.fill();
+      ctx.fillStyle = COMMON.accent; ctx.textAlign = 'center'; ctx.font = `600 ${Math.round(t.size * 0.6)}px "DS Card Sans", "DejaVu Sans", sans-serif`;
+      ctx.fillText(String(nums[i]), x + t.size / 2, t.y + t.size * 0.72);
+    }
+    ctx.textAlign = 'left';
+  }
+  function solve() { const L = LAYOUTS[layoutKey], msgs = []; const s = L.solve(DISCS[discKey], msgs); frameWarnings(s, msgs); s.msgs = msgs; solved = s; return s; }
+
+  function draw() {
+    const L = LAYOUTS[layoutKey], s = solve(), d = DISCS[discKey];
+    ctx.clearRect(0, 0, W, H);
+    if (scene.complete && scene.naturalWidth) ctx.drawImage(scene, 0, 0, W, H);
+    const { plate } = s;
+    ctx.fillStyle = plateMode === 'solid' ? '#050706' : 'rgba(5,7,6,0.82)'; ctx.fillRect(plate.x, plate.y, plate.w, plate.h);
+    if (L.frame && frameOn) { ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 2; ctx.strokeRect(plate.x, plate.y, plate.w, plate.h); }
+    if (layoutKey === 'b01') { ctx.fillStyle = COMMON.accent; ctx.fillRect(plate.x, plate.y, 6, plate.h); }
+    if (layoutKey === 'b04') {
+      const a = s.arc; ctx.strokeStyle = COMMON.accent; ctx.lineWidth = 7; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(a.x0, a.tailY);
+      ctx.quadraticCurveTo(plate.x + plate.w * 0.30, a.tailY + 10, a.peakX, a.peakY); ctx.quadraticCurveTo(plate.x + plate.w * 0.78, a.peakY + 30, a.x1, a.tailY); ctx.stroke(); ctx.lineCap = 'butt';
+    }
+    photoCircle(d.src, s.disc, L.tilt, 'rgba(255,255,255,0.9)', layoutKey === 'b04' ? 7 : 8);
+    if (s.coin) photoCircle(d.src, s.coin, 0, COMMON.accent, 5, true);
+    ctx.fillStyle = '#fff'; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.font = NAME_FONT(s.namePx); ctx.fillText(d.name.toUpperCase(), s.name.x, s.name.y);
+    if (s.plastic) { ctx.font = `500 ${s.plastic.px}px "DS Card Sans", "DejaVu Sans", sans-serif`; ctx.fillStyle = 'rgba(255,255,255,0.78)'; ctx.fillText(d.plastic, s.plastic.x, s.plastic.y); }
+    tilesRow(s.tiles, d.flights);
+    if (showHandles) for (const h of L.handles(s)) drawHandle(h);
+    renderTree();
+  }
+  function drawHandle(h) {
+    ctx.save(); ctx.fillStyle = '#ff2d55'; ctx.strokeStyle = '#fff'; ctx.lineWidth = 4; ctx.beginPath();
+    if (h.shape === 'dot') ctx.arc(h.x, h.y, 16, 0, Math.PI * 2);
+    else if (h.shape === 'bar') ctx.rect(h.x - 9, h.y - 34, 18, 68);
+    else if (h.shape === 'square') ctx.rect(h.x - 14, h.y - 14, 28, 28);
+    else { ctx.moveTo(h.x, h.y - 30); ctx.lineTo(h.x + 22, h.y + 6); ctx.lineTo(h.x - 22, h.y + 6); ctx.closePath(); }
+    ctx.fill(); ctx.stroke(); ctx.restore();
+  }
+
+  // Dragging a handle pins exactly the values it controls.
+  let drag = null;
+  const toFrame = e => { const r = canvas.getBoundingClientRect(); return { x: (e.clientX - r.left) * W / r.width, y: (e.clientY - r.top) * H / r.height }; };
+  canvas.addEventListener('pointerdown', e => {
+    if (!showHandles) return; const p = toFrame(e);
+    const hit = LAYOUTS[layoutKey].handles(solved).map(h => ({ h, d: Math.hypot(h.x - p.x, h.y - p.y) })).filter(o => o.d < 46).sort((a, b) => a.d - b.d)[0];
+    if (!hit) return; canvas.setPointerCapture(e.pointerId); drag = { id: hit.h.id, start: p, s: JSON.parse(JSON.stringify(solved)) };
+  });
+  canvas.addEventListener('pointermove', e => {
+    const p = toFrame(e); canvas.style.cursor = showHandles && LAYOUTS[layoutKey].handles(solved).some(h => Math.hypot(h.x - p.x, h.y - p.y) < 46) ? 'grab' : 'default';
+    if (!drag) return; LAYOUTS[layoutKey].drag(drag.id, drag.s, p.x - drag.start.x, p.y - drag.start.y); draw();
+  });
+  const end = () => { drag = null; save(); };
+  canvas.addEventListener('pointerup', end); canvas.addEventListener('pointercancel', end);
+
+  function renderTree() {
+    const L = LAYOUTS[layoutKey], s = solved, rows = document.getElementById('rows');
+    const html = Object.keys(L.labels).map(k => {
+      const isPin = k in pinned, state = isPin ? 'pinned' : s.changed[k] ? 'derived' : 'default';
+      const v = s.shown[k], text = Number.isInteger(v) ? `${v}px` : v.toFixed(3);
+      return `<tr><td>${L.labels[k]}</td><td class="v">${text}</td><td><span class="state ${state}">${state}</span></td><td>${isPin ? `<button type="button" data-unpin="${k}">Unpin</button>` : ''}</td></tr>`;
+    }).join('') + `<tr><td>Plate height</td><td class="v">${s.plateH}px</td><td><span class="state derived">derived</span></td><td></td></tr>`
+      + `<tr><td>Name size</td><td class="v">${s.namePx}px</td><td><span class="state derived">derived</span></td><td></td></tr>`;
+    rows.innerHTML = html;
+    rows.querySelectorAll('[data-unpin]').forEach(b => b.onclick = () => { delete pinned[b.dataset.unpin]; save(); draw(); });
+    document.getElementById('msgs').innerHTML = [...(s.msgs.length ? s.msgs : [['ok', Object.keys(pinned).length ? 'All rules hold.' : L.idle(s)]]), ['ref', L.ref]]
+      .map(([k, t]) => `<div class="msg ${k === 'ok' ? 'ok' : ''}">${k === 'ref' ? '<b>For comparison</b> · ' : ''}${t}</div>`).join('');
+    const derived = { plateWidth: s.plateW, plateHeight: s.plateH, nameSize: s.namePx, tile: s.tile }; if (s.coin) derived.zoomCircle = s.coin.d;
+    document.getElementById('recipe').value = JSON.stringify({ layout: layoutKey, disc: DISCS[discKey].name, plate: plateMode, ...(L.frame ? { frame: frameOn } : {}), pinned, derived }, null, 1);
+  }
+  function chrome() {
+    const L = LAYOUTS[layoutKey];
+    document.getElementById('layout-name').textContent = L.title;
+    document.getElementById('legend').innerHTML = L.legend.map(([m, t]) => `<span><b>${m}</b> ${t}</span>`).join('');
+    document.getElementById('frame-toggle').hidden = document.getElementById('frame-label').hidden = !L.frame;
+    canvas.setAttribute('aria-label', `${L.title} card on the example scene with drag handles`);
+  }
+
+  const KEY = 'thro-card-lab-v2';
+  function save() { store[layoutKey] = pinned; try { localStorage.setItem(KEY, JSON.stringify({ store, layoutKey, discKey, plateMode, frameOn })); } catch {} }
+  try {
+    const st = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if (st) { Object.assign(store, st.store || {}); layoutKey = st.layoutKey || 'b01'; discKey = st.discKey || '2'; plateMode = st.plateMode || 'see-through'; frameOn = !!st.frameOn; }
+    else { const old = JSON.parse(localStorage.getItem('thro-b01-lab-v1') || 'null'); if (old) { store.b01 = old.pinned || {}; discKey = old.discKey || '2'; } }
+  } catch {}
+  if (!LAYOUTS[layoutKey]) layoutKey = 'b01';
+  pinned = store[layoutKey] || {};
+  const $ = id => document.getElementById(id);
+  $('layout').value = layoutKey; $('disc').value = discKey; $('plate').value = plateMode; $('frame-toggle').value = frameOn ? 'on' : 'off';
+  $('layout').onchange = e => { store[layoutKey] = pinned; layoutKey = e.target.value; pinned = store[layoutKey] || {}; chrome(); save(); draw(); };
+  $('disc').onchange = e => { discKey = e.target.value; save(); draw(); };
+  $('plate').onchange = e => { plateMode = e.target.value; save(); draw(); };
+  $('frame-toggle').onchange = e => { frameOn = e.target.value === 'on'; save(); draw(); };
+  $('reset').onclick = () => { pinned = {}; save(); draw(); };
+  $('handles').onclick = e => { showHandles = !showHandles; e.target.setAttribute('aria-pressed', String(showHandles)); e.target.textContent = showHandles ? 'Hide handles' : 'Show handles'; draw(); };
+  $('copy').onclick = e => { const t = $('recipe'); try { navigator.clipboard.writeText(t.value).then(() => e.target.textContent = 'Copied', () => { t.select(); e.target.textContent = 'Selected, press Ctrl+C'; }); } catch { t.select(); } };
+  window.__lab = { set(k) { $('layout').value = k; $('layout').onchange({ target: $('layout') }); }, solved: () => solved, LAYOUTS, pin(p) { Object.assign(pinned, p); draw(); } };
+
+  const faces = [['DS Card Sans', 'assets/DejaVuSans.woff2', '100 550'], ['DS Card Sans', 'assets/DejaVuSans-Bold.woff2', '551 1000'], ['DS Card Sans Condensed', 'assets/DejaVuSansCondensed-Bold.woff2', '100 1000']];
+  chrome();
+  Promise.all(faces.map(([f, u, w]) => new FontFace(f, `url(${u})`, { weight: w }).load().then(face => document.fonts.add(face)))).catch(() => {}).finally(draw);
+  draw();
+})();
+</script>

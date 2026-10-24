@@ -5,7 +5,7 @@ import { Part } from './studio/part-first-kernel/src/pxc.mjs';
 import { calculations, allCardStudies } from './graphics.mjs';
 import { competitionCalculations } from './competition.mjs';
 import { validateBattleRule } from './renderer/src/constraints.js';
-import { nativeBuild, isNativeStudy, nativeCardRequest, nativeStudy } from './native-cards.mjs';
+import { nativeBuild, isNativeStudy, nativeCardRequest, nativeStudy, partsLayout, validParts } from './native-cards.mjs';
 import { openLockedArchive } from './locked-storage.mjs';
 import { createWorkspaceCodec } from './archive-codec.mjs';
 import { pack, unpack } from './archive-storage.mjs';
@@ -55,6 +55,7 @@ async function validateWorld(raw, renderGraphic) {
     if (Object.hasOwn(item, 'nativePlate')) require(validPlate(item.nativePlate), 'Unsupported native plate.');
     if (Object.hasOwn(item, 'nativeNudge')) require(validNudge(item.nativeNudge), 'Unsupported native nudge.');
     if (Object.hasOwn(item, 'nativeRevision')) require(isNativeStudy(item.study) && validRevision(nativeStudy(item.study).preset, item.nativeRevision), 'Unsupported card revision.');
+    if (Object.hasOwn(item, 'nativeParts')) require(isNativeStudy(item.study) && partsLayout(item) === nativeStudy(item.study).preset && validParts(item.nativeParts, nativeStudy(item.study).preset) && Object.keys(item.nativeParts).length > 0, 'Unsupported card parts.');
   };
   require(shelf.length > 0 && new Set(shelf.map(row => row.disc.id)).size === shelf.length, 'A prepared shelf needs distinct physical copies.');
   for (const row of shelf) disc(row.address);
@@ -91,12 +92,12 @@ async function validateWorld(raw, renderGraphic) {
       if (isNativeStudy(capture.design.study)) {
         const provenance = capture.graphic.provenance;
         const request = nativeCardRequest({ disc: specimen, resolved, design: capture.design });
-        require(exactKeys(provenance, ['schema', 'renderer', 'rendererBuild', 'preset', 'physicalDiscId', 'discAddress', 'designAddress', 'resolvedAddress', 'preparedPhotoSha256', 'appearance', 'placement', 'rasterOnly', ...(request.nudge ? ['nudge'] : []), ...(request.revision !== undefined ? ['revision'] : [])])
+        require(exactKeys(provenance, ['schema', 'renderer', 'rendererBuild', 'preset', 'physicalDiscId', 'discAddress', 'designAddress', 'resolvedAddress', 'preparedPhotoSha256', 'appearance', 'placement', 'rasterOnly', ...(request.nudge ? ['nudge'] : []), ...(request.revision !== undefined ? ['revision'] : []), ...(request.parts ? ['parts'] : [])])
           && provenance.schema === 'thro-native-card@1' && provenance.renderer === 'discstudio-cards' && provenance.rasterOnly === true
           && provenance.preset === request.preset && provenance.rendererBuild === nativeBuild && provenance.discAddress === source.disc && provenance.physicalDiscId === specimen.id
           && provenance.designAddress === source.design && same(value(provenance.resolvedAddress), resolved), 'Native capture provenance is not bound to its owning version.');
         // provenance.nudge is what the design asked for; provenance.placement is where the adapter's clamp put the card.
-        require(same(provenance.appearance, request.appearance) && same(provenance.nudge, request.nudge) && provenance.revision === request.revision && exactKeys(provenance.placement, ['scale', 'dx', 'dy']) && provenance.placement.scale === request.scale
+        require(same(provenance.appearance, request.appearance) && same(provenance.nudge, request.nudge) && provenance.revision === request.revision && same(provenance.parts, request.parts) && exactKeys(provenance.placement, ['scale', 'dx', 'dy']) && provenance.placement.scale === request.scale
           && [provenance.placement.dx, provenance.placement.dy].every(value => Number.isFinite(value) && Math.abs(value) <= 1), 'Native capture treatment differs from its retained design.');
         const photo = Uint8Array.from(atob(specimen.depiction.src.split(',')[1]), value => value.charCodeAt(0));
         require(provenance.preparedPhotoSha256 === await digestBytes(photo), 'Native capture prepared-photo identity differs from its retained bytes.');

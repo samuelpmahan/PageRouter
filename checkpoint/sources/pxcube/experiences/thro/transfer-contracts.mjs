@@ -12,6 +12,10 @@ export const EDIT_PROFILE = 'thro-prepared-workspace@1';
 export const LEGACY_V1_PROFILE = 'thro-delivered-workspace-v1@1';
 // thro-card-appearance@1: a native design or card uses a solid plate or a nudge. The same renderer build id is
 // not enough: an older adapter recognises that build but ignores both fields, so content declares the semantics.
+// thro-card-parts@1/<preset>: a native design or card with parts pinned by its handles (B01 revision 2 only, so far).
+// A consumer without it cannot draw the card the person made, so it must refuse rather than draw the default.
+export const partsCapability = preset => `thro-card-parts@1/${preset}`;
+export const partsPresets = Object.freeze(['b01']);
 export const capabilities = Object.freeze(['parts-archive@1', 'prepared-disc@1', 'versioned-bags@1', 'studio-single-svg@1', 'studio-lineup-svg@1', 'discstudio-card-png@1', 'export-record@1', 'thro-card-appearance@1']);
 export const NUDGE_LIMIT = 1920;
 /** Plate and nudge as retained: omitted means the old defaults; a supplied value must be exact, never normalised. */
@@ -26,7 +30,8 @@ export const usesCardAppearance = design => design?.nativePlate === 'solid' || B
 export const calculationNames = new Set(`fn.addReference fn.addToShelf fn.createBag fn.find fn.paintRecipe fn.read fn.renderDepiction fn.renderPainting fn.selectPainting fn.shelfQuery fn.shelfRows fn.tick oc.create oc.destroy oc.update fn.studio.canvasDesign fn.studio.canvasFields fn.studio.canvasFrame fn.studio.canvasScene fn.studio.capture fn.studio.card fn.studio.cardPreset fn.studio.cardPreview fn.studio.cardTokens fn.studio.compositionDefinition fn.studio.compositionFields fn.studio.compositionLayers fn.studio.cornerMetadata fn.studio.cornerStudy fn.studio.cornerTypography fn.studio.exportRecord fn.studio.frame fn.studio.graphic fn.studio.graphicArt fn.studio.graphicDesign fn.studio.graphicFields fn.studio.layeredCompositionDefinition fn.studio.layeredCompositionPreview fn.studio.layeredCompositionScene fn.studio.moldHeading fn.studio.reorderSelection fn.studio.scene fn.studio.svgDigest fn.studio.unlabelledArt fn.studio.unlabelledCard fn.studio.competitionAppearance fn.studio.competitionCapture fn.studio.competitionDesign fn.studio.competitionDraft fn.studio.competitionEdit fn.studio.competitionFields fn.studio.competitionPreset fn.studio.competitionPresetPanel fn.studio.competitionScene fn.studio.competitionTreatment fn.studio.competitionTreatmentPanel fn.battle.entry fn.battle.standings`.split(' '));
 const presets = ['u01', 'u02', 'u03-front', 'u03-behind', 'u04', 'u05', 'b01', 'b02', 'b03', 'b04', 'b05'];
 export const supportsCapability = item => capabilities.includes(item) || presets.some(preset => item === `discstudio-recipe@28ac2b39fab85255/${preset}`)
-  || Object.entries(revisedPresets).some(([preset, revision]) => item === revisionCapability(preset, revision));
+  || Object.entries(revisedPresets).some(([preset, revision]) => item === revisionCapability(preset, revision))
+  || partsPresets.some(preset => item === partsCapability(preset));
 // v1 did not declare its data ABI. Only this verified delivered producer has
 // an explicit historical profile mapping; this is not proof of authorship.
 export const supportsLegacyProducer = value => value.sourceId === 'efb93ae994ed5316e946302a6cdba1bb64669223ed3a953cbb468226f9da8911'

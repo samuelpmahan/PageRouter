@@ -290,6 +290,7 @@ function cardFeatures(r, prefix = '', label = '', photo = null) {
   return f;
 }
 /** A recipe's definition: its features in order, each { key, label, value }. Two recipes with the same definition are the same card. */
+const PART_NAMES = { plateW: ['plate width', 'px'], discD: ['disc size', 'px'], discOX: ['disc overhang', ''], discOY: ['disc lift', ''], tile: ['number tile', 'px'], nameMax: ['largest name size', 'px'] };
 export function recipeDefinition(recipe, photos = []) {
   if (!recipe) return [];
   if (recipe.cards) return [
@@ -306,6 +307,9 @@ export function recipeDefinition(recipe, photos = []) {
     { key: 'size', label: 'size', value: recipe.scale === undefined ? undefined : `${Math.round(recipe.scale * 100)}%` },
     { key: 'position', label: 'position', value: recipe.nudge ? `${num(recipe.nudge.x)}, ${num(recipe.nudge.y)}` : 'as laid out' },
     { key: 'drawing', label: 'drawing', value: `revision ${recipe.revision ?? 1}` },
+    // Parts pinned with the card's handles (card-parts.mjs); a part not pinned follows the rules.
+    ...(recipe.parts ? Object.entries(PART_NAMES).map(([k, [label, unit]]) => ({ key: `part.${k}`, label,
+      value: Object.hasOwn(recipe.parts, k) ? `${unit ? Math.round(recipe.parts[k]) + ' ' + unit : recipe.parts[k].toFixed(2)} pinned` : 'by the rules' })) : []),
   ].filter(x => x.value !== undefined);
 }
 /** What changed between two definitions, feature by feature (same change on every card is said once). */
@@ -321,6 +325,7 @@ export function definitionChanges(before, after) {
   for (const key of new Set([...a.keys(), ...b.keys()])) {
     const x = a.get(key), y = b.get(key);
     if (x?.value === y?.value) continue;
+    if (key.startsWith('part.') && (x?.value ?? 'by the rules') === (y?.value ?? 'by the rules')) continue; // a part that follows the rules either way
     if (key === 'discs' && x && y && x.value.split(', ').length === y.value.split(', ').length) continue; // each card says its own disc
     if (layoutChanged && y?.follows === 'layout' && !/^card\d+\./.test(key)) { withLayout.push(`${y.label} ${y.value}`); continue; } // came with the new layout
     const m = /^card(\d+)\.(.+)$/.exec(key), feature = m ? (x ?? y).label.replace(/^card \d+ /, '') : (x ?? y).label;

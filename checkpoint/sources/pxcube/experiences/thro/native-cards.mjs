@@ -56,10 +56,21 @@ export function nativeDesign(previous, study) {
     // Plate carries across layouts like the accent; a nudge belongs to one layout's geometry.
     nativePlate: wasNative ? previous.nativePlate ?? 'see-through' : 'see-through',
     nativeNudge: same && previous.nativeNudge ? { ...previous.nativeNudge } : { x: 0, y: 0 } };
-  delete design.nativeRevision;
+  delete design.nativeRevision; delete design.nativeParts; // pinned parts, like a nudge, belong to one layout's geometry
+  if (same && previous.nativeParts && Object.keys(previous.nativeParts).length) design.nativeParts = { ...previous.nativeParts };
   const revision = same ? previous.nativeRevision : latestCardRevision(study);
   if (revision !== undefined) design.nativeRevision = revision;
   return design;
+}
+// Parts of a card a person has pinned with its handles (the first Constraint Lab, in the renderer): only B01 at revision 2 is
+// drawn from parts and rules so far. The ranges are the renderer's own (B01_PARTS in thro-card-core-r2.js).
+export const cardParts = Object.freeze({ b01: Object.freeze({
+  plateW: [360, 1100], discD: [160, 700], discOX: [-0.6, 0.6], discOY: [-0.8, 0.45], tile: [40, 120], nameMax: [40, 180] }) });
+export const partsLayout = design => (isNativeStudy(design?.study) && cardParts[nativeStudy(design.study).preset] && design.nativeRevision === cardRevisions[nativeStudy(design.study).preset] ? nativeStudy(design.study).preset : null);
+export function validParts(parts, preset) {
+  const ranges = cardParts[preset];
+  if (!ranges || !parts || typeof parts !== 'object' || Array.isArray(parts)) return false;
+  return Object.entries(parts).every(([k, v]) => ranges[k] && Number.isFinite(v) && v >= ranges[k][0] && v <= ranges[k][1]);
 }
 const nudgeLimit = 1920;
 export const validNudge = nudge => nudge && Number.isFinite(nudge.x) && Number.isFinite(nudge.y) && Math.abs(nudge.x) <= nudgeLimit && Math.abs(nudge.y) <= nudgeLimit;
@@ -79,6 +90,12 @@ export function nativeControlDesign(previous, controls) {
     if (controls.nudge !== undefined) design.nativeNudge = validNudge(controls.nudge) ? { x: Math.round(controls.nudge.x), y: Math.round(controls.nudge.y) } : { x: 0, y: 0 };
     // Moving a saved design to the fixed card is always an explicit choice.
     if (controls.revision !== undefined && controls.revision === cardRevisions[nativeStudy(controls.study).preset]) design.nativeRevision = controls.revision;
+    // A handle pins parts; { parts: {} } lets them all go back to their rules.
+    if (controls.parts !== undefined) {
+      const preset = partsLayout(design);
+      if (preset && validParts(controls.parts, preset) && Object.keys(controls.parts).length) design.nativeParts = { ...controls.parts };
+      else delete design.nativeParts;
+    }
   }
   return design;
 }
@@ -111,6 +128,8 @@ export function nativeCardRecipe({ disc, resolved, design }) {
   if (design.nativePlate === 'solid') appearance.plate = 'solid';
   const revision = design.nativeRevision;
   if (revision !== undefined && revision !== cardRevisions[selected.preset]) throw Error('This card revision is not available for its layout.');
+  const parts = design.nativeParts && Object.keys(design.nativeParts).length ? design.nativeParts : null;
+  if (parts && (partsLayout(design) !== selected.preset || !validParts(parts, selected.preset))) throw Error('These card parts are not available for this layout.');
   return {
     disc: { id: disc.id, mold: disc.mold, name: resolved.name, manufacturer: resolved.manufacturer, plastic: disc.plastic ?? null, weight: disc.weight ?? null },
     flights: ['speed', 'glide', 'turn', 'fade'].map(field => resolved[field] ?? null),
@@ -118,6 +137,8 @@ export function nativeCardRecipe({ disc, resolved, design }) {
     // The card keeps its own corner anchor; a nudge moves it from there (canvas pixels).
     ...(nudge.x || nudge.y ? { nudge: { x: nudge.x, y: nudge.y } } : {}),
     ...(revision !== undefined ? { revision } : {}),
+    // Parts the person pinned; the renderer derives the rest. Sorted, so the same pins are the same recipe.
+    ...(parts ? { parts: Object.fromEntries(Object.keys(parts).sort().map(k => [k, parts[k]])) } : {}),
   };
 }
 /** The renderer's request: the recipe plus the retained prepared photo. */
@@ -202,6 +223,7 @@ export function createNativeRenderer(renderCard = async request => {
       // the nudge the design asked for, kept apart from the placement the adapter's clamp produced
       ...(request.nudge ? { nudge: { ...request.nudge } } : {}),
       ...(request.revision !== undefined ? { revision: request.revision } : {}),
+      ...(request.parts ? { parts: { ...request.parts } } : {}),
     } };
   };
   // Bag: each entry is the exact request its Single card would make, set in one frame.
