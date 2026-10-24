@@ -9,7 +9,7 @@ import { sha256 } from './renderer/src/media.js';
 const prefix='ds.px.studio.demo.';
 export const captureIdentity=capture=>JSON.stringify([capture.source.mount,capture.source.graphic,capture.hash,...(capture.source.queueItem?[capture.source.queueItem]:[])]);
 const frozen=value=>Object.freeze(structuredClone(value));
-const install=pxc=>{for(const [name,fn] of Object.entries({...calculations,...competitionCalculations})) if(!pxc.entries().some(([address])=>address===name))pxc.set(name,new Part(fn));};
+const install=pxc=>{const have=new Set(pxc.entries().map(([address])=>address));for(const [name,fn] of Object.entries({...calculations,...competitionCalculations})) if(!have.has(name))pxc.set(name,new Part(fn));}; // one index, not a scan per calculation
 
 export async function openDemo(storage,{renderGraphic}={}) {
   const known=createExperience(()=>{}); install(known.pxc);
