@@ -243,3 +243,91 @@ test('12. the default clock is the platform clock, and a sync run under runAsync
   const strip = (r) => canonical({ ...r, runId: 0 });
   assert.equal(strip(a.receipt), strip(s.receipt), 'the same receipt apart from its run id');
 });
+
+// ---- found by an independent review of seq 63 (23 Oct 2026), each a regression test before its fix.
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+test('13. a call that fails while interning its output still ends its span, so a parent that catches it is not left waiting', () => {
+  const w = createWorld({ name: 'intern-fail' });
+  w.contract({ id: 'f', in: {}, out: { y: { type: 'any' } } });
+  w.implement({ id: 'f/bad', implements: 'f', run: () => ({ y: { h: () => 1 } }) });
+  w.implement({ id: 'f/good', implements: 'f', run: () => ({ y: 1 }) });
+  w.contract({ id: 'top', in: {}, out: { n: num } });
+  w.implement({ id: 'top/js', implements: 'top', uses: ['f'], run: (_, ctx) => ({ n: ctx.sum('f', {}).length }) });
+  const { outputs, timing } = w.run('top', {});
+  assert.deepEqual(outputs, { n: 2 }, 'as before seq 63: the sum records the failing way and goes on');
+  assert.equal(timing.closes, true);
+  assert.equal(callOf(timing, 'f').error.code, 'NOT_JSON');
+});
+
+test('14. a fault an implementation catches does not end its span', async () => {
+  const clock = manualClock();
+  const w = createWorld({ name: 'caught', clock: clock.now });
+  w.contract({ id: 'a', in: {}, out: { y: num } });
+  w.implement({ id: 'a/js', implements: 'a', run: async (_, ctx) => { try { ctx.at(5); } catch { /* recovered */ } await wait(5); clock.t += 30; return { y: 1 }; } });
+  w.contract({ id: 'top', in: {}, out: { y: num } });
+  w.implement({ id: 'top/js', implements: 'top', uses: ['a'], run: async (_, ctx) => ({ y: (await ctx.callAsync('a', {})).y }) });
+  const { timing } = await w.runAsync('top', {});
+  assert.equal(callOf(timing, 'a').ms, 30, 'the span runs until the call returns, not until the caught fault');
+});
+
+test('15. UNAWAITED_CALL: the run fails, and the child still running afterwards neither crashes nor writes into the frozen record', async () => {
+  const w = createWorld({ name: 'orphan' });
+  w.contract({ id: 'slow', in: {}, out: { y: num } });
+  w.implement({ id: 'slow/js', implements: 'slow', run: async () => { await wait(20); return { y: 1 }; } });
+  w.contract({ id: 'top', in: {}, out: { y: num } });
+  w.implement({ id: 'top/js', implements: 'top', uses: ['slow'], run: (_, ctx) => { ctx.callAsync('slow', {}); return { y: 0 }; } });
+  const unhandled = []; const onUnhandled = (e) => unhandled.push(e);
+  process.on('unhandledRejection', onUnhandled);
+  try {
+    await assert.rejects(w.runAsync('top', {}), (e) => {
+      assert.equal(e.code, 'UNAWAITED_CALL');
+      assert.equal(e.timing.calls.find((c) => c.contract === 'top').error.code, 'UNAWAITED_CALL', 'error.timing names the failure');
+      return true;
+    });
+    await wait(60);
+  } finally { process.off('unhandledRejection', onUnhandled); }
+  assert.deepEqual(unhandled, [], 'no unhandled rejection from the orphan');
+  const failed = w.runs().at(-1);
+  assert.equal(failed.status, 'failed');
+  assert.deepEqual(failed.trace.calls[0].out, {}, 'the frozen record is untouched by the orphan');
+});
+
+test('16. a run that never starts (inputs that are not JSON) uses no run id', () => {
+  const w = createWorld({ name: 'ids' });
+  w.contract({ id: 'k', in: { x: { type: 'any' } }, out: { y: num } });
+  w.implement({ id: 'k/js', implements: 'k', run: () => ({ y: 1 }) });
+  w.run('k', { x: 1 });
+  assert.throws(() => w.run('k', { x: () => 1 }), { code: 'NOT_JSON' });
+  w.run('k', { x: 2 });
+  assert.deepEqual(w.runs().map((r) => r.runId), [1, 2]);
+});
+
+test('17. two unrecorded runAsync at once have different ids, so a Ref from one is a cross-run edge in the other', async () => {
+  const w = createWorld({ name: 'replays' });
+  w.contract({ id: 'slow', in: { x: num }, out: { y: num } });
+  w.implement({ id: 'slow/js', implements: 'slow', run: async ({ x }) => { await wait(5); return { y: x.value }; } });
+  const [p, q] = await Promise.all([w.runAsync('slow', { x: 1 }, { record: false }), w.runAsync('slow', { x: 2 }, { record: false })]);
+  assert.notEqual(p.receipt.runId, q.receipt.runId);
+});
+
+test('18. under runAsync, a synchronous ctx.call to an async implementation says to use ctx.callAsync', async () => {
+  const w = createWorld({ name: 'msg' });
+  w.contract({ id: 'later', in: {}, out: { y: num } });
+  w.implement({ id: 'later/js', implements: 'later', run: async () => ({ y: 1 }) });
+  w.contract({ id: 'top', in: {}, out: { y: num } });
+  w.implement({ id: 'top/js', implements: 'top', uses: ['later'], run: (_, ctx) => ctx.call('later', {}) });
+  await assert.rejects(w.runAsync('top', {}), (e) => e.code === 'ASYNC_RUN' && /ctx\.callAsync/.test(e.message) && !/use world\.runAsync/.test(e.message));
+});
+
+test('19. a waiting child under a parent declared pure: nothing is cached, the parent included', async () => {
+  const w = createWorld({ name: 'up' });
+  w.contract({ id: 'c', in: {}, out: { y: num } });
+  w.implement({ id: 'c/js', implements: 'c', run: async () => { await wait(1); return { y: 1 }; } });
+  w.contract({ id: 'p', in: {}, out: { y: num } });
+  w.implement({ id: 'p/js', implements: 'p', pure: true, uses: ['c'], run: async (_, ctx) => ({ y: (await ctx.callAsync('c', {})).y }) });
+  await w.runAsync('p', {});
+  const second = await w.runAsync('p', {});
+  assert.equal(second.trace.cached, false);
+  assert.equal(second.receipt.impure, true);
+});
