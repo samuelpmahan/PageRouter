@@ -24,7 +24,8 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
   // A drawing asked for by single() is timed under the stage that asked (its place, from here()), even though the model reaches
   // the renderer only after awaits of its own. The place is passed by the request (disc and design), not guessed.
   const places = new Map(), placeKey = (disc, design) => JSON.stringify([disc, design ?? null]);
-  const renderGraphic = input => within(places.get(placeKey(input?.discAddress, input?.design)), () => drawWith(input));
+  // Object.assign keeps the renderer's own entries (renderGraphic.lineup draws Bag and Battle lineups).
+  const renderGraphic = Object.assign(input => within(places.get(placeKey(input?.discAddress, input?.design)), () => drawWith(input)), drawWith);
   const codec = createWorkspaceCodec({ pack, unpack });
   const retained = await openLockedArchive(storage, key, { locks, pack: codec.packArchive, unpack: codec.unpackArchive });
   let committedRaw = retained.getItem(''), model, conflict = null, draft = null, queue = Promise.resolve(), pending = 0;
