@@ -118,7 +118,7 @@ test('5. each implementation is hashed once, at registration: no Function.protot
   assert.equal(w.implementations().find((i) => i.id === 'a/same-body').code, a.code, 'the same body, the same hash');
   const original = Function.prototype.toString; let calls = 0;
   Function.prototype.toString = function (...args) { calls += 1; return original.apply(this, args); };
-  try { w.run('outer', { x: 3 }); w.run('outer', { x: 4 }); } finally { Function.prototype.toString = original; }
+  try { w.run('outer', { x: 3 }, { fill: { a: 'a/js' } }); w.run('outer', { x: 4 }, { fill: { a: 'a/js' } }); } finally { Function.prototype.toString = original; }
   assert.equal(calls, 0, 'running hashes nothing');
   const composed = w.compose({ id: 'outer/composed', implements: 'outer', steps: [{ name: 'a', call: 'a', bind: { x: '$in.x' } }], returns: { y: 'a.y' } });
   assert.match(composed.code, /^[0-9a-f]{16}$/, 'a composition is hashed by its assembly');
@@ -155,7 +155,7 @@ test('7. parallel waits: the overlap is shown, not hidden, and the books close',
   w.contract({ id: 'both', in: {}, out: { y: num } });
   w.implement({ id: 'both/js', implements: 'both', uses: ['fetch'], run: async (_, ctx) => {
     const [p, q] = await Promise.all([ctx.callAsync('fetch', { x: 10 }), ctx.callAsync('fetch', { x: 15 })]);
-    return { y: p.y + q.y };
+    return { y: p.y.value + q.y.value };
   } });
   const { outputs, timing } = await w.runAsync('both', {});
   assert.deepEqual(outputs, { y: 25 });

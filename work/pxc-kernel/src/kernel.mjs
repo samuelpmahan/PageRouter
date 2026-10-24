@@ -41,6 +41,13 @@ export const isRef = (x) => x !== null && typeof x === 'object' && x[REF] === tr
 
 const KINDS = new Set(['calculation', 'check', 'tick']);
 const DEFAULT_LIMITS = Object.freeze({ maxCalls: 200_000, maxDepth: 256 });
+/** A call whose own, un-itemised time is at least this share of its run is flagged as opaque (seq 63). */
+const OPAQUE_SHARE = 0.05;
+/** The platform's monotonic clock in milliseconds; Date.now where there is none. Inject another with createWorld({ clock }). */
+function defaultClock() {
+  const p = globalThis.performance;
+  return p && typeof p.now === 'function' ? () => p.now() : () => Date.now();
+}
 const CONTRACT_FIELDS = new Set(['id', 'kind', 'in', 'out', 'examples', 'tolerance', 'description', 'notes']);
 const IMPL_FIELDS = new Set(['id', 'implements', 'version', 'uses', 'run', 'pure', 'description', 'assembly', 'origin', 'examples']);
 const TICK_DEP = '@tick';
@@ -130,14 +137,17 @@ function implies(c, p) {
 }
 const slotKey = (contract, slot) => (slot ? `${contract}#${slot}` : contract);
 
-export function createWorld({ name = 'world', limits = {} } = {}) {
+export function createWorld({ name = 'world', limits = {}, clock = defaultClock() } = {}) {
+  if (typeof clock !== 'function') fail('clock must be a function returning milliseconds', 'BAD_OPTION');
   const contracts = new Map();
   const impls = new Map();
   const selected = new Map();   // 'contract' or 'contract#slot' -> implId
   const declaredSlots = new Set(); // 'contract#slot' declared by a composition step or an implementation's uses
   const parts = new Map();      // hash -> frozen value
   const cache = new Map();      // key -> [{ out, run, call, deps: [[resolution, value]], verdicts }]
-  const runs = [];
+  const runs = [];               // runs[runId - 1]; a run's slot is reserved when it starts, so async runs never share an id
+  let runSeq = 0;
+  const timings = new Map();     // runId -> the run's timing side record (seq 63): never hashed, never read by a decision
   const proofs = [];
   const lim = { ...DEFAULT_LIMITS, ...limits };
   const stats = { cacheHits: 0, cacheMisses: 0, cacheRejectedByDeps: 0 };
@@ -198,7 +208,10 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
     }
     for (const step of def.assembly?.steps ?? []) if (step.slot) declaredSlots.add(slotKey(step.call, step.slot));
     const uses = [...new Set((def.uses ?? []).map((u) => u.split('#')[0]))];
-    const impl = Object.freeze({ version: '1', pure: true, ...def, examples: def.examples ?? [], uses: Object.freeze(uses), slots: deepFreeze(slots) });
+    // seq 63: the code is hashed once, here, never per run. A composition is hashed by its assembly.
+    const code = hashString(def.assembly ? `assembly:${canonical(def.assembly)}` : `function:${Function.prototype.toString.call(def.run)}`);
+    const declaredPure = Object.hasOwn(def, 'pure') && def.pure === true;
+    const impl = Object.freeze({ version: '1', pure: true, ...def, examples: def.examples ?? [], uses: Object.freeze(uses), slots: deepFreeze(slots), code, declaredPure });
     impls.set(impl.id, impl);
     return impl;
   }
@@ -528,10 +541,11 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
   }
 
   // ---------------------------------------------------------------- subscription
-  function run(contractId, inputs, options = {}) {
+  function startRun(contractId, inputs, options, isAsync) {
     checkFill(options.fill);
     const record = options.record !== false;
-    const runId = record ? runs.length + 1 : `replay:${runs.length + 1}`;
+    const runId = record ? ++runSeq : `replay:${runSeq + 1}`;
+    const t0 = clock();
     const state = {
       seq: 0, calls: 0, cacheOn: options.cache !== false,
       maxCalls: options.maxCalls ?? lim.maxCalls,
@@ -540,8 +554,9 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
       pathFill: Object.keys(options.fill ?? {}).some((k) => k.includes('/')),
       reach: options.reach ?? new Map(),
       slotsSeen: options.slotsSeen ?? new Set(),
+      async: isAsync, time: [],
     };
-    const root = { calls: [], deps: new Map(), pdeps: null, path: [], impure: false, tick: options.tick ?? null, decisions: [] };
+    const root = { calls: [], deps: new Map(), pdeps: null, path: [], impure: false, tick: options.tick ?? null, decisions: [], rec: null };
     if (state.pathFill) root.pdeps = new Map();
     const rootRefs = Object.fromEntries(Object.entries(inputs ?? {}).map(([p, v]) => [p, mint(v, { kind: 'input', call: 0, port: p }, runId, `$in.${p}`)]));
     const head = {
@@ -549,31 +564,113 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
       inputs: Object.fromEntries(Object.entries(rootRefs).map(([p, r]) => [p, r.hash])),
       inputValues: Object.fromEntries(Object.entries(rootRefs).map(([p, r]) => [p, r.value])),
     };
-    let refs;
-    try {
-      refs = invoke(contractId, rootRefs, root, 0, state, options.fill, runId, undefined, false);
-      if (!options.allowUnusedFill) checkUnknownSlots(options.fill, state.consulted, options.landing, state.slotsSeen);
-    } catch (error) {
-      const failed = deepFreeze({ ...head, status: 'failed', error: { code: error.code ?? 'IMPL_ERROR', message: error.message }, calls: state.calls, verdicts: collectVerdicts(root.calls[0]), trace: root.calls[0] ?? null });
-      if (record) runs.push(failed);
-      error.trace = root.calls[0] ?? null;
-      error.receipt = failed;
-      throw error;
-    }
+    return { contractId, record, runId, t0, state, root, rootRefs, head };
+  }
+  function failRun(r, error) {
+    const { head, state, root, record, runId } = r;
+    const failed = deepFreeze({ ...head, status: 'failed', error: { code: error.code ?? 'IMPL_ERROR', message: error.message }, calls: state.calls, verdicts: collectVerdicts(root.calls[0]), trace: root.calls[0] ?? null });
+    const timing = lazyTiming(r, clock());
+    if (record) { runs[runId - 1] = failed; timings.set(runId, timing); }
+    error.trace = root.calls[0] ?? null;
+    error.receipt = failed;
+    Object.defineProperty(error, 'timing', { get: timing, enumerable: false, configurable: true });
+    return error;
+  }
+  function finishRun(r, refs, options) {
+    const { head, state, root, record, runId } = r;
     const trace = root.calls[0];
-    const outputs = Object.fromEntries(Object.entries(refs).map(([p, r]) => [p, r.value]));
+    const outputs = Object.fromEntries(Object.entries(refs).map(([p, ref]) => [p, ref.value]));
     const receipt = deepFreeze({
       ...head, status: 'ok',
-      outputs: Object.fromEntries(Object.entries(refs).map(([p, r]) => [p, r.hash])),
+      outputs: Object.fromEntries(Object.entries(refs).map(([p, ref]) => [p, ref.hash])),
       calls: state.calls, randomDraws: state.random?.draws() ?? 0, impure: root.impure,
       fillConsulted: Object.keys(options.fill ?? {}).filter((k) => state.consulted.has(k)),
       fillReach: Object.fromEntries(Object.keys(options.fill ?? {}).map((k) => [k, [...(state.reach.get(k) ?? [])]])),
       verdicts: collectVerdicts(trace), trace,
     });
-    if (record) runs.push(receipt);
+    const timing = lazyTiming(r, clock());
+    if (record) { runs[runId - 1] = receipt; timings.set(runId, timing); }
     // Observation (v0.6): an opt-in subscriber sees every recorded receipt, from any world in the process (used by the flow miner).
-    if (record && typeof globalThis.__pxcObserve === 'function') globalThis.__pxcObserve({ world: name, receipt, implementations: () => [...impls.values()] });
-    return { outputs, refs, trace, receipt };
+    // seq 63: and its timing side record, which is kept apart so the receipt stays the same whatever the clock said.
+    if (record && typeof globalThis.__pxcObserve === 'function') globalThis.__pxcObserve({ world: name, receipt, get timing() { return timing(); }, implementations: () => [...impls.values()] });
+    return { outputs, refs, trace, receipt, get timing() { return timing(); } };
+  }
+  function run(contractId, inputs, options = {}) {
+    const r = startRun(contractId, inputs, options, false);
+    let refs;
+    try {
+      refs = invoke(contractId, r.rootRefs, r.root, 0, r.state, options.fill, r.runId, undefined, false);
+      if (!options.allowUnusedFill) checkUnknownSlots(options.fill, r.state.consulted, options.landing, r.state.slotsSeen);
+    } catch (error) { throw failRun(r, error); }
+    return finishRun(r, refs, options);
+  }
+  /**
+   * runAsync (seq 63): run, for Calculations that wait (a decode, a fetch, a Worker). An implementation may return a Promise and
+   * call ctx.callAsync; its children stay under it across every await because the parent is passed explicitly (no ambient
+   * "current call"). A call that waited is impure, so never cached, unless its implementation declared pure: true. Its ms
+   * includes the waiting: for a Worker or an OffscreenCanvas, queueing and transfer are part of it.
+   */
+  async function runAsync(contractId, inputs, options = {}) {
+    const r = startRun(contractId, inputs, options, true);
+    let refs;
+    try {
+      refs = await invokeAsync(contractId, r.rootRefs, r.root, 0, r.state, options.fill, r.runId, undefined, false);
+      if (!options.allowUnusedFill) checkUnknownSlots(options.fill, r.state.consulted, options.landing, r.state.slotsSeen);
+    } catch (error) { throw failRun(r, error); }
+    return finishRun(r, refs, options);
+  }
+
+  // ---------------------------------------------------------------- timing (seq 63)
+  /**
+   * The timing side record of a run: never part of a receipt or trace, never hashed, never read by a decision.
+   * Each call: start (from the run's start), ms, selfMs (its span minus its children), and rows, its ledger: its children and the
+   * remainders between them, each remainder named by where it sits, signed (a negative remainder means the clock stepped back).
+   * Children that ran at the same time (only under runAsync) are not sequential: the time they shared is reported as overlap, so
+   * rows − overlap = ms for every call. opaque lists every call whose own time is OPAQUE_SHARE of the run or more.
+   */
+  /** The side record is built the first time someone reads it, so a run nobody inspects pays only for the clock reads. */
+  function lazyTiming(r, t1) {
+    let built = null;
+    return () => (built ??= timingOf(r, t1));
+  }
+  function timingOf(r, t1) {
+    const recs = r.state.time, ms = t1 - r.t0;
+    const label = (x) => (x.slot ? `${x.contract}#${x.slot}` : x.contract);
+    const kidsOf = new Map(recs.map((x) => [x, []]));
+    for (const x of recs) { if (x.end === null) x.end = t1; if (x.parent) kidsOf.get(x.parent).push(x); }
+    const calls = recs.map((x) => {
+      const kids = kidsOf.get(x).sort((p, q) => p.start - q.start || p.id - q.id);
+      const span = x.end - x.start, L = label(x), rows = [];
+      let overlap = 0;
+      if (!kids.length) rows.push({ name: `inside “${L}”, not itemised`, ms: span, remainder: true });
+      else {
+        let at = x.start, prev = null, last = null;
+        for (const k of kids) {
+          const gap = k.start - at;
+          let shared = 0;
+          if (x.concurrent && gap < 0) shared = Math.min(at, k.end) - k.start; // still inside a sibling that was running
+          else rows.push({ name: prev ? `between “${label(prev)}” and “${label(k)}”` : `from the start of “${L}” to “${label(k)}”`, ms: gap, remainder: true });
+          rows.push({ name: label(k), ms: k.end - k.start, call: k.id, ...(shared ? { overlaps: shared } : {}) });
+          overlap += shared;
+          if (x.concurrent) { if (k.end >= at) { at = k.end; last = k; } } else { at = k.end; last = k; }
+          prev = k;
+        }
+        rows.push({ name: `after “${label(last)}”, until “${L}” returns`, ms: x.end - at, remainder: true });
+      }
+      const selfMs = rows.reduce((s, w) => s + (w.remainder ? w.ms : 0), 0);
+      return { id: x.id, contract: x.contract, slot: x.slot, impl: x.impl, start: x.start - r.t0, ms: span, selfMs, cached: x.cached,
+        concurrent: x.concurrent, overlap, rows, ...(x.error ? { error: x.error } : {}) };
+    });
+    const top = calls[0] ?? null;
+    const outside = { name: top ? `around the top call “${label(recs[0])}”` : `around “${r.contractId}”, which never started`, ms: ms - (top?.ms ?? 0) };
+    const share = (v) => (ms > 0 ? v / ms : 0);
+    const opaque = calls.filter((c) => ms > 0 && share(c.selfMs) >= OPAQUE_SHARE).map((c) => ({ call: c.id, contract: c.contract, slot: c.slot, impl: c.impl,
+      selfMs: c.selfMs, share: share(c.selfMs),
+      why: `${Math.round(100 * share(c.selfMs))}% of the run is in “${c.slot ? `${c.contract}#${c.slot}` : c.contract}” itself, not itemised: give its steps their own calls to see inside it` }));
+    if (ms > 0 && share(outside.ms) >= OPAQUE_SHARE) opaque.push({ call: null, name: outside.name, selfMs: outside.ms, share: share(outside.ms), why: 'the kernel\'s own work around the top call' });
+    const close = (a, b) => Math.abs(a - b) <= 1e-6 * Math.max(1, Math.abs(a), Math.abs(b));
+    const closes = calls.every((c) => close(c.rows.reduce((s, w) => s + w.ms, 0) - c.overlap, c.ms)) && close((top?.ms ?? 0) + outside.ms, ms);
+    return deepFreeze({ runId: r.runId, contract: r.contractId, ms, calls, outside, opaque, closes });
   }
 
   // ---------------------------------------------------------------- sum (seq 62)
@@ -642,7 +739,32 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
     return out;
   }
 
+  /** A synchronous call: its implementation must return its outputs, not a Promise. */
   function invoke(contractId, inRefs, parent, depth, state, fill, runId, slot, tickOverride) {
+    const call = enter(contractId, inRefs, parent, depth, state, fill, runId, slot, tickOverride);
+    if (call.served) return call.served;
+    let result;
+    try { result = call.impl.run(call.inputs, call.ctx); } catch (error) { call.threw(error); }
+    if (result && typeof result.then === 'function') {
+      result.then(null, () => {}); // its rejection is moot: the call has already failed
+      call.fault(`${call.impl.id} returned a Promise; run is synchronous (use world.runAsync and ctx.callAsync for steps that wait)`, 'ASYNC_RUN');
+    }
+    return call.finish(result);
+  }
+  /** A call that may wait (seq 63). Its parent is the frame passed in, not whatever ran last, so it survives every await. */
+  async function invokeAsync(contractId, inRefs, parent, depth, state, fill, runId, slot, tickOverride) {
+    const call = enter(contractId, inRefs, parent, depth, state, fill, runId, slot, tickOverride);
+    if (call.served) return call.served;
+    let result;
+    try {
+      result = call.impl.run(call.inputs, call.ctx);
+      if (result && typeof result.then === 'function') { call.waited(); result = await result; }
+    } catch (error) { call.threw(error); }
+    return call.finish(result);
+  }
+
+  /** Everything a call does before and after its implementation runs; shared by invoke and invokeAsync. */
+  function enter(contractId, inRefs, parent, depth, state, fill, runId, slot, tickOverride) {
     if (depth > lim.maxDepth) fail(`call depth exceeds ${lim.maxDepth}`, 'DEPTH_LIMIT');
     const c = contracts.get(contractId) ?? fail(`unknown contract ${contractId}`, 'UNKNOWN_CONTRACT');
     const myKey = slotKey(contractId, slot);
@@ -660,8 +782,19 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
     if (chosen.key && fill && Object.hasOwn(fill, chosen.key)) reachOf(state, chosen.key).push(id);
     for (const [port, ref] of Object.entries(inRefs)) node.in[port] = { hash: ref.hash, from: ref.from };
     parent.calls.push(node);
+    // seq 63: the call's span, on the injected clock, in the run's side record. Nothing below reads it to decide anything.
+    const rec = { id, contract: contractId, slot: slot ?? null, impl: impl.id, start: clock(), end: null, parent: parent.rec ?? null, active: 0, concurrent: false, cached: false, error: null };
+    state.time.push(rec);
+    if (rec.parent) { if (rec.parent.active > 0) rec.parent.concurrent = true; rec.parent.active += 1; }
+    const stop = (error) => {
+      if (rec.end !== null) return;
+      rec.end = clock();
+      if (error) rec.error = error;
+      if (rec.parent) rec.parent.active -= 1;
+    };
     const fault = (message, code, detail) => {
       node.error = { code, message };
+      stop(node.error);
       try { fail(message, code, detail); } catch (e) { e.originCall = id; throw e; }
     };
     for (const port of Object.keys(c.in)) if (!(port in inRefs)) fault(`${contractId}: missing input ${port}`, 'MISSING_INPUT');
@@ -671,7 +804,7 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
       if (problems.length) fault(problems.join('; '), 'INPUT_SCHEMA', problems);
     }
 
-    const frame = { deps: new Map(), pdeps: state.pathFill ? new Map() : null, path: nodePath, impure: impl.pure === false, calls: node.calls, tick, decisions: [] };
+    const frame = { deps: new Map(), pdeps: state.pathFill ? new Map() : null, path: nodePath, impure: impl.pure === false, calls: node.calls, tick, decisions: [], rec };
     const key = `${impl.id}@${impl.version}|${Object.keys(inRefs).sort().map((p) => `${p}=${inRefs[p].hash}`).join('&')}`;
     const outFrom = (port) => ({ kind: 'call', call: id, port });
     // Merge a finished subtree's dependencies into the parent. A tick read beneath a drive belongs to the drive, not above it.
@@ -710,7 +843,9 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
           node.out[port] = { hash, from: { kind: 'cached' } };
           refs[port] = new Ref(parts.get(hash), hash, outFrom(port), runId);
         }
-        return Object.freeze(refs);
+        rec.cached = true;
+        stop();
+        return { served: Object.freeze(refs) };
       }
       stats.cacheRejectedByDeps += 1;
     }
@@ -729,6 +864,18 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
         checkSlot(target, opts?.slot);
         const normalized = Object.fromEntries(Object.entries(args ?? {}).map(([p, v]) => [p, mint(v, { kind: 'computed' }, runId, `${target}.in.${p}`)]));
         return invoke(target, normalized, frame, depth + 1, state, fill, runId, opts?.slot, false);
+      },
+      /**
+       * ctx.callAsync(contract, args, { slot }) (seq 63): ctx.call for a callee that may wait; await it. Only under world.runAsync.
+       * The child is attached to this call's frame when it starts, so it stays this call's child across the await, and so does
+       * any ctx.call made after the await.
+       */
+      callAsync(target, args, opts) {
+        if (!state.async) fault(`${impl.id} called ${target} with ctx.callAsync inside a synchronous run; use world.runAsync`, 'ASYNC_IN_SYNC_RUN');
+        if (!impl.uses.includes(target)) fault(`${impl.id} called undeclared contract ${target}`, 'UNDECLARED_CALL');
+        checkSlot(target, opts?.slot);
+        const normalized = Object.fromEntries(Object.entries(args ?? {}).map(([p, v]) => [p, mint(v, { kind: 'computed' }, runId, `${target}.in.${p}`)]));
+        return invokeAsync(target, normalized, frame, depth + 1, state, fill, runId, opts?.slot, false);
       },
       /**
        * ctx.sum(contract, args, { slot }) (seq 62): every implementation of the contract, each as its own child call (pinned by
@@ -886,44 +1033,48 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
       }),
     });
 
-    let result;
-    try {
-      result = impl.run(inputs, ctx);
-    } catch (error) {
+    const threw = (error) => {
       if (!node.error) {
         node.error = error.originCall === undefined
           ? { code: error.code ?? 'IMPL_ERROR', message: error.message }
           : { code: error.code ?? 'IMPL_ERROR', message: error.message, via: error.originCall };
       }
+      stop(node.error);
       if (error.originCall === undefined) error.originCall = id;
       throw error;
-    }
-    if (result && typeof result.then === 'function') fault(`${impl.id} returned a Promise; run is synchronous`, 'ASYNC_RUN');
-    if (!result || typeof result !== 'object') fault(`${impl.id} must return an object of output ports`, 'BAD_OUTPUT');
-    const refs = {};
-    for (const port of Object.keys(c.out)) {
-      if (!(port in result)) fault(`${impl.id} did not return ${port}`, 'MISSING_OUTPUT');
-      const raw = result[port];
-      if (raw === SKIPPED) fault(`${impl.id} returned ${port} from a skipped step`, 'SKIPPED_OUTPUT');
-      const value = isRef(raw) ? raw.value : raw;
-      const problems = validate(value, c.out[port], `${contractId}.out.${port}`);
-      if (problems.length) fault(problems.join('; '), 'OUTPUT_SCHEMA', problems);
-      const { hash, value: frozen } = intern(value, `${contractId}.out.${port}`);
-      node.out[port] = { hash, from: isRef(raw) ? local(raw).from : { kind: 'computed' } };
-      refs[port] = new Ref(frozen, hash, outFrom(port), runId);
-    }
-    for (const port of Object.keys(result)) if (!(port in c.out)) fault(`${impl.id} returned extra port ${port}`, 'EXTRA_OUTPUT');
+    };
+    // A call that waited may depend on when it settled, so it is impure unless its implementation said pure: true (seq 63).
+    const waited = () => { if (!impl.declaredPure) frame.impure = true; };
+    const finish = (result) => {
+      if (rec.active > 0) fault(`${impl.id} returned while ${rec.active} call(s) it started were still running; await them`, 'UNAWAITED_CALL');
+      if (!result || typeof result !== 'object') fault(`${impl.id} must return an object of output ports`, 'BAD_OUTPUT');
+      const refs = {};
+      for (const port of Object.keys(c.out)) {
+        if (!(port in result)) fault(`${impl.id} did not return ${port}`, 'MISSING_OUTPUT');
+        const raw = result[port];
+        if (raw === SKIPPED) fault(`${impl.id} returned ${port} from a skipped step`, 'SKIPPED_OUTPUT');
+        const value = isRef(raw) ? raw.value : raw;
+        const problems = validate(value, c.out[port], `${contractId}.out.${port}`);
+        if (problems.length) fault(problems.join('; '), 'OUTPUT_SCHEMA', problems);
+        const { hash, value: frozen } = intern(value, `${contractId}.out.${port}`);
+        node.out[port] = { hash, from: isRef(raw) ? local(raw).from : { kind: 'computed' } };
+        refs[port] = new Ref(frozen, hash, outFrom(port), runId);
+      }
+      for (const port of Object.keys(result)) if (!(port in c.out)) fault(`${impl.id} returned extra port ${port}`, 'EXTRA_OUTPUT');
 
-    // Propagate implementation choices, tick reads and impurity upward, then cache if this subtree is pure.
-    mergeUp(frame.deps, frame.pdeps);
-    if (frame.impure) { parent.impure = true; node.impure = true; }
-    if (state.cacheOn && !frame.impure) {
-      const entry = { out: Object.fromEntries(Object.entries(node.out).map(([p, o]) => [p, o.hash])), run: runId, call: id, deps: [...frame.deps],
-        pdeps: frame.pdeps ? [...frame.pdeps] : null, verdicts: collectVerdicts(node), decisions: node.decisions ?? [] };
-      if (!cache.has(key)) cache.set(key, []);
-      cache.get(key).push(entry);
-    }
-    return Object.freeze(refs);
+      // Propagate implementation choices, tick reads and impurity upward, then cache if this subtree is pure.
+      mergeUp(frame.deps, frame.pdeps);
+      if (frame.impure) { parent.impure = true; node.impure = true; }
+      if (state.cacheOn && !frame.impure) {
+        const entry = { out: Object.fromEntries(Object.entries(node.out).map(([p, o]) => [p, o.hash])), run: runId, call: id, deps: [...frame.deps],
+          pdeps: frame.pdeps ? [...frame.pdeps] : null, verdicts: collectVerdicts(node), decisions: node.decisions ?? [] };
+        if (!cache.has(key)) cache.set(key, []);
+        cache.get(key).push(entry);
+      }
+      stop();
+      return Object.freeze(refs);
+    };
+    return { impl, inputs, ctx, fault, threw, waited, finish };
   }
 
   // ---------------------------------------------------------------- time
@@ -1076,12 +1227,14 @@ export function createWorld({ name = 'world', limits = {} } = {}) {
   }
 
   return Object.freeze({
-    name, contract, implement, compose, select, implementationsOf, run, sum, evaluate, drive, replay, prove, ledger, node, ref,
+    name, contract, implement, compose, select, implementationsOf, run, runAsync, sum, evaluate, drive, replay, prove, ledger, node, ref,
+    /** The timing side record of a recorded run (seq 63), or null. */
+    timing: (runId) => timings.get(runId)?.() ?? null,
     contracts: () => [...contracts.values()],
     implementations: () => [...impls.values()],
-    runs: () => [...runs],
+    runs: () => runs.filter(Boolean),
     part: (hash) => parts.get(hash),
-    stats: () => ({ ...stats, parts: parts.size, cacheEntries: [...cache.values()].reduce((a, l) => a + l.length, 0), runs: runs.length }),
+    stats: () => ({ ...stats, parts: parts.size, cacheEntries: [...cache.values()].reduce((a, l) => a + l.length, 0), runs: runs.filter(Boolean).length }),
   });
 }
 

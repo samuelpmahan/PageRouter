@@ -53,7 +53,8 @@ Fill keys are validated: an unknown contract or an implementation of the wrong c
 - `ctx.fault(message, code)` (v0.3): fail with a named code, recorded on this node.
 - `ctx.literal(value)`, `ctx.random()` (needs a run seed; marks the call impure), `ctx.value(x)`, `ctx.tick()` (a cache dependency, see Kinds).
 - Forward Refs, not `.value`, whenever you can. A plain value is recorded as `computed`.
-- Return `{ port: Ref | value }` for every output port. Synchronous.
+- Return `{ port: Ref | value }` for every output port. Synchronous under `run`; under `runAsync` (seq 63) it may return a Promise.
+- `ctx.callAsync(contractId, args, { slot? })` (seq 63, only under `runAsync`): `ctx.call` for a callee that may wait; `await` it. Inside a synchronous run it fails with `ASYNC_IN_SYNC_RUN`.
 - A Ref from another run is accepted anywhere and recorded as `{kind:'run', run, from}`.
 
 ## Composition specs
@@ -131,6 +132,16 @@ v0.4 additions:
 
 Inside an implementation, `ctx.sum(contract, args, { slot? })` runs every implementation of a declared (`uses`) contract as its own child call and returns `[{ impl, outputs } | { impl, error }]`; a throwing way is recorded, not thrown. The node records the sum (`node.sums`), and the polynomial expands through it: a node is its implementation × the polynomial of each ordinary call × Σ over each sum's ways (monomials are sets of implementation ids). Its cache entry depends on the set of implementations of the summed contract, so it stays valid until one is added or removed.
 
+## Timing (seq 63, proposed on branch claude/pxc-kernel-sum)
+
+Every call is timed by the kernel, so no Calculation writes its own spans. `createWorld({ clock })` injects the clock (milliseconds; default `performance.now`). The timing is a side record, `run(...).timing` and `world.timing(runId)`: it is never in a receipt or trace, never hashed, and nothing the kernel decides (choice, cache, outputs) reads it, so two clocks give byte-identical receipts. It is built the first time it is read.
+
+`{ runId, contract, ms, calls, outside, opaque, closes }`. Each call is `{ id, contract, slot, impl, start, ms, selfMs, cached, concurrent, overlap, rows, error? }`: `start` is from the run's start; `selfMs` is the span minus its children; `rows` is its ledger, its children and the remainders between them, each remainder named by where it sits (`from the start of “P” to “A”`, `between “A” and “B”`, `after “B”, until “P” returns`, or `inside “P”, not itemised` for a call with no children). Remainders are signed: a negative one means the clock stepped back, and it is shown, not clamped. Children that ran at the same time (only under `runAsync`) are not sequential: the time they shared is `overlap`, so `Σ rows − overlap = ms` for every call. `outside` is the run's time around its top call. `opaque` lists every call (and `outside`) whose own time is 5% of the run or more, with why: give its steps their own calls to see inside it. `closes` is true when every ledger balances. The observer (`globalThis.__pxcObserve`) gets `timing` beside `receipt`.
+
+Each implementation's code is hashed once, at registration (`impl.code`; a composition by its assembly), never per run.
+
+`world.runAsync(contractId, inputs, options)` is `run` for Calculations that wait (a decode, a fetch, a Worker). A child started with `ctx.callAsync` is attached to its caller's frame when it starts, so it stays that call's child across every `await`, and so does any `ctx.call` after the await: there is no ambient "current call". A call that waited is impure (never cached) unless its implementation declared `pure: true`. Its `ms` includes the waiting; for a Worker or an OffscreenCanvas that is queueing and transfer too. A call that returns while children it started are still running fails with `UNAWAITED_CALL`. `run` keeps `ASYNC_RUN`. Run ids are reserved when a run starts, so concurrent runs never share one.
+
 ## Still not in the kernel (deliberately)
 
-Demand / `request(n)`, async completion, a fitted-model kind (use an `x-role` annotation; a second entry using it promotes it), objectives on contracts, named shared schemas, implementation parameters, slices, a clock binding for compositions, nested clocks, graded checks, collect with initial state or a count Ref, a tick segment in paths, filters over arrays, looping compositions. Merging identical decisions in the record was declined (seq 51). Each has one requesting entry so far. If your migration shows a second real need for one, record it in FRICTION.md.
+Demand / `request(n)`, a fitted-model kind (use an `x-role` annotation; a second entry using it promotes it), objectives on contracts, named shared schemas, implementation parameters, slices, a clock binding for compositions, nested clocks, graded checks, collect with initial state or a count Ref, a tick segment in paths, filters over arrays, looping compositions. Merging identical decisions in the record was declined (seq 51). Each has one requesting entry so far. If your migration shows a second real need for one, record it in FRICTION.md.
