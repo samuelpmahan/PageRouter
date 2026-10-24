@@ -8,7 +8,7 @@ import { defaultDesign } from './graphics.mjs';
 import { createNativeRenderer, isNativeStudy, isLineupStudy, workspaceDesignChange } from './native-cards.mjs';
 import { validateFlightCorrection } from './prepared-fixture.mjs';
 import { createWorkspacePackage, snapshotJson } from './workspace-package.mjs';
-import { span } from './gestures.mjs';
+import { span, here, within } from './gestures.mjs';
 
 export const archiveKey = 'thro.v1:prepared-samples:archive';
 const clone = value => structuredClone(value);
@@ -20,7 +20,11 @@ const failure = (code, message) => Object.assign(Error(message), { code });
 
 // Collection heads in the legacy Experience are mutable. A candidate world
 // isolates those mutations until the complete archive has durably committed.
-export async function openWorkspace({ storage = globalThis.localStorage, locks = globalThis.navigator?.locks, fixture, key = archiveKey, renderGraphic = createNativeRenderer() } = {}) {
+export async function openWorkspace({ storage = globalThis.localStorage, locks = globalThis.navigator?.locks, fixture, key = archiveKey, renderGraphic: drawWith = createNativeRenderer() } = {}) {
+  // A drawing asked for by single() is timed under the stage that asked (its place, from here()), even though the model reaches
+  // the renderer only after awaits of its own. The place is passed by the request (disc and design), not guessed.
+  const places = new Map(), placeKey = (disc, design) => JSON.stringify([disc, design ?? null]);
+  const renderGraphic = input => within(places.get(placeKey(input?.discAddress, input?.design)), () => drawWith(input));
   const codec = createWorkspaceCodec({ pack, unpack });
   const retained = await openLockedArchive(storage, key, { locks, pack: codec.packArchive, unpack: codec.unpackArchive });
   let committedRaw = retained.getItem(''), model, conflict = null, draft = null, queue = Promise.resolve(), pending = 0;
@@ -53,15 +57,16 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
 
   const serial = (intent, action) => {
     pending++;
+    const at = here(); // the stage that asked for this (a save), kept for when the queue gets to it
     const operation = queue.then(async () => {
       if (conflict) throw conflict;
       draft = clone(intent);
       const staged = memory(committedRaw);
       let candidate;
       try {
-        candidate = await span('open a copy of the workspace', () => openDemo(staged, { renderGraphic }));
-        const result = await span('apply it to the copy', () => action(candidate));
-        await span('write it to storage', async () => { retained.setItem('', staged.raw); await retained.flush(); });
+        candidate = await span('open a copy of the workspace', () => openDemo(staged, { renderGraphic }), at);
+        const result = await span('apply it to the copy', () => action(candidate), at);
+        await span('write it to storage', async () => { retained.setItem('', staged.raw); await retained.flush(); }, at);
         committedRaw = staged.raw;
         model = candidate;
         draft = null;
@@ -95,12 +100,13 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
     },
     change(changes) {
       return serial({ operation: 'change', context: changes }, async candidate => {
+        const at = here();
         const next = await candidate.patch(workspaceDesignChange(candidate.context, changes, defaultDesign));
         if (isNativeStudy(next.design?.study) && (next.throMode ?? 'single') === 'single'
           && ['design', 'selectedDisc', 'throMode'].some(key => Object.hasOwn(changes, key))) {
           // patch() wrote only the private staging store. A native geometry,
           // photo or renderer failure must precede the outer durable flush.
-          await span('check the card draws', () => candidate.render(next.selectedDisc, next.design));
+          await span('check the card draws', () => candidate.render(next.selectedDisc, next.design), at);
         }
         return next;
       });
@@ -112,8 +118,12 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
       });
     },
     async single(discAddress, design = model.context.design) {
-      const result = await model.render(discAddress, design);
-      return { ...result, design: clone(design) };
+      const k = placeKey(discAddress, design), at = here();
+      if (at?.j) places.set(k, at);
+      try {
+        const result = await model.render(discAddress, design);
+        return { ...result, design: clone(design) };
+      } finally { if (places.get(k) === at) places.delete(k); }
     },
     async battle(selection, design = model.context.design) {
       if (isNativeStudy(design?.study)) throw failure('THRO_NATIVE_SINGLE_ONLY', 'DiscStudio card layouts are available in Single. Choose a lineup composition for Battle or Bag.');

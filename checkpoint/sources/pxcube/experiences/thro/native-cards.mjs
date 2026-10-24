@@ -1,5 +1,5 @@
 import { canonical, hashString } from './pxc/canonical.mjs';
-import { span } from './gestures.mjs';
+import { span, here } from './gestures.mjs';
 // Native card pixels are an optional Single treatment. The renderer/catalog
 // module graph is imported only when one of these explicit studies is used.
 export const nativeBuild = '28ac2b39fab85255';
@@ -171,14 +171,17 @@ export function createNativeRenderer(renderCard = async request => {
   const single = async input => {
     if (!isNativeStudy(input.design?.study)) return null;
     if (input.purpose && input.purpose !== 'single') throw Error('Thro card layouts are available in Single. Choose a lineup composition for Battle or Bag.');
-    const request = nativeCardRequest(input), photo = await span('hash the disc photo', () => preparedPhotoDigest(request.photoSrc));
+    const at = here(); // the stage this drawing belongs to, kept across the awaits below
+    const request = nativeCardRequest(input), photo = await span('hash the disc photo', () => preparedPhotoDigest(request.photoSrc), at);
     // Same recipe, same pixels: the key is the hash the PxC kernel gives the recipe Part (thro.card.recipe's output).
     const key = recipePartHash(requestRecipe(request, photo));
     // A card being drawn is drawn once: a second request for the same recipe waits for the same drawing.
     const cached = pixels.get(key);
     let drawing = cached ? null : inflight.get(key);
-    if (!cached && !drawing) { drawing = span('draw the pixels', () => renderCard(request)); inflight.set(key, drawing); drawing.finally(() => inflight.delete(key)).catch(() => {}); }
-    const result = cached ?? await drawing;
+    const mine = !cached && !drawing;
+    if (mine) { drawing = span('draw the pixels', () => renderCard(request), at); inflight.set(key, drawing); drawing.finally(() => inflight.delete(key)).catch(() => {}); }
+    // Waiting for a drawing another request started is a stage of its own, so it is not mistaken for this one's own work.
+    const result = cached ?? await (mine ? drawing : span('wait for the same drawing, already in flight', () => drawing, at));
     const portrait = nativeStudy(input.design.study).orientation === 'portrait';
     if (result.build !== nativeBuild) throw Error('Native renderer build does not match this saved design.');
     // A renderer that does not report a revision drew revision 1; one that ignored the asked revision is refused.

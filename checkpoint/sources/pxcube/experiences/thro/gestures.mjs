@@ -8,7 +8,8 @@
 //
 // The parent is passed explicitly. A stage started while another stage's function is running (synchronously) is that stage's
 // child; any other stage is a child of the gesture it is given (span(name, fn, gesture)), or else of the gesture still being
-// answered. There is no "current stage" that has to survive an await.
+// answered. There is no "current stage" that has to survive an await: code that waits keeps its place with here() and passes it
+// back (span(name, fn, place), or within(place, fn) for code it calls), as native-cards.mjs and workspace.mjs do.
 //
 // Conservation (engineering notebook, page 2). Three laws are kept as books and checked on every gesture:
 //   1. Gestures: every gesture that begins ends exactly once, and says how: painted, superseded by a newer gesture, unchanged
@@ -54,14 +55,15 @@ world.implement({ id: 'thro.stage/app', implements: 'thro.stage', uses: ['thro.s
     const j = jobs.get(job.value);
     stack.push({ g: j.g, ctx, j });
     let out;
-    try { out = j.fn(); } catch (error) { j.error = error; j.sync = true; throw error; } finally { stack.pop(); }
-    const kids = () => (j.kids.size ? Promise.allSettled([...j.kids]) : null);
+    try { out = j.fn(); } catch (error) { j.error = error; j.sync = true; j.closed = true; throw error; } finally { stack.pop(); }
+    // A stage is done when its function is and every stage started under it is too; from then on it takes no new children.
+    const kids = async () => { while (j.kids.size) await Promise.allSettled([...j.kids]); j.closed = true; };
     if (out && typeof out.then === 'function') {
-      return out.then(async value => { j.result = value; await kids(); return { done: true }; }, error => { j.error = error; throw error; });
+      return out.then(async value => { j.result = value; await kids(); return { done: true }; }, error => { j.error = error; j.closed = true; throw error; });
     }
     j.result = out; j.sync = true;
-    const waiting = kids();
-    return waiting ? waiting.then(() => ({ done: true })) : { done: true };
+    if (!j.kids.size) { j.closed = true; return { done: true }; }
+    return kids().then(() => ({ done: true }));
   } });
 
 let current = null;
@@ -79,17 +81,29 @@ export function begin(label, at = now()) {
   return g;
 }
 
-/** Time one stage (sync or async) as a kernel call: under the stage running now, else under the gesture given or being answered. */
-export function span(name, fn, g = current) {
-  const top = stack.at(-1);
-  const parent = top && (!g || top.g === g) ? top : null;
-  g = parent?.g ?? g;
+/** Where a stage started now would go: the stage whose function is running, else the gesture being answered. Keep it to pass
+ *  to span after an await, so a stage that waits keeps its children (the parent passed explicitly, never guessed). */
+export const here = () => stack.at(-1) ?? current;
+/** Run fn with `at` (from here()) as the running stage, for code that resumes after an await: the explicit way back to a parent. */
+export function within(at, fn) {
+  if (!at?.j || at.j.closed) return fn();
+  stack.push(at);
+  try { return fn(); } finally { stack.pop(); }
+}
+/** Time one stage (sync or async) as a kernel call. `where` is a gesture or a place from here(); the stage whose function is
+ *  running right now, if it belongs to the same gesture, is used first. */
+export function span(name, fn, where = current) {
+  const top = stack.at(-1), g0 = where?.j ? where.g : where;
+  let parent = top && (!g0 || top.g === g0) ? top : null;
+  if (!parent && where?.j && !where.j.closed) parent = where;
+  const g = parent?.g ?? g0;
   if (!g || !g.live) return measured(name, fn);
   const id = ++jobSeq, j = { g, fn, kids: new Set(), sync: false };
   jobs.set(id, j);
   const p = (parent?.ctx ?? g.ctx).callAsync('thro.stage', { job: id }, { slot: slotOf(name) });
   const settled = p.then(() => { jobs.delete(id); }, () => { jobs.delete(id); });
-  if (parent) parent.j.kids.add(settled); else { g.kids.add(settled); settled.then(() => { g.kids.delete(settled); g.poke(); }); }
+  const owner = parent ? parent.j.kids : g.kids;
+  owner.add(settled); settled.then(() => { owner.delete(settled); g.poke(); });
   if (j.sync) { if ('error' in j) throw j.error; return j.result; } // it finished (or failed) before callAsync returned
   return p.then(() => j.result, error => { throw j.error ?? error; });
 }

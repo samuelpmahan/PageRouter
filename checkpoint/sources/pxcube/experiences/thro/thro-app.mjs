@@ -605,7 +605,8 @@ function paint() {
   span('show the new card', () => paintPreview());
   span('bind the controls', () => bind());
   if (refocus) root.querySelector(refocus)?.focus({ preventScroll: true });
-  span('put the thumbnails back', () => paintCompositionThumbs());
+  // Only the start is a stage of the gesture: the thumbnails are redrawn when the page is idle, outside it (they never hold a tap).
+  span('put the thumbnails back', () => { void paintCompositionThumbs(); });
   span('kept thumbnails', () => paintKeptThumbs());
   bindSwatches();
   span('sample the disc colour', () => sampleDiscColour());
