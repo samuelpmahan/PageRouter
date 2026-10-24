@@ -7,7 +7,7 @@ import { loadFixture } from './prepared-fixture.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
 import { esc } from './renderer/src/presentation.js';
 import { pngFromSvg, sha256, downloadBlob } from './renderer/src/media.js';
-import { span, end as endGesture, active as activeGesture, settle as settleGesture, gestures, books } from './timing.mjs';
+import { span, end as endGesture, active as activeGesture, settle as settleGesture, hold as holdGesture, gestures, books } from './gestures.mjs';
 
 const $ = id => document.getElementById(id);
 const debug = new URLSearchParams(location.search).get('debug') === '1';
@@ -492,12 +492,12 @@ function editCard(holder, graphic) {
   // The card's own pixel bounds (plate included) are the drag target; the renderer's layout places the taps.
   const gesture = activeGesture(), drawn = cardLayout(graphic.svg)?.card;
   // The renderer reports where the card's pixels are; only an older drawing without that report is decoded to find them.
-  (drawn ? Promise.resolve(pixelBox(drawn, graphic)) : span('find the card pixels', () => rasterBounds(graphic.svg))).then(bounds => {
+  (drawn ? Promise.resolve(pixelBox(drawn, graphic)) : span('find the card pixels', () => rasterBounds(graphic.svg), gesture)).then(bounds => {
     if (holder.querySelector('svg') !== svg || graphic !== currentGraphic()) return;
     span('put the handles on the card', () => attachCardEditor(holder, { graphic, layout: cardLayout(graphic.svg), bounds: bounds && { x: bounds.x, y: bounds.y, w: bounds.width, h: bounds.height }, design, fixedRevision: latestCardRevision(ui.design.study), onChange: (controls, note) => {
       ui.design = nativeControlDesign(ui.design, { study: ui.design.study, ...controls });
       change({ design: structuredClone(ui.design) }, `${note}. Your graphic is ready.`);
-    } }));
+    } }), gesture);
     endGesture(gesture);
   });
 }
@@ -718,25 +718,26 @@ const nextFrame = () => new Promise(resolve => requestAnimationFrame(() => setTi
 // Paints are recorded on the gesture that asked for them (conservation law 3: its final pixels are painted exactly once).
 let svgSerial = 0; const svgIds = new Map();
 const svgId = svg => { if (!svgIds.has(svg)) { svgIds.set(svg, ++svgSerial); if (svgIds.size > 60) svgIds.delete(svgIds.keys().next().value); } return svgIds.get(svg); };
-function paintFor(gesture, when) { span('paint the page', () => paint()); gesture?.paints.push({ when, pixels: svgId(paintedSvg) }); }
+function paintFor(gesture, when) { span('paint the page', () => paint(), gesture); gesture?.paints.push({ when, pixels: svgId(paintedSvg) }); }
 function change(patch, note = 'Saved. Your graphic is ready.') {
   capturedPreview = null;
-  const token = ++shownChange, gesture = activeGesture();
+  // The gesture is passed to every stage explicitly, and held open until its save is done, so its run covers all its work.
+  const token = ++shownChange, gesture = activeGesture(), release = holdGesture(gesture);
   const quick = ui.mode === 'single' && !hasConflict() && Object.keys(patch).length === 1 && isNativeStudy(patch.design?.study);
   const shown = quick && (async () => {
     try {
-      const result = await span('draw the card', () => workspace.single(ui.selectedDisc, patch.design));
+      const result = await span('draw the card', () => workspace.single(ui.selectedDisc, patch.design), gesture);
       if (token !== shownChange || hasConflict()) return;
       if (result.graphic?.svg === paintedSvg) { settleGesture('unchanged', gesture); return; } // the same pixels are already on screen
-      currentResult = result; span('run the screen through PxC', () => runScreen()); paintFor(gesture, 'shown');
+      currentResult = result; span('run the screen through PxC', () => runScreen(), gesture); paintFor(gesture, 'shown');
     } catch { /* the save below draws it again and reports any failure */ }
   })();
-  return run(async () => {
+  const queued = run(async () => {
     try {
       // The save waits for the card to be drawn and that frame to be on screen, so it never holds up the pixels.
       if (shown) { await shown; await nextFrame(); }
-      await span('save the change', () => workspace.change(patch)); ui.design = { ...defaultDesign, ...context().design };
-      await span('check the engine', () => ensureOneEngine()); await span('draw the card', () => renderCurrent());
+      await span('save the change', () => workspace.change(patch), gesture); ui.design = { ...defaultDesign, ...context().design };
+      await span('check the engine', () => ensureOneEngine(), gesture); await span('draw the card', () => renderCurrent(), gesture);
       // A newer change paints itself; the same pixels already on screen are not painted twice.
       if (!quick || (token === shownChange && currentGraphic()?.svg !== paintedSvg)) paintFor(gesture, 'after the save');
       else diagnostics();
@@ -746,8 +747,10 @@ function change(patch, note = 'Saved. Your graphic is ready.') {
         dispatchEvent(new CustomEvent('thro:books'));
       }
       message(note);
-    } catch (error) { settleGesture('failed', gesture); throw error; }
+    } catch (error) { settleGesture('failed', gesture); throw error; } finally { release(); }
   }, { kind: 'change', patch, ui });
+  queued.finally(release); // also when the queue skips this change (a conflict)
+  return queued;
 }
 
 async function keepCurrent(explicit = false) {

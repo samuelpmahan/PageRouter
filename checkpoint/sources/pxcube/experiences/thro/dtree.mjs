@@ -317,7 +317,7 @@ async function start() {
     if (!panel.hidden && !lights.length) paint();
   }
 
-  // How long each tap took, finger to pixels (timing.mjs): one bar per tap on the same scale, a block per stage, the frame
+  // How long each tap took, finger to pixels (each gesture a PxC run, its stages kernel calls timed by the kernel, gestures.mjs): one bar per tap on the same scale, a block per stage, the frame
   // the eye calls instant (100 ms) marked. Measured on this device, in this browser, each time.
   const STAGE_COLOURS = { 'draw the card': '#ff9e80', 'run the screen through PxC': '#c77dff', 'paint the page': '#4cc9f0', 'put the handles on the card': '#c8f49d', 'find the card pixels': '#ffd166', 'save the change': '#7d8a80' };
   function timingNode() {
@@ -326,7 +326,9 @@ async function start() {
     const scale = Math.max(400, ...taps.map(t => t.end)), pct = ms => `${(100 * ms / scale).toFixed(2)}%`;
     const bar = t => `<div class="dt-tbar" role="img" aria-label="${esc(t.label)}: ${Math.round(t.end)} milliseconds"><u style="width:${pct(t.end)}"></u>${t.stages.filter(st => st.depth === 0 && st.start < t.end && STAGE_COLOURS[st.name]).map(st => `<i title="${esc(st.name)} ${Math.round(st.ms)} ms" style="left:${pct(st.start)};width:${pct(Math.min(st.ms, t.end - st.start))};background:${STAGE_COLOURS[st.name]}"></i>`).join('')}<b style="left:${pct(100)}"></b></div>`;
     const used = [...new Set(taps.flatMap(t => t.stages.filter(st => st.depth === 0 && st.start < t.end && STAGE_COLOURS[st.name]).map(st => st.name)))];
-    return `<h3>Your last taps, finger to pixels</h3><ol class="dt-taps">${taps.map(t => `<li><span class="dt-tlabel">${esc(t.label)}</span><span class="dt-tms">${Math.round(t.end)} ms</span>${bar(t)}</li>`).join('')}</ol>
+    // The kernel flags a stage that spends 5% or more of the gesture in its own code, not itemised: the next place to look inside.
+    const opaque = t => (t.opaque?.length ? `<span class="dt-about" style="display:block;margin:2px 0 0;color:#ffd166">Not itemised yet (share of all its work, save included): ${t.opaque.map(o => `${esc(o.name)} ${Math.round(100 * o.share)}%`).join(', ')}</span>` : '');
+    return `<h3>Your last taps, finger to pixels</h3><ol class="dt-taps">${taps.map(t => `<li><span class="dt-tlabel">${esc(t.label)}</span><span class="dt-tms">${Math.round(t.end)} ms</span>${bar(t)}${opaque(t)}</li>`).join('')}</ol>
       <p class="dt-about"><a href="./notebook.html" style="color:#c8f49d">The engineering notebook →</a> datasheets for the parts these taps run on, measured in your browser.</p>
       <p class="dt-ways-sum">${used.map(n => `<span class="dt-key"><i style="background:${STAGE_COLOURS[n]}"></i>${esc(n)}</span>`).join('')}<span class="dt-key"><i style="background:none;border-left:2px solid #fff;width:0"></i>100 ms</span></p>`;
   }

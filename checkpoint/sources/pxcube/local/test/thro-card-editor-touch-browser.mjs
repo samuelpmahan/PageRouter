@@ -7,7 +7,7 @@ const { chromium } = await import(process.env.PLAYWRIGHT_MODULE ?? 'playwright')
 const base = new URL(process.argv[2] ?? 'http://localhost:8766/'), shots = process.argv[3];
 const browser = await chromium.launch(process.env.CHROMIUM_PATH ? { executablePath: process.env.CHROMIUM_PATH } : {});
 const failures = [], notes = [];
-// Finger to pixels, measured by the page itself (timing.mjs). Before 23 Oct a tap took about a second and nothing measured it.
+// Finger to pixels, measured by the page itself (gestures.mjs: the PxC kernel times every stage). Before 23 Oct a tap took about a second and nothing measured it.
 const BUDGET = Number(process.env.THRO_TAP_BUDGET_MS ?? 300);
 const expect = (label, ok, message) => { if (!ok) failures.push(`${label}: ${message}`); };
 const sizes = [{ label: 'phone 390 (touch)', width: 390, height: 844, touch: true }, { label: "Sam's window 1540×784", width: 1540, height: 784 }, { label: '1280×900', width: 1280, height: 900 }];

@@ -28,7 +28,7 @@ const STYLE = `
 .card-editor .ce-knob{position:absolute;pointer-events:auto;width:32px;height:32px;min-height:32px;min-width:32px;margin:-16px 0 0 -16px;padding:0;border-radius:50%;border:3px solid #fff;background:#e2402f;color:#fff;font:700 14px/1 system-ui,sans-serif;touch-action:none;cursor:nwse-resize;box-shadow:0 2px 8px #0007}
 .card-editor.is-dragging .ce-knob,.card-editor.is-dragging .ce-badge{visibility:hidden}
 `;
-import { begin, settle } from './timing.mjs';
+import { begin, settle } from './gestures.mjs';
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const union = boxes => {
   const list = boxes.filter(b => b && Number.isFinite(b.x) && b.w > 0 && b.h > 0);

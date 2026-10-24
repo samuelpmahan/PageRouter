@@ -8,7 +8,7 @@ import { defaultDesign } from './graphics.mjs';
 import { createNativeRenderer, isNativeStudy, isLineupStudy, workspaceDesignChange } from './native-cards.mjs';
 import { validateFlightCorrection } from './prepared-fixture.mjs';
 import { createWorkspacePackage, snapshotJson } from './workspace-package.mjs';
-import { span } from './timing.mjs';
+import { span } from './gestures.mjs';
 
 export const archiveKey = 'thro.v1:prepared-samples:archive';
 const clone = value => structuredClone(value);

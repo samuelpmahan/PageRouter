@@ -1,11 +1,12 @@
-// thro engineering notebook, page 2: conservation laws checked over every gesture of the real site (timing.mjs keeps the books).
+// thro engineering notebook, page 2: conservation laws checked over every gesture of the real site. Each gesture is a PxC run and
+// each stage a kernel call (gestures.mjs); the kernel times them (seq 63) and its side record is the time ledger drawn here.
 // thro runs in the frame on a throwaway workspace (?scratch: storage in memory, its own key and lock). The page reads the books the
 // site keeps (window.__thro.books, window.__thro.timing) and draws them; the gauge drives the card with the same pointer events a
 // finger makes. Nothing is typed in: every number is booked by the site as it runs.
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const frame = $('#thro');
-const COLOURS = { 'draw the card': '#ff9e80', 'run the screen through PxC': '#c77dff', 'paint the page': '#4cc9f0', 'put the handles on the card': '#c8f49d', 'find the card pixels': '#ffd166', 'save the change': '#7d8a80' };
+const COLOURS = { 'wait for the frame to be shown': '#3a5a44', 'draw the card': '#ff9e80', 'run the screen through PxC': '#c77dff', 'paint the page': '#4cc9f0', 'put the handles on the card': '#c8f49d', 'find the card pixels': '#ffd166', 'save the change': '#7d8a80' };
 const wait = ms => new Promise(r => setTimeout(r, ms));
 const win = () => frame.contentWindow;
 const thro = () => win()?.__thro;
@@ -21,15 +22,17 @@ function paint() {
   $('#paints').innerHTML = withLaw.length
     ? `${withLaw.filter(g => g.paintLaw.ofFinal === 1).length} of ${withLaw.length} painted gestures put their final pixels on screen exactly once; ${withLaw.reduce((n, g) => n + g.paintLaw.duplicates, 0)} duplicate repaints. <span class="${withLaw.every(g => g.paintLaw.ofFinal === 1 && !g.paintLaw.duplicates) ? 'pass' : 'fail'}">${withLaw.every(g => g.paintLaw.ofFinal === 1 && !g.paintLaw.duplicates) ? '✓ conserved' : '✗ see the gestures marked below'}</span>`
     : 'No painted gesture has finished its save yet.';
-  const scale = Math.max(150, ...gs.map(g => g.end ?? 0));
+  const scale = Math.max(150, ...gs.map(g => g.ledger?.total ?? g.end ?? 0));
   $('#ledgers').innerHTML = gs.map(g => {
     const L = g.ledger; if (!L) return '';
     let at = 0;
     const blocks = L.rows.map(r => { const left = at; at += r.ms; return `<i class="${r.remainder ? 'rem' : ''}" title="${esc(r.name)} ${r.ms.toFixed(1)} ms" style="left:${(100 * left / scale).toFixed(2)}%;width:${(100 * r.ms / scale).toFixed(2)}%;${r.remainder ? '' : `background:${COLOURS[r.name] ?? '#9fb0a3'}`}"></i>`; }).join('');
     const law = g.paintLaw ? ` · paints ${g.paintLaw.paints}, of its final pixels ${g.paintLaw.ofFinal}${g.paintLaw.duplicates ? `, <span class="fail">${g.paintLaw.duplicates} duplicate</span>` : ''} <span class="${g.paintLaw.ofFinal === 1 && !g.paintLaw.duplicates ? 'pass' : 'fail'}">${g.paintLaw.ofFinal === 1 && !g.paintLaw.duplicates ? '✓' : '✗'}</span>` : '';
-    const rows = L.rows.filter(r => !r.remainder || r.ms >= 0.5).map(r => `<tr><td class="${r.remainder ? 'rem' : ''}">${r.remainder ? 'remainder ' : ''}${esc(r.name)}</td><td class="num">${r.ms.toFixed(1)} ms</td></tr>`).join('');
-    return `<div class="g"><div class="head"><b>${esc(g.label)}</b><span class="tag ${g.outcome}">${g.outcome}</span><span>${g.end.toFixed(1)} ms</span><span class="muted">stages + remainders − overlap ${L.overlap.toFixed(1)} = ${(L.total + L.balance).toFixed(1)} ms</span><span class="${Math.abs(L.balance) < 0.01 ? 'pass' : 'fail'}">${Math.abs(L.balance) < 0.01 ? '✓ closes' : `✗ off by ${L.balance.toFixed(2)}`}</span>${law}</div>
-      <div class="bar">${blocks}</div><table>${rows}</table></div>`;
+    const mark = `<b class="px" title="pixels on screen at ${g.end.toFixed(1)} ms" style="left:${(100 * g.end / scale).toFixed(2)}%"></b>`;
+    const opaque = g.opaque?.length ? `<p class="opaque">Opaque (5% or more of the gesture in its own code, not itemised): ${g.opaque.map(o => `${esc(o.name)} ${Math.round(100 * o.share)}%`).join(', ')}</p>` : '';
+    const rows = L.rows.filter(r => !r.remainder || Math.abs(r.ms) >= 0.5).map(r => `<tr><td class="${r.remainder ? 'rem' : ''}">${r.remainder ? 'remainder ' : ''}${esc(r.name)}</td><td class="num">${r.ms.toFixed(1)} ms</td></tr>`).join('');
+    return `<div class="g"><div class="head"><b>${esc(g.label)}</b><span class="tag ${g.outcome}">${g.outcome}</span><span>pixels at ${g.end.toFixed(1)} ms</span><span>all its work ${L.total.toFixed(1)} ms</span><span class="muted">stages + remainders − overlap ${L.overlap.toFixed(1)} = ${(L.total + L.balance).toFixed(1)} ms</span><span class="${Math.abs(L.balance) < 0.01 ? 'pass' : 'fail'}">${Math.abs(L.balance) < 0.01 ? '✓ closes' : `✗ off by ${L.balance.toFixed(2)}`}</span>${law}</div>
+      <div class="bar">${blocks}${mark}</div>${opaque}<table>${rows}</table></div>`;
   }).join('') || '<p class="muted">No gesture yet.</p>';
 }
 

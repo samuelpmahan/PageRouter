@@ -1,5 +1,5 @@
 import { canonical, hashString } from './pxc/canonical.mjs';
-import { span } from './timing.mjs';
+import { span } from './gestures.mjs';
 // Native card pixels are an optional Single treatment. The renderer/catalog
 // module graph is imported only when one of these explicit studies is used.
 export const nativeBuild = '28ac2b39fab85255';

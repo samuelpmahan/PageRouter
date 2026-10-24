@@ -1,4 +1,4 @@
-// Conservation laws over every gesture (engineering notebook page 2; timing.mjs keeps the books). Runs the notebook's gauge on
+// Conservation laws over every gesture (engineering notebook page 2; gestures.mjs: each gesture a PxC run, timed by the kernel). Runs the notebook's gauge on
 // thro in a throwaway frame and requires: (1) begun = painted + superseded + unchanged + failed, nothing open, nothing open past
 // 3 s, and the gauge's superseded and unchanged gestures booked as such; (2) every gesture's time ledger closes; (3) every painted
 // gesture put its final pixels on screen exactly once, with no duplicate repaint; and the real localStorage is never written.

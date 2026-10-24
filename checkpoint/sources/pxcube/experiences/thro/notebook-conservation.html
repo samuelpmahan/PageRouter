@@ -42,6 +42,8 @@ td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
 .bar i.rem{background:repeating-linear-gradient(135deg,#9fb0a355 0 4px,#9fb0a322 4px 8px)}
 .g table{font-size:12.5px;margin:2px 0}
 .g td.rem{color:#d6e0d3;font-style:italic}
+.bar b.px{position:absolute;top:-2px;bottom:-2px;border-left:2px solid #fff}
+.g p.opaque{margin:2px 0;font-size:12.5px;color:var(--gold)}
 .tag{display:inline-block;border-radius:5px;padding:0 6px;font-size:11.5px;font-weight:700}
 .tag.painted{background:#2c3a2e;color:var(--lime)}.tag.superseded{background:#3a3326;color:var(--gold)}.tag.unchanged{background:#2a2f3a;color:var(--sky)}.tag.failed{background:#3a2626;color:var(--red)}
 </style>
@@ -58,7 +60,7 @@ td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
   <h3>The laws</h3>
   <ol class="laws">
     <li><b>Gestures are conserved.</b> Every gesture that begins ends exactly once and says how: <span class="tag painted">painted</span> its pixels, <span class="tag superseded">superseded</span> by a newer gesture, <span class="tag unchanged">unchanged</span> (nothing to redraw), or <span class="tag failed">failed</span>. So begun = painted + superseded + unchanged + failed + open, and open is 0 once things settle. A gesture still open after 3 seconds is a violation, counted.</li>
-    <li><b>Time balances.</b> A gesture's total is its top-level stages plus its remainders. Each remainder is named by where it sits (between which two stages), not by a guess at what is inside it. Stages that overlap are not sequential, and the overlap is shown, not hidden.</li>
+    <li><b>Time balances.</b> Every gesture is a PxC run and every stage a kernel call, so the kernel times them; nothing here keeps its own clock. A gesture's total, from the finger until its last work (the save) is done, is its stages plus its remainders. Each remainder is named by where it sits (between which two stages), not by a guess at what is inside it, and kept signed. Stages that ran at the same time are not sequential: the overlap is shown, not hidden. The white mark is when its pixels were on screen. A stage that spends 5% or more of the gesture in its own code, not itemised, is flagged opaque.</li>
     <li><b>Final pixels are painted exactly once.</b> A gesture that paints puts its final pixels on screen once; painting the same pixels again in a row is a duplicate.</li>
   </ol>
 
@@ -74,7 +76,7 @@ td.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
       <h3>Law 3 · Paints</h3>
       <p id="paints" class="muted">No painted gesture yet.</p>
       <h3>Law 2 · Time, gesture by gesture</h3>
-      <p class="muted">Solid blocks are thro's own stages; hatched blocks are remainders, named by where they sit. Newest first. Remainders under 0.5 ms are left out of the lists, not out of the sums.</p>
+      <p class="muted">Solid blocks are thro's stages, timed by the kernel; hatched blocks are remainders, named by where they sit; the white mark is the pixels. Newest first. Remainders under 0.5 ms are left out of the lists, not out of the sums.</p>
       <div id="ledgers"></div>
     </div>
   </div>
