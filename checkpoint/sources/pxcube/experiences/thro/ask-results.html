@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Card picks — results</title>
+<style>
+:root{--ground:#0f1611;--line:#2c3b2f;--ink:#eef3ea;--muted:#a3b39e;--pick:#ffd166}
+body{margin:0;background:var(--ground);color:var(--ink);font:15px/1.5 system-ui,sans-serif;padding:20px max(16px,env(safe-area-inset-left))}
+h1{font-size:22px;margin:0 0 4px}p{color:var(--muted);margin:0 0 16px}
+table{border-collapse:collapse;width:100%;max-width:980px}td,th{border-top:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+th{font-size:12px;color:var(--muted);font-weight:600}.bar{height:10px;background:var(--pick);border-radius:5px;display:inline-block;margin-right:8px;vertical-align:middle}
+td.n{font-variant-numeric:tabular-nums;white-space:nowrap}.wrap{overflow-x:auto}
+</style>
+</head>
+<body>
+<h1>Which card would you put on screen? Results</h1>
+<p id="meta">Loading…</p>
+<div class="wrap"><table id="tally"></table></div>
+<h2 style="font-size:17px;margin:24px 0 8px">Every answer</h2>
+<div class="wrap"><table id="answers"></table></div>
+<script type="module">
+const key = new URLSearchParams(location.search).get('key') ?? '';
+const NAMES = { u01: 'U01 · Compact scorebug', u02: 'U02 · Stacked poster', 'u03-front': 'U03 · Disc in front', 'u03-behind': 'U03 · Disc behind', u04: 'U04 · Kinetic name', u05: 'U05 · Glass drawer', b01: 'B01 · Hero rail', b02: 'B02 · Split nameplate', b03: 'B03 · Framed hero', b04: 'B04 · Peak mark', b05: 'B05 · Stamp macro' };
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+try {
+  const res = await fetch(`./api/judgments${key ? `?key=${encodeURIComponent(key)}` : ''}`);
+  if (!res.ok) throw Error((await res.json().catch(() => ({}))).error ?? `HTTP ${res.status}`);
+  const { tally, answers } = await res.json();
+  document.getElementById('meta').textContent = `${tally.answers} answers.${answers ? '' : ' Notes show only with the results key.'}`;
+  const rows = Object.keys(NAMES).map(k => [k, tally.picks[k] ?? 0]).sort((a, b) => b[1] - a[1]);
+  const max = Math.max(1, ...rows.map(r => r[1]));
+  document.getElementById('tally').innerHTML = '<tr><th>Card</th><th>Picked by</th></tr>' + rows.map(([k, n]) => `<tr><td>${NAMES[k]}</td><td class="n"><span class="bar" style="width:${Math.round(240 * n / max)}px"></span>${n} of ${tally.answers}</td></tr>`).join('');
+  if (answers) document.getElementById('answers').innerHTML = '<tr><th>When (UTC)</th><th>Picked</th><th>What they\'d change</th><th>Seconds</th><th>Device</th></tr>' + answers.map(a => `<tr><td class="n">${esc(a.at.slice(0, 16).replace('T', ' '))}</td><td>${a.picks.map(p => esc(NAMES[p] ?? p)).join('<br>')}</td><td>${esc(a.note)}</td><td class="n">${a.seconds ?? ''}</td><td>${esc(a.device)}</td></tr>`).join('');
+} catch (e) { document.getElementById('meta').textContent = `No results here yet: ${e.message}`; }
+</script>
+</body>
+</html>
