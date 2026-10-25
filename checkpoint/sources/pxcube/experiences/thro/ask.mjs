@@ -1,6 +1,6 @@
 // thro ask: "Which card would you put on screen?" (Sam, 24 Oct 18:56: "These people don't want ThroCards. I am requesting their
 // time, taste and judgement on my work"). One screen: every card layout up close on a real tee shot, drawn by the renderer exactly
-// as the editor draws it. Tap one or two, optionally say what you'd change, then Copy feedback.
+// as the editor draws it. Tap every card you'd use (or Select all), optionally say what you'd change, then Copy feedback.
 // Copy feedback puts the answer on the clipboard as plain text, to paste back into the Slack thread (Sam, 19:02: discussion in
 // Slack draws in outside interest). Nothing is sent or stored anywhere.
 import { loadFixture } from './prepared-fixture.mjs';
@@ -9,7 +9,7 @@ const V = '?v=28ac2b39fab85255';
 const adapter = await import(`./vendor/discstudio-cards/thro-adapter.mjs${V}`);
 const molds = await import(`./vendor/discstudio-cards/mold-library.js${V}`);
 const $ = id => document.getElementById(id);
-const opened = performance.now(), MAX_PICKS = 2;
+const opened = performance.now();
 
 const fixture = await loadFixture(), disc = fixture.find(d => d.name === 'Servo') ?? fixture[0];
 const tee = await image('./assets/tee-shot-original.jpg');
@@ -27,9 +27,8 @@ for (const study of nativeStudies) {
   b.innerHTML = `<canvas width="${study.orientation === 'portrait' ? 300 : 480}" height="${study.orientation === 'portrait' ? 420 : 300}"></canvas><span class="wait">drawing…</span><span class="name">${code} · ${rest.join(' · ')}</span><span class="check" aria-hidden="true">✓</span>`;
   b.setAttribute('aria-label', `${study.name}: pick this card`);
   b.onclick = () => {
-    if (sent) return;
-    if (picked.has(study.preset)) picked.delete(study.preset);
-    else { if (picked.size >= MAX_PICKS) { const first = [...picked][0]; picked.delete(first); tiles.find(t => t.study.preset === first).el.setAttribute('aria-pressed', 'false'); } picked.add(study.preset); }
+        if (picked.has(study.preset)) picked.delete(study.preset);
+    else picked.add(study.preset);
     b.setAttribute('aria-pressed', String(picked.has(study.preset))); status();
   };
   $(study.orientation === 'portrait' ? 'portrait' : 'landscape').append(b);
@@ -56,15 +55,15 @@ for (const { study, el } of tiles) {
 }
 $('main').setAttribute('aria-busy', 'false');
 
-let sent = false;
 function status() {
   $('send').disabled = !picked.size;
-  $('status').innerHTML = picked.size ? `<b>${[...picked].map(p => p.toUpperCase()).join(' and ')}</b>${picked.size < MAX_PICKS ? ' · pick one more, or copy' : ''}` : 'Tap one or two.';
+  $('status').innerHTML = picked.size ? `<b>${picked.size} of ${tiles.length}</b> picked` : 'Tap every card you\'d use.';
+  $('all').textContent = picked.size === tiles.length ? 'Clear all' : 'Select all';
 }
 const nameOf = preset => nativeStudies.find(s => s.preset === preset).name;
 function feedback() {
   const note = $('note').value.trim(), seconds = Math.round((performance.now() - opened) / 1000);
-  return [`My pick${picked.size > 1 ? 's' : ''}: ${[...picked].map(nameOf).join(', ')}`, note && `What I'd change: ${note}`, `(${seconds}s, on ${matchMedia('(pointer:coarse)').matches ? 'a phone' : 'a computer'})`].filter(Boolean).join('\n');
+  return [`My pick${picked.size > 1 ? 's' : ''}: ${[...document.querySelectorAll('.card[aria-pressed=true]')].map(el => nameOf(el.dataset.preset)).join(', ')}`, note && `What I'd change: ${note}`, `(${seconds}s, on ${matchMedia('(pointer:coarse)').matches ? 'a phone' : 'a computer'})`].filter(Boolean).join('\n');
 }
 $('send').onclick = async () => {
   if (!picked.size) return;
@@ -72,6 +71,11 @@ $('send').onclick = async () => {
   try { await navigator.clipboard.writeText(text); $('status').innerHTML = '<b>Copied.</b> Paste it in the Slack thread.'; box.hidden = true; }
   catch { box.value = text; box.hidden = false; box.focus(); box.select(); $('status').innerHTML = '<b>Copy this</b> and paste it in the Slack thread.'; }
   $('send').textContent = 'Copied ✓'; setTimeout(() => { $('send').textContent = 'Copy feedback'; }, 2500);
+};
+$('all').onclick = () => {
+  const every = picked.size !== tiles.length;
+  for (const { study, el } of tiles) { every ? picked.add(study.preset) : picked.delete(study.preset); el.setAttribute('aria-pressed', String(every)); }
+  status();
 };
 $('note').addEventListener('input', () => { $('copy-fallback').hidden = true; });
 status();
