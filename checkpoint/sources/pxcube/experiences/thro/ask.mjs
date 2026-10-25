@@ -1,16 +1,15 @@
 // thro ask: "Which card would you put on screen?" (Sam, 24 Oct 18:56: "These people don't want ThroCards. I am requesting their
 // time, taste and judgement on my work"). One screen: every card layout up close on a real tee shot, drawn by the renderer exactly
-// as the editor draws it. Tap one or two, optionally say what you'd change, Send. Then everyone's picks show on the cards.
-// An answer holds only: the picks, the note, seconds spent, phone or desktop, and the time. No name, address or browser details.
-// Answers go to POST ./api/judgments (_worker.js, D1). Where this preview has no store yet, they stay on this device and the page
-// says so.
+// as the editor draws it. Tap one or two, optionally say what you'd change, then Copy feedback.
+// Copy feedback puts the answer on the clipboard as plain text, to paste back into the Slack thread (Sam, 19:02: discussion in
+// Slack draws in outside interest). Nothing is sent or stored anywhere.
 import { loadFixture } from './prepared-fixture.mjs';
 import { nativeStudies, cardRevisions } from './native-cards.mjs';
 const V = '?v=28ac2b39fab85255';
 const adapter = await import(`./vendor/discstudio-cards/thro-adapter.mjs${V}`);
 const molds = await import(`./vendor/discstudio-cards/mold-library.js${V}`);
 const $ = id => document.getElementById(id);
-const opened = performance.now(), MAX_PICKS = 2, LOCAL = 'thro.ask.local';
+const opened = performance.now(), MAX_PICKS = 2;
 
 const fixture = await loadFixture(), disc = fixture.find(d => d.name === 'Servo') ?? fixture[0];
 const tee = await image('./assets/tee-shot-original.jpg');
@@ -59,32 +58,20 @@ $('main').setAttribute('aria-busy', 'false');
 
 let sent = false;
 function status() {
-  if (sent) return;
   $('send').disabled = !picked.size;
-  $('status').innerHTML = picked.size ? `<b>${[...picked].map(p => p.toUpperCase()).join(' and ')}</b>${picked.size < MAX_PICKS ? ' · pick one more, or Send' : ''}` : 'Tap one or two.';
+  $('status').innerHTML = picked.size ? `<b>${[...picked].map(p => p.toUpperCase()).join(' and ')}</b>${picked.size < MAX_PICKS ? ' · pick one more, or copy' : ''}` : 'Tap one or two.';
 }
-const readLocal = () => { try { return JSON.parse(localStorage.getItem(LOCAL) ?? '[]'); } catch { return []; } };
-async function send(answer) {
-  try {
-    const res = await fetch('./api/judgments', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(answer) });
-    if (res.ok) return { stored: 'shared', tally: (await res.json()).tally };
-  } catch { /* no store on this preview */ }
-  const all = [...readLocal(), answer]; try { localStorage.setItem(LOCAL, JSON.stringify(all)); } catch { /* private mode */ }
-  const tally = {}; for (const a of all) for (const p of a.picks) tally[p] = (tally[p] ?? 0) + 1;
-  return { stored: 'local', tally: { answers: all.length, picks: tally } };
+const nameOf = preset => nativeStudies.find(s => s.preset === preset).name;
+function feedback() {
+  const note = $('note').value.trim(), seconds = Math.round((performance.now() - opened) / 1000);
+  return [`My pick${picked.size > 1 ? 's' : ''}: ${[...picked].map(nameOf).join(', ')}`, note && `What I'd change: ${note}`, `(${seconds}s, on ${matchMedia('(pointer:coarse)').matches ? 'a phone' : 'a computer'})`].filter(Boolean).join('\n');
 }
 $('send').onclick = async () => {
-  if (!picked.size || sent) return;
-  sent = true; $('send').disabled = true; $('send').textContent = 'Sending…';
-  const answer = { picks: [...picked], note: $('note').value.trim().slice(0, 600), seconds: Math.round((performance.now() - opened) / 1000),
-    device: matchMedia('(pointer:coarse)').matches ? 'phone' : 'desktop', at: new Date().toISOString() };
-  const { stored, tally } = await send(answer);
-  for (const { study, el } of tiles) {
-    const n = tally.picks[study.preset] ?? 0, share = tally.answers ? n / tally.answers : 0;
-    const t = document.createElement('span'); t.className = 'tally'; t.innerHTML = `<i style="width:${Math.round(share * 70)}%"></i>${n} of ${tally.answers}`; el.append(t);
-  }
-  $('send').textContent = 'Sent';
-  $('note').disabled = true;
-  $('status').innerHTML = stored === 'shared' ? `<b>Thank you.</b> That's how everyone has picked so far.` : `<b>Thank you.</b> (This preview has no shared store yet: your answer stayed on this device.)`;
+  if (!picked.size) return;
+  const text = feedback(), box = $('copy-fallback');
+  try { await navigator.clipboard.writeText(text); $('status').innerHTML = '<b>Copied.</b> Paste it in the Slack thread.'; box.hidden = true; }
+  catch { box.value = text; box.hidden = false; box.focus(); box.select(); $('status').innerHTML = '<b>Copy this</b> and paste it in the Slack thread.'; }
+  $('send').textContent = 'Copied ✓'; setTimeout(() => { $('send').textContent = 'Copy feedback'; }, 2500);
 };
+$('note').addEventListener('input', () => { $('copy-fallback').hidden = true; });
 status();

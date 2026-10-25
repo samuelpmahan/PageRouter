@@ -38,8 +38,6 @@ const runtimeFiles = [
   'console-map.mjs',
   'ask.html',
   'ask.mjs',
-  'ask-results.html',
-  '_worker.js',
   'console-map/phone.json',
   'console-map/phone.webp',
   'ways.mjs',
