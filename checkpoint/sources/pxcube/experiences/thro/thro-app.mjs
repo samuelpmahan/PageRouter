@@ -4,6 +4,7 @@ import { attachCardEditor, detachCardEditor } from './card-editor.mjs';
 import { createThroWorld, decide, screen, SITE_FILL, photoDefinition } from './thro-world.mjs';
 import { alphaBounds, fitArtwork } from './preview-frame.mjs';
 import { loadFixture } from './prepared-fixture.mjs';
+import { loadBag, workspaceKey as photoBagKey } from './photo-bag.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
 import { esc } from './renderer/src/presentation.js';
 import { pngFromSvg, sha256, downloadBlob } from './renderer/src/media.js';
@@ -900,9 +901,11 @@ $('reload-latest').onclick = () => {
 };
 
 try {
-  const fixture = await loadFixture(); fixtureDiscs = fixture;
+  // ?bag=photos: the shelf is the discs just cropped from real photos on photos.html, in a workspace of their own.
+  const params = new URLSearchParams(location.search), photoBag = params.get('bag') === 'photos';
+  const fixture = photoBag ? loadBag() : await loadFixture(); fixtureDiscs = fixture;
   // ?scratch (the notebook's embedded thro): a throwaway workspace in memory, under its own key and lock; saved work is never touched.
-  workspace = await openWorkspace({ storage: localStorage, locks: navigator.locks, fixture, ...(new URLSearchParams(location.search).has('scratch') ? { key: 'thro.scratch:prepared-samples' } : {}) });
+  workspace = await openWorkspace({ storage: localStorage, locks: navigator.locks, fixture, ...(photoBag ? { key: photoBagKey } : params.has('scratch') ? { key: 'thro.scratch:prepared-samples' } : {}) });
   rows = await workspace.model.shelfForDisplay(); adoptContext();
   window.__throStarted?.();
   await ensureOneEngine();

@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f1611">
+<title>thro · your photos</title>
+<meta name="description" content="Ten real disc photos, cropped live in the browser: find the rim, fit the ellipse, unwarp the disc, then make cards with it.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%23c8f49d' stroke-width='3'%3E%3Ccircle cx='16' cy='16' r='13'/%3E%3Ccircle cx='16' cy='16' r='5.75'/%3E%3C/svg%3E">
+<style>
+:root{--ground:#0f1611;--panel:#17211a;--line:#2c3b2f;--ink:#eef3ea;--muted:#a3b39e;--accent:#c8f49d;--coarse:#ffb347;--b1:#5ad1ff;--b2:#ff6bd6;--b3:#ffe066;--pick:#ffd166}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:radial-gradient(1200px 700px at 60% 30%,#1a2a1d,var(--ground));color:var(--ink);font:14.5px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;display:grid;grid-template-rows:auto 1fr auto;min-height:100dvh}
+header{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 16px;padding:max(12px,env(safe-area-inset-top)) 16px 6px}
+header a.mark{color:var(--accent);font:800 20px system-ui;text-decoration:none;letter-spacing:-.5px}
+h1{margin:0;font-size:clamp(18px,2.2vw,24px);letter-spacing:-.4px}
+header p{margin:0;color:var(--muted);font-size:13px}
+main{display:grid;grid-template-columns:150px minmax(0,1fr) 340px;gap:12px;padding:6px 16px 10px;min-height:0}
+.strip{display:flex;flex-direction:column;gap:8px;overflow:auto;min-height:0;padding-right:2px}
+.thumb{position:relative;flex:none;border:2px solid var(--line);border-radius:10px;overflow:hidden;padding:0;background:#000;cursor:pointer;aspect-ratio:3/4}
+.thumb img,.thumb canvas{display:block;width:100%;height:100%;object-fit:cover}
+.thumb canvas{position:absolute;inset:0}
+.thumb[aria-current=true]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.thumb .tag{position:absolute;left:4px;bottom:4px;font:700 10.5px system-ui;background:#000c;color:var(--ink);padding:2px 6px;border-radius:6px}
+.thumb .tag.done{background:var(--accent);color:#16230f}
+.stage{position:relative;min-height:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#070a08}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%}
+.stage .cap{position:absolute;left:12px;top:10px;right:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;font:650 12.5px system-ui;pointer-events:none}
+.stage .cap span{background:#000b;padding:4px 9px;border-radius:7px}
+.stage .go{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);display:flex;gap:8px}
+button.big{min-height:46px;padding:10px 22px;border-radius:12px;border:1px solid var(--accent);background:var(--accent);color:#16230f;font:780 15px system-ui;cursor:pointer;box-shadow:0 6px 24px #0008}
+button.ghost{min-height:46px;padding:10px 16px;border-radius:12px;border:1px solid #56704e;background:#0d150fcc;color:var(--ink);font:650 14px system-ui;cursor:pointer}
+button:disabled{opacity:.45;cursor:default}
+aside{display:flex;flex-direction:column;gap:10px;min-height:0;overflow:auto}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:12px}
+.panel h2{margin:0 0 6px;font-size:13px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.steps li{display:grid;grid-template-columns:18px 1fr;gap:8px;align-items:start;color:var(--muted);transition:color .2s}
+.steps li i{width:14px;height:14px;margin-top:3px;border-radius:50%;border:2px solid currentColor}
+.steps li.on{color:var(--ink)}
+.steps li.on i{background:currentColor}
+.steps li b{font-weight:700}
+.steps li small{display:block;font:12px ui-monospace,Menlo,Consolas,monospace;color:var(--muted)}
+.steps li[data-k=coarse] i{color:var(--coarse)} .steps li[data-k=fine] i{color:var(--b1)} .steps li[data-k=join] i{color:var(--b2)} .steps li[data-k=unwarp] i{color:var(--accent)}
+.keys{display:flex;flex-wrap:wrap;gap:4px 10px;font:12px ui-monospace,Menlo,monospace;margin-top:4px}
+.keys span::before{content:"";display:inline-block;width:10px;height:3px;margin-right:4px;vertical-align:middle;background:var(--c)}
+.cut{display:grid;grid-template-columns:120px 1fr;gap:12px;align-items:center}
+.cut canvas{width:120px;height:120px;border-radius:50%;background:repeating-conic-gradient(#222 0 25%,#2c2c2c 0 50%) 0 0/16px 16px}
+.cut p{margin:0;color:var(--muted);font-size:13px}
+label.f{display:grid;gap:4px;font-size:12px;color:var(--muted);margin-top:8px}
+input[type=search]{width:100%;min-height:40px;border:1px solid #405043;border-radius:9px;padding:8px 10px;background:#0d150f;color:var(--ink);font:14px system-ui}
+.hits{display:grid;gap:4px;margin-top:6px}
+.hits button{text-align:left;border:1px solid var(--line);background:#0d150f;color:var(--ink);border-radius:8px;padding:7px 9px;font:13.5px system-ui;cursor:pointer}
+.hits button[aria-pressed=true]{border-color:var(--accent);background:#21321f}
+.hits small{color:var(--muted);margin-left:6px;font-family:ui-monospace,Menlo,monospace}
+.seen{color:var(--muted);font-size:12.5px;margin:0 0 4px}
+footer{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:flex-end;padding:10px 16px max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--line);background:#141d16e6;backdrop-filter:blur(6px)}
+footer .status{margin-right:auto;color:var(--muted);font-size:13px}
+footer .status b{color:var(--ink)}
+.bag{display:flex;gap:6px;flex-wrap:wrap}
+.bag canvas{width:34px;height:34px;border-radius:50%}
+button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+@media (max-width:980px){
+  body{grid-template-rows:auto auto auto}
+  main{grid-template-columns:1fr;grid-auto-rows:auto}
+  .strip{flex-direction:row;overflow-x:auto}
+  .strip{min-height:116px}
+  .thumb{width:84px;height:112px;aspect-ratio:auto}
+  .stage{height:max(320px,calc(100dvh - 350px))}
+  header p{font-size:12px}
+  footer{position:sticky;bottom:0;flex-wrap:nowrap}
+  footer .bag{display:none}
+  footer .status{font-size:12px}
+}
+</style>
+</head>
+<body>
+<header>
+  <a class="mark" href="./">thro</a>
+  <h1>Your photos, cropped while you watch</h1>
+  <p>Ten real phone photos, not touched beforehand. Tap one: the page finds the rim, fits it, and unwarps the disc. Then make cards with it.</p>
+</header>
+<main>
+  <nav class="strip" id="strip" aria-label="Your photos"></nav>
+  <section class="stage" id="stage" aria-label="Crop">
+    <canvas id="view"></canvas>
+    <div class="cap" id="cap"></div>
+    <div class="go"><button type="button" class="big" id="crop">Crop this photo</button><button type="button" class="ghost" id="all">Crop all 10</button></div>
+  </section>
+  <aside>
+    <div class="panel">
+      <h2>How the crop happens</h2>
+      <ol class="steps" id="steps">
+        <li data-k="coarse"><i></i><div><b>Find the rim, roughly</b><small id="s-coarse">colour bands on 72 rays, 8 octants vote</small></div></li>
+        <li data-k="fine"><i></i><div><b>Three fine fits</b><small id="s-fine">band snap · overmold outer · polar path</small><div class="keys"><span style="--c:var(--b1)">band snap</span><span style="--c:var(--b2)">overmold outer</span><span style="--c:var(--b3)">polar path</span></div></div></li>
+        <li data-k="join"><i></i><div><b>Join the best arc per octant</b><small id="s-join">one ellipse from 8 arcs</small></div></li>
+        <li data-k="unwarp"><i></i><div><b>Unwarp to a circle</b><small id="s-unwarp">undo the camera tilt</small></div></li>
+      </ol>
+    </div>
+    <div class="panel">
+      <h2>The disc</h2>
+      <div class="cut"><canvas id="cut" width="240" height="240"></canvas><p id="cut-note">Not cropped yet.</p></div>
+      <p class="seen" id="seen"></p>
+      <label class="f" for="mold">Mold<input type="search" id="mold" placeholder="Search molds: Servo, Buzzz, Luna…" autocomplete="off"></label>
+      <div class="hits" id="hits"></div>
+    </div>
+  </aside>
+</main>
+<footer>
+  <span class="status" id="status" role="status">Loading your photos…</span>
+  <div class="bag" id="bag"></div>
+  <button type="button" class="big" id="make" disabled>Make cards →</button>
+</footer>
+<script type="module" src="./photos.mjs"></script>
+</body>
+</html>
