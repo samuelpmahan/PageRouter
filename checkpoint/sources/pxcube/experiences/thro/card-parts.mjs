@@ -32,6 +32,11 @@ const STYLE = `
 .cp-recipe .cp-derived .cp-state{color:#b5d899}.cp-recipe .cp-default .cp-state{color:#7f907c}
 .cp-recipe .cp-msg{flex-basis:100%;color:#ffd166;font-size:11.5px}
 .cp-recipe button{min-height:32px;padding:4px 10px;font-size:11.5px;border-radius:16px}
+.cp-recipe .cp-part{flex-wrap:wrap;align-items:center}
+.cp-recipe .cp-ctl{display:inline-flex;align-items:center;gap:3px}
+.cp-recipe .cp-ctl button{min-height:26px;min-width:26px;padding:0 6px;border-radius:13px;font-weight:800}
+.cp-recipe .cp-ctl input[type=range]{width:110px;min-height:0;padding:0;accent-color:#ff2d55}
+.cp-recipe .cp-ctl button[aria-pressed=true]{background:#ff2d55;border-color:#ff2d55;color:#fff}
 `;
 const TITLES = { 'disc-centre': 'Drag to move the disc on the plate corner', 'disc-rim': 'Drag to size the disc', 'plate-edge': 'Drag to set the plate width', tile: 'Drag to set the number size', name: 'Drag up or down to set the largest name size' };
 const clamp = (v, [a, b]) => Math.max(a, Math.min(b, v)), round3 = v => Math.round(v * 1000) / 1000;
@@ -39,7 +44,8 @@ const DISPLAY = '"DS Card Sans Condensed", "DejaVu Sans Condensed", "Nimbus Sans
 let measurer = null;
 const nameWidthFor = name => px => { measurer ??= document.createElement('canvas').getContext('2d'); measurer.font = `800 ${px}px ${DISPLAY}`; return measurer.measureText(name.toUpperCase()).width; };
 const range = k => [B01_PARTS[k].min, B01_PARTS[k].max];
-const shown = (k, v) => (B01_PARTS[k].unit === 'px' ? `${Math.round(v)} px` : v.toFixed(2));
+const shown = (k, v) => (B01_PARTS[k].unit === 'px' ? `${Math.round(v)} px` : B01_PARTS[k].unit === 'choice' ? B01_PARTS[k].choices[Math.round(v)] : v.toFixed(2));
+const snap = (k, v) => { const p = B01_PARTS[k], r = Math.min(p.max, Math.max(p.min, v)); return p.unit === 'px' || p.unit === 'choice' ? Math.round(r) : Math.round(r * 1000) / 1000; };
 
 /** What dragging a handle by (dx, dy) native pixels pins, from the card as it is now drawn (the lab's own rules). */
 export function pinFor(id, recipe, dx, dy) {
@@ -67,11 +73,25 @@ export function attachCardParts(holder, layer, { recipe, design, name, view, onC
   const strip = holder.parentElement?.querySelector(':scope > .ce-strip');
   (strip ?? holder).after(panel);
   const renderPanel = (values = recipe.values, state = recipe.state, derived = recipe.derived, msgs = recipe.msgs) => {
-    const items = Object.keys(B01_PARTS).map(k => `<span class="cp-part cp-${state[k]}">${B01_PARTS[k].label} <b>${shown(k, values[k])}</b> <span class="cp-state">${state[k]}</span></span>`);
+    // Every part, both ways: drag the slider (continuous) or step it with − and + (discrete); a choice is a pair of buttons.
+    const items = Object.keys(B01_PARTS).map(k => { const p = B01_PARTS[k], v = values[k];
+      const ctl = p.unit === 'choice'
+        ? `<span class="cp-ctl">${p.choices.map((c, i) => `<button type="button" data-set="${k}" data-value="${i}" aria-pressed="${Math.round(v) === i}">${c}</button>`).join('')}</span>`
+        : `<span class="cp-ctl"><button type="button" data-step="${k}" data-dir="-1" aria-label="${p.label} down">−</button><input type="range" data-part="${k}" min="${p.min}" max="${p.max}" step="${p.unit === 'px' ? 1 : 0.01}" value="${v}" aria-label="${p.label}"><button type="button" data-step="${k}" data-dir="1" aria-label="${p.label} up">+</button></span>`;
+      return `<span class="cp-part cp-${state[k]}" data-k="${k}">${p.label} <b>${shown(k, v)}</b> <span class="cp-state">${state[k]}</span>${ctl}</span>`; });
     items.push(`<span class="cp-part cp-derived">Plate height <b>${Math.round(derived.plateH)} px</b> <span class="cp-state">derived</span></span>`);
     items.push(`<span class="cp-part cp-derived">Name size <b>${Math.round(derived.namePx)} px</b> <span class="cp-state">derived</span></span>`);
     panel.innerHTML = `<span class="cp-label">RECIPE</span>${items.join('')}${Object.keys(pinned).length ? '<button type="button" class="cp-reset">Let every part follow the rules</button>' : ''}${(msgs ?? []).map(([, m]) => `<span class="cp-msg">${m}</span>`).join('')}`;
     panel.querySelector('.cp-reset')?.addEventListener('click', () => { begin('Unpin parts'); onChange({ parts: {} }, 'Every part follows the rules again'); });
+    const pin = (k, v, how) => { begin(`Pin ${k} (${how})`); onChange({ parts: { ...pinned, [k]: snap(k, v) } }, `Pinned the ${B01_PARTS[k].label.toLowerCase()}`); };
+    for (const b of panel.querySelectorAll('[data-step]')) b.addEventListener('click', () => { const k = b.dataset.step; pin(k, values[k] + Number(b.dataset.dir) * B01_PARTS[k].step, 'step'); });
+    for (const b of panel.querySelectorAll('[data-set]')) b.addEventListener('click', () => pin(b.dataset.set, Number(b.dataset.value), 'choice'));
+    for (const r of panel.querySelectorAll('input[data-part]')) {
+      const k = r.dataset.part, chip = r.closest('.cp-part');
+      // While the slider moves, the dashed outlines show where every part will go; letting go pins it and the card is redrawn.
+      r.addEventListener('input', () => { const { boxes } = preview({ ...pinned, [k]: snap(k, Number(r.value)) }); drawGhosts(boxes); chip.querySelector('b').textContent = shown(k, Number(r.value)); });
+      r.addEventListener('change', () => { for (const g of Object.values(ghosts)) g.remove(); pin(k, Number(r.value), 'slider'); });
+    }
   };
   renderPanel();
 

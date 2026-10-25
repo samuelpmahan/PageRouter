@@ -28,7 +28,7 @@ for (const [tag, viewport, touch] of [['1540×784', { width: 1540, height: 784 }
     if ((await pixels()) === before) fail(`${tag}: dragging ${part} did not redraw the card`);
     void h;
   }
-  const pins = { 'plate-edge': 'Plate width', 'disc-rim': 'Disc size', tile: 'Number tile', name: 'Largest name size', 'disc-centre': 'Disc lift' };
+  const pins = { 'plate-edge': 'Plate width', 'disc-rim': 'Disc size', tile: 'Number tile', name: 'Largest name size', 'disc-centre': 'Disc down' };
   for (const [part, [dx, dy]] of Object.entries({ 'plate-edge': [80, 0], 'disc-rim': [-40, 0], tile: [40, 0], name: [0, -25], 'disc-centre': [-30, 20] })) {
     await drag(part, dx, dy);
     const r = await recipe(), re = new RegExp(`${pins[part]}[^0-9-]*[-0-9.]+(?: px)? PINNED`);

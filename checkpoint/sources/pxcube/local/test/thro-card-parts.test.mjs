@@ -42,3 +42,19 @@ test('the design carries pins for B01 revision 2 only; a new layout or "follow t
   assert.deepEqual(nativeCardRecipe({ disc, resolved, design: pinned }).parts, { plateW: 800 });
   assert.equal('parts' in nativeCardRecipe({ disc, resolved, design: b01 }), false, 'no pins: the recipe is exactly as before');
 });
+// ---- Wide ranges and one row (Sam, 24 Oct 20:39: "a thin black box with text on the left and disc on the right that's the entire width").
+test('one row: a full-width bar with the disc inside its right end, the name then the tiles on one line', () => {
+  const s = solveB01({ row: 1, plateW: 1824, discD: 120, discOX: -0.6, discOY: 0.5, nameMax: 80, tile: 56 }, width), g = s.geometry;
+  assert.equal(g.plate.w, 1824); assert.ok(g.plate.h < 120, `thin: ${g.plate.h}px`);
+  assert.equal(g.plastic, undefined, 'one row leaves the plastic line out');
+  assert.ok(g.tiles.x > g.name.x && Math.abs((g.tiles.y + g.tiles.size / 2) - (g.plate.y + g.plate.h / 2)) <= 1, 'tiles after the name, centred on the bar');
+  assert.ok(g.disc.cx + g.disc.d / 2 <= g.plate.x + g.plate.w + 1, 'disc inside the bar');
+  assert.ok(g.scrim.x + g.scrim.w <= 1920 - 48, 'the panel stops at the frame margin');
+});
+test('stacked is still the 6.6.1 card when nothing is pinned, and row 0 is the same as no row', () => {
+  assert.deepEqual(solveB01({ row: 0 }, width).geometry, solveB01({}, width).geometry);
+});
+test('the design accepts the wide ranges and a whole-number row only', () => {
+  assert.equal(validParts({ plateW: 1824, row: 1, discOX: -1.5 }, 'b01'), true);
+  assert.equal(validParts({ row: 0.5 }, 'b01'), false);
+});

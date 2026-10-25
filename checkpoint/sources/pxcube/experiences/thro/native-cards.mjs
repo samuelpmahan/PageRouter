@@ -65,12 +65,13 @@ export function nativeDesign(previous, study) {
 // Parts of a card a person has pinned with its handles (the first Constraint Lab, in the renderer): only B01 at revision 2 is
 // drawn from parts and rules so far. The ranges are the renderer's own (B01_PARTS in thro-card-core-r2.js).
 export const cardParts = Object.freeze({ b01: Object.freeze({
-  plateW: [360, 1100], discD: [160, 700], discOX: [-0.6, 0.6], discOY: [-0.8, 0.45], tile: [40, 120], nameMax: [40, 180] }) });
+  plateW: [240, 1824], discD: [80, 900], discOX: [-1.6, 0.8], discOY: [-0.9, 1.6], tile: [24, 160], nameMax: [24, 220], row: [0, 1] }) });
+const wholeParts = new Set(['row']); // a choice, not a measure: 0 or 1
 export const partsLayout = design => (isNativeStudy(design?.study) && cardParts[nativeStudy(design.study).preset] && design.nativeRevision === cardRevisions[nativeStudy(design.study).preset] ? nativeStudy(design.study).preset : null);
 export function validParts(parts, preset) {
   const ranges = cardParts[preset];
   if (!ranges || !parts || typeof parts !== 'object' || Array.isArray(parts)) return false;
-  return Object.entries(parts).every(([k, v]) => ranges[k] && Number.isFinite(v) && v >= ranges[k][0] && v <= ranges[k][1]);
+  return Object.entries(parts).every(([k, v]) => ranges[k] && Number.isFinite(v) && v >= ranges[k][0] && v <= ranges[k][1] && (!wholeParts.has(k) || Number.isInteger(v)));
 }
 const nudgeLimit = 1920;
 export const validNudge = nudge => nudge && Number.isFinite(nudge.x) && Number.isFinite(nudge.y) && Math.abs(nudge.x) <= nudgeLimit && Math.abs(nudge.y) <= nudgeLimit;

@@ -677,71 +677,104 @@ function drawAppearanceTiles(ctx     , nums          , x        , y        , til
 // as before (the fixed numbers). The rules are written so that the starting values reproduce those numbers: plate 620 x 330,
 // disc 420 riding the plate's top-right corner (+40, -60), tiles 74, name up to 104.
 export const B01_PARTS = Object.freeze({
-  plateW: { start: 620, min: 360, max: 1100, label: 'Plate width', unit: 'px' },
-  discD: { start: 420, min: 160, max: 700, label: 'Disc size', unit: 'px' },
-  discOX: { start: 40 / 420, min: -0.6, max: 0.6, label: 'Disc overhang (× disc size)', unit: '' },
-  discOY: { start: -60 / 420, min: -0.8, max: 0.45, label: 'Disc lift (× disc size)', unit: '' },
-  tile: { start: 74, min: 40, max: 120, label: 'Number tile', unit: 'px' },
-  nameMax: { start: 104, min: 40, max: 180, label: 'Largest name size', unit: 'px' },
+  // Ranges are wide on purpose (Sam, 24 Oct 20:39: "Don't constrain what can be done, constraint is that the card should adapt as
+  // wanted. Maybe someone wants a thin black box with text on the left and disc on the right that's the entire width"): the plate
+  // runs up to the full frame width, the disc can sit anywhere on or inside the plate, and the pieces can go in one row.
+  plateW: { start: 620, min: 240, max: 1824, label: 'Plate width', unit: 'px', step: 20 },
+  discD: { start: 420, min: 80, max: 900, label: 'Disc size', unit: 'px', step: 20 },
+  discOX: { start: 40 / 420, min: -1.6, max: 0.8, label: 'Disc across (× disc size)', unit: '', step: 0.05 },
+  discOY: { start: -60 / 420, min: -0.9, max: 1.6, label: 'Disc down (× disc size)', unit: '', step: 0.05 },
+  tile: { start: 74, min: 24, max: 160, label: 'Number tile', unit: 'px', step: 4 },
+  nameMax: { start: 104, min: 24, max: 220, label: 'Largest name size', unit: 'px', step: 4 },
+  row: { start: 0, min: 0, max: 1, label: 'Pieces in one row', unit: 'choice', step: 1, choices: ['Stacked', 'One row'] },
 });
-const B01_RULES = Object.freeze({ margin: 48, pad: 36, gap: 14, nameTop: 28, plasticGap: 50, tileGap: 30, bottom: 44, rimClear: 24 });
+const B01_RULES = Object.freeze({ margin: 48, pad: 36, gap: 14, nameTop: 28, plasticGap: 50, tileGap: 30, bottom: 44, rimClear: 24, rowPad: 22, rowGap: 28, scrimRun: 140 });
 /** Solve B01 for a recipe. pinned: { part: value } (any subset of B01_PARTS). nameWidth(px): the drawn name's width at px.
- *  Returns the values, which were derived, and the geometry in the left-anchored frame (the plate at the left margin). */
+ *  Returns the values, which were derived, and the geometry in the left-anchored frame (the plate at the left margin).
+ *  Stacked (the 6.6.1 card): name, plastic line and tiles one above the other. One row: name, then the tiles, on one line; the plate
+ *  is only as tall as the taller of the two, so a wide plate makes a thin bar. */
 export function solveB01(pinned, nameWidth) {
   const R = B01_RULES, P = B01_PARTS, has = k => Object.hasOwn(pinned ?? {}, k), msgs = [];
   const clampPart = (k, v) => Math.max(P[k].min, Math.min(P[k].max, v));
   const val = k => (has(k) && Number.isFinite(pinned[k]) ? clampPart(k, pinned[k]) : P[k].start);
-  const rowW = t => 4 * t + 3 * R.gap;
+  const rowW = t => 4 * t + 3 * R.gap, oneRow = Math.round(val('row')) === 1;
   let plateW = val('plateW'), tile = val('tile'), namePx = val('nameMax');
   const discD = val('discD'), discOX = val('discOX'), discOY = val('discOY');
-  let plate, disc, nameY, plasticY, tilesY, plateH, nameLane = 0;
+  let plate, disc, nameY, plasticY, tilesY, tilesX, plateH, nameLane = 0;
   // Where type may run on a band of rows: from the plate's padding to the disc's left edge at those rows, kept clear of the rim.
   const laneRight = (top, bottom) => {
     let right = plate.x + plate.w - R.pad; const r = disc.d / 2 + 4;
-    for (let y = top; y <= bottom; y += 4) { const dy = y - disc.cy; if (Math.abs(dy) < r) right = Math.min(right, disc.cx - Math.sqrt(r * r - dy * dy) - R.rimClear); }
+    for (let y = top; y <= bottom; y += 4) { const dy = y - disc.cy; if (Math.abs(dy) < r && disc.cx - r < right + R.rimClear) right = Math.min(right, disc.cx - Math.sqrt(r * r - dy * dy) - R.rimClear); }
     return right;
   };
   for (let pass = 0; pass < 8; pass++) {
-    // Rule: the plate hugs its contents (name, plastic line, tiles), with the same spacing the fixed card uses.
-    const nameBase = R.nameTop + namePx;
-    plateH = Math.round(nameBase + R.plasticGap + R.tileGap + tile + R.bottom);
-    plate = { x: R.margin, y: 1080 - R.margin - plateH, w: plateW, h: plateH };
-    // Rule: the disc rides the plate's top-right corner.
-    disc = { cx: plate.x + plate.w + discOX * discD, cy: plate.y + discOY * discD, d: discD };
-    nameY = plate.y + nameBase; plasticY = nameY + R.plasticGap; tilesY = plasticY + R.tileGap;
-    const nx = plate.x + R.pad;
-    // Rule: the name fills its lane up to its largest size.
-    const lane = laneRight(nameY - namePx * 0.75, nameY) - nx; nameLane = lane;
-    let fitted = val('nameMax'); while (fitted > 24 && nameWidth(fitted) > lane) fitted -= 2;
-    // Rule: the four tiles fit their lane; a pinned tile widens an unpinned plate instead.
-    const tileLane = laneRight(tilesY, tilesY + tile) - nx;
-    let nextTile = tile, nextPlateW = plateW;
-    if (rowW(tile) > tileLane) {
-      if (has('tile') && !has('plateW')) nextPlateW = Math.ceil(plateW + rowW(tile) - tileLane);
-      else nextTile = Math.max(P.tile.min, Math.floor((tileLane - 3 * R.gap) / 4));
-    } else if (!has('tile')) nextTile = Math.min(P.tile.start, Math.floor((tileLane - 3 * R.gap) / 4));
-    nextPlateW = Math.min(P.plateW.max, nextPlateW);
-    const settled = fitted === namePx && nextTile === tile && nextPlateW === plateW;
-    namePx = fitted; tile = nextTile; plateW = nextPlateW;
-    if (settled) break;
+    const nx = plate ? plate.x + R.pad : R.margin + R.pad;
+    if (!oneRow) {
+      // Rule: the plate hugs its contents (name, plastic line, tiles), with the same spacing the fixed card uses.
+      const nameBase = R.nameTop + namePx;
+      plateH = Math.round(nameBase + R.plasticGap + R.tileGap + tile + R.bottom);
+      plate = { x: R.margin, y: 1080 - R.margin - plateH, w: plateW, h: plateH };
+      // Rule: the disc rides the plate's top-right corner (or wherever its offsets put it).
+      disc = { cx: plate.x + plate.w + discOX * discD, cy: plate.y + discOY * discD, d: discD };
+      nameY = plate.y + nameBase; plasticY = nameY + R.plasticGap; tilesY = plasticY + R.tileGap; tilesX = nx;
+      // Rule: the name fills its lane up to its largest size.
+      const lane = laneRight(nameY - namePx * 0.75, nameY) - nx; nameLane = lane;
+      let fitted = val('nameMax'); while (fitted > 24 && nameWidth(fitted) > lane) fitted -= 2;
+      // Rule: the four tiles fit their lane; a pinned tile widens an unpinned plate instead.
+      const tileLane = laneRight(tilesY, tilesY + tile) - nx;
+      let nextTile = tile, nextPlateW = plateW;
+      if (rowW(tile) > tileLane) {
+        if (has('tile') && !has('plateW')) nextPlateW = Math.ceil(plateW + rowW(tile) - tileLane);
+        else nextTile = Math.max(P.tile.min, Math.floor((tileLane - 3 * R.gap) / 4));
+      } else if (!has('tile')) nextTile = Math.min(P.tile.start, Math.floor((tileLane - 3 * R.gap) / 4));
+      nextPlateW = Math.min(P.plateW.max, nextPlateW);
+      const settled = fitted === namePx && nextTile === tile && nextPlateW === plateW;
+      namePx = fitted; tile = nextTile; plateW = nextPlateW;
+      if (settled) break;
+    } else {
+      // One row. Rule: the plate is as tall as the taller of the name and the tiles, plus its padding.
+      const cap = namePx * 0.75;
+      plateH = Math.round(2 * R.rowPad + Math.max(cap, tile));
+      plate = { x: R.margin, y: 1080 - R.margin - plateH, w: plateW, h: plateH };
+      disc = { cx: plate.x + plate.w + discOX * discD, cy: plate.y + discOY * discD, d: discD };
+      nameY = plate.y + (plateH + cap) / 2; tilesY = plate.y + (plateH - tile) / 2; plasticY = null;
+      // Rule: the tiles come right after the name; together they fit the lane left of the disc.
+      const lane = laneRight(Math.min(nameY - cap, tilesY), Math.max(nameY, tilesY + tile)) - nx;
+      let fitted = val('nameMax'); while (fitted > 24 && nameWidth(fitted) + R.rowGap + rowW(tile) > lane) fitted -= 2;
+      let nextTile = tile, nextPlateW = plateW;
+      const need = nameWidth(fitted) + R.rowGap + rowW(tile);
+      if (need > lane) {
+        if (has('tile') && !has('plateW')) nextPlateW = Math.min(P.plateW.max, Math.ceil(plateW + need - lane));
+        else nextTile = Math.max(P.tile.min, Math.floor((lane - nameWidth(fitted) - R.rowGap - 3 * R.gap) / 4));
+      } else if (!has('tile') && tile < P.tile.start) nextTile = Math.min(P.tile.start, Math.floor((lane - nameWidth(fitted) - R.rowGap - 3 * R.gap) / 4));
+      nameLane = Math.max(40, lane - R.rowGap - rowW(nextTile));
+      tilesX = nx + Math.min(nameWidth(fitted), nameLane) + R.rowGap;
+      const settled = fitted === namePx && nextTile === tile && nextPlateW === plateW;
+      namePx = fitted; tile = nextTile; plateW = nextPlateW;
+      if (settled) break;
+    }
   }
   if (has('tile') && tile !== val('tile')) msgs.push(['warn', `Number tile held to ${tile}px: there is no room for ${val('tile')}px with the plate width pinned at ${plateW}px.`]);
   if (has('tile') && plateW !== val('plateW')) msgs.push(['ok', `Plate widened to ${plateW}px to hold ${tile}px tiles.`]);
   if (namePx < val('nameMax')) msgs.push([has('nameMax') ? 'warn' : 'ok', `Name set at ${namePx}px: it only fits that size beside the disc.`]);
+  if (oneRow) msgs.push(['ok', 'One row: the plastic line is left out.']);
   if (disc.cy - disc.d / 2 < 0) msgs.push(['warn', 'Disc runs off the top of the frame.']);
   if (disc.cx + disc.d / 2 > 1920) msgs.push(['warn', 'Disc runs off the side of the frame.']);
-  const values = { plateW, discD, discOX, discOY, tile, nameMax: val('nameMax') };
+  const values = { plateW, discD, discOX, discOY, tile, nameMax: val('nameMax'), row: oneRow ? 1 : 0 };
   const state = Object.fromEntries(Object.keys(P).map(k => [k, has(k) ? 'pinned' : 'default']));
   if (plateW !== val('plateW')) state.plateW = 'derived';
   if (tile !== val('tile')) state.tile = 'derived';
+  // The dark panel runs past the plate toward the disc, and stops at the same margin on the far side of the frame.
+  const scrimW = Math.min(plateW + R.scrimRun, 1920 - 2 * R.margin);
   return { values, state, derived: { plateH, namePx }, msgs,
-    geometry: { plate, disc, name: { x: plate.x + R.pad, y: nameY, px: namePx, lane: Math.max(40, Math.floor(nameLane)) }, plastic: { x: plate.x + R.pad, y: plasticY, px: 34 },
-      tiles: { x: plate.x + R.pad, y: tilesY, size: tile, gap: R.gap }, scrim: { x: plate.x, y: plate.y, w: plateW + 140, h: plateH } } };
+    geometry: { plate, disc, name: { x: plate.x + R.pad, y: nameY, px: namePx, lane: Math.max(40, Math.floor(nameLane)) },
+      ...(oneRow ? {} : { plastic: { x: plate.x + R.pad, y: plasticY, px: 34 } }),
+      tiles: { x: tilesX, y: tilesY, size: tile, gap: R.gap }, scrim: { x: plate.x, y: plate.y, w: scrimW, h: plateH } } };
 }
 /** Mirror a left-anchored B01 geometry for a disc on the left (the plate in the bottom-right corner). */
 function mirrorB01(g) {
   const mx = x => HW - x, rect = r => ({ ...r, x: HW - r.x - r.w });
-  return { plate: rect(g.plate), disc: { ...g.disc, cx: mx(g.disc.cx) }, name: { ...g.name, x: mx(g.name.x) }, plastic: { ...g.plastic, x: mx(g.plastic.x) },
+  return { plate: rect(g.plate), disc: { ...g.disc, cx: mx(g.disc.cx) }, name: { ...g.name, x: mx(g.name.x) }, ...(g.plastic ? { plastic: { ...g.plastic, x: mx(g.plastic.x) } } : {}),
     tiles: { ...g.tiles, x: mx(g.tiles.x) }, scrim: rect(g.scrim) };
 }
 async function renderB01Recipe(ctx, rd, environment, appearance, pinned) {
@@ -756,7 +789,7 @@ async function renderB01Recipe(ctx, rd, environment, appearance, pinned) {
   // The name was fitted to its lane by the solver; the lane is also the canvas guard, as in the fixed card.
   drawPresetName(ctx, rd.moldName, g.name.x, g.name.y, g.name.lane, g.name.px, align);
   const pw = plasticLine(rd);
-  if (pw) drawQuietLine(ctx, pw, g.plastic.x, g.plastic.y, 34, align, g.name.lane);
+  if (pw && g.plastic) drawQuietLine(ctx, pw, g.plastic.x, g.plastic.y, 34, align, g.name.lane);
   drawAppearanceTiles(ctx, flightTiles(rd), g.tiles.x, g.tiles.y, g.tiles.size, g.tiles.gap, Math.round(44 * g.tiles.size / 74), appearance, align);
   environment.solved = { layout: 'b01', side: right ? 'left' : 'right', ...solved, geometry: g };
 }

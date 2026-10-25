@@ -290,7 +290,7 @@ function cardFeatures(r, prefix = '', label = '', photo = null) {
   return f;
 }
 /** A recipe's definition: its features in order, each { key, label, value }. Two recipes with the same definition are the same card. */
-const PART_NAMES = { plateW: ['plate width', 'px'], discD: ['disc size', 'px'], discOX: ['disc overhang', ''], discOY: ['disc lift', ''], tile: ['number tile', 'px'], nameMax: ['largest name size', 'px'] };
+const PART_NAMES = { plateW: ['plate width', 'px'], discD: ['disc size', 'px'], discOX: ['disc across', ''], discOY: ['disc down', ''], tile: ['number tile', 'px'], nameMax: ['largest name size', 'px'], row: ['pieces in one row', 'choice'] };
 export function recipeDefinition(recipe, photos = []) {
   if (!recipe) return [];
   if (recipe.cards) return [
@@ -309,7 +309,7 @@ export function recipeDefinition(recipe, photos = []) {
     { key: 'drawing', label: 'drawing', value: `revision ${recipe.revision ?? 1}` },
     // Parts pinned with the card's handles (card-parts.mjs); a part not pinned follows the rules.
     ...(recipe.parts ? Object.entries(PART_NAMES).map(([k, [label, unit]]) => ({ key: `part.${k}`, label,
-      value: Object.hasOwn(recipe.parts, k) ? `${unit ? Math.round(recipe.parts[k]) + ' ' + unit : recipe.parts[k].toFixed(2)} pinned` : 'by the rules' })) : []),
+      value: Object.hasOwn(recipe.parts, k) ? `${unit === 'choice' ? (recipe.parts[k] ? 'one row' : 'stacked') : unit ? Math.round(recipe.parts[k]) + ' ' + unit : recipe.parts[k].toFixed(2)} pinned` : 'by the rules' })) : []),
   ].filter(x => x.value !== undefined);
 }
 /** What changed between two definitions, feature by feature (same change on every card is said once). */

@@ -1,4 +1,4 @@
-// ?console — the whole editor on one screen, mapped to the phone page it came from (Sam, 24 Oct 17:17: "a single screen that
+// One screen (?console) — the whole editor on one screen, mapped to the phone page it came from (Sam, 24 Oct 17:17: "a single screen that
 // somehow maps to the big ol Thro reach phone image ... make a giant extremely comprehensive thing and refine into a nice
 // intuitive UI"). Nothing is redrawn or rewired: the page's own controls are moved into columns that each fit the screen.
 // Down the left edge is the phone page as it is today (390 × 844, measured by local/test/thro-console-map.mjs), every control
@@ -18,7 +18,10 @@ export function controls(root = document) {
 }
 window.__consoleControls = () => controls();
 
-const on = new URLSearchParams(location.search).has('console');
+// One screen is the default on a laptop or bigger (Sam, 24 Oct 20:39: "Whole screen as default"); ?page shows the long page, and
+// ?console forces one screen at any width.
+const query = new URLSearchParams(location.search);
+const on = query.has('console') || (!query.has('page') && innerWidth >= 1000);
 if (on) start();
 
 async function start() {
@@ -58,9 +61,11 @@ async function start() {
     live = controls(document.getElementById('workspace') ?? document);
     layer.replaceChildren();
     for (const c of live) {
-      const r = byKey.get(c.key), t = document.createElement('span');
-      t.className = 'cm-tag'; t.textContent = r ? `s${(1 + r.y / map.screen).toFixed(1)} · ${r.shown}%` : 'new';
-      if (r) t.style.setProperty('--ink', ink(r.shown)); else t.classList.add('cm-new');
+      const r = byKey.get(c.key);
+      if (!r) continue; // a control the phone page didn't have yet: nothing to map it to
+      const t = document.createElement('span');
+      t.className = 'cm-tag'; t.textContent = `s${(1 + r.y / map.screen).toFixed(1)} · ${r.shown}%`;
+      t.style.setProperty('--ink', ink(r.shown));
       layer.append(t); tagFor.set(c.el, t);
       if (!c.el.dataset.cmBound) {
         c.el.dataset.cmBound = '1';
