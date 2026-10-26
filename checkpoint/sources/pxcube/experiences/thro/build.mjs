@@ -43,6 +43,8 @@ const runtimeFiles = [
   'photo-bag.mjs',
   'rimfit.mjs',
   'rimfit-worker.mjs',
+  'thro-calculations.mjs',
+  'witness-pattern.mjs',
   'assets/photos/photos.json',
   'assets/photos/IMG_6081.jpg',
   'assets/photos/IMG_6161.jpg',

@@ -54,6 +54,11 @@ input[type=search]{width:100%;min-height:40px;border:1px solid #405043;border-ra
 .hits button{text-align:left;border:1px solid var(--line);background:#0d150f;color:var(--ink);border-radius:8px;padding:7px 9px;font:13.5px system-ui;cursor:pointer}
 .hits button[aria-pressed=true]{border-color:var(--accent);background:#21321f}
 .hits small{color:var(--muted);margin-left:6px;font-family:ui-monospace,Menlo,monospace}
+.witness{display:grid;gap:6px;font:12px ui-monospace,Menlo,Consolas,monospace}
+.witness .calc{display:grid;gap:1px}
+.witness b{color:var(--ink);font-weight:700}
+.witness span{color:var(--accent);margin-left:6px}
+.witness small{color:var(--muted)}
 .seen{color:var(--muted);font-size:12.5px;margin:0 0 4px}
 footer{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:flex-end;padding:10px 16px max(12px,env(safe-area-inset-bottom));border-top:1px solid var(--line);background:#141d16e6;backdrop-filter:blur(6px)}
 footer .status{margin-right:auto;color:var(--muted);font-size:13px}
@@ -97,6 +102,8 @@ button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline
         <li data-k="join"><i></i><div><b>Join the best arc per octant</b><small id="s-join">one ellipse from 8 arcs</small></div></li>
         <li data-k="unwarp"><i></i><div><b>Unwarp to a circle</b><small id="s-unwarp">undo the camera tilt</small></div></li>
       </ol>
+      <h2 style="margin-top:12px">Registered Calculations that ran</h2>
+      <div id="witness" class="witness"></div>
     </div>
     <div class="panel">
       <h2>The disc</h2>

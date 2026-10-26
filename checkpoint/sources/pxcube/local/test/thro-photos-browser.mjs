@@ -13,7 +13,13 @@ const devs = await p.evaluate(() => window.__photoFits);
 const worst = Math.max(...Object.values(devs));
 console.log('off Argon\'s run, % of radius:', JSON.stringify(devs));
 if (worst > 1.5) { console.error('a live fit is far from Argon\'s run'); process.exitCode = 1; }
+await p.screenshot({ path: process.argv[3] ?? '/tmp/thro-photos-witness.png' });
+const ran = await p.evaluate(() => window.__throWitness);
+const byId = {}; for (const r of ran) (byId[r.id] ??= []).push(r.status);
+console.log('registered Calculations that ran:', JSON.stringify(Object.fromEntries(Object.entries(byId).map(([k, v]) => [k, `${v.filter(x => x === 'PASS').length}/${v.length} PASS`]))));
+if (ran.some(r => r.status !== 'PASS')) { console.error('a guarantee failed:', JSON.stringify(ran.filter(r => r.status !== 'PASS'))); process.exitCode = 1; }
 await p.click('#make');
+const handoff = await p.evaluate(() => (window.__throWitness ?? []).length);
 await p.waitForSelector('[data-testid=prepared-shelf]', { timeout: 30000 });
 const shelf = await p.$$eval('[data-testid=prepared-shelf] button, [data-testid=prepared-shelf] [role=button], [data-testid=prepared-shelf] li', els => els.length);
 console.log(status, '| editor shelf items:', shelf, '| url:', p.url());

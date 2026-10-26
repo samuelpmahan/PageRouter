@@ -4,6 +4,7 @@
 // mold, goes to the editor as a real shelf disc (photo-bag.mjs). Argon's own run on the same photos is kept only as a check: the
 // caption shows how far the live fit lands from it, as a number.
 import { saveBag } from './photo-bag.mjs';
+import { enter, record } from './thro-calculations.mjs';
 const V = '?v=28ac2b39fab85255';
 const molds = await import(`./vendor/discstudio-cards/mold-library.js${V}`);
 const $ = id => document.getElementById(id);
@@ -29,18 +30,15 @@ function fit(p) {
   const data = x.getImageData(0, 0, c.width, c.height).data;
   return new Promise((ok, no) => {
     waiting.set(p.meta.name, { ok, no });
-    worker.postMessage({ name: p.meta.name, width: img.naturalWidth, height: img.naturalHeight, working: { width: c.width, height: c.height, data } }, [data.buffer]);
+    worker.postMessage({ name: p.meta.name, width: img.naturalWidth, height: img.naturalHeight, reference: p.meta.argon, working: { width: c.width, height: c.height, data } }, [data.buffer]);
   });
 }
 
 // ---- geometry ----
 const radiusAlong = (e, th) => { const a = e.angle * DEG, u = Math.cos(th - a), v = Math.sin(th - a); return 1 / Math.sqrt((u / e.rx) ** 2 + (v / e.ry) ** 2); };
-// The affine map that sends ellipse e (image px) to a circle of radius R centred at (X, Y): p' = A·p + t.
-function unwarp(e, R, X, Y) {
-  const a = e.angle * DEG, c = Math.cos(a), s = Math.sin(a), ix = R / e.rx, iy = R / e.ry;
-  const m11 = c * c * ix + s * s * iy, m12 = c * s * (ix - iy), m22 = s * s * ix + c * c * iy; // R·diag(R/rx, R/ry)·Rᵀ
-  return [m11, m12, m12, m22, X - (m11 * e.cx + m12 * e.cy), Y - (m12 * e.cx + m22 * e.cy)];
-}
+const SIZE = 800; // the cutout; thro/crop/unwarp maps the ellipse onto an 800 px circle
+// Place the registered unwarp (ellipse -> 800 px circle) on the stage: scale to radius R and move the centre to (X, Y).
+function place(M, R, X, Y) { const k = R / (SIZE / 2); return [M[0] * k, M[1] * k, M[2] * k, M[3] * k, (M[4] - SIZE / 2) * k + X, (M[5] - SIZE / 2) * k + Y]; }
 const mix = (A, B, t) => A.map((v, i) => v + (B[i] - v) * t);
 const ease = t => t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2;
 const clamp01 = t => Math.max(0, Math.min(1, t));
@@ -105,7 +103,7 @@ function draw(f) {
   });
   if (f.final > 0 && u < 1) strokeEllipse(e, vw, { color: COL.accent, width: 3, upTo: TAU * clamp01(f.final * 1.6), alpha: fade, glow: 14 });
   if (u > 0) { // the unwarp: one affine map, from "the disc where it lies in the photo" to "the disc face-on in the middle"
-    const R = Math.min(W, H) * 0.37, T = mix(base, unwarp(e, R, W / 2, H * 0.45), u);
+    const R = Math.min(W, H) * 0.37, T = mix(base, place(p.matrix, R, W / 2, H * 0.45), u);
     vx.save(); vx.setTransform(...T); vx.beginPath(); vx.ellipse(e.cx, e.cy, e.rx, e.ry, e.angle * DEG, 0, TAU); vx.clip(); vx.drawImage(p.img, 0, 0); vx.restore();
     vx.save(); vx.strokeStyle = COL.accent; vx.globalAlpha = 0.9 * (1 - u * 0.6); vx.lineWidth = 3 * (devicePixelRatio || 1); vx.setTransform(...T);
     vx.beginPath(); vx.ellipse(e.cx, e.cy, e.rx, e.ry, e.angle * DEG, 0, TAU); vx.setTransform(1, 0, 0, 1, 0, 0); vx.stroke(); vx.restore();
@@ -124,16 +122,20 @@ function steps(on, p) {
   $('s-unwarp').textContent = r && on.includes('unwarp') ? `${fmt(r.output)} → circle · squash ${((1 - r.output.ry / r.output.rx) * 100).toFixed(1)}%` : 'undo the camera tilt';
 }
 function caption(p) {
-  const r = p.result, a = p.meta.argon;
+  const r = p.result;
   if (!r) { $('cap').innerHTML = `<span>${p.meta.name} · ${p.img.naturalWidth}×${p.img.naturalHeight}</span>`; return; }
-  const dev = Math.max(...['cx', 'cy', 'rx', 'ry'].map(k => Math.abs(r.output[k] - a[k]))) / a.rx * 100;
-  (window.__photoFits ??= {})[p.meta.name] = +dev.toFixed(2);
+  const dev = r.offReferencePct;
+  (window.__photoFits ??= {})[p.meta.name] = dev;
   $('cap').innerHTML = `<span>${p.meta.name}</span><span>found in ${p.ms} ms, in this browser</span><span>off Argon's own run by ${dev.toFixed(2)}% of the radius</span>`;
 }
 async function play(p, speed = 1) {
   caption(p); steps([], p);
   let done = false, t0 = performance.now();
-  const fitted = p.result ? Promise.resolve() : fit(p).then(d => { p.result = d.result; p.ms = d.ms; });
+  const fitted = p.result ? Promise.resolve() : fit(p).then(d => {
+    const live = record(d.report); p.result = live.items[0]; p.ms = p.result.ms;
+    const unwarp = enter('thro/crop/unwarp', [{ name: p.meta.name, ellipse: p.result.output, size: SIZE }]); p.matrix = unwarp.items[0].matrix;
+    p.reports = [live, unwarp];
+  });
   fitted.catch(() => {}).finally(() => { done = true; });
   await new Promise(ok => { const spin = now => { if (done && now - t0 > 500 / speed) return ok(); draw({ p, scan: (now - t0) / 400 }); requestAnimationFrame(spin); }; requestAnimationFrame(spin); });
   await fitted; caption(p);
@@ -144,17 +146,26 @@ async function play(p, speed = 1) {
     steps(on, p);
     await new Promise(ok => { const tick = now => { f[k] = clamp01((now - s) / dur); draw(f); f[k] < 1 ? requestAnimationFrame(tick) : ok(); }; requestAnimationFrame(tick); });
   }
-  p.cut = cutout(p); p.played = true;
-  thumbs(); panel(); bag();
+  p.cut = await cutout(p); p.played = true;
+  thumbs(); panel(); bag(); witness(p);
 }
 // The disc, face-on, on transparency: the same affine map as the animation's last frame, at 800 px.
-function cutout(p) {
-  const S = 800, c = Object.assign(document.createElement('canvas'), { width: S, height: S }), x = c.getContext('2d'), e = p.result.output;
-  x.imageSmoothingQuality = 'high'; x.setTransform(...unwarp(e, S / 2, S / 2, S / 2));
-  x.beginPath(); x.ellipse(e.cx, e.cy, e.rx, e.ry, e.angle * DEG, 0, TAU); x.clip(); x.drawImage(p.img, 0, 0);
+async function cutout(p) {
+  const report = enter('thro/crop/cutout', [{ name: p.meta.name, img: p.img, ellipse: p.result.output, size: SIZE, matrix: p.matrix }]);
+  p.reports.push(report);
+  const off = report.items[0].canvas, c = Object.assign(document.createElement('canvas'), { width: SIZE, height: SIZE });
+  c.getContext('2d').drawImage(off, 0, 0);
   let src = c.toDataURL('image/webp', 0.88);
   if (!src.startsWith('data:image/webp')) src = c.toDataURL('image/png');
   return { canvas: c, src };
+}
+// Every guarantee that ran for this photo, as Argon's runner reported it.
+function witness(p) {
+  $('witness').replaceChildren(...(p?.reports ?? []).map(r => {
+    const d = document.createElement('div'); d.className = 'calc';
+    d.innerHTML = `<b>${r.calculationId}</b> <span>${r.selfGuaranteeStatus}</span>` + Object.values(r.guarantees).map(g => `<small title="${g.description}">${g.id} · ${g.metric}</small>`).join('');
+    return d;
+  }));
 }
 
 // ---- strip, panel, bag ----
@@ -200,7 +211,7 @@ function setBusy(on) { busy = on; $('crop').disabled = on || !!current?.cut; $('
 
 async function select(p) {
   if (busy) return;
-  current = p; thumbs(); panel();
+  current = p; thumbs(); panel(); witness(p);
   if (!p.img) p.img = await image(p.meta.file);
   caption(p);
   if (p.cut) { steps(['coarse', 'fine', 'join', 'unwarp'], p); draw({ p, coarse: 1, fine: 1, join: 1, final: 1, unwarp: 1 }); }
@@ -220,7 +231,10 @@ $('all').onclick = async () => {
 $('make').onclick = async () => {
   const discs = ready().map(p => ({ id: `photo-${p.meta.name.toLowerCase().replace(/_/g, '-')}`, mold: p.mold.id, name: p.mold.mold, manufacturer: p.mold.manufacturer,
     plastic: p.mold.id === p.meta.mold ? p.meta.plastic : null, src: p.cut.src }));
-  try { saveBag(discs); } catch (error) { $('status').textContent = `Could not hand the discs over: ${error.message}`; return; }
+  let handoff;
+  try { handoff = enter('thro/bag/handoff', [{ name: 'bag', discs, moldRecord: molds.moldRecord, save: saveBag }]); }
+  catch (error) { $('status').textContent = `Could not hand the discs over: ${error.message}`; return; }
+  if (handoff.selfGuaranteeStatus !== 'PASS') { $('status').textContent = `Hand-off guarantees failed: ${Object.values(handoff.guarantees).filter(g => !g.passed).map(g => g.id).join(', ')}`; return; }
   const editor = (await fetch('./editor.html', { method: 'HEAD' }).catch(() => null))?.ok ? './editor.html' : './index.html';
   location.href = `${editor}?bag=photos`;
 };
