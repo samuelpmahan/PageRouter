@@ -7,7 +7,7 @@ const b = await chromium.launch(), p = await (await b.newContext({ viewport: { w
 const errors = []; p.on('pageerror', e => errors.push(String(e)));
 await p.goto(new URL('photos.html', site).href, { waitUntil: 'networkidle' });
 await p.click('#all');
-await p.waitForFunction(() => [...document.querySelectorAll('.thumb .tag')].every(t => t.textContent !== 'raw'), null, { timeout: 120000 });
+await p.waitForFunction(() => [...document.querySelectorAll('.thumb')].every(t => t.dataset.state !== 'raw'), null, { timeout: 120000 });
 const status = await p.textContent('#status');
 const devs = await p.evaluate(() => window.__photoFits);
 const worst = Math.max(...Object.values(devs));

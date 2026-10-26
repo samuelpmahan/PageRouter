@@ -87,14 +87,16 @@ button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid
   .adds.one{grid-template-columns:1fr}
   .strip{flex-direction:row;overflow-x:auto;min-height:0}
   .thumb{width:72px;height:96px;aspect-ratio:auto}
-  .stage{flex:none;height:clamp(300px,52dvh,520px)}
+  .stage{flex:none;height:clamp(250px,40dvh,460px)}
   .controls button{flex:1}
   aside{overflow:visible;padding:0}
   header{padding:max(12px,env(safe-area-inset-top)) 16px 6px}
-  footer{position:sticky;bottom:0;padding:10px 16px max(12px,env(safe-area-inset-bottom))}
+  footer{position:sticky;bottom:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 12px;align-items:center;padding:10px 16px max(12px,env(safe-area-inset-bottom))}
   footer .bag{display:none}
-  footer .status{flex:1 1 100%;font-size:13px}
-  footer #make{flex:1 1 100%}
+  footer .status{font-size:13px;line-height:1.35}
+  footer .status .warn{font-size:12.5px}
+  footer #make{min-height:48px;padding:10px 16px}
+  aside{scroll-margin-bottom:175px}
 }
 </style>
 </head>

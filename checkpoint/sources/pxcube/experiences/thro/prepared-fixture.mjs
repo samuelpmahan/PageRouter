@@ -24,6 +24,30 @@ export function validateFlightCorrection(disc) {
   return Object.freeze({ flightOverrides: Object.freeze({ ...overrides }), flightCitation: Object.freeze({ ...citation }) });
 }
 
+// A cited manufacturer correction belongs to the mold, not to the photo: every disc of that mold gets it, whichever way the disc
+// arrived (a prepared sample, or a photo cropped on photos.html). Returns Map(mold id -> { flightOverrides, flightCitation }).
+export async function loadFlightCorrections({ fetcher = globalThis.fetch, base = new URL('./', import.meta.url) } = {}) {
+  const corrections = new Map();
+  const response = await fetcher(new URL('prepared-fixture.json', base));
+  if (!response.ok) throw Error(`Prepared sample manifest unavailable (${response.status}).`);
+  const manifest = await response.json();
+  if (manifest.schema !== 'thro-prepared-fixture@1' || !Array.isArray(manifest.discs)) throw Error('Unknown prepared sample manifest.');
+  for (const disc of manifest.discs) {
+    const correction = validateFlightCorrection(disc);
+    if (correction && /^[a-z0-9-]+$/.test(disc.mold)) corrections.set(disc.mold, correction);
+  }
+  return corrections;
+}
+
+/** The discs with their mold's cited correction attached (a disc that already carries its own keeps it). */
+export function withFlightCorrections(discs, corrections) {
+  return discs.map(disc => {
+    const correction = corrections.get(disc.mold);
+    if (!correction || Object.hasOwn(disc, 'flightOverrides')) return disc;
+    return Object.freeze({ ...disc, flightOverrides: correction.flightOverrides, flightCitation: correction.flightCitation });
+  });
+}
+
 function asDataUrl(bytes) {
   let binary = '';
   for (let offset = 0; offset < bytes.length; offset += 8192) binary += String.fromCharCode(...bytes.subarray(offset, offset + 8192));

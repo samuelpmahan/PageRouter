@@ -27,9 +27,17 @@ const STYLE = `
 @media (pointer:coarse){.card-editor .ce-badge{min-height:40px;height:40px;line-height:36px;border-radius:20px;padding:0 12px}}
 .card-editor .ce-knob{position:absolute;pointer-events:auto;width:32px;height:32px;min-height:32px;min-width:32px;margin:-16px 0 0 -16px;padding:0;border-radius:50%;border:3px solid #fff;background:#e2402f;color:#fff;font:700 14px/1 system-ui,sans-serif;touch-action:none;cursor:nwse-resize;box-shadow:0 2px 8px #0007}
 .card-editor.is-dragging .ce-knob,.card-editor.is-dragging .ce-badge{visibility:hidden}
+.ce-strip .ce-tap-hint{display:none;flex-basis:100%;font-size:11px;line-height:1.4;color:#b8c6a6}
+/* On a phone the card's own marks (the size knob, the five red handles, the Side / Colour / Plate badges) would sit on the flight numbers, so they stay
+   away until the card is tapped; the strip under the card has the same three actions all along. Tap the card again to put them away. */
+@media (max-width:760px){
+  .card-editor:not(.ce-armed) .ce-knob,.card-editor:not(.ce-armed) .ce-badge,.card-editor:not(.ce-armed) .ce-hint,.card-editor:not(.ce-armed) .card-parts{display:none}
+  .ce-strip .ce-tap-hint{display:block}
+}
 `;
 import { begin, settle } from './gestures.mjs';
 import { attachCardParts } from './card-parts.mjs';
+let armed = false; // phone: the card's marks are shown after a tap on the card (see STYLE); kept across redraws
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const union = boxes => {
   const list = boxes.filter(b => b && Number.isFinite(b.x) && b.w > 0 && b.h > 0);
@@ -64,6 +72,7 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
   const put = (e, b, m) => Object.assign(e.style, { left: `${m.x(b.x)}px`, top: `${m.y(b.y)}px`, width: `${b.w * m.s}px`, height: `${b.h * m.s}px` });
   const at = (e, x, y, m, maxX, maxY) => Object.assign(e.style, { left: `${clamp(m.x(x), 18, maxX - 18)}px`, top: `${clamp(m.y(y), 16, maxY - 16)}px` });
 
+  layer.classList.toggle('ce-armed', armed);
   const box = el('div', 'ce-card', { tabIndex: 0, title: 'Drag to move the card. Arrow keys nudge it.' });
   box.setAttribute('role', 'button'); box.setAttribute('aria-label', 'Card position: drag, or use the arrow keys');
   // The knob sits on the corner away from the frame edges the card hugs; that corner stays put while sizing.
@@ -77,6 +86,9 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
   holder.parentElement?.querySelector(':scope > .ce-strip')?.remove();
   const strip = document.createElement('div'); strip.className = 'ce-strip'; strip.setAttribute('role', 'group'); strip.setAttribute('aria-label', 'Card controls');
   strip.innerHTML = '<span class="ce-label">ON THE CARD</span>';
+  const tapHint = document.createElement('span'); tapHint.className = 'ce-tap-hint';
+  const hintText = () => { tapHint.textContent = armed ? 'Handles are on the card. Drag one, or tap the card again to put them away.' : 'Tap the card to show its handles for moving and sizing.'; };
+  hintText(); strip.appendChild(tapHint);
   holder.after(strip);
   const actions = [
     // With handles on the card's parts (card-parts.mjs), the badges step off the handles' spots: Side under the disc, Colour under the
@@ -153,6 +165,7 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
     const m = view(); let dx = 0, dy = 0;
     track(box, e, (x, y) => { dx = x; dy = y; svg.style.translate = `${x}px ${y}px`; box.style.translate = `${x}px ${y}px`; },
       (moved, cancelled) => {
+        if (!moved && !cancelled && matchMedia('(max-width:760px)').matches) { armed = !armed; layer.classList.toggle('ce-armed', armed); hintText(); place(); return; }
         const to = moved && !cancelled ? (begin('Move'), commitNudge(dx / m.s, dy / m.s)) : null;
         if (moved && !cancelled && !to) settle('unchanged'); // dropped where it already was: nothing to redraw
         // The card stays where the finger left it (or settles into its corner) until the redrawn card replaces it; it never

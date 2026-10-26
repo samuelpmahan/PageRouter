@@ -7,6 +7,7 @@
 // Rung 4: after every change, what the change did in the world: which features of the card changed (its definition, never a
 // hash), which contracts recomputed and which were reused, and whether the pixels were drawn or reused. A toast under the
 // preview and a short list here. Edges are labelled by kind; what is on screen carries the four guarantees (the four causes).
+import { developer } from './editor-dev.mjs';
 import { OPEN, SITE_FILL, propagation, guarantees, recipeDefinition, definitionChanges } from './thro-world.mjs';
 import { viewer, setPurpose, resetOrder } from './viewer.mjs';
 import { everyWay, everyLineupWay } from './ways.mjs';
@@ -396,4 +397,4 @@ async function start() {
   if (window.__thro.screen) onScreen(); // a run that happened before the DTree started
   window.__dtree = { open: openCount, toggle, changes: () => changes.map(c => ({ n: c.n, what: what(c), recomputed: c.recomputed, reused: c.reused, whole: c.whole, pixel: c.pixel, sameAs: c.sameAs, times: c.times })), toast: () => (toast.hidden ? null : toast.textContent), blame: () => { const v = verdict(); return v && !v.accepted ? blame(v) : null; }, decisions: decided.receipt.trace.calls.map(n => ({ contract: n.contract, impl: n.impl, rung: n.chosenBy?.rung })), verdict };
 }
-start();
+if (developer) start(); // customers get a clean editor: the DTree button, drawer and change toasts are for the builders (?console, ?debug, ?dtree)

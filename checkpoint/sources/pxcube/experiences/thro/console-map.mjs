@@ -1,3 +1,4 @@
+import { developer } from './editor-dev.mjs';
 // One screen (?console) — the whole editor on one screen, mapped to the phone page it came from (Sam, 24 Oct 17:17: "a single screen that
 // somehow maps to the big ol Thro reach phone image ... make a giant extremely comprehensive thing and refine into a nice
 // intuitive UI"). Nothing is redrawn or rewired: the page's own controls are moved into columns that each fit the screen.
@@ -22,9 +23,14 @@ window.__consoleControls = () => controls();
 // ?console forces one screen at any width.
 const query = new URLSearchParams(location.search);
 const on = query.has('console') || (!query.has('page') && innerWidth >= 1000);
-if (on) start();
+// The measurement layer (tags, the phone-page rail, the lines between them) is for the builders: customers get the one-screen layout alone.
 
 async function start() {
+  if (!developer) {
+    const style = document.createElement('style'); style.textContent = CSS; document.head.append(style);
+    document.documentElement.classList.add('console-map', 'cm-clean');
+    return;
+  }
   const map = await fetch('./console-map/phone.json').then(r => (r.ok ? r.json() : null)).catch(() => null);
   if (!map) return;
   const byKey = new Map(map.rows.map(r => [r.key, r]));
@@ -121,6 +127,7 @@ html.console-map,html.console-map body{height:100%;overflow:hidden}
 html.console-map .app-header,html.console-map .app-status,html.console-map .diagnostics,html.console-map .conflict-banner:not([hidden]){display:none}
 html.console-map #workspace,html.console-map .studio-grid{display:contents}
 html.console-map body{display:grid;grid-template-columns:var(--cm-rail,170px) minmax(250px,.9fr) minmax(480px,2.6fr) minmax(330px,1.15fr);grid-template-rows:auto 1fr;gap:10px 14px;padding:10px 14px 10px 0;box-sizing:border-box}
+html.cm-clean{--cm-rail:0px}
 html.console-map .cm-rail{grid-column:1;grid-row:1 / 3}
 html.console-map .workspace-heading{grid-column:2;grid-row:1;margin:0;display:flex;flex-direction:column;align-items:stretch;gap:8px}
 html.console-map .workspace-heading h1{font-size:18px;letter-spacing:-.4px}
@@ -152,3 +159,4 @@ html:not(.console-map) .cm-rail>:not(.cm-toggle){display:none}
 .cm-line{position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:8}
 .cm-lit{outline:3px solid #fff!important;outline-offset:2px}
 `;
+if (on) start(); // after CSS exists

@@ -151,7 +151,7 @@ async function play(p, speed = 1) {
   }
   p.cut = await cutout(p); p.played = true;
   thumbs(); panel(); bag(); witness(p);
-  if (!run && narrow.matches && !p.mold) $('disc').scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
+  if (!run && narrow.matches && !p.mold) $('disc').scrollIntoView({ block: 'end', behavior: reduced ? 'auto' : 'smooth' });
 }
 // The disc, face-on, on transparency: the same affine map as the animation's last frame, at 800 px.
 async function cutout(p) {
@@ -174,6 +174,7 @@ function witness(p) {
 
 // ---- strip, panel, bag ----
 function thumbs() {
+  if (current?.el) { const st = $('strip'), e = current.el, row = getComputedStyle(st).flexDirection === 'row'; st.scrollTo(row ? { left: e.offsetLeft - (st.clientWidth - e.offsetWidth) / 2 } : { top: e.offsetTop - (st.clientHeight - e.offsetHeight) / 2 }); }
   for (const p of photos) {
     const b = p.el; b.setAttribute('aria-current', String(p === current));
     const state = p.cut ? (p.mold ? 'ready' : 'needs-mold') : 'raw'; b.dataset.state = state; b.querySelector('.tag').textContent = { raw: '', ready: '✓', 'needs-mold': 'Name it' }[state];
@@ -212,7 +213,6 @@ function hits() {
     note = document.createElement('p'); note.className = 'nomatch';
     note.innerHTML = `The catalog has no mold called <b></b>.` + (rows.length ? ' Closest matches:' : ' Try the maker\u2019s name or the first letters.');
     note.querySelector('b').textContent = `\u201c${q}\u201d`;
-    if (p.cut) { const k = document.createElement('div'); k.className = 'sub'; k.textContent = 'A disc without a catalog mold stays out of the cards.'; note.append(k); }
   }
   $('hits').replaceChildren(...(note ? [note] : []), ...rows.map(m => {
     const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-pressed', String(p.mold?.id === m.id));
@@ -313,7 +313,8 @@ $('make').onclick = async () => {
   try { handoff = enter('thro/bag/handoff', [{ name: 'bag', discs, moldRecord: molds.moldRecord, save: saveBag }]); }
   catch (error) { $('status').textContent = `Could not hand the discs over: ${error.message}`; return; }
   if (handoff.selfGuaranteeStatus !== 'PASS') { $('status').textContent = `Hand-off guarantees failed: ${Object.values(handoff.guarantees).filter(g => !g.passed).map(g => g.id).join(', ')}`; return; }
-  const editor = (await fetch('./editor.html', { method: 'HEAD' }).catch(() => null))?.ok ? './editor.html' : './index.html';
+  // In the production layout index.html is the ask page and the editor is editor.html; in a plain build the editor is index.html.
+  const editor = /ask\.mjs/.test(await fetch('./index.html').then(r => r.text()).catch(() => '')) ? './editor.html' : './index.html';
   location.href = `${editor}?bag=photos`;
 };
 
