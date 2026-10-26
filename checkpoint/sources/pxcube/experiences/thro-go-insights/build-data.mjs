@@ -11,7 +11,7 @@ const vById = Object.fromEntries(videos.map((v) => [v.video_id, v]));
 const MULTI_BRAND = /and /; // "Dynamic Discsand Innova" (two brands in one row)
 const MOLD_ALIAS = { buzz: 'buzzz' };           // transcript spelling vs catalogue spelling
 const norm = (s) => String(s).toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
-const moldBase = (m) => String(m).split(/[,;]/)[0].trim();            // "Convict, 2019 HP Pierce Team Series run" -> "Convict"
+const moldBase = (m) => (/^Unreleased/.test(m) ? 'Unreleased (name withheld)' : String(m).split(/[,;]/)[0].trim());            // "Convict, 2019 HP Pierce Team Series run" -> "Convict"
 const moldKey = (m) => { const k = norm(moldBase(m)); return MOLD_ALIAS[k] ?? k; };
 const epochDay = (iso) => Math.round(Date.parse(iso + 'T00:00:00Z') / 86400000);
 
@@ -64,7 +64,7 @@ const releaseBrands = [...new Set(releases.map((r) => r.manufacturer))];
 writeFileSync(new URL('./data/prepared.json', import.meta.url), JSON.stringify({
   built_from: ['appearances.json', 'videos.json', 'releases.json', 'description_links.json'],
   channels, videos, appearances: prepared, releaseMatches, coarseSkipped, releaseBrands,
-  links: links.map(({ video_id, destination_host, kind, thro_code }) => ({ video_id, destination_host, kind, thro_code })),
+  links: links.map(({ video_id, position, destination_host, kind, thro_code }) => ({ video_id, position, destination_host, kind, thro_code })),
   window: { daysBefore: 14, daysAfter: 90 },
 }, null, 1));
 const n = (f) => prepared.filter(f).length;

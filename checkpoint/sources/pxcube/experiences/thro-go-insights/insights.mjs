@@ -48,7 +48,7 @@ const throCapabilities = [
 export const registry = createRegistry([...statisticsCapabilities, ...throCapabilities], { source: 'thro-go-insights over capability-lab', version: '1' });
 
 const SEED = 20261025;
-const REPLICATES = 2000;
+const REPLICATES = 1000;
 const CONFIDENCE = 0.95;
 const MODE_ORDER = ['talked', 'thrown', 'shown'];
 const LINKED_BRAND_HOSTS = { 'Infinite Discs': /(^|\.)infinitediscs\.com$/, 'Trash Panda Disc Golf': /(^|\.)trashpandadiscgolf\.com$/ };
