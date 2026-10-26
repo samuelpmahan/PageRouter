@@ -48,3 +48,53 @@ Banner at top on every view; "viewer-hours" absent (checked in rendered text); g
 - Reach is a ceiling dominated by the fact that nearly every video features some counted brand (Bodanza ceiling equals all views).
 - Page is dark-only; pitch table scrolls sideways inside its own box on a phone (page itself does not scroll sideways).
 - The "how" bar input preview is truncated for long arrays; the full input is in the capability receipt, not shown.
+
+---
+# Round 2
+
+Files added or changed: `build-data.mjs` (classification rewritten, no regex), `insights.mjs` (rewritten), `thro-capabilities/index.mjs` and `thro-capabilities/catalog.json` (new), `index.html` (layout and copy rewritten), `tools/export-catalog.mjs`, `tools/check.mjs`, `tools/shoot.mjs`. Screenshots: `shots/round2-desktop.png`, `shots/round2-phone.png` (J-Milly), `shots/round2-{desktop,phone}-{jmilly,bodanza}-full.png`, `shots/round2-desktop-receipt.png`.
+
+## Changed counts
+Rows are now classified once each, in this precedence: notes without a timestamp (candidate), set aside (unreleased disc), quoted from a friend, manufacturer unknown, manufacturer guessed, then counted; a counted row that repeats the same brand and mold in the same video within 30 seconds of an earlier counted row is "same moment" and not counted.
+J-Milly 28 to 17 counted (6 unreleased set aside, 5 repeats, 1 quoted row; Convict is 7 now, Dynamic Discs 15). Bodanza 73 to 69 (4 repeats). Of J-Milly's 17, 16 are in "I Brought Back a Retired Disc".
+
+## Unreleased discs (priority 2)
+The 6 timestamped rows whose mold is "Unreleased, name withheld" (ids 74 to 79, Discmania, J-Milly "Hardest Course" video) are excluded: not in any brand total, not in the Discs list, not drawn on the timeline, no link to the moment. The page shows only a generic "6 set aside" in the rows bar. The one candidate row (id 1) is already excluded as a note. For Sam to decide: if a creator should never see even that count, drop the "set aside" segment in `index.html` (`fateLabel.withheld`).
+
+## Finding by finding
+| # | Result | What I did |
+|---|---|---|
+| 1 | fixed | One exclusive classification drives both the bar and the sentence; the bar shows what happened to every row (counted, no timestamp, guessed, unknown, repeat, quoted, set aside) and the evidence classes are counted over counted rows only. Guessed shows 6 and 13 in both places. |
+| 2 | fixed | The footnote is derived from data (counted rows only, years from `release_date`); guessed rows no longer appear in release text at all. Bodanza shows "2 counted mentions of Discmania MD5 ... released in 2018". |
+| 3 | fixed | A match is headline-eligible only if no earlier `new mold` release row exists for that manufacturer and mold (`moldOld`). PD has a 2008 row, so it is a small lead line saying "mold name only; the mold itself is older, so this does not count as release support". No 22px headline remains for it. |
+| 4 | fixed | Regex removed. Id 111 is excluded by its evidence ("quote from a friend") and counted under "quoted from a friend". |
+| 5 | fixed | Same brand, mold and video within 30 seconds collapse to one counted moment (9 rows, includes ids 106 and 107). Labels say "mentions and sightings". |
+| 6 | fixed | `thro.ratio` and `thro.positionHistogram` now live in `thro-capabilities/index.mjs` with the Capability Lab descriptor shape, are registered in the same registry, have `thro-capabilities/catalog.json` with examples (all pass through `registry.execute`), and call `statistics.sum` and `statistics.histogram` through `ctx.call`. The receipt still names `thro.*` for those numbers; the page footer says they are defined in that catalog. Declined: adding files under `vendor/` (vendored, pinned). |
+| 7 | fixed | Each receipt lists the rows that went in ("#90 Dynamic Discs Convict at 11:22 (thrown)", "Discmania PD: video 2026-09-01 minus release 2026-07-13"); raw input is kept under it. |
+| 8 | fixed | No "vs", "Q4" or "calc" in rendered text (checked by regex on both tabs and both widths); "versus", "fourth quarter" replaced by "per quarter", "t statistic". |
+| 9 | fixed | "Clicks count taps, not people, sales or revenue" sits inside the Link clicks item of the offer. The word never appears in a count context elsewhere. |
+| 10 | fixed | Second stat tile: "94% in one video, 'I Brought Back a Retired Disc': the brand moment" (computed with `statistics.extrema` and `thro.ratio`; says "the busiest video" below 50%). |
+| 11 | fixed | See Unreleased discs above. |
+| 12 | fixed | Reach ceiling removed from the hero; it stays in the ledger column with one ceiling note. |
+| 13 | reframed | Linked-brand paired interval moved to the Method disclosure; the offer says "N of your M description links go to retailers, affiliates, sponsors or manufacturers; 0 are measurable per-disc links". |
+| 14 | fixed | Bodanza's release panel opens with the calendar sentence (covers 10 manufacturers; Infinite Discs, Trash Panda Disc Golf and Kastaplast are not in it yet). The guessed Discraft Buzz lead is dropped. |
+| 15 | fixed | Welch row and "How sure are we" moved into a collapsed "Method and small sample" disclosure; "small sample" is said there once. |
+| 16 | fixed | First tile: "mentions and sightings counted, N of them on camera". |
+| 17 | fixed | Hero rate is pooled (counted rows over total runtime, per 10 minutes: 1.2 and 3.9). The Method disclosure shows the average of the per-video rates and says which is which. |
+| 18 | fixed | Offer is the top of the right column (y = 177 at 1440x900): three one-sentence benefits, a "today" line using real numbers, a "Connect YouTube Studio" button that opens a four-step "How it works" (no fake success, no invented address; price and start date say "reply to the message that brought you here"). Assumption for Sam to confirm: the "read-only access to this channel's YouTube analytics" wording. |
+| 19 | fixed | One ceiling note, no repeated caveats; the clicks sentence and banner kept. |
+| 20 | fixed | The internal-data admission is gone; the offer says what thro-go does. |
+| 21 | partly | The line under the creator name now names the most-counted disc ("Dynamic Discs Convict, 7 in 2 videos"). Not done: stamp and run descriptions (Robert stamp, 2019 run); the data supports it, it is a possible round 3. |
+| D1 | fixed | The "how" bar is one idle line (it grows only when a number is hovered or tapped). At 1440x900 the right column ends above it (rows panel bottom 829 and 859 against bar top 868). |
+| D2 | partly | Offer, ledger, timeline, release and rows all sit in the first screen; page height is 939 (J-Milly) and 969 (Bodanza) because the collapsed Method disclosure is below. |
+| D3 | fixed | Columns are within about 30 px of each other. |
+| D4 | fixed | Title column 330 px, wraps to two lines; rows with guessed ticks say "N guessed". |
+| D5 | fixed | One hollow style, one legend entry. |
+| D6 | fixed | Amber is used only for thro (banner, active tab, offer). Brand colours are cyan, coral, lime, violet, pink. |
+| D7 | fixed | The offer is a list, not a table, so nothing is clipped at 390 px; the pitch table is gone. |
+| D8 | partly | Phone banner and header tightened, stat tiles in 2x2 at 23 px; first brand row at about y = 430. |
+| D9 | no action | Review said OK. |
+| D10 | fixed | Dotted underline is faint until hover or focus. |
+
+## Checks (Playwright, 1440x900 and 390x844, both tabs)
+Zero console or page errors and no failed requests; no horizontal scroll (scrollWidth 1440 and 390); banner present; "viewer-hours" absent; no "vs", "Q1" to "Q4", "Unreleased" or "name withheld" in the rendered text; "not people, sales or revenue" present.

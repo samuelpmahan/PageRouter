@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>thro-go creator insight</title>
 <style>
@@ -25,7 +26,7 @@ nav.tabs{display:flex;gap:4px}
 nav.tabs button{background:none;border:0;border-bottom:2px solid transparent;color:var(--mute);font:600 15px var(--cond);letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;cursor:pointer}
 nav.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--amber)}
 nav.tabs button:focus-visible,.cta:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
-.hero{padding:12px 0 10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 40px;align-items:end}
+.hero{padding:10px 0 8px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 40px;align-items:end}
 h1{margin:0;font:700 34px/1 var(--cond);letter-spacing:.02em;text-transform:uppercase}
 .sub{color:var(--mute);margin-top:6px;font-size:13px}
 .lede{margin-top:4px;font-size:14px}
@@ -33,7 +34,7 @@ h1{margin:0;font:700 34px/1 var(--cond);letter-spacing:.02em;text-transform:uppe
 .stat .v{font:700 30px/1 var(--cond);font-variant-numeric:tabular-nums}
 .stat .l{font-size:11.5px;color:var(--mute);margin-top:4px;max-width:170px;line-height:1.25}
 .grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:0 36px;align-items:start}
-section{padding:10px 0 12px;border-top:1px solid var(--rule)}
+section{padding:7px 0 8px;border-top:1px solid var(--rule)}
 h2{margin:0 0 8px;font:700 13px var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--mute);display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 h2 .seg button{background:none;border:0;color:var(--dim);font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer;padding:0 0 0 12px}
 h2 .seg button[aria-pressed=true]{color:var(--ink);text-decoration:underline;text-decoration-color:var(--amber);text-underline-offset:4px}
@@ -49,7 +50,7 @@ table.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nu
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:baseline}
 .bar{display:inline-block;height:8px;vertical-align:middle;margin-right:8px;min-width:2px}
 .ledger .sm{color:var(--mute);font-size:11px}
-.tl-row{display:grid;grid-template-columns:290px minmax(0,1fr) 44px;gap:12px;align-items:center;padding:5px 0;border-top:1px solid var(--rule)}
+.tl-row{display:grid;grid-template-columns:330px minmax(0,1fr) 44px;gap:12px;align-items:center;padding:5px 0;border-top:1px solid var(--rule)}
 .tl-title{font-size:12.5px;line-height:1.25;min-width:0}
 .tl-title b{font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .tl-title span{color:var(--mute);font-size:11.5px}
@@ -80,9 +81,9 @@ table.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nu
 .mixl b{color:var(--ink);font-weight:500}
 .offer{border-top:2px solid var(--amber);padding-top:12px}
 .offer h2{color:var(--amber);font-size:15px;margin-bottom:6px}
-.offer .say{font:700 22px/1.1 var(--cond);text-transform:uppercase;letter-spacing:.02em;margin:0 0 8px}
+.offer .say{font:700 19px/1.1 var(--cond);text-transform:uppercase;letter-spacing:.02em;margin:0 0 8px}
 .gets{margin:0;padding:0;list-style:none}
-.gets li{padding:6px 0;border-top:1px solid var(--rule);font-size:13px}
+.gets li{padding:5px 0;border-top:1px solid var(--rule);font-size:13px}
 .gets li b{display:block;font:700 15px var(--cond);letter-spacing:.04em;text-transform:uppercase}
 .gets li span{color:var(--mute)}
 .today{margin:8px 0;font-size:13px}
@@ -195,7 +196,7 @@ function render() {
   const timeline = `
     <div class="legend"><span><i style="height:14px"></i>on camera</span><span><i style="height:7px"></i>mentioned aloud</span><span><i class="h" style="height:14px"></i>manufacturer guessed or unknown, not counted</span></div>
     ${c.videos.map((v) => `<div class="tl-row">
-      <div class="tl-title"><b title="${esc(v.title)}">${esc(v.title)}</b><span>${esc(v.published_at)} &middot; ${fmt(v.views)} views &middot; ${N(v.counted, v.counted.v)} counted${v.guessedCount ? ` &middot; ${v.guessedCount} guessed, not counted` : ''}</span></div>
+      <div class="tl-title"><b title="${esc(v.title)}">${esc(v.title)}</b><span>${esc(v.published_at)} &middot; ${fmt(v.views)} views &middot; ${N(v.counted, v.counted.v)} counted${v.guessedCount ? ` &middot; ${v.guessedCount} guessed` : ''}</span></div>
       <div class="strip">${v.marks.map((m) => {
         const tip = `${m.brand} ${m.mold} at ${mmss(m.start)}, ${m.mode}${m.counted ? '' : ' (' + m.reason + ', not counted)'}`;
         return `<a class="tick ${m.mode !== 'talked' ? 'cam' : 'say'} ${m.counted ? '' : 'hollow'}" style="left:${(m.start / v.duration_seconds) * 100}%;${m.counted ? 'background:' + (colorOf[m.brand] ?? 'var(--cx)') : ''}" href="${m.url}" target="_blank" rel="noopener" title="${esc(tip)}" aria-label="${esc(tip)}"></a>`;
@@ -227,18 +228,18 @@ function render() {
   const rows = `
     <div class="mix">${c.fates.map((f) => `<i style="flex:${f.n.v};background:${fateCol[f.key]}"></i>`).join('')}</div>
     <div class="mixl">${c.fates.map((f) => `<span><span class="sw" style="background:${fateCol[f.key]}"></span><b>${N(f.n, f.n.v)}</b> ${fateLabel[f.key]}</span>`).join('')}</div>
-    <p class="note">${N(c.rowsTotal, c.rowsTotal.v)} rows in all. Of the ${N(c.counted, c.counted.v)} counted: ${c.evidence.map((e) => `${N(e.n, e.n.v)} ${esc(e.label)}`).join(', ')}.</p>`;
+    <p class="note">Of ${N(c.rowsTotal, c.rowsTotal.v)} rows, the ${N(c.counted, c.counted.v)} counted: ${c.evidence.map((e) => `${N(e.n, e.n.v)} ${esc(e.label)}`).join(', ')}.</p>`;
 
   // offer
   const offer = `
     <h2>Connect YouTube Studio</h2>
-    <p class="say">See what ${N(c.counted, c.counted.v)} sightings are worth to a sponsor</p>
+    <p class="say">Put a sponsor-ready number on ${N(c.counted, c.counted.v)} sightings</p>
     <ul class="gets">
       <li><b>Attention-seconds per disc</b><span>Each appearance weighted by how many people are still watching at that second, from your audience retention curve.</span></li>
       <li><b>Exposure minutes per sponsor, per quarter</b><span>On-screen time for each brand, quarter by quarter: the page to bring to offseason sponsor talks.</span></li>
       <li><b>Link clicks per disc</b><span>Taps on per-disc links you own. Clicks count taps, not people, sales or revenue.</span></li>
     </ul>
-    <p class="today">Today: ${esc(top.brand)} has ${N(top.n, top.n.v)} counted. After you connect, it gets its attention-seconds and exposure minutes. Your descriptions hold ${N(c.links.total, c.links.total.v)} links; ${N(c.links.paying, c.links.paying.v)} go to retailers, affiliates, sponsors or manufacturers and ${N(c.links.tracked, c.links.tracked.v)} are per-disc links you can measure.</p>
+    <p class="today">Today: ${esc(top.brand)} has ${N(top.n, top.n.v)} counted. After you connect: its attention-seconds and exposure minutes. ${N(c.links.paying, c.links.paying.v)} of your ${N(c.links.total, c.links.total.v)} description links go to retailers, affiliates, sponsors or manufacturers; ${N(c.links.tracked, c.links.tracked.v)} are measurable per-disc links.</p>
     <a class="cta" href="#connect" id="cta">Connect YouTube Studio</a>
     <details class="how-it-works" id="connect"><summary>How it works</summary><ol>
       <li>Sign in with Google and approve read-only access to this channel's YouTube analytics.</li>
