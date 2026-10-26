@@ -33,15 +33,18 @@ function tile(d, v, handle, shop) {
   const href = d.image || d.linkKind === 'product' ? d.link : d.link;
   return `<li><a class="card" href="${esc(href)}" rel="noopener">${art}<span class="what">${label} ${status}</span></a><span class="how">${evidence(d, v)}</span></li>`;
 }
+let sectionNo = 0;
 function section(v, handle, shop, kind) {
+  sectionNo++;
   const names = v.discs.map(d => esc(d.mold)).join(', ');
   const head = kind === 'video'
     ? `<a class="vt" href="${esc(v.url)}" rel="noopener">${esc(v.title)}</a>`
     : `<a class="vt" href="${esc(v.url)}" rel="noopener">${esc(v.title)}</a>`;
-  return `<section><header><span class="kind">${kind === 'video' ? 'Video' : 'Release post'} · ${date(v.published)}</span>${head}<p class="bag">${kind === 'video' ? 'Featured' : 'In the drop'}: ${names}</p></header><ol class="grid">${v.discs.map(d => tile(d, v, handle, shop)).join('')}</ol></section>`;
+  return `<section><header><span class="no">No. ${String(sectionNo).padStart(2, '0')}</span><span class="kind">${kind === 'video' ? 'Video' : 'Release post'} · ${date(v.published)}</span>${head}<p class="bag">${kind === 'video' ? 'Featured' : 'In the drop'}: ${names}</p></header><ol class="grid">${v.discs.map(d => tile(d, v, handle, shop)).join('')}</ol></section>`;
 }
 const css = fs.readFileSync(path.join(root, 'page.css'), 'utf8');
 for (const [handle, s] of Object.entries(shops)) {
+  sectionNo = 0;
   const dir = path.join(out, handle);
   fs.mkdirSync(path.join(dir, 'cards'), { recursive: true });
   for (const v of [...s.videos, ...s.drops]) for (const d of v.discs) if (d.cardBase) fs.copyFileSync(path.join(root, 'cards', `${d.cardBase}-u02.webp`), path.join(dir, 'cards', `${d.cardBase}-u02.webp`));
@@ -51,8 +54,9 @@ for (const [handle, s] of Object.entries(shops)) {
 <meta name="robots" content="noindex, nofollow"><title>${esc(title)} · featured discs</title>
 <meta name="description" content="The discs from ${esc(s.name)}'s recent videos, each linking to ${esc(s.domain)}.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%23c8f49d' stroke-width='3'%3E%3Ccircle cx='16' cy='16' r='13'/%3E%3Ccircle cx='16' cy='16' r='5.75'/%3E%3C/svg%3E">
-<style>${css}</style></head><body>
-<header class="top"><p class="eyebrow">Featured discs</p><h1>${esc(s.name)}</h1><p class="sub">${s.name === s.shopName ? '' : `with ${esc(s.shopName)} · `}every disc from these videos, one tap from <a href="https://${esc(s.domain)}" rel="noopener">${esc(s.domain)}</a></p></header>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>${css}</style></head><body class="${handle}">
+<header class="top"><svg class="burst" viewBox="-100 -100 200 200" aria-hidden="true">${Array.from({length:16},(_, i)=>`<line x1="0" y1="0" x2="${(Math.cos(i*Math.PI/8)*(i%2?62:96)).toFixed(1)}" y2="${(Math.sin(i*Math.PI/8)*(i%2?62:96)).toFixed(1)}" stroke="#2b2420" stroke-width="${i%2?3:5}" stroke-linecap="round"/>`).join('')}<circle r="22" fill="#f3e8d2" stroke="#2b2420" stroke-width="5"/><circle r="7" fill="#2b2420"/></svg><div class="inner"><p class="eyebrow">Featured discs</p><h1>${esc(s.name)}</h1><p class="sub">${s.name === s.shopName ? '' : `with ${esc(s.shopName)} · `}every disc from these videos, one tap from <a href="https://${esc(s.domain)}" rel="noopener">${esc(s.domain)}</a></p></div></header>
 <main>${s.videos.map(v => section(v, handle, s.shopName, 'video')).join('')}${s.drops.map(v => section(v, handle, s.shopName, 'drop')).join('')}</main>
 <footer>A prototype made with <a href="https://thro.pages.dev/">thro</a>. Not affiliated with ${esc(s.shopName)}${s.name === s.shopName ? '' : ` or ${esc(s.name)}`}. Discs come from the public videos (title, description or what's said on camera); every card links to ${esc(s.domain)}.</footer>
 </body></html>`;
