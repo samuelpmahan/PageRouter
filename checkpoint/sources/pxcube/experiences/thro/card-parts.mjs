@@ -8,6 +8,7 @@
 // renderer redraws the card. The recipe (each part: its value and whether it is a default, pinned, or derived) is shown under the card.
 import { solveB01, B01_PARTS } from './vendor/discstudio-cards/thro-card-core-r2.js?v=28ac2b39fab85255';
 import { begin, settle } from './gestures.mjs';
+import { chromeAnchor } from './editor-place.mjs';
 
 const STYLE = `
 .card-parts{position:absolute;inset:0;pointer-events:none;z-index:3}
@@ -68,10 +69,9 @@ export function attachCardParts(holder, layer, { recipe, design, name, view, onC
   const pinned = { ...(design.nativeParts ?? {}) };
 
   // The recipe, under the card: each part, its value, and whether it is a default, pinned by you, or derived by the rules.
-  holder.parentElement?.querySelector(':scope > .cp-recipe')?.remove();
   const panel = document.createElement('div'); panel.className = 'cp-recipe'; panel.setAttribute('aria-label', 'Card recipe');
-  const strip = holder.parentElement?.querySelector(':scope > .ce-strip');
-  (strip ?? holder).after(panel);
+  const strip = holder.closest('.preview-column')?.querySelector(':scope > .ce-strip') ?? holder.parentElement?.querySelector(':scope > .ce-strip');
+  (strip ?? chromeAnchor(holder)).after(panel);
   const renderPanel = (values = recipe.values, state = recipe.state, derived = recipe.derived, msgs = recipe.msgs) => {
     // Every part, both ways: drag the slider (continuous) or step it with − and + (discrete); a choice is a pair of buttons.
     const items = Object.keys(B01_PARTS).map(k => { const p = B01_PARTS[k], v = values[k];

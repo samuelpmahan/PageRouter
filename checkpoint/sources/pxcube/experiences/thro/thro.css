@@ -145,8 +145,8 @@
 .export-batch{flex:0 0 100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;padding-top:10px;border-top:1px solid #3d5135}
 .export-batch[hidden]{display:none}
 .export-batch .button-secondary{min-height:44px;font-size:12px;padding:8px 14px}
-.tight-crop{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:12px;font-weight:600;color:#d6dfd2;cursor:pointer}
-.tight-crop input{width:20px;height:20px;min-height:0;accent-color:var(--accent)}
+.export-batch .tight-crop{display:flex;flex-direction:row;align-items:center;gap:8px;min-height:44px;font-size:12px;font-weight:600;color:#d6dfd2;cursor:pointer}
+.export-batch .tight-crop input{flex:0 0 20px;width:20px;height:20px;min-height:0;margin:0;padding:0;accent-color:var(--accent)}
 .export-batch-note{font-size:10.5px;color:#a6b69a;flex:1 1 160px}
 
 /* Phone first screen: the disc strip, then the card. The card comes straight after the strip of discs, and Download sits right under
@@ -166,6 +166,10 @@
   .disc-copy>span:last-child:not(:first-child){display:none}
   .preview-heading{min-height:0;margin-bottom:0}
   .preview-heading>div{display:none}
-  .preview-note{display:none}
+  .preview-note,.preview-bottom{display:none}
   .preview-toolbar{min-height:44px}
+  /* The strip and the recipe follow the Download bar (editor-place.mjs): each its own panel. */
+  .preview-column>.ce-strip,.preview-column>.cp-recipe{margin-top:10px;border:1px solid #3a493b;border-radius:12px}
+  .preview-column>.ce-strip .ce-label{display:none}
+  .export-batch-note{display:none}
 }

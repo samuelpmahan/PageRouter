@@ -37,6 +37,7 @@ const STYLE = `
 `;
 import { begin, settle } from './gestures.mjs';
 import { attachCardParts } from './card-parts.mjs';
+import { onPhone, chromeAnchor, clearChrome } from './editor-place.mjs';
 let armed = false; // phone: the card's marks are shown after a tap on the card (see STYLE); kept across redraws
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const union = boxes => {
@@ -83,13 +84,13 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
   knob.setAttribute('aria-label', `Card size ${Math.round(scale0 * 100)}%: drag to change`);
   const side = design.nativeSide, other = side === 'left' ? 'right' : 'left', tiles = design.nativeHighlight === 'tiles', solid = design.nativePlate === 'solid';
   // The strip names each control's current state; hovering or focusing one outlines the piece it changes.
-  holder.parentElement?.querySelector(':scope > .ce-strip')?.remove();
+  clearChrome(holder);
   const strip = document.createElement('div'); strip.className = 'ce-strip'; strip.setAttribute('role', 'group'); strip.setAttribute('aria-label', 'Card controls');
   strip.innerHTML = '<span class="ce-label">ON THE CARD</span>';
   const tapHint = document.createElement('span'); tapHint.className = 'ce-tap-hint';
   const hintText = () => { tapHint.textContent = armed ? 'Handles are on the card. Drag one, or tap the card again to put them away.' : 'Tap the card to show its handles for moving and sizing.'; };
   hintText(); strip.appendChild(tapHint);
-  holder.after(strip);
+  chromeAnchor(holder).after(strip);
   const actions = [
     // With handles on the card's parts (card-parts.mjs), the badges step off the handles' spots: Side under the disc, Colour under the
     // numbers, Plate at the plate's bottom corner.
@@ -165,7 +166,7 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
     const m = view(); let dx = 0, dy = 0;
     track(box, e, (x, y) => { dx = x; dy = y; svg.style.translate = `${x}px ${y}px`; box.style.translate = `${x}px ${y}px`; },
       (moved, cancelled) => {
-        if (!moved && !cancelled && matchMedia('(max-width:760px)').matches) { armed = !armed; layer.classList.toggle('ce-armed', armed); hintText(); place(); return; }
+        if (!moved && !cancelled && onPhone()) { armed = !armed; layer.classList.toggle('ce-armed', armed); hintText(); place(); return; }
         const to = moved && !cancelled ? (begin('Move'), commitNudge(dx / m.s, dy / m.s)) : null;
         if (moved && !cancelled && !to) settle('unchanged'); // dropped where it already was: nothing to redraw
         // The card stays where the finger left it (or settles into its corner) until the redrawn card replaces it; it never
@@ -195,5 +196,5 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
 /** Remove the editor and its strip (kept versions, Battle and Bag show no controls). */
 export function detachCardEditor(holder) {
   holder.querySelector(':scope > .card-editor')?.remove();
-  holder.parentElement?.querySelector(':scope > .ce-strip')?.remove();
+  clearChrome(holder);
 }
