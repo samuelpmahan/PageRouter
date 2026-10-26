@@ -6,97 +6,112 @@
 <title>thro-go creator insight</title>
 <style>
 :root{
-  --bg:#0b0c0e; --panel:#111317; --ink:#ece8df; --mute:#8d929b; --dim:#5b606a; --rule:#22252b;
-  --amber:#f2b134; --c1:#f2b134; --c2:#4fc3d9; --c3:#ef6f5e; --c4:#a6d85a; --c5:#a58cf0; --cx:#6b707a;
+  --bg:#0b0c0e; --ink:#ece8df; --mute:#8d929b; --dim:#5b606a; --rule:#22252b;
+  --amber:#f2b134; --c1:#4fc3d9; --c2:#ef6f5e; --c3:#a6d85a; --c4:#a58cf0; --c5:#e6a0c4; --cx:#6b707a;
   --cond:"Bahnschrift","Roboto Condensed","Arial Narrow","Liberation Sans Narrow",sans-serif;
   --body:"Inter","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
 }
 *{box-sizing:border-box}
 html{background:var(--bg)}
-body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.4 var(--body);-webkit-font-smoothing:antialiased;padding-bottom:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.4 var(--body);-webkit-font-smoothing:antialiased;padding-bottom:56px}
 a{color:inherit}
-.banner{position:sticky;top:0;z-index:20;background:var(--amber);color:#17130a;font:600 12.5px/1.3 var(--body);padding:7px 16px;letter-spacing:.01em}
+.banner{position:sticky;top:0;z-index:20;background:var(--amber);color:#17130a;font:600 12.5px/1.3 var(--body);padding:6px 16px}
 .wrap{max-width:1360px;margin:0 auto;padding:0 24px}
-header.top{display:flex;align-items:center;gap:20px;justify-content:space-between;padding:14px 0 12px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+header.top{display:flex;align-items:center;gap:20px;justify-content:space-between;padding:10px 0 8px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
 .brand{font:700 20px var(--cond);letter-spacing:.04em;text-transform:uppercase}
 .brand span{color:var(--amber)}
 .brand small{font:500 12px var(--body);color:var(--mute);letter-spacing:.02em;text-transform:none;margin-left:10px}
 nav.tabs{display:flex;gap:4px}
 nav.tabs button{background:none;border:0;border-bottom:2px solid transparent;color:var(--mute);font:600 15px var(--cond);letter-spacing:.06em;text-transform:uppercase;padding:6px 12px;cursor:pointer}
 nav.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--amber)}
-nav.tabs button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
-.hero{padding:14px 0 12px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 40px;align-items:end}
+nav.tabs button:focus-visible,.cta:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.hero{padding:12px 0 10px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 40px;align-items:end}
 h1{margin:0;font:700 34px/1 var(--cond);letter-spacing:.02em;text-transform:uppercase}
 .sub{color:var(--mute);margin-top:6px;font-size:13px}
-.stats{display:flex;gap:30px;flex-wrap:wrap}
-.stat .v{font:700 30px/1 var(--cond);letter-spacing:.01em;font-variant-numeric:tabular-nums}
-.stat .l{font-size:11.5px;color:var(--mute);margin-top:4px;max-width:160px;line-height:1.25}
-.grid{display:grid;grid-template-columns:minmax(0,1.65fr) minmax(0,1fr);gap:0 36px;align-items:start}
-section{padding:12px 0 14px;border-top:1px solid var(--rule)}
+.lede{margin-top:4px;font-size:14px}
+.stats{display:flex;gap:28px;flex-wrap:wrap}
+.stat .v{font:700 30px/1 var(--cond);font-variant-numeric:tabular-nums}
+.stat .l{font-size:11.5px;color:var(--mute);margin-top:4px;max-width:170px;line-height:1.25}
+.grid{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:0 36px;align-items:start}
+section{padding:10px 0 12px;border-top:1px solid var(--rule)}
 h2{margin:0 0 8px;font:700 13px var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--mute);display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 h2 .seg button{background:none;border:0;color:var(--dim);font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer;padding:0 0 0 12px}
 h2 .seg button[aria-pressed=true]{color:var(--ink);text-decoration:underline;text-decoration-color:var(--amber);text-underline-offset:4px}
 .note{color:var(--mute);font-size:12px;margin:6px 0 0}
-.n{border-bottom:1px dotted var(--dim);cursor:help;font-variant-numeric:tabular-nums}
-.n:hover,.n:focus-visible,.n.on{border-bottom-color:var(--amber);color:#fff;outline:none;background:rgba(242,177,52,.12)}
+.n{border-bottom:1px dotted rgba(141,146,155,.4);cursor:help;font-variant-numeric:tabular-nums}
+.n:hover,.n:focus-visible,.n.on{border-bottom-color:var(--amber);color:#fff;outline:none;background:rgba(242,177,52,.14)}
 table.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
 .ledger th{font:600 11px var(--body);color:var(--dim);text-align:right;padding:0 8px 5px;letter-spacing:.04em;text-transform:uppercase;white-space:nowrap}
 .ledger th:nth-child(2),.ledger td:nth-child(2){text-align:left}
-.ledger td{padding:5px 8px;border-top:1px solid var(--rule);text-align:right;white-space:nowrap}
+.ledger td{padding:4px 8px;border-top:1px solid var(--rule);text-align:right;white-space:nowrap}
 .ledger td.rk{color:var(--dim);width:28px;padding-left:0;text-align:left;font:700 15px var(--cond)}
-.ledger td.nm{max-width:220px;overflow:hidden;text-overflow:ellipsis}
+.ledger td.nm{max-width:240px;overflow:hidden;text-overflow:ellipsis}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:8px;vertical-align:baseline}
-.bar{display:inline-block;height:8px;background:var(--cx);vertical-align:middle;margin-right:8px;min-width:2px}
+.bar{display:inline-block;height:8px;vertical-align:middle;margin-right:8px;min-width:2px}
 .ledger .sm{color:var(--mute);font-size:11px}
-.tl-row{display:grid;grid-template-columns:240px minmax(0,1fr) 44px;gap:12px;align-items:center;padding:6px 0;border-top:1px solid var(--rule)}
+.tl-row{display:grid;grid-template-columns:290px minmax(0,1fr) 44px;gap:12px;align-items:center;padding:5px 0;border-top:1px solid var(--rule)}
 .tl-title{font-size:12.5px;line-height:1.25;min-width:0}
-.tl-title b{font-weight:600;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tl-title b{font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .tl-title span{color:var(--mute);font-size:11.5px}
 .strip{position:relative;height:26px;background:linear-gradient(var(--rule),var(--rule)) center/100% 1px no-repeat}
 .tick{position:absolute;bottom:2px;width:3px;margin-left:-1.5px;background:var(--cx);border-radius:1px;text-decoration:none}
 .tick::before{content:"";position:absolute;inset:-4px -5px}
 .tick.cam{height:22px}.tick.say{height:11px}
-.tick.guess{background:transparent;box-shadow:inset 0 0 0 1px var(--mute)}
-.tick.unk{background:transparent;box-shadow:inset 0 0 0 1px var(--dim);opacity:.8}
+.tick.hollow{background:transparent;box-shadow:inset 0 0 0 1px var(--mute)}
 .tick:hover,.tick:focus-visible{outline:2px solid #fff;outline-offset:1px;z-index:3}
 .tl-dur{font-size:11px;color:var(--dim);text-align:right;font-variant-numeric:tabular-nums}
 .legend{display:flex;flex-wrap:wrap;gap:4px 16px;font-size:11.5px;color:var(--mute);margin:2px 0 6px}
 .legend i{display:inline-block;width:3px;vertical-align:middle;margin-right:6px;background:var(--cx)}
 .legend i.h{box-shadow:inset 0 0 0 1px var(--mute);background:transparent}
-.pos{display:flex;align-items:flex-end;gap:2px;height:34px;margin-top:6px}
+.pos{display:flex;align-items:flex-end;gap:2px;height:26px;margin-top:4px}
 .pos b{flex:1;background:var(--cx);opacity:.85;min-height:1px}
-.rel{padding:6px 0;border-top:1px solid var(--rule);font-size:13px}
+.rel{padding:5px 0;border-top:1px solid var(--rule);font-size:13px}
 .rel:first-of-type{border-top:0}
-.rel .big{font:700 22px/1 var(--cond);display:block;margin-bottom:3px}
-.rel small,.kv small{color:var(--mute);font-size:12px;display:block}
+.rel small{color:var(--mute);font-size:12px;display:block}
+.rel .big{font:700 20px/1.1 var(--cond);display:block;margin-bottom:3px}
 .kv{display:grid;grid-template-columns:1fr auto;gap:2px 14px;padding:5px 0;border-top:1px solid var(--rule);font-size:13px}
 .kv:first-of-type{border-top:0}
 .kv span:last-child{text-align:right;font-variant-numeric:tabular-nums}
-.kv small{grid-column:1 / -1}
-.mix{display:flex;height:12px;gap:2px;margin:4px 0 8px}
+.kv small{grid-column:1 / -1;color:var(--mute);font-size:12px}
+.mix{display:flex;height:10px;gap:2px;margin:2px 0 6px}
 .mix i{display:block;min-width:2px}
-.mixl{display:grid;grid-template-columns:auto 1fr auto;gap:3px 8px;font-size:12.5px;align-items:center}
-.mixl .sw{width:9px;height:9px}
-.mixl span:last-child{font-variant-numeric:tabular-nums}
-.pitch{margin-top:18px;border-top:2px solid var(--amber);padding-top:14px}
-.pitch h2{color:var(--amber);font-size:14px}
-.pitch .lede{font:700 24px/1.1 var(--cond);text-transform:uppercase;letter-spacing:.02em;margin:0 0 4px}
-.lock{color:var(--dim);font-style:italic}
-.pitch th small{display:block;font:500 10.5px var(--body);text-transform:none;letter-spacing:0;color:var(--dim);white-space:normal;max-width:170px;margin-left:auto;margin-top:2px}
-.pitch td.k{border-left:1px dashed var(--rule)}
-.foot{margin-top:22px;padding-top:12px;border-top:1px solid var(--rule);color:var(--mute);font-size:12px}
+.mixl{display:flex;flex-wrap:wrap;gap:2px 14px;font-size:12px;color:var(--mute)}
+.mixl .sw{display:inline-block;width:8px;height:8px;margin-right:5px}
+.mixl b{color:var(--ink);font-weight:500}
+.offer{border-top:2px solid var(--amber);padding-top:12px}
+.offer h2{color:var(--amber);font-size:15px;margin-bottom:6px}
+.offer .say{font:700 22px/1.1 var(--cond);text-transform:uppercase;letter-spacing:.02em;margin:0 0 8px}
+.gets{margin:0;padding:0;list-style:none}
+.gets li{padding:6px 0;border-top:1px solid var(--rule);font-size:13px}
+.gets li b{display:block;font:700 15px var(--cond);letter-spacing:.04em;text-transform:uppercase}
+.gets li span{color:var(--mute)}
+.today{margin:8px 0;font-size:13px}
+.cta{display:inline-block;background:var(--amber);color:#17130a;font:700 15px var(--cond);letter-spacing:.06em;text-transform:uppercase;padding:9px 18px;text-decoration:none;margin-top:4px}
+.cta:hover{background:#ffc860}
+details.how-it-works{margin-top:10px;font-size:13px;color:var(--mute)}
+details.how-it-works summary{cursor:pointer;color:var(--ink)}
+details.how-it-works ol{margin:6px 0 0 18px;padding:0}
+.method{margin-top:14px;border-top:1px solid var(--rule);padding-top:10px}
+.method summary{cursor:pointer;font:700 13px var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--mute)}
+.method .cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 36px;margin-top:8px}
+.foot{margin-top:14px;padding-top:10px;border-top:1px solid var(--rule);color:var(--mute);font-size:12px}
 .foot code{font:11.5px ui-monospace,Menlo,Consolas,monospace;color:var(--ink)}
-.how{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#16181d;border-top:1px solid #2a2e36;padding:8px 16px;font:12px/1.4 ui-monospace,Menlo,Consolas,monospace;color:var(--mute);min-height:52px;max-height:30vh;overflow:auto}
+.how{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#16181d;border-top:1px solid #2a2e36;padding:8px 16px;font:12px/1.4 ui-monospace,Menlo,Consolas,monospace;color:var(--mute);max-height:34vh;overflow:auto}
+.how.idle{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:7px 16px}
 .how b{color:var(--amber);font-weight:600}
 .how .r{color:var(--ink)}
+.col{min-width:0}
 @media (max-width:980px){
   .grid{grid-template-columns:minmax(0,1fr)}
+  .col{display:contents}
+  .s-ledger{order:1}.s-offer{order:2}.s-time{order:3}.s-release{order:4}.s-rows{order:5}
   .hero{grid-template-columns:minmax(0,1fr)}
+  .method .cols{grid-template-columns:minmax(0,1fr)}
 }
 @media (max-width:640px){
   .wrap{padding:0 16px}
   h1{font-size:28px}
-  .stats{gap:18px 22px}.stat .v{font-size:26px}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}.stat .v{font-size:23px}.stat .l{max-width:none}
   .ledger .opt{display:none}
   .bar{max-width:40px}
   .ledger th{white-space:normal}
@@ -105,10 +120,10 @@ table.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nu
   .tl-row{grid-template-columns:minmax(0,1fr) 44px;gap:4px 8px}
   .tl-row .strip{grid-column:1 / -1;order:3}
   .tl-dur{order:2}
-  .banner{font-size:12px}
-  header.top{gap:6px}
+  .banner{font-size:11.5px;padding:5px 16px}
+  header.top{gap:2px;padding:8px 0 4px}
   .brand small{display:block;margin:2px 0 0}
-  .pitch-scroll{overflow-x:auto}
+  .offer .say{font-size:20px}
 }
 </style>
 </head>
@@ -121,7 +136,7 @@ table.ledger{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nu
   </header>
   <main id="app" aria-live="polite"><p class="note" style="padding:24px 0">Loading data and running the statistics capabilities...</p></main>
 </div>
-<div class="how" id="how" role="status"><b>how</b> Tap or hover any underlined number to see which Capability Lab capability produced it, and from what input.</div>
+<div class="how idle" id="how" role="status"><b>how</b> Hover or tap a number with a dotted underline to see which capability produced it and from which rows.</div>
 <script type="module">
 import { computeInsights, registry } from './insights.mjs';
 
@@ -134,133 +149,132 @@ const PAL = ['var(--c1)', 'var(--c2)', 'var(--c3)', 'var(--c4)', 'var(--c5)'];
 let M, state = { tab: 0, ledger: 'brands' };
 
 function howText(f) {
-  return `<b>${esc(f.id)}</b> <span class="r">${esc(f.label)}</span><br>input ${esc(f.input)}<br>result ${esc(f.result)} &middot; receipt ${f.hash} &middot; ${f.calls} capability call${f.calls === 1 ? '' : 's'} in the trace`;
+  const from = f.items.length ? `<br>from: <span class="r">${f.items.map(esc).join(' &middot; ')}</span>` : '';
+  return `<b>${esc(f.id)}</b> <span class="r">${esc(f.label)}</span>${from}<br>result ${esc(f.result)} &middot; receipt ${f.hash} &middot; ${f.calls} capability call${f.calls === 1 ? '' : 's'} in the trace<br>raw input ${esc(f.input)}`;
 }
 /** A number on the page, linked to the receipt of the capability call that produced it. */
 function N(fact, text) {
   const f = M.facts[fact.k ?? fact];
-  return `<span class="n" tabindex="0" data-k="${f.k}" title="${esc(f.id + ' - ' + f.label)}">${text}</span>`;
+  return `<span class="n" tabindex="0" data-k="${f.k}" title="${esc(f.id + ': ' + f.label)}">${text}</span>`;
 }
+const plural = (n, one, many) => (n === 1 ? one : many);
 
 function render() {
   const c = M.creators[state.tab];
+  const other = M.creators[1 - state.tab];
   location.hash = c.short.toLowerCase();
   $('#tabs').innerHTML = M.creators.map((x, i) => `<button role="tab" aria-selected="${i === state.tab}" data-i="${i}">${esc(x.short)}</button>`).join('');
   const colorOf = Object.fromEntries(c.brands.map((b, i) => [b.brand, i < PAL.length ? PAL[i] : 'var(--cx)']));
-  const top = c.brands[0];
-  const rate = c.rateCI.r;
-  const exclTotal = c.excluded;
+  const top = c.brands[0], topDisc = c.molds[0], bz = c.busiest;
+  const nVid = c.videos.length;
 
+  const moment = bz.share.v >= 50 ? 'the brand moment' : 'the busiest video';
   const stats = `
-    <div class="stat"><div class="v">${N(c.counted, fmt(c.counted.v))}</div><div class="l">disc appearances counted, in ${N(c.videoCount, fmt(c.videoCount.v))} videos</div></div>
-    <div class="stat"><div class="v">${fmt(c.brands.length)}</div><div class="l">brands behind them; ${esc(top.brand)} leads with ${N(top.share, fmt(top.share.v) + '%')}</div></div>
-    <div class="stat"><div class="v">&le; ${N(c.reachCeiling, fmt(c.reachCeiling.v))}</div><div class="l">views, upper bound: every view of the videos that feature a counted disc</div></div>
-    <div class="stat"><div class="v">${N(c.rateCI, fmt(rate.estimate, 1))}</div><div class="l">appearances per 10 minutes of runtime (95% interval ${fmt(rate.lower, 1)} to ${fmt(rate.upper, 1)})</div></div>`;
+    <div class="stat"><div class="v">${N(c.counted, fmt(c.counted.v))}</div><div class="l">mentions and sightings counted, ${N(c.onCamera, fmt(c.onCamera.v))} of them on camera</div></div>
+    <div class="stat"><div class="v">${N(bz.share, fmt(bz.share.v) + '%')}</div><div class="l">in one video, &ldquo;${esc(bz.video.title)}&rdquo;: ${moment}</div></div>
+    <div class="stat"><div class="v">${N(top.share, fmt(top.share.v) + '%')}</div><div class="l">${esc(top.brand)}, the most-seen brand</div></div>
+    <div class="stat"><div class="v">${N(c.pooledRate, fmt(c.pooledRate.v, 1))}</div><div class="l">counted per 10 minutes of runtime, all ${nVid} videos pooled</div></div>`;
 
-  const items = state.ledger === 'brands' ? c.brands : c.molds.slice(0, 8);
-  const shown = items.slice(0, 7);
+  // ledger
+  const items = state.ledger === 'brands' ? c.brands : c.molds;
+  const shown = items.slice(0, 6);
   const maxN = Math.max(...shown.map((b) => b.n.v));
   const ledger = `
-    <table class="ledger"><thead><tr><th></th><th>${state.ledger === 'brands' ? 'Brand' : 'Disc'}</th><th>Appearances</th><th class="opt">On camera</th><th class="opt">Videos</th><th>Reach &le; (views)</th></tr></thead><tbody>
+    <table class="ledger"><thead><tr><th></th><th>${state.ledger === 'brands' ? 'Brand' : 'Disc'}</th><th>Counted</th><th class="opt">On camera</th><th class="opt">Videos</th><th>Reach &le; (views)</th></tr></thead><tbody>
     ${shown.map((b) => `<tr><td class="rk">${N(b.rank, b.rank.v)}</td>
       <td class="nm"><span class="dot" style="background:${colorOf[b.brand] ?? 'var(--cx)'}"></span>${esc(b.label)}</td>
       <td><span class="bar" style="width:${Math.max(2, Math.round((b.n.v / maxN) * 90))}px;background:${colorOf[b.brand] ?? 'var(--cx)'}"></span>${N(b.n, fmt(b.n.v))}</td>
       <td class="opt">${N(b.onCam, fmt(b.onCam.v))}</td>
-      <td class="opt">${N(b.nVideos, fmt(b.nVideos.v))} <span class="sm">of ${c.videos.length}</span></td>
+      <td class="opt">${N(b.nVideos, fmt(b.nVideos.v))} <span class="sm">of ${nVid}</span></td>
       <td>${N(b.reach, fmt(b.reach.v))}</td></tr>`).join('')}
     </tbody></table>
-    <p class="note">Reach is a ceiling: all views of the videos where the ${state.ledger === 'brands' ? 'brand' : 'disc'} appears, not viewers who saw it. Ceilings overlap between rows, so do not add them. ${items.length > shown.length ? `${items.length - shown.length} more not shown.` : ''}</p>`;
+    <p class="note">Reach is a ceiling: all views of the videos where it appears, not viewers who saw it; rows overlap, so do not add them. Counted = mentioned aloud or seen; on camera = thrown or shown. ${items.length > shown.length ? `${items.length - shown.length} more not shown.` : ''}</p>`;
 
+  // timeline
   const maxPos = Math.max(...c.position.r.bins.map((b) => b.count), 1);
   const timeline = `
-    <div class="legend"><span><i style="height:14px"></i>on camera (thrown or shown)</span><span><i style="height:7px"></i>mentioned aloud</span><span><i class="h" style="height:14px"></i>manufacturer guessed or unknown, not counted</span></div>
+    <div class="legend"><span><i style="height:14px"></i>on camera</span><span><i style="height:7px"></i>mentioned aloud</span><span><i class="h" style="height:14px"></i>manufacturer guessed or unknown, not counted</span></div>
     ${c.videos.map((v) => `<div class="tl-row">
-      <div class="tl-title"><b title="${esc(v.title)}">${esc(v.title)}</b><span>${esc(v.published_at)} &middot; ${fmt(v.views)} views &middot; ${N(v.counted, v.counted.v)} counted</span></div>
+      <div class="tl-title"><b title="${esc(v.title)}">${esc(v.title)}</b><span>${esc(v.published_at)} &middot; ${fmt(v.views)} views &middot; ${N(v.counted, v.counted.v)} counted${v.guessedCount ? ` &middot; ${v.guessedCount} guessed, not counted` : ''}</span></div>
       <div class="strip">${v.marks.map((m) => {
-        const cls = m.reason === 'manufacturer guessed' ? 'guess' : (m.counted ? '' : 'unk');
-        const colour = m.counted ? `background:${colorOf[m.brand] ?? 'var(--cx)'};` : '';
-        const tip = `${m.brand} ${m.mold} at ${mmss(m.start)}, ${m.mode}${m.reason ? ' (' + m.reason + ', not counted)' : ''}`;
-        return `<a class="tick ${m.mode !== 'talked' ? 'cam' : 'say'} ${cls}" style="left:${(m.start / v.duration_seconds) * 100}%;${colour}" href="${m.url}" target="_blank" rel="noopener" title="${esc(tip)}" aria-label="${esc(tip)}"></a>`;
+        const tip = `${m.brand} ${m.mold} at ${mmss(m.start)}, ${m.mode}${m.counted ? '' : ' (' + m.reason + ', not counted)'}`;
+        return `<a class="tick ${m.mode !== 'talked' ? 'cam' : 'say'} ${m.counted ? '' : 'hollow'}" style="left:${(m.start / v.duration_seconds) * 100}%;${m.counted ? 'background:' + (colorOf[m.brand] ?? 'var(--cx)') : ''}" href="${m.url}" target="_blank" rel="noopener" title="${esc(tip)}" aria-label="${esc(tip)}"></a>`;
       }).join('')}</div>
       <div class="tl-dur">${mmss(v.duration_seconds)}</div></div>`).join('')}
-    <div class="legend" style="margin:8px 0 0"><span>Counted appearances by tenth of runtime, first to last</span></div><div class="pos" aria-label="Where in the runtime counted appearances start, ten equal bins">${c.position.r.bins.map((b) => `<b style="height:${Math.max(3, (b.count / maxPos) * 34)}px" title="${b.count} counted appearances in this tenth of the runtime"></b>`).join('')}</div>
-    <p class="note">Each strip runs 0:00 to the end; click a tick to open YouTube at that second. Bars: ${N(c.position, 'all ' + c.videos.length + ' videos together')}.</p>`;
+    <div class="pos" aria-label="Where in the runtime counted rows start, ten equal bins">${c.position.r.bins.map((b) => `<b style="height:${Math.max(3, (b.count / maxPos) * 26)}px" title="${b.count} counted in this tenth of the runtime"></b>`).join('')}</div>
+    <p class="note">Each strip runs from 0:00 to the end; click a tick to open YouTube at that second. Bars: counted rows by tenth of runtime, ${N(c.position, 'all ' + nVid + ' videos')}.</p>`;
 
   // release support
-  const win = M.window;
-  const inWin = c.releaseMatches.filter((m) => m.inWindow);
-  const outCounted = c.releaseMatches.filter((m) => m.counted && !m.inWindow);
-  const guessedLead = c.releaseMatches.filter((m) => m.guessed && Math.abs(m.offsetDays.v) <= win.daysAfter);
-  const guessedOld = c.releaseMatches.filter((m) => m.guessed && !(Math.abs(m.offsetDays.v) <= win.daysAfter));
+  const R = c.release, win = M.window;
   let release = '';
-  if (inWin.length) {
-    release += inWin.map((m) => `<div class="rel"><span class="big">${esc(m.manufacturer)} ${esc(m.mold)} &middot; ${N(m.offsetDays, '+' + m.offsetDays.v + ' days')}</span>
-      Mentioned aloud in the video published ${esc(m.published_at)}, ${m.offsetDays.v} days after its ${esc(m.release_date)} release (${esc(m.release_kind)}).
-      <small>Mold name matched, edition not verified. <a href="${m.url}" target="_blank" rel="noopener">Open the moment</a> &middot; <a href="${esc(m.source_url)}" target="_blank" rel="noopener">release source</a></small></div>`).join('');
-    release += `<div class="rel">${N(c.releaseSupportedVideos, c.releaseSupportedVideos.v)} video inside the window, ceiling &le; ${N(c.releaseSupportedViews, fmt(c.releaseSupportedViews.v))} views. One mention is a lead, not a pattern.</div>`;
-  } else {
-    release += `<div class="rel"><span class="big">0 counted matches in the window</span>No counted appearance is of a mold released ${win.daysBefore} days before to ${win.daysAfter} days after the video date.<small>${c.brandsWithoutReleaseRows.length ? 'No release rows exist yet for ' + esc(c.brandsWithoutReleaseRows.join(', ')) + ', so these brands cannot be matched at all.' : ''}</small></div>`;
+  if (R.headline.length) {
+    release += R.headline.map((m) => `<div class="rel"><span class="big">${esc(m.manufacturer)} ${esc(m.mold)}, ${N(m.offsetDays, (m.offsetDays.v >= 0 ? '+' : '') + m.offsetDays.v + ' days')}</span>Counted in the video published ${esc(m.published_at)}, ${Math.abs(m.offsetDays.v)} days ${m.offsetDays.v >= 0 ? 'after' : 'before'} the mold's ${esc(m.release_date)} release. <small><a href="${m.url}" target="_blank" rel="noopener">Open the moment</a> &middot; <a href="${esc(m.source_url)}" target="_blank" rel="noopener">release source</a></small></div>`).join('');
   }
-  if (guessedLead.length) release += guessedLead.map((m) => `<div class="rel">Lead, not counted: ${esc(m.manufacturer)} ${esc(m.mold)} (manufacturer guessed) in the ${esc(m.published_at)} video, ${N(m.offsetDays, (m.offsetDays.v >= 0 ? '+' : '') + m.offsetDays.v + ' days')} from the ${esc(m.release_date)} release. <small><a href="${esc(m.source_url)}" target="_blank" rel="noopener">release source</a></small></div>`).join('');
-  const oldN = outCounted.length + guessedOld.length;
-  if (oldN) release += `<div class="rel"><small>${oldN} further mold match${oldN === 1 ? '' : 'es'} fall years outside the window (2018 and 2019 releases), so they are not release support.</small></div>`;
+  if (!R.headline.length && R.missingBrands.length) {
+    release += `<div class="rel">The release calendar covers ${N(R.calendar, R.calendar.v)} manufacturers. ${esc(R.missingBrands.join(', '))} ${plural(R.missingBrands.length, 'is', 'are')} not in it yet, so thro-go cannot pair ${plural(R.missingBrands.length, 'its', 'their')} molds with release dates until ${plural(R.missingBrands.length, 'it is', 'they are')} added.</div>`;
+  }
+  release += R.leads.map((m) => `<div class="rel"><small>Lead: ${esc(m.manufacturer)} ${esc(m.mold)} mentioned ${N(m.offsetDays, m.offsetDays.v + ' days')} after the ${esc(m.release_date)} ${esc(m.release_kind)} run of that mold. Mold name only; the mold itself is older, so this does not count as release support. <a href="${m.url}" target="_blank" rel="noopener">Open the moment</a> &middot; <a href="${esc(m.source_url)}" target="_blank" rel="noopener">release source</a></small></div>`).join('');
+  if (R.older.length) {
+    const kinds = [...new Set(R.older.map((m) => `${m.manufacturer} ${m.mold}`))].join(', ');
+    const years = [...new Set(R.older.map((m) => m.release_date.slice(0, 4)))].join(' and ');
+    release += `<div class="rel"><small>${R.older.length} counted ${plural(R.older.length, 'mention', 'mentions')} of ${esc(kinds)}: that mold was released in ${years}, years outside the window of ${win.daysBefore} days before to ${win.daysAfter} days after.</small></div>`;
+  }
+  if (!R.headline.length && !R.missingBrands.length && !R.leads.length && !R.older.length) release += `<div class="rel">No counted mold has a release date near these videos.</div>`;
 
-  // uncertainty
-  const vci = c.viewsCI.r;
-  let sure = `
-    <div class="kv"><span>Typical views per video</span><span>${N(c.viewsCI, fmt(vci.estimate))}</span><small>mean of ${c.videos.length} videos; 95% bootstrap interval ${fmt(vci.lower)} to ${fmt(vci.upper)}. Median ${N(c.viewsSummary, fmt(c.viewsSummary.r.median))}.</small></div>`;
+  // rows
+  const fateCol = { counted: 'var(--c1)', candidate: '#4a4e57', 'manufacturer guessed': '#7a5a56', 'manufacturer unknown': '#5b6270', 'same moment': '#3b3f47', 'quoted from a friend': '#6a6f78', withheld: '#2f3238' };
+  const fateLabel = { counted: 'counted', candidate: 'notes without a timestamp', 'manufacturer guessed': 'manufacturer guessed', 'manufacturer unknown': 'manufacturer unknown', 'same moment': 'repeat of a row within 30 seconds', 'quoted from a friend': 'quoted from a friend', withheld: 'set aside' };
+  const rows = `
+    <div class="mix">${c.fates.map((f) => `<i style="flex:${f.n.v};background:${fateCol[f.key]}"></i>`).join('')}</div>
+    <div class="mixl">${c.fates.map((f) => `<span><span class="sw" style="background:${fateCol[f.key]}"></span><b>${N(f.n, f.n.v)}</b> ${fateLabel[f.key]}</span>`).join('')}</div>
+    <p class="note">${N(c.rowsTotal, c.rowsTotal.v)} rows in all. Of the ${N(c.counted, c.counted.v)} counted: ${c.evidence.map((e) => `${N(e.n, e.n.v)} ${esc(e.label)}`).join(', ')}.</p>`;
+
+  // offer
+  const offer = `
+    <h2>Connect YouTube Studio</h2>
+    <p class="say">See what ${N(c.counted, c.counted.v)} sightings are worth to a sponsor</p>
+    <ul class="gets">
+      <li><b>Attention-seconds per disc</b><span>Each appearance weighted by how many people are still watching at that second, from your audience retention curve.</span></li>
+      <li><b>Exposure minutes per sponsor, per quarter</b><span>On-screen time for each brand, quarter by quarter: the page to bring to offseason sponsor talks.</span></li>
+      <li><b>Link clicks per disc</b><span>Taps on per-disc links you own. Clicks count taps, not people, sales or revenue.</span></li>
+    </ul>
+    <p class="today">Today: ${esc(top.brand)} has ${N(top.n, top.n.v)} counted. After you connect, it gets its attention-seconds and exposure minutes. Your descriptions hold ${N(c.links.total, c.links.total.v)} links; ${N(c.links.paying, c.links.paying.v)} go to retailers, affiliates, sponsors or manufacturers and ${N(c.links.tracked, c.links.tracked.v)} are per-disc links you can measure.</p>
+    <a class="cta" href="#connect" id="cta">Connect YouTube Studio</a>
+    <details class="how-it-works" id="connect"><summary>How it works</summary><ol>
+      <li>Sign in with Google and approve read-only access to this channel's YouTube analytics.</li>
+      <li>thro-go reads the retention curve for these ${nVid} videos and marks how long each disc is on screen.</li>
+      <li>You get the per-disc and per-sponsor report, plus per-disc links to put in your descriptions.</li>
+      <li>Price and start date: reply to the message that brought you here.</li></ol></details>`;
+
+  // method (small sample)
+  const vci = c.viewsCI.r, rci = c.rateCI.r;
+  let method = `<div class="kv"><span>Typical views per video</span><span>${N(c.viewsCI, fmt(vci.estimate))}</span><small>Mean of ${nVid} videos, 95% bootstrap interval ${fmt(vci.lower)} to ${fmt(vci.upper)}; median ${N(c.viewsSummary, fmt(c.viewsSummary.r.median))}.</small></div>
+    <div class="kv"><span>Average of the per-video rates</span><span>${N(c.rateCI, fmt(rci.estimate, 1))}</span><small>Counted per 10 minutes, each video weighted equally; 95% bootstrap interval ${fmt(rci.lower, 1)} to ${fmt(rci.upper, 1)}. The headline pooled rate weights by runtime instead.</small></div>`;
   if (c.linkedCI) {
     const l = c.linkedCI.r;
-    sure += `<div class="kv"><span>Brands linked in the descriptions</span><span>${N(c.linkedCI, (l.estimate >= 0 ? '+' : '') + fmt(l.estimate, 1))}</span><small>more appearances per 10 minutes than unlinked brands (${esc(c.linkedBrands.join(' + '))}: ${N(c.linkedMeans[0], fmt(c.linkedMeans[0].r.value, 1))} vs ${N(c.linkedMeans[1], fmt(c.linkedMeans[1].r.value, 1))}); paired by video, 95% interval ${fmt(l.lower, 1)} to ${fmt(l.upper, 1)}. Describes the pattern; it does not say which came first.</small></div>`;
-  } else {
-    sure += `<div class="kv"><span>Linked vs unlinked brands</span><span class="lock">not testable</span><small>None of the ${c.brands.length} counted brands has a link of its own in these descriptions, so there is no linked group to compare.</small></div>`;
+    method += `<div class="kv"><span>Brands already in the descriptions</span><span>${N(c.linkedCI, (l.estimate >= 0 ? '+' : '') + fmt(l.estimate, 1))}</span><small>${esc(c.linkedBrands.join(' and '))} have ${N(c.linkedBrandLinks, c.linkedBrandLinks.v)} links in the descriptions, none with a thro code. Their counted rows per 10 minutes: ${N(c.linkedMeans[0], fmt(c.linkedMeans[0].r.value, 1))} against ${N(c.linkedMeans[1], fmt(c.linkedMeans[1].r.value, 1))} for other brands (paired by video, 95% interval ${fmt(l.lower, 1)} to ${fmt(l.upper, 1)}).</small></div>`;
   }
-  const w = M.welch, wr = w.r;
-  const other = M.creators[1 - state.tab];
-  const sign = state.tab === 0 ? 1 : -1;
-  sure += `<div class="kv"><span>${esc(c.short)} vs ${esc(other.short)}, appearances per 10 minutes</span><span>${N(w, (sign * wr.difference >= 0 ? '+' : '') + fmt(sign * wr.difference, 1))}</span><small>Welch test, ${w.nA.v} vs ${w.nB.v} videos: t = ${fmt(wr.testStatistic * sign, 2)}, about ${fmt(wr.degreesOfFreedom, 1)} degrees of freedom. A gap this size is well inside what five videos each can produce by chance; read it as no detectable difference.</small></div>`;
-
-  // evidence
-  const totalRows = c.rowsTotal.v;
-  const evCol = { aloud: 'var(--c2)', corroborated: 'var(--c4)', retailer: 'var(--c5)', guessed: 'var(--c3)', description: 'var(--cx)' };
-  const evidence = `
-    <div class="mix">${c.evidence.filter((e) => e.n.v).map((e) => `<i style="flex:${e.n.v};background:${evCol[e.key]}"></i>`).join('')}</div>
-    <div class="mixl">${c.evidence.filter((e) => e.n.v).map((e) => `<span class="sw" style="background:${evCol[e.key]}"></span><span>${esc(e.label)}</span><span>${N(e.n, e.n.v)}</span>`).join('')}</div>
-    <p class="note">${N(c.rowsTotal, totalRows)} rows in all. Counted: ${N(c.counted, c.counted.v)}. Left out: ${N(exclTotal.candidate, exclTotal.candidate.v)} candidate notes with no timestamp, ${N(exclTotal.guessed, exclTotal.guessed.v)} timestamped rows whose manufacturer was guessed (shown hollow, not counted in any brand total), ${N(exclTotal.unknown, exclTotal.unknown.v)} with unknown manufacturer${exclTotal.multi.v ? ', ' + N(exclTotal.multi, exclTotal.multi.v) + ' naming two brands' : ''}.</p>`;
-
-  // pitch
-  const locked = c.brands.slice(0, 4);
-  const pitch = `
-    <div class="pitch">
-      <h2>Offer: connect YouTube Studio to unlock</h2>
-      <p class="lede">Today: what was said and shown. With Studio: how long people stayed for it.</p>
-      <p class="note" style="margin:0 0 10px">The three right-hand columns are empty on purpose. They are what thro-go fills in once ${esc(c.short)} connects YouTube Studio and adds thro links. Nothing in them is measured yet.</p>
-      <div class="pitch-scroll"><table class="ledger"><thead><tr><th></th><th>Brand</th><th>Appearances<small>measured above</small></th><th>Reach &le; (views)<small>measured above, a ceiling</small></th>
-        <th class="k">Attention-seconds<small>audience retention curve at each appearance, summed over its seconds on screen</small></th>
-        <th class="k">Exposure minutes, Q4<small>per brand per quarter, on-screen seconds weighted by retention</small></th>
-        <th class="k">Link clicks<small>taps on a per-disc link the creator owns</small></th></tr></thead><tbody>
-      ${locked.map((b) => `<tr><td class="rk">${b.rank.v}</td><td class="nm"><span class="dot" style="background:${colorOf[b.brand]}"></span>${esc(b.label)}</td><td>${N(b.n, fmt(b.n.v))}</td><td>${N(b.reach, fmt(b.reach.v))}</td><td class="k lock">after connect</td><td class="k lock">after connect</td><td class="k lock">after connect</td></tr>`).join('')}
-      </tbody></table></div>
-      <p class="note">Why the gap exists: ${N(c.links.total, c.links.total.v)} links sit in these ${c.videos.length} descriptions, ${N(c.links.paying, c.links.paying.v)} of them to retailers, affiliates, sponsors or manufacturers, and ${N(c.links.tracked, c.links.tracked.v)} carry a per-disc thro code. Start/end seconds for on-screen time are not in the appearance rows yet either; Studio retention plus a second pass over these videos closes that.</p>
-      <p class="note">Link clicks count taps on a link, not people, sales or revenue.</p>
-    </div>`;
+  const w = M.welch, wr = w.r, sign = state.tab === 0 ? 1 : -1;
+  method += `<div class="kv"><span>${esc(c.short)} versus ${esc(other.short)}, counted per 10 minutes</span><span>${N(w, (sign * wr.difference >= 0 ? '+' : '') + fmt(sign * wr.difference, 1))}</span><small>Welch mean difference, ${w.nA.v} versus ${w.nB.v} videos: t statistic ${fmt(wr.testStatistic * sign, 2)}, about ${fmt(wr.degreesOfFreedom, 1)} degrees of freedom. No detectable difference.</small></div>`;
 
   $('#app').innerHTML = `
-    <div class="hero"><div><h1>${esc(c.title)}</h1><div class="sub">${esc(c.handle)} &middot; ${c.videos.length} videos, views as of 2026-10-21 &middot; small sample, intervals are wide</div></div>
+    <div class="hero"><div><h1>${esc(c.title)}</h1><div class="sub">${esc(c.handle)} &middot; ${nVid} videos, views as of 2026-10-21 &middot; most-counted disc: ${esc(topDisc.label)}, ${N(topDisc.n, topDisc.n.v)} in ${N(topDisc.nVideos, topDisc.nVideos.v)} ${plural(topDisc.nVideos.v, 'video', 'videos')}</div></div>
     <div class="stats">${stats}</div></div>
     <div class="grid">
-      <div>
-        <section><h2><span>Discs by appearance</span><span class="seg"><button data-l="brands" aria-pressed="${state.ledger === 'brands'}">Brands</button><button data-l="molds" aria-pressed="${state.ledger === 'molds'}">Discs</button></span></h2>${ledger}</section>
-        <section><h2>Where they come up</h2>${timeline}</section>
+      <div class="col">
+        <section class="s-ledger"><h2><span>Discs by appearance</span><span class="seg"><button data-l="brands" aria-pressed="${state.ledger === 'brands'}">Brands</button><button data-l="molds" aria-pressed="${state.ledger === 'molds'}">Discs</button></span></h2>${ledger}</section>
+        <section class="s-time"><h2>Where they come up</h2>${timeline}</section>
       </div>
-      <div>
-        <section><h2>Release support</h2><p class="note" style="margin:0 0 4px">Counted appearances of a mold, video published ${win.daysBefore} days before to ${win.daysAfter} days after the release date.</p>${release}</section>
-        <section><h2>How sure are we</h2>${sure}</section>
-        <section><h2>Evidence behind the rows</h2>${evidence}</section>
+      <div class="col">
+        <section class="s-offer offer">${offer}</section>
+        <section class="s-release"><h2>Release support</h2>${release}</section>
+        <section class="s-rows"><h2>Rows behind the numbers</h2>${rows}</section>
       </div>
     </div>
-    ${pitch}
-    <div class="foot">Every number above is produced by a registered Capability Lab capability: ${M.capabilityUse.map(([id, n]) => `<code>${esc(id)}</code> &times;${n}`).join(', ')}. Bootstrap intervals use ${M.replicates} resamples, seed ${M.seed}. Reproducible: same data in, same receipts out.</div>`;
+    <details class="method"><summary>Method and small sample</summary><div class="cols"><div>${method}</div><div class="note" style="margin:0">Five videos per creator is a small sample, so every interval here is wide and the comparisons are descriptive. Bootstrap intervals use ${M.replicates} resamples with seed ${M.seed}. Every number on the page is produced by a registered capability: ${M.capabilityUse.map(([id, n]) => `<code>${esc(id)}</code> &times;${n}`).join(', ')}. The two <code>thro.*</code> capabilities are defined in <a href="thro-capabilities/catalog.json">thro-capabilities/catalog.json</a> and call <code>statistics.*</code> inside.</div></div></details>`;
+  const cta = $('#cta');
+  if (cta) cta.addEventListener('click', (e) => { e.preventDefault(); const d = $('#connect'); d.open = true; d.scrollIntoView({ block: 'center' }); });
+  if (location.hash === '#connect' && $('#connect')) $('#connect').open = true;
 }
 
 const how = $('#how');
@@ -268,7 +282,7 @@ function show(el) {
   const k = el.dataset.k; if (!k) return;
   document.querySelectorAll('.n.on').forEach((x) => x.classList.remove('on'));
   el.classList.add('on');
-  how.innerHTML = howText(M.facts[k]);
+  how.classList.remove('idle'); how.innerHTML = howText(M.facts[k]);
 }
 document.addEventListener('click', (e) => {
   const t = e.target.closest('[data-i],[data-l],.n');
