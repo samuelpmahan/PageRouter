@@ -1,0 +1,61 @@
+// thro shop pages: thro.pages.dev/<handle> for three shops (Sam, 26 Oct 00:44: evidence, not a pitch).
+// Each page = the shop's recent videos and the discs featured in them, each disc a ThroCard that links to the product page on the
+// shop's own website. Data: data/shops.json, built from public video titles/descriptions/captions and the shop's public catalog;
+// cards rendered by thro's own pipeline (thro/crop/live -> unwarp -> cutout through registered Calculations, then the card
+// renderer, layout u02). No views, clicks or prices. Usage: node build.mjs OUT_DIR
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const root = path.dirname(fileURLToPath(import.meta.url));
+const out = path.resolve(process.argv[2] ?? path.join(root, 'out'));
+const shops = JSON.parse(fs.readFileSync(path.join(root, 'data/shops.json'), 'utf8'));
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const date = d => d ? new Date(d + 'T12:00:00Z').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '';
+const clock = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}`;
+const flight = f => f ? f.map(n => Number.isInteger(n) ? n : n.toFixed(1).replace(/\.0$/, '')).join(' | ') : '';
+function evidence(d, v) {
+  if (d.at != null && v.id) return `<a href="https://www.youtube.com/watch?v=${v.id}&t=${Math.floor(d.at)}s" rel="noopener">said at ${clock(d.at)}</a>`;
+  if (/^title/.test(d.evidence)) return 'named in the title';
+  if (/^description/.test(d.evidence)) return 'named in the description';
+  if (d.evidence === 'blog') return 'in the release post';
+  return '';
+}
+function tile(d, v, handle, shop) {
+  const name = `${esc(d.vendorFromShop || d.manufacturer)} ${esc(d.mold)}`;
+  const card = d.cardBase ? `cards/${d.cardBase}-u02.webp` : null;
+  const crop = d.statuses?.every(s => s.endsWith('PASS'));
+  let art;
+  if (card && crop) art = `<img src="${card}" alt="${name} ThroCard" loading="lazy" width="460" height="694">`;
+  else if (d.mold === 'Oxymoron') art = `<div class="photo"><img src="cards/raredg-oxymoron-photo.jpg" alt="${name}" loading="lazy"><span>Not round, so no ThroCard: the shop's own photo.</span></div>`;
+  else art = `<div class="missing"><b>${esc(d.mold)}</b><span>Not listed at ${esc(shop)} right now</span></div>`;
+  const label = d.linkKind === 'product' ? esc(d.productTitle) : `Search ${esc(shop)} for “${esc(d.mold)}”`;
+  const status = d.linkKind === 'product' && d.available === false ? '<em>sold out</em>' : '';
+  const href = d.image || d.linkKind === 'product' ? d.link : d.link;
+  return `<li><a class="card" href="${esc(href)}" rel="noopener">${art}<span class="what">${label} ${status}</span></a><span class="how">${evidence(d, v)}</span></li>`;
+}
+function section(v, handle, shop, kind) {
+  const names = v.discs.map(d => esc(d.mold)).join(', ');
+  const head = kind === 'video'
+    ? `<a class="vt" href="${esc(v.url)}" rel="noopener">${esc(v.title)}</a>`
+    : `<a class="vt" href="${esc(v.url)}" rel="noopener">${esc(v.title)}</a>`;
+  return `<section><header><span class="kind">${kind === 'video' ? 'Video' : 'Release post'} · ${date(v.published)}</span>${head}<p class="bag">${kind === 'video' ? 'Featured' : 'In the drop'}: ${names}</p></header><ol class="grid">${v.discs.map(d => tile(d, v, handle, shop)).join('')}</ol></section>`;
+}
+const css = fs.readFileSync(path.join(root, 'page.css'), 'utf8');
+for (const [handle, s] of Object.entries(shops)) {
+  const dir = path.join(out, handle);
+  fs.mkdirSync(path.join(dir, 'cards'), { recursive: true });
+  for (const v of [...s.videos, ...s.drops]) for (const d of v.discs) if (d.cardBase) fs.copyFileSync(path.join(root, 'cards', `${d.cardBase}-u02.webp`), path.join(dir, 'cards', `${d.cardBase}-u02.webp`));
+  if (handle === 'raredg') fs.copyFileSync(path.join(root, 'cards/raredg-oxymoron-photo.jpg'), path.join(dir, 'cards/raredg-oxymoron-photo.jpg'));
+  const title = s.name === s.shopName ? s.name : `${s.name} × ${s.shopName}`;
+  const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow"><title>${esc(title)} · featured discs</title>
+<meta name="description" content="The discs from ${esc(s.name)}'s recent videos, each linking to ${esc(s.domain)}.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%23c8f49d' stroke-width='3'%3E%3Ccircle cx='16' cy='16' r='13'/%3E%3Ccircle cx='16' cy='16' r='5.75'/%3E%3C/svg%3E">
+<style>${css}</style></head><body>
+<header class="top"><p class="eyebrow">Featured discs</p><h1>${esc(s.name)}</h1><p class="sub">${s.name === s.shopName ? '' : `with ${esc(s.shopName)} · `}every disc from these videos, one tap from <a href="https://${esc(s.domain)}" rel="noopener">${esc(s.domain)}</a></p></header>
+<main>${s.videos.map(v => section(v, handle, s.shopName, 'video')).join('')}${s.drops.map(v => section(v, handle, s.shopName, 'drop')).join('')}</main>
+<footer>A prototype made with <a href="https://thro.pages.dev/">thro</a>. Not affiliated with ${esc(s.shopName)}${s.name === s.shopName ? '' : ` or ${esc(s.name)}`}. Discs come from the public videos (title, description or what's said on camera); every card links to ${esc(s.domain)}.</footer>
+</body></html>`;
+  fs.writeFileSync(path.join(dir, 'index.html'), html);
+  console.log(handle, [...s.videos, ...s.drops].reduce((n, v) => n + v.discs.length, 0), 'discs');
+}
