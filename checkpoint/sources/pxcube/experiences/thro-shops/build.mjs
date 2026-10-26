@@ -19,6 +19,8 @@ function evidence(d, v) {
   if (/^title/.test(d.evidence)) return 'named in the title';
   if (/^description/.test(d.evidence)) return 'named in the description';
   if (d.evidence === 'blog') return 'in the release post';
+  if (/^linked/.test(d.evidence)) { const what = d.evidence.replace(/^linked:?\s*/, ''); return what && what !== 'product' ? `linked in the description <small>(${esc(what)})</small>` : 'linked in the description'; }
+  if (d.evidence === 'title') return 'named in the title';
   return '';
 }
 function tile(d, v, handle, shop) {
@@ -27,7 +29,7 @@ function tile(d, v, handle, shop) {
   const crop = d.statuses?.every(s => s.endsWith('PASS'));
   let art;
   if (card && crop) art = `<img src="${card}" alt="${name} ThroCard" loading="lazy" width="460" height="694">`;
-  else if (d.photoTile) art = `<div class="photo"><img src="cards/${esc(d.photoTile)}" alt="${name}" loading="lazy"><span>Not round, so no ThroCard: the shop's own photo.</span></div>`;
+  else if (d.photoTile) art = `<div class="photo"><img src="cards/${esc(d.photoTile)}" alt="${name}" loading="lazy"><span>${esc(d.photoNote ?? "Not round, so no ThroCard: the shop's own photo.")}</span></div>`;
   else art = `<div class="missing"><b>${esc(d.mold)}</b><span>Not listed at ${esc(shop)} right now</span></div>`;
   const label = d.linkKind === 'product' ? esc(d.productTitle) : `Search ${esc(shop)} for “${esc(d.mold)}”`;
   const status = d.linkKind === 'product' && d.available === false ? '<em>sold out</em>' : '';
@@ -57,7 +59,7 @@ function download(v, num) {
   const bytes = zipStore(entries);
   fs.mkdirSync(path.join(pageDir, 'downloads'), { recursive: true });
   fs.writeFileSync(path.join(pageDir, file), bytes);
-  return `<a class="dl" href="${file}" download>Download these ${entries.length / 2} cards <small>transparent PNG · ${kb(bytes.length)}</small></a>`;
+  return `<a class="dl" href="${file}" download>${entries.length === 2 ? 'Download this card' : `Download these ${entries.length / 2} cards`} <small>transparent PNG · ${kb(bytes.length)}</small></a>`;
 }
 function section(v, handle, shop, kind) {
   sectionNo++;
@@ -65,7 +67,7 @@ function section(v, handle, shop, kind) {
   const head = kind === 'video'
     ? `<a class="vt" href="${esc(v.url)}" rel="noopener">${esc(v.title)}</a>`
     : `<a class="vt" href="${esc(v.url)}" rel="noopener">${esc(v.title)}</a>`;
-  return `<section><header><span class="no">No. ${String(sectionNo).padStart(2, '0')}</span><span class="kind">${kind === 'video' ? 'Video' : 'Release post'} · ${date(v.published)}</span>${head}<p class="bag">${kind === 'video' ? 'Featured' : 'In the drop'}: ${names}</p>${download(v, sectionNo)}</header><ol class="grid">${v.discs.map(d => tile(d, v, handle, shop)).join('')}</ol></section>`;
+  return `<section><header><span class="no">No. ${String(sectionNo).padStart(2, '0')}</span><span class="kind">${kind === 'video' ? 'Video' : 'Release post'} · ${date(v.published)}</span>${head}<p class="bag">${kind !== 'video' ? 'In the drop' : v.discs.every(d => /^linked/.test(d.evidence)) ? 'Linked in the description' : 'Featured'}: ${names}</p>${download(v, sectionNo)}</header><ol class="grid">${v.discs.map(d => tile(d, v, handle, shop)).join('')}</ol></section>`;
 }
 const css = fs.readFileSync(path.join(root, 'page.css'), 'utf8');
 for (const [handle, s] of Object.entries(shops)) {
@@ -86,7 +88,7 @@ for (const [handle, s] of Object.entries(shops)) {
 <style>${css}</style></head><body class="${handle}"${vars}>
 <header class="top"><svg class="burst" viewBox="-100 -100 200 200" aria-hidden="true">${Array.from({length:16},(_, i)=>`<line x1="0" y1="0" x2="${(Math.cos(i*Math.PI/8)*(i%2?62:96)).toFixed(1)}" y2="${(Math.sin(i*Math.PI/8)*(i%2?62:96)).toFixed(1)}" stroke="#2b2420" stroke-width="${i%2?3:5}" stroke-linecap="round"/>`).join('')}<circle r="22" fill="#f3e8d2" stroke="#2b2420" stroke-width="5"/><circle r="7" fill="#2b2420"/></svg><div class="inner"><p class="eyebrow">Featured discs</p><h1>${esc(s.name)}</h1><p class="sub">${s.name === s.shopName ? '' : `with ${esc(s.shopName)} · `}every disc from these videos, one tap from <a href="https://${esc(s.domain)}" rel="noopener">${esc(s.domain)}</a></p>${all}</div></header>
 <main>${main}</main>
-<footer>A prototype made with <a href="https://thro.pages.dev/">thro</a>. Not affiliated with ${esc(s.shopName)}${s.name === s.shopName ? '' : ` or ${esc(s.name)}`}. Discs come from the public videos (title, description or what's said on camera); every card links to ${esc(s.domain)}.</footer>
+<footer>A prototype made with <a href="https://thro.pages.dev/">thro</a>. Not affiliated with ${esc(s.shopName)}${s.name === s.shopName ? '' : ` or ${esc(s.name)}`}. Discs come from the public videos (the title, the description and the shop links in it, or what's said on camera); every card links to ${esc(s.domain)}.</footer>
 </body></html>`;
   fs.writeFileSync(path.join(dir, 'index.html'), html);
   console.log(handle, [...s.videos, ...s.drops].reduce((n, v) => n + v.discs.length, 0), 'discs');
