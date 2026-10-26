@@ -47,6 +47,8 @@ const runtimeFiles = [
   'thro-bar.mjs',
   'bar.html',
   'bar.mjs',
+  'frames.html',
+  'frames.mjs',
   'witness-pattern.mjs',
   'assets/photos/photos.json',
   'assets/photos/IMG_6081.jpg',

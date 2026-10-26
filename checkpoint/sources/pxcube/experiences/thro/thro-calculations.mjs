@@ -107,3 +107,5 @@ export function record(report) {
   return report;
 }
 export const registered = () => [...registry.values()].map(({ id, description, guarantees }) => ({ id, description, guarantees: guarantees.map(({ id, description }) => ({ id, description })) }));
+// For sloplint (Argon, Brook thro #34): the registered IDs, inspectable without running anything.
+export const listRegisteredCalculations = () => [...registry.keys()];
