@@ -26,8 +26,8 @@ section header{display:grid;gap:8px;align-content:start}
 .grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(46%,176px),1fr));gap:22px 16px}
 .grid li{display:grid;gap:6px;align-content:start}
 .card{display:grid;gap:8px;text-decoration:none}
-.card img{display:block;width:100%;height:auto;filter:drop-shadow(5px 5px 0 var(--paper2));transition:transform .15s,filter .15s}
-.card:hover img{transform:translate(-2px,-2px);filter:drop-shadow(7px 7px 0 var(--signal))}
+.card img{display:block;width:100%;height:auto;transition:transform .15s}
+.card:hover img{transform:translateY(-3px)}
 .what{font-size:14px;line-height:1.3;font-weight:500}
 .card:hover .what{text-decoration:underline}
 .what em{display:inline-block;margin-left:4px;padding:0 6px;background:var(--ink);color:var(--paper);font:600 11px/1.6 "Jost";letter-spacing:.06em;text-transform:uppercase;font-style:normal;border-radius:2px}
