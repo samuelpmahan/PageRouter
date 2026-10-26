@@ -8,6 +8,15 @@ export const monthLast = (ym) => {
   return addDays(`${m === 12 ? y + 1 : y}-${String(m === 12 ? 1 : m + 1).padStart(2, '0')}-01`, -1);
 };
 export const quarterOf = (iso) => `${iso.slice(0, 4)}-Q${Math.ceil(+iso.slice(5, 7) / 3)}`;
+// Instants are UTC strings like 2026-03-06T23:00:00Z. A "local day" is the calendar day in a channel's fixed UTC offset (hours).
+export const instantMs = (iso) => Date.parse(iso);
+export const localDay = (instant, offsetHours) => new Date(Date.parse(instant) + offsetHours * 36e5).toISOString().slice(0, 10);
+export const localTime = (instant, offsetHours) => new Date(Date.parse(instant) + offsetHours * 36e5).toISOString().slice(11, 16);
+// The UTC instant at which a local wall-clock day and time happens in a fixed UTC offset.
+export const instantAt = (day, hhmm, offsetHours) => new Date(Date.parse(`${day}T${hhmm}:00Z`) - offsetHours * 36e5).toISOString().replace('.000Z', 'Z');
+export const addSeconds = (instant, n) => new Date(Date.parse(instant) + n * 1000).toISOString().replace('.000Z', 'Z');
+export const hostOf = (url) => /^https?:\/\/([^/?#]+)/.exec(url)?.[1] ?? '';
+export const offsetLabel = (h) => `UTC${h < 0 ? '−' : '+'}${Math.abs(h)}`;
 export const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 export const monthName = (ym) => `${MONTHS[+ym.slice(5, 7) - 1]} ${ym.slice(0, 4)}`;
 export const prettyDate = (iso) => `${MONTHS[+iso.slice(5, 7) - 1].slice(0, 3)} ${+iso.slice(8, 10)}, ${iso.slice(0, 4)}`;
@@ -41,6 +50,8 @@ const rnd = (n, d) => { const f = 10 ** d, sign = n < 0 ? -1 : 1; return (sign *
 export const fmt1 = (n) => { const [i, f] = rnd(n, 1).toFixed(1).split('.'); return `${commas(i)}.${f}`; };
 export const fmt2 = (n) => { const [i, f] = rnd(n, 2).toFixed(2).split('.'); return `${commas(i)}.${f}`; };
 export const fmtInt = (n) => commas(String(Math.round(n)));
+// Attention-seconds and viewer-minutes are modelled numbers, so large values are shown whole (24,890, not 24,890.0).
+export const fmtAtt = (n) => (Math.abs(n) >= 100 ? fmtInt(n) : fmt1(n));
 export const pct = (f) => `${Math.floor(f * 100 + 0.5 + 1e-6)}%`;
 export const round4 = (n) => Math.round(n * 1e4) / 1e4;
 export const plural = (n, one, many = one + 's') => `${n} ${n === 1 ? one : many}`;

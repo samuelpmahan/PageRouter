@@ -12,8 +12,18 @@ function flatten(trace, depth = 0, out = []) {
   return out;
 }
 // Execute a registered capability; returns its result plus a compact receipt (ids and hashes of the whole call tree).
+// Results are memoised by (capability, input): the same input always gives the same result and the same receipt, so a Case that changes one video
+// only pays for the numbers that really changed. Callers must treat the returned objects as read-only.
+const memo = new Map();
 export function exec(id, input) {
-  const r = registry.execute(id, input);
-  return { out: r.result, receipt: { capability: id, inputHash: r.replay.inputHash, resultHash: r.replay.resultHash, calls: flatten(r.trace) } };
+  const key = `${id}|${JSON.stringify(input)}`;
+  let hit = memo.get(key);
+  if (!hit) {
+    const r = registry.execute(id, input);
+    hit = { out: r.result, receipt: { capability: id, inputHash: r.replay.inputHash, resultHash: r.replay.resultHash, calls: flatten(r.trace) } };
+    memo.set(key, hit);
+  }
+  return hit;
 }
+export const execMemoSize = () => memo.size;
 export const capabilityCount = () => registry.list().length;
