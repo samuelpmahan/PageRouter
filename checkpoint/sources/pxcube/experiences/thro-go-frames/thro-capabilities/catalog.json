@@ -1,0 +1,173 @@
+{
+  "domain": "thro",
+  "capabilities": [
+    {
+      "id": "thro.ratio",
+      "title": "Scaled ratio of two sums",
+      "description": "scale x sum(numerator) / sum(denominator); both sums are taken with statistics.sum.",
+      "kind": "composed",
+      "dependsOn": [
+        "statistics.sum"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "numerator": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "denominator": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1
+          },
+          "scale": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "numerator",
+          "denominator",
+          "scale"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "numerator": [
+              1,
+              1
+            ],
+            "denominator": [
+              10,
+              10
+            ],
+            "scale": 100
+          },
+          "expected": {
+            "value": 10
+          }
+        }
+      ],
+      "formula": "scale * sum(numerator) / sum(denominator)",
+      "caveats": "Shares use scale 100; appearances per ten minutes of runtime use scale 600 with runtime in seconds. A ratio of pooled sums, not a mean of per-item ratios."
+    },
+    {
+      "id": "thro.positionHistogram",
+      "title": "Where in the runtime events start",
+      "description": "Histogram of start_seconds / duration_seconds over equal-width bins on [0,1], through statistics.histogram.",
+      "kind": "composed",
+      "dependsOn": [
+        "statistics.histogram"
+      ],
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "starts": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "durations": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "bins": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "starts",
+          "durations",
+          "bins"
+        ],
+        "additionalProperties": false
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "bins": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "x0": {
+                  "type": "number"
+                },
+                "x1": {
+                  "type": "number"
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              },
+              "required": [
+                "x0",
+                "x1",
+                "count"
+              ]
+            }
+          }
+        },
+        "required": [
+          "bins"
+        ],
+        "additionalProperties": false
+      },
+      "examples": [
+        {
+          "input": {
+            "starts": [
+              0,
+              50
+            ],
+            "durations": [
+              100,
+              100
+            ],
+            "bins": 2
+          },
+          "expected": {
+            "bins": [
+              {
+                "x0": 0,
+                "x1": 0.5,
+                "count": 1
+              },
+              {
+                "x0": 0.5,
+                "x1": 1,
+                "count": 1
+              }
+            ]
+          }
+        }
+      ],
+      "formula": "fraction = min(1, start / duration); statistics.histogram over equal-width edges",
+      "caveats": "starts and durations are matched by index."
+    }
+  ]
+}
