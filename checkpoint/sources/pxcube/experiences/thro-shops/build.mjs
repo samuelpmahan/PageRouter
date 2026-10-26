@@ -26,7 +26,7 @@ function evidence(d, v) {
 function tile(d, v, handle, shop) {
   const name = `${esc(d.vendorFromShop || d.manufacturer)} ${esc(d.mold)}`;
   const card = d.cardBase ? `cards/${d.cardBase}-u02.webp` : null;
-  const crop = d.statuses?.every(s => s.endsWith('PASS'));
+  const crop = d.cropOk ?? d.statuses?.every(s => s.endsWith('PASS'));  // cropOk: the final crop is witnessed (a silhouette refit may replace a failed first fit)
   let art;
   if (card && crop) art = `<img src="${card}" alt="${name} ThroCard" loading="lazy" width="460" height="694">`;
   else if (d.photoTile) art = `<div class="photo"><img src="cards/${esc(d.photoTile)}" alt="${name}" loading="lazy"><span>${esc(d.photoNote ?? "Not round, so no ThroCard: the shop's own photo.")}</span></div>`;
@@ -44,7 +44,7 @@ const kb = n => n > 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.round(n
 function packEntries(v, num) {
   const e = [];
   v.discs.forEach((d, i) => {
-    if (!d.cardBase || !d.statuses?.every(x => x.endsWith('PASS'))) return;
+    if (!d.cardBase || !(d.cropOk ?? d.statuses?.every(x => x.endsWith('PASS')))) return;
     const n = `${String(i + 1).padStart(2, '0')} ${slug(d.mold)}`;
     e.push({ name: `${n} - card.png`, data: new Uint8Array(fs.readFileSync(path.join(root, 'cards', `${d.cardBase}-card.png`))) });
     e.push({ name: `${n} - disc.png`, data: new Uint8Array(fs.readFileSync(path.join(root, 'cards', `${d.cardBase}-cut.png`))) });
