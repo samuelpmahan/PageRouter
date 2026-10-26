@@ -8,7 +8,7 @@
 // silhouette. A face-on photo gets a trimmed circle through them; otherwise the fitted ellipse is scaled to them (same shape/angle).
 import { register } from './thro-calculations.mjs';
 const TAU = Math.PI * 2, DEG = Math.PI / 180;
-const T_DISC = 40, T_BG = 14, RUN = 4;
+const T_DISC = 40, T_BG = 14, RUN = 4, SHARP = 35;
 function fitCircle(P) {
   let sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0, sxz = 0, syz = 0, sz = 0; const n = P.length;
   for (const [x, y] of P) { const z = x * x + y * y; sx += x; sy += y; sxx += x * x; syy += y * y; sxy += x * y; sxz += x * z; syz += y * z; sz += z; }
@@ -19,8 +19,8 @@ function fitCircle(P) {
 }
 function trimmed(P) {
   let pts = P, c = fitCircle(pts);
-  for (let k = 0; k < 3; k++) {
-    const res = pts.map(([x, y]) => Math.abs(Math.hypot(x - c.cx, y - c.cy) - c.r)).sort((a, b) => a - b), cut = res[Math.floor(res.length * 0.8)];
+  for (let k = 0; k < 4; k++) {
+    const res = pts.map(([x, y]) => Math.abs(Math.hypot(x - c.cx, y - c.cy) - c.r)).sort((a, b) => a - b), cut = res[Math.floor(res.length * 0.85)];  // keep 85% per round, 4 rounds (~half): a soft drop shadow on one side must not pull the circle (FX-4)
     pts = pts.filter(([x, y]) => Math.abs(Math.hypot(x - c.cx, y - c.cy) - c.r) <= cut); c = fitCircle(pts);
   }
   const res = P.map(([x, y]) => Math.abs(Math.hypot(x - c.cx, y - c.cy) - c.r)).sort((a, b) => a - b);
@@ -48,7 +48,19 @@ export function findSilhouette({ width, height, working, ellipse: e }) {
       if (v == null) { bgRun = RUN; break; }               // left the image: treat as background
       if (v > T_DISC) { last = j; bgRun = 0; } else if (v < T_BG && ++bgRun >= RUN) break;
     }
-    if (last >= 0 && bgRun >= RUN) { P.push([e.cx + steps[last] * vx, e.cy + steps[last] * vy]); ratios.push(steps[last]); }
+    if (last >= 0 && bgRun >= RUN) {
+      // A soft drop shadow also differs from the background, but it fades out gradually; the disc's edge is a hard colour step.
+      // So step back inward (up to 8% of the outline radius) to the OUTERMOST sharp step (>= SHARP between samples 2 apart).
+      // Not the strongest step: on an overmold the colour->grey-rim step is stronger than grey-rim->background, and the rim
+      // belongs to the disc (Orbital, Impulse). A shadow fades out gradually, so it never makes a sharp step (FX-4).
+      const col = j => px(e.cx + steps[j] * vx, e.cy + steps[j] * vy);
+      let edge = last;
+      for (let j = last; j >= 2 && steps[j] >= steps[last] * 0.92; j--) {
+        const a = col(j - 2), b = col(Math.min(steps.length - 1, j + 2));
+        if (a && b && Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]) >= SHARP) { edge = j; break; }
+      }
+      P.push([e.cx + steps[edge] * vx, e.cy + steps[edge] * vy]); ratios.push(steps[edge]);
+    }
   }
   const outsideBg = ringBg(e, 1.06, px, d);
   if (P.length < 80) return { ...base, applied: false, reason: 'silhouette not found all the way round', ellipse: e, outsideBg, coverage: P.length / 120 };

@@ -93,3 +93,10 @@ for (const [handle, s] of Object.entries(shops)) {
   fs.writeFileSync(path.join(dir, 'index.html'), html);
   console.log(handle, [...s.videos, ...s.drops].reduce((n, v) => n + v.discs.length, 0), 'discs');
 }
+// Parked shops (data/parked.json): their old URLs get a plain "taken down" page, so nobody lands on a stale copy.
+const parkedFile = path.join(root, 'data/parked.json');
+if (fs.existsSync(parkedFile)) for (const [handle, p] of Object.entries(JSON.parse(fs.readFileSync(parkedFile, 'utf8')))) {
+  fs.mkdirSync(path.join(out, handle), { recursive: true });
+  fs.writeFileSync(path.join(out, handle, 'index.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><title>Taken down · thro</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f3e8d2;color:#2b2420;font:16px/1.5 system-ui,sans-serif;padding:24px}main{max-width:36ch}a{color:#1f6f68}</style></head><body><main><h1 style="margin:0 0 8px;font-size:24px">This demo page has been taken down.</h1><p style="margin:0">It showed discs from ${esc(p.name)}'s public videos. <a href="https://thro.pages.dev/">thro</a></p></main></body></html>`);
+  console.log(handle, 'parked: taken-down page');
+}
