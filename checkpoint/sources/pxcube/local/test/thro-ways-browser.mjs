@@ -11,7 +11,7 @@ for (const width of [1280, 390]) {
   const context = await browser.newContext({ viewport: { width, height: phone ? 844 : 900 }, hasTouch: phone, isMobile: phone });
   const p = await context.newPage(), errors = [];
   p.on('pageerror', e => errors.push(String(e)));
-  await p.goto(base.href, { waitUntil: 'networkidle' });
+  await p.goto(new URL('?debug', base).href, { waitUntil: 'networkidle' }); // the DTree is a developer surface: ?debug
   await p.waitForFunction(() => window.__dtree && window.__thro?.screen && document.querySelectorAll('button[data-study^="discstudio:"] svg').length === 11, null, { timeout: 30000 });
   await p.waitForTimeout(800);
   await p.evaluate(() => window.__dtree.toggle(true)); await p.waitForTimeout(500);

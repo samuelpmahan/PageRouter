@@ -11,6 +11,7 @@ for (const [tag, viewport, touch] of [['1540×784', { width: 1540, height: 784 }
   const ctx = await b.newContext({ viewport, hasTouch: touch, isMobile: touch }), p = await ctx.newPage(), errs = [];
   p.on('pageerror', e => errs.push(String(e)));
   await p.goto(new URL('./?scratch', base).href, { waitUntil: 'networkidle' });
+  if (touch) { await p.waitForSelector('.ce-card', { state: 'attached', timeout: 30000 }); await p.locator('.ce-card').tap(); } // on a phone the card's handles show after a tap on the card (card-editor.mjs)
   await p.waitForSelector('.card-parts .cp-h', { timeout: 30000 }).catch(() => fail(`${tag}: no handles on the B01 card`));
   const parts = await p.$$eval('.card-parts .cp-h', els => els.map(e => e.dataset.part));
   if (parts.join() !== 'disc-centre,disc-rim,plate-edge,tile,name') fail(`${tag}: handles ${parts.join()}`);

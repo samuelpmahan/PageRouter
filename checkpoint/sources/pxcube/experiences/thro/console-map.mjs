@@ -22,7 +22,7 @@ window.__consoleControls = () => controls();
 // One screen is the default on a laptop or bigger (Sam, 24 Oct 20:39: "Whole screen as default"); ?page shows the long page, and
 // ?console forces one screen at any width.
 const query = new URLSearchParams(location.search);
-const on = query.has('console') || query.has('debug') || (!query.has('page') && innerWidth >= 1000);
+const on = query.has('console') || (!query.has('page') && innerWidth >= 1000);
 // The measurement layer (tags, the phone-page rail, the lines between them) is for the builders: customers get the one-screen layout alone.
 
 async function start() {

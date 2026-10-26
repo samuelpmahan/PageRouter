@@ -14,7 +14,7 @@ for (const width of [1280, 390]) {
   const p = await context.newPage(), errors = [];
   p.on('pageerror', e => errors.push(String(e)));
   const tap = loc => (phone ? loc.tap() : loc.click());
-  await p.goto(base.href, { waitUntil: 'networkidle' });
+  await p.goto(new URL('?debug', base).href, { waitUntil: 'networkidle' }); // the DTree is a developer surface: ?debug
   await p.waitForFunction(() => window.__dtree && window.__dtree.changes().length && document.querySelector('#graphic-preview svg'), null, { timeout: 30000 });
   const tickOf = 'const [c] = window.__dtree.changes(); return c ? c.n * 1000 + c.times : 0;'; // the list is capped at 6, so count by the newest entry
   const runs = () => p.evaluate(new Function(tickOf));

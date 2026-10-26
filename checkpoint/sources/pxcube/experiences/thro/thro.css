@@ -173,3 +173,10 @@
   .preview-column>.ce-strip .ce-label{display:none}
   .export-batch-note{display:none}
 }
+/* Laptop: Download all sits on the same row as Download PNG, in the place of the bar's caption, so the bar is no taller than it was. */
+@media(min-width:761px){
+  .export-bar:has(.export-batch:not([hidden])) .export-copy{display:none}
+  .export-bar .export-batch{order:1;flex:1 1 auto;border-top:0;padding-top:0;justify-content:flex-start}
+  .export-bar .export-actions{order:2}
+  .export-batch-note{display:none}
+}

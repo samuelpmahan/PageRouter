@@ -18,6 +18,7 @@ for (const size of sizes) {
   await p.goto(base.href, { waitUntil: 'networkidle' });
   await p.waitForFunction(() => window.__thro?.screen && document.querySelector('.card-editor .ce-badge'), null, { timeout: 30000 });
   await p.waitForTimeout(3000); // the page draws what a tap could make while it is idle
+  if (size.touch) { await p.locator('.ce-card').tap(); await p.waitForTimeout(300); } // on a phone the card's badges and handles show after a tap on the card (card-editor.mjs)
   const cdp = size.touch ? await context.newCDPSession(p) : null;
   const lastTap = label => p.waitForFunction(l => window.__thro.timing?.at(-1)?.label === l, label, { timeout: 5000 }).catch(() => null)
     .then(() => p.evaluate(() => { const g = window.__thro.timing?.at(-1); return g ? { label: g.label, ms: Math.round(g.end) } : null; }));
