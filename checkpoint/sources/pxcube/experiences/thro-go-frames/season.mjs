@@ -150,7 +150,7 @@ export function buildSeason(seed) {
   const jitter = (v, spread) => Math.round((v + (rng.next() * 2 - 1) * spread) * 100) / 100;
   const maker = {}, mold = {}, release = {};
   for (const m of MAKERS) {
-    maker[m.key] = add('Manufacturer', `maker:${m.key}`, { name: m.name, country: m.country, shopHost: m.host });
+    maker[m.key] = add('Manufacturer', `maker:${m.key}`, { name: m.name, shopHost: m.host });
     for (const [k, name, kind] of m.molds) mold[k] = add('Mold', `mold:${k}`, { manufacturerId: maker[m.key].id, name, kind });
   }
   const moldMaker = Object.fromEntries(MAKERS.flatMap((m) => m.molds.map(([k]) => [k, m])));

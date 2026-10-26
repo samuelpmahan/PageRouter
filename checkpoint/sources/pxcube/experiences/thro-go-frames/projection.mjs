@@ -26,7 +26,7 @@ export function projectResults(W, E, M) {
   for (const [k, x] of Object.entries(M.attention.byDisc)) disc[k] = { attention: x.value, long: x.byFormat.long?.value ?? null, short: x.byFormat.short?.value ?? null };
   for (const [k, x] of Object.entries(M.attention.byMold)) mold[k] = { attention: x.value, perCreator: { ...x.perCreator }, long: x.byFormat.long?.value ?? null, short: x.byFormat.short?.value ?? null };
   for (const r of M.exposure.rows) sponsorRows[r.key] = { viewerMinutes: r.viewerMinutes, state: r.state, creators: [...r.creators], overlapped: r.entries.some((e) => e.sumAttention - e.unionAttention > 1e-9), byCreator: { ...r.byCreator }, long: r.byFormat.long ?? null, short: r.byFormat.short ?? null, videos: [...r.videoIds].sort() };
-  for (const c of E.clicks) clicks[c.id] = { kind: c.attribution.kind, reason: c.attribution.reason, appearanceKey: c.attribution.kind === 'moment' ? c.attribution.appearanceId : null };
+  for (const c of E.clicks) clicks[c.id] = { kind: c.attribution.kind, reason: c.attribution.reason, appearanceKey: c.attribution.kind === 'moment' ? c.attribution.appearanceId : null, host: c.refererHost, country: c.country };
   for (const [k, x] of Object.entries(M.clicks.perThousand)) perThousand[k] = x.value;
   return { videos, discs, appearances, discVideo, disc, mold, sponsorRows, clicks, perThousand };
 }

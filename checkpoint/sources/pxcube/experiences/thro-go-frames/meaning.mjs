@@ -5,7 +5,7 @@ import { fmt2, fmtInt, fmtAtt, mmss, monthName, prettyDate, pct, plural, dayDiff
 
 export const discLabel = (E, discId) => {
   const d = E.discs[discId];
-  return `${d.moldName} (${d.plastic}${d.runLabel ? `, ${d.runLabel}` : ''})`;
+  return `${d.moldName} (${d.plastic}${d.runLabel ? `, ${d.runLabel}` : ''}${d.resolvedBy === 'normalized' ? `; typed “${d.typedName}”` : ''})`;
 };
 // Two creators can own the same mold in the same plastic, so anything that crosses creators names the owner too.
 export const discOwnerLabel = (W, E, discId) => `${discLabel(E, discId)}, ${W.get(E.discs[discId].creatorId).t.name}`;
@@ -117,7 +117,7 @@ export function deriveFacts(W, E, M) {
       if (p.bagId === q.bagId) continue;
       const before = bagDiscs(p.bagId), after = bagDiscs(q.bagId);
       const added = after.filter((d) => !before.includes(d)), removed = before.filter((d) => !after.includes(d));
-      push({ kind: 'bag-change', creatorId: cid, fromVideoId: p.id, videoId: q.id, added, removed, sentence: `The bag changed between ${vtitle(p.id)} and ${vtitle(q.id)}: ${added.map((d) => discLabel(E, d)).join(', ') || 'nothing'} added, ${removed.map((d) => discLabel(E, d)).join(', ') || 'nothing'} removed; each disc is credited only to the videos whose bag held it.` });
+      push({ kind: 'bag-change', creatorId: cid, fromVideoId: p.id, videoId: q.id, added, removed, sentence: `The bag changed from “${W.get(p.bagId).t.name}” to “${W.get(q.bagId).t.name}” between ${vtitle(p.id)} and ${vtitle(q.id)}: ${added.map((d) => discLabel(E, d)).join(', ') || 'nothing'} added, ${removed.map((d) => discLabel(E, d)).join(', ') || 'nothing'} removed; each disc is credited only to the videos whose bag held it.` });
     }
   }
   for (const v of Object.values(E.videos)) {

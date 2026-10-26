@@ -10,11 +10,14 @@
 //   meaning-numbers       the meaning sentences contain the oracle's numbers
 import { oracle } from './oracle.mjs';
 import { diffProjections } from './projection.mjs';
-import { typeProblems, effectiveTerminals } from './frames.mjs';
+import { typeProblems, effectiveExpect } from './frames.mjs';
 import { buildGraph, neighborhood, nodeLabel } from './graph.mjs';
 import { creatorOfVideo } from './world.mjs';
-import { factsOf, effectOf } from './effect.mjs';
-import { fmtAtt } from './util.mjs';
+import { factsOf, effectOf, sentenceDelta } from './effect.mjs';
+import { fmtAtt as fmtAttRaw } from './util.mjs';
+// a number on the page may round either way when the value sits exactly on a rounding edge (floating-point noise), so accept either neighbour
+const shows = (sentence, v) => [v, v + 1e-6, v - 1e-6].some((x) => sentence.includes(fmtAttRaw(x)));
+const fmtAtt = fmtAttRaw;
 
 const KINDS = {
   'release-day': ['release-window'], 'window-last-day': ['release-window'], 'custom-window': ['release-window'], 'reissue-day': ['release-window'], 'window-day-after': ['established'],
@@ -56,6 +59,7 @@ function creatorsOfEntry(A, section, key, before, after) {
   return out;
 }
 
+let base0 = null;
 function checkExpect(c, A, O, baseO) {
   const e = c.expect, W = A.W;
   if (!e) return null;
@@ -97,6 +101,13 @@ function checkExpect(c, A, O, baseO) {
       if (e.credited && e.moment !== undefined) ok = ok && (k.kind === 'moment') === e.moment;
       return chk(id, ok, `click credited as ${k.kind}${k.reason ? ` (${k.reason})` : ''}`);
     }
+    case 'renamed': {
+      // every sentence that changed names the new spelling where the old one stood, so the label is reached through the link, not copied into each sentence
+      const delta = sentenceDelta(base0, A);
+      const afterAll = delta.flatMap((d) => d.after), beforeAll = delta.flatMap((d) => d.before);
+      const ok = delta.length > 0 && afterAll.every((f) => f.sentence.includes(e.to)) && beforeAll.every((f) => f.sentence.includes(e.from));
+      return chk(id, ok, `${delta.length} facts reworded; ${afterAll.filter((f) => f.sentence.includes(e.to)).length} of ${afterAll.length} new sentences carry “${e.to}” where ${beforeAll.filter((f) => f.sentence.includes(e.from)).length} of ${beforeAll.length} carried “${e.from}”`);
+    }
     default: return chk(id, false, `unknown expect kind ${e.kind}`);
   }
 }
@@ -126,19 +137,20 @@ function meaningNumbers(sentences, O) {
   for (const f of sentences) {
     if (f.appearanceId && O.appearances[f.appearanceId] && ['attention', 'release-window', 'pre-release', 'release-month', 'established', 'other-brand', 'thrown-no-card', 'short'].includes(f.kind)) {
       const att = O.appearances[f.appearanceId].attention;
-      if (att != null && !f.sentence.includes(fmtAtt(att))) bad.push(`${f.kind}: “${fmtAtt(att)}” missing`);
+      if (att != null && !shows(f.sentence, att)) bad.push(`${f.kind}: “${fmtAtt(att)}” missing`);
       if (att == null && /got [\d,.]+ attention/.test(f.sentence)) bad.push(`${f.kind}: number for an unmeasurable appearance`);
     }
     if (f.rowKey && O.sponsorRows[f.rowKey] && f.kind.endsWith('exposure')) {
       const r = O.sponsorRows[f.rowKey];
-      if (r.viewerMinutes == null ? !/could not be measured/.test(f.sentence) : !f.sentence.includes(fmtAtt(r.viewerMinutes))) bad.push(`${f.kind} ${f.rowKey}`);
+      if (r.viewerMinutes == null ? !/could not be measured/.test(f.sentence) : !shows(f.sentence, r.viewerMinutes)) bad.push(`${f.kind} ${f.rowKey}`);
     }
-    if (f.kind === 'cross-creator' && O.mold[f.moldId] && !f.sentence.includes(fmtAtt(O.mold[f.moldId].attention))) bad.push(`cross-creator ${f.moldId}`);
+    if (f.kind === 'cross-creator' && O.mold[f.moldId] && !shows(f.sentence, O.mold[f.moldId].attention)) bad.push(`cross-creator ${f.moldId}`);
   }
   return bad;
 }
 
 export function verifyCase(c, base, baseO, opts = {}) {
+  base0 = base;
   const A = c.kind === 'observed' || c.kind === 'chained' ? base : c._after;
   const checks = [];
   const O = A === base ? baseO : oracle(rawOf(A));
@@ -159,8 +171,8 @@ export function verifyCase(c, base, baseO, opts = {}) {
     for (const e of eff.changed) for (const cr of creatorsOfEntry(A, e.section, e.key, e.before, e.after)) if (!nearCreators.has(cr)) far.push(`${e.section}:${e.key} (${cr})`);
     checks.push(chk('locality', far.length === 0, far.length ? `changed outside the neighbourhood: ${far.slice(0, 3).join(', ')}` : `all changes within ${nearCreators.size} connected creator${nearCreators.size === 1 ? '' : 's'}`));
     if (c.kind === 'expectation') {
-      const inst = base.W.get(c.instanceId), term = effectiveTerminals(inst.frame)[c.frameTerminal.split('.')[1]];
-      const ex = term.expect.find((e) => e.id === c.expectationId);
+      const inst = base.W.get(c.instanceId);
+      const ex = effectiveExpect(inst.frame, c.frameTerminal.split('.')[1]).find((e) => e.id === c.expectationId);
       const note = A.E.transformations.find((n) => n.instanceId === c.instanceId && n.expectationId === c.expectationId);
       const wasBefore = base.E.transformations.some((n) => n.instanceId === c.instanceId && n.expectationId === c.expectationId);
       const named = ex.mismatch.startsWith('resolve:') ? note && (note.action === ex.mismatch || note.action.startsWith('frame:')) : ex.mismatch.startsWith('frame:') ? (A.E.chains[c.instanceId] ?? []).some((aid) => aid.endsWith(`~${ex.mismatch.slice(6)}`)) : note && note.action === ex.mismatch;
@@ -192,8 +204,11 @@ export function verifyCase(c, base, baseO, opts = {}) {
   }
   const bad = meaningNumbers(meaning, O);
   checks.push(chk('meaning-numbers', bad.length === 0, bad.length ? bad.slice(0, 3).join('; ') : `${meaning.length} sentence${meaning.length === 1 ? '' : 's'} carry the oracle's numbers`));
+  const noteKey = (n) => `${n.instanceId}#${n.expectationId}#${n.action}`;
+  const had = new Set(base.E.transformations.map(noteKey));
+  const selected = A === base ? [] : A.E.transformations.filter((n) => !had.has(noteKey(n))).slice(0, 8).map((n) => ({ instanceId: n.instanceId, expectationId: n.expectationId, mismatch: n.mismatch, action: n.action, detail: n.detail, alternateId: n.alternateId ?? null }));
   return {
-    id: c.id, pass: checks.every((k) => k.ok), checks,
+    id: c.id, selected, pass: checks.every((k) => k.ok), checks,
     meaning: meaning.slice(0, 8).map((f) => ({ kind: f.kind, sentence: f.sentence })),
     delta: eff.changed.slice(0, 14).map((e) => ({ section: e.section, key: e.key, fields: e.fields, before: e.before, after: e.after })),
     deltaCount: eff.changed.length,

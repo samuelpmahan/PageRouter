@@ -168,7 +168,7 @@ export function oracle(instances) {
       const group = card ? keys.find((k) => appearances[k].start <= ts && ts < appearances[k].end && appearances[k].hasCard) : null;
       if (group) { kind = 'moment'; appearanceKey = group; } else kind = 'video';
     }
-    clicks[c.id] = { kind, reason, appearanceKey };
+    clicks[c.id] = { kind, reason, appearanceKey, host: c.t.refererHost, country: c.t.country };
     const pl = (perLink[link.id] ??= { credited: 0 });
     if (kind !== 'unattributed') pl.credited++;
   }

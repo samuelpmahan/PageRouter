@@ -84,7 +84,6 @@ export const FRAMES = {
   } },
   Manufacturer: { role: 'input', description: 'A disc brand.', terminals: {
     name: T('string', 'Halcyon Discs', [X('nameUnique', 'No two manufacturers share a name.', (v, i, W) => others(W, 'Manufacturer', i).every((m) => m.t.name !== v))]),
-    country: T('string', 'US'),
     shopHost: T('string', 'halcyondiscs.example', [X('shopHostUnique', 'Each manufacturer has its own shop host.', (v, i, W) => others(W, 'Manufacturer', i).every((m) => m.t.shopHost !== v))]),
   } },
   Mold: { role: 'input', description: 'A disc design in the catalog (not a physical disc).', terminals: {
@@ -245,9 +244,26 @@ export const FRAMES = {
     videoId: T('ref:Video', null, [X('coversVideo', 'The curve has one point per second of the video.', (v, i, W) => i.t.seconds >= (W.get(v)?.t.durationSeconds ?? 0))]),
     seconds: T('int', 420),
     shape: T('enum:linear-decay|flat|early-drop|exp-decay|loop', 'linear-decay'),
-    endLevel: T('number', 0.5),
-    dip: T('object?', null),
-    bump: T('object?', null),
+    endLevel: T('number', 0.5, [], {
+      variants: (i) => [
+        V(`viewers leave faster: the curve ends at ${Math.round(i.t.endLevel * 60) / 100} instead of ${i.t.endLevel}`, set(i.id, 'endLevel', Math.round(i.t.endLevel * 60) / 100)),
+        V(`viewers stay: the curve ends at 0.95 instead of ${i.t.endLevel}`, set(i.id, 'endLevel', 0.95)),
+      ].filter((v) => v.patches[0].to !== i.t.endLevel),
+    }),
+    dip: T('object?', null, [], {
+      variants: (i, W) => {
+        if (i.t.dip) return [V('the retention dip is gone', set(i.id, 'dip', null))];
+        const card = placementsOf(W, i.t.videoId).filter((p) => p.t.endSec > p.t.startSec).sort((a, b) => a.t.startSec - b.t.startSec)[0];
+        return card ? [V(`viewers leave while the first card is up (seconds ${card.t.startSec} to ${card.t.endSec})`, set(i.id, 'dip', { from: card.t.startSec, to: Math.min(card.t.endSec, i.t.seconds), depth: 0.2 }))] : [];
+      },
+    }),
+    bump: T('object?', null, [], {
+      variants: (i, W) => {
+        if (i.t.bump) return [V('the rewatch bump is gone', set(i.id, 'bump', null))];
+        const card = placementsOf(W, i.t.videoId).filter((p) => p.t.endSec > p.t.startSec).sort((a, b) => a.t.startSec - b.t.startSec)[0];
+        return card ? [V(`viewers rewatch the part where the first card is up (second ${card.t.startSec})`, set(i.id, 'bump', { at: card.t.startSec, height: 0.1, width: 20 }))] : [];
+      },
+    }),
     fractions: T('array:number', null, [
       X('unitInterval', 'Every point is between 0 and 1 (a Short that loops may rise to 1.5).', (v, i, W) => v.every((f) => f >= 0 && f <= (W.get(i.t.videoId)?.t.kind === 'short' ? 1.5 : 1))),
     ], { derive: (t) => curveValues(t.shape, t.endLevel, t.dip, t.bump, t.seconds) }),
@@ -382,8 +398,8 @@ export const FRAMES = {
         ];
       },
     }),
-    refererHost: T('string', 'youtube.com'),
-    country: T('string', 'US'),
+    refererHost: T('string', 'youtube.com', [], { variants: (i) => [V(i.t.refererHost === 'instagram.com' ? 'the click came from reddit.com' : 'the click came from instagram.com', set(i.id, 'refererHost', i.t.refererHost === 'instagram.com' ? 'reddit.com' : 'instagram.com'))] }),
+    country: T('string', 'US', [], { variants: (i) => [V(i.t.country === 'DE' ? 'the click came from Brazil' : 'the click came from Germany', set(i.id, 'country', i.t.country === 'DE' ? 'BR' : 'DE'))] }),
     videoTimestamp: T('int?', null, [
       X('timestampFromCardsOnly', 'Only a click on a YouTube card link carries a video timestamp.', (v, i, W) => v === null || W.get(i.t.linkId)?.t.placement === 'card'),
       X('timestampInsideVideo', 'A video timestamp is a second inside the video.', (v, i, W) => {
@@ -430,21 +446,36 @@ export const FRAMES = {
     daysBeforeMax: T('int', 0, [], { fill: (from, W) => releaseState(W, W.get(from.t.discId), W.get(from.t.videoId)).daysBeforeMax }),
   } },
   OtherBrandAppearance: { role: 'alternate', inherits: 'OnScreenDisc', description: 'A disc on screen whose brand is not the creator\'s active sponsor (or whose mold the deal does not cover): counted, but not as sponsor exposure.', terminals: {
-    reason: T('enum:no-deal|other-brand|mold-not-covered|unknown-brand', 'other-brand', [], { fill: (from, W) => {
+    reason: T('enum:no-deal|other-brand|mold-not-covered|unknown-brand', 'other-brand', [X('reasonIsNotSponsor', 'An other-brand appearance is never under the active sponsor.', (v) => v !== 'sponsor')], { fill: (from, W) => {
       const video = W.get(from.t.videoId), disc = W.get(from.t.discId);
       return sponsorBucket(W, creatorOfVideo(W, video).id, publishDay(W, video), resolveMold(W, disc)?.mold ?? null).bucket;
     } }),
     manufacturerId: T('ref:Manufacturer?', null, [], { fill: (from, W) => resolveMold(W, W.get(from.t.discId))?.mold.t.manufacturerId ?? null }),
   } },
-  ShownOnlyCard: { role: 'alternate', inherits: 'CardPlacement', description: 'A card was on screen but the creator never marked the disc as thrown: shown, not thrown.', terminals: {} },
-  CardlessAppearance: { role: 'alternate', inherits: 'Appearance', description: 'The disc was in the video (thrown or mentioned) but no thro card was up, so no link prompt was shown.', terminals: {} },
-  AwaitingViewsVideo: { role: 'alternate', inherits: 'Video', description: 'A published video with no views yet: attention is "not measurable yet", not zero.', terminals: {} },
-  ClicksOnlyChannel: { role: 'alternate', inherits: 'Channel', description: 'A channel without YouTube Studio: clicks are counted, attention-seconds are not available.', terminals: {} },
+  ShownOnlyCard: { role: 'alternate', inherits: 'CardPlacement', description: 'A card was on screen but the creator never marked the disc as thrown: shown, not thrown.', terminals: {
+    thrownMarks: T('int', 0, [X('noThrownMark', 'A shown-only card has no thrown mark for its disc over its seconds.', (v) => v === 0)], { fill: (from, W) => W.where('Appearance', 'videoId', from.t.videoId).filter((m) => m.t.discId === from.t.discId && m.t.mode === 'thrown' && m.t.startSec < from.t.endSec && from.t.startSec < m.t.endSec).length }),
+  } },
+  CardlessAppearance: { role: 'alternate', inherits: 'Appearance', description: 'The disc was in the video (thrown or mentioned) but no thro card was up, so no link prompt was shown.', terminals: {
+    overlappingCards: T('int', 0, [X('noCardUp', 'No thro card of the disc is up during a cardless appearance.', (v) => v === 0)], { fill: (from, W) => W.where('CardPlacement', 'videoId', from.t.videoId).filter((p) => p.t.discId === from.t.discId && p.t.startSec < from.t.endSec && from.t.startSec < p.t.endSec).length }),
+  } },
+  AwaitingViewsVideo: { role: 'alternate', inherits: 'Video', description: 'A published video with no views yet: attention is "not measurable yet", not zero.', terminals: {
+    viewsSoFar: T('int', 0, [X('zeroViewsSoFar', 'An awaiting-views video has no views yet.', (v) => v === 0)], { fill: (from) => latestViews(from) }),
+  } },
+  ClicksOnlyChannel: { role: 'alternate', inherits: 'Channel', description: 'A channel without YouTube Studio: clicks are counted, attention-seconds are not available.', terminals: {
+    attentionAvailable: T('bool', false, [X('noAttentionWithoutStudio', 'Without YouTube Studio no attention-seconds are available.', (v) => v === false)], { fill: () => false }),
+  } },
   UnattributedClick: { role: 'alternate', inherits: 'Click', description: 'A click counted for its link and disc but not credited to any appearance.', terminals: {
-    reason: T('enum:no-video|disc-not-in-video|predates-publish', 'disc-not-in-video', [], { fill: (from, W, ctx) => ({ linkIsVideoScoped: 'no-video', discAppearedInVideo: 'disc-not-in-video', notBeforePublish: 'predates-publish' })[ctx.vias[0]] }),
+    reason: T('enum:no-video|disc-not-in-video|predates-publish', 'disc-not-in-video', [X('reasonIsTrue', 'The reason an unattributed click gives is true of the world: no video on the link, a video the disc never usefully appears in, or a click before the publish instant.', (v, i, W) => {
+      const link = W.get(i.t.linkId), video = link?.t.videoId ? W.get(link.t.videoId) : null;
+      if (v === 'no-video') return !video;
+      if (!video) return false;
+      if (v === 'predates-publish') return instantMs(i.t.at) < instantMs(video.t.publishedAt);
+      const usable = (p) => p.t.endSec > p.t.startSec && p.t.startSec < video.t.durationSeconds && p.t.endSec >= p.t.startSec;
+      return ![...placementsOf(W, video.id, link.t.discId), ...givenAppearancesOf(W, video.id, link.t.discId)].some(usable);
+    })], { fill: (from, W, ctx) => ({ linkIsVideoScoped: 'no-video', discAppearedInVideo: 'disc-not-in-video', notBeforePublish: 'predates-publish' })[ctx.vias[0]] }),
   } },
   OffBrandLink: { role: 'alternate', inherits: 'Link', description: 'A link whose destination is not the shop of the disc\'s brand: the click lands on another brand.', terminals: {
-    expectedHost: T('string', '', [], { fill: (from, W) => W.get(resolveMold(W, W.get(from.t.discId)).mold.t.manufacturerId).t.shopHost }),
+    expectedHost: T('string', '', [X('hostsDiffer', 'An off-brand link\'s actual host is not the shop of the disc\'s brand.', (v, i) => v !== i.t.actualHost)], { fill: (from, W) => W.get(resolveMold(W, W.get(from.t.discId)).mold.t.manufacturerId).t.shopHost }),
     actualHost: T('string', '', [], { fill: (from) => hostOf(from.t.destination) }),
   } },
 };

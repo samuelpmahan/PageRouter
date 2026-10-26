@@ -3,7 +3,7 @@
 import { changedEntries } from './projection.mjs';
 import { deriveFacts } from './meaning.mjs';
 
-export const factKey = (f) => `${f.kind}|${f.appearanceId ?? f.clickId ?? f.rowKey ?? f.linkId ?? f.moldId ?? [f.discId, f.videoId, f.instanceId, f.fromVideoId].filter(Boolean).join('/')}`;
+export const factKey = (f) => `${f.kind}|${f.appearanceId ?? f.clickId ?? f.rowKey ?? f.linkId ?? f.moldId ?? [f.discId, f.videoId, f.instanceId, f.fromVideoId, ...(f.discIds ?? []), f.creatorId].filter(Boolean).join('/')}`;
 export const factsOf = (a) => a.facts ?? (a.facts = deriveFacts(a.W, a.E, a.M));
 const group = (facts) => { const m = new Map(); for (const f of facts) (m.get(factKey(f)) ?? m.set(factKey(f), []).get(factKey(f))).push(f); return m; };
 // Facts (with their sentences) that are new or worded differently after the departure.
@@ -15,6 +15,7 @@ export function sentenceDelta(base, after) {
 }
 export function effectOf(base, after) {
   const changed = changedEntries(base.P, after.P);
-  const sentences = sentenceDelta(base, after);
-  return { changed, sentences, observable: changed.length > 0 || sentences.length > 0 };
+  let sentences = null;
+  const eff = { changed, get sentences() { return sentences ?? (sentences = sentenceDelta(base, after)); }, get observable() { return changed.length > 0 || this.sentences.length > 0; } };
+  return eff;
 }

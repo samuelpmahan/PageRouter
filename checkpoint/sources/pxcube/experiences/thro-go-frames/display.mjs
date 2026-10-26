@@ -77,8 +77,8 @@ export function creatorPanel(W, E, M, creatorId) {
 // Sponsor view: for every manufacturer, each quarter, across creators. Every number lists the videos and discs behind it.
 export function sponsorView(W, E, M) {
   const brands = {};
-  for (const mk of W.all('Manufacturer')) brands[mk.id] = { manufacturerId: mk.id, name: mk.t.name, country: mk.t.country, shopHost: mk.t.shopHost, deals: W.where('SponsorDeal', 'manufacturerId', mk.id).map((d) => ({ dealId: d.id, creator: W.get(d.t.creatorId).t.name, start: d.t.start, end: d.t.end, covers: d.t.moldsCovered === 'all' ? 'every mold' : d.t.moldsCovered.map((m) => W.get(m).t.name).join(', ') })), quarters: {} };
-  brands.unknown = { manufacturerId: null, name: 'Brand not known', country: null, shopHost: null, deals: [], quarters: {} };
+  for (const mk of W.all('Manufacturer')) brands[mk.id] = { manufacturerId: mk.id, name: mk.t.name, shopHost: mk.t.shopHost, deals: W.where('SponsorDeal', 'manufacturerId', mk.id).map((d) => ({ dealId: d.id, creator: W.get(d.t.creatorId).t.name, start: d.t.start, end: d.t.end, covers: d.t.moldsCovered === 'all' ? 'every mold' : d.t.moldsCovered.map((m) => W.get(m).t.name).join(', ') })), quarters: {} };
+  brands.unknown = { manufacturerId: null, name: 'Brand not known', shopHost: null, deals: [], quarters: {} };
   for (const r of M.exposure.rows) {
     const b = brands[r.manufacturerId ?? 'unknown'];
     const q = (b.quarters[r.quarter] ??= { quarter: r.quarter, sponsor: null, other: null });

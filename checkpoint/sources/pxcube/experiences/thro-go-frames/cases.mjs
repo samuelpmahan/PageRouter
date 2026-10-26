@@ -18,7 +18,7 @@ import { quarterOf } from './util.mjs';
 const THEME_OF_FRAME = { Release: 'Release timing', Video: 'Videos and views', RetentionCurve: 'Retention', CardPlacement: 'Cards on screen', Appearance: 'Cards on screen', SponsorDeal: 'Sponsor deals', Channel: 'Time zones and Studio', Bag: 'Bags and shelves', Disc: 'Bags and shelves', Link: 'Links and clicks', Click: 'Links and clicks', Mold: 'Catalog', Manufacturer: 'Catalog', Creator: 'Catalog' };
 const THEME_OF_EXPECT = { dealActive: 'Sponsor deals', releaseClass: 'Release timing', releaseOffset: 'Release timing', quarter: 'Time zones and quarters', localDay: 'Time zones and quarters', clickCredit: 'Links and clicks', secondsOn: 'Cards on screen', clampedSeconds: 'Cards on screen' };
 export const THEMES = ['Release timing', 'Sponsor deals', 'Time zones and quarters', 'Time zones and Studio', 'Cards on screen', 'Links and clicks', 'Bags and shelves', 'Videos and views', 'Retention', 'Catalog', 'Cross-creator', 'Chains of frames'];
-export const KIND_ORDER = ['observed', 'chained', 'expectation', 'boundary', 'variant', 'enum'];
+export const KIND_ORDER = ['observed', 'chained', 'expectation', 'boundary', 'variant', 'relink', 'rename', 'enum'];
 
 // ---------- observed situations: predicates over the raw world, found with the oracle ----------
 export function observedSituations(instances, O) {

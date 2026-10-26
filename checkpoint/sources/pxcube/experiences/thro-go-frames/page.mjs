@@ -1,12 +1,12 @@
-// The page: runs the real pipeline in the browser (generate -> enrich -> metrics -> verify every Case) and shows each Case with its frames,
-// its links, its computed values with Capability Lab receipts, the generated meaning sentence, and the creator insight panel the display builds.
-import { runPipeline, DEFAULT_SEED, fragmentsOf } from './pipeline.mjs';
-import { serializeWorld } from './world-json.mjs';
-import { FRAMES, frameSystem } from './frames.mjs';
-import { DEPARTURES } from './departures.mjs';
-import { indexWorld } from './world.mjs';
-import { discLabel } from './meaning.mjs';
-import { fmt1, fmt2, fmtInt, mmss, prettyDate } from './util.mjs';
+// The page. It loads the build (data/toy-world.json = the one shared season and its Cases, data/results.json = verdicts and deltas from the
+// node build, which is where the verification happens), re-runs the real analysis on the season in the browser as a SMOKE check only, and draws
+// five views: Cases, Sponsors, Links (walk the graph), Frames, Pipeline.
+import { analyzeWorld } from './analysis.mjs';
+import { FRAMES, effectiveTerminals, effectiveExpect, frameSystem } from './frames.mjs';
+import { sponsorView, viewerMinutesText } from './display.mjs';
+import { buildGraph, nodeLabel } from './graph.mjs';
+import { deriveFacts, discLabel } from './meaning.mjs';
+import { fnv32, fmt1, fmt2, fmtInt, fmtAtt, mmss, prettyDate } from './util.mjs';
 
 const $ = (sel) => document.querySelector(sel);
 const NS = 'http://www.w3.org/2000/svg';
@@ -28,337 +28,370 @@ function sv(tag, attrs, ...kids) {
   return el;
 }
 
-const KIND_LABEL = { baseline: 'Baseline', 'release-timing': 'Release timing', bag: 'Bags', shelf: 'Shelf', catalog: 'Catalog', sponsor: 'Sponsors', 'appearance-mode': 'Thrown, shown, talked', 'placement-geometry': 'Placement geometry', click: 'Clicks', video: 'Videos', retention: 'Retention', 'cross-creator': 'Cross-creator', combination: 'Seeded combinations' };
-const KIND_ORDER = Object.keys(KIND_LABEL);
+const KIND_LABEL = { observed: 'Observed in the season', chained: 'Chain of frames', expectation: 'Expectation fails', boundary: 'Boundary value', variant: 'Declared variant', relink: 'Re-pointed link', rename: 'Renamed label', enum: 'Other enum value' };
+const KIND_HELP = {
+  observed: 'A situation the season already contains. The Case asserts how it is handled.',
+  chained: 'One frame replaced by the next, then that one by another.',
+  expectation: 'One soft expectation of a frame is broken on purpose; its mismatch rule must pick the next frame or a transformation.',
+  boundary: 'A value at the edge a terminal declares (deal first or last day, window day 29, 30 or 31, click at a card\'s last second, quarter edge, time zone).',
+  variant: 'A situation the frame names for one of its terminals.',
+  relink: 'A reference re-pointed at another instance of the same frame.',
+  rename: 'A label renamed: every sentence that names it must change with it.',
+  enum: 'Every other value of an enum terminal.',
+};
+const SECTION_LABEL = { appearances: 'Appearance', discVideo: 'Disc in video', disc: 'Disc total', discs: 'Disc', mold: 'Mold total, all creators', sponsorRows: 'Sponsor row', clicks: 'Click credit', perThousand: 'Clicks per 1,000 attention-seconds', videos: 'Video' };
+const FIELD_LABEL = { attention: 'attention-seconds', viewerMinutes: 'viewer-minutes on screen', seconds: 'seconds on screen', start: 'starts at', end: 'ends at', bucket: 'counts as', dealId: 'under deal', kind: 'credited as', reason: 'reason', appearanceKey: 'credited to', releaseClass: 'release class', offsetMin: 'days from release (nearest)', offsetMax: 'days from release (farthest)', quarter: 'quarter', day: 'local day', views: 'views', state: 'state', dealIds: 'deals', creators: 'creators', videos: 'videos', long: 'from long videos', short: 'from Shorts', cards: 'cards merged', hasCard: 'has a card', thrown: 'thrown', moldId: 'mold', releaseId: 'release', hasMold: 'mold in catalog', resolvedBy: 'mold found by', manufacturerId: 'brand', pre: 'before release', host: 'referrer', country: 'country', perCreator: 'by creator', byCreator: 'by creator', overlapped: 'overlap counted once' };
 
-const state = { run: null, Ws: null, view: 'cases', caseId: null, kind: 'all', failOnly: false, focus: null, tab: 0, seed: DEFAULT_SEED, worldMatch: null };
+const state = { world: null, results: null, run: null, view: 'cases', caseId: null, entityId: null, trail: [], theme: 'all', kind: 'all', q: '', failOnly: false, brand: 'all', quarter: 'all', entQ: '', entFrame: 'all', smoke: null };
+const mobile = () => matchMedia('(max-width: 800px)').matches;
 
-function load(seed) {
-  state.run = runPipeline(seed);
-  state.seed = seed;
-  state.Ws = Object.fromEntries([...fragmentsOf(state.run.world)].map(([id, inst]) => [id, indexWorld(inst)]));
-  if (!state.run.world.cases.some((c) => c.id === state.caseId)) state.caseId = state.run.world.cases[0].id;
-  state.focus = null; state.tab = 0;
+/* ---------- small helpers ---------- */
+const caseOf = (id) => state.world.cases.find((c) => c.id === id);
+const verdictOf = (id) => state.results.verdicts[id];
+const W = () => state.run.W, E = () => state.run.E;
+const label = (id) => { try { return nodeLabel(W(), E(), id); } catch { return id; } };
+const fmtNum = (n) => (Number.isInteger(n) ? fmtInt(n) : Math.abs(n) >= 100 ? fmtInt(n) : fmt2(n));
+function fmtVal(v, field) {
+  if (v === null || v === undefined) return h('i', { class: 'none' }, field === 'viewerMinutes' || field === 'attention' ? 'not measurable' : 'none');
+  if (typeof v === 'number') return field === 'viewerMinutes' || field === 'attention' || field === 'long' || field === 'short' ? fmtAtt(v) : field === 'offsetMin' || field === 'offsetMax' ? (v > 0 ? `+${v}` : String(v)) : fmtNum(v);
+  if (typeof v === 'boolean') return v ? 'yes' : 'no';
+  if (Array.isArray(v)) return v.length ? v.map((x) => (typeof x === 'string' && W().get(x) ? label(x) : String(x))).join(', ') : 'none';
+  if (typeof v === 'object') return Object.entries(v).map(([k, x]) => `${W().get(k) ? label(k) : k}: ${typeof x === 'number' ? fmtAtt(x) : x}`).join('; ');
+  const s = String(v);
+  return W().get(s) ? label(s) : s;
+}
+const unitOf = (field) => (field === 'attention' ? 'attention-seconds' : field === 'viewerMinutes' ? 'viewer-minutes on screen' : field === 'seconds' ? 's' : '');
+function pathGet(o, path) { let x = o; for (const k of path.split('.')) x = x == null ? x : x[k]; return x; }
+function keyLabel(section, key) {
+  try {
+    if (section === 'appearances' || section === 'discVideo') { const [d, rest] = key.split('@'); const v = rest.split('#')[0]; return `${label(d)} in “${W().get(v).t.title}”`; }
+    if (section === 'sponsorRows') { const [k, m, q] = key.split('|'); return `${W().get(m)?.t.name ?? m} · ${q} · ${k === 'sponsor' ? 'as sponsor' : 'not the sponsor'}`; }
+    if (section === 'perThousand') return label(key);
+    if (section === 'mold') return label(key);
+    if (section === 'clicks') return label(key);
+    return label(key);
+  } catch { return key; }
+}
+function chipFor(id, text) {
+  return h('button', { class: 'ent', title: id, onclick: () => goEntity(id) }, text ?? label(id));
 }
 
-const short = (id) => String(id).replace(/^c\d+\./, '');
-const caseOf = (id) => state.run.world.cases.find((c) => c.id === id);
-
-/* ---------------- labels for nodes ---------------- */
-function nodeInfo(c, id) {
-  const E = state.run.enriched[c.id], W = state.Ws[c.id];
-  const app = E.appearances.find((a) => a.id === id);
-  if (app) return { frame: 'Appearance', merged: true, label: `appearance · ${E.discs[app.discId].moldName} ${mmss(app.start)}–${mmss(app.end)}`, terms: [['interval', `${mmss(app.start)}–${mmss(app.end)} (${app.seconds} s)`], ['modes', app.modes.join(' + ')], ['evidence', app.evidence.join(' + ')], ['sponsor bucket', app.bucket], ['flags', app.flags.join(', ') || 'none']] };
-  const alt = E.alternates.find((a) => a.id === id);
-  if (alt) return { frame: alt.frame, alt: true, label: alt.frame, inst: alt };
-  const i = W.get(id);
-  if (!i) return { frame: '?', label: short(id) };
-  const t = i.t;
-  const label = {
-    Creator: () => t.name, Channel: () => t.title, Manufacturer: () => t.name, Mold: () => `${t.name}`, Shelf: () => `Shelf (${t.discIds.length} discs)`,
-    Release: () => `release ${t.datePrecision === 'month' ? t.date : prettyDate(t.date)}${t.runLabel ? ` · ${t.runLabel}` : ''}`,
-    SponsorDeal: () => `deal · ${W.get(t.manufacturerId)?.t.name ?? '?'}`,
-    Disc: () => (E.discs[i.id] ? discLabel(E, i.id) : t.moldName), Bag: () => `${t.name} \u00b7 ${t.discIds.length} disc${t.discIds.length === 1 ? '' : 's'}`, Video: () => t.title, RetentionCurve: () => `retention curve (${t.fractions.length} pts)`,
-    CardPlacement: () => `card ${mmss(t.startSec)}–${mmss(t.endSec)}`, Appearance: () => `marked ${t.mode} ${mmss(t.startSec)}–${mmss(t.endSec)}`,
-    Link: () => `link ${t.code}`, Click: () => `click · ${t.refererHost}${t.videoTimestamp != null ? ` @${mmss(t.videoTimestamp)}` : ''}`,
-  }[i.frame]?.() ?? short(id);
-  return { frame: i.frame, label, inst: i };
+/* ---------- navigation ---------- */
+function setHash() {
+  const p = new URLSearchParams();
+  p.set('view', state.view);
+  if (state.view === 'cases' && state.caseId) p.set('case', state.caseId);
+  if (state.view === 'links' && state.entityId) p.set('entity', state.entityId);
+  history.replaceState(null, '', `#${p.toString()}`);
 }
-
-/* ---------------- value formatting ---------------- */
-function fmtVal(v) {
-  if (v === null || v === undefined) return 'null';
-  if (typeof v === 'string') return /^c\d+\./.test(v) ? short(v) : v;
-  if (typeof v === 'number' || typeof v === 'boolean') return String(v);
-  if (Array.isArray(v)) {
-    if (v.length > 8 && v.every((x) => typeof x === 'number')) return `${v.length} numbers (${v[0]} … ${v[v.length - 1]})`;
-    if (v.every((x) => typeof x === 'string')) return v.length ? `[${v.map(fmtVal).join(', ')}]` : '[]';
-    return JSON.stringify(v).replace(/c\d+\./g, '').slice(0, 90);
-  }
-  return JSON.stringify(v).replace(/c\d+\./g, '').slice(0, 90);
+function readHash() {
+  const p = new URLSearchParams(location.hash.slice(1));
+  if (p.get('view')) state.view = p.get('view');
+  if (p.get('case') && caseOf(p.get('case'))) state.caseId = p.get('case');
+  if (p.get('entity')) state.entityId = p.get('entity');
 }
-const receiptText = (r) => (r ? [...new Set(r.calls.map((c) => c.id))].join(' → ') : null);
+function goView(v) { state.view = v; renderAll(); window.scrollTo(0, 0); }
+function goEntity(id) { if (state.entityId && state.entityId !== id) state.trail.push(state.entityId); state.entityId = id; state.view = 'links'; renderAll(); window.scrollTo(0, 0); }
+function goCase(id) { state.caseId = id; state.view = 'cases'; renderAll(); window.scrollTo(0, 0); }
 
-/* ---------------- left list ---------------- */
+/* ---------- Cases ---------- */
+function visibleCases() {
+  const q = state.q.trim().toLowerCase();
+  return state.world.cases.filter((c) => (state.theme === 'all' || c.theme === state.theme) && (state.kind === 'all' || c.kind === state.kind) && (!state.failOnly || !verdictOf(c.id).pass)
+    && (!q || `${c.id} ${c.title} ${c.theme} ${c.frameTerminal ?? ''} ${c.where ?? ''}`.toLowerCase().includes(q)));
+}
 function renderList() {
   const list = $('#list');
-  list.replaceChildren();
-  const cases = state.run.world.cases;
-  const kinds = KIND_ORDER.filter((k) => cases.some((c) => c.kind === k));
-  const bar = h('div', { class: 'filters' },
-    h('button', { class: state.kind === 'all' ? 'on' : '', onclick: () => { state.kind = 'all'; renderList(); } }, 'all'),
-    kinds.map((k) => h('button', { class: state.kind === k ? 'on' : '', onclick: () => { state.kind = k; renderList(); } }, KIND_LABEL[k])),
-    h('button', { class: state.failOnly ? 'on' : '', onclick: () => { state.failOnly = !state.failOnly; renderList(); } }, 'failing only'));
-  list.append(bar);
-  for (const k of kinds) {
-    if (state.kind !== 'all' && state.kind !== k) continue;
-    const group = cases.filter((c) => c.kind === k && (!state.failOnly || !state.run.verdicts[c.id].pass));
-    if (!group.length) continue;
-    list.append(h('div', { class: 'group' }, `${KIND_LABEL[k]} · ${group.length}`));
-    for (const c of group) {
-      const v = state.run.verdicts[c.id];
-      list.append(h('button', { class: 'item', 'data-case': c.id, 'aria-current': c.id === state.caseId ? 'true' : 'false', onclick: () => selectCase(c.id) },
-        h('span', { class: 'id' }, c.id), h('span', { class: 'slug' }, c.slug.replace(/^baseline$/, 'all defaults').replace(/\+/g, ' + ').replace(/:/g, ' › ')), h('span', { class: `pill ${v.pass ? 'pass' : 'fail'}` }, v.pass ? 'PASS' : 'FAIL'),
-        h('span', { class: 't' }, c.title)));
+  const cases = state.world.cases;
+  const themes = [...new Set(cases.map((c) => c.theme))];
+  const kinds = [...new Set(cases.map((c) => c.kind))];
+  const vis = visibleCases();
+  const kids = [
+    h('div', { class: 'filters' },
+      h('input', { type: 'search', id: 'q', placeholder: 'Search Cases', 'aria-label': 'Search Cases', value: state.q, oninput: (e) => { state.q = e.target.value; renderList(); $('#q').focus(); } }),
+      h('select', { id: 'kind', 'aria-label': 'Kind of Case', onchange: (e) => { state.kind = e.target.value; renderList(); } }, h('option', { value: 'all' }, `All kinds (${cases.length})`), kinds.map((k) => h('option', { value: k, selected: state.kind === k }, `${KIND_LABEL[k]} (${cases.filter((c) => c.kind === k).length})`))),
+      h('select', { id: 'theme', 'aria-label': 'Theme', onchange: (e) => { state.theme = e.target.value; renderList(); } }, h('option', { value: 'all' }, 'All themes'), themes.map((t) => h('option', { value: t, selected: state.theme === t }, `${t} (${cases.filter((c) => c.theme === t).length})`))),
+      h('label', { class: 'chk' }, h('input', { type: 'checkbox', checked: state.failOnly, onchange: (e) => { state.failOnly = e.target.checked; renderList(); } }), ' failing only'),
+      h('div', { class: 'count' }, `${vis.length} of ${cases.length} Cases`)),
+  ];
+  let lastTheme = null;
+  for (const c of vis) {
+    if (c.theme !== lastTheme) { kids.push(h('div', { class: 'group' }, c.theme)); lastTheme = c.theme; }
+    const v = verdictOf(c.id);
+    kids.push(h('button', { class: 'item', 'data-case': c.id, 'aria-current': c.id === state.caseId ? 'true' : 'false', onclick: () => { state.caseId = c.id; $('#list').classList.remove('open'); renderAll(); window.scrollTo(0, 0); } },
+      h('span', { class: 'id' }, c.id), h('span', { class: 'slug' }, c.title), h('span', { class: `pill ${v.pass ? 'pass' : 'fail'}` }, v.pass ? 'PASS' : 'FAIL'),
+      h('span', { class: 't' }, KIND_LABEL[c.kind])));
+  }
+  list.replaceChildren(...kids);
+}
+function expectText(e) {
+  if (!e) return null;
+  const vt = (id) => `“${W().get(id)?.t.title ?? id}”`;
+  switch (e.kind) {
+    case 'dealActive': return `${vt(e.videoId)} is ${e.active ? '' : 'not '}under the ${label(W().get(e.dealId).t.manufacturerId)} deal.`;
+    case 'releaseClass': return `${label(e.discId)} in ${vt(e.videoId)} counts as ${e.releaseClass}${e.offset !== undefined ? ` at day ${e.offset}` : ''}.`;
+    case 'releaseOffset': return `${vt(e.videoId)} sits ${e.offset} day${Math.abs(e.offset) === 1 ? '' : 's'} from the release day.`;
+    case 'quarter': return `${vt(e.videoId)} belongs to ${e.quarter}.`;
+    case 'localDay': return `${vt(e.videoId)} lands on another local day.`;
+    case 'secondsOn': return `${e.seconds} second${e.seconds === 1 ? '' : 's'} on screen.`;
+    case 'clampedSeconds': return `The appearance ends at the video's end, not after it.`;
+    case 'clickCredit': return e.credited ? (e.moment === undefined ? 'The click is credited.' : e.moment ? 'The click is credited to the on-screen moment.' : 'The click is credited to the video, not to a moment.') : `The click is credited to nothing (${e.reason}).`;
+    case 'renamed': return `Every sentence that names it now says “${e.to}”.`;
+    default: return null;
+  }
+}
+const details = (title, open, ...kids) => h('details', { class: 'sec', open: open ? '' : null }, h('summary', null, title), h('div', { class: 'body' }, kids));
+function deltaView(v) {
+  if (!v.delta.length) return h('p', { class: 'mute' }, 'No linked result changed; the change shows only in the sentences.');
+  const rows = v.delta.map((d) => {
+    const fields = d.fields.filter((f, n, a) => a.indexOf(f) === n).map((f) => f.split('.')[0]).filter((f, n, a) => a.indexOf(f) === n).slice(0, 5);
+    return h('div', { class: 'drow' },
+      h('div', { class: 'dk' }, h('span', { class: 'sect' }, SECTION_LABEL[d.section] ?? d.section), ' ', keyLabel(d.section, d.key)),
+      d.before === null ? h('div', { class: 'df' }, h('span', { class: 'new' }, 'new'), ' now in the results') : d.after === null ? h('div', { class: 'df' }, h('span', { class: 'gone' }, 'gone'), ' from the results') : fields.map((f) => h('div', { class: 'df' }, h('span', { class: 'fn' }, FIELD_LABEL[f] ?? f), h('span', { class: 'b' }, fmtVal(d.before[f], f)), h('span', { class: 'ar' }, '→'), h('span', { class: 'a' }, fmtVal(d.after[f], f)), unitOf(f) && h('span', { class: 'un' }, unitOf(f)))));
+  });
+  return h('div', { class: 'delta' }, rows.slice(0, 6), rows.length > 6 && h('details', { class: 'more' }, h('summary', null, `${rows.length - 6} more changed entries`), rows.slice(6)), v.deltaCount > v.delta.length && h('p', { class: 'mute' }, `…and ${v.deltaCount - v.delta.length} more entries changed.`));
+}
+function renderCase() {
+  const c = caseOf(state.caseId), v = verdictOf(c.id), o = c.kind === 'observed' || c.kind === 'chained';
+  const exp = expectText(c.expect);
+  const kids = [
+    h('header', { class: 'case-head' },
+      h('div', { class: 'kicker' }, h('span', null, c.id), h('span', null, KIND_LABEL[c.kind]), h('span', null, c.theme), h('span', { id: 'case-verdict', class: `pill ${v.pass ? 'pass' : 'fail'}` }, v.pass ? 'PASS' : 'FAIL'), h('span', { class: 'mute' }, `${v.checks.filter((k) => k.ok).length} of ${v.checks.length} checks`)),
+      h('h1', null, c.title),
+      c.where && h('p', { class: 'where' }, h('span', null, 'Where: '), c.where),
+      h('p', { class: 'help' }, o ? KIND_HELP[c.kind] : `${KIND_HELP[c.kind]} Change applied to the shared season, then the whole linked analysis runs again.`)),
+  ];
+  if (v.meaning.length) kids.push(details('What it means', true, v.meaning.slice(0, 3).map((m) => h('p', { class: 'sentence' }, m.sentence)), v.meaning.length > 3 && h('details', { class: 'more' }, h('summary', null, `${v.meaning.length - 3} more sentence${v.meaning.length - 3 === 1 ? '' : 's'}`), v.meaning.slice(3).map((m) => h('p', { class: 'sentence' }, m.sentence)))));
+  if (!o) {
+    kids.push(details(`What changes in the season (${c.departures.length})`, true,
+      groupDepartures(c.departures).map(({ first, more }) => h('div', { class: 'dep' }, h('span', { class: 'who' }, chipFor(first.id)), first.terminal ? [h('span', { class: 'term' }, `${first.frame}.${first.terminal}`), h('span', { class: 'b' }, fmtShort(first.from)), h('span', { class: 'ar' }, '→'), h('span', { class: 'a' }, fmtShort(first.to))] : h('span', { class: 'term' }, 'removed'), more > 0 && h('span', { class: 'mute' }, `and ${more} more ${first.frame}.${first.terminal} change${more === 1 ? '' : 's'} of the same kind, moved with it`))),
+      exp && h('p', { class: 'expect' }, h('b', null, 'Expected: '), exp)));
+    kids.push(details(`Linked results before → after (${v.deltaCount})`, !mobile(), deltaView(v)));
+    if (v.sentenceDelta.length && !v.meaning.length) kids.push(details('Sentences that changed', true, v.sentenceDelta.map((s) => h('p', { class: 'sentence' }, s.after.join(' ')))));
+  } else {
+    kids.push(details(`Where it is in the season (${v.entities.length} linked things)`, !mobile(), entBlock(v.entities)));
+  }
+  if (v.selected.length || c.kind === 'chained') kids.push(details(`How the frames chose (${v.selected.length || 'chain'})`, !mobile(), selectedView(c, v)));
+  kids.push(details(`Checks (${v.checks.filter((k) => k.ok).length} of ${v.checks.length} pass)`, !mobile(), h('div', { class: 'checks' }, v.checks.map((k) => h('div', { class: `check${k.ok ? '' : ' bad'}` }, h('span', { class: k.ok ? 'ok' : 'no' }, k.ok ? '✓' : '✗'), h('b', null, k.id), h('span', { class: 'ev' }, k.detail))))));
+  if (!o) kids.push(details(`Linked things this Case touches (${v.entities.length})`, false, entBlock(v.entities)));
+  $('#main').replaceChildren(h('div', { class: 'case' }, ...kids));
+}
+function groupDepartures(deps) {
+  const groups = new Map();
+  for (const d of deps) { const k = `${d.frame}.${d.terminal}`; if (!groups.has(k)) groups.set(k, { first: d, more: 0 }); else groups.get(k).more++; }
+  return [...groups.values()];
+}
+const entBlock = (ids, cap = 14) => { const box = h('div', { class: 'ents' }, ids.slice(0, cap).map((id) => chipFor(id))); if (ids.length > cap) box.append(h('button', { class: 'ent showall', onclick: (e) => { e.target.remove(); box.append(...ids.slice(cap).map((id) => chipFor(id))); } }, `show all ${ids.length}`)); return box; };
+function fmtShort(v) {
+  if (v === null || v === undefined) return 'none';
+  if (typeof v === 'object') return JSON.stringify(v).length > 60 ? `${JSON.stringify(v).slice(0, 57)}…` : JSON.stringify(v);
+  const s = String(v);
+  return W().get(s) ? label(s) : s.length > 50 ? `${s.slice(0, 47)}…` : s;
+}
+function selectedView(c, v) {
+  const rows = v.selected.map((n) => h('div', { class: 'sel' },
+    h('div', null, chipFor(n.instanceId), ' ', h('code', null, n.expectationId)),
+    h('div', { class: 'step' }, h('span', { class: 'lbl' }, 'expectation failed'), n.detail),
+    h('div', { class: 'step' }, h('span', { class: 'lbl' }, 'its mismatch string says'), h('code', null, n.mismatch), ' → ', h('b', null, n.action), n.alternateId && h('span', { class: 'mute' }, ` (${n.alternateId.split('~')[1]})`))));
+  if (c.kind === 'chained') {
+    const aid = c.entries[0]?.key;
+    const a = E().appearances.find((x) => x.id === aid);
+    if (a) {
+      const chain = state.run.E.chains[a.placementIds[0]] ?? [];
+      rows.unshift(h('div', { class: 'sel' }, h('div', { class: 'step' }, h('span', { class: 'lbl' }, 'chain'), chain.map((id, n) => [n ? ' → ' : '', h('b', null, E().alternates.find((x) => x.id === id).frame)])),
+        E().alternates.filter((x) => chain.includes(x.id)).map((alt) => h('div', { class: 'step' }, h('span', { class: 'lbl' }, alt.frame), `inherits ${FRAMES[alt.frame].inherits}; selected by ${alt.vias.join(', ')}; its own expectations may fail in turn`))));
     }
   }
+  return rows;
 }
 
-function selectCase(id) {
-  state.caseId = id; state.focus = null; state.tab = 0; state.view = 'cases';
-  syncTabs(); renderList(); renderMain();
-  $('#list').classList.remove('open'); updateToggle();
-  $('#main').scrollTop = 0; window.scrollTo(0, 0);
-}
-
-/* ---------------- case page ---------------- */
-function caseHead(c, v) {
-  return h('section', { class: 'case-head' },
-    h('div', { class: 'kicker' }, h('span', null, `Case ${c.id}`), h('span', null, KIND_LABEL[c.kind]), h('span', { class: `pill ${v.pass ? 'pass' : 'fail'}`, id: 'case-verdict' }, v.pass ? 'PASS' : 'FAIL'), h('span', null, `${v.checks.length} checks`)),
-    h('h1', null, c.title),
-    h('div', { class: 'departs' }, c.departures.length
-      ? c.departures.map((d) => h('span', { class: 'dep' }, d.terminal === null ? `${d.frame} ${short(d.instanceId)} removed` : `${short(d.instanceId)}.${d.terminal}  `, d.terminal === null ? null : [h('span', { class: 'arrow' }, fmtVal(d.from)), ' → ', fmtVal(d.to)]))
-      : h('span', { class: 'dep' }, 'no departures: every terminal at its default')));
-}
-
-function meaningBlock(c, v) {
-  return h('section', { class: 'meaning' },
-    h('div', { class: 'label' }, 'What this means for the creator or sponsor · generated from the linked data'),
-    v.meaning.map((m) => h('blockquote', null, m ?? '(no sentence produced)')));
-}
-
-function panelNode(p) {
-  const el = h('div', { class: 'panel' },
-    h('div', { class: 'who' }, p.creator.name, h('span', null, p.creator.handle)));
-  for (const v of p.videos) {
-    el.append(h('div', { class: 'video' },
-      h('h3', null, v.title, h('span', { class: 'tag' }, v.format === 'short' ? 'Short · vertical' : 'long'), v.retentionState !== 'ok' ? h('span', { class: 'tag' }, v.retentionState.replace('-', ' ')) : null),
-      h('div', { class: 'meta' }, h('span', null, `published ${prettyDate(v.publishedAt)}`), h('span', null, `${v.duration} s`), h('span', null, v.viewsText), h('span', null, `sponsor: ${v.sponsorText}`), v.bag ? h('span', null, `bag: ${v.bag.discs.join(', ')}`) : null),
-      v.discs.length ? v.discs.map((d) => h('div', { class: 'disc' },
-        h('div', { class: 'name' }, d.label, h('small', null, `${d.brand} · ${d.span} · ${d.seconds} s`)),
-        h('div', { class: `att${d.attention.value == null ? ' na' : ''}` }, d.attention.value == null ? d.attention.text : [fmt1(d.attention.value), h('small', null, 'attention-seconds')]),
-        h('div', { class: 'chips' }, d.chips.map((c) => h('span', { class: `chip ${c.kind}`, 'data-code': c.code }, c.text)), d.clicksCredited ? h('span', { class: 'chip' }, `${d.clicksCredited} click${d.clicksCredited === 1 ? '' : 's'} credited`) : null)))
-        : h('div', { class: 'notice' }, 'No card or marked appearance in this video.'),
-      v.issues.length ? h('ul', { class: 'issues' }, v.issues.map((i) => h('li', null, `data issue: ${i.text}`))) : null,
-      v.clicks.length ? h('ul', { class: 'clicklist' }, v.clicks.map((k) => h('li', null, h('span', { class: 'k' }, `${k.host} · ${k.country}${k.timestamp != null ? ` · @${mmss(k.timestamp)}` : ''}`), ` — ${k.text}`))) : null));
+/* ---------- Sponsors ---------- */
+function renderSponsors() {
+  const brands = sponsorView(W(), E(), state.run.M);
+  const quarters = [...new Set(brands.flatMap((b) => b.quarters.map((q) => q.quarter)))].sort();
+  const el = h('div', { class: 'page-pad' },
+    h('h1', null, 'Sponsors'),
+    h('p', { class: 'lead' }, 'Per manufacturer, per quarter, across creators. Every number lists the videos and discs behind it. Numbers are viewer-minutes on screen: viewers still watching, times minutes a disc was on screen, overlapping cards counted once. A quarter nothing could be measured for shows “not measurable”, never zero.'),
+    h('div', { class: 'filters inline' },
+      h('select', { id: 'brand', 'aria-label': 'Manufacturer', onchange: (e) => { state.brand = e.target.value; renderSponsors(); } }, h('option', { value: 'all' }, 'All manufacturers'), brands.map((b) => h('option', { value: b.manufacturerId ?? 'unknown', selected: state.brand === (b.manufacturerId ?? 'unknown') }, b.name))),
+      h('select', { id: 'quarter', 'aria-label': 'Quarter', onchange: (e) => { state.quarter = e.target.value; renderSponsors(); } }, h('option', { value: 'all' }, 'All quarters'), quarters.map((q) => h('option', { value: q, selected: state.quarter === q }, q)))));
+  for (const b of brands) {
+    if (state.brand !== 'all' && (b.manufacturerId ?? 'unknown') !== state.brand) continue;
+    const qs = b.quarters.filter((q) => state.quarter === 'all' || q.quarter === state.quarter);
+    if (!qs.length) continue;
+    el.append(h('section', { class: 'brandblock' },
+      h('h2', null, b.manufacturerId ? chipFor(b.manufacturerId, b.name) : b.name),
+      b.deals.length ? h('ul', { class: 'deals' }, b.deals.map((d) => h('li', null, h('b', null, d.creator), ` ${prettyDate(d.start)} – ${prettyDate(d.end)}, ${d.covers}`))) : h('p', { class: 'mute' }, b.manufacturerId ? 'No sponsor deal.' : ''),
+      qs.map((q) => [q.sponsor && rowView(b, q.quarter, q.sponsor), q.other && rowView(b, q.quarter, q.other)])));
   }
-  if (!p.videos.length) el.append(h('div', { class: 'notice' }, 'No videos for this creator.'));
-  if (p.sponsorRows.length) el.append(h('div', { class: 'sub-h' }, 'Sponsor exposure per quarter'), h('table', { class: 'mini' }, h('tbody', null, p.sponsorRows.map((r) => h('tr', null,
-    h('td', null, r.brand, r.kind === 'other' ? h('small', { class: 'cov' }, ` · not a sponsor (${r.reasons.join(', ')})`) : null), h('td', null, r.quarter), h('td', { class: 'num' }, r.kind === 'sponsor' ? r.minutesText : `${fmt2(r.minutes)} min, other brand`), h('td', { style: 'white-space:nowrap' }, r.creators > 1 ? `${r.creators} creators` : '1 creator'))))));
-  if (p.releaseRows.length) el.append(h('div', { class: 'sub-h' }, 'Release support'), h('table', { class: 'mini' }, h('tbody', null, p.releaseRows.flatMap((r) => r.items.map((i) => h('tr', null, h('td', null, `${r.dateText}${r.runLabel ? ` · ${r.runLabel}` : ''}`), h('td', null, i.title), h('td', { class: 'num' }, i.chip.text)))))));
-  if (p.moldRollups.length) el.append(h('div', { class: 'sub-h' }, 'Mold rollup'), h('table', { class: 'mini' }, h('tbody', null, p.moldRollups.map((m) => h('tr', null, h('td', null, `${m.moldName} · ${m.discCount} disc${m.discCount === 1 ? '' : 's'}`), h('td', { class: 'num' }, m.ownText), h('td', null, m.otherCreators ? `${m.otherCreators} other creator shares this mold` : ''))))));
-  for (const n of p.notices) el.append(h('div', { class: 'notice' }, n));
-  el.append(h('div', { class: 'foot' }, p.footnote));
-  return el;
+  $('#main').replaceChildren(el);
 }
-function panelSection(c, v) {
-  const ids = Object.keys(v.panels);
-  const tab = Math.min(state.tab, ids.length - 1);
-  const sec = h('section', { class: 'sec' }, h('h2', null, 'How the display renders it ', h('small', null, 'creator insight panel, built from the linked data')));
-  if (ids.length > 1) sec.append(h('div', { class: 'ptabs' }, ids.map((id, i) => h('button', { class: i === tab ? 'on' : '', onclick: () => { state.tab = i; renderMain(true); } }, v.panels[id].creator.name))));
-  sec.append(panelNode(v.panels[ids[tab]]));
-  return sec;
+function rowView(b, quarter, r) {
+  const sponsor = r.kind === 'sponsor';
+  const vmText = r.viewerMinutes == null ? h('span', { class: 'none' }, 'not measurable') : h('span', null, h('b', null, fmtAtt(r.viewerMinutes)), h('span', { class: 'un' }, ' viewer-minutes on screen'));
+  return h('div', { class: `qrow ${sponsor ? 'sp' : 'ot'}`, 'data-row': r.key },
+    h('div', { class: 'qh' }, h('span', { class: 'q' }, quarter), h('span', { class: `tag ${sponsor ? 'sp' : 'ot'}` }, sponsor ? 'As sponsor' : 'Not the sponsor'), vmText,
+      r.state === 'partial' && h('span', { class: 'tag part' }, 'some videos not measurable')),
+    h('div', { class: 'qc' }, r.creators.map((c) => h('span', { class: 'cr' }, chipFor(c.id, c.name), ' ', c.viewerMinutes == null ? h('i', { class: 'none' }, 'not measurable') : fmtAtt(c.viewerMinutes)))),
+    (r.byFormat.long != null && r.byFormat.short != null) && h('p', { class: 'mute' }, `${fmtAtt(r.byFormat.short)} from Shorts, ${fmtAtt(r.byFormat.long)} from long videos`),
+    r.reasons?.length ? h('p', { class: 'mute' }, `Why not sponsor exposure: ${r.reasons.join(', ')}`) : null,
+    h('details', { class: 'vids' }, h('summary', null, `${r.videos.length} video${r.videos.length === 1 ? '' : 's'} behind this number`),
+      h('div', { class: 'vlist' }, r.videos.map((v) => h('div', { class: 'vrow' },
+        h('div', { class: 'vt' }, chipFor(v.videoId, v.title), h('span', { class: 'mute' }, ` ${v.creator} · ${v.format} · ${prettyDate(v.publishDay)} · ${fmtInt(v.views)} views`)),
+        h('div', { class: 'vn' }, v.viewerMinutes == null ? h('i', { class: 'none' }, 'not measurable') : [h('b', null, fmtAtt(v.viewerMinutes)), h('span', { class: 'un' }, ` viewer-minutes · ${v.onScreenSeconds} s on screen`)]),
+        h('div', { class: 'vd mute' }, v.discs.join(' · ')))))));
 }
 
-/* ---------------- links ---------------- */
-const COLS = [
-  { name: 'who and deals', frames: ['Creator', 'Channel', 'Shelf', 'Bag', 'SponsorDeal'] },
-  { name: 'video', frames: ['Video', 'RetentionCurve'] },
-  { name: 'on screen', frames: ['CardPlacement', 'Appearance'] },
-  { name: 'links', frames: ['Link', 'Click'] },
-  { name: 'disc', frames: ['Disc'] },
-  { name: 'catalog', frames: ['Mold', 'Manufacturer', 'Release'] },
-  { name: 'selected by mismatch', frames: ['*'] },
-];
-function colOf(info) {
-  if (info.alt || info.frame === 'ProvisionalMold') return info.frame === 'ProvisionalMold' ? 5 : 6;
-  const i = COLS.findIndex((c) => c.frames.includes(info.frame));
-  return i < 0 ? 6 : i;
+/* ---------- Links (walk the graph) ---------- */
+function entityList() {
+  const G = state.run.G, q = state.entQ.trim().toLowerCase();
+  const all = [...G.nodes.values()];
+  const frames = [...new Set(all.map((n) => n.frame))].sort();
+  const match = all.filter((n) => (state.entFrame === 'all' || n.frame === state.entFrame) && (!q || `${n.label} ${n.id}`.toLowerCase().includes(q)));
+  return { frames, match, total: all.length };
 }
-function linkSection(c) {
-  const E = state.run.enriched[c.id];
-  const ids = [...new Set(E.edges.flatMap((e) => [e.from, e.to]))];
-  const infos = Object.fromEntries(ids.map((id) => [id, nodeInfo(c, id)]));
-  if (!state.focus || !infos[state.focus]) state.focus = E.appearances[0]?.id ?? ids[0];
-  const focus = state.focus;
-  const near = new Set(E.edges.filter((e) => e.from === focus || e.to === focus).flatMap((e) => [e.from, e.to]));
-  const W_ = 142, GAP = 24, ROW = 27, TOP = 26;
-  const cols = COLS.map(() => []);
-  for (const id of ids) cols[colOf(infos[id])].push(id);
-  const order = (id) => { const f = infos[id].frame; return Object.keys(FRAMES).indexOf(f) * 1000 + (infos[id].merged ? 500 : 0); };
-  cols.forEach((col) => col.sort((a, b) => order(a) - order(b) || a.localeCompare(b)));
-  const pos = {};
-  cols.forEach((col, ci) => col.forEach((id, ri) => { pos[id] = { x: ci * (W_ + GAP), y: TOP + ri * ROW }; }));
-  const usedCols = cols.map((col, i) => (col.length ? i : -1)).filter((i) => i >= 0);
-  const width = COLS.length * (W_ + GAP) - GAP, height = TOP + Math.max(...cols.map((c2) => c2.length)) * ROW + 6;
-  const svg = sv('svg', { class: `graph${focus ? ' has-focus' : ''}`, viewBox: `0 0 ${width} ${height}`, role: 'group', 'aria-label': 'Cross-links of this Case' });
-  usedCols.forEach((ci) => svg.append(sv('text', { class: 'colhead', x: ci * (W_ + GAP), y: 12 }, COLS[ci].name)));
-  for (const e of E.edges) {
-    const a = pos[e.from], b = pos[e.to];
-    if (!a || !b) continue;
-    const fwd = a.x < b.x, same = a.x === b.x;
-    const x1 = same ? a.x + W_ : fwd ? a.x + W_ : a.x, x2 = same ? b.x + W_ : fwd ? b.x : b.x + W_, y1 = a.y + 10, y2 = b.y + 10;
-    const dx = same ? 40 : (x2 - x1) / 2;
-    const path = same ? `M${x1} ${y1} C${x1 + dx} ${y1} ${x2 + dx} ${y2} ${x2} ${y2}` : `M${x1} ${y1} C${x1 + dx} ${y1} ${x2 - dx} ${y2} ${x2} ${y2}`;
-    const hot = e.from === focus || e.to === focus;
-    svg.append(sv('path', { class: `edge${hot ? ' hot' : ''}`, d: path }, sv('title', null, `${infos[e.from].label} —${e.rel}→ ${infos[e.to].label}`)));
-  }
-  for (const id of ids) {
-    const p = pos[id], lab = infos[id].label;
-    const g = sv('g', { class: `node${id === focus ? ' focus' : near.has(id) ? ' near' : ''}`, transform: `translate(${p.x} ${p.y})`, tabindex: 0, role: 'button', 'aria-label': lab, 'data-node': id },
-      sv('rect', { width: W_, height: 20, rx: 2 }), sv('text', { x: 6, y: 14 }, lab.length > 24 ? `${lab.slice(0, 23)}…` : lab), sv('title', null, `${infos[id].frame}: ${lab}`));
-    g.addEventListener('click', () => { state.focus = id; renderMain(true); });
-    g.addEventListener('keydown', (ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); state.focus = id; renderMain(true); } });
+function relPhrase(rel) { return rel.replace(/([A-Z])/g, ' $1').toLowerCase(); }
+function renderLinks() {
+  const G = state.run.G;
+  const { frames, match, total } = entityList();
+  const left = h('div', { class: 'elist' },
+    h('div', { class: 'filters inline' },
+      h('input', { type: 'search', id: 'eq', placeholder: 'Search everything', 'aria-label': 'Search entities', value: state.entQ, oninput: (e) => { state.entQ = e.target.value; renderLinks(); $('#eq').focus(); const x = $('#eq'); x.setSelectionRange(x.value.length, x.value.length); } }),
+      h('select', { id: 'ef', 'aria-label': 'Kind of thing', onchange: (e) => { state.entFrame = e.target.value; renderLinks(); } }, h('option', { value: 'all' }, `All kinds (${total})`), frames.map((f) => h('option', { value: f, selected: state.entFrame === f }, `${f} (${[...G.nodes.values()].filter((n) => n.frame === f).length})`)))),
+    h('div', { class: 'count' }, `${match.length} shown${match.length > 120 ? ', first 120' : ''}`),
+    h('div', { class: 'eitems' }, match.slice(0, 120).map((n) => h('button', { class: 'eitem', 'aria-current': n.id === state.entityId ? 'true' : 'false', onclick: () => goEntity(n.id) }, h('span', { class: 'fr' }, n.frame), h('span', { class: 'lb' }, n.label)))));
+  const right = h('div', { class: 'edetail' }, state.entityId && G.nodes.has(state.entityId) ? entityDetail(state.entityId) : h('div', { class: 'empty' }, h('h2', null, 'Walk the links'), h('p', { class: 'lead' }, 'Pick anything: a creator, a disc, a video, a sponsor deal, a click. You see everything linked to it, and every linked thing is a button, so you can keep walking. The dataset is one connected world, so every thing reaches every other.'),
+    h('div', { class: 'ents' }, ['creator:maren', 'mold:comet', 'maker:halcyon', 'video:maren-03', 'deal:tavi-halcyon'].filter((id) => G.nodes.has(id)).map((id) => chipFor(id)))));
+  $('#main').replaceChildren(h('div', { class: 'links' }, left, right));
+}
+function entityDetail(id) {
+  const G = state.run.G, n = G.nodes.get(id), inst = W().get(id);
+  const out = (G.out.get(id) ?? []), inn = (G.inn.get(id) ?? []);
+  const group = (edges, pick) => { const m = {}; for (const e of edges) (m[e.rel] ??= []).push(pick(e)); return m; };
+  const outG = group(out, (e) => e.to), inG = group(inn, (e) => e.from);
+  const cases = state.world.cases.filter((c) => verdictOf(c.id).entities.includes(id)).map((c) => c.id);
+  const facts = (state.run.facts ?? []).filter((f) => [f.discId, f.videoId, f.appearanceId, f.clickId, f.creatorId, f.linkId, f.manufacturerId, f.moldId, f.rowKey].includes(id)).slice(0, 5);
+  const relBlock = (title, g, dir) => Object.keys(g).length ? h('div', { class: 'rels' }, h('h3', null, title), Object.entries(g).map(([rel, ids]) => h('div', { class: 'rel' }, h('span', { class: 'rl' }, dir === 'out' ? relPhrase(rel) : `${relPhrase(rel)} (from)`, h('span', { class: 'n' }, ids.length)), h('div', { class: 'ents' }, [...new Set(ids)].slice(0, 40).map((x) => chipFor(x)), ids.length > 40 && h('span', { class: 'mute' }, `…${ids.length - 40} more`))))) : null;
+  return h('div', { class: 'ent-detail' },
+    state.trail.length ? h('button', { class: 'back', onclick: () => { state.entityId = state.trail.pop(); renderAll(); } }, `← back to ${label(state.trail[state.trail.length - 1] ?? state.entityId)}`.replace(/^← back to .*/, '← back')) : null,
+    h('div', { class: 'kicker' }, h('span', null, n.frame), h('span', { class: 'mono' }, id)),
+    h('h1', null, n.label),
+    neighbourhood(id),
+    inst && h('div', { class: 'terms' }, h('h3', null, 'Terminals'), Object.entries(inst.t).filter(([k]) => k !== 'fractions').map(([k, v]) => h('div', { class: 'term' }, h('span', { class: 'tn' }, k), h('span', { class: 'tv' }, termValue(v))), ), inst.t.fractions && h('div', { class: 'term' }, h('span', { class: 'tn' }, 'fractions'), h('span', { class: 'tv mute' }, `${inst.t.fractions.length} points, derived`))),
+    relBlock('Points at', outG, 'out'), relBlock('Pointed at by', inG, 'in'),
+    facts.length ? h('div', { class: 'facts' }, h('h3', null, 'What the data says about it'), facts.map((f) => h('p', { class: 'sentence' }, f.sentence))) : null,
+    h('div', { class: 'incases' }, h('h3', null, `In ${cases.length} Case${cases.length === 1 ? '' : 's'}`), h('div', { class: 'ents' }, cases.slice(0, 40).map((cid) => h('button', { class: 'ent case', onclick: () => goCase(cid) }, `${cid} ${caseOf(cid).title.slice(0, 48)}`)), cases.length > 40 && h('span', { class: 'mute' }, `…${cases.length - 40} more`))));
+}
+function termValue(v) {
+  if (Array.isArray(v)) return h('span', null, v.length ? v.slice(0, 12).map((x, n) => [n ? ', ' : '', typeof x === 'string' && state.run.G.nodes.has(x) ? chipFor(x) : typeof x === 'object' ? JSON.stringify(x) : String(x)]) : 'none', v.length > 12 && ` …${v.length - 12} more`);
+  if (typeof v === 'string' && state.run.G.nodes.has(v)) return chipFor(v);
+  if (v === null) return h('i', { class: 'none' }, 'none');
+  if (typeof v === 'object') return JSON.stringify(v);
+  return String(v);
+}
+function neighbourhood(id) {
+  const G = state.run.G, ns = G.neighbors(id);
+  const seen = new Map();
+  for (const x of ns) if (!seen.has(x.id)) seen.set(x.id, x);
+  const list = [...seen.values()].slice(0, 22);
+  if (!list.length) return null;
+  const S = 360, cx = S / 2, cy = S / 2, R = 128;
+  const svg = sv('svg', { viewBox: `0 0 ${S} ${S}`, class: 'nb', role: 'img', 'aria-label': `Neighbours of ${label(id)}` });
+  list.forEach((x, k) => {
+    const a = (k / list.length) * Math.PI * 2 - Math.PI / 2, px = cx + R * Math.cos(a), py = cy + R * Math.sin(a);
+    svg.append(sv('line', { x1: cx, y1: cy, x2: px, y2: py, class: x.dir === 'out' ? 'eo' : 'ei' }));
+  });
+  list.forEach((x, k) => {
+    const a = (k / list.length) * Math.PI * 2 - Math.PI / 2, px = cx + R * Math.cos(a), py = cy + R * Math.sin(a);
+    const lb = G.nodes.get(x.id)?.label ?? x.id, t = lb.length > 20 ? `${lb.slice(0, 19)}…` : lb;
+    const g = sv('g', { class: 'nd', tabindex: 0, role: 'button', 'aria-label': lb }, sv('circle', { cx: px, cy: py, r: 5 }), sv('text', { x: px + (Math.cos(a) >= 0 ? 8 : -8), y: py + 3, 'text-anchor': Math.cos(a) >= 0 ? 'start' : 'end' }, t));
+    g.addEventListener('click', () => goEntity(x.id));
+    g.addEventListener('keydown', (e) => { if (e.key === 'Enter') goEntity(x.id); });
     svg.append(g);
-  }
-  const outs = E.edges.filter((e) => e.from === focus), ins = E.edges.filter((e) => e.to === focus);
-  const li = (e, other, dir) => h('li', null, h('span', { class: 'rel' }, dir === 'out' ? `${e.rel} →` : `← ${e.rel}`), h('button', { onclick: () => { state.focus = other; renderMain(true); } }, infos[other].label), h('small', { class: 'cov' }, ` ${infos[other].frame}`));
-  const fi = infos[focus];
-  const card = h('div', { class: 'focuscard', id: 'focus-card' },
-    h('div', { class: 'fr' }, fi.frame + (fi.merged ? ' (merged from cards and marks)' : '')), h('h3', null, fi.label),
-    h('div', { class: 'rels' }, h('div', null, h('h4', null, `links out (${outs.length})`), h('ul', null, outs.map((e) => li(e, e.to, 'out')))), h('div', null, h('h4', null, `links in (${ins.length})`), h('ul', null, ins.map((e) => li(e, e.from, 'in'))))));
-  return h('section', { class: 'sec' }, h('h2', null, 'Linked data ', h('small', null, `${ids.length} things, ${E.edges.length} links · click any node or name to follow the links`)), h('div', { class: 'graph-wrap' }, svg), card);
+  });
+  svg.append(sv('circle', { cx, cy, r: 8, class: 'me' }));
+  return h('div', { class: 'nbwrap' }, svg, h('p', { class: 'mute' }, `${ns.length} direct links${ns.length > list.length ? `, ${list.length} drawn` : ''}. Click a dot to walk to it.`));
 }
 
-/* ---------------- frames of the case ---------------- */
-function framesSection(c) {
-  const W = state.Ws[c.id], E = state.run.enriched[c.id];
-  const dep = (id, term) => c.departures.find((d) => d.instanceId === id && d.terminal === term);
-  const order = Object.keys(FRAMES);
-  const groups = order.map((f) => ({ f, list: [...W.instances.filter((i) => i.frame === f), ...E.alternates.filter((a) => a.frame === f)] })).filter((g) => g.list.length);
-  const card = (i) => {
-    const frame = FRAMES[i.frame];
-    const rows = Object.keys(frame.terminals).map((name) => ({ name, how: i.how[name] ?? 'default', v: i.t[name], d: dep(i.id, name) }));
-    const n = (k) => rows.filter((r) => r.how === k).length;
-    return h('div', { class: 'inst', id: `inst-${i.id}` },
-      h('h4', null, h('span', { class: 'fr' }, i.frame), h('button', { onclick: () => { state.focus = i.id; renderMain(true); document.getElementById('focus-card')?.scrollIntoView({ block: 'center' }); } }, short(i.id))),
-      h('div', { class: 'sum' }, `${n('default')} default · ${n('given')} filled · ${n('wired')} wired · ${n('derived')} derived · ${n('departed')} departed`),
-      h('table', { class: 'terms' }, h('tbody', null, rows.map((r) => h('tr', { class: r.how }, h('td', { class: 'n' }, r.name), h('td', { class: 'v' }, fmtVal(r.v), r.d ? h('span', { class: 'was' }, `was ${fmtVal(r.d.from)} (default ${fmtVal(r.d.default)})`) : null), h('td', { class: 's' }, r.how === 'given' ? 'filled' : r.how))))));
-  };
-  return h('section', { class: 'sec' }, h('h2', null, 'Frames in this Case ', h('small', null, `${W.instances.length} instances, ${E.alternates.length} alternate-frame instances selected by mismatches`)),
-    h('div', { class: 'legend' }, h('span', null, h('i', null, 'default'), ' the frame\'s default assignment'), h('span', null, h('i', { style: 'color:var(--blue)' }, 'filled'), ' set by the scene'), h('span', null, h('i', { style: 'color:var(--teal)' }, 'wired'), ' a reference to another frame'), h('span', null, h('i', { style: 'color:var(--violet)' }, 'derived'), ' computed from other terminals'), h('span', null, h('i', { style: 'color:var(--amber)' }, 'departed'), ' deliberately varied away from the default')),
-    h('div', { class: 'frames' }, groups.flatMap((g) => g.list.map(card))));
-}
-
-function mismatchSection(c) {
-  const E = state.run.enriched[c.id];
-  const exp = {};
-  for (const e of E.violations) exp[`${e.instanceId}#${e.expectationId}`] = e;
-  const section = h('section', { class: 'sec' }, h('h2', null, 'Expectations that were violated ', h('small', null, 'each mismatch selects an alternate frame or a transformation')));
-  if (!E.transformations.length) { section.append(h('div', { class: 'rows' }, h('div', { class: 'row' }, h('div', { class: 'l' }, 'No expectation was violated.'), h('div', { class: 'r' }, 'Every filler met its terminal\'s expectations.')))); return section; }
-  section.append(h('div', { class: 'rows' }, E.transformations.map((t) => {
-    const v = exp[`${t.instanceId}#${t.expectationId}`];
-    return h('div', { class: 'row' }, h('div', { class: 'l' }, h('code', null, `${v?.frame ?? ''}.${v?.terminal ?? ''} › ${t.expectationId}`), h('small', { class: 'cov', style: 'display:block' }, `${short(t.instanceId)}: ${v?.text ?? ''}`)),
-      h('div', { class: 'r' }, t.action, h('small', null, t.detail)));
-  })));
-  return section;
-}
-
-function valuesOf(c) {
-  const E = state.run.enriched[c.id], M = state.run.metrics[c.id], W = state.Ws[c.id];
-  const out = [];
-  for (const a of E.appearances) {
-    const at = M.attention.attention[a.id], v = E.videos[a.videoId];
-    out.push({ label: `attention-seconds · ${discLabel(E, a.discId)} in “${v.title}”`, num: at.value == null ? null : fmt1(at.value), na: at.value == null ? (at.state === 'awaiting-views' ? 'not measurable yet (no views)' : 'unavailable (Studio not connected)') : null,
-      formula: at.value == null ? 'null, never a silent zero' : `${fmtInt(at.views)} views × Σ retention over ${at.seconds} s (${at.retentionSum.toFixed(4)})`, receipt: at.receipt });
-    const d = M.dips.dips[a.id];
-    if (d) out.push({ label: `retention inside vs around · ${discLabel(E, a.discId)}`, num: `${d.windowMean.toFixed(3)} vs ${d.surroundMean.toFixed(3)}`, formula: d.dipped ? `dip of ${d.drop.toFixed(3)} (threshold 0.05)` : `no dip (drop ${d.drop.toFixed(3)}, threshold 0.05)`, receipt: d.receipt });
-  }
-  for (const r of M.releases.releases) for (const x of r.videos) out.push({ label: `release offset · ${discLabel(E, E.appearances.find((a) => a.id === x.appearanceId).discId)}`, num: x.precision === 'month' ? `${x.offsetMin} to ${x.offsetMax} d` : `${x.offsetDays > 0 ? '+' : ''}${x.offsetDays} d`, formula: `${x.class}; published ${prettyDate(x.publishedAt)} minus release ${r.precision === 'month' ? r.date : prettyDate(r.date)} (calendar days; no capability needed)`, receipt: null });
-  for (const [id, m] of Object.entries(M.attention.byMold)) if (m.discIds.length > 1 || m.creators.length > 1) out.push({ label: `mold rollup · ${E.discs[m.discIds[0]].moldName}`, num: fmt1(m.value), formula: `statistics.sum over ${m.discIds.length} discs, ${m.creators.length} creator${m.creators.length > 1 ? 's' : ''}`, receipt: m.receipt });
-  for (const [id, d] of Object.entries(M.attention.byDisc)) if (d.videoIds.length > 1) out.push({ label: `disc total · ${discLabel(E, id)}`, num: fmt1(d.value), formula: `statistics.sum over ${d.videoIds.length} videos`, receipt: d.receipt });
-  for (const r of M.exposure.rows) out.push({ label: `${r.kind === 'sponsor' ? 'sponsor' : 'other brand'} exposure · ${r.brand} · ${r.quarter}`, num: `${fmt2(r.minutes)} min`, formula: r.entries.map((e) => `${fmt1(e.unionAttention)} union attention-seconds / 60${e.sumAttention - e.unionAttention > 1e-9 ? ` (cards summed separately: ${fmt1(e.sumAttention)})` : ''}`).join(' + ') || 'no measurable video', receipt: r.receipt });
-  for (const [k, p] of Object.entries(M.clicks.perThousand)) out.push({ label: `credited clicks per 1,000 attention-seconds · ${short(k.split('@')[0])}`, num: fmt2(p.value), formula: `${p.clicks} credited click${p.clicks === 1 ? '' : 's'} / ${fmt1(p.attention)} attention-seconds × 1000 (clicks, not people or sales)`, receipt: p.receipt });
-  return out;
-}
-function valuesSection(c) {
-  const vals = valuesOf(c);
-  return h('section', { class: 'sec' }, h('h2', null, 'Computed values ', h('small', null, 'every number comes from a registered capability; the receipt shows which and its hashes')),
-    h('div', { class: 'rows' }, vals.map((v) => h('div', { class: 'val' }, h('div', { class: 'l' }, v.label), h('div', { class: `n${v.num == null ? ' na' : ''}` }, v.num ?? v.na),
-      h('div', { class: 'rc' }, v.receipt ? [h('b', null, receiptText(v.receipt)), ` · in ${v.receipt.inputHash.slice(0, 8)} → out ${v.receipt.resultHash.slice(0, 8)}`] : 'no receipt (date arithmetic or null)'), h('div', { class: 'f' }, v.formula)))));
-}
-function checksSection(c, v) {
-  return h('section', { class: 'sec' }, h('h2', null, 'Executable expectation ', h('small', null, `${v.checks.filter((k) => k.pass).length} of ${v.checks.length} checks pass · expected values come from an independent oracle over the raw instances`)),
-    h('div', { class: 'rows' }, v.checks.map((k) => h('div', { class: `check${k.pass ? '' : ' bad'}` }, h('span', { class: k.pass ? 'ok' : 'no' }, k.pass ? '✓' : '✗'), h('span', null, k.label), h('span', { class: 'ev' }, k.pass ? `= ${JSON.stringify(k.actual)}` : `expected ${JSON.stringify(k.expected)}, got ${JSON.stringify(k.actual)}`)))));
-}
-
-function renderCase() {
-  const c = caseOf(state.caseId), v = state.run.verdicts[c.id];
-  const main = $('#main');
-  main.replaceChildren(caseHead(c, v), meaningBlock(c, v), h('div', { class: 'two' }, panelSection(c, v), valuesSection(c)), linkSection(c), framesSection(c), mismatchSection(c), checksSection(c, v));
-}
-
-/* ---------------- frames view ---------------- */
+/* ---------- Frames ---------- */
 function renderFrames() {
-  const cov = {};
-  for (const key of Object.keys(DEPARTURES)) cov[key] = DEPARTURES[key].length;
-  const sys = frameSystem();
-  const main = $('#main');
+  const sys = frameSystem(), audit = Object.fromEntries(state.results.audit.map((a) => [a.terminal, a]));
   const el = h('div', { class: 'page-pad' }, h('h1', null, 'Frames'),
-    h('p', { class: 'lead' }, `${sys.nodes.filter((n) => n.role === 'input').length} input frames and ${sys.nodes.filter((n) => n.role === 'alternate').length} alternate frames, ${sys.nodes.reduce((s, n) => s + n.terminals, 0)} terminals, ${sys.edges.length} reference terminals that link frames into a frame system. Each terminal has a type, a default and expectations; a violated expectation selects an alternate frame or a transformation. Cases are made by varying terminals away from their defaults.`));
+    h('p', { class: 'lead' }, `${sys.nodes.filter((n) => n.role === 'input').length} input frames, 1 abstract parent, ${sys.nodes.filter((n) => n.role === 'alternate').length} alternate frames. A terminal is a slot with a type, a default and expectations. A soft expectation names (its “mismatch” string) what to do when it fails: instantiate an alternate frame from the failing instance's terminals, or call a named transformation. Alternates inherit their parent frame and carry expectations of their own, so one failure can lead to the next frame (a chain).`));
   for (const [id, f] of Object.entries(FRAMES)) {
-    el.append(h('div', { class: 'frame-def', id: `frame-${id}` }, h('h3', null, id, h('span', { class: 'role' }, f.role === 'alternate' ? `alternate frame · selected by ${f.selectedBy}` : 'input frame')), h('p', null, f.description),
-      h('table', { class: 'defs' }, h('thead', null, h('tr', null, ['terminal', 'type', 'default', 'expectations → on mismatch', 'Cases'].map((x) => h('th', null, x)))),
-        h('tbody', null, Object.entries(f.terminals).map(([name, t]) => h('tr', null, h('td', { class: 't' }, name), h('td', null, t.type), h('td', null, t.derive ? 'derived' : fmtVal(typeof t.default === 'function' ? t.default() : t.default)),
-          h('td', null, t.expect.length ? t.expect.map((e) => h('span', { class: 'exp' }, h('i', null, e.id), ` ${e.text} `, e.mismatch ? h('span', { class: 'mm' }, `→ ${e.mismatch}`) : h('span', { class: 'hard' }, '(hard: never violated)'))) : h('span', { class: 'cov' }, '—')),
-          h('td', { class: 'cov' }, cov[`${id}.${name}`] ? h('b', null, `${cov[`${id}.${name}`]} departure${cov[`${id}.${name}`] > 1 ? 's' : ''}`) : '—')))))));
+    const terms = Object.entries(effectiveTerminals(id));
+    el.append(h('details', { class: 'frame-def', id: `frame-${id}` }, h('summary', null, h('b', null, id), h('span', { class: 'role' }, f.role === 'alternate' ? `alternate of ${f.inherits}` : f.role === 'abstract' ? 'abstract parent' : f.inherits ? `input, inherits ${f.inherits}` : 'input'), h('span', { class: 'mute' }, ` ${terms.length} terminals`)),
+      h('p', null, f.description),
+      h('div', { class: 'tdefs' }, terms.map(([name, t]) => {
+        const exps = effectiveExpect(id, name), a = audit[`${id}.${name}`];
+        return h('div', { class: 'tdef' }, h('div', { class: 'th' }, h('b', null, name), h('code', null, t.type), t.derive && h('span', { class: 'tag' }, 'derived'), a && (a.cases ? h('span', { class: 'tag ok' }, `${a.cases} Case${a.cases > 1 ? 's' : ''}`) : a.skip ? h('span', { class: 'tag', title: a.skip }, 'no Case: see Pipeline') : null)),
+          exps.length ? exps.map((e) => h('div', { class: 'exp' }, h('i', null, e.id), ` ${e.text} `, e.mismatch ? h('span', { class: 'mm' }, `→ ${e.mismatch}`) : h('span', { class: 'hard' }, '(hard: the world must not break it)'))) : null);
+      }))));
   }
-  main.replaceChildren(el);
-}
-
-/* ---------------- pipeline view ---------------- */
-function renderPipeline() {
-  const r = state.run, cases = r.world.cases;
-  const byKind = KIND_ORDER.map((k) => [k, cases.filter((c) => c.kind === k).length]).filter(([, n]) => n);
-  const seedInput = h('input', { type: 'number', id: 'seed', value: state.seed, 'aria-label': 'seed', style: 'background:var(--bg2);color:var(--ink);border:1px solid var(--rule);padding:4px 8px;width:140px;font:inherit' });
-  const el = h('div', { class: 'page-pad' }, h('h1', null, 'Pipeline'),
-    h('p', { class: 'lead' }, `Generation, linking and every metric are registered Calculations run through the witness runner; numbers come from ${r.capabilityCount} registered capabilities (Capability Lab statistics, thro.ratio, and two thro-go capabilities). The same seed always gives the same bytes. Change the seed to generate a different world: every Case is checked again.`),
-    h('div', { style: 'display:flex;gap:10px;align-items:center;margin:0 0 22px;flex-wrap:wrap' }, h('label', { for: 'seed', class: 'cov' }, 'seed'), seedInput,
-      h('button', { class: 'pill pass', id: 'run-seed', onclick: () => { load(Number(seedInput.value) || DEFAULT_SEED); updateStatus(); renderAll(); } }, 'RUN SEED'), h('span', { class: 'cov' }, state.worldMatch == null ? '' : state.worldMatch)),
-    h('div', { class: 'sub-h' }, `${cases.length} Cases by kind`), h('table', { class: 'mini' }, h('tbody', null, byKind.map(([k, n]) => h('tr', null, h('td', null, KIND_LABEL[k]), h('td', { class: 'num' }, n))))),
-    h('div', { class: 'sub-h', style: 'margin-top:22px' }, 'Registered Calculations'),
-    r.reports.map((rep) => h('div', { class: 'calc' }, h('h3', null, rep.calculationId, h('span', { class: `pill ${rep.status === 'PASS' ? 'pass' : 'fail'}` }, rep.status), h('span', { class: 'cov' }, `${rep.corpusSize} items`)), h('p', null, rep.description),
-      h('ul', null, rep.guarantees.map((g) => h('li', { class: g.passed ? '' : 'f' }, h('b', null, g.passed ? '✓' : '✗'), `${g.description} `, h('span', { class: 'cov' }, `${g.passCount}/${g.totalCount}`)))))));
   $('#main').replaceChildren(el);
 }
 
-/* ---------------- shell ---------------- */
-function renderMain(keepScroll) {
-  const main = $('#main'), top = main.scrollTop, wtop = window.scrollY;
-  if (state.view === 'frames') renderFrames(); else if (state.view === 'pipeline') renderPipeline(); else renderCase();
-  if (keepScroll) { main.scrollTop = top; window.scrollTo(0, wtop); }
+/* ---------- Pipeline ---------- */
+function renderPipeline() {
+  const r = state.results, g = r.graph, s = state.smoke;
+  const row = (name, a, b) => h('tr', null, h('td', null, name), h('td', { class: 'num' }, a), h('td', { class: 'num' }, b));
+  const kinds = Object.entries(r.kinds);
+  const el = h('div', { class: 'page-pad' }, h('h1', null, 'Pipeline'),
+    h('div', { class: `smoke ${s?.ok ? 'ok' : 'bad'}` }, h('b', null, 'Smoke check in this page: '), s?.ok ? `this page re-ran the real analysis on the season (${s.ms} ms) and got the same linked results as the stored build (digest ${s.digest}).` : `this page's re-run did NOT match the stored build (${s?.digest} vs ${r.baseProjectionDigest}).`,
+      h('br'), 'It uses the same code as the build, so it cannot catch a bug in that code. The verification is the build: `node --test` and an independent oracle that imports none of this code.'),
+    h('h2', null, 'How cross-linked is the dataset'),
+    h('table', { class: 'mini' }, h('thead', null, h('tr', null, h('th', null, ''), h('th', null, 'Round 1'), h('th', null, 'Now'))), h('tbody', null,
+      row('Things (nodes)', g.before.nodes, g.after.nodes), row('References (edges)', g.before.edges, g.after.edges), row('Connected components', g.before.components, g.after.components),
+      row('Average references per thing', g.before.avgDegree, `${g.after.avgDegree} (${g.after.avgDegreeNonClick} without ${g.after.clicks} click leaves)`),
+      row('Reference edges between Cases', g.before.crossCaseEdges, '(Cases share things instead)'), row('Case pairs sharing a disc, video, mold, release, deal, bag, link or click', 0, g.after.crossCaseEdges),
+      row('Things in more than one Case', g.before.entitiesInMoreThanOneCase, g.after.entitiesInMoreThanOneCase), row('Case network components', 'n/a (47 islands)', g.after.caseComponents), row('Sponsor rows adding up several creators', 0, g.rollups.sponsorRowsWithManyCreators), row('Molds with several creators', 1, g.rollups.moldsWithManyCreators))),
+    h('p', { class: 'mute' }, 'Round 1 numbers are the Critic\'s measurement of the old data (47 disconnected fragments).'),
+    h('h2', null, `${state.world.cases.length} Cases by kind`),
+    h('table', { class: 'mini' }, h('tbody', null, kinds.map(([k, n]) => h('tr', null, h('td', null, KIND_LABEL[k]), h('td', { class: 'num' }, n))))),
+    h('h2', null, 'Registered Calculations (build)'),
+    r.reports.map((rep) => h('details', { class: 'calc' }, h('summary', null, h('b', null, rep.calculationId), h('span', { class: `pill ${rep.status === 'PASS' ? 'pass' : 'fail'}` }, rep.status), h('span', { class: 'mute' }, ` ${rep.corpusSize} item${rep.corpusSize === 1 ? '' : 's'}, ${rep.guarantees.length} guarantees`)),
+      h('p', null, rep.description), h('ul', null, rep.guarantees.map((x) => h('li', { class: x.passed ? '' : 'f' }, h('b', null, x.passed ? '✓ ' : '✗ '), x.description, h('span', { class: 'mute' }, ` ${x.passCount}/${x.totalCount}`)))))),
+    r.mutants && h('div', null, h('h2', null, 'Mutation test'), h('p', { class: 'lead' }, `${r.mutants.summary.killed} of ${r.mutants.summary.applied} injected bugs were caught by the tests${r.mutants.summary.survived.length ? `; survived: ${r.mutants.summary.survived.join(', ')}` : ''}.`),
+      h('details', { class: 'calc' }, h('summary', null, 'The bugs'), h('ul', null, r.mutants.results.map((m) => h('li', null, h('b', null, m.killed ? '✓ ' : m.applied ? '✗ ' : '– '), m.name, h('span', { class: 'mute' }, m.applied ? ` ${m.failedCount} failing test${m.failedCount === 1 ? '' : 's'}` : ` not applied: ${m.note}`)))))),
+    h('h2', null, 'Terminals with no Case, and why'),
+    h('ul', { class: 'plain' }, r.audit.filter((a) => a.skip).map((a) => h('li', null, h('code', null, a.terminal), ` ${a.skip}`))),
+    r.rejected.length ? h('div', null, h('h2', null, 'Derived situations that could not be made'), h('ul', { class: 'plain' }, r.rejected.map((x) => h('li', null, h('code', null, x.slug ?? x.slot.split('|').slice(0, 2).join(' ')), ` ${x.reason}`)))) : null);
+  $('#main').replaceChildren(el);
 }
+
+/* ---------- shell ---------- */
 function syncTabs() {
   document.querySelectorAll('#tabs button').forEach((b) => b.classList.toggle('on', b.dataset.view === state.view));
-  $('#shell').classList.toggle('nolist', state.view !== 'cases');
-}
-function updateToggle() {
-  const t = $('#mobile-toggle');
-  if (t) t.innerHTML = `<span>Cases</span><b>${state.caseId} ▾</b>`;
+  $('#shell').dataset.view = state.view;
 }
 function updateStatus() {
-  const r = state.run, pass = Object.values(r.verdicts).filter((v) => v.pass).length, total = r.world.cases.length;
-  const calcs = r.reports.filter((x) => x.status === 'PASS').length;
-  const ok = pass === total && calcs === r.reports.length;
-  $('#status').innerHTML = `<b class="${ok ? '' : 'bad'}" id="summary">${pass} / ${total} Cases PASS</b> · ${calcs} / ${r.reports.length} Calculations PASS · seed ${state.seed}${state.worldMatch ? ` · ${state.worldMatch}` : ''}`;
+  const r = state.results, vs = Object.values(r.verdicts), pass = vs.filter((v) => v.pass).length, calcs = r.reports.filter((x) => x.status === 'PASS').length;
+  const ok = pass === vs.length && calcs === r.reports.length;
+  $('#status').innerHTML = `<b class="${ok ? '' : 'bad'}" id="summary">${pass} / ${vs.length} Cases PASS</b> in the build · ${calcs} / ${r.reports.length} Calculations PASS · <span id="smoke" class="${state.smoke?.ok ? '' : 'bad'}">page smoke check ${state.smoke?.ok ? 'matches' : 'DIFFERS'}</span>`;
 }
-function renderAll() { syncTabs(); renderList(); renderMain(); updateToggle(); }
+function updateToggle() { const t = $('#mobile-toggle'); if (t) { t.innerHTML = `<span>Cases</span><b>${state.caseId} ▾</b>`; t.style.display = state.view === 'cases' && mobile() ? 'flex' : 'none'; } }
+function renderAll() {
+  syncTabs(); setHash();
+  if (state.view === 'cases') { renderList(); renderCase(); } else if (state.view === 'sponsors') renderSponsors(); else if (state.view === 'links') renderLinks(); else if (state.view === 'frames') renderFrames(); else renderPipeline();
+  updateToggle();
+}
 
 async function start() {
+  const [world, results] = await Promise.all([fetch('data/toy-world.json', { cache: 'no-store' }).then((r) => r.json()), fetch('data/results.json', { cache: 'no-store' }).then((r) => r.json())]);
+  state.world = world; state.results = results;
   const t0 = performance.now();
-  load(DEFAULT_SEED);
-  try {
-    const res = await fetch('data/toy-world.json', { cache: 'no-store' });
-    const text = await res.text();
-    state.worldMatch = text === serializeWorld(state.run.world) ? 'regenerated world = data/toy-world.json, byte for byte' : 'data/toy-world.json differs from the regenerated world';
-  } catch { state.worldMatch = null; }
-  document.querySelectorAll('#tabs button').forEach((b) => b.addEventListener('click', () => { state.view = b.dataset.view; renderAll(); $('#main').scrollTop = 0; window.scrollTo(0, 0); }));
+  const A = analyzeWorld(world.instances, 'season');
+  const digest = fnv32(JSON.stringify(A.P));
+  state.run = { ...A, G: buildGraph(A.W, A.E), facts: deriveFacts(A.W, A.E, A.M) };
+  state.smoke = { ok: digest === results.baseProjectionDigest, digest, ms: Math.round(performance.now() - t0) };
+  state.caseId = world.cases[0].id;
+  readHash();
+  document.querySelectorAll('#tabs button').forEach((b) => b.addEventListener('click', () => goView(b.dataset.view)));
   const toggle = h('button', { class: 'mobile-toggle', id: 'mobile-toggle', 'aria-label': 'Choose a Case', onclick: () => $('#list').classList.toggle('open') });
   $('#shell').before(toggle);
-  new MutationObserver(() => { toggle.style.display = state.view === 'cases' && matchMedia('(max-width: 800px)').matches ? 'flex' : 'none'; }).observe($('#shell'), { attributes: true });
+  addEventListener('resize', updateToggle);
   updateStatus(); renderAll();
-  toggle.style.display = matchMedia('(max-width: 800px)').matches ? 'flex' : 'none';
   document.body.dataset.ready = 'true';
-  console.info(`pipeline ran in ${Math.round(performance.now() - t0)} ms`);
 }
-start();
+start().catch((e) => { document.body.dataset.error = String(e); $('#status').textContent = `failed to start: ${e}`; console.error(e); });
+export { discLabel, mmss, fmt1, viewerMinutesText };

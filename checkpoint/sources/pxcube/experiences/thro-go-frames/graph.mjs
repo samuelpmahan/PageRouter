@@ -98,6 +98,40 @@ export function graphMetrics(instances) {
   for (const i of ids) { const r = find(i); comps.set(r, (comps.get(r) ?? 0) + 1); }
   const sizes = [...comps.values()].sort((a, b) => b - a);
   const nodes = ids.size, avgDegree = nodes ? (2 * edges.length) / nodes : 0;
-  return { nodes, edges: edges.length, dangling: dangling.length, danglingExamples: dangling.slice(0, 3), components: comps.size, largestComponent: sizes[0] ?? 0, smallestComponent: sizes[sizes.length - 1] ?? 0, avgDegree: Math.round(avgDegree * 1000) / 1000 };
+  // each Click is one edge by nature (a leaf on its Link), so the density that says something about the world is over everything else
+  const deg = new Map([...ids].map((i) => [i, 0]));
+  for (const e of edges) { deg.set(e.from, deg.get(e.from) + 1); if (deg.has(e.to)) deg.set(e.to, deg.get(e.to) + 1); }
+  const isClick = new Set(instances.filter((i) => i.frame === 'Click').map((i) => i.id));
+  const rest = [...ids].filter((i) => !isClick.has(i));
+  const avgDegreeNonClick = rest.length ? rest.reduce((s, i) => s + deg.get(i), 0) / rest.length : 0;
+  const leavesNonClick = rest.filter((i) => deg.get(i) <= 1).length;
+  return { nodes, edges: edges.length, dangling: dangling.length, danglingExamples: dangling.slice(0, 3), components: comps.size, largestComponent: sizes[0] ?? 0, smallestComponent: sizes[sizes.length - 1] ?? 0, avgDegree: Math.round(avgDegree * 1000) / 1000, avgDegreeNonClick: Math.round(avgDegreeNonClick * 1000) / 1000, clicks: isClick.size, leavesNonClick };
 }
 export { discLabel, prettyDate };
+
+// The entities a Case is about: the things it names (subjects, patched instances, result entries) plus what they point at (video -> channel -> creator,
+// disc -> mold -> manufacturer, ...). Two Cases that share one of these are linked through it.
+export function caseEntities(c, W, E, G) {
+  const seeds = new Set();
+  const add = (id) => { if (id && G.nodes.has(id)) seeds.add(id); };
+  for (const id of c.subjectIds ?? []) add(id);
+  for (const p of c.patches ?? []) add(p.id);
+  // the result entries a Case is about (observed) or changed (departure): each names the discs, videos, molds, brands and links it is made of
+  for (const e of [...(c.entries ?? []), ...(c._effect?.changed ?? [])]) {
+    if (e.section === 'appearances' || e.section === 'discVideo') {
+      const [d, v] = e.section === 'discVideo' ? e.key.split('@') : [null, null];
+      const a = e.section === 'appearances' ? E.appearances.find((x) => x.id === e.key) ?? { discId: e.key.split('@')[0], videoId: e.key.split('@')[1].split('#')[0] } : { discId: d, videoId: v };
+      add(a.discId); add(a.videoId);
+    } else if (e.section === 'sponsorRows') { add(e.key.split('|')[1]); for (const v of e.after?.videos ?? e.before?.videos ?? []) add(v); }
+    else if (e.section === 'disc' || e.section === 'discs') add(e.key);
+    else if (e.section === 'videos') add(e.key);
+    else if (e.section === 'mold') add(e.key);
+    else if (e.section === 'clicks') { add(e.key); add(W.get(e.key)?.t.linkId); }
+    else if (e.section === 'perThousand') add(e.key);
+  }
+  // and the things named by every sentence the departure reworded
+  for (const d of c._effect?.sentences ?? []) for (const f of [...d.before, ...d.after]) { add(f.discId); add(f.videoId); add(f.moldId); add(f.linkId); add(f.clickId); for (const x of f.discIds ?? []) add(x); }
+  return [...contextOf(G, [...seeds], 2)].filter((id) => W.get(id)).sort();
+}
+// A shared entity of these kinds links two Cases for real; creators and manufacturers are hubs that would link nearly everything.
+export const STRICT_FRAMES = new Set(['Disc', 'Video', 'Mold', 'Release', 'SponsorDeal', 'Bag', 'Link', 'Click', 'CardPlacement', 'Appearance', 'RetentionCurve']);
