@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f1611">
+<title>thro · the bar</title>
+<meta name="description" content="thro's one-row bar as a broadcast lower-third: the same renderer call as the editor, with every guarantee that ran.">
+<style>
+:root{--ground:#0f1611;--panel:#17211a;--line:#2c3b2f;--ink:#eef3ea;--muted:#a3b39e;--accent:#c8f49d}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100dvh}
+header{display:flex;flex-wrap:wrap;gap:4px 16px;align-items:baseline;padding:12px 16px 6px}
+header a{color:var(--accent);font:800 20px system-ui;text-decoration:none}
+h1{margin:0;font-size:clamp(18px,2.2vw,24px)}
+header p{margin:0;color:var(--muted);font-size:13px}
+main{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,520px),1fr));gap:12px;padding:6px 16px 16px}
+figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+figure canvas{display:block;width:100%;height:auto;background:#000}
+figcaption{padding:8px 10px;display:grid;gap:2px;font:12px ui-monospace,Menlo,Consolas,monospace;color:var(--muted)}
+figcaption b{color:var(--ink);font:650 13px system-ui}
+figcaption span.ok{color:var(--accent)}
+code{font:12px ui-monospace,Menlo,monospace;color:var(--ink)}
+</style>
+</head>
+<body>
+<header>
+  <a href="./">thro</a>
+  <h1>The bar, as a lower-third</h1>
+  <p>Each frame is <code>renderThroBar()</code> over a real tee shot: the editor's one-row card, plate 1824 px, disc in the right end. Under it, every guarantee of <code>thro/card/bar</code> as it ran.</p>
+</header>
+<main id="main" aria-busy="true"></main>
+<script type="module" src="./bar.mjs"></script>
+</body>
+</html>

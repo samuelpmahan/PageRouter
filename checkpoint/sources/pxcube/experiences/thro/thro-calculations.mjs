@@ -19,7 +19,7 @@ export function unwarpMatrix(e, R, X, Y) {
 }
 
 const registry = new Map();
-function register(def) { if (registry.has(def.id)) throw Error(`Calculation registered twice: ${def.id}`); registry.set(def.id, Object.freeze(def)); }
+export function register(def) { if (registry.has(def.id)) throw Error(`Calculation registered twice: ${def.id}`); registry.set(def.id, Object.freeze(def)); }
 
 // 1. The live rim fit: Argon's runThroDiscItem, unchanged, with Argon's own live guarantees plus the distance from his witness run.
 register({
@@ -91,6 +91,15 @@ export function enter(id, corpus) {
   const def = registry.get(id);
   if (!def) throw Error(`Unregistered Calculation: ${id}`);
   return record(runWitnessedCalculation(def, corpus));
+}
+// The same way in for a Calculation whose calculate is async (a canvas render): every item is computed first, then Argon's runner
+// witnesses those outputs exactly as it would a synchronous Calculation.
+export async function enterAsync(id, corpus) {
+  const def = registry.get(id);
+  if (!def) throw Error(`Unregistered Calculation: ${id}`);
+  const out = new Map();
+  for (const item of corpus) out.set(item, await def.calculate(item));
+  return record(runWitnessedCalculation({ ...def, calculate: item => out.get(item) }, corpus));
 }
 // Keep a report where the page and tests can read it (a worker's report is recorded when it reaches the page).
 export function record(report) {
