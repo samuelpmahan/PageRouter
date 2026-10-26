@@ -6,6 +6,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { zipStore } from '../thro/editor-zip.mjs';
 const root = path.dirname(fileURLToPath(import.meta.url));
 const out = path.resolve(process.argv[2] ?? path.join(root, 'out'));
 const shops = JSON.parse(fs.readFileSync(path.join(root, 'data/shops.json'), 'utf8'));
@@ -26,7 +27,7 @@ function tile(d, v, handle, shop) {
   const crop = d.statuses?.every(s => s.endsWith('PASS'));
   let art;
   if (card && crop) art = `<img src="${card}" alt="${name} ThroCard" loading="lazy" width="460" height="694">`;
-  else if (d.mold === 'Oxymoron') art = `<div class="photo"><img src="cards/raredg-oxymoron-photo.jpg" alt="${name}" loading="lazy"><span>Not round, so no ThroCard: the shop's own photo.</span></div>`;
+  else if (d.photoTile) art = `<div class="photo"><img src="cards/${esc(d.photoTile)}" alt="${name}" loading="lazy"><span>Not round, so no ThroCard: the shop's own photo.</span></div>`;
   else art = `<div class="missing"><b>${esc(d.mold)}</b><span>Not listed at ${esc(shop)} right now</span></div>`;
   const label = d.linkKind === 'product' ? esc(d.productTitle) : `Search ${esc(shop)} for “${esc(d.mold)}”`;
   const status = d.linkKind === 'product' && d.available === false ? '<em>sold out</em>' : '';
@@ -34,30 +35,57 @@ function tile(d, v, handle, shop) {
   return `<li><a class="card" href="${esc(href)}" rel="noopener">${art}<span class="what">${label} ${status}</span></a><span class="how">${evidence(d, v)}</span></li>`;
 }
 let sectionNo = 0;
+const slug = t => { const w = String(t).replace(/[^A-Za-z0-9]+/g, ' ').trim(); return w.length <= 60 ? w : w.slice(0, 60).replace(/ \S*$/, ''); };
+const kb = n => n > 1048576 ? `${(n / 1048576).toFixed(1)} MB` : `${Math.round(n / 1024)} KB`;
+// The download Sam offers in the DM: every card in a section as a transparent PNG (690x1041, drop straight into CapCut or Premiere)
+// plus the round disc cutout on its own (800x800), one zip per video or drop.
+function packEntries(v, num) {
+  const e = [];
+  v.discs.forEach((d, i) => {
+    if (!d.cardBase || !d.statuses?.every(x => x.endsWith('PASS'))) return;
+    const n = `${String(i + 1).padStart(2, '0')} ${slug(d.mold)}`;
+    e.push({ name: `${n} - card.png`, data: new Uint8Array(fs.readFileSync(path.join(root, 'cards', `${d.cardBase}-card.png`))) });
+    e.push({ name: `${n} - disc.png`, data: new Uint8Array(fs.readFileSync(path.join(root, 'cards', `${d.cardBase}-cut.png`))) });
+  });
+  return e;
+}
+let pageDir = null;
+function download(v, num) {
+  const entries = packEntries(v, num);
+  if (!entries.length) return '';
+  const file = `downloads/${String(num).padStart(2, '0')}-${slug(v.title).replace(/ /g, '-').toLowerCase()}.zip`;
+  const bytes = zipStore(entries);
+  fs.mkdirSync(path.join(pageDir, 'downloads'), { recursive: true });
+  fs.writeFileSync(path.join(pageDir, file), bytes);
+  return `<a class="dl" href="${file}" download>Download these ${entries.length / 2} cards <small>transparent PNG · ${kb(bytes.length)}</small></a>`;
+}
 function section(v, handle, shop, kind) {
   sectionNo++;
   const names = v.discs.map(d => esc(d.mold)).join(', ');
   const head = kind === 'video'
     ? `<a class="vt" href="${esc(v.url)}" rel="noopener">${esc(v.title)}</a>`
     : `<a class="vt" href="${esc(v.url)}" rel="noopener">${esc(v.title)}</a>`;
-  return `<section><header><span class="no">No. ${String(sectionNo).padStart(2, '0')}</span><span class="kind">${kind === 'video' ? 'Video' : 'Release post'} · ${date(v.published)}</span>${head}<p class="bag">${kind === 'video' ? 'Featured' : 'In the drop'}: ${names}</p></header><ol class="grid">${v.discs.map(d => tile(d, v, handle, shop)).join('')}</ol></section>`;
+  return `<section><header><span class="no">No. ${String(sectionNo).padStart(2, '0')}</span><span class="kind">${kind === 'video' ? 'Video' : 'Release post'} · ${date(v.published)}</span>${head}<p class="bag">${kind === 'video' ? 'Featured' : 'In the drop'}: ${names}</p>${download(v, sectionNo)}</header><ol class="grid">${v.discs.map(d => tile(d, v, handle, shop)).join('')}</ol></section>`;
 }
 const css = fs.readFileSync(path.join(root, 'page.css'), 'utf8');
 for (const [handle, s] of Object.entries(shops)) {
   sectionNo = 0;
-  const dir = path.join(out, handle);
+  const dir = path.join(out, handle); pageDir = dir;
   fs.mkdirSync(path.join(dir, 'cards'), { recursive: true });
   for (const v of [...s.videos, ...s.drops]) for (const d of v.discs) if (d.cardBase) fs.copyFileSync(path.join(root, 'cards', `${d.cardBase}-u02.webp`), path.join(dir, 'cards', `${d.cardBase}-u02.webp`));
-  if (handle === 'raredg') fs.copyFileSync(path.join(root, 'cards/raredg-oxymoron-photo.jpg'), path.join(dir, 'cards/raredg-oxymoron-photo.jpg'));
+  for (const v of [...s.videos, ...s.drops]) for (const d of v.discs) if (d.photoTile) fs.copyFileSync(path.join(root, 'cards', d.photoTile), path.join(dir, 'cards', d.photoTile));
   const title = s.name === s.shopName ? s.name : `${s.name} × ${s.shopName}`;
+  const main = s.videos.map(v => section(v, handle, s.shopName, 'video')).join('') + s.drops.map(v => section(v, handle, s.shopName, 'drop')).join('');
+  const all = '';
+  const vars = s.signal ? ` style="--signal:${esc(s.signal)};--signal2:${esc(s.signal2 ?? '#1f6f68')}"` : '';
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow"><title>${esc(title)} · featured discs</title>
 <meta name="description" content="The discs from ${esc(s.name)}'s recent videos, each linking to ${esc(s.domain)}.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%23c8f49d' stroke-width='3'%3E%3Ccircle cx='16' cy='16' r='13'/%3E%3Ccircle cx='16' cy='16' r='5.75'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>${css}</style></head><body class="${handle}">
-<header class="top"><svg class="burst" viewBox="-100 -100 200 200" aria-hidden="true">${Array.from({length:16},(_, i)=>`<line x1="0" y1="0" x2="${(Math.cos(i*Math.PI/8)*(i%2?62:96)).toFixed(1)}" y2="${(Math.sin(i*Math.PI/8)*(i%2?62:96)).toFixed(1)}" stroke="#2b2420" stroke-width="${i%2?3:5}" stroke-linecap="round"/>`).join('')}<circle r="22" fill="#f3e8d2" stroke="#2b2420" stroke-width="5"/><circle r="7" fill="#2b2420"/></svg><div class="inner"><p class="eyebrow">Featured discs</p><h1>${esc(s.name)}</h1><p class="sub">${s.name === s.shopName ? '' : `with ${esc(s.shopName)} · `}every disc from these videos, one tap from <a href="https://${esc(s.domain)}" rel="noopener">${esc(s.domain)}</a></p></div></header>
-<main>${s.videos.map(v => section(v, handle, s.shopName, 'video')).join('')}${s.drops.map(v => section(v, handle, s.shopName, 'drop')).join('')}</main>
+<style>${css}</style></head><body class="${handle}"${vars}>
+<header class="top"><svg class="burst" viewBox="-100 -100 200 200" aria-hidden="true">${Array.from({length:16},(_, i)=>`<line x1="0" y1="0" x2="${(Math.cos(i*Math.PI/8)*(i%2?62:96)).toFixed(1)}" y2="${(Math.sin(i*Math.PI/8)*(i%2?62:96)).toFixed(1)}" stroke="#2b2420" stroke-width="${i%2?3:5}" stroke-linecap="round"/>`).join('')}<circle r="22" fill="#f3e8d2" stroke="#2b2420" stroke-width="5"/><circle r="7" fill="#2b2420"/></svg><div class="inner"><p class="eyebrow">Featured discs</p><h1>${esc(s.name)}</h1><p class="sub">${s.name === s.shopName ? '' : `with ${esc(s.shopName)} · `}every disc from these videos, one tap from <a href="https://${esc(s.domain)}" rel="noopener">${esc(s.domain)}</a></p>${all}</div></header>
+<main>${main}</main>
 <footer>A prototype made with <a href="https://thro.pages.dev/">thro</a>. Not affiliated with ${esc(s.shopName)}${s.name === s.shopName ? '' : ` or ${esc(s.name)}`}. Discs come from the public videos (title, description or what's said on camera); every card links to ${esc(s.domain)}.</footer>
 </body></html>`;
   fs.writeFileSync(path.join(dir, 'index.html'), html);
