@@ -911,16 +911,17 @@
        2
       ],
       "statuses": [
-       "thro/crop/live FAIL",
-       "thro/crop/silhouette PASS",
-       "thro/crop/face PASS",
-       "thro/crop/unwarp PASS",
-       "thro/crop/cutout PASS"
+       "thro-shops/prototypes/square-disc: body-colour key PASS (hue 13, 4 corners, fill 0.936, tilt 0.51 deg corrected)",
+       "card frame: disc outline (128 points) PASS"
       ],
-      "cropOk": false,
+      "cropOk": true,
       "silhouetteRefit": false,
       "faceApplied": false,
-      "photoTile": "raredg-oxymoron-photo.jpg"
+      "cardShape": {
+       "kind": "outline",
+       "points": 128,
+       "source": "experiences/thro-shops/prototypes/square-disc/raredg-0ele1NyWlfg-0-outline.json"
+      }
      }
     ]
    },

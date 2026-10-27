@@ -24,6 +24,17 @@ export function validateU01Appearance(value         )                {
   }
   if (appearance.plate !== undefined) { if (!['see-through', 'solid'].includes(appearance.plate)) throw new Error('invalid U01 appearance.'); if (appearance.plate === 'solid') extra.plate = 'solid'; }
   if (appearance.frame !== undefined) { if (typeof appearance.frame !== 'boolean') throw new Error('invalid U01 appearance.'); if (appearance.frame) extra.frame = true; }
+  // discShape: 'round' (default) or 'square' (a square disc such as the Doomsday Oxymoron); discCornerRadius is the rounded
+  // square's corner radius as a fraction of its side (0..0.5), measured from the cutout.
+  if (appearance.discShape !== undefined) { if (!['round', 'square'].includes(appearance.discShape)) throw new Error('invalid U01 appearance.'); if (appearance.discShape === 'square') extra.discShape = 'square'; }
+  if (appearance.discCornerRadius !== undefined) { const c = appearance.discCornerRadius; if (!(Number.isFinite(c) && c >= 0 && c <= 0.5)) throw new Error('invalid U01 appearance.'); extra.discCornerRadius = Math.round(c * 1000) / 1000; }
+  // discOutline: the disc's own silhouette for a non-round disc, as [x, y] points in 0..1 of the photo frame (16..256 points).
+  // The card clips the photo to it and strokes its ring along it, so the frame takes the disc's shape.
+  if (appearance.discOutline !== undefined) {
+    const o = appearance.discOutline;
+    if (!Array.isArray(o) || o.length < 16 || o.length > 256 || !o.every(q => Array.isArray(q) && q.length === 2 && q.every(n => Number.isFinite(n) && n >= 0 && n <= 1))) throw new Error('invalid U01 appearance.');
+    extra.discOutline = Object.freeze(o.map(([x, y]) => Object.freeze([Math.round(x * 1e4) / 1e4, Math.round(y * 1e4) / 1e4])));
+  }
   return Object.freeze({ ...base, ...extra });
 }
 export function validateCardAppearance(value         )                 {
