@@ -1,0 +1,10 @@
+# thro.pages.dev Pages project: static site (built separately) + Pages Functions under functions/.
+# Deployed by ~/thro-deploy.sh, which runs wrangler from this directory so functions/ and these bindings are picked up.
+name = "thro"
+pages_build_output_dir = "./site"
+compatibility_date = "2026-10-01"
+
+[[d1_databases]]
+binding = "FEEDBACK"
+database_name = "thro-feedback"
+database_id = "daf43f8e-ad01-43ac-8356-1c99b67dee55"

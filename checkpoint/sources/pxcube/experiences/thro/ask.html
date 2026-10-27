@@ -3,61 +3,85 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0f1611">
-<title>Which cards would you put on screen?</title>
-<meta name="description" content="Eleven overlay cards for disc golf videos. Thirty seconds: tap every card you'd put on screen, then paste your picks in the thread.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%23c8f49d' stroke-width='3'%3E%3Ccircle cx='16' cy='16' r='13'/%3E%3Ccircle cx='16' cy='16' r='5.75'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#f3e8d2">
+<title>Which cards would you put on screen? · thro</title>
+<meta name="description" content="Eleven overlay cards for disc golf videos. Thirty seconds: tap every card you'd put on screen, then send your picks.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%232b2420' stroke-width='3'%3E%3Ccircle cx='16' cy='16' r='13'/%3E%3Ccircle cx='16' cy='16' r='5.75'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--ground:#0f1611;--panel:#17211a;--line:#2c3b2f;--ink:#eef3ea;--muted:#a3b39e;--accent:#c8f49d;--pick:#ffd166}
+/* Mid-Century Retro, the same system as the shop pages: warm paper, ink, one signal colour, Jost, hard offset shadows. */
+:root{--paper:#f3e8d2;--paper2:#ead9b8;--card:#fbf4e6;--ink:#2b2420;--muted:#6f6253;--rule:#cdb995;--signal:#e0632e;--signal2:#1f6f68;--gutter:clamp(16px,4vw,72px)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--ground);color:var(--ink);font:15px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100dvh;display:flex;flex-direction:column}
-header{padding:max(14px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 8px max(16px,env(safe-area-inset-left));display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline}
-h1{font-size:clamp(19px,2.4vw,26px);margin:0;letter-spacing:-.5px;font-weight:750}
-header p{margin:0;color:var(--muted);font-size:13.5px;max-width:70ch}
-header .who{font-size:12.5px;color:var(--muted);margin-left:auto}
-main{flex:1;align-content:start;padding:6px max(16px,env(safe-area-inset-right)) 10px max(16px,env(safe-area-inset-left));display:grid;gap:10px}
-.row{display:grid;gap:8px;align-items:start}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 16px/1.5 "Jost",system-ui,sans-serif;min-height:100dvh;display:flex;flex-direction:column}
+.brandbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px var(--gutter);padding-top:max(12px,env(safe-area-inset-top));border-bottom:3px solid var(--ink)}
+.brandbar a{display:block;line-height:0}
+.brandbar .logo{height:30px;width:auto;display:block}
+.brandbar span{font:600 12px/1 "Jost",sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+header{padding:clamp(20px,3.2vw,40px) var(--gutter) 6px;display:grid;gap:8px}
+.eyebrow{margin:0;font:600 13px/1 "Jost",sans-serif;letter-spacing:.24em;text-transform:uppercase;color:var(--signal2)}
+h1{margin:0;font:800 clamp(30px,3.5vw,54px)/1 "Jost",sans-serif;letter-spacing:-.03em;text-wrap:balance}
+header p.sub{margin:2px 0 0;max-width:78ch;font-size:clamp(15px,1.3vw,18px);color:var(--muted)}
+header p.sub b{color:var(--ink);font-weight:600}
+main{flex:1;align-content:start;padding:18px var(--gutter) 26px;display:grid;gap:18px}
+.group{display:grid;gap:10px}
+.group h2{margin:0;font:700 13px/1 "Jost",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.row{display:grid;gap:16px;align-items:start}
 .row.landscape{grid-template-columns:repeat(5,minmax(0,1fr))}
 .row.portrait{grid-template-columns:repeat(6,minmax(0,1fr))}
-.card{position:relative;padding:0;border:2px solid var(--line);border-radius:11px;overflow:hidden;background:#000;cursor:pointer;color:var(--ink);text-align:left;font:inherit}
-.card canvas{display:block;width:100%;height:auto}
-.card .name{position:absolute;left:0;right:38px;top:0;padding:6px 8px 12px;font:650 11.5px/1.2 system-ui,sans-serif;background:linear-gradient(#000b,transparent)}
-.card .check{position:absolute;top:6px;right:6px;width:24px;height:24px;border-radius:50%;border:2px solid #fff;background:#0008;display:grid;place-items:center;font:800 14px system-ui;color:transparent}
-.card[aria-pressed=true]{border-color:var(--pick);box-shadow:0 0 0 2px var(--pick)}
-.card[aria-pressed=true] .check{background:var(--pick);border-color:var(--pick);color:#1d1a0b}
-.card .tally{position:absolute;left:0;right:0;bottom:0;padding:5px 8px;font:700 12px/1.2 system-ui,sans-serif;background:#000c;display:flex;align-items:center;gap:7px}
-.card .tally i{display:block;height:6px;background:var(--pick);border-radius:3px;min-width:2px}
-.card .wait{position:absolute;inset:0;display:grid;place-items:center;color:var(--muted);font-size:12px}
-.card:focus-visible,button:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-footer{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:10px max(16px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));border-top:1px solid var(--line);background:#141d16;position:sticky;bottom:0}
-footer label{flex:1 1 320px;display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
-textarea{width:100%;min-height:42px;max-height:120px;resize:vertical;border:1px solid #405043;border-radius:9px;padding:9px 10px;background:#0d150f;color:var(--ink);font:14px/1.4 system-ui,sans-serif}
-footer .status{font-size:13px;color:var(--muted);min-width:150px}
+.card{position:relative;padding:0;border:2px solid var(--ink);border-radius:3px;overflow:hidden;background:var(--card);cursor:pointer;color:var(--ink);text-align:left;font:inherit;box-shadow:4px 4px 0 var(--ink);display:grid}
+.card:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
+.card canvas{display:block;width:100%;height:auto;background:#1a1d18}
+.card .name{display:block;padding:7px 10px 8px;border-top:2px solid var(--ink);font:600 13px/1.25 "Jost",sans-serif;min-height:38px}
+.card .name b{font-weight:800;letter-spacing:.02em}
+.card .check{position:absolute;top:8px;right:8px;width:26px;height:26px;border-radius:50%;border:2px solid var(--ink);background:var(--card);display:grid;place-items:center;font:800 15px/1 "Jost",sans-serif;color:transparent}
+.card[aria-pressed=true]{border-color:var(--signal);box-shadow:4px 4px 0 var(--signal)}
+.card[aria-pressed=true] .name{border-top-color:var(--signal);background:var(--signal);color:#fff8ee}
+.card[aria-pressed=true] .check{background:var(--signal);border-color:#fff8ee;color:#fff8ee}
+.card .tally{display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px;padding:0 10px 9px;font:600 12px/1.2 "Jost",sans-serif;color:var(--muted)}
+.card[aria-pressed=true] .tally{background:var(--signal);color:#fff8ee}
+.card .tally[hidden]{display:none}
+.card .tally .bar{height:7px;border:1.5px solid currentColor;border-radius:2px;overflow:hidden}
+.card .tally .bar i{display:block;height:100%;background:currentColor}
+.card .wait{position:absolute;inset:0 0 40px;display:grid;place-items:center;color:#cfc4ae;font-size:13px}
+.card:focus-visible,button:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid var(--signal2);outline-offset:3px}
+footer{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:14px var(--gutter) max(14px,env(safe-area-inset-bottom));border-top:3px solid var(--ink);background:var(--paper2);position:sticky;bottom:0;z-index:2}
+footer label{flex:1 1 340px;display:flex;flex-direction:column;gap:5px;font:600 13px/1.2 "Jost",sans-serif}
+footer label .lbl{display:block}
+footer label .lbl span{font-weight:400;color:var(--muted)}
+textarea{width:100%;min-height:44px;max-height:130px;resize:vertical;border:2px solid var(--ink);border-radius:3px;padding:9px 11px;background:var(--card);color:var(--ink);font:15px/1.4 "Jost",sans-serif}
+textarea::placeholder{color:#9a8c78}
+footer .status{font-size:14px;color:var(--muted);min-width:170px}
+footer .status b{color:var(--ink);font-weight:700}
 #copy-fallback{flex:1 1 100%;min-height:70px}
-footer .status b{color:var(--ink)}
-footer button{min-height:46px;padding:10px 22px;border-radius:11px;border:1px solid var(--accent);background:var(--accent);color:#16230f;font:750 15px system-ui,sans-serif;cursor:pointer}
-footer button:disabled{opacity:.4;cursor:default}
-footer button.secondary{background:transparent;color:var(--ink);border-color:#56704e;padding:10px 14px}
-@media (max-width:640px){footer{position:static}}
-@media (max-width:900px){.row.landscape{grid-template-columns:repeat(2,minmax(0,1fr))}.row.portrait{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media (prefers-reduced-motion:no-preference){.card{transition:border-color .12s,box-shadow .12s}.card .tally i{transition:width .5s}}
+footer button{min-height:46px;padding:10px 20px;border-radius:3px;border:2px solid var(--ink);background:var(--signal);color:#fff8ee;font:700 15px/1 "Jost",sans-serif;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+footer button:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+footer button:active:not(:disabled){transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+footer button:disabled{opacity:.45;cursor:default;box-shadow:none}
+footer button.secondary{background:var(--card);color:var(--ink)}
+.after{flex:1 1 100%;margin:0;font-size:13px;color:var(--muted)}
+@media (max-width:1100px){.row.landscape{grid-template-columns:repeat(3,minmax(0,1fr))}.row.portrait{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:700px){.brandbar{padding:10px 16px}.brandbar .logo{height:24px}.brandbar span{font-size:10px;letter-spacing:.16em}.row{gap:12px}.row.landscape{grid-template-columns:1fr}.row.portrait{grid-template-columns:repeat(2,minmax(0,1fr))}footer{position:static}.card .name{font-size:12.5px}}
+@media (prefers-reduced-motion:no-preference){.card{transition:border-color .12s,box-shadow .12s,transform .12s}.card .tally .bar i{transition:width .5s}}
 </style>
 </head>
 <body>
+<nav class="brandbar"><a href="./" aria-label="thro"><svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="117 396 847 290" role="img" aria-label="thro"><path fill="#2b2420" fill-rule="evenodd" d="M242.38 676.41C247.95 675.54 252.89 674.45 253.37 673.99C254.94 672.49 253.91 651.78 251.65 639.50C249.51 627.88 249.36 627.51 246.97 627.70C228.87 629.17 226.47 629.13 223.07 627.32C221.19 626.32 218.71 624.23 217.57 622.68C215.54 619.91 215.50 618.85 215.50 569.68L215.50 519.50L233.75 519.23L252.00 518.95L252.00 495.50L252.00 472.05L233.75 471.77L215.50 471.50L215.50 447.75L215.50 424.00L183.75 424.00L152.00 424.00L152.00 448.00L152.00 472.00L138.50 472.00L125.00 472.00L125.00 495.50L125.00 519.00L138.50 519.00L152.00 519.00L152.00 571.87C152.00 631.10 152.49 637.17 158.29 648.94C164.79 662.14 178.54 672.20 195.24 675.97C206.02 678.40 228.37 678.61 242.38 676.41ZM333.21 611.72L333.50 548.50L335.80 542.80C338.90 535.13 345.60 527.86 352.22 524.97C359.38 521.85 371.59 521.16 379.42 523.43C389.54 526.38 397.29 535.60 399.88 547.80C400.64 551.39 401.00 572.72 401.00 614.02L401.00 674.94L432.58 675.22C449.96 675.38 464.36 675.31 464.58 675.08C465.47 674.19 464.91 544.97 463.98 536.13C462.65 523.56 460.62 516.12 455.82 506.27C448.39 491.02 434.63 478.95 418.28 473.33C407.91 469.77 389.03 468.90 377.57 471.45C359.06 475.57 344.66 487.15 335.17 505.55L332.10 511.50L332.05 457.75L332.00 404.00L301.00 404.00L270.00 404.00L270.00 498.25C270.00 550.09 269.70 611.02 269.34 633.66L268.68 674.82L271.09 675.16C272.41 675.35 286.87 675.37 303.21 675.22L332.92 674.94L333.21 611.72ZM542.22 613.75L542.50 552.50L545.63 546.00C549.61 537.71 555.77 531.54 564.00 527.61C570.37 524.56 570.80 524.50 585.00 524.54C592.98 524.57 601.17 525.09 603.22 525.70L606.94 526.82L607.22 499.31C607.38 483.85 607.11 471.57 606.60 471.25C606.11 470.95 600.46 470.49 594.05 470.22C576.74 469.51 567.45 472.62 556.95 482.63C551.04 488.27 547.03 494.66 543.99 503.28C540.68 512.68 540.00 510.52 540.00 490.58L540.00 472.00L509.00 472.00L478.00 472.00L478.00 573.50L478.00 675.00L509.97 675.00L541.94 675.00L542.22 613.75ZM729.50 670.56C756.20 662.74 777.59 645.37 790.22 621.28C798.00 606.42 801.19 593.20 801.15 576.00C801.10 550.64 791.62 527.04 774.14 508.75C755.67 489.42 731.03 478.89 704.00 478.78C659.71 478.60 622.66 506.34 609.31 549.70C606.81 557.82 606.60 559.84 606.58 576.00C606.55 595.59 607.34 599.79 613.86 614.91C625.10 640.99 647.18 660.92 674.39 669.55C686.26 673.32 691.18 673.93 706.50 673.55C717.99 673.26 722.12 672.73 729.50 670.56ZM693.00 653.31C652.09 646.43 624.20 612.47 626.28 572.05C627.24 553.39 634.01 537.47 646.74 523.94C663.42 506.21 682.76 498.29 707.00 499.27C716.55 499.66 720.17 500.30 728.38 503.04C775.27 518.70 795.39 573.84 769.85 616.69C765.62 623.80 753.23 636.49 745.84 641.30C731.19 650.84 708.70 655.95 693.00 653.31ZM716.48 623.46C734.36 618.80 749.43 601.83 751.96 583.50C755.29 559.31 741.44 537.24 718.00 529.38C709.87 526.66 695.43 526.94 687.50 529.98C672.33 535.80 661.93 546.42 656.93 561.17C655.11 566.54 654.85 569.17 655.20 578.53C655.59 588.85 655.85 590.05 659.35 597.13C665.53 609.65 677.76 620.12 690.00 623.40C697.27 625.34 709.16 625.37 716.48 623.46ZM694.70 603.56C673.74 596.08 668.23 569.42 684.66 554.99C690.28 550.06 696.06 547.88 703.50 547.88C722.86 547.88 736.47 566.35 730.87 585.04C727.66 595.75 715.20 605.04 704.16 604.96C701.05 604.93 696.79 604.30 694.70 603.56Z"/><path fill="#e0632e" fill-rule="evenodd" d="M929.97 458.72C932.34 455.55 934.42 453.09 934.59 453.26C934.77 453.43 934.27 458.96 933.48 465.54C932.70 472.12 932.05 485.04 932.03 494.25L932.00 511.00L944.00 511.00L956.00 511.00L956.00 464.50L956.00 418.00L909.00 418.00L862.00 418.00L862.00 429.62L862.00 441.24L887.25 440.69C901.14 440.38 914.46 439.71 916.85 439.18C920.24 438.44 920.90 438.49 919.85 439.43C919.11 440.08 914.67 443.83 910.00 447.75C905.33 451.67 891.38 465.03 879.02 477.43L856.53 499.99L865.02 508.53L873.50 517.07L899.58 490.78C913.92 476.33 927.60 461.90 929.97 458.72Z"/></svg></a><span>Show what you thro</span></nav>
 <header>
+  <p class="eyebrow">Thirty seconds of your taste</p>
   <h1>Which cards would you put on screen?</h1>
-  <p>Tap every card you'd put on a disc golf video, then <b>Copy feedback</b> and paste it in the thread.</p>
+  <p class="sub">Each card is drawn over a real tee shot, the way it would sit in a video. Tap every one you'd actually use, then <b>Send</b>: your picks are saved and copied, ready to paste in the thread.</p>
 </header>
 <main id="main" aria-busy="true">
-  <div class="row landscape" id="landscape" aria-label="Cards for landscape video"></div>
-  <div class="row portrait" id="portrait" aria-label="Cards for Shorts, Reels and TikTok"></div>
+  <section class="group"><h2>Landscape video</h2><div class="row landscape" id="landscape" aria-label="Cards for landscape video"></div></section>
+  <section class="group"><h2>Shorts, Reels and TikTok</h2><div class="row portrait" id="portrait" aria-label="Cards for Shorts, Reels and TikTok"></div></section>
 </main>
 <footer>
-  <label for="note">What would you change? <span>(optional)</span><textarea id="note" maxlength="600" placeholder="Anything: what's ugly, what's missing, what you'd never use"></textarea></label>
+  <label for="note"><span class="lbl">What would you change? <span>(optional)</span></span><textarea id="note" maxlength="600" placeholder="Anything: what's ugly, what's missing, what you'd never use"></textarea></label>
   <button type="button" class="secondary" id="all">Select all</button>
   <span class="status" id="status" role="status">Tap every card you'd use.</span>
   <textarea id="copy-fallback" readonly hidden aria-label="Your feedback, to copy"></textarea>
-  <button type="button" id="send" disabled>Copy feedback</button>
+  <button type="button" id="send" disabled>Send</button>
 </footer>
 <script type="module" src="./ask.mjs"></script>
 </body>

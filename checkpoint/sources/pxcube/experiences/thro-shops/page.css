@@ -44,3 +44,12 @@ footer a{color:var(--ink);font-weight:600}
 .dl small{font:500 12px/1.2 "Jost";color:var(--muted);letter-spacing:.02em}
 .dl:hover{transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
 .dl:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+
+/* thro brand strip: the logo in its own colours on paper, above the shop's coloured hero */
+.brandbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px clamp(16px,4vw,72px);background:var(--paper);border-bottom:3px solid var(--ink)}
+.brandbar a{display:block;line-height:0}
+.brandbar .logo{height:30px;width:auto;display:block}
+.brandbar span{font:600 12px/1 "Jost",sans-serif;letter-spacing:.22em;text-transform:uppercase;color:var(--muted)}
+.foot-logo{display:inline-block;vertical-align:-4px;margin-right:6px;line-height:0}
+.foot-logo .logo{height:18px;width:auto}
+@media (max-width:760px){.brandbar{padding:10px 16px}.brandbar .logo{height:24px}.brandbar span{font-size:10px;letter-spacing:.16em}}

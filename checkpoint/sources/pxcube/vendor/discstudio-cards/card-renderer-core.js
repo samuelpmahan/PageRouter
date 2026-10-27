@@ -112,16 +112,11 @@ function accentRgba(hex        , alpha        )         {
   return `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`;
 }
 
-async function drawPhotoCircle(environment                       , ctx     , src               , cx        , cy        , d        , accent         , shape = null) {
-  // shape: null draws the round disc frame; { discShape: 'square', discCornerRadius } clips and rings a rounded square instead
+async function drawPhotoCircle(environment                       , ctx     , src               , cx        , cy        , d        , accent         ) {
   const r = d / 2;
-  const outline = () => {
-    if (shape?.discOutline) { ctx.beginPath(); shape.discOutline.forEach(([u, v], i) => ctx[i ? 'lineTo' : 'moveTo'](cx - r + u * d, cy - r + v * d)); ctx.closePath(); }
-    else if (shape?.discShape === 'square') roundRect(ctx, cx - r, cy - r, d, d, d * Math.min(0.5, Math.max(0, shape.discCornerRadius ?? 0.275)));
-    else { ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); }
-  };
   ctx.save();
-  outline();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.clip();
   let drew = false;
   if (src) {
@@ -151,8 +146,8 @@ async function drawPhotoCircle(environment                       , ctx     , src
   // Mint rim around the photo, echoing the deck's disc-mark ring.
   ctx.strokeStyle = accent ? accentRgba(accent, 0.9) : 'rgba(143,227,174,0.9)';
   ctx.lineWidth = 7;
-  ctx.lineJoin = 'round';
-  outline();
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
   ctx.stroke();
 }
 
@@ -429,7 +424,7 @@ async function renderU02(ctx     , rd              , environment                
 
   // Hero: top of the card, full card width.
   const d = 400;
-  await drawPhotoCircle(environment, ctx, rd.photoSrc, cardX + cardW / 2, 680, d, accent, appearance?.discOutline ? { discOutline: appearance.discOutline } : appearance?.discShape === 'square' ? { discShape: 'square', discCornerRadius: appearance.discCornerRadius } : null);
+  await drawPhotoCircle(environment, ctx, rd.photoSrc, cardX + cardW / 2, 680, d, accent);
 
   // Name band: dark with the same mint accent as the photo rim.
   const bandY = 830, bandH = 340;
@@ -485,18 +480,14 @@ export async function cardFrameSnapshot(disc              , preset            , 
     catch (error) { if (environment.strictPhoto) throw error; }
   }
   const photoSize = 368;
-  // discShape: 'round' (default) clips and rings a circle; 'square' (Doomsday Oxymoron and other square discs) clips and rings a
-  // rounded square whose corner radius is a fraction of the side (discCornerRadius, measured from the cutout's fill ratio).
-  const discShape = appearance?.discShape === 'square' ? 'square' : 'round', cornerFrac = Math.min(0.5, Math.max(0, appearance?.discCornerRadius ?? 0.275));
-  const outline = (ctx, cx, cy, r) => { ctx.beginPath(); if (discShape === 'square') roundRect(ctx, cx - r, cy - r, 2 * r, 2 * r, 2 * r * cornerFrac); else ctx.arc(cx, cy, r, 0, Math.PI * 2); };
-  const photo = { id: 'disc-photo', identity: JSON.stringify([rd.photoSrc, accent, photoSize, discShape, cornerFrac]), width: photoSize, height: photoSize,
+  const photo = { id: 'disc-photo', identity: JSON.stringify([rd.photoSrc, accent, photoSize]), width: photoSize, height: photoSize,
     x: (preset === 'u04' ? u04Center : mirrorX(352)) - photoSize / 2, y: (preset === 'u04' ? 1038 : 810) - photoSize / 2,
     draw(ctx     ) {
       const r = 180, cx = 184, cy = 184;
-      ctx.save(); outline(ctx, cx, cy, r); ctx.clip();
+      ctx.save(); ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.clip();
       if (image) { const scale = Math.max(360/image.width,360/image.height), w=image.width*scale,h=image.height*scale;ctx.drawImage(image,cx-w/2,cy-h/2,w,h); }
       else { ctx.fillStyle='#1c2a24';ctx.fillRect(4,4,360,360); }
-      ctx.restore();ctx.strokeStyle=accent;ctx.lineWidth=7;outline(ctx, cx, cy, r);ctx.stroke();
+      ctx.restore();ctx.strokeStyle=accent;ctx.lineWidth=7;ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.stroke();
     } };
   const surface = { id: 'card-surface', identity: JSON.stringify([preset === 'u04' ? 'kinetic-v3-fade' : 'spine-v2',mirrored,preset === 'u04' ? rd.manufacturer : '',u04Shift]), draw(ctx     ) {
     if (preset === 'u04') {
