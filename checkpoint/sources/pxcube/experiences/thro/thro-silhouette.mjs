@@ -11,6 +11,9 @@
 import { register } from './thro-calculations.mjs';
 const TAU = Math.PI * 2, DEG = Math.PI / 180;
 const T_DISC = 40, T_BG = 14, T_FAINT = 18, T_BG_FAINT = 8, RUN = 4, SHARP = 35, SHARP_FAINT = 18;
+// Gate for the concentric-rim trace (Argon, Brook thro #60): centred between the white-on-white rim (Neutron Control, p25 22.5)
+// and one-sided drop shadows (FX-4, Orbital, Impulse, p25 3.5), 9.5 of margin each way. The trace itself still uses T_FAINT.
+const T_CONCENTRIC = 13;
 function fitCircle(P) {
   let sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0, sxz = 0, syz = 0, sz = 0; const n = P.length;
   for (const [x, y] of P) { const z = x * x + y * y; sx += x; sy += y; sxx += x * x; syy += y * y; sxy += x * y; sxz += x * z; syz += y * z; sz += z; }
@@ -73,7 +76,7 @@ export function findSilhouette({ width, height, working, ellipse: e }) {
   const med0 = sorted0.length ? sorted0[Math.floor(sorted0.length / 2)] : 1;
   // When Pass 1 stays inside a concentric faint/white overmold rim (25th percentile around 1.04x >= T_FAINT, so at least 3/4 of the
   // perimeter is non-background, unlike a one-sided drop shadow whose unshadowed side is <= 6), trace the faint rim's outer step.
-  if (med0 < 1.03 && outsideConcentric != null && outsideConcentric >= T_FAINT) {
+  if (med0 < 1.03 && outsideConcentric != null && outsideConcentric >= T_CONCENTRIC) {
     const faint = traceRays(e, steps, px, d, T_FAINT, T_BG_FAINT, SHARP_FAINT);
     if (faint.P.length >= 96) {
       const s = [...faint.ratios].sort((a, b) => a - b), fm = s[Math.floor(s.length / 2)], fiqr = s[Math.floor(s.length * 0.75)] - s[Math.floor(s.length * 0.25)];
@@ -103,7 +106,7 @@ register({
   calculate: photo => findSilhouette(photo),
   witnessItem: (photo, out, ms) => ({ name: photo.name, ms, ...out, metrics: { maxRelExcursion: out.outsideBg == null ? 0 : out.outsideBg / 255 } }),
   guarantees: [
-    { id: 'G1_BackgroundOutside', description: 'on a uniform background, just outside the final crop is not disc or unclaimed concentric rim (1.06x median < 40 and 1.04x 25th-percentile < 18)', check: items => tally(items, x => !x.uniform || ((x.outsideBg == null || x.outsideBg < T_DISC) && (x.outsideConcentric == null || x.outsideConcentric < T_FAINT)), x => x.uniform ? `outside med ${Math.round(x.outsideBg ?? 0)}, p25 ${Math.round(x.outsideConcentric ?? 0)}${x.applied ? ` (was med ${Math.round(x.outsideBgBefore)}, p25 ${Math.round(x.outsideConcentricBefore ?? 0)})` : ''}` : 'no uniform background') },
+    { id: 'G1_BackgroundOutside', description: 'on a uniform background, just outside the final crop is not disc or unclaimed concentric rim (1.06x median < 40 and 1.04x 25th-percentile < 13)', check: items => tally(items, x => !x.uniform || ((x.outsideBg == null || x.outsideBg < T_DISC) && (x.outsideConcentric == null || x.outsideConcentric < T_CONCENTRIC)), x => x.uniform ? `outside med ${Math.round(x.outsideBg ?? 0)}, p25 ${Math.round(x.outsideConcentric ?? 0)}${x.applied ? ` (was med ${Math.round(x.outsideBgBefore)}, p25 ${Math.round(x.outsideConcentricBefore ?? 0)})` : ''}` : 'no uniform background') },
     { id: 'G2_RefitIsOutward', description: 'a refit only ever grows the crop to the outline (1.03x to 3x), never shrinks it', check: items => tally(items, x => !x.applied || (x.ratio >= 1.03 && x.ratio <= 3), x => x.applied ? `x${x.ratio.toFixed(2)}` : 'kept') },
   ],
 });
