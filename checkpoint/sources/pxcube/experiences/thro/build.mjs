@@ -38,6 +38,7 @@ const runtimeFiles = [
   'console-map.mjs',
   'ask.html',
   'ask.mjs',
+  'paper-card.mjs',
   'photos.html',
   'photos.mjs',
   'photo-bag.mjs',

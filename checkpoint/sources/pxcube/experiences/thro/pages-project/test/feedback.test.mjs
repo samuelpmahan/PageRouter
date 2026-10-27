@@ -16,7 +16,7 @@ try { ({ DatabaseSync } = await import('node:sqlite')); } catch { console.error(
 
 const here = dirname(fileURLToPath(import.meta.url)), project = resolve(here, '..'), thro = resolve(project, '..');
 const wranglerBin = join(project, 'node_modules', 'wrangler', 'bin', 'wrangler.js');
-const CARDS = ['u01', 'u02', 'u03-front', 'u03-behind', 'u04', 'u05', 'b01', 'b02', 'b03', 'b04', 'b05'];
+const CARDS = ['u01', 'u02', 'u03-front', 'u03-behind', 'u04', 'u05', 'b01', 'b02', 'b03', 'b04', 'b05', 'p01'];
 const sql = name => readFileSync(join(project, 'sql', name), 'utf8');
 const migration = name => readFileSync(join(project, 'migrations', name), 'utf8');
 const functionSource = readFileSync(join(project, 'functions', 'api', 'feedback.js'), 'utf8');
@@ -59,9 +59,9 @@ await test('migration 0002 carries legacy rows over and fills the derived tables
   eq(Object.fromEntries(db.prepare('SELECT key, n FROM feedback_counts').all().map(r => [r.key, r.n])), counts, 'recompute restores the same counts');
 });
 
-await test('0002 on an empty database: 11 cards + _answers seeded at 0, matching the CARDS list in feedback.js', () => {
+await test('0002+0003 on an empty database: 12 cards + _answers seeded at 0, matching the CARDS list in feedback.js', () => {
   const db = new DatabaseSync(':memory:');
-  db.exec(migration('0001_initial_feedback.sql')); db.exec(migration('0002_idempotent_append_only.sql'));
+  db.exec(migration('0001_initial_feedback.sql')); db.exec(migration('0002_idempotent_append_only.sql')); db.exec(migration('0003_paper_card.sql'));
   const keys = db.prepare('SELECT key FROM feedback_counts ORDER BY key').all().map(r => r.key);
   const inSource = /const CARDS = Object\.freeze\((\[[^\]]*\])\)/.exec(functionSource);
   ok(inSource, 'CARDS not found in feedback.js');
@@ -71,7 +71,7 @@ await test('0002 on an empty database: 11 cards + _answers seeded at 0, matching
 
 await test('the raw table is append-only: UPDATE and DELETE raise, and the function source never issues them', () => {
   const db = new DatabaseSync(':memory:');
-  db.exec(migration('0001_initial_feedback.sql')); db.exec(migration('0002_idempotent_append_only.sql'));
+  db.exec(migration('0001_initial_feedback.sql')); db.exec(migration('0002_idempotent_append_only.sql')); db.exec(migration('0003_paper_card.sql'));
   db.exec("INSERT INTO feedback (answer_id, revision, received_at, schema_version, client_version, picks, ingest_id) VALUES ('11111111-1111-4111-8111-111111111111', 1, '2026-10-27T00:00:00.000Z', 2, 't', '[\"u01\"]', 'x')");
   let msg = ''; try { db.exec("UPDATE feedback SET picks = '[\"u02\"]'"); } catch (e) { msg = e.message; }
   ok(/append-only/.test(msg), `UPDATE must be refused by trigger (got "${msg}")`);

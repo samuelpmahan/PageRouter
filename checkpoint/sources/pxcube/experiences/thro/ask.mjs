@@ -10,12 +10,13 @@
 // create a duplicate answer: the same (answerId, revision) is stored once and answered "duplicate" afterwards.
 import { loadFixture } from './prepared-fixture.mjs';
 import { nativeStudies, cardRevisions } from './native-cards.mjs';
+import { renderPaperCard, storyImage } from './paper-card.mjs';
 const V = '?v=28ac2b39fab85255';
 const adapter = await import(`./vendor/discstudio-cards/thro-adapter.mjs${V}`);
 const molds = await import(`./vendor/discstudio-cards/mold-library.js${V}`);
 const $ = id => document.getElementById(id);
 const opened = performance.now();
-const CLIENT_VERSION = 'ask@2026-10-27.2';   // stored with every answer as provenance; bump when what this page sends changes
+const CLIENT_VERSION = 'ask@2026-10-27.3';   // stored with every answer as provenance; bump when what this page sends changes
 const ANSWER_ID = mintId();                   // one per page visit
 function mintId() {                           // crypto.randomUUID needs a secure context; the fallback keeps plain-http previews working
   if (crypto.randomUUID) return crypto.randomUUID();
@@ -54,29 +55,52 @@ function flightsOf(d) {
   return ['speed', 'glide', 'turn', 'fade'].map((f, i) => d.flightOverrides?.[f] ?? base[i] ?? null);
 }
 
+// Every card on this page wears thro's orange (Sam, 27 Oct 14:37: the same orange detail as everything else), and the paper card
+// (P01, the Mid-Century Retro ThroCard from Sam's first reel) joins the eleven overlay layouts.
+const ACCENT = '#e0632e';
+const studies = [...nativeStudies, { preset: 'p01', name: 'P01 · Paper card', orientation: 'portrait', paper: true }];
+const logoSrc = (() => { const svg = document.querySelector('.brandbar svg'); return svg ? 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(new XMLSerializer().serializeToString(svg)) : null; })();
 const picked = new Set(), tiles = [];
-for (const study of nativeStudies) {
+for (const study of studies) {
   const b = document.createElement('button'); b.type = 'button'; b.className = 'card'; b.setAttribute('aria-pressed', 'false'); b.dataset.preset = study.preset;
   const [code, ...rest] = study.name.split(' · ');
   b.innerHTML = `<canvas width="${study.orientation === 'portrait' ? 300 : 480}" height="${study.orientation === 'portrait' ? 420 : 300}"></canvas><span class="wait">drawing…</span><span class="name"><b>${code}</b> ${rest.join(' · ')}</span><span class="check" aria-hidden="true">✓</span><span class="tally" hidden><span class="bar"><i style="width:0"></i></span><span class="n"></span></span>`;
   b.setAttribute('aria-label', `${study.name}: pick this card`);
+  const tile = document.createElement('div'); tile.className = 'tile';
+  const story = document.createElement('button'); story.type = 'button'; story.className = 'story'; story.disabled = true;
+  story.innerHTML = 'Share as a story <span aria-hidden="true">↗</span>'; story.setAttribute('aria-label', `${study.name}: save or share as an Instagram or TikTok story`);
   b.onclick = () => {
         if (picked.has(study.preset)) picked.delete(study.preset);
     else picked.add(study.preset);
     b.setAttribute('aria-pressed', String(picked.has(study.preset))); changed();
   };
-  $(study.orientation === 'portrait' ? 'portrait' : 'landscape').append(b);
-  tiles.push({ study, el: b });
+  tile.append(b, story);
+  $(study.orientation === 'portrait' ? 'portrait' : 'landscape').append(tile);
+  const entry = { study, el: b, story, card: null };
+  story.onclick = () => shareStory(entry);
+  tiles.push(entry);
 }
 // Each tile: a window onto the full frame, centred on the card with room around it, so the card is big enough to judge and the
 // shot around it is still there.
-for (const { study, el } of tiles) {
-  const c = el.querySelector('canvas'), ctx = c.getContext('2d');
+for (const entry of tiles) {
+  const { study, el } = entry, c = el.querySelector('canvas'), ctx = c.getContext('2d');
   try {
-    const r = await adapter.renderDiscStudioCard({ disc: { id: disc.id, mold: disc.mold, name: disc.name, manufacturer: disc.manufacturer, plastic: disc.plastic ?? null, weight: null },
-      photoSrc: disc.depiction.src, flights: flightsOf(disc), preset: study.preset, revision: cardRevisions[study.preset],
-      appearance: { discSide: study.side, highlightTarget: study.highlight, accentColor: study.accent } });
-    const card = await blobImage(r.png), W = r.width, H = r.height, b = r.layout.card;
+    let W, H, b, card;
+    if (study.paper) {
+      // the paper card is a whole card, not an overlay: shown sitting in the corner of the same portrait frame
+      W = 1080; H = 1920;
+      const pc = await renderPaperCard({ name: disc.name, manufacturer: disc.manufacturer, plastic: disc.plastic ?? null, weight: disc.weight ?? null,
+        flights: flightsOf(disc), photoSrc: disc.depiction.src, logoSrc, accent: ACCENT, width: 900 });
+      const cw = 560, ch = cw * pc.height / pc.width; b = { x: 64, y: H - 120 - ch, w: cw, h: ch }; entry.card = pc;
+      card = Object.assign(document.createElement('canvas'), { width: W, height: H }); card.getContext('2d').drawImage(pc, b.x, b.y, b.w, b.h);
+    } else {
+      const r = await adapter.renderDiscStudioCard({ disc: { id: disc.id, mold: disc.mold, name: disc.name, manufacturer: disc.manufacturer, plastic: disc.plastic ?? null, weight: null },
+        photoSrc: disc.depiction.src, flights: flightsOf(disc), preset: study.preset, revision: cardRevisions[study.preset],
+        appearance: { discSide: study.side, highlightTarget: study.highlight, accentColor: ACCENT } });
+      card = await blobImage(r.png); W = r.width; H = r.height; b = r.layout.card;
+      const only = Object.assign(document.createElement('canvas'), { width: Math.round(b.w), height: Math.round(b.h) });   // the card alone, for its story
+      only.getContext('2d').drawImage(card, b.x, b.y, b.w, b.h, 0, 0, only.width, only.height); entry.card = only;
+    }
     const frame = Object.assign(document.createElement('canvas'), { width: W, height: H }), f = frame.getContext('2d'), s0 = Math.max(W / tee.width, H / tee.height);
     f.drawImage(tee, (W - tee.width * s0) / 2, (H - tee.height * s0) / 2, tee.width * s0, tee.height * s0); f.drawImage(card, 0, 0);
     const aspect = c.width / c.height; let w = b.w * 1.45, h = b.h * 1.45;
@@ -84,8 +108,20 @@ for (const { study, el } of tiles) {
     w = Math.min(w, W); h = Math.min(h, H);
     const x = Math.max(0, Math.min(W - w, b.x + b.w / 2 - w / 2)), y = Math.max(0, Math.min(H - h, b.y + b.h / 2 - h / 2));
     ctx.drawImage(frame, x, y, w, h, 0, 0, c.width, c.height);
-    el.querySelector('.wait').remove();
+    el.querySelector('.wait').remove(); entry.story.disabled = false;
   } catch (e) { el.querySelector('.wait').textContent = 'could not draw'; console.error(e); }
+}
+// Share as a story: the card alone, centred on ink at 1080x1920 (Instagram and TikTok story size). On a phone the share sheet opens,
+// so it goes straight to Instagram; where sharing files is not supported, the image downloads instead.
+async function shareStory({ study, card, story }) {
+  if (!card) return;
+  const label = story.innerHTML; story.disabled = true;
+  try {
+    const s = await storyImage(card), blob = await new Promise(ok => s.toBlob(ok, 'image/png'));
+    const file = new File([blob], `throcard-${study.preset}-story.png`, { type: 'image/png' });
+    if (navigator.canShare?.({ files: [file] })) { try { await navigator.share({ files: [file] }); } catch { /* the person closed the share sheet */ } }
+    else { const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(blob), download: file.name }); document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000); }
+  } finally { story.disabled = false; story.innerHTML = label; }
 }
 $('main').setAttribute('aria-busy', 'false');
 
@@ -95,7 +131,7 @@ function status() {
   $('status').innerHTML = picked.size ? `<b>${picked.size} of ${tiles.length}</b> picked` : 'Tap every card you\'d use.';
   $('all').textContent = picked.size === tiles.length ? 'Clear all' : 'Select all';
 }
-const nameOf = preset => nativeStudies.find(s => s.preset === preset).name;
+const nameOf = preset => studies.find(s => s.preset === preset).name;
 function feedback() {
   const note = $('note').value.trim(), seconds = Math.round((performance.now() - opened) / 1000);
   return [`My pick${picked.size > 1 ? 's' : ''}: ${[...document.querySelectorAll('.card[aria-pressed=true]')].map(el => nameOf(el.dataset.preset)).join(', ')}`, note && `What I'd change: ${note}`, `(${seconds}s, on ${matchMedia('(pointer:coarse)').matches ? 'a phone' : 'a computer'})`].filter(Boolean).join('\n');

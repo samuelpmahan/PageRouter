@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#f3e8d2">
 <title>Which cards would you put on screen? · thro</title>
-<meta name="description" content="Eleven overlay cards for disc golf videos. Thirty seconds: tap every card you'd put on screen, then send your picks.">
+<meta name="description" content="Twelve ThroCards for disc golf videos. Thirty seconds: tap every card you'd put on screen, then send your picks.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%232b2420' stroke-width='3'%3E%3Ccircle cx='16' cy='16' r='13'/%3E%3Ccircle cx='16' cy='16' r='5.75'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -28,7 +28,11 @@ main{flex:1;align-content:start;padding:18px var(--gutter) 26px;display:grid;gap
 .group h2{margin:0;font:700 13px/1 "Jost",sans-serif;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
 .row{display:grid;gap:16px;align-items:start}
 .row.landscape{grid-template-columns:repeat(5,minmax(0,1fr))}
-.row.portrait{grid-template-columns:repeat(6,minmax(0,1fr))}
+.row.portrait{grid-template-columns:repeat(7,minmax(0,1fr))}
+.tile{display:grid;gap:9px;align-content:start;min-width:0}
+.story{justify-self:start;min-height:34px;padding:6px 11px;border:1.5px solid var(--ink);border-radius:3px;background:var(--card);color:var(--ink);font:600 12.5px/1 "Jost",sans-serif;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+.story:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:3px 3px 0 var(--ink)}
+.story:disabled{opacity:.4;cursor:default;box-shadow:none}
 .card{position:relative;padding:0;border:2px solid var(--ink);border-radius:3px;overflow:hidden;background:var(--card);cursor:pointer;color:var(--ink);text-align:left;font:inherit;box-shadow:4px 4px 0 var(--ink);display:grid}
 .card:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
 .card canvas{display:block;width:100%;height:auto;background:#1a1d18}

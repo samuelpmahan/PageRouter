@@ -28,7 +28,7 @@ const LIMITS = Object.freeze({
 });
 const SCHEMA_VERSION = 2;      // version of the stored row contract (migrations/0002); 1 = the pre-migration table
 const PAGE = 'ask';
-const CARDS = Object.freeze(['u01', 'u02', 'u03-front', 'u03-behind', 'u04', 'u05', 'b01', 'b02', 'b03', 'b04', 'b05']);
+const CARDS = Object.freeze(['u01', 'u02', 'u03-front', 'u03-behind', 'u04', 'u05', 'b01', 'b02', 'b03', 'b04', 'b05', 'p01']);
 const TOTAL_KEY = '_answers';  // reserved row of feedback_counts: number of distinct answerIds
 // --------------------------------------------------------------------------------------------------------------------
 
