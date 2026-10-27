@@ -1,0 +1,14 @@
+{
+  "name": "thro-pages-project",
+  "private": true,
+  "type": "module",
+  "description": "thro.pages.dev Pages Functions (feedback endpoint) and its tests",
+  "scripts": {
+    "test": "node test/feedback.test.mjs",
+    "check-counts:local": "node scripts/check-counts.mjs --local",
+    "check-counts:remote": "node scripts/check-counts.mjs --remote"
+  },
+  "devDependencies": {
+    "wrangler": "4.154.0"
+  }
+}

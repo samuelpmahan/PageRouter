@@ -8,3 +8,10 @@ compatibility_date = "2026-10-01"
 binding = "FEEDBACK"
 database_name = "thro-feedback"
 database_id = "daf43f8e-ad01-43ac-8356-1c99b67dee55"
+# Numbered SQL files applied with: npx wrangler d1 migrations apply thro-feedback --remote   (see migrations/)
+migrations_dir = "migrations"
+
+# NOT declarable here: Cloudflare's Rate Limiting binding ([[ratelimits]]) is Workers-only; Pages Functions cannot use it,
+# so functions/api/feedback.js rate-limits with a D1 counter instead (table rate_limit).
+# Set by hand (Pages project > Settings > Variables and Secrets, Production), never committed:
+#   CLIENT_KEY_SECRET  any long random string; keys the rate-limit buckets so the stored value cannot be reversed to an IP.

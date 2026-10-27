@@ -5,6 +5,9 @@
 // thread (Sam, 19:02: discussion in Slack draws in outside interest) and saves it to thro's backend (POST /api/feedback, Cloudflare
 // D1 table feedback). The reply carries how many answers picked each card; those counts are shown only after you send, so they
 // cannot sway your own picks. Notes are stored but never shown to other visitors.
+// Every send carries an identity the server dedupes on: answerId (one random UUID per page visit) + revision (1, 2, 3 ... bumped only
+// when the picks or the note change). A triple-click, a double-submit, a retry after a flaky network or "Send update" can therefore never
+// create a duplicate answer: the same (answerId, revision) is stored once and answered "duplicate" afterwards.
 import { loadFixture } from './prepared-fixture.mjs';
 import { nativeStudies, cardRevisions } from './native-cards.mjs';
 const V = '?v=28ac2b39fab85255';
@@ -12,6 +15,35 @@ const adapter = await import(`./vendor/discstudio-cards/thro-adapter.mjs${V}`);
 const molds = await import(`./vendor/discstudio-cards/mold-library.js${V}`);
 const $ = id => document.getElementById(id);
 const opened = performance.now();
+const CLIENT_VERSION = 'ask@2026-10-27.2';   // stored with every answer as provenance; bump when what this page sends changes
+const ANSWER_ID = mintId();                   // one per page visit
+function mintId() {                           // crypto.randomUUID needs a secure context; the fallback keeps plain-http previews working
+  if (crypto.randomUUID) return crypto.randomUUID();
+  const b = crypto.getRandomValues(new Uint8Array(16)); b[6] = b[6] & 0x0f | 0x40; b[8] = b[8] & 0x3f | 0x80;
+  const h = [...b].map(x => x.toString(16).padStart(2, '0')).join('');
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+}
+// <post-answer> (test/feedback.test.mjs loads exactly this block, so keep it free of DOM access)
+// One POST of an already-frozen payload. Retries at most twice (400 ms, then 1.2 s later) and ONLY when the request itself fails
+// (offline, dropped, timed out): any answer from the server, including 429/503/400, is final. Every attempt sends the identical bytes
+// with the identical (answerId, revision), so a retry whose first attempt actually landed is answered "duplicate", not stored twice.
+const RETRY_DELAYS_MS = [400, 1200], ATTEMPT_TIMEOUT_MS = 10000;
+async function postAnswer(payload, { fetchFn = fetch, sleep = ms => new Promise(r => setTimeout(r, ms)), delays = RETRY_DELAYS_MS, timeoutMs = ATTEMPT_TIMEOUT_MS } = {}) {
+  const body = JSON.stringify(payload);
+  for (let attempt = 0; ; attempt++) {
+    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), timeoutMs);
+    try {
+      const r = await fetchFn('./api/feedback', { method: 'POST', headers: { 'content-type': 'application/json' }, body, signal: ctl.signal });
+      const text = await r.text();
+      let j = null; try { j = JSON.parse(text); } catch { /* the edge answered with something that is not ours */ }
+      return { saved: r.ok && j?.ok === true, status: r.status, error: j?.error ?? null, duplicate: j?.duplicate === true, tally: j?.tally ?? null, attempts: attempt + 1 };
+    } catch {
+      if (attempt >= delays.length) return { saved: false, status: 0, error: 'network', duplicate: false, tally: null, attempts: attempt + 1 };
+      await sleep(delays[attempt]);
+    } finally { clearTimeout(timer); }
+  }
+}
+// </post-answer>
 
 const fixture = await loadFixture(), disc = fixture.find(d => d.name === 'Servo') ?? fixture[0];
 const tee = await image('./assets/tee-shot-original.jpg');
@@ -57,8 +89,9 @@ for (const { study, el } of tiles) {
 }
 $('main').setAttribute('aria-busy', 'false');
 
+const sendDisabled = () => sending || !picked.size || (sentText !== null && feedbackKey() === sentText);
 function status() {
-  $('send').disabled = !picked.size || (sentText !== null && feedbackKey() === sentText);
+  $('send').disabled = sendDisabled();
   $('status').innerHTML = picked.size ? `<b>${picked.size} of ${tiles.length}</b> picked` : 'Tap every card you\'d use.';
   $('all').textContent = picked.size === tiles.length ? 'Clear all' : 'Select all';
 }
@@ -67,7 +100,8 @@ function feedback() {
   const note = $('note').value.trim(), seconds = Math.round((performance.now() - opened) / 1000);
   return [`My pick${picked.size > 1 ? 's' : ''}: ${[...document.querySelectorAll('.card[aria-pressed=true]')].map(el => nameOf(el.dataset.preset)).join(', ')}`, note && `What I'd change: ${note}`, `(${seconds}s, on ${matchMedia('(pointer:coarse)').matches ? 'a phone' : 'a computer'})`].filter(Boolean).join('\n');
 }
-let sentText = null;   // what was last sent; Send re-enables once the picks or the note change
+let sentText = null;   // what was last saved; Send re-enables once the picks or the note change
+let revision = 0, attempted = null, pending = null, sending = false;   // revision/attempted/pending: the identity and frozen payload of the newest content
 function changed() { status(); if (sentText !== null && feedbackKey() !== sentText) { $('send').textContent = 'Send update'; } }
 const feedbackKey = () => JSON.stringify([[...picked].sort(), $('note').value.trim()]);
 function showTally(t) {
@@ -80,26 +114,28 @@ function showTally(t) {
   }
 }
 $('send').onclick = async () => {
-  if (!picked.size) return;
-  const text = feedback(), box = $('copy-fallback');
+  if (sending || !picked.size) return;                 // a second click while a request is in flight does nothing
+  sending = true; $('send').disabled = true; $('send').textContent = 'Sending…';
+  const text = feedback(), box = $('copy-fallback'), key = feedbackKey();
   let copied = false;
   try { await navigator.clipboard.writeText(text); copied = true; box.hidden = true; }
   catch { box.value = text; box.hidden = false; box.focus(); box.select(); }
-  $('send').disabled = true; $('send').textContent = 'Sending…';
-  const seconds = Math.round((performance.now() - opened) / 1000), device = matchMedia('(pointer:coarse)').matches ? 'phone' : 'computer';
-  let saved = false, tally = null;
-  try {
-    const r = await fetch('./api/feedback', { method: 'POST', headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ picks: [...picked], note: $('note').value.trim(), seconds, device }) });
-    const j = await r.json(); saved = r.ok && j.ok; tally = j.tally;
-  } catch { /* offline or no backend: the copy still worked */ }
-  sentText = saved ? feedbackKey() : sentText;
+  if (key !== attempted) {   // new picks or note -> next revision, payload frozen now; the same content again (retry after a failure) reuses both
+    attempted = key; revision += 1;
+    pending = { answerId: ANSWER_ID, revision, picks: [...picked].sort(), note: $('note').value.trim(), seconds: Math.round((performance.now() - opened) / 1000),
+      device: matchMedia('(pointer:coarse)').matches ? 'phone' : 'computer', clientVersion: CLIENT_VERSION };
+  }
+  let r;
+  try { r = await postAnswer(pending); } finally { sending = false; }   // never leave Send stuck disabled
+  const saved = r.saved;
+  if (saved) sentText = key;
+  const why = r.error === 'daily_cap_reached' ? 'Saving is paused for today' : r.error === 'rate_limited' ? 'Too many sends just now' : 'Couldn\'t save just now';
   $('status').innerHTML = saved
     ? (copied ? '<b>Sent, and copied.</b> Paste it in the Slack thread.' : '<b>Sent.</b> Copy the text below for the Slack thread.')
-    : (copied ? '<b>Copied.</b> Couldn\'t save just now; paste it in the Slack thread.' : '<b>Copy this</b> and paste it in the Slack thread.');
-  $('send').textContent = saved ? 'Sent ✓' : 'Send';
-  $('send').disabled = saved;
-  if (saved) showTally(tally);
+    : (copied ? `<b>Copied.</b> ${why}; paste it in the Slack thread.` : '<b>Copy this</b> and paste it in the Slack thread.');
+  $('send').textContent = saved && sentText === feedbackKey() ? 'Sent ✓' : sentText !== null ? 'Send update' : 'Send';
+  $('send').disabled = sendDisabled();
+  if (saved) showTally(r.tally);
 };
 $('all').onclick = () => {
   const every = picked.size !== tiles.length;
