@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flight lab · thro</title>
+  <style>
+    :root {
+      /* thro Mid-Century Retro tokens under the engine's original names (so every rule below keeps working) */
+      --bg: #f3e8d2;        /* paper */
+      --panel: #fbf4e6;     /* card */
+      --panel-2: #ead9b8;   /* paper 2 */
+      --border: #2b2420;    /* ink */
+      --text: #2b2420;
+      --muted: #6f6253;
+      --lime: #b07d12;      /* neutral / stable (was lime) */
+      --cyan: #1f6f68;      /* overstable / fade (was cyan) */
+      --amber: #2b2420;     /* gates and pins (was amber) */
+      --rose: #e0632e;      /* understable / turn (was rose) */
+      --emerald: #2f7a4a;
+      --signal: #e0632e;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      width: 100vw; height: 100dvh;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font: 13px/1.38 'Jost', system-ui, -apple-system, sans-serif;
+      user-select: none;
+    }
+    .shell {
+      display: grid;
+      grid-template-rows: 48px 36px minmax(0, 1fr) 195px;
+      grid-template-columns: minmax(0, 1fr);
+      width: 100vw;
+      max-width: 100vw;
+      height: 100dvh;
+      gap: 7px;
+      padding: 7px 10px;
+      overflow: hidden;
+    }
+    header.topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 0 12px;
+      gap: 10px;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+    .brand .pill {
+      background: rgba(176, 125, 18, 0.14);
+      color: var(--lime);
+      border: 1px solid rgba(176, 125, 18, 0.35);
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 10.5px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .brand h1 {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+    }
+    .brand span.sub {
+      color: var(--muted);
+      font-size: 11.5px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .witness-pills {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+      flex-wrap: nowrap;
+    }
+    .wpill {
+      background: rgba(47, 122, 74, 0.12);
+      border: 1px solid rgba(47, 122, 74, 0.35);
+      color: #2f7a4a;
+      padding: 2px 7px;
+      border-radius: 5px;
+      font: 600 10.5px/1.2 ui-monospace, Consolas, monospace;
+      white-space: nowrap;
+    }
+    .wpill.fail {
+      background: rgba(224, 99, 46, 0.15);
+      border-color: rgba(224, 99, 46, 0.45);
+      color: #e0632e;
+    }
+    .modebar {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0 10px;
+      overflow-x: auto;
+    }
+    .modebar .lbl {
+      font: 700 10.5px ui-monospace, monospace;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-right: 4px;
+      white-space: nowrap;
+    }
+    .mode-btn {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.12s;
+    }
+    .mode-btn:hover { border-color: #2b2420; }
+    .mode-btn.active {
+      background: rgba(176, 125, 18, 0.14);
+      border-color: var(--lime);
+      color: var(--lime);
+    }
+    .stage-row {
+      display: grid;
+      grid-template-columns: 335px minmax(0, 1fr) 375px;
+      gap: 7px;
+      min-height: 0;
+      min-width: 0;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      min-width: 0;
+      overflow: hidden;
+    }
+    .card-head {
+      padding: 6px 11px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(43, 36, 32, 0.015);
+    }
+    .card-head h2 {
+      margin: 0;
+      font-size: 11.5px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--lime);
+    }
+    .card-body {
+      padding: 8px 10px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      flex: 1;
+    }
+    .preset-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .preset-btn {
+      text-align: left;
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 5px 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 11.5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+    .preset-btn.active {
+      border-color: var(--lime);
+      background: rgba(176, 125, 18, 0.1);
+    }
+    .preset-btn small {
+      color: var(--muted);
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 10.5px;
+      white-space: nowrap;
+    }
+    .control-group {
+      background: var(--panel-2);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 6px 9px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .control-group h3 {
+      margin: 0;
+      font-size: 10.5px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: flex;
+      justify-content: space-between;
+    }
+    .slider-row {
+      display: grid;
+      grid-template-columns: 98px 1fr 58px;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+    }
+    .slider-row input[type="range"] {
+      width: 100%;
+      accent-color: var(--lime);
+      height: 4px;
+      cursor: pointer;
+    }
+    .slider-row .val {
+      text-align: right;
+      font-family: ui-monospace, Consolas, monospace;
+      color: var(--cyan);
+      font-size: 10.5px;
+    }
+    .solved-box {
+      background: rgba(31, 111, 104, 0.07);
+      border: 1px solid rgba(31, 111, 104, 0.3);
+      border-radius: 7px;
+      padding: 6px 9px;
+    }
+    .solved-box h3 {
+      margin: 0 0 5px;
+      font-size: 10.5px;
+      color: var(--cyan);
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+    }
+    .solved-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+    .kv {
+      background: rgba(251, 244, 230, 0.9);
+      border: 1px solid rgba(43, 36, 32, 0.16);
+      border-radius: 5px;
+      padding: 3px 5px;
+    }
+    .kv span {
+      display: block;
+      font-size: 9.5px;
+      color: var(--muted);
+    }
+    .kv b {
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 11px;
+      color: var(--text);
+    }
+    .viewport-wrap {
+      position: relative;
+      flex: 1;
+      min-height: 0;
+      background: radial-gradient(circle at 50% 25%, #fbf4e6 0%, #ead9b8 80%);
+    }
+    canvas.full-cv {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+    .cam-bar {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      display: flex;
+      gap: 4px;
+      z-index: 5;
+    }
+    .cam-btn {
+      background: rgba(251, 244, 230, 0.92);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 4px 9px;
+      border-radius: 5px;
+      font-size: 11px;
+      cursor: pointer;
+      backdrop-filter: blur(6px);
+    }
+    .cam-btn.active {
+      border-color: var(--lime);
+      color: var(--lime);
+      background: rgba(176, 125, 18, 0.14);
+      font-weight: 600;
+    }
+    .hud-overlay {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(251, 244, 230, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 7px 10px;
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5px;
+      min-width: 245px;
+      backdrop-filter: blur(6px);
+      z-index: 5;
+    }
+    .hud-overlay .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .scrubber-bar {
+      position: absolute;
+      bottom: 8px;
+      left: 10px;
+      right: 10px;
+      background: rgba(251, 244, 230, 0.92);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 5px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(6px);
+      z-index: 5;
+    }
+    .play-btn {
+      background: var(--lime);
+      color: #fff8ee;
+      border: none;
+      border-radius: 5px;
+      padding: 3px 10px;
+      font-weight: 700;
+      font-size: 11.5px;
+      cursor: pointer;
+    }
+    .bottom-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 440px;
+      gap: 7px;
+      min-height: 0;
+      min-width: 0;
+    }
+    .legend {
+      display: flex;
+      gap: 9px;
+      font-size: 10.5px;
+      color: var(--muted);
+      align-items: center;
+    }
+    .dot {
+      display: inline-block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+  
+    /* --- thro Mid-Century Retro pass (overrides; layout and behaviour unchanged) --- */
+    .topbar, .modebar, .card { border: 2px solid var(--border) !important; border-radius: 3px !important; box-shadow: 3px 3px 0 var(--border); }
+    .topbar { background: var(--bg) !important; }
+    .logo-link { display: block; line-height: 0; flex: 0 0 auto; }
+    .logo-link .logo { height: 24px; width: auto; display: block; }
+    .brand h1 { font-weight: 800 !important; letter-spacing: -.01em; }
+    .brand .pill { background: var(--signal) !important; color: #fff8ee !important; border: 0 !important; border-radius: 2px !important; font: 700 10.5px/1.6 'Jost', sans-serif !important; letter-spacing: .14em; text-transform: uppercase; padding: 1px 8px !important; }
+    .mode-btn { border: 1.5px solid var(--border) !important; border-radius: 3px !important; background: var(--panel) !important; color: var(--text) !important; font-family: 'Jost', sans-serif !important; font-weight: 600 !important; }
+    .mode-btn.active { background: var(--border) !important; color: var(--bg) !important; }
+    .card-head { border-bottom: 2px solid var(--border) !important; }
+    .card-head h2 { font-family: 'Jost', sans-serif !important; font-weight: 800 !important; letter-spacing: .04em; }
+    .wpill { border-radius: 2px !important; font-family: 'Jost', sans-serif !important; font-weight: 700 !important; }
+    .wpill.open { background: var(--panel-2) !important; color: var(--muted) !important; border: 1.5px dashed var(--muted) !important; }
+    .model-note { margin: 0 0 6px; padding: 5px 8px; border-left: 3px solid var(--signal); background: var(--panel-2); font-size: 11.5px; color: var(--text); }
+    button, select, input { font-family: 'Jost', sans-serif; }
+    .brand h1 { color: var(--text) !important; }
+    @media (max-width: 900px) {
+      html, body { width: auto; height: auto; overflow: auto; }
+      .shell { display: flex; flex-direction: column; width: auto; max-width: none; height: auto; overflow: visible; }
+      .topbar { flex-wrap: wrap; height: auto; padding: 8px 10px !important; gap: 6px; }
+      .brand { flex-wrap: wrap; row-gap: 4px; }
+      .brand h1 { white-space: normal; font-size: 15px; }
+      .brand .sub { display: none; }
+      .witness-pills { flex-wrap: wrap; gap: 4px; }
+      .modebar { min-height: 40px; }
+      .stage-row, .bottom-row { display: flex; flex-direction: column; gap: 9px; height: auto; }
+      .stage-row > .card:nth-child(1) { height: auto; max-height: none; }
+      .stage-row > .card:nth-child(2) { height: 420px; }
+      .stage-row > .card:nth-child(3), .bottom-row > .card { height: 300px; }
+    }
+    @media (max-width: 900px) {
+      .hud-overlay { top: auto !important; bottom: 54px !important; right: 8px !important; left: auto !important; font-size: 10px !important; padding: 5px 7px !important; }
+      .cam-bar { flex-wrap: wrap; gap: 4px; }
+    }
+</style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <a class="logo-link" href="./" aria-label="thro"><svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="117 396 847 290" role="img" aria-label="thro"><path fill="#2b2420" fill-rule="evenodd" d="M242.38 676.41C247.95 675.54 252.89 674.45 253.37 673.99C254.94 672.49 253.91 651.78 251.65 639.50C249.51 627.88 249.36 627.51 246.97 627.70C228.87 629.17 226.47 629.13 223.07 627.32C221.19 626.32 218.71 624.23 217.57 622.68C215.54 619.91 215.50 618.85 215.50 569.68L215.50 519.50L233.75 519.23L252.00 518.95L252.00 495.50L252.00 472.05L233.75 471.77L215.50 471.50L215.50 447.75L215.50 424.00L183.75 424.00L152.00 424.00L152.00 448.00L152.00 472.00L138.50 472.00L125.00 472.00L125.00 495.50L125.00 519.00L138.50 519.00L152.00 519.00L152.00 571.87C152.00 631.10 152.49 637.17 158.29 648.94C164.79 662.14 178.54 672.20 195.24 675.97C206.02 678.40 228.37 678.61 242.38 676.41ZM333.21 611.72L333.50 548.50L335.80 542.80C338.90 535.13 345.60 527.86 352.22 524.97C359.38 521.85 371.59 521.16 379.42 523.43C389.54 526.38 397.29 535.60 399.88 547.80C400.64 551.39 401.00 572.72 401.00 614.02L401.00 674.94L432.58 675.22C449.96 675.38 464.36 675.31 464.58 675.08C465.47 674.19 464.91 544.97 463.98 536.13C462.65 523.56 460.62 516.12 455.82 506.27C448.39 491.02 434.63 478.95 418.28 473.33C407.91 469.77 389.03 468.90 377.57 471.45C359.06 475.57 344.66 487.15 335.17 505.55L332.10 511.50L332.05 457.75L332.00 404.00L301.00 404.00L270.00 404.00L270.00 498.25C270.00 550.09 269.70 611.02 269.34 633.66L268.68 674.82L271.09 675.16C272.41 675.35 286.87 675.37 303.21 675.22L332.92 674.94L333.21 611.72ZM542.22 613.75L542.50 552.50L545.63 546.00C549.61 537.71 555.77 531.54 564.00 527.61C570.37 524.56 570.80 524.50 585.00 524.54C592.98 524.57 601.17 525.09 603.22 525.70L606.94 526.82L607.22 499.31C607.38 483.85 607.11 471.57 606.60 471.25C606.11 470.95 600.46 470.49 594.05 470.22C576.74 469.51 567.45 472.62 556.95 482.63C551.04 488.27 547.03 494.66 543.99 503.28C540.68 512.68 540.00 510.52 540.00 490.58L540.00 472.00L509.00 472.00L478.00 472.00L478.00 573.50L478.00 675.00L509.97 675.00L541.94 675.00L542.22 613.75ZM729.50 670.56C756.20 662.74 777.59 645.37 790.22 621.28C798.00 606.42 801.19 593.20 801.15 576.00C801.10 550.64 791.62 527.04 774.14 508.75C755.67 489.42 731.03 478.89 704.00 478.78C659.71 478.60 622.66 506.34 609.31 549.70C606.81 557.82 606.60 559.84 606.58 576.00C606.55 595.59 607.34 599.79 613.86 614.91C625.10 640.99 647.18 660.92 674.39 669.55C686.26 673.32 691.18 673.93 706.50 673.55C717.99 673.26 722.12 672.73 729.50 670.56ZM693.00 653.31C652.09 646.43 624.20 612.47 626.28 572.05C627.24 553.39 634.01 537.47 646.74 523.94C663.42 506.21 682.76 498.29 707.00 499.27C716.55 499.66 720.17 500.30 728.38 503.04C775.27 518.70 795.39 573.84 769.85 616.69C765.62 623.80 753.23 636.49 745.84 641.30C731.19 650.84 708.70 655.95 693.00 653.31ZM716.48 623.46C734.36 618.80 749.43 601.83 751.96 583.50C755.29 559.31 741.44 537.24 718.00 529.38C709.87 526.66 695.43 526.94 687.50 529.98C672.33 535.80 661.93 546.42 656.93 561.17C655.11 566.54 654.85 569.17 655.20 578.53C655.59 588.85 655.85 590.05 659.35 597.13C665.53 609.65 677.76 620.12 690.00 623.40C697.27 625.34 709.16 625.37 716.48 623.46ZM694.70 603.56C673.74 596.08 668.23 569.42 684.66 554.99C690.28 550.06 696.06 547.88 703.50 547.88C722.86 547.88 736.47 566.35 730.87 585.04C727.66 595.75 715.20 605.04 704.16 604.96C701.05 604.93 696.79 604.30 694.70 603.56Z"/><path fill="#e0632e" fill-rule="evenodd" d="M929.97 458.72C932.34 455.55 934.42 453.09 934.59 453.26C934.77 453.43 934.27 458.96 933.48 465.54C932.70 472.12 932.05 485.04 932.03 494.25L932.00 511.00L944.00 511.00L956.00 511.00L956.00 464.50L956.00 418.00L909.00 418.00L862.00 418.00L862.00 429.62L862.00 441.24L887.25 440.69C901.14 440.38 914.46 439.71 916.85 439.18C920.24 438.44 920.90 438.49 919.85 439.43C919.11 440.08 914.67 443.83 910.00 447.75C905.33 451.67 891.38 465.03 879.02 477.43L856.53 499.99L865.02 508.53L873.50 517.07L899.58 490.78C913.92 476.33 927.60 461.90 929.97 458.72Z"/></svg></a><span class="pill">flight lab</span>
+        <h1>Deterministic 2D Cross-Section Airfoil → 6-DoF Flight & BVP Engine</h1>
+        <span class="sub">Zero Flight-Number Inputs Required: Cylindrical Shell Inertia + Stagnation PLH & Cavity Lift Integrated Directly from 2D Rim Contour</span>
+      </div>
+      <div class="witness-pills" id="witness-pills"></div>
+    </header>
+
+    <nav class="modebar" id="modebar">
+      <span class="lbl">Engine Mode:</span>
+      <button class="mode-btn active" data-mode="bvp">1. Single-Shot BVP Constraint Solver</button>
+      <button class="mode-btn" data-mode="matrix-12">2. All 12 Archetypes (4 Classes × 3 Stabilities)</button>
+      <button class="mode-btn" data-mode="putter">Putters (US / Stable / OS)</button>
+      <button class="mode-btn" data-mode="midrange">Midranges (US / Stable / OS)</button>
+      <button class="mode-btn" data-mode="fairway">Fairways (US / Stable / OS)</button>
+      <button class="mode-btn" data-mode="driver">Distance Drivers (US / Stable / OS)</button>
+      <button class="mode-btn" data-mode="fndm-4">3. "Flight Numbers Don't Matter" (4 Runs of 12|5|-1|3 + Inverse PLH)</button>
+    </nav>
+
+    <div class="stage-row">
+      <!-- Left Column: Shot Presets / Squad Roster, Cross-Section Sliders & Solved Vector -->
+      <section class="card">
+        <div class="card-head">
+          <h2 id="left-head-title">1. Constraint Spec & 2D Cross-Section Controls</h2>
+          <span id="solve-ms" style="font:10.5px ui-monospace,monospace;color:var(--emerald)">-- ms</span>
+        </div>
+        <p class="model-note">Flight numbers on this page are the model's output from each rim cross-section, not the manufacturers' published numbers.</p>
+        <div class="card-body">
+          <div class="preset-list" id="preset-list"></div>
+
+          <div class="control-group" id="ctrl-cross-section">
+            <h3><span>2D Cross-Section Geometry (mm)</span><span style="color:var(--amber)" id="lbl-emergent-fn">Emergent: 10|5|-1|2</span></h3>
+            <div class="slider-row">
+              <label>PLH Shift (Δz_plh)</label>
+              <input type="range" id="sl-cs-plh" min="-1.8" max="1.8" step="0.05" value="0">
+              <span class="val" id="val-cs-plh">+0.00 mm</span>
+            </div>
+            <div class="slider-row">
+              <label>Rim Width (w_rim)</label>
+              <input type="range" id="sl-cs-rim" min="9.0" max="24.5" step="0.2" value="18.8">
+              <span class="val" id="val-cs-rim">18.8 mm</span>
+            </div>
+            <div class="slider-row">
+              <label>Dome Rise (h_dome)</label>
+              <input type="range" id="sl-cs-dome" min="1.2" max="6.5" step="0.1" value="4.2">
+              <span class="val" id="val-cs-dome">4.2 mm</span>
+            </div>
+          </div>
+
+          <div class="control-group" id="ctrl-bvp-constraints">
+            <h3><span>3D Fairway Mando & Pin Constraints</span><span style="color:var(--lime)">Drag on Map</span></h3>
+            <div class="slider-row">
+              <label>Pin Dist / Lat</label>
+              <input type="range" id="sl-pin-x" min="220" max="475" step="5" value="375">
+              <span class="val" id="val-pin-x">375 ft</span>
+            </div>
+            <div class="slider-row">
+              <label>Pin Lateral (Y)</label>
+              <input type="range" id="sl-pin-y" min="-65" max="65" step="1" value="0">
+              <span class="val" id="val-pin-y">0 ft</span>
+            </div>
+            <div class="slider-row">
+              <label>Gate Lateral (Y)</label>
+              <input type="range" id="sl-gate-y" min="-45" max="45" step="1" value="-4">
+              <span class="val" id="val-gate-y">-4 ft</span>
+            </div>
+            <div class="slider-row">
+              <label>Ceiling (Zmax)</label>
+              <input type="range" id="sl-gate-zmax" min="12" max="55" step="1" value="24">
+              <span class="val" id="val-gate-zmax">24 ft</span>
+            </div>
+          </div>
+
+          <div class="solved-box">
+            <h3>
+              <span id="sol-box-title">Solved 6-DoF Release Vector u*</span>
+              <span id="land-err-badge" style="color:var(--emerald)">err: 0.01 ft</span>
+            </h3>
+            <div class="solved-grid">
+              <div class="kv"><span>Release Speed</span><b id="sol-speed">-- mph</b></div>
+              <div class="kv"><span>Hyzer Bank (φ₀)</span><b id="sol-hyzer">--°</b></div>
+              <div class="kv"><span>Launch Angle (θ₀)</span><b id="sol-launch">--°</b></div>
+              <div class="kv"><span>Aim Azimuth (ψ₀)</span><b id="sol-aim">--°</b></div>
+              <div class="kv"><span>Nose AoA (α₀)</span><b id="sol-nose">--°</b></div>
+              <div class="kv"><span>Axial Spin (ωz)</span><b id="sol-spin">-- rpm</b></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Center Column: 3D Controlled Physics Engine Viewport -->
+      <section class="card">
+        <div class="card-head">
+          <h2 id="viewport-title">2. 3D Aerodynamic & Gyroscopic Flight Viewport</h2>
+          <div class="legend">
+            <span><i class="dot" style="background:#e0632e"></i>Understable / Turn (φ &lt; 0)</span>
+            <span><i class="dot" style="background:#b07d12"></i>Neutral / Stable Cruise</span>
+            <span><i class="dot" style="background:#1f6f68"></i>Overstable / Hyzer Fade (φ &gt; 0)</span>
+          </div>
+        </div>
+        <div class="viewport-wrap">
+          <div class="cam-bar">
+            <button class="cam-btn active" data-cam="chase">Chase Cam</button>
+            <button class="cam-btn" data-cam="tee">Tee Broadcast Cam</button>
+            <button class="cam-btn" data-cam="gate">Mando Gate Cam</button>
+            <button class="cam-btn" data-cam="orbit">3D Orbit Overview</button>
+          </div>
+          <div class="hud-overlay" id="hud-overlay">
+            <div class="row"><span>Time t:</span><b id="hud-t">0.00 s</b></div>
+            <div class="row"><span>Position (X,Y,Z):</span><b id="hud-pos">0, 0, 5 ft</b></div>
+            <div class="row"><span>Airspeed v_rel:</span><b id="hud-speed" style="color:var(--lime)">0.0 mph</b></div>
+            <div class="row"><span>Bank Angle φ(t):</span><b id="hud-bank" style="color:var(--cyan)">0.0°</b></div>
+            <div class="row"><span>Precession dφ/dt:</span><b id="hud-prec" style="color:var(--amber)">0.0°/s</b></div>
+            <div class="row"><span>Cross-Sec C_L / C_D0:</span><b id="hud-clcd">0.00 / 0.000</b></div>
+            <div class="row"><span>Emergent Flight:</span><b id="hud-emergent" style="color:var(--lime)">10 | 5 | -1 | 2</b></div>
+          </div>
+          <canvas id="cv-3d" class="full-cv"></canvas>
+          <div class="scrubber-bar">
+            <button class="play-btn" id="btn-play">Pause</button>
+            <input type="range" id="sl-time" min="0" max="1000" value="0" style="flex:1;accent-color:var(--lime)">
+            <span id="lbl-phase" style="font:600 11px ui-monospace,monospace;color:var(--lime);min-width:195px;text-align:right">PHASE: HIGH-SPEED TURN</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right Column: Interactive Top-Down Fairway Dispersion & Constraint Map -->
+      <section class="card">
+        <div class="card-head">
+          <h2>3. Top-Down Fairway Dispersion & Constraint Map</h2>
+          <span style="font-size:10.5px;color:var(--muted)" id="map-sub-label">Drag <b style="color:var(--amber)">Gate</b> or <b style="color:var(--lime)">Pin</b></span>
+        </div>
+        <div class="viewport-wrap" style="background:#fbf4e6">
+          <canvas id="cv-map" class="full-cv" style="cursor:grab"></canvas>
+        </div>
+      </section>
+    </div>
+
+    <!-- Bottom Row: Elevation Ceiling Profile, Gyroscopic Precession Curve, & Deterministic 2D Cross-Section Airfoil Inspector -->
+    <div class="bottom-row">
+      <section class="card">
+        <div class="card-head">
+          <h2>4. Side Elevation Profile z(x) & Carry Tiers</h2>
+          <span id="elev-summary" style="font:10.5px ui-monospace,monospace;color:var(--muted)">Apex: -- ft</span>
+        </div>
+        <div class="viewport-wrap" style="background:#fbf4e6">
+          <canvas id="cv-elev" class="full-cv"></canvas>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>5. Gyroscopic Bank Precession φ(t) (Turn → Fade)</h2>
+          <span id="prec-summary" style="font:10.5px ui-monospace,monospace;color:var(--muted)">Turn → Fade</span>
+        </div>
+        <div class="viewport-wrap" style="background:#fbf4e6">
+          <canvas id="cv-bank" class="full-cv"></canvas>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <h2>6. Deterministic 2D Cross-Section Airfoil Ω(r, z)</h2>
+          <span id="cs-badge" style="font:600 10.5px ui-monospace,monospace;color:var(--amber)">PLH = 7.8mm · z_CM = 8.4mm</span>
+        </div>
+        <div class="viewport-wrap" style="background:#fbf4e6">
+          <canvas id="cv-cs" class="full-cv"></canvas>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script type="module" src="./flight-engine.mjs"></script>
+</body>
+</html>
