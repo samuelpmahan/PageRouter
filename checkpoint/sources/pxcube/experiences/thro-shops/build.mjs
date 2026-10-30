@@ -83,7 +83,7 @@ for (const [handle, s] of Object.entries(shops)) {
   const all = '';
   const vars = s.signal ? ` style="--signal:${esc(s.signal)};--signal2:${esc(s.signal2 ?? '#1f6f68')}"` : '';
   const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="robots" content="noindex, nofollow"><title>${esc(title)} · featured discs</title>
+<meta name="robots" content="noindex, nofollow"><title>${esc(title)} · thro</title>
 <meta name="description" content="The discs from ${esc(s.name)}'s recent videos, each linking to ${esc(s.domain)}.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%23c8f49d' stroke-width='3'%3E%3Ccircle cx='16' cy='16' r='13'/%3E%3Ccircle cx='16' cy='16' r='5.75'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -101,4 +101,15 @@ if (fs.existsSync(parkedFile)) for (const [handle, p] of Object.entries(JSON.par
   fs.mkdirSync(path.join(out, handle), { recursive: true });
   fs.writeFileSync(path.join(out, handle, 'index.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><title>Taken down · thro</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#f3e8d2;color:#2b2420;font:16px/1.5 system-ui,sans-serif;padding:24px}main{max-width:36ch}a{color:#1f6f68}</style></head><body><main><h1 style="margin:0 0 8px;font-size:24px">This demo page has been taken down.</h1><p style="margin:0">It showed discs from ${esc(p.name)}'s public videos. <a href="https://thro.pages.dev/">thro</a></p></main></body></html>`);
   console.log(handle, 'parked: taken-down page');
+}
+
+// Site-wide 404 (Cloudflare Pages serves 404.html with status 404 for unknown paths, instead of falling back to the front page)
+// and a sitemap of the real pages. Both are generated here so they list exactly the shop pages this build wrote.
+{
+  const handles = Object.keys(shops).filter(h => fs.existsSync(path.join(out, h, 'index.html')));
+  const links = handles.map(h => `<li><a href="/${h}/">${esc(shops[h].name)}</a></li>`).join('');
+  fs.writeFileSync(path.join(out, '404.html'), `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>Not found · thro</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@500;700;800&display=swap"><style>body{margin:0;background:#f3e8d2;color:#2b2420;font:18px/1.5 Jost,system-ui,sans-serif}main{max-width:640px;margin:0 auto;padding:64px max(16px,env(safe-area-inset-left,0px))}.logo{height:56px}h1{font:800 56px/1 Jost;margin:40px 0 12px}a{color:#2b2420}ul{padding-left:20px}.cta{display:inline-block;margin-top:24px;background:#e0632e;color:#2b2420;font-weight:700;padding:12px 18px;border-radius:10px;text-decoration:none}</style></head><body><main><a href="/" aria-label="thro">${LOGO}</a><h1>Nothing here.</h1><p>That address isn't a thro page. These are:</p><ul>${links}</ul><a class="cta" href="/editor.html">Make a card</a></main></body></html>`);
+  const urls = ['/', '/editor.html', ...handles.map(h => `/${h}/`)];
+  fs.writeFileSync(path.join(out, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u => `  <url><loc>https://thro.pages.dev${u}</loc></url>`).join('\n')}\n</urlset>\n`);
+  console.log('404.html and sitemap.xml:', urls.length, 'pages');
 }
