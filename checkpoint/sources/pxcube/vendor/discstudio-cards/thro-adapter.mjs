@@ -4,7 +4,7 @@
 // pngFromSvg export path reproduces those pixels unchanged. Nothing in thro changes.
 import { CARD_SIZE, browserFrames, sizeBrowserSticker, ensureCardFonts } from './browser-card-renderer.js?v=28ac2b39fab85255';
 import { drawCard } from './card-renderer-core.js?v=28ac2b39fab85255';
-import { drawCard as drawCardRevision2 } from './thro-card-core-r2.js?v=28ac2b39fab85255';
+import { drawCard as drawCardRevision2, solveB01, b01NameWidth, B01_PARTS } from './thro-card-core-r2.js?v=28ac2b39fab85255';
 import { getMoldDetails } from './mold-library.js?v=28ac2b39fab85255';
 import { alphaBounds as rasterAlphaBounds, cardRasterIdentity, stickerOrigin } from './sticker-raster.mjs?v=28ac2b39fab85255';
 import { imageLayer } from './frame-seek.mjs?v=28ac2b39fab85255';
@@ -250,32 +250,60 @@ function recipeLayout(solved, m, moldName) {
 }
 
 /** A lineup (Battle or Bag): 2–4 DiscStudio cards, each drawn by the same renderer as a Single
- *  card, sized with DiscStudio's sticker step at one shared scale and set in a row along the
- *  bottom of a 1920 × 1080 frame by DiscStudio's frame renderer. Nothing is redrawn or restyled:
- *  every card is exactly the card it would be on its own. emphasis: index of a card shown full
- *  size while the others step back to `rest` of it (Battle's "whose turn"). */
+ *  card, sized with DiscStudio's sticker step at one shared scale and set by DiscStudio's frame renderer
+ *  in a row along the bottom of the frame (1920 × 1080 by default) or, in a portrait frame such as 1080 × 1350 (4:5), in a grid
+ *  of two columns (two rows for four cards) centred in the frame; a row of 3–4 that cannot stay readable falls back to that grid.
+ *  Nothing is redrawn or restyled: every card is exactly the card it would be on its own, except that B01 revision-2 cards share
+ *  one name size (the smallest any of them fits), so a short name is never set larger than a long one. emphasis: index of a card
+ *  shown full size while the others step back to `rest` of it (Battle's "whose turn"). */
+async function sharedB01NameSize(cards, preset) {
+  const b01 = cards.filter(card => (card.preset ?? preset) === 'b01' && card.revision === 2);
+  if (b01.length < 2) return cards;
+  await ensureCardFonts();
+  const ctx = newCanvas(1, 1).getContext('2d');
+  if (!ctx) throw new Error('Canvas2D is unavailable in this browser.');
+  const fitted = [];
+  for (const card of b01) {
+    const moldName = card.disc?.name ?? (await getMoldDetails(String(card.disc?.mold ?? '').replace(/^ds\.px\.seed\./, '')))?.mold ?? '';
+    fitted.push(solveB01(card.parts ?? {}, b01NameWidth(ctx, moldName)).derived.namePx);
+  }
+  const shared = Math.min(...fitted);
+  if (fitted.every(px => px === shared) && b01.every(card => (card.parts?.nameMax ?? B01_PARTS.nameMax.start) === shared)) return cards;
+  return cards.map(card => b01.includes(card) ? { ...card, parts: { ...(card.parts ?? {}), nameMax: shared } } : card);
+}
 export async function renderDiscStudioLineup({ cards, preset = 'u05', width = 1920, height = 1080, margin = 48, gap = 40, emphasis = null, rest = 0.82 }) {
   if (!Array.isArray(cards) || cards.length < 2 || cards.length > 4) throw Error('A lineup needs 2 to 4 discs.');
   const natives = [];
-  for (const request of cards) natives.push(await drawNativeCard({ ...request, preset: request.preset ?? preset }));
+  for (const request of await sharedB01NameSize(cards, preset)) natives.push(await drawNativeCard({ ...request, preset: request.preset ?? preset }));
   const weight = natives.map((_, i) => emphasis === null || emphasis === i ? 1 : rest);
-  const sumW = natives.reduce((total, n, i) => total + (n.bounds[2] - n.bounds[0]) * weight[i], 0), maxH = Math.max(...natives.map((n, i) => (n.bounds[3] - n.bounds[1]) * weight[i]));
-  const base = Math.min(1.5 , (width - margin * 2 - gap * (natives.length - 1)) / sumW, (height - margin * 2) / maxH);
+  const w = i => (natives[i].bounds[2] - natives[i].bounds[0]) * weight[i], h = i => (natives[i].bounds[3] - natives[i].bounds[1]) * weight[i];
+  // rows: card indexes per row. The shared scale is the largest at which every row fits the width and the rows fit the height.
+  const scaleFor = rows => Math.min(1.5, ...rows.map(row => (width - margin * 2 - gap * (row.length - 1)) / row.reduce((t, i) => t + w(i), 0)),
+    (height - margin * 2 - gap * (rows.length - 1)) / rows.reduce((t, row) => t + Math.max(...row.map(h)), 0));
+  const all = natives.map((_, i) => i), grid = [];
+  for (let i = 0; i < all.length; i += 2) grid.push(all.slice(i, i + 2));
+  let rows = height > width ? grid : [all], base = scaleFor(rows);
+  if (base * Math.min(...weight) < 0.5 && rows.length === 1 && natives.length > 2 && scaleFor(grid) > base) { rows = grid; base = scaleFor(grid); }
   if (base * Math.min(...weight) < 0.5) throw Error('These cards cannot share one frame at a readable size.');
   const stickers = [];
   for (const [i, native] of natives.entries()) stickers.push(await stickerFor(native, Math.min(1.5, Math.round(base * weight[i] * 1000) / 1000)));
-  const row = stickers.reduce((total, s) => total + s.width, 0) + gap * (stickers.length - 1);
-  let x = Math.round((width - row) / 2);
-  const layers = [], layout = [];
-  for (const [i, sticker] of stickers.entries()) {
-    const origin = { x, y: height - margin - sticker.height };
-    layers.push({ ...imageLayer(`lineup-card-${i}`, sticker.identity, sticker.canvas, sticker.width, sticker.height), ...origin });
-    layout.push(layoutOf(natives[i].items.map(item => itemThrough(item, toSticker(natives[i], sticker, origin))), natives[i].moldName));
-    x += sticker.width + gap;
+  const layers = [], layout = [], rowH = rows.map(row => Math.max(...row.map(i => stickers[i].height)));
+  const total = rowH.reduce((t, v) => t + v, 0) + gap * (rows.length - 1);
+  // One row sits on the bottom margin (as before); a grid is centred in the frame. Each row is centred across, its cards on its baseline.
+  let y = rows.length === 1 ? height - margin - total : Math.round((height - total) / 2);
+  for (const [r, row] of rows.entries()) {
+    let x = Math.round((width - (row.reduce((t, i) => t + stickers[i].width, 0) + gap * (row.length - 1))) / 2);
+    for (const i of row) {
+      const sticker = stickers[i], origin = { x, y: y + rowH[r] - sticker.height };
+      layers[i] = { ...imageLayer(`lineup-card-${i}`, sticker.identity, sticker.canvas, sticker.width, sticker.height), ...origin };
+      layout[i] = layoutOf(natives[i].items.map(item => itemThrough(item, toSticker(natives[i], sticker, origin))), natives[i].moldName);
+      x += sticker.width + gap;
+    }
+    y += rowH[r] + gap;
   }
   const canvas = newCanvas(width, height), context = canvas.getContext('2d');
   if (!context) throw new Error('Canvas2D is unavailable in this browser.');
   browserFrames.seek(context, { width, height, layers }, 0);
   const png = await canvasBlob(canvas);
-  return { svg: await svgFor(png, width, height), width, height, png, layout, presets: natives.map(n => n.id), scales: stickers.map(s => s.scale), build };
+  return { svg: await svgFor(png, width, height), width, height, png, layout, presets: natives.map(n => n.id), scales: stickers.map(s => s.scale), arrangement: rows.length === 1 ? 'row' : 'grid', build };
 }

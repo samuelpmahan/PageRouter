@@ -10,7 +10,8 @@ import { archive } from '../../experiences/thro/dist/studio/upload-disc-to-shelf
 // is a synthetic opaque carrier; these tests make no visual-quality claim.
 const fixtureBase = new URL('../../experiences/thro/', import.meta.url);
 const manifest = JSON.parse(fs.readFileSync(new URL('prepared-fixture.json', fixtureBase)));
-const fixtures = manifest.discs.map(disc => {
+// The first three prepared samples (Servo, Buzzz SS, Anchor): the shelf this test was written around; later samples are not needed here.
+const fixtures = manifest.discs.slice(0, 3).map(disc => {
   const bytes = fs.readFileSync(new URL(disc.file, fixtureBase));
   assert.equal(createHash('sha256').update(bytes).digest('hex'), disc.sha256);
   return { ...disc, depiction: { kind: 'photo', name: disc.name, src: `data:image/webp;base64,${bytes.toString('base64')}` } };

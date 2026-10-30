@@ -1,6 +1,7 @@
 import { openWorkspace } from './workspace.mjs';
-import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, cardLayout, latestCardRevision, useSiteCardRevision, pixelStats, nativeLineupPlan, accentPalette } from './native-cards.mjs';
+import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, lineupStudy, lineupFrames, lineupFrame, cardParts, cardLayout, latestCardRevision, useSiteCardRevision, pixelStats, nativeLineupPlan, accentPalette } from './native-cards.mjs';
 import { attachCardEditor, detachCardEditor } from './card-editor.mjs';
+import { B01_PARTS } from './vendor/discstudio-cards/thro-card-core-r2.js?v=28ac2b39fab85255'; // already loaded by card-parts.mjs
 import { createThroWorld, decide, screen, SITE_FILL, photoDefinition } from './thro-world.mjs';
 import { alphaBounds, fitArtwork } from './preview-frame.mjs';
 import { cardPixelBox, fileNames, cropPng, zipPngs } from './editor-batch.mjs';
@@ -237,7 +238,7 @@ function thumbDesign(id) {
 // never blanks the picker; a stale thumbnail stays visible (dimmed) while its new one renders.
 const thumbCache = new Map(), lastThumb = new Map();
 let retiredThumbs = new Map(); // the thumbnail slots of the page just replaced, by layout
-const thumbKey = (disc, id) => { const d = thumbDesign(id); return JSON.stringify([disc, id, isLineupStudy(id) ? [ui.selection, context().competitionAddress] : null, d.accent, d.foreground, d.background, d.nativeSide ?? null, d.nativeHighlight ?? null, d.nativeScale ?? null, d.nativePlate ?? null, d.nativeRevision ?? null]); };
+const thumbKey = (disc, id) => { const d = thumbDesign(id); return JSON.stringify([disc, id, isLineupStudy(id) ? [ui.selection, context().competitionAddress, d.lineupFrame ?? null, d.nativeParts ?? null] : null, d.accent, d.foreground, d.background, d.nativeSide ?? null, d.nativeHighlight ?? null, d.nativeScale ?? null, d.nativePlate ?? null, d.nativeRevision ?? null]); };
 // Idle means no tap is being answered and no save is running, not only a free moment between them (a draw waits on the
 // PNG encoder; a thumbnail started in that gap would make the card wait).
 const idle = async () => {
@@ -354,12 +355,30 @@ function downloadedMarkup() {
   return `<div class="downloaded" role="status"><span class="downloaded-mark" aria-hidden="true">✓</span><div><strong>Downloaded ${d.format.toUpperCase()} · ${d.width} × ${d.height}</strong><p><span class="downloaded-file">${text(d.filename)}</span> ${next}</p></div></div>`;
 }
 
+// A lineup's frame and, for a layout drawn from parts (B01), its choice parts (row, maker line, align) for every card at once.
+const lineupMarkupNote = design => { const frame = lineupFrame(design); return `Each disc is its exact Thro card, set ${frame.height > frame.width ? 'two across' : 'side by side'} in one ${frame.width} × ${frame.height} frame.`; };
+const lineupChoiceParts = design => (cardParts[lineupStudy(design.study).preset] ? Object.keys(B01_PARTS).filter(k => B01_PARTS[k].unit === 'choice') : []);
+function lineupPartsMarkup(design) {
+  const keys = lineupChoiceParts(design);
+  if (!keys.length) return '';
+  const field = k => `<label>${text(B01_PARTS[k].label)}<select id="lineup-part-${k}" data-lineup-part="${k}">${B01_PARTS[k].choices.map((c, i) => option(String(i), c, String(design.nativeParts?.[k] ?? B01_PARTS[k].start))).join('')}</select></label>`;
+  const rows = [];
+  for (let i = 0; i < keys.length; i += 2) rows.push(`<div class="field-pair">${keys.slice(i, i + 2).map(field).join('')}</div>`);
+  return rows.join('');
+}
+function readLineupParts(design) {
+  const parts = { ...(design.nativeParts ?? {}) };
+  for (const select of document.querySelectorAll('[data-lineup-part]')) { const k = select.dataset.lineupPart, v = Number(select.value); if (v === B01_PARTS[k].start) delete parts[k]; else parts[k] = v; }
+  const next = { ...design };
+  if (Object.keys(parts).length) next.nativeParts = parts; else delete next.nativeParts;
+  return next;
+}
 function controlsMarkup() {
   const design = ui.design;
   const choice = study => `<button type="button" role="radio" class="composition-choice" data-study="${text(study.id)}" aria-checked="${study.id === design.study}" title="${text(study.note ?? study.name)}"><span class="composition-thumb" data-study-thumb="${text(study.id)}" aria-hidden="true"></span><span class="composition-name">${text(shortStudyName(study))}</span></button>`;
   const picker = `<fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}">${ui.mode === 'single' && site.single === 'cards' ? `<div class="composition-picker" role="radiogroup" aria-label="Card layouts">${nativeStudies.map(choice).join('')}</div>` : `<p class="composition-group">${ui.mode === 'bag' ? 'Thro lineups' : 'Lineup layouts'}</p><div class="composition-picker" role="radiogroup" aria-label="Lineup layouts">${studiesFor(ui.mode).map(choice).join('')}</div>`}</fieldset>`;
   if (isLineupStudy(design.study)) {
-    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form">${picker}<p class="subtle">Each disc is its exact Thro card, set side by side in one 1920 × 1080 frame.</p><div class="field-pair canvas-fields"><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div></form>${battleMarkup()}${bagMarkup()}</aside>`;
+    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form">${picker}<p class="subtle">${lineupMarkupNote(design)}</p><div class="field-pair canvas-fields"><label>Frame<select id="lineup-frame">${lineupFrames.map(frame => option(frame.id, frame.name, lineupFrame(design).id)).join('')}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div>${lineupPartsMarkup(design)}<div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div></form>${battleMarkup()}${bagMarkup()}</aside>`;
   }
   if (isNativeStudy(design.study)) {
     const selected = nativeStudy(design.study), scale = design.nativeScale ?? .66;
@@ -673,7 +692,11 @@ function paintExportFailure({ focus = false } = {}) {
 
 function readDesign() {
   const study = $('composition').value;
-  if (isLineupStudy(study)) return { ...ui.design, study, accent: $('accent')?.value ?? ui.design.accent };
+  if (isLineupStudy(study)) {
+    // Parts belong to the layout they were set on; a different lineup layout starts from its own rules.
+    if (study !== ui.design.study) { const next = { ...ui.design, study, accent: $('accent')?.value ?? ui.design.accent }; delete next.nativeParts; return next; }
+    return readLineupParts({ ...ui.design, study, accent: $('accent')?.value ?? ui.design.accent, lineupFrame: $('lineup-frame')?.value ?? lineupFrame(ui.design).id });
+  }
   if (isLineupStudy(ui.design.study)) return { ...ui.design, study };
   if (isNativeStudy(study)) {
     return nativeControlDesign(ui.design, { study, scale: $('native-scale') ? Number($('native-scale').value) : undefined, side: $('native-side')?.value, highlight: $('native-highlight')?.value, accent: $('accent')?.value });

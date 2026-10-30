@@ -136,6 +136,7 @@ html.console-map .workspace-heading .mode-nav button{flex:1}
 html.console-map .shelf{grid-column:2;grid-row:2;overflow:auto;min-height:0;align-self:stretch}
 html.console-map .preview-column{grid-column:3;grid-row:1 / 3;overflow:auto;min-height:0;display:flex;flex-direction:column}
 html.console-map .preview-column .export-bar{position:static}
+html.console-map .preview-column>.preview-shell{flex-shrink:0} /* a tall frame (4:5, 9:16) shown whole scrolls the column instead of clipping its bottom */
 html.console-map .controls-panel{grid-column:4;grid-row:1 / 3;overflow:auto;min-height:0;align-self:stretch}
 html.console-map .captures{grid-column:2;grid-row:2;align-self:end;margin:0;max-height:34vh;overflow:auto}
 html.console-map .shelf{max-height:calc(100vh - 140px - 34vh)}

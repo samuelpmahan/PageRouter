@@ -29,12 +29,16 @@ export const nativeStudies = Object.freeze(definitions.map(([preset, name]) => O
   highlight: preset === 'u01' || preset === 'u02' || preset.startsWith('b') ? 'digits' : 'tiles',
   accent: /^(u03|u04|b0)/.test(preset) ? '#c8f23d' : '#8fe3ae',
 })));
-// Lineups (Bag): 2–4 of the same DiscStudio cards in one frame. Portrait-family cards only:
-// they stay readable at 3–4 across, and U04 is left out until it meets the hierarchy rule.
-const lineupDefinitions = [['u05', 'Glass drawer'], ['u02', 'Stacked poster'], ['u01', 'Compact scorebug'], ['u03-front', 'Disc in front'], ['u03-behind', 'Disc behind']];
+// Lineups (Bag): 2–4 of the same DiscStudio cards in one frame. Portrait-family cards stay readable at 3–4 across; U04 is left
+// out until it meets the hierarchy rule. B01 (revision 2, drawn from parts) joins them: its cards share one name size, and four of
+// them sit in a 2 × 2 grid (the 4:5 frame, or 16:9 when a row would be too small to read).
+const lineupDefinitions = [['u05', 'Glass drawer'], ['u02', 'Stacked poster'], ['u01', 'Compact scorebug'], ['u03-front', 'Disc in front'], ['u03-behind', 'Disc behind'], ['b01', 'Hero rail']];
 export const lineupStudies = Object.freeze(lineupDefinitions.map(([preset, name]) => Object.freeze({
   id: `discstudio-lineup:${preset}`, preset, name: `${preset.toUpperCase()} ${name}`, cardStudy: `discstudio:${preset}` })));
 export const isLineupStudy = study => typeof study === 'string' && study.startsWith('discstudio-lineup:');
+// The lineup's frame: the video frame (16:9) or a feed post (4:5, where the cards sit in a grid of two columns).
+export const lineupFrames = Object.freeze([Object.freeze({ id: '16:9', name: '16:9 · 1920 × 1080', width: 1920, height: 1080 }), Object.freeze({ id: '4:5', name: '4:5 · 1080 × 1350', width: 1080, height: 1350 })]);
+export const lineupFrame = design => lineupFrames.find(frame => frame.id === design?.lineupFrame) ?? lineupFrames[0];
 export function lineupStudy(study) {
   const result = lineupStudies.find(item => item.id === study);
   if (!result) throw Error('Choose a known Thro lineup layout.');
@@ -65,8 +69,8 @@ export function nativeDesign(previous, study) {
 // Parts of a card a person has pinned with its handles (the first Constraint Lab, in the renderer): only B01 at revision 2 is
 // drawn from parts and rules so far. The ranges are the renderer's own (B01_PARTS in thro-card-core-r2.js).
 export const cardParts = Object.freeze({ b01: Object.freeze({
-  plateW: [240, 1824], discD: [80, 900], discOX: [-1.6, 0.8], discOY: [-0.9, 1.6], tile: [24, 160], nameMax: [24, 220], row: [0, 1] }) });
-const wholeParts = new Set(['row']); // a choice, not a measure: 0 or 1
+  plateW: [240, 1824], discD: [80, 900], discOX: [-1.6, 0.8], discOY: [-0.9, 1.6], tile: [24, 160], nameMax: [24, 220], row: [0, 1], maker: [0, 1], align: [0, 1] }) });
+const wholeParts = new Set(['row', 'maker', 'align']); // choices, not measures: 0 or 1
 export const partsLayout = design => (isNativeStudy(design?.study) && cardParts[nativeStudy(design.study).preset] && design.nativeRevision === cardRevisions[nativeStudy(design.study).preset] ? nativeStudy(design.study).preset : null);
 export function validParts(parts, preset) {
   const ranges = cardParts[preset];
@@ -165,15 +169,21 @@ export function nativeLineupPlan({ material, design, entries }) {
   const selected = lineupStudy(design.study), state = material.states?.[0];
   const cards = entries.map(entry => {
     const cardDesign = nativeDesign({ ...design, study: selected.cardStudy, rendererBuild: nativeBuild }, selected.cardStudy);
+    // A lineup card starts at its layout's latest revision (B01: 2, drawn from parts), like a card picked fresh in Single.
+    if (cardDesign.nativeRevision === undefined && latestCardRevision(selected.cardStudy) !== undefined) cardDesign.nativeRevision = latestCardRevision(selected.cardStudy);
+    if (!cardParts[selected.preset]) delete cardDesign.nativeParts; // parts are B01's; another lineup layout ignores them
     const accent = material.styles?.[entry.id]?.accent ?? design.accent ?? cardDesign.accent;
     return { disc: entry.disc, resolved: entry.resolved, design: { ...cardDesign, accent, rendererBuild: nativeBuild } };
   });
   const featured = state?.highlight ? entries.findIndex(entry => entry.id === state.highlight) : -1;
-  return { preset: selected.preset, featured: featured >= 0 ? featured : null, cards };
+  const frame = lineupFrame(design);
+  return { preset: selected.preset, featured: featured >= 0 ? featured : null, cards, ...(frame.id !== '16:9' ? { frame: frame.id } : {}) };
 }
 /** What the lineup renderer draws from, without photo bytes: the lineup recipe Part. */
-export const lineupRequestRecipe = (plan, requests, photos) => ({ preset: plan.preset, featured: plan.featured,
-  cards: requests.map((request, i) => { const { depiction, ...disc } = request.disc; return { disc, flights: request.flights, appearance: request.appearance, photo: photos[i] }; }) });
+// A 16:9 lineup without card revisions or parts keeps exactly the recipe it had before frames and parts existed.
+export const lineupRequestRecipe = (plan, requests, photos) => ({ preset: plan.preset, featured: plan.featured, ...(plan.frame ? { frame: plan.frame } : {}),
+  cards: requests.map((request, i) => { const { depiction, ...disc } = request.disc; return { disc, flights: request.flights, appearance: request.appearance, photo: photos[i],
+    ...(request.revision !== undefined ? { revision: request.revision } : {}), ...(request.parts ? { parts: request.parts } : {}) }; }) });
 /** The recipe inside a renderer request (photo by SHA-256), and the hash the kernel gives that Part. */
 export const requestRecipe = (request, photo) => { const { disc: { depiction, ...disc }, photoSrc, ...rest } = request; return { disc, ...rest, photo }; };
 export const recipePartHash = recipe => hashString(canonical(recipe));
@@ -241,9 +251,11 @@ export function createNativeRenderer(renderCard = async request => {
     for (const request of requests) photos.push(await preparedPhotoDigest(request.photoSrc));
     const key = recipePartHash(lineupRequestRecipe(plan, requests, photos));
     const cached = lineupPixels.get(key);
-    const result = cached ?? await renderLineup({ cards: requests.map(({ disc, photoSrc, flights, appearance }) => ({ disc, photoSrc, flights, appearance })), preset: plan.preset, emphasis: plan.featured });
+    const frame = lineupFrame(design);
+    const result = cached ?? await renderLineup({ cards: requests.map(({ disc, photoSrc, flights, appearance, revision, parts }) => ({ disc, photoSrc, flights, appearance, ...(revision !== undefined ? { revision } : {}), ...(parts ? { parts } : {}) })),
+      preset: plan.preset, emphasis: plan.featured, width: frame.width, height: frame.height });
     if (result.build !== nativeBuild) throw Error('Native renderer build does not match this saved lineup.');
-    if (result.width !== 1920 || result.height !== 1080 || typeof result.svg !== 'string' || !/href=["']data:image\/png;base64,/.test(result.svg) || /href=["'](?:https?:|blob:)/i.test(result.svg)) throw Error('Native lineup must contain its retained PNG pixels.');
+    if (result.width !== frame.width || result.height !== frame.height || typeof result.svg !== 'string' || !/href=["']data:image\/png;base64,/.test(result.svg) || /href=["'](?:https?:|blob:)/i.test(result.svg)) throw Error('Native lineup must contain its retained PNG pixels.');
     if (result.layout) { layouts.set(pixelsOf(result.svg), result.layout); if (layouts.size > 60) layouts.delete(layouts.keys().next().value); }
     notePixels(key, cached);
     if (!cached) { lineupPixels.set(key, result); if (lineupPixels.size > 20) lineupPixels.delete(lineupPixels.keys().next().value); }
@@ -251,6 +263,7 @@ export function createNativeRenderer(renderCard = async request => {
       schema: 'thro-native-lineup@1', renderer: 'discstudio-cards', rendererBuild: nativeBuild, preset: plan.preset,
       physicalDiscIds: entries.map(entry => entry.disc.id), preparedPhotoSha256: photos,
       appearances: requests.map(request => ({ ...request.appearance })), featured: plan.featured, scales: [...result.scales], rasterOnly: true,
+      ...(plan.frame ? { frame: plan.frame, arrangement: result.arrangement } : {}),
     } };
   };
   return single;

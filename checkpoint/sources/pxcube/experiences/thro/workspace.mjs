@@ -48,7 +48,8 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
     }
     const staged = memory(archive(seededState));
     model = await openDemo(staged, { renderGraphic });
-    await model.patch({ name: 'Prepared sample bag', selection: model.experience.shelf().map(row => row.address), throMode: 'single' });
+    // The bag starts with the first three discs (the original prepared samples): a lineup holds 2–4, and the shelf can hold more.
+    await model.patch({ name: 'Prepared sample bag', selection: model.experience.shelf().slice(0, 3).map(row => row.address), throMode: 'single' });
     committedRaw = staged.raw;
     retained.setItem('', committedRaw);
     await retained.flush();

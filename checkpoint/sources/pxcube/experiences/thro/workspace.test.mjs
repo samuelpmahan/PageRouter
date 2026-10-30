@@ -32,9 +32,9 @@ test('prepared photos, exact bag membership and retained captures survive reopen
   const backing = storage(), lock = locks();
   const workspace = await openWorkspace({ storage: backing, locks: lock, fixture });
   const rows = workspace.model.experience.shelf();
-  assert.equal(rows.length, 3);
-  assert.deepEqual(rows.map(row => row.disc.depiction.kind), ['photo', 'photo', 'photo']);
-  assert.deepEqual(rows.map(row => row.seed.name), ['Servo', 'Buzzz SS', 'Anchor']);
+  assert.equal(rows.length, 9);
+  assert.ok(rows.every(row => row.disc.depiction.kind === 'photo'));
+  assert.deepEqual(rows.map(row => row.seed.name), ['Servo', 'Buzzz SS', 'Anchor', 'Luna', 'Challenger', 'Focus', 'APX', 'Zone', 'Buzzz']);
   const ordered = [rows[2].address, rows[0].address];
   const bagAddress = await workspace.createBag('Two exact copies', ordered);
   assert.deepEqual(workspace.model.value(bagAddress).versions.map(version => version.address), ordered);

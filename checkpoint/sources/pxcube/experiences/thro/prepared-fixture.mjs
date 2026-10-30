@@ -58,7 +58,7 @@ export async function loadFixture({ fetcher = globalThis.fetch, base = new URL('
   const response = await fetcher(new URL('prepared-fixture.json', base));
   if (!response.ok) throw Error(`Prepared sample manifest unavailable (${response.status}).`);
   const manifest = await response.json();
-  if (manifest.schema !== 'thro-prepared-fixture@1' || manifest.fixtureId !== fixtureId || manifest.fixtureOnly !== true || !Array.isArray(manifest.discs) || manifest.discs.length !== 3) throw Error('Unknown prepared sample manifest.');
+  if (manifest.schema !== 'thro-prepared-fixture@1' || manifest.fixtureId !== fixtureId || manifest.fixtureOnly !== true || !Array.isArray(manifest.discs) || manifest.discs.length < 3) throw Error('Unknown prepared sample manifest.');
   return Promise.all(manifest.discs.map(async disc => {
     validateFlightCorrection(disc);
     if (!/^assets\/discs\/[a-z0-9-]+\.webp$/.test(disc.file) || !/^[a-f0-9]{64}$/.test(disc.sha256) || !/^[a-z0-9-]+$/.test(disc.mold)) throw Error('Invalid prepared sample identity.');
