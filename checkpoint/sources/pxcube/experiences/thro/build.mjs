@@ -36,6 +36,7 @@ const runtimeFiles = [
   'dtree.mjs',
   'handles.mjs',
   'console-map.mjs',
+  'post-mode.mjs',
   'ask.html',
   'ask.mjs',
   'paper-card.mjs',

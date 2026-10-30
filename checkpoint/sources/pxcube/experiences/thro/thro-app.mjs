@@ -10,6 +10,7 @@ import { loadBag, workspaceKey as photoBagKey } from './photo-bag.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
 import { esc } from './renderer/src/presentation.js';
 import { pngFromSvg, sha256, downloadBlob } from './renderer/src/media.js';
+import { paintPost, postActive, setPostActive } from './post-mode.mjs';
 import { span, end as endGesture, active as activeGesture, settle as settleGesture, hold as holdGesture, gestures, books } from './gestures.mjs';
 
 const $ = id => document.getElementById(id);
@@ -98,6 +99,7 @@ function run(action, intent = null) {
 function adoptContext() {
   const saved = context();
   ui.mode = ['single', 'battle', 'bag'].includes(saved.throMode) ? saved.throMode : saved.graphicsPurpose === 'competition' ? 'battle' : 'single';
+  if (postActive()) ui.mode = 'post';
   ui.selectedDisc = rows.some(row => row.address === saved.selectedDisc) ? saved.selectedDisc : rows[0]?.address;
   ui.selection = [...(saved.selection ?? [])].filter(address => rows.some(row => row.address === address));
   ui.design = { ...defaultDesign, ...saved.design };
@@ -508,6 +510,7 @@ async function framePortraitPreview(graphic) {
   }
 }
 function schedulePortraitFrame() {
+  if (ui.mode === 'post') return; // Post sizes its own frame
   if (portraitReflowFrame) cancelAnimationFrame(portraitReflowFrame);
   portraitReflowFrame = requestAnimationFrame(() => { portraitReflowFrame = 0; framePortraitPreview(currentGraphic()); });
 }
@@ -622,10 +625,16 @@ function focusToken() {
   return null;
 }
 
+// What Post borrows from the editor: the shelf, the Single card drawing and its on-card editor, the download.
+const postApi = () => ({ rows, rowName, design: () => ui.design, single: (disc, design) => workspace.single(disc, design), nativeDesign, nativeControlDesign,
+  nativeStudies, latestCardRevision, cardLayout, attachCardEditor, palette, sha256, downloadBlob, message });
 function paint() {
   const keepBar = root.querySelector('.export-bar'), refocus = focusToken();
   retiredThumbs = new Map([...root.querySelectorAll('[data-study-thumb]')].map(slot => [slot.dataset.studyThumb, slot]));
-  span('rebuild the page', () => root.innerHTML = `<section class="workspace-heading"><div><span class="eyebrow">GOOD TO GO</span><h1>Your discs. Your next video.</h1></div><nav class="mode-nav" aria-label="Graphic type">${[['single', 'Single'], ['battle', 'Battle'], ['bag', 'Bag lineup']].map(([mode, label]) => `<button type="button" data-mode="${mode}" aria-pressed="${ui.mode === mode}">${label}</button>`).join('')}</nav></section><div class="studio-grid">${shelfMarkup()}<section class="preview-column" aria-labelledby="preview-title"><div class="preview-heading"><div><span class="eyebrow">YOUR GRAPHIC</span><h2 id="preview-title">${capturedPreview ? 'A kept version' : ui.mode === 'single' ? 'One disc. Ready for its moment.' : ui.mode === 'battle' ? 'Set the scene.' : 'Your selected lineup.'}</h2></div><button id="return-live" type="button" class="text-button" hidden>Back to current image</button></div><div class="preview-shell"><div class="preview-toolbar"><div class="view-switch" role="group" aria-label="Preview framing">${[['closeup', 'Close-up'], ['frame', 'Whole frame']].map(([v, label]) => `<button type="button" data-preview-view="${v}" aria-pressed="${ui.view === v}">${label}</button>`).join('')}</div><span id="preview-dimensions" class="preview-dimensions"></span><button id="preview-framing" type="button" class="preview-framing-toggle" aria-label="Toggle artwork detail and full canvas preview" hidden>Full canvas</button><div class="background-switch" aria-label="Preview background">${[['checker', 'Checkerboard'], ['light', 'Light'], ['dark', 'Dark']].map(([v, label]) => `<button type="button" data-preview-background="${v}" aria-label="${label} preview background" aria-pressed="${ui.background === v}" title="${label}"><span class="swatch swatch-${v}" aria-hidden="true"></span></button>`).join('')}</div></div><div id="graphic-preview" data-testid="graphic-preview" class="graphic-preview"></div><div class="preview-bottom"><span class="transparency-dot" aria-hidden="true"></span><strong id="preview-kind"></strong></div></div><p id="preview-note" class="preview-note"></p><div class="export-bar">${downloadedMarkup()}<div class="export-copy"><span class="eyebrow">STEP 3 · TAKE IT TO YOUR VIDEO</span><p>Download keeps this exact version.</p></div><div class="export-actions"><button id="keep-graphic" type="button" data-needs-ready class="button-secondary">Keep version</button><button id="download-png" type="button" data-needs-ready class="button-primary">Download PNG <span aria-hidden="true">↓</span></button><button id="download-svg" type="button" data-needs-ready class="svg-button" aria-label="Download editable SVG">SVG</button></div><div id="export-batch" class="export-batch"><button id="download-all" type="button" data-needs-ready class="button-secondary">Download all ${rows.length} <span aria-hidden="true">↓</span></button><label class="tight-crop"><input id="tight-crop" type="checkbox" ${tightCrop ? 'checked' : ''}> Tight crop</label><span class="export-batch-note">One PNG per disc in this layout, in one .zip.</span></div></div></section>${controlsMarkup()}</div>${capturesMarkup()}`);
+  span('rebuild the page', () => root.innerHTML = `<section class="workspace-heading"><div><span class="eyebrow">GOOD TO GO</span><h1>Your discs. Your next video.</h1></div><nav class="mode-nav" aria-label="Graphic type">${[['single', 'Single'], ['battle', 'Battle'], ['bag', 'Bag lineup'], ['post', 'Post']].map(([mode, label]) => `<button type="button" data-mode="${mode}" aria-pressed="${ui.mode === mode}">${label}</button>`).join('')}</nav></section><div class="studio-grid">${shelfMarkup()}<section class="preview-column" aria-labelledby="preview-title"><div class="preview-heading"><div><span class="eyebrow">YOUR GRAPHIC</span><h2 id="preview-title">${capturedPreview ? 'A kept version' : ui.mode === 'single' ? 'One disc. Ready for its moment.' : ui.mode === 'battle' ? 'Set the scene.' : 'Your selected lineup.'}</h2></div><button id="return-live" type="button" class="text-button" hidden>Back to current image</button></div><div class="preview-shell"><div class="preview-toolbar"><div class="view-switch" role="group" aria-label="Preview framing">${[['closeup', 'Close-up'], ['frame', 'Whole frame']].map(([v, label]) => `<button type="button" data-preview-view="${v}" aria-pressed="${ui.view === v}">${label}</button>`).join('')}</div><span id="preview-dimensions" class="preview-dimensions"></span><button id="preview-framing" type="button" class="preview-framing-toggle" aria-label="Toggle artwork detail and full canvas preview" hidden>Full canvas</button><div class="background-switch" aria-label="Preview background">${[['checker', 'Checkerboard'], ['light', 'Light'], ['dark', 'Dark']].map(([v, label]) => `<button type="button" data-preview-background="${v}" aria-label="${label} preview background" aria-pressed="${ui.background === v}" title="${label}"><span class="swatch swatch-${v}" aria-hidden="true"></span></button>`).join('')}</div></div><div id="graphic-preview" data-testid="graphic-preview" class="graphic-preview"></div><div class="preview-bottom"><span class="transparency-dot" aria-hidden="true"></span><strong id="preview-kind"></strong></div></div><p id="preview-note" class="preview-note"></p><div class="export-bar">${downloadedMarkup()}<div class="export-copy"><span class="eyebrow">STEP 3 · TAKE IT TO YOUR VIDEO</span><p>Download keeps this exact version.</p></div><div class="export-actions"><button id="keep-graphic" type="button" data-needs-ready class="button-secondary">Keep version</button><button id="download-png" type="button" data-needs-ready class="button-primary">Download PNG <span aria-hidden="true">↓</span></button><button id="download-svg" type="button" data-needs-ready class="svg-button" aria-label="Download editable SVG">SVG</button></div><div id="export-batch" class="export-batch"><button id="download-all" type="button" data-needs-ready class="button-secondary">Download all ${rows.length} <span aria-hidden="true">↓</span></button><label class="tight-crop"><input id="tight-crop" type="checkbox" ${tightCrop ? 'checked' : ''}> Tight crop</label><span class="export-batch-note">One PNG per disc in this layout, in one .zip.</span></div></div></section>${controlsMarkup()}</div>${capturesMarkup()}`);
+  if (ui.mode === 'post') { // Post (post-mode.mjs): Single cards on one frame with words; kept in this browser, apart from the workspace
+    paintPost(root, postApi()); bindModes(); diagnostics(); return;
+  }
   if (ui.mode === 'battle' && site.battle === 'formats') { // the decided Battle engine: one model, formats as classes
     root.querySelector('.studio-grid').outerHTML = `<section class="battle-formats panel"><iframe src="./battle-lab.html?embedded=1" title="Battle: Round, Closest to the pin, Skins"></iframe></section>`;
     root.querySelector('.captures')?.remove();
@@ -873,6 +882,8 @@ function refreshCaptures() {
 
 function bindModes() {
   document.querySelectorAll('[data-mode]').forEach(button => button.onclick = () => {
+    if (button.dataset.mode === 'post') { ui.mode = 'post'; paint(); return; }
+    if (ui.mode === 'post') setPostActive(false);
     ui.mode = button.dataset.mode;
     if (ui.mode !== 'single' && ui.selection.length === 0) ui.selection = rows.slice(0, 2).map(row => row.address);
     const remembered = isNativeStudy(ui.design.study) || isNativeStudy(context().singleDesign?.study);

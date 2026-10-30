@@ -186,3 +186,5 @@
 /* Shop-page look (cream, ink, Jost): selects fit their labels in Jost's wider letters. */
 select{font-size:12px;padding-right:22px;text-overflow:ellipsis}
 input[type=range]{accent-color:var(--accent)}
+/* Four modes: two per row where the column is narrow (the one-screen layout). */
+html.console-map .workspace-heading .mode-nav{display:grid;grid-template-columns:1fr 1fr}
