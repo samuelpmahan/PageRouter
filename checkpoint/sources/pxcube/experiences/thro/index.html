@@ -51,9 +51,8 @@
     })();
   </script>
   <script type="module" src="./thro-app.mjs" onerror="window.__throStartupFailed('Part of the page did not load.')"></script>
-  <script type="module">
-    // Developer overlays (DTree, part handles, the phone-page map) load only with ?dev, so visitors see the editor alone.
-    if (new URLSearchParams(location.search).has('dev')) for (const f of ['./dtree.mjs', './handles.mjs', './console-map.mjs']) import(f);
-  </script>
+  <script type="module" src="./dtree.mjs"></script>
+  <script type="module" src="./handles.mjs"></script>
+  <script type="module" src="./console-map.mjs"></script>
 </body>
 </html>
