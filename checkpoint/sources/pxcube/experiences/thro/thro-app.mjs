@@ -356,6 +356,8 @@ function downloadedMarkup() {
 }
 
 // A lineup's frame and, for a layout drawn from parts (B01), its choice parts (row, maker line, align) for every card at once.
+// The lineup's numbers start as its card layout draws them (B01, U01, U02: coloured digits; the rest: coloured tiles).
+const lineupNumbers = design => nativeStudy(lineupStudy(design.study).cardStudy)?.highlight ?? 'digits';
 const lineupMarkupNote = design => { const frame = lineupFrame(design); return `Each disc is its exact Thro card, set ${frame.height > frame.width ? 'two across' : 'side by side'} in one ${frame.width} × ${frame.height} frame.`; };
 const lineupChoiceParts = design => (cardParts[lineupStudy(design.study).preset] ? Object.keys(B01_PARTS).filter(k => B01_PARTS[k].unit === 'choice') : []);
 // The measures every card in the lineup shares (plate, disc, number tiles, name size), as sliders like the single card's.
@@ -383,7 +385,7 @@ function controlsMarkup() {
   const choice = study => `<button type="button" role="radio" class="composition-choice" data-study="${text(study.id)}" aria-checked="${study.id === design.study}" title="${text(study.note ?? study.name)}"><span class="composition-thumb" data-study-thumb="${text(study.id)}" aria-hidden="true"></span><span class="composition-name">${text(shortStudyName(study))}</span></button>`;
   const picker = `<fieldset class="composition-field"><legend>Composition</legend><input type="hidden" id="composition" value="${text(design.study)}">${ui.mode === 'single' && site.single === 'cards' ? `<div class="composition-picker" role="radiogroup" aria-label="Card layouts">${nativeStudies.map(choice).join('')}</div>` : `<p class="composition-group">${ui.mode === 'bag' ? 'Thro lineups' : 'Lineup layouts'}</p><div class="composition-picker" role="radiogroup" aria-label="Lineup layouts">${studiesFor(ui.mode).map(choice).join('')}</div>`}</fieldset>`;
   if (isLineupStudy(design.study)) {
-    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form">${picker}<p class="subtle">${lineupMarkupNote(design)}</p><div class="field-pair canvas-fields"><label>Frame<select id="lineup-frame">${lineupFrames.map(frame => option(frame.id, frame.name, lineupFrame(design).id)).join('')}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><label>Backdrop<select id="lineup-backdrop">${lineupBackdrops.map(b => option(b.id, b.name, lineupBackdrop(design).id)).join('')}</select></label>${lineupPartsMarkup(design)}<div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div></form>${battleMarkup()}${bagMarkup()}</aside>`;
+    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form">${picker}<p class="subtle">${lineupMarkupNote(design)}</p><div class="field-pair canvas-fields"><label>Frame<select id="lineup-frame">${lineupFrames.map(frame => option(frame.id, frame.name, lineupFrame(design).id)).join('')}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><label>Backdrop<select id="lineup-backdrop">${lineupBackdrops.map(b => option(b.id, b.name, lineupBackdrop(design).id)).join('')}</select></label><label>Numbers<select id="lineup-highlight">${[['digits', 'Coloured digits'], ['tiles', 'Coloured tiles']].map(([v, n]) => option(v, n, design.lineupHighlight ?? lineupNumbers(design))).join('')}</select></label>${lineupPartsMarkup(design)}<div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div></form>${battleMarkup()}${bagMarkup()}</aside>`;
   }
   if (isNativeStudy(design.study)) {
     const selected = nativeStudy(design.study), scale = design.nativeScale ?? .66;
@@ -700,7 +702,7 @@ function readDesign() {
   if (isLineupStudy(study)) {
     // Parts belong to the layout they were set on; a different lineup layout starts from its own rules.
     if (study !== ui.design.study) { const next = { ...ui.design, study, accent: $('accent')?.value ?? ui.design.accent }; delete next.nativeParts; return next; }
-    return readLineupParts({ ...ui.design, study, accent: $('accent')?.value ?? ui.design.accent, lineupFrame: $('lineup-frame')?.value ?? lineupFrame(ui.design).id, lineupBackdrop: $('lineup-backdrop')?.value ?? lineupBackdrop(ui.design).id });
+    return readLineupParts({ ...ui.design, study, accent: $('accent')?.value ?? ui.design.accent, lineupFrame: $('lineup-frame')?.value ?? lineupFrame(ui.design).id, lineupBackdrop: $('lineup-backdrop')?.value ?? lineupBackdrop(ui.design).id, lineupHighlight: $('lineup-highlight')?.value ?? ui.design.lineupHighlight });
   }
   if (isLineupStudy(ui.design.study)) return { ...ui.design, study };
   if (isNativeStudy(study)) {

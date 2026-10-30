@@ -177,6 +177,8 @@ export function nativeLineupPlan({ material, design, entries }) {
     // A lineup card starts at its layout's latest revision (B01: 2, drawn from parts), like a card picked fresh in Single.
     if (cardDesign.nativeRevision === undefined && latestCardRevision(selected.cardStudy) !== undefined) cardDesign.nativeRevision = latestCardRevision(selected.cardStudy);
     if (!cardParts[selected.preset]) delete cardDesign.nativeParts; // parts are B01's; another lineup layout ignores them
+    // Numbers: the lineup may swap which part of the number tiles carries the accent (digits or tiles) for every card at once.
+    if (design.lineupHighlight === 'digits' || design.lineupHighlight === 'tiles') cardDesign.nativeHighlight = design.lineupHighlight;
     const accent = material.styles?.[entry.id]?.accent ?? design.accent ?? cardDesign.accent;
     return { disc: entry.disc, resolved: entry.resolved, design: { ...cardDesign, accent, rendererBuild: nativeBuild } };
   });
