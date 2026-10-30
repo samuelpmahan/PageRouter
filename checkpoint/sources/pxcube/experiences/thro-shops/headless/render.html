@@ -1,0 +1,45 @@
+<!doctype html><meta charset=utf-8><body><script type=module>
+import { enter } from './thro-calculations.mjs';
+import './thro-face.mjs';
+import './thro-silhouette.mjs';
+const V='?v=28ac2b39fab85255';
+const A=await import(`./vendor/discstudio-cards/thro-adapter.mjs${V}`), M=await import(`./vendor/discstudio-cards/mold-library.js${V}`);
+const img=src=>new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=src;});
+const toURL=b=>new Promise(ok=>{const r=new FileReader();r.onload=()=>ok(r.result);r.readAsDataURL(b);});
+window.renderDisc=async(d,presets,accent)=>{
+  const im=await img(d.imageFile.replace('img/','shopimg/'));
+  const k=1024/Math.max(im.naturalWidth,im.naturalHeight), c=Object.assign(document.createElement('canvas'),{width:Math.round(im.naturalWidth*k),height:Math.round(im.naturalHeight*k)});
+  const x=c.getContext('2d',{willReadFrequently:true}); x.fillStyle='#fff'; x.fillRect(0,0,c.width,c.height); x.drawImage(im,0,0,c.width,c.height);
+  // full-size photo on white (transparent PNGs become white like a product shot)
+  const full=Object.assign(document.createElement('canvas'),{width:im.naturalWidth,height:im.naturalHeight}); const fx=full.getContext('2d'); fx.fillStyle='#fff'; fx.fillRect(0,0,full.width,full.height); fx.drawImage(im,0,0);
+  const fullImg=await img(full.toDataURL('image/png'));
+  const live=enter('thro/crop/live',[{name:d.imageFile,width:im.naturalWidth,height:im.naturalHeight,reference:null,working:{width:c.width,height:c.height,data:x.getImageData(0,0,c.width,c.height).data}}]);
+  const li=live.items[0], W0={width:c.width,height:c.height,data:x.getImageData(0,0,c.width,c.height).data};
+  // on a plain background the crop must reach the disc's outline (Sam 26 Oct: Orbital/Impulse lost their grey rim)
+  const silr=enter('thro/crop/silhouette',[{name:d.imageFile,width:im.naturalWidth,height:im.naturalHeight,working:W0,ellipse:li.output}]);
+  const sil=silr.items[0].ellipse, sq=1-Math.min(sil.rx,sil.ry)/Math.max(sil.rx,sil.ry);
+  const face=enter('thro/crop/face',[{name:d.imageFile,width:im.naturalWidth,height:im.naturalHeight,working:{width:c.width,height:c.height,data:x.getImageData(0,0,c.width,c.height).data},ellipse:sil,support:silr.items[0].applied?1:li.liveWitness.octantSupport,squash:sq}]);
+  const e=face.items[0].ellipse;
+  const un=enter('thro/crop/unwarp',[{name:d.imageFile,ellipse:e,size:800}]);
+  const cut=enter('thro/crop/cutout',[{name:d.imageFile,img:fullImg,ellipse:e,size:800,matrix:un.items[0].matrix}]);
+  const cutSrc=await toURL(await cut.items[0].canvas.convertToBlob({type:'image/png'}));
+  const hits=M.searchMolds(d.mold,8), want=(d.vendorFromShop||d.manufacturer).toLowerCase().split(' ')[0];
+  const rec=hits.find(h=>h.mold.toLowerCase()===d.mold.toLowerCase()&&h.manufacturer.toLowerCase().startsWith(want))||hits.find(h=>h.mold.toLowerCase()===d.mold.toLowerCase());
+  const out={statuses:[live,silr,face,un,cut].map(r=>r.calculationId+' '+r.selfGuaranteeStatus), faceRefit:face.items[0].applied, silhouetteRefit:silr.items[0].applied, faceApplied:face.items[0].applied, silWhy:[silr.items[0].reason,silr.items[0].ratio,silr.items[0].outsideBg,silr.items[0].uniform,silr.items[0].coverage,JSON.stringify(li.output)], cropOk:(live.selfGuaranteeStatus==='PASS'||silr.items[0].applied)&&[silr,face,un,cut].every(r=>r.selfGuaranteeStatus==='PASS'), mold:rec?.id??null, flight:d.flightFromShop??rec?.flight??null, cutout:cutSrc, cards:{}};
+  for(const p of presets){
+    try{
+      const r=await A.renderDiscStudioCard({disc:{id:'x',mold:rec?.id??'unknown',name:d.mold,manufacturer:d.vendorFromShop||d.manufacturer,plastic:null,weight:null},photoSrc:cutSrc,flights:d.flightFromShop??rec?.flight??[null,null,null,null],preset:p,revision:A.cardRevisions?.[p],scale:1,...(accent?{appearance:{accentColor:accent}}:{})});
+      const b=r.layout.card, bm=await createImageBitmap(r.png), t=new OffscreenCanvas(Math.round(b.w),Math.round(b.h)); t.getContext('2d').drawImage(bm,b.x,b.y,b.w,b.h,0,0,t.width,t.height);
+      out.cards[p]=await toURL(await t.convertToBlob({type:'image/webp',quality:0.9}));
+    }catch(err){out.cards[p]='ERR '+err.message;}
+  }
+  // the download: the same card at 1.5x (the renderer maximum) as a transparent PNG (for CapCut / Premiere overlays)
+  try{
+    const p=presets[0], r=await A.renderDiscStudioCard({disc:{id:'x',mold:rec?.id??'unknown',name:d.mold,manufacturer:d.vendorFromShop||d.manufacturer,plastic:null,weight:null},photoSrc:cutSrc,flights:d.flightFromShop??rec?.flight??[null,null,null,null],preset:p,revision:A.cardRevisions?.[p],scale:1.5,...(accent?{appearance:{accentColor:accent}}:{})});
+    const b=r.layout.card, bm=await createImageBitmap(r.png), t=new OffscreenCanvas(Math.round(b.w),Math.round(b.h)); t.getContext('2d').drawImage(bm,b.x,b.y,b.w,b.h,0,0,t.width,t.height);
+    out.png2x=await toURL(await t.convertToBlob({type:'image/png'})); out.png2xSize=[t.width,t.height];
+  }catch(err){out.png2x='ERR '+err.message;}
+  return out;
+};
+window.ready=true;
+</script>
