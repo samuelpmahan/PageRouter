@@ -252,7 +252,8 @@ function recipeLayout(solved, m, moldName) {
 /** A lineup (Battle or Bag): 2–4 DiscStudio cards, each drawn by the same renderer as a Single
  *  card, sized with DiscStudio's sticker step at one shared scale and set by DiscStudio's frame renderer
  *  in a row along the bottom of the frame (1920 × 1080 by default) or, in a portrait frame such as 1080 × 1350 (4:5), in a grid
- *  of two columns (two rows for four cards) centred in the frame; a row of 3–4 that cannot stay readable falls back to that grid.
+ *  of two columns (two rows for four cards) or one card per row, whichever draws the cards larger, centred in the frame; a row of
+ *  3–4 that cannot stay readable falls back to that grid.
  *  Nothing is redrawn or restyled: every card is exactly the card it would be on its own, except that B01 revision-2 cards share
  *  one name size (the smallest any of them fits), so a short name is never set larger than a long one. emphasis: index of a card
  *  shown full size while the others step back to `rest` of it (Battle's "whose turn"). */
@@ -282,7 +283,9 @@ export async function renderDiscStudioLineup({ cards, preset = 'u05', width = 19
     (height - margin * 2 - gap * (rows.length - 1)) / rows.reduce((t, row) => t + Math.max(...row.map(h)), 0));
   const all = natives.map((_, i) => i), grid = [];
   for (let i = 0; i < all.length; i += 2) grid.push(all.slice(i, i + 2));
-  let rows = height > width ? grid : [all], base = scaleFor(rows);
+  // Portrait: two across, or one card per row when that draws the cards larger (wide B01 plates stack better than they pair).
+  const column = all.map(i => [i]);
+  let rows = height > width ? (scaleFor(column) > scaleFor(grid) ? column : grid) : [all], base = scaleFor(rows);
   if (base * Math.min(...weight) < 0.5 && rows.length === 1 && natives.length > 2 && scaleFor(grid) > base) { rows = grid; base = scaleFor(grid); }
   if (base * Math.min(...weight) < 0.5) throw Error('These cards cannot share one frame at a readable size.');
   const stickers = [];
@@ -305,5 +308,5 @@ export async function renderDiscStudioLineup({ cards, preset = 'u05', width = 19
   if (!context) throw new Error('Canvas2D is unavailable in this browser.');
   browserFrames.seek(context, { width, height, layers }, 0);
   const png = await canvasBlob(canvas);
-  return { svg: await svgFor(png, width, height), width, height, png, layout, presets: natives.map(n => n.id), scales: stickers.map(s => s.scale), arrangement: rows.length === 1 ? 'row' : 'grid', build };
+  return { svg: await svgFor(png, width, height), width, height, png, layout, presets: natives.map(n => n.id), scales: stickers.map(s => s.scale), arrangement: rows.length === 1 ? 'row' : rows.every(row => row.length === 1) ? 'column' : 'grid', build };
 }

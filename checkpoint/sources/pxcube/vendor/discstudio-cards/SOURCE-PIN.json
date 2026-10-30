@@ -50,8 +50,8 @@
   "adapter": {
     "path": "thro-adapter.mjs",
     "upstreamSha256": "4594bf5f0a3f31aa16677e4b899f3bbd4b49ffe3e2c26c1f93b157d5197438be",
-    "bytes": 25373,
-    "sha256": "8171758474fac74c59776f7ffffb26d890bf79b7bc55f6d2c5ddd762bf52c39b",
+    "bytes": 25691,
+    "sha256": "bf8a0067110a184e2b1ac49282bfb6662d20f55c1bfbfca0859e04e8175eeef1",
     "upstreamGitCorrespondence": "The adapter was supplied in the handoff ZIP; it is not part of the native Git checkpoint above.",
     "localChanges": [
       "Do not prefix an already addressed ds.px.seed. mold ID again.",
@@ -64,7 +64,8 @@
       "Key the sticker cache by card revision for revisions after 1 (revision 1 keeps DiscStudio's identity), so a card drawn at one revision is never served for another.",
       "Report the card's visible pixel bounds (plate included) as layout.card, measured on the native canvas and carried through the placement, so the page does not decode the PNG again to find the card; card pixels are unchanged.",
       "Accept optional pinned parts for B01 revision 2 (refused for any other card), pass them to the renderer, include them in the sticker identity, and report the card's parts (values, default/pinned/derived, handle points through the placement) as layout.recipe.",
-      "Lineup: B01 revision-2 cards share the smallest name size any of them fits (passed to each as its nameMax part); the frame size is the caller's (1920 x 1080 or 1080 x 1350); a portrait frame sets the cards in a grid of two columns centred in the frame, and a 16:9 row of 3-4 that would fall below a readable scale falls back to that grid. A 16:9 row of cards with no shared name change draws exactly as before."
+      "Lineup: B01 revision-2 cards share the smallest name size any of them fits (passed to each as its nameMax part); the frame size is the caller's (1920 x 1080 or 1080 x 1350); a portrait frame sets the cards in a grid of two columns centred in the frame, and a 16:9 row of 3-4 that would fall below a readable scale falls back to that grid. A 16:9 row of cards with no shared name change draws exactly as before.",
+      "Lineup: a portrait frame sets the cards one per row instead of two across when that draws them larger (reported as arrangement 'column')."
     ]
   }
 }

@@ -39,6 +39,11 @@ export const isLineupStudy = study => typeof study === 'string' && study.startsW
 // The lineup's frame: the video frame (16:9) or a feed post (4:5, where the cards sit in a grid of two columns).
 export const lineupFrames = Object.freeze([Object.freeze({ id: '16:9', name: '16:9 · 1920 × 1080', width: 1920, height: 1080 }), Object.freeze({ id: '4:5', name: '4:5 · 1080 × 1350', width: 1080, height: 1350 })]);
 export const lineupFrame = design => lineupFrames.find(frame => frame.id === design?.lineupFrame) ?? lineupFrames[0];
+/** What sits behind the cards: nothing (a transparent PNG for video) or a solid colour (a post, where transparency turns black). */
+export const lineupBackdrops = Object.freeze([Object.freeze({ id: 'none', name: 'Transparent' }), Object.freeze({ id: 'paper', name: 'Paper', fill: '#f3e8d2' }), Object.freeze({ id: 'ink', name: 'Ink', fill: '#2b2420' })]);
+export const lineupBackdrop = design => lineupBackdrops.find(b => b.id === design?.lineupBackdrop) ?? lineupBackdrops[0];
+// The backdrop is laid under the drawn lineup, outside its recipe: the cards' pixels (and their cache key) do not change.
+const withBackdrop = (svg, backdrop) => (backdrop.fill ? svg.replace(/(<svg\b[^>]*>)/, `$1<rect width="100%" height="100%" fill="${backdrop.fill}"/>`) : svg);
 export function lineupStudy(study) {
   const result = lineupStudies.find(item => item.id === study);
   if (!result) throw Error('Choose a known Thro lineup layout.');
@@ -259,11 +264,13 @@ export function createNativeRenderer(renderCard = async request => {
     if (result.layout) { layouts.set(pixelsOf(result.svg), result.layout); if (layouts.size > 60) layouts.delete(layouts.keys().next().value); }
     notePixels(key, cached);
     if (!cached) { lineupPixels.set(key, result); if (lineupPixels.size > 20) lineupPixels.delete(lineupPixels.keys().next().value); }
-    return { svg: result.svg, width: result.width, height: result.height, provenance: {
+    const backdrop = lineupBackdrop(design);
+    return { svg: withBackdrop(result.svg, backdrop), width: result.width, height: result.height, provenance: {
       schema: 'thro-native-lineup@1', renderer: 'discstudio-cards', rendererBuild: nativeBuild, preset: plan.preset,
       physicalDiscIds: entries.map(entry => entry.disc.id), preparedPhotoSha256: photos,
       appearances: requests.map(request => ({ ...request.appearance })), featured: plan.featured, scales: [...result.scales], rasterOnly: true,
       ...(plan.frame ? { frame: plan.frame, arrangement: result.arrangement } : {}),
+      ...(backdrop.fill ? { backdrop: backdrop.id } : {}),
     } };
   };
   return single;
