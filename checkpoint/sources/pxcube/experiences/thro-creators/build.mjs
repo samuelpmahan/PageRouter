@@ -17,6 +17,23 @@ if (!process.argv[2] || !fs.existsSync(site)) { console.error('usage: node build
 const manifestFile = path.join(site, 'disc-photos', 'manifest.json');
 const photos = fs.existsSync(manifestFile) ? JSON.parse(fs.readFileSync(manifestFile, 'utf8')) : { default: [], creators: {}, photos: {} };
 const photoFor = (slug, discId) => { for (const p of photos.creators?.[slug] ?? photos.default ?? []) { const x = photos.photos?.[p]?.[discId]; if (x) return x; } return null; };
+// Every video the search (SITE/feed.json) has for a creator sits on that creator's page, so a search card's /<slug>?v=<id> always finds
+// its video (Sam, 31 Oct: the search is a funnel to the creator page). SITE/creator-pages.json maps each channel to its page.
+const feedFile = path.join(site, 'feed.json'), cpFile = path.join(site, 'creator-pages.json');
+const feed = fs.existsSync(feedFile) ? JSON.parse(fs.readFileSync(feedFile, 'utf8')) : null;
+const channelPage = fs.existsSync(cpFile) ? JSON.parse(fs.readFileSync(cpFile, 'utf8')) : {};
+const FEED_HOW = { m: 'transcript', t: 'title', c: 'featured', d: 'description' };
+function feedVideos(slug) {
+  if (!feed) return [];
+  const chans = new Set(feed.channels.map(([id], i) => channelPage[id] === slug ? i : -1).filter(i => i >= 0));
+  return feed.videos.filter(v => chans.has(v[1])).map(([id, , day, title, ds]) => ({ id, title, day: day || '', fromFeed: true,
+    discs: ds.map(([d, at, how]) => { const [did, mk, name] = feed.discs[d]; return { id: did, mold: name, plastic: '', source: FEED_HOW[how] ?? 'description', flight: [], maker: brand(feed.makers[mk][1]), sec: at ?? 0, buy: '', page: `/${did}` }; }) }));
+}
+// Every outbound click goes through /out/ with its intent (Sam, 31 Oct): desire = going to watch the video, demand = going to a shop or
+// the maker's page for a disc. The worker writes intent and the surface it came from (f) into D1 out_clicks.
+const qs = o => Object.entries(o).filter(([, v]) => v !== '' && v != null).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&');
+const watch = (v, sec, from = 'creator') => `/out/watch?${qs({ v: v.id, c: v.slug, t: sec > 0 ? Math.floor(sec) : '', i: 'desire', f: from, u: `https://www.youtube.com/watch?v=${v.id}${sec > 0 ? `&t=${Math.floor(sec)}s` : ''}` })}`;
+const demand = href => href + (href.includes('?') ? '&' : '?') + 'i=demand&f=creator';
 const shopCss = fs.readFileSync(path.join(root, '../thro-shops/page.css'), 'utf8');
 const ownCss = fs.readFileSync(path.join(root, 'creator.css'), 'utf8');
 const LOGO = fs.readFileSync(path.join(root, '../thro/brand/thro-logo.svg'), 'utf8').replace(/ width="\d+" height="\d+"/, '').replace('<svg ', '<svg class="logo" ');
@@ -27,7 +44,7 @@ const clock = s => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(
 // Short brand names, as the site's nav and URLs say them (Innova, Axiom, MVP …).
 const BRAND = { 'Innova Champion Discs': 'Innova', 'Disc Golf Association': 'DGA', 'Above Ground Level': 'AGL', 'MVP Disc Sports': 'MVP' };
 const brand = b => BRAND[b] ?? String(b ?? '').replace(/ (Champion Discs|Disc Sports|Golf Discs|Disc Golf|Discs|Disc|Athletics)$/, '');
-const HOW = { title: 'named in the title', description: 'named in the description', chapter: 'in the chapters', transcript: 'said on camera', card: 'on the card', comment: 'in the pinned comment' };
+const HOW = { featured: 'featured in the video', title: 'named in the title', description: 'named in the description', chapter: 'in the chapters', transcript: 'said on camera', card: 'on the card', comment: 'in the pinned comment' };
 // One bold signal colour per page, as the shop pages have (Mid-Century Retro), picked by the slug so it never changes.
 const SIGNALS = [['#3fb8c4', '#c4502b'], ['#e3a62f', '#1f6f68'], ['#e0632e', '#2f6f8f'], ['#7aa95c', '#c4502b'], ['#d98aa0', '#1f6f68'], ['#6f9bd8', '#c4502b'], ['#c9b03c', '#2f6f8f']];
 const signal = slug => SIGNALS[[...slug].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % SIGNALS.length];
@@ -63,16 +80,20 @@ function read(slug, html) {
 function tile(d, v) {
   const photo = photoFor(v.slug, d.id);
   const label = `${d.maker} ${d.mold}${d.plastic ? `, ${d.plastic}` : ''}`;
-  const how = d.sec > 0 ? `<a href="https://www.youtube.com/watch?v=${esc(v.id)}&amp;t=${Math.floor(d.sec)}s" rel="noopener">▶ said at ${clock(d.sec)}</a>` : esc(HOW[d.source] ?? '');
+  const how = d.sec > 0 ? `<a href="${esc(watch(v, d.sec))}" rel="noopener">▶ ${d.source === 'transcript' ? 'said' : 'at'} ${clock(d.sec)}</a>` : esc(HOW[d.source] ?? '');
+  // No shop link: the card still sends people to buy it, at the maker's own page for the mold (the photo's page), a shop added later.
+  const maker = !d.buy && photo?.page ? `/out/${encodeURIComponent(d.id.split('/')[1] ?? d.id)}?${qs({ d: d.id, m: d.mold, c: v.slug, v: v.id, u: photo.page, i: 'demand', f: 'creator' })}` : '';
+  const href = d.buy ? demand(d.buy) : maker || d.page;
   // No photo from any provider: an empty ring keeps the row's plates level and says so plainly.
   const pic = photo ? `<span class="tc-photo"><img src="${esc(photo.src)}" alt="" loading="lazy" width="${photo.w}" height="${photo.h}"></span>` : '<span class="tc-photo none"><span>No maker photo yet</span></span>';
   const credit = photo ? `<span class="tc-credit">${esc(photo.credit)}${photo.match === 'special-edition' ? ' · special run' : ''}</span>` : '';
   const card = `${pic}<span class="tc with-photo" aria-hidden="true">${credit}<span class="tc-name" style="--n:${Math.max(5, d.mold.length)}">${esc(d.mold)}</span>${d.flight.length === 4 ? `<span class="tc-flight">${d.flight.map(n => `<i>${esc(n)}</i>`).join('')}</span>` : ''}<span class="tc-brand">${esc(d.maker)}</span></span>`;
-  return `<li><a class="card" href="${esc(d.buy || d.page)}" rel="${d.buy ? 'nofollow noopener' : ''}">${card}<span class="what">${d.buy ? 'Get' : 'See'} the ${esc(label)}${d.buy ? ' ↗' : ''}</span></a><span class="how">${how}${how ? ' · ' : ''}<a href="${esc(d.page)}">every video with it</a></span></li>`;
+  const what = d.buy ? `Get the ${esc(label)} ↗` : maker ? `See the ${esc(label)} at ${esc(d.maker)} ↗` : `See the ${esc(label)}`;
+  return `<li><a class="card" href="${esc(href)}" rel="${d.buy || maker ? 'nofollow noopener' : ''}">${card}<span class="what">${what}</span></a><span class="how">${how}${how ? ' · ' : ''}<a href="${esc(d.page)}">every video with it</a></span></li>`;
 }
 function section(v, i) {
   const names = [...new Set(v.discs.map(d => d.mold))].map(esc).join(', ');
-  return `<section id="v-${esc(v.id)}" data-video="${esc(v.id)}"><header><span class="no">No. ${String(i + 1).padStart(2, '0')}</span><span class="kind"><span class="sel">Selected video · </span>Video · ${date(v.day)}</span><a class="vt" href="https://www.youtube.com/watch?v=${esc(v.id)}" rel="noopener">${esc(v.title)}</a><p class="bag">Featured: ${names}</p><a class="dl" href="/editor?creator=${encodeURIComponent(v.slug)}">Make these cards <small>in the thro editor</small></a></header><ol class="grid">${v.discs.map(d => tile(d, v)).join('')}</ol></section>`;
+  return `<section id="v-${esc(v.id)}" data-video="${esc(v.id)}"><header><span class="no">No. ${String(i + 1).padStart(2, '0')}</span><span class="kind"><span class="sel">Selected video · </span>Video · ${date(v.day)}</span><a class="vt" href="${esc(watch(v, 0))}" rel="noopener">${esc(v.title)}</a><p class="bag">Featured: ${names}</p><a class="dl" href="/editor?creator=${encodeURIComponent(v.slug)}">Make these cards <small>in the thro editor</small></a></header><ol class="grid">${v.discs.map(d => tile(d, v)).join('')}</ol></section>`;
 }
 // ?v=<id> (a card on the front page): that video's section moves to the top, marked "Selected video", and the page starts there.
 const PICK = `<script>(async()=>{const id=new URLSearchParams(location.search).get('v');if(!id)return;let s=document.getElementById('v-'+id);
@@ -87,13 +108,15 @@ s=document.createElement('section');s.id='v-'+id;s.dataset.video=id;
 s.innerHTML=\`<header><span class="no">No. 00</span><span class="kind"><span class="sel">Selected video · </span>Video\${day?' · '+day:''}</span><a class="vt" href="https://www.youtube.com/watch?v=\${e(id)}" rel="noopener">\${e(v[3])}</a><p class="bag">Featured: \${ds.map(d=>e(d.name)).join(', ')}</p></header><ol class="grid">\${ds.map(d=>{const p=P[d.id];return\`<li><a class="card" href="/\${e(d.id)}">\${p?\`<span class="tc-photo"><img src="\${e(p.src)}" alt="" loading="lazy" width="480" height="480"></span>\`:''}<span class="tc\${p?' with-photo':''}" aria-hidden="true">\${p?\`<span class="tc-credit">\${e(p.credit||'')}</span>\`:''}<span class="tc-name" style="--n:\${Math.max(5,d.name.length)}">\${e(d.name)}</span><span class="tc-brand">\${e(d.mk)}</span></span><span class="what">See the \${e(d.mk)} \${e(d.name)}</span></a><span class="how">\${d.at!=null?\`<a href="https://www.youtube.com/watch?v=\${e(id)}&amp;t=\${d.at}s" rel="noopener">at \${Math.floor(d.at/60)}:\${String(d.at%60).padStart(2,'0')} in the video</a> · \`:''}<a href="/\${e(d.id)}">every video with it</a></span></li>\`}).join('')}</ol>\`;}
 m.prepend(s);s.classList.add('is-selected');s.scrollIntoView({block:'start'});})()</script>`;
 
-let n = 0;
+let n = 0, added = 0;
 for (const slug of fs.readdirSync(site).sort()) {
   const file = path.join(site, slug, 'index.html');
   if (['insights', 'creators', 'editor', 'assets'].includes(slug) || !fs.existsSync(file)) continue;
   const html = fs.readFileSync(file, 'utf8');
   if (!html.includes(`data-creator-slug="${slug}"`) || !html.includes('class="page-title"')) continue;  // creator hubs only (not mold pages, shops, or pages built here already)
   const c = read(slug, html);
+  const have = new Set(c.videos.map(v => v.id));
+  for (const v of feedVideos(slug)) if (!have.has(v.id) && v.discs.length) { c.videos.push(v); have.add(v.id); }
   if (!c.videos.length) continue;
   c.videos.sort((a, b) => (b.day || '').localeCompare(a.day || ''));
   c.videos.forEach(v => { v.slug = slug; });
@@ -112,6 +135,6 @@ for (const slug of fs.readdirSync(site).sort()) {
 <footer><a class="foot-logo" href="/" aria-label="thro">${LOGO}</a> Discs come from ${esc(c.name)}'s public videos: the title, the description, the chapters, or what's said on camera. Not affiliated with ${esc(c.name)}.</footer>
 ${PICK}</body></html>`;
   fs.writeFileSync(file, out);
-  n++;
+  n++; added += c.videos.filter(v => v.fromFeed).length;
 }
-console.log(`${n} creator pages written in the shop-page look`);
+console.log(`${n} creator pages written in the shop-page look, ${added} search videos added to them`);
