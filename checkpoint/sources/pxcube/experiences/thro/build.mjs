@@ -37,6 +37,8 @@ const runtimeFiles = [
   'handles.mjs',
   'console-map.mjs',
   'post-mode.mjs',
+  'kan-crop.mjs',
+  'pxc/gondola-client.mjs',
   'ask.html',
   'ask.mjs',
   'paper-card.mjs',

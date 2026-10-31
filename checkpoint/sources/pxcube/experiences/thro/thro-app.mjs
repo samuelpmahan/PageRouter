@@ -12,6 +12,8 @@ import { esc } from './renderer/src/presentation.js';
 import { pngFromSvg, sha256, downloadBlob } from './renderer/src/media.js';
 import { paintPost, postActive, setPostActive } from './post-mode.mjs';
 import { span, end as endGesture, active as activeGesture, settle as settleGesture, hold as holdGesture, gestures, books } from './gestures.mjs';
+import { openKanUploadModal } from './kan-crop.mjs';
+import { createGondolaMount } from './pxc/gondola-client.mjs';
 
 const $ = id => document.getElementById(id);
 const debug = new URLSearchParams(location.search).get('debug') === '1';
@@ -35,7 +37,8 @@ const currentGraphic = () => capturedPreview?.capture.graphic ?? currentResult?.
 const hasConflict = () => Boolean(workspace?.conflict);
 const option = (v, label, chosen) => `<option value="${text(v)}" ${v === chosen ? 'selected' : ''}>${text(label)}</option>`;
 const facts = row => [row.disc.plastic, row.disc.weight == null ? null : `${row.disc.weight} g`].filter(Boolean).join(' · ');
-const rowName = row => row?.seed?.name ?? row?.disc?.nickname ?? 'Prepared disc';
+const rowName = row => row?.disc?.name || row?.disc?.nickname || row?.seed?.name || 'Prepared disc';
+const rowMaker = row => row?.disc?.manufacturer || row?.seed?.manufacturer || '';
 const resultKey = result => result?.address ?? result?.graphic?.svg;
 
 function setBusy(next) {
@@ -108,9 +111,9 @@ function adoptContext() {
 
 function shelfMarkup() {
   const multiple = ui.mode !== 'single';
-  return `<aside class="shelf panel${multiple ? ' is-multiple' : ''}" aria-labelledby="shelf-title"><div class="section-heading"><div><span class="eyebrow">STEP 1 · PICK</span><h2 id="shelf-title">Your discs</h2></div><span class="count">${rows.length}</span></div><p class="subtle">${multiple ? 'Choose 2–4 exact copies for this image.' : 'Pick the disc you want on screen.'}</p><div class="disc-shelf" data-testid="prepared-shelf">${rows.map((row, index) => {
+  return `<aside class="shelf panel${multiple ? ' is-multiple' : ''}" aria-labelledby="shelf-title"><div class="section-heading"><div><span class="eyebrow">STEP 1 · PICK</span><h2 id="shelf-title">Your discs</h2></div><span class="count">${rows.length}</span></div><p class="subtle">${multiple ? 'Choose 2–4 exact copies for this image.' : 'Pick the disc you want on screen.'}</p><button type="button" id="add-disc-photo" class="add-disc-button">+ Add a disc photo</button><div class="disc-shelf" data-testid="prepared-shelf">${rows.map((row, index) => {
     const selected = multiple ? ui.selection.includes(row.address) : ui.selectedDisc === row.address;
-    return `<button type="button" class="disc-choice ${selected ? 'is-selected' : ''}" data-disc="${text(row.address)}" aria-pressed="${selected}" aria-label="${text(row.seed.manufacturer)} ${text(rowName(row))}${facts(row) ? `, ${text(facts(row))}` : ''}"><span class="disc-thumb"><img src="${text(row.art)}" alt="" loading="${index < 4 ? 'eager' : 'lazy'}"><span class="selection-mark" aria-hidden="true">${selected ? '✓' : '+'}</span></span><span class="disc-copy"><span class="disc-maker">${text(row.seed.manufacturer)}</span><strong>${text(rowName(row))}</strong>${facts(row) ? `<span>${text(facts(row))}</span>` : ''}</span></button>`;
+    return `<button type="button" class="disc-choice ${selected ? 'is-selected' : ''}" data-disc="${text(row.address)}" aria-pressed="${selected}" aria-label="${text(rowMaker(row))} ${text(rowName(row))}${facts(row) ? `, ${text(facts(row))}` : ''}"><span class="disc-thumb"><img src="${text(row.art)}" alt="" loading="${index < 4 ? 'eager' : 'lazy'}"><span class="selection-mark" aria-hidden="true">${selected ? '✓' : '+'}</span></span><span class="disc-copy"><span class="disc-maker">${text(rowMaker(row))}</span><strong>${text(rowName(row))}</strong>${facts(row) ? `<span>${text(facts(row))}</span>` : ''}</span></button>`;
   }).join('')}</div>${multiple ? `<div class="lineup-total"><strong>${ui.selection.length} selected</strong><span>2–4-disc graphic</span></div>` : ''}</aside>`;
 }
 
@@ -609,7 +612,11 @@ function runScreen() {
 // A photo's definition (which disc, which source photo, which preparation) from its prepared record, found by which disc it is
 // (mold and plastic, as a person names a disc), never by the photo's hash: that would make the material check prove itself.
 // Null when no record or more than one matches.
-const photoOf = disc => { const found = fixtureDiscs.filter(record => `ds.px.seed.${record.mold}` === disc.mold && (record.plastic ?? null) === (disc.plastic ?? null)); return found.length === 1 ? photoDefinition(found[0]) : null; };
+const photoOf = disc => {
+  if (disc?.photoDefinition) return disc.photoDefinition; // a photo added with + Add a disc photo carries its own crop
+  const found = fixtureDiscs.filter(record => `ds.px.seed.${record.mold}` === disc.mold && (record.plastic ?? null) === (disc.plastic ?? null));
+  return found.length === 1 ? photoDefinition(found[0]) : null;
+};
 // Each screen run says whether this exact recipe's pixels were drawn now or reused, and tells the DTree (rung 4: what a change did).
 function announce(run) {
   window.__thro.screen = { ...run, stats: throWorld.stats(), pixels: { drawn: pixelStats.drawn, reused: pixelStats.reused }, pixel: pixelStats.byRecipe.get(run.recipeHash) ?? null };
@@ -892,6 +899,22 @@ function bindModes() {
 }
 function bind() {
   bindModes();
+  if ($('add-disc-photo')) {
+    $('add-disc-photo').onclick = () => openKanUploadModal({
+      workspace,
+      onDiscSaved: async (newAddress, label) => {
+        rows = await workspace.model.shelfForDisplay();
+        if (ui.mode === 'single') {
+          ui.selectedDisc = newAddress;
+          await change({ selectedDisc: newAddress }, `Added ${label} from your photo. Your graphic is ready.`);
+        } else {
+          if (ui.selection.length < 4) ui.selection = [...ui.selection, newAddress];
+          else ui.selection = [...ui.selection.slice(1), newAddress];
+          await change({ selection: [...ui.selection] }, `Added ${label} to your lineup.`);
+        }
+      },
+    });
+  }
   document.querySelectorAll('[data-disc]').forEach(button => button.onclick = () => {
     const address = button.dataset.disc;
     if (ui.mode === 'single') { ui.selectedDisc = address; change({ selectedDisc: address }); }
@@ -979,6 +1002,181 @@ $('reload-latest').onclick = () => {
   });
 };
 
+const CREATOR_PROFILE_KEY = 'thro.creator.profile.v1';
+const normalizeCreatorSlug = raw => String(raw ?? '')
+  .trim()
+  .replace(/^https?:\/\/(?:www\.)?thro\.dev\//i, '')
+  .replace(/^[@/]+|\/+$/g, '')
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-+|-+$/g, '');
+
+function mountCreatorPublishControl() {
+  const header = document.querySelector('.app-header');
+  if (!header || $('thro-publish-trigger')) return;
+
+  const gondola = createGondolaMount('THRO');
+  if (window.__thro) window.__thro.gondola = gondola;
+
+  const urlCreator = normalizeCreatorSlug(new URLSearchParams(location.search).get('creator'));
+  let stored = {};
+  try { stored = JSON.parse(localStorage.getItem(CREATOR_PROFILE_KEY) || '{}') || {}; } catch { stored = {}; }
+
+  const style = document.createElement('style');
+  style.id = 'thro-publish-styles';
+  style.textContent = `
+    .thro-publish-trigger{margin-left:auto;min-height:38px;padding:0 14px;border-radius:9px;border:1.5px solid #2b2420;background:#e0632e;color:#2b2420;font:700 13px/1 "Jost",Inter,system-ui,sans-serif;letter-spacing:-.01em;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,.18)}
+    .thro-publish-trigger:hover:not(:disabled){background:#eb723d;border-color:#2b2420}
+    .thro-publish-trigger:focus-visible{outline:3px solid #e0632e;outline-offset:3px}
+    .app-header .thro-publish-trigger+.demo-badge{margin-left:0}
+    .workspace-heading .thro-publish-trigger{margin:0;width:100%;min-height:40px}
+    @media(max-width:760px){
+      .app-header{gap:8px;padding-inline:14px}
+      .thro-publish-trigger{min-height:36px;padding:0 10px;font-size:11.5px;margin-left:0}
+      .app-header .demo-badge{display:none}
+    }
+    .thro-publish-dialog{border:2px solid #2b2420;border-radius:16px;background:#f3e8d2;color:#2b2420;padding:0;width:min(420px,calc(100vw - 24px));max-width:calc(100vw - 24px);box-shadow:0 24px 64px rgba(43,36,32,.42);font-family:"Jost",Inter,system-ui,sans-serif}
+    .thro-publish-dialog::backdrop{background:rgba(43,36,32,.52);backdrop-filter:blur(3px)}
+    .thro-pub-shell{padding:20px;display:flex;flex-direction:column;gap:14px}
+    .thro-pub-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .thro-pub-head h2{font:800 20px/1.15 "Jost",Inter,system-ui,sans-serif;color:#2b2420;letter-spacing:-.01em}
+    .thro-pub-sub{font-size:13px;line-height:1.45;color:#6a5d4f}
+    .thro-pub-form{display:flex;flex-direction:column;gap:12px}
+    .thro-pub-form label{color:#2b2420;font:700 12px/1.35 "Jost",Inter,system-ui,sans-serif;gap:6px}
+    .thro-pub-form input{background:#f8f0df;border:1.5px solid rgba(43,36,32,.38);border-radius:9px;color:#2b2420;font:500 14px/1.3 "Jost",Inter,system-ui,sans-serif;min-height:42px;padding:9px 11px}
+    .thro-pub-form input::placeholder{color:#6a5d4f}
+    .thro-pub-form input:focus{outline:2px solid #e0632e;border-color:#e0632e}
+    .thro-pub-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin-top:2px;flex-wrap:wrap}
+    .thro-pub-cancel{min-height:40px;padding:0 13px;border-radius:9px;border:1px solid rgba(43,36,32,.32);background:#ead9b8;color:#2b2420;font:600 13px/1 "Jost",Inter,system-ui,sans-serif}
+    .thro-pub-cancel:hover:not(:disabled){background:#e2cda4;border-color:#2b2420}
+    .thro-pub-submit{min-height:40px;padding:0 15px;border-radius:9px;border:1.5px solid #2b2420;background:#e0632e;color:#2b2420;font:700 13px/1 "Jost",Inter,system-ui,sans-serif}
+    .thro-pub-submit:hover:not(:disabled){background:#eb723d;border-color:#2b2420}
+    .thro-pub-status{font-size:12.5px;line-height:1.4;color:#1f6f68;font-weight:600}
+    .thro-pub-status.is-error{color:#c4502b}
+  `;
+  document.head.append(style);
+
+  const trigger = document.createElement('button');
+  trigger.id = 'thro-publish-trigger';
+  trigger.type = 'button';
+  trigger.className = 'thro-publish-trigger';
+  trigger.textContent = urlCreator ? 'Update page' : 'Publish to my page';
+
+  // The one-screen layout hides the header, and every paint rebuilds the workspace, so the button lives
+  // under the Single / Battle / Bag lineup / Post switch and is put back whenever a paint removes it.
+  const place = () => {
+    const heading = document.querySelector('.workspace-heading');
+    if (heading && trigger.parentElement !== heading) heading.append(trigger);
+    else if (!heading && !trigger.isConnected) header.append(trigger);
+  };
+  place();
+  new MutationObserver(place).observe(document.body, { childList: true, subtree: true });
+
+  const dialog = document.createElement('dialog');
+  dialog.id = 'thro-publish-dialog';
+  dialog.className = 'thro-publish-dialog';
+  dialog.setAttribute('aria-labelledby', 'thro-pub-title');
+  dialog.innerHTML = `
+    <div class="thro-pub-shell">
+      <div class="thro-pub-head">
+        <div>
+          <h2 id="thro-pub-title">${urlCreator ? 'Update your page' : 'Publish to your page'}</h2>
+          <p class="thro-pub-sub">Connect your store link and send your selected discs to your thro page.</p>
+        </div>
+      </div>
+      <form id="thro-pub-form" class="thro-pub-form" novalidate>
+        <label>Your page name
+          <input id="thro-pub-creator" type="text" maxlength="80" autocomplete="off" placeholder="bodanza" value="${text(urlCreator || stored.creator || '')}">
+        </label>
+        <label>Your store link
+          <input id="thro-pub-poster-link" type="url" maxlength="512" autocomplete="url" placeholder="https://infinitediscs.com/?tag=yourname" value="${text(stored.posterLink || '')}">
+        </label>
+        <p id="thro-pub-status" class="thro-pub-status" role="status" hidden></p>
+        <div class="thro-pub-actions">
+          <button type="button" id="thro-pub-cancel" class="thro-pub-cancel">Close</button>
+          <button type="submit" id="thro-pub-submit" class="thro-pub-submit">Save &amp; Queue Update</button>
+        </div>
+      </form>
+    </div>
+  `;
+  document.body.append(dialog);
+
+  const form = dialog.querySelector('#thro-pub-form');
+  const creatorInput = dialog.querySelector('#thro-pub-creator');
+  const posterInput = dialog.querySelector('#thro-pub-poster-link');
+  const statusEl = dialog.querySelector('#thro-pub-status');
+  const cancelBtn = dialog.querySelector('#thro-pub-cancel');
+  const submitBtn = dialog.querySelector('#thro-pub-submit');
+
+  const closeDialog = () => { if (dialog.open) dialog.close?.(); dialog.removeAttribute('open'); };
+  cancelBtn.onclick = closeDialog;
+  dialog.addEventListener('click', event => { if (event.target === dialog) closeDialog(); });
+
+  trigger.onclick = () => {
+    statusEl.hidden = true;
+    statusEl.classList.remove('is-error');
+    if (typeof dialog.showModal === 'function') dialog.showModal();
+    else dialog.setAttribute('open', '');
+    (creatorInput.value ? posterInput : creatorInput).focus();
+    const lookupSlug = normalizeCreatorSlug(creatorInput.value);
+    if (lookupSlug && !posterInput.value) {
+      gondola.px(`claimed.${lookupSlug}`).then(state => {
+        const remoteLink = state?.posterLink ?? state?.value?.posterLink;
+        if (remoteLink && !posterInput.value) posterInput.value = remoteLink;
+      }).catch(() => {});
+    }
+  };
+
+  form.onsubmit = async event => {
+    event.preventDefault();
+    const creator = normalizeCreatorSlug(creatorInput.value);
+    const posterLink = posterInput.value.trim();
+    if (!creator) {
+      statusEl.hidden = false;
+      statusEl.classList.add('is-error');
+      statusEl.textContent = 'Enter your page name first.';
+      creatorInput.focus();
+      return;
+    }
+    if (posterLink && !/^https?:\/\/[^\s]+$/i.test(posterLink)) {
+      statusEl.hidden = false;
+      statusEl.classList.add('is-error');
+      statusEl.textContent = 'Enter a full web address starting with https://.';
+      posterInput.focus();
+      return;
+    }
+    const chosenRows = ui.mode === 'single'
+      ? rows.filter(r => r.address === ui.selectedDisc)
+      : rows.filter(r => ui.selection.includes(r.address));
+    const activeRows = chosenRows.length ? chosenRows : rows;
+    const discs = activeRows.map(r => ({
+      name: rowName(r),
+      manufacturer: rowMaker(r),
+      mold: r.seed?.name || rowName(r),
+      plastic: r.disc?.plastic || null,
+      weight: r.disc?.weight ?? null,
+    }));
+
+    submitBtn.disabled = true;
+    try {
+      const receipt = await gondola.oc('deploy', { creator, posterLink, discs });
+      const sent = receipt.deliveredVia !== 'offline';
+      creatorInput.value = creator;
+      try { localStorage.setItem(CREATOR_PROFILE_KEY, JSON.stringify({ creator, posterLink })); } catch { /* temporary session */ }
+      trigger.textContent = 'Update page';
+      statusEl.hidden = false;
+      statusEl.classList.remove('is-error');
+      const said = sent ? `Sent. thro reviews updates for thro.dev/${creator} before they go live.` : 'Saved on this device only. thro could not be reached, so nothing was sent yet. Try again in a minute.';
+      statusEl.classList.toggle('is-error', !sent);
+      statusEl.textContent = said;
+      message(said);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  };
+}
+
+
 try {
   // ?bag=photos: the shelf is the discs just cropped from real photos on photos.html, in a workspace of their own.
   const params = new URLSearchParams(location.search), photoBag = params.get('bag') === 'photos';
@@ -988,6 +1186,7 @@ try {
   workspace = await openWorkspace({ storage: localStorage, locks: navigator.locks, fixture, ...(photoBag ? { key: photoBagKey } : params.has('scratch') ? { key: 'thro.scratch:prepared-samples' } : {}) });
   rows = await workspace.model.shelfForDisplay(); adoptContext();
   window.__throStarted?.();
+  mountCreatorPublishControl();
   await ensureOneEngine();
   await renderCurrent(); paint(); setBusy(false); message('Ready. Choose your graphic, then take it to your video.');
   if (debug) {
