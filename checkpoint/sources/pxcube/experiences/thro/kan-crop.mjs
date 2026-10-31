@@ -5,8 +5,27 @@
 //   Stage 3: Shadow-Aware ForkJoin (720px Lab, 3 branches + 8-octant arc join + ScopeLive Witness)
 
 import { initialDraft } from './studio/upload-disc-to-shelf/model.js';
+import { enter } from './thro-calculations.mjs';
 
+// The crop is thro's own (photos.html): Argon's CoarseRimBand + FineRimForkJoin as the registered Calculation thro/crop/live, run
+// off the main thread, then thro/crop/unwarp (one affine map, ellipse -> face-on circle) and thro/crop/cutout. KAN's own detector
+// still runs and its branches stay as alternatives under the stage.
 const DEG = Math.PI / 180;
+let rimWorker = null; const rimWaiting = new Map(); let rimSeq = 0;
+function rimFit(img, name) {
+  rimWorker ??= Object.assign(new Worker(new URL('./rimfit-worker.mjs', import.meta.url), { type: 'module' }), {
+    onmessage: ({ data }) => { const w = rimWaiting.get(data.name); rimWaiting.delete(data.name); if (w) data.error ? w.no(Error(data.error)) : w.ok(data.report); },
+  });
+  const W = img.naturalWidth || img.width, H = img.naturalHeight || img.height, k = 1024 / Math.max(W, H);
+  const c = Object.assign(document.createElement('canvas'), { width: Math.round(W * k), height: Math.round(H * k) });
+  const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(img, 0, 0, c.width, c.height);
+  const data = x.getImageData(0, 0, c.width, c.height).data, key = `${name}#${++rimSeq}`;
+  return new Promise((ok, no) => { rimWaiting.set(key, { ok, no }); rimWorker.postMessage({ name: key, width: W, height: H, reference: null, working: { width: c.width, height: c.height, data } }, [data.buffer]); });
+}
+// A crop here is normalised (centre and radii as fractions of the photo's width/height) plus the ellipse's angle in degrees.
+const toPx = (crop, W, H) => ({ cx: crop.centerX * W, cy: crop.centerY * H, rx: Math.max(4, crop.radiusX * W), ry: Math.max(4, crop.radiusY * H), angle: crop.angle || 0 });
+const fromPx = (e, W, H) => ({ centerX: e.cx / W, centerY: e.cy / H, radiusX: e.rx / W, radiusY: e.ry / H, angle: e.angle || 0 });
+
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
 const median = (arr) => {
@@ -849,22 +868,9 @@ export async function cropDiscToDataUrl(imageSource, crop, size = 1024) {
   canvas.height = size;
   const ctx = canvas.getContext('2d');
 
-  const half = size / 2;
-  ctx.save();
-  ctx.beginPath();
-  ctx.arc(half, half, half - 1, 0, Math.PI * 2);
-  ctx.closePath();
-  ctx.clip();
-
-  const sx = crop.centerX * srcW;
-  const sy = crop.centerY * srcH;
-  const srx = Math.max(8, crop.radiusX * srcW);
-  const sry = Math.max(8, crop.radiusY * srcH);
-
-  ctx.translate(half, half);
-  ctx.scale(half / srx, half / sry);
-  ctx.drawImage(imageSource, -sx, -sy, srcW, srcH);
-  ctx.restore();
+  const ellipse = toPx(crop, srcW, srcH), name = 'added-photo';
+  const { matrix } = enter('thro/crop/unwarp', [{ name, ellipse, size }]).items[0];
+  ctx.drawImage(enter('thro/crop/cutout', [{ name, img: imageSource, ellipse, size, matrix }]).items[0].canvas, 0, 0);
 
   let dataUrl = canvas.toDataURL('image/webp', 0.88);
   if (!dataUrl.startsWith('data:image/webp;base64,')) {
@@ -926,8 +932,8 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
         <section class="kan-stage-col">
           <div class="kan-canvas-wrap">
             <canvas id="kan-stage-canvas" width="520" height="520"></canvas>
-            <div id="kan-witness-badge" class="kan-witness-badge">Pick a sample or upload a photo</div>
           </div>
+          <div id="kan-witness-badge" class="kan-witness-badge">Pick a sample or upload a photo</div>
           <div class="kan-stage-controls">
             <div id="kan-candidate-pills" class="kan-pill-row" role="group" aria-label="Candidate rim branches"></div>
             <div class="kan-nudge-row">
@@ -944,7 +950,7 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
         <section class="kan-form-col">
           <div class="kan-cutout-header">
             <div class="kan-cutout-preview-wrap">
-              <canvas id="kan-cutout-canvas" width="104" height="104"></canvas>
+              <canvas id="kan-cutout-canvas" width="208" height="208"></canvas>
             </div>
             <div class="kan-cutout-meta">
               <span class="eyebrow">YOUR CUTOUT</span>
@@ -1070,12 +1076,13 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
     const cy = oy + activeCrop.centerY * dh;
     const rx = activeCrop.radiusX * dw;
     const ry = activeCrop.radiusY * dh;
+    const tilt = (activeCrop.angle || 0) * DEG, ct = Math.cos(tilt), st = Math.sin(tilt);
 
     // Darken exterior outside active crop ellipse
     stageCtx.save();
     stageCtx.beginPath();
     stageCtx.rect(0, 0, cw, ch);
-    stageCtx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2, true);
+    stageCtx.ellipse(cx, cy, rx, ry, tilt, 0, Math.PI * 2, true);
     stageCtx.fillStyle = 'rgba(8, 14, 10, 0.64)';
     stageCtx.fill('evenodd');
     stageCtx.restore();
@@ -1085,7 +1092,7 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
       const ic = kanResult.innerCrop;
       stageCtx.save();
       stageCtx.beginPath();
-      stageCtx.ellipse(ox + ic.centerX * dw, oy + ic.centerY * dh, ic.radiusX * dw, ic.radiusY * dh, 0, 0, Math.PI * 2);
+      stageCtx.ellipse(ox + ic.centerX * dw, oy + ic.centerY * dh, ic.radiusX * dw, ic.radiusY * dh, (ic.angle || 0) * DEG, 0, Math.PI * 2);
       stageCtx.setLineDash([5, 5]);
       stageCtx.lineWidth = 1.75;
       stageCtx.strokeStyle = '#ffd166cc';
@@ -1096,12 +1103,12 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
     // Draw the active outer crop ellipse (thro orange) + 4 cardinal handles
     stageCtx.save();
     stageCtx.beginPath();
-    stageCtx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+    stageCtx.ellipse(cx, cy, rx, ry, tilt, 0, Math.PI * 2);
     stageCtx.lineWidth = 2.5;
     stageCtx.strokeStyle = '#e0632e';
     stageCtx.stroke();
 
-    for (const [hx, hy] of [[cx + rx, cy], [cx - rx, cy], [cx, cy + ry], [cx, cy - ry]]) {
+    for (const [hx, hy] of [[cx + rx * ct, cy + rx * st], [cx - rx * ct, cy - rx * st], [cx - ry * st, cy + ry * ct], [cx + ry * st, cy - ry * ct]]) {
       stageCtx.beginPath();
       stageCtx.arc(hx, hy, 5, 0, Math.PI * 2);
       stageCtx.fillStyle = '#e1d6c2';
@@ -1116,14 +1123,13 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
     const cSize = cutoutCanvas.width;
     cutoutCtx.clearRect(0, 0, cSize, cSize);
     cutoutCtx.save();
+    const e = toPx(activeCrop, sw, sh), { matrix } = enter('thro/crop/unwarp', [{ name: 'preview', ellipse: e, size: cSize }]).items[0];
+    cutoutCtx.imageSmoothingQuality = 'high';
+    cutoutCtx.setTransform(...matrix);
     cutoutCtx.beginPath();
-    cutoutCtx.arc(cSize / 2, cSize / 2, cSize / 2 - 1, 0, Math.PI * 2);
+    cutoutCtx.ellipse(e.cx, e.cy, e.rx, e.ry, e.angle * DEG, 0, Math.PI * 2);
     cutoutCtx.clip();
-    const srx = Math.max(4, activeCrop.radiusX * sw);
-    const sry = Math.max(4, activeCrop.radiusY * sh);
-    cutoutCtx.translate(cSize / 2, cSize / 2);
-    cutoutCtx.scale((cSize / 2) / srx, (cSize / 2) / sry);
-    cutoutCtx.drawImage(loadedImg, -activeCrop.centerX * sw, -activeCrop.centerY * sh, sw, sh);
+    cutoutCtx.drawImage(loadedImg, 0, 0);
     cutoutCtx.restore();
   }
 
@@ -1165,13 +1171,22 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
     const rgba = octx.getImageData(0, 0, dw, dh).data;
 
     kanResult = detectKanDisc(rgba, dw, dh);
+    let fit = null;
+    try {
+      const report = await rimFit(img, fname || 'photo');
+      const item = report.items?.[0];
+      if (item?.output) fit = { crop: fromPx(item.output, sw, sh), passed: ['G1_LivePriorBounds', 'G2_LiveZeroBandClip', 'G3_LiveOctantSupport'].every(g => report.guarantees?.[g]?.passed !== false), ms: item.ms };
+    } catch (error) { console.warn('rim fit failed; using the KAN detector', error); }
+    if (fit) kanResult.candidates = [{ id: 'rim-fit', label: 'Rim fit', crop: fit.crop }, ...kanResult.candidates];
     activeCandidateId = kanResult.candidates[0].id;
-    activeCrop = structuredClone(kanResult.crop);
+    activeCrop = structuredClone(fit ? fit.crop : kanResult.crop);
 
     const w = kanResult.witness;
     // Plain words for everyone; the solver's numbers only with ?dev.
     const dev = new URLSearchParams(location.search).has('dev');
-    const parts = !dev ? [w.passed ? '✓ Rim found' : 'Check the rim, then drag it to fit'] : [
+    const found = fit ? fit.passed : w.passed;
+    const parts = !dev ? [found ? '✓ Rim found' : 'Check the rim, then drag it to fit'] : [
+      fit ? `thro/crop/live ${fit.passed ? 'PASS' : 'CHECK'} · ${Math.round(fit.ms)} ms` : 'thro/crop/live unavailable',
       w.passed ? '✓ ScopeLive PASS' : '⚠ Manual review',
       `octants ${Math.round(w.octantSupport * 8)}/8`,
       `band ${(w.bandUsage * 100).toFixed(1)}%`,
@@ -1180,7 +1195,7 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
       `${w.ms} ms`,
     ].filter(Boolean);
     witnessBadge.textContent = parts.join(' · ');
-    witnessBadge.classList.toggle('is-pass', w.passed);
+    witnessBadge.classList.toggle('is-pass', found);
 
     if (preset) {
       moldSearch.value = preset.moldQuery;
@@ -1332,7 +1347,7 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
         source: sourceName,
         prepared: 'kan-2.0-live',
         size: `${width} × ${height}`,
-        preparation: `KAN 2.0 ShadowAwareForkJoin (${activeCandidateId})`,
+        preparation: `${activeCandidateId === 'rim-fit' ? 'thro/crop/live rim fit' : `KAN 2.0 ${activeCandidateId}`} + thro/crop/unwarp`,
         build: 'kan-2.0',
         sha256,
       });

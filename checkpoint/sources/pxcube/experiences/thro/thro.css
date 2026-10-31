@@ -207,7 +207,7 @@ html.console-map .workspace-heading .mode-nav{display:grid;grid-template-columns
 .kan-canvas-wrap{position:relative;border:1px solid #cdb995;border-radius:13px;overflow:hidden;background:#e1d6c2;display:grid;place-items:center;aspect-ratio:1 / 1;max-height:54vh;margin:0 auto;width:100%}
 #kan-stage-canvas{width:100%;height:100%;object-fit:contain;touch-action:none;cursor:grab}
 #kan-stage-canvas:active{cursor:grabbing}
-.kan-witness-badge{position:absolute;left:10px;right:10px;bottom:10px;padding:6px 10px;border-radius:8px;background:rgba(248,240,223,.92);border:1px solid #cdb995;font-family:ui-monospace,monospace;font-size:10.5px;color:var(--muted)}
+.kan-witness-badge{padding:7px 11px;border-radius:9px;background:#f3e8d2;border:1px solid #cdb995;font-size:12px;font-weight:600;color:var(--muted)}
 .kan-witness-badge.is-pass{border-color:#1f6f68;color:#1f6f68}
 .kan-stage-controls{display:flex;flex-direction:column;gap:7px}
 .kan-pill-row,.kan-nudge-row{display:flex;flex-wrap:wrap;align-items:center;gap:5px}
