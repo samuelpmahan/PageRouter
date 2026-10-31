@@ -58,3 +58,50 @@ test('the design accepts the wide ranges and a whole-number row only', () => {
   assert.equal(validParts({ plateW: 1824, row: 1, discOX: -1.5 }, 'b01'), true);
   assert.equal(validParts({ row: 0.5 }, 'b01'), false);
 });
+// ---- The disc stays whole (Sam, 30 Oct, thro.dev/editor: plate 1824 px and disc 900 px pinned cut the disc down the middle).
+test('a wide plate and a big disc: the unpinned disc offset slides the disc in, so the frame never cuts it', () => {
+  const s = solveB01({ plateW: 1824, discD: 900 }, width), g = s.geometry;
+  assert.ok(g.disc.cx + g.disc.d / 2 <= 1920 - 48 + 1e-9, `disc right edge ${g.disc.cx + g.disc.d / 2}`);
+  assert.equal(g.plate.w, 1824, 'the pinned plate keeps its width');
+  assert.equal(s.state.discOX, 'derived'); assert.equal(s.state.plateW, 'pinned');
+  assert.ok(s.msgs.some(([, m]) => /stays whole/.test(m)));
+  assert.ok(!s.msgs.some(([, m]) => /runs off the side/.test(m)));
+});
+test('with the disc offset pinned at its far end the disc still fits beside the default plate; every part pinned stays put and says so', () => {
+  const a = solveB01({ discD: 900, discOX: 0.8 }, width);
+  assert.ok(a.geometry.disc.cx + a.geometry.disc.d / 2 <= 1920 - 48 + 1e-9); assert.equal(a.state.discOX, 'pinned');
+  const b = solveB01({ plateW: 1824, discD: 900, discOX: 0.1 }, width);
+  assert.equal(b.geometry.plate.w, 1824); assert.ok(b.msgs.some(([, m]) => /runs off the side/.test(m)));
+});
+test('the disc stays below the top of the frame when its drop is not pinned', () => {
+  const s = solveB01({ discD: 900, plateW: 240 }, width), g = s.geometry;
+  assert.ok(g.disc.cy - g.disc.d / 2 >= 48 - 1e-9);
+});
+test('every card a person can make from the slider ends keeps its disc inside the frame unless every part is pinned', () => {
+  for (const plateW of [240, 620, 1200, 1824]) for (const discD of [80, 420, 900]) for (const row of [0, 1]) {
+    const g = solveB01({ plateW, discD, row }, width).geometry;
+    assert.ok(g.disc.cx + g.disc.d / 2 <= 1920 - 48 + 1e-9 && g.disc.cx - g.disc.d / 2 >= 48 - 1e-9 && g.disc.cy - g.disc.d / 2 >= 48 - 1e-9, `plate ${plateW} disc ${discD} row ${row}`);
+  }
+});
+test('see-through stays the default plate, and the dark plate is one switch (Sam, 31 Oct: "Keep see-through")', () => {
+  const fresh = nativeDesign({ study: 'discstudio:b01', accent: '#c8f23d' }, 'discstudio:b01');
+  assert.equal(fresh.nativePlate, 'see-through');
+  const disc = { id: 'd', mold: 'm', plastic: null, weight: null }, resolved = { name: 'Servo', manufacturer: 'MVP', speed: 6.5, glide: 5, turn: -1, fade: 2 };
+  assert.equal(nativeCardRecipe({ disc, resolved, design: fresh }).appearance.plate, undefined, 'see-through draws as it always did');
+  const dark = nativeControlDesign(fresh, { study: 'discstudio:b01', plate: 'solid' });
+  assert.equal(dark.nativePlate, 'solid');
+  assert.equal(nativeCardRecipe({ disc, resolved, design: dark }).appearance.plate, 'solid', 'the dark plate is the renderer\'s solid plate');
+  assert.equal(nativeControlDesign(dark, { study: 'discstudio:b01', plate: 'see-through' }).nativePlate, 'see-through', 'and it switches back');
+  assert.equal(nativeDesign({ study: 'discstudio:b01', nativePlate: 'see-through' }, 'discstudio:b01').nativePlate, 'see-through', 'a card saved see-through stays see-through');
+});
+test('half flight numbers draw as a whole number with a raised, smaller fraction (Sam, 30 Oct)', async () => {
+  const src = (await import('node:fs')).readFileSync(new URL('../../vendor/discstudio-cards/thro-card-core-r2.js', import.meta.url), 'utf8');
+  const body = src.slice(src.indexOf('function fillFlightValue'), src.indexOf('/** Law 5'));
+  const fillFlightValue = new Function(`${body}; return fillFlightValue;`)();
+  const calls = [], ctx = { font: '600 40px Inter', textAlign: 'center', fillText: (t, x, y) => calls.push([t, ctx.font, ctx.textAlign, Math.round(y)]), measureText: t => ({ width: t.length * 20 }) };
+  fillFlightValue(ctx, '6.5', 100, 80);
+  assert.deepEqual(calls.map(c => c[0]), ['6', '.5']);
+  assert.match(calls[1][1], /22px/); assert.ok(calls[1][3] < calls[0][3], 'the fraction sits above the baseline');
+  assert.equal(ctx.font, '600 40px Inter'); assert.equal(ctx.textAlign, 'center', 'font and alignment are put back');
+  calls.length = 0; fillFlightValue(ctx, '-1', 100, 80); assert.deepEqual(calls.map(c => c[0]), ['-1']);
+});

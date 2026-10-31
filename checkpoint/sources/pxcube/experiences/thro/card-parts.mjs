@@ -2,13 +2,13 @@
 // version of Constraint Lab as good as the first one yet?"). Each red handle sits on the part it changes and its shape says how:
 //   ● on the disc centre   moves the disc on the plate's corner      ● on the disc rim   sizes the disc
 //   ▮ on the plate edge    sets the plate's width                      ■ on the last tile   sets the number size
-//   ▲ on the name          sets the largest name size
+//   ▲ past the name's end  sets the largest name size              (the ■ sits past the last tile, never on a digit)
 // Dragging pins that part; every part not pinned is derived by the renderer's rules (solveB01 in thro-card-core-r2.js) and the card
 // re-forms around it. While the finger is down the page solves the same rules and outlines where every part will be; on release the
 // renderer redraws the card. The recipe (each part: its value and whether it is a default, pinned, or derived) is shown under the card.
 import { solveB01, B01_PARTS } from './vendor/discstudio-cards/thro-card-core-r2.js?v=28ac2b39fab85255';
 import { begin, settle } from './gestures.mjs';
-import { chromeAnchor } from './editor-place.mjs';
+import { chromeAnchor, placeClear, spotsAround } from './editor-place.mjs';
 
 const STYLE = `
 .card-parts{position:absolute;inset:0;pointer-events:none;z-index:3}
@@ -102,7 +102,39 @@ export function attachCardParts(holder, layer, { recipe, design, name, view, onC
   const ghosts = { plate: Object.assign(document.createElement('div'), { className: 'cp-ghost' }), disc: Object.assign(document.createElement('div'), { className: 'cp-ghost round' }),
     tiles: Object.assign(document.createElement('div'), { className: 'cp-ghost' }) };
   const tip = Object.assign(document.createElement('div'), { className: 'cp-tip' });
-  const place = () => { const m = view(); for (const { h, el } of handles) Object.assign(el.style, { left: `${m.x(h.x)}px`, top: `${m.y(h.y)}px` }); };
+  // The card's content in holder pixels: the name as drawn, the row of tiles and the disc. The name and tile handles sit just past
+  // the end of what they size, never on a letter or a digit (Sam's screenshot, 30 Oct: the name handle sat on the S of SERVO).
+  const nameSpan = nameWidthFor(name);
+  const content = m => {
+    const g = recipe.native, dir = recipe.dir, box = (x0, y0, x1, y1) => { const p = toCanvas(Math.min(x0, x1), Math.min(y0, y1)), q = toCanvas(Math.max(x0, x1), Math.max(y0, y1)); return { x: m.x(p.x), y: m.y(p.y), w: (q.x - p.x) * m.s, h: (q.y - p.y) * m.s }; };
+    const nw = nameSpan(g.name.px), t = g.tiles, row = 4 * t.size + 3 * t.gap;
+    return { name: box(g.name.x, g.name.y - g.name.px * 0.75, g.name.x + dir * nw, g.name.y), tiles: box(t.x, t.y, t.x + dir * row, t.y + t.size),
+      disc: box(g.disc.cx - g.disc.d / 2, g.disc.cy - g.disc.d / 2, g.disc.cx + g.disc.d / 2, g.disc.cy + g.disc.d / 2) };
+  };
+  const shownAt = new Map(); // where each handle is drawn (holder pixels): a drag starts from there
+  // avoid: the card editor's own marks (its size knob) in holder pixels, which no handle may touch.
+  let lastAvoid = [];
+  const place = (avoid = lastAvoid) => {
+    lastAvoid = avoid;
+    const m = view(), c = content(m), hw = holder.clientWidth, hh = holder.clientHeight, ahead = recipe.dir > 0 ? 'after' : 'before';
+    const keep = [c.name, c.tiles];
+    for (const { h, el } of handles) {
+      if (h.id === 'tile' || h.id === 'name') continue;
+      if (h.id === 'plate-edge') {
+        // The plate bar stays on the plate's edge but slides along it, up first, until it clears the size knob: with a wide plate the
+        // edge runs into the card's corner, where the knob sits (thro.dev/editor, plate 1824 px: bar and knob touched).
+        const x = m.x(h.x), y = m.y(h.y), step = el.offsetHeight / 2 + 4, along = [0, -1, -2, -3, 1, 2].map(k => ({ x, y: y + k * step }));
+        const b = placeClear(el, along, avoid, hw, hh, 0); shownAt.set(el, { x: b.x + b.w / 2, y: b.y + b.h / 2 }); continue;
+      }
+      Object.assign(el.style, { left: `${m.x(h.x)}px`, top: `${m.y(h.y)}px` }); shownAt.set(el, { x: m.x(h.x), y: m.y(h.y) });
+    }
+    for (const id of ['tile', 'name']) {
+      const found = handles.find(({ h }) => h.id === id); if (!found) continue;
+      const target = id === 'tile' ? c.tiles : c.name, el = found.el;
+      const b = placeClear(el, spotsAround(target, el.offsetWidth, el.offsetHeight, [ahead, 'above', 'below'], 6), [...keep, c.disc], hw, hh);
+      keep.push(b); shownAt.set(el, { x: b.x + b.w / 2, y: b.y + b.h / 2 });
+    }
+  };
   place();
 
   // Where every part would be with these pins: the same rules the renderer runs, outlined over the card while dragging.
@@ -119,14 +151,14 @@ export function attachCardParts(holder, layer, { recipe, design, name, view, onC
   for (const { h, el } of handles) {
     el.addEventListener('pointerdown', ev => {
       if (ev.button > 0) return; ev.preventDefault(); ev.stopPropagation();
-      const id = ev.pointerId, x0 = ev.clientX, y0 = ev.clientY, m = view(), k = recipe.k * m.s, landed = ev.timeStamp;
+      const id = ev.pointerId, x0 = ev.clientX, y0 = ev.clientY, m = view(), k = recipe.k * m.s, landed = ev.timeStamp, from = shownAt.get(el) ?? { x: m.x(h.x), y: m.y(h.y) };
       try { el.setPointerCapture(id); } catch { /* capture is a nicety */ }
       let next = null; layer.classList.add('is-dragging'); parts.appendChild(tip);
       const move = mv => {
         if (mv.pointerId !== id) return;
         const dx = (mv.clientX - x0) / k, dy = (mv.clientY - y0) / k;
         next = { ...pinned, ...pinFor(h.id, recipe, dx, dy) };
-        Object.assign(el.style, { left: `${m.x(h.x) + mv.clientX - x0}px`, top: `${m.y(h.y) + mv.clientY - y0}px` });
+        Object.assign(el.style, { left: `${from.x + mv.clientX - x0}px`, top: `${from.y + mv.clientY - y0}px` });
         const { solved, boxes } = preview(next); drawGhosts(boxes); renderPanel(solved.values, solved.state, solved.derived, solved.msgs);
         const changed = Object.keys(pinFor(h.id, recipe, 0, 0)).map(p => `${B01_PARTS[p].label} ${shown(p, next[p])}`).join(' · ');
         tip.textContent = changed; Object.assign(tip.style, { left: el.style.left, top: el.style.top });
@@ -151,5 +183,8 @@ export function attachCardParts(holder, layer, { recipe, design, name, view, onC
     });
   }
   void settle;
-  return { place, detach: () => { parts.remove(); panel.remove(); } };
+  // The boxes the controls must keep clear of (the card editor's Side and Colour badges): the content and the handles as drawn.
+  const occupied = () => { const m = view(), c = content(m), o = holder.getBoundingClientRect();
+    return [c.name, c.tiles, ...handles.map(({ el }) => { const r = el.getBoundingClientRect(); return { x: r.left - o.left, y: r.top - o.top, w: r.width, h: r.height }; })]; };
+  return { place, occupied, detach: () => { parts.remove(); panel.remove(); } };
 }

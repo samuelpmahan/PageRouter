@@ -202,7 +202,7 @@ test('plate and nudge: defaults, exact round-trip, invalid active/dormant/captur
   const editContext = (raw, fn) => { const node = contextNode(raw), context = decode(node.material); fn(context); delete node.calculation; delete node.inputs; node.material = encode(context); };
   const refuses = async (value, code, label) => { const target = storage(); await assert.rejects(api.adoptWorkspacePackage({ storage: target, locks, key: `thro.test:${label}`, package: value, renderGraphic }), code ? { code } : undefined, label); assert.equal(target.values.size, 0, `${label} wrote nothing`); };
 
-  // 1. Omitted fields keep the old defaults and need no new capability.
+  // 1. Omitted fields keep the old defaults (see-through, Sam 30 Oct: "keep it as it was") and need no new capability.
   const plain = await openWorkspace({ storage: storage(), locks, fixture, renderGraphic });
   await plain.change({ design: nativeDesign(plain.model.context.design, 'discstudio:b01') });
   await plain.keep(await plain.single(plain.model.context.selectedDisc));
@@ -256,41 +256,41 @@ test('plate and nudge: defaults, exact round-trip, invalid active/dormant/captur
   await refuses(future, 'THRO_PACKAGE_UNSUPPORTED', 'unknown-consumer');
 });
 
-test('card revision 2 (B01 upright disc, U04 smaller manufacturer): fresh designs get it, saved ones keep revision 1 until chosen, and packages declare it (synthetic producer, no browser-pixel claim)', async () => {
+test('card revision 3 (dark plate on every layout, raised half numbers): fresh designs get it, saved ones keep revision 1 until chosen, and packages declare it (synthetic producer, no browser-pixel claim)', async () => {
   const { createNativeRenderer, nativeDesign, nativeControlDesign, nativeCardRequest } = await import(new URL('native-cards.mjs', runtime));
   const manifest = JSON.parse(fs.readFileSync(new URL('prepared-fixture.json', runtime)));
   const fixture = manifest.discs.map(disc => ({ ...disc, depiction: { kind: 'photo', name: disc.name, src: `data:image/webp;base64,${fs.readFileSync(new URL(disc.file, runtime)).toString('base64')}` } }));
   const header = Buffer.alloc(33); Buffer.from('89504e470d0a1a0a', 'hex').copy(header); header.write('IHDR', 12); header.writeUInt32BE(1920, 16); header.writeUInt32BE(1080, 20);
   const png = `data:image/png;base64,${header.toString('base64')}`, requests = [];
   const renderGraphic = createNativeRenderer(async request => { requests.push(request); return { svg: `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080"><image width="1920" height="1080" href="${png}"/></svg>`, width: 1920, height: 1080, build: identity.nativeRendererBuild, revision: request.revision ?? 1, placement: { scale: request.scale, dx: 0, dy: 0 } }; });
-  const CAP = 'thro-card-revision@2/b01';
+  const CAP = 'thro-card-revision@3/b01';
   const contextNode = raw => { const pair = raw.bindings.filter(([name]) => /^ds\.px\.studio\.demo\.\d+\.context$/.test(name)).at(-1); return raw.nodes.find(item => item.id === pair[1]); };
   const editContext = (raw, fn) => { const node = contextNode(raw), context = decode(node.material); fn(context); delete node.calculation; delete node.inputs; node.material = encode(context); };
   const refuses = async (value, code, label) => { const target = storage(); await assert.rejects(api.adoptWorkspacePackage({ storage: target, locks, key: `thro.test:${label}`, package: value, renderGraphic }), code ? { code } : undefined, label); assert.equal(target.values.size, 0, `${label} wrote nothing`); };
 
-  // Fresh layouts start at their latest revision; layouts that never changed have none.
+  // Fresh layouts start at their latest revision, which is now 3 on every layout.
   const start = (await openWorkspace({ storage: storage(), locks, fixture })).model.context.design;
-  assert.equal(nativeDesign(start, 'discstudio:b01').nativeRevision, 2);
-  assert.equal(nativeDesign(start, 'discstudio:u04').nativeRevision, 2);
-  assert.ok(!Object.hasOwn(nativeDesign(start, 'discstudio:b02'), 'nativeRevision'));
+  assert.equal(nativeDesign(start, 'discstudio:b01').nativeRevision, 3);
+  assert.equal(nativeDesign(start, 'discstudio:u04').nativeRevision, 3);
+  assert.equal(nativeDesign(start, 'discstudio:b02').nativeRevision, 3);
   // A saved revision-1 design stays revision 1 when re-derived, and moves only when a person asks.
   const saved = { ...nativeDesign(start, 'discstudio:b01') }; delete saved.nativeRevision;
   assert.ok(!Object.hasOwn(nativeDesign(saved, 'discstudio:b01'), 'nativeRevision'), 'same layout keeps revision 1');
-  assert.equal(nativeControlDesign(saved, { study: 'discstudio:b01', revision: 2 }).nativeRevision, 2, 'explicit choice moves it');
-  assert.ok(!Object.hasOwn(nativeControlDesign(saved, { study: 'discstudio:b01', revision: 3 }), 'nativeRevision'), 'unknown revision ignored');
+  assert.equal(nativeControlDesign(saved, { study: 'discstudio:b01', revision: 3 }).nativeRevision, 3, 'explicit choice moves it');
+  assert.ok(!Object.hasOwn(nativeControlDesign(saved, { study: 'discstudio:b01', revision: 4 }), 'nativeRevision'), 'unknown revision ignored');
 
-  // Revision 2 flows into the request, the kept card and the package requirement, and round-trips exactly.
+  // Revision 3 flows into the request, the kept card and the package requirement, and round-trips exactly.
   const fresh = await openWorkspace({ storage: storage(), locks, fixture, renderGraphic });
   const design = nativeDesign(fresh.model.context.design, 'discstudio:b01');
   await fresh.change({ design });
   const kept = await fresh.keep(await fresh.single(fresh.model.context.selectedDisc, design));
-  assert.equal(requests.at(-1).revision, 2); assert.equal(kept.capture.graphic.provenance.revision, 2);
+  assert.equal(requests.at(-1).revision, 3); assert.equal(kept.capture.graphic.provenance.revision, 3);
   const revised = await fresh.exportPackage({ identity });
   assert.ok(revised.compatibility.requiredCapabilities.includes(CAP));
   const target = storage(), key = 'thro.test:revision-roundtrip';
   await api.adoptWorkspacePackage({ storage: target, locks, key, package: revised, renderGraphic });
   const reopened = await openWorkspace({ storage: target, locks, key, renderGraphic });
-  assert.equal(reopened.model.context.design.nativeRevision, 2);
+  assert.equal(reopened.model.context.design.nativeRevision, 3);
   assert.deepEqual(reopened.model.value(kept.address), kept.capture, 'kept image bytes and provenance preserved exactly');
 
   // A revision-1 recipe needs nothing new and draws revision 1.
@@ -304,9 +304,9 @@ test('card revision 2 (B01 upright disc, U04 smaller manufacturer): fresh design
 
   // Malformed revisions fail with zero writes, and nothing can hide or invent the requirement.
   for (const [label, fn] of [
-    ['revision-3', context => { context.design.nativeRevision = 3; }],
-    ['revision-on-unchanged-layout', context => { context.design = { ...context.design, study: 'discstudio:b02' }; }],
-    ['revision-string', context => { context.singleDesign.nativeRevision = '2'; }],
+    ['revision-4', context => { context.design.nativeRevision = 4; }],
+    ['revision-2-on-a-layout-it-never-had', context => { context.design = { ...context.design, study: 'discstudio:b02', nativeRevision: 2 }; }],
+    ['revision-string', context => { context.singleDesign.nativeRevision = '3'; }],
   ]) await refuses(rewritten(revised, raw => editContext(raw, fn)), null, label);
   const mismatch = rewritten(revised, raw => {
     const captureNode = raw.nodes.find(node => node.material && decode(node.material)?.schema === 'studio-graphic@1'), capture = decode(captureNode.material);
@@ -318,9 +318,9 @@ test('card revision 2 (B01 upright disc, U04 smaller manufacturer): fresh design
   await refuses(mismatch, null, 'provenance-revision-dropped');
   const hidden = structuredClone(revised); hidden.compatibility.requiredCapabilities = hidden.compatibility.requiredCapabilities.filter(item => item !== CAP); seal(hidden);
   await refuses(hidden, 'THRO_PACKAGE_INVALID', 'hidden-revision');
-  const future = structuredClone(revised); future.compatibility.requiredCapabilities.push('thro-card-revision@3/b01'); seal(future);
+  const future = structuredClone(revised); future.compatibility.requiredCapabilities.push('thro-card-revision@4/b01'); seal(future);
   await refuses(future, 'THRO_PACKAGE_UNSUPPORTED', 'unknown-revision-consumer');
-  assert.throws(() => nativeCardRequest({ disc: fresh.model.experience.shelf()[0].disc, resolved: fresh.model.experience.resolve(fresh.model.experience.shelf()[0].disc), design: { ...design, nativeRevision: 3 } }), /revision/);
+  assert.throws(() => nativeCardRequest({ disc: fresh.model.experience.shelf()[0].disc, resolved: fresh.model.experience.resolve(fresh.model.experience.shelf()[0].disc), design: { ...design, nativeRevision: 4 } }), /revision/);
 });
 
 test('regression (f1525a4): plate/nudge/revision checks never skip the native or legacy design check', async () => {
@@ -356,7 +356,7 @@ test('a card renderer that does not confirm the asked revision is refused (a sta
   const workspace = await openWorkspace({ storage: storage(), locks, fixture });
   const disc = workspace.model.value(workspace.model.context.selectedDisc), resolved = workspace.model.experience.resolve(disc);
   const design = nativeDesign(workspace.model.context.design, 'discstudio:b01');
-  assert.equal(design.nativeRevision, 2);
+  assert.equal(design.nativeRevision, 3);
   await assert.rejects(stale({ disc, resolved, design }), /another revision/);
   const saved = { ...design }; delete saved.nativeRevision;
   await stale({ disc, resolved, design: saved });
@@ -373,8 +373,8 @@ test("the site's card revision decides what new cards start at; saved cards keep
     assert.equal(latestCardRevision('discstudio:u04'), undefined, 'site at revision 1: the editor offers no fixed card');
     const saved = { ...nativeDesign(start, 'discstudio:b01'), nativeRevision: 2 };
     assert.equal(nativeDesign(saved, 'discstudio:b01').nativeRevision, 2, 'a saved revision-2 card keeps revision 2');
-    assert.throws(() => useSiteCardRevision(3), /not one the site can choose/);
-  } finally { useSiteCardRevision(2); }
-  assert.equal(nativeDesign(start, 'discstudio:b01').nativeRevision, 2);
-  assert.equal(latestCardRevision('discstudio:u04'), 2);
+    assert.throws(() => useSiteCardRevision(4), /not one the site can choose/);
+  } finally { useSiteCardRevision(3); }
+  assert.equal(nativeDesign(start, 'discstudio:b01').nativeRevision, 3);
+  assert.equal(latestCardRevision('discstudio:u04'), 3);
 });

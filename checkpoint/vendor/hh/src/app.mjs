@@ -3,12 +3,9 @@ import {createPublicController} from './public-controller.mjs';
 import {renderPublicSite, renderPreviewControls} from './public-site.mjs';
 import {createCommunity} from './community.mjs';
 import {registerWebMcp} from './webmcp.mjs';
-import {mountDevTools} from './pxc-devtools/devtools.mjs';
-import {createStyleInspectionBoard, registerBrowserStylePlayground} from './style-playground.mjs';
 
 const root = document.getElementById('app');
 const SVG_NS = 'http://www.w3.org/2000/svg';
-let devTools;
 let storage;
 let lastRenderedRoute = null;
 try { storage = window.sessionStorage; }
@@ -264,17 +261,9 @@ Object.defineProperty(window, 'hhPreview', {
 try {
   await controller.initialize(location.hash || '#/');
   if (controller.state.journey.terms.open) { focusOnTerms = true; render(controller.state, controller.route); }
-  const stylePlayground = runtime.fixture === true ? registerBrowserStylePlayground(runtime.pxc) : null;
-  const inspectionBoard = stylePlayground ? createStyleInspectionBoard(runtime.pxc, runtime.devtoolsBoard) : runtime.devtoolsBoard;
-  devTools = mountDevTools(inspectionBoard, {label: 'Homeroom Heroes', readOnly: true,
-    app: document.getElementById('hh-devtools-mount') || root, storage,
-    getContext: () => {
-      const journey = runtime.snapshot();
-      return {session: journey.session.status, registration: journey.registration.status,
-        currentTeacherName: journey.demo?.selectedTeacher?.name || null,
-        hasCurrentProfile: (journey.demo?.publicProfiles || []).some(profile => profile.teacherId === journey.registration.teacherId),
-        publicProfiles: journey.demo?.publicProfiles || []};
-    }, stylePlayground});
+  // Homeroom Heroes is a demo people examine to trust it (Sam, 30 Oct: "We don't need fast-check or devtools"), so the public page
+  // carries neither the PxC devtools panel nor the fast-check style playground. Its state and PxC receipts stay readable through
+  // window.hhPreview.
   registerWebMcp(controller, {navigate: async path => {
     const hash = `#${path}`;
     if (location.hash !== hash) location.hash = hash;

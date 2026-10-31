@@ -1,4 +1,5 @@
 import { openWorkspace } from './workspace.mjs';
+import { archiveStorage } from './idb-storage.mjs';
 import { nativeStudies, isNativeStudy, nativeStudy, nativeDesign, nativeControlDesign, lineupStudies, isLineupStudy, lineupStudy, lineupFrames, lineupFrame, lineupBackdrops, lineupBackdrop, cardParts, cardLayout, latestCardRevision, useSiteCardRevision, pixelStats, nativeLineupPlan, accentPalette } from './native-cards.mjs';
 import { attachCardEditor, detachCardEditor } from './card-editor.mjs';
 import { B01_PARTS } from './vendor/discstudio-cards/thro-card-core-r2.js?v=28ac2b39fab85255'; // already loaded by card-parts.mjs
@@ -6,7 +7,7 @@ import { createThroWorld, decide, screen, SITE_FILL, photoDefinition } from './t
 import { alphaBounds, fitArtwork } from './preview-frame.mjs';
 import { cardPixelBox, fileNames, cropPng, zipPngs } from './editor-batch.mjs';
 import { loadFixture, loadFlightCorrections, withFlightCorrections } from './prepared-fixture.mjs';
-import { loadBag, workspaceKey as photoBagKey } from './photo-bag.mjs';
+import { loadBag, workspaceKey as photoBagKey, takeFreshBag } from './photo-bag.mjs';
 import { defaultDesign, compositionStudies, compositionSizeStudies } from './graphics.mjs';
 import { esc } from './renderer/src/presentation.js';
 import { pngFromSvg, sha256, downloadBlob } from './renderer/src/media.js';
@@ -254,7 +255,7 @@ const idle = async () => {
   }
 };
 // What one tap on the card could make, drawn while nothing else is happening, so the tap finds its pixels ready.
-// The same designs the badges ask for (card-editor.mjs: Side, Colour, Plate); nothing is shown or saved.
+// The same designs the labels on the card ask for (card-editor.mjs: the disc's side, where the colour goes, the plate); nothing is shown or saved.
 async function prewarmCard(token) {
   if (ui.mode !== 'single' || capturedPreview || !isNativeStudy(ui.design.study)) return;
   const d = { ...nativeDesign(ui.design, ui.design.study), ...ui.design };
@@ -304,6 +305,7 @@ async function paintCompositionThumbs() {
 // ---- Accent swatches: one sampled from the disc, then a fixed palette ----
 const palette = accentPalette; // named in native-cards.mjs, so the world names accents the same way
 let discColour = null; // { disc, colour }
+let accentFollowsDisc = false; // set by Match disc: a new disc's colour replaces the old one instead of carrying it over
 function swatchMarkup(chosen) {
   const sampled = discColour && discColour.disc === (ui.mode === 'single' ? ui.selectedDisc : ui.selection[0]) ? discColour.colour : null;
   const same = (a, b) => String(a).toLowerCase() === String(b).toLowerCase();
@@ -334,6 +336,9 @@ function sampleDiscColour() {
       const n = bright.length, lift = Math.min(1.6, 235 / Math.max(1, r / n, g / n, b / n)); // indoor photos read darker than the plastic looks on screen
       const hex = v => Math.min(255, Math.round(v / n * lift)).toString(16).padStart(2, '0');
       discColour = { disc, colour: `#${hex(r)}${hex(g)}${hex(b)}` };
+      if (accentFollowsDisc && $('accent') && String(ui.design.accent).toLowerCase() !== discColour.colour) {
+        $('accent').value = discColour.colour; ui.design = readDesign(); change({ design: structuredClone(ui.design) }, 'Accent matched to this disc. Your graphic is ready.');
+      }
       const group = document.querySelector('.swatches'); if (group) { group.innerHTML = swatchMarkup(ui.design.accent); bindSwatches(); }
     } catch { /* An unreadable photo simply leaves Match disc disabled. */ }
   };
@@ -342,6 +347,7 @@ function sampleDiscColour() {
 function bindSwatches() {
   document.querySelectorAll('[data-accent]').forEach(button => button.onclick = () => {
     if (!button.dataset.accent) return;
+    accentFollowsDisc = button.classList.contains('swatch-match');
     $('accent').value = button.dataset.accent;
     ui.design = readDesign(); change({ design: structuredClone(ui.design) }, `Accent set to ${button.getAttribute('aria-label') ?? 'the disc colour'}. Your graphic is ready.`);
   });
@@ -394,7 +400,7 @@ function controlsMarkup() {
   }
   if (isNativeStudy(design.study)) {
     const selected = nativeStudy(design.study), scale = design.nativeScale ?? .66;
-    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><div class="native-primary-controls">${picker}<p class="subtle">Drag the card to move it, pull its red knob to size it, and tap Side, Colour or Plate on the card. These are the card's own pixels, kept with this exact disc.</p><label>Card size <output id="native-scale-value">${Math.round(scale * 100)}%</output><input id="native-scale" type="range" min="0.5" max="1.5" step="0.01" value="${scale}" aria-label="Native card size"></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation" disabled>${option(selected.orientation, selected.orientation === 'portrait' ? 'Portrait' : 'Landscape', selected.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div><p class="subtle">Canvas dimensions follow the selected card layout.</p><div class="field-pair"><label>Disc side<select id="native-side">${option('left', 'Left', design.nativeSide ?? selected.side)}${option('right', 'Right', design.nativeSide ?? selected.side)}</select></label><label>Highlight<select id="native-highlight">${option('digits', 'Digits', design.nativeHighlight ?? selected.highlight)}${option('tiles', 'Tile blocks', design.nativeHighlight ?? selected.highlight)}</select></label></div></form></aside>`;
+    return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form"><div class="native-primary-controls">${picker}<p class="subtle">Drag the card to move it, pull its red knob to size it, and tap the small labels on the card: each one changes the piece it sits on. Point at a label, or press and hold it on a phone, to see how it is set now. These are the card's own pixels, kept with this exact disc.</p><label>Card size <output id="native-scale-value">${Math.round(scale * 100)}%</output><input id="native-scale" type="range" min="0.5" max="1.5" step="0.01" value="${scale}" aria-label="Native card size"></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation" disabled>${option(selected.orientation, selected.orientation === 'portrait' ? 'Portrait' : 'Landscape', selected.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div><p class="subtle">Canvas dimensions follow the selected card layout.</p><div class="field-pair"><label>Disc side<select id="native-side">${option('left', 'Left', design.nativeSide ?? selected.side)}${option('right', 'Right', design.nativeSide ?? selected.side)}</select></label><label>Highlight<select id="native-highlight">${option('digits', 'Digits', design.nativeHighlight ?? selected.highlight)}${option('tiles', 'Tile blocks', design.nativeHighlight ?? selected.highlight)}</select></label></div></form></aside>`;
   }
   return `<aside class="controls-panel panel" aria-labelledby="style-title"><div class="section-heading"><div><span class="eyebrow">STEP 2 · STYLE</span><h2 id="style-title">Make it yours</h2></div></div><form id="design-form">${picker}<div class="field-pair placement-fields"><fieldset class="placement-field"><legend>Placement <span class="optional">${text(({ 'bottom-left': 'Bottom left', 'bottom-center': 'Bottom center', 'bottom-right': 'Bottom right', 'top-left': 'Top left', 'top-right': 'Top right' })[design.placement] ?? '')}</span></legend><input type="hidden" id="placement" value="${text(design.placement)}"><div class="placement-frame" role="radiogroup" aria-label="Where the graphic sits in the video frame">${[['top-left', 'Top left'], ['top-right', 'Top right'], ['bottom-left', 'Bottom left'], ['bottom-center', 'Bottom center'], ['bottom-right', 'Bottom right']].map(([v, name]) => `<button type="button" role="radio" class="placement-spot spot-${v}" data-placement="${v}" aria-checked="${v === design.placement}" aria-label="${name}" title="${name}"><span aria-hidden="true"></span></button>`).join('')}</div></fieldset><label>Width<select id="composition-size">${compositionSizeStudies.map(size => option(size.id, size.id === 'balanced' ? 'Preferred' : size.id === 'full-width' ? 'Maximum' : 'Compact', design.compositionSize)).join('')}</select></label></div><div class="field-pair canvas-fields"><label>Canvas<select id="orientation">${option('landscape', 'Landscape', design.orientation)}${option('portrait', 'Portrait', design.orientation)}</select></label><label>Accent<input id="accent" type="color" value="${text(design.accent)}"></label></div><div class="swatches" role="group" aria-label="Accent colour">${swatchMarkup(design.accent)}</div><label>Title <span class="optional">optional</span><input id="graphic-title" maxlength="80" value="${text(design.title)}" placeholder="For the next shot"></label><details class="fine-tuning"><summary>More control</summary><div class="field-pair"><label>Background<input id="background" type="color" value="${text(design.background)}"></label><label>Text<input id="foreground" type="color" value="${text(design.foreground)}"></label></div><label>Canvas background<select id="frame">${option('none', 'Transparent', design.frame)}${option('filled', 'Solid', design.frame)}</select></label><div class="field-pair"><label>X offset <span class="optional">px</span><input id="offset-x" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetX) || 0}"></label><label>Y offset <span class="optional">px</span><input id="offset-y" type="number" min="-120" max="120" step="20" value="${Number(design.compositionOffsetY) || 0}"></label></div></details></form>${battleMarkup()}${bagMarkup()}</aside>`;
 }
@@ -414,7 +420,9 @@ function paintKeptThumbs() {
 
 function capturesMarkup() {
   const captures = context().graphics ?? [];
-  return `<section class="captures panel" aria-labelledby="captures-title"><div class="section-heading"><div><span class="eyebrow">READY WHEN YOU ARE</span><h2 id="captures-title">Kept graphics <span class="inline-count">${captures.length}</span></h2></div><span class="subtle">Exact saved versions</span></div>${captures.length ? `<div class="capture-list">${captures.slice().reverse().map(address => { const capture = value(address); return `<button type="button" class="capture-choice ${capturedPreview?.address === address ? 'is-selected' : ''}" data-capture="${text(address)}" aria-pressed="${capturedPreview?.address === address}"><span class="capture-thumbnail" data-capture-thumb="${text(address)}" aria-hidden="true"></span><span><strong>${text(capture.title)}</strong><small>${text(keptDetail(capture))}</small></span><span class="capture-arrow" aria-hidden="true">↗</span></button>`; }).join('')}</div>` : '<p class="empty-note">Keep a graphic to come back to its exact version.</p>'}</section>`;
+  // The heading stacks in the narrow column (Sam's screenshot, 30 Oct: the count and the note were squeezed beside the title). Each
+  // kept graphic gets its own Delete, on its row (Sam: no cap on kept versions, each kept graphic gets a delete).
+  return `<section class="captures panel" aria-labelledby="captures-title"><div class="section-heading"><div><span class="eyebrow">READY WHEN YOU ARE</span><h2 id="captures-title">Kept graphics${captures.length ? ` <span class="inline-count">${captures.length}</span>` : ''}</h2>${captures.length ? '<p class="subtle captures-note">Exact saved versions. Tap one to see it again.</p>' : ''}</div></div>${captures.length ? `<div class="capture-list">${captures.slice().reverse().map(address => { const capture = value(address); return `<div class="capture-row"><button type="button" class="capture-choice ${capturedPreview?.address === address ? 'is-selected' : ''}" data-capture="${text(address)}" aria-pressed="${capturedPreview?.address === address}"><span class="capture-thumbnail" data-capture-thumb="${text(address)}" aria-hidden="true"></span><span><strong>${text(capture.title)}</strong><small>${text(keptDetail(capture))}</small></span><span class="capture-arrow" aria-hidden="true">↗</span></button><button type="button" class="capture-delete" data-forget="${text(address)}" aria-label="Delete ${text(capture.title)} from Kept graphics">Delete</button></div>`; }).join('')}</div>` : '<p class="empty-note">Keep a graphic to come back to its exact version.</p>'}</section>`;
 }
 
 // The renderer's card box in whole canvas pixels, inside the canvas (the same shape alphaBounds gives).
@@ -877,6 +885,23 @@ async function downloadAll() {
 
 function bindCaptureChoices() {
   document.querySelectorAll('[data-capture]').forEach(button => button.onclick = () => { capturedPreview = { address: button.dataset.capture, capture: value(button.dataset.capture) }; paint(); $('graphic-preview')?.scrollIntoView({ block: 'center', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); $('preview-title').focus?.(); });
+  // Delete asks once on the row itself: the first tap says what a second tap does, and it lets go after 4 seconds.
+  document.querySelectorAll('[data-forget]').forEach(button => button.onclick = () => {
+    if (button.dataset.armed !== 'true') {
+      button.dataset.armed = 'true'; button.textContent = 'Tap again to delete';
+      setTimeout(() => { if (button.isConnected) { button.dataset.armed = 'false'; button.textContent = 'Delete'; } }, 4000);
+      return;
+    }
+    const address = button.dataset.forget, title = value(address)?.title ?? 'That graphic';
+    run(async () => {
+      if (!await workspace.forget(address)) return;
+      for (const [key, kept] of keptResults) if (kept?.address === address) keptResults.delete(key);
+      if (capturedPreview?.address === address) capturedPreview = null;
+      // A "Kept this exact version" note in the export bar would now be untrue, so it goes with the graphic.
+      if (lastDownload?.kind === 'keep') { lastDownload = null; document.querySelector('.downloaded')?.remove(); }
+      paint(); message(`Deleted ${title} from Kept graphics.`);
+    }, { kind: 'forget-graphic', address });
+  });
 }
 
 function refreshCaptures() {
@@ -928,7 +953,7 @@ function bind() {
     button.setAttribute('aria-pressed', String(ui.mode === 'single' || ui.selection.includes(address)));
   });
   $('design-form').onsubmit = event => event.preventDefault();
-  $('design-form').onchange = () => { ui.design = readDesign(); change({ design: structuredClone(ui.design) }); };
+  $('design-form').onchange = event => { if (event.target?.id === 'accent') accentFollowsDisc = false; ui.design = readDesign(); change({ design: structuredClone(ui.design) }); };
   $('preview-framing').onclick = () => { ui.view = $('graphic-preview').dataset.previewFraming === 'detail' ? 'frame' : 'closeup'; paintPreview(); };
   document.querySelectorAll('[data-preview-view]').forEach(button => button.onclick = () => { ui.view = button.dataset.previewView; rememberPreview(); paintPreview(); });
   document.querySelectorAll('[data-study]').forEach(button => button.onclick = () => {
@@ -1183,7 +1208,9 @@ try {
   // A cited manufacturer correction applies by mold wherever the disc came from, so Servo reads the same on a photo as on the sample.
   const fixture = photoBag ? withFlightCorrections(loadBag(), await loadFlightCorrections().catch(() => new Map())) : await loadFixture(); fixtureDiscs = fixture;
   // ?scratch (the notebook's embedded thro): a throwaway workspace in memory, under its own key and lock; saved work is never touched.
-  workspace = await openWorkspace({ storage: localStorage, locks: navigator.locks, fixture, ...(photoBag ? { key: photoBagKey } : params.has('scratch') ? { key: 'thro.scratch:prepared-samples' } : {}) });
+  const storage = await archiveStorage(); // IndexedDB: kept graphics are not capped by localStorage's few megabytes
+  if (photoBag) await takeFreshBag(storage); // a new hand-off from the photos page starts its workspace fresh
+  workspace = await openWorkspace({ storage, locks: navigator.locks, fixture, ...(photoBag ? { key: photoBagKey } : params.has('scratch') ? { key: 'thro.scratch:prepared-samples' } : {}) });
   rows = await workspace.model.shelfForDisplay(); adoptContext();
   window.__throStarted?.();
   mountCreatorPublishControl();

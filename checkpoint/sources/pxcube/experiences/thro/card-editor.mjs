@@ -1,10 +1,13 @@
 // On-card editing for Thro Single cards: the Constraint Lab, merged into Thro.
-// Drag the card to move it from its corner, pull the knob to size it, tap Side, Colour or Plate on the card where each one acts
+// Drag the card to move it from its corner, pull the knob to size it, tap Side, Colour or Plate on the card next to what each one changes; a hover or a press and hold says how it is set and what a tap does
 // (the first Constraint Lab, f75a060; Sam, 23 Oct: "immediate sensorimotor feedback is just as important to ground symbols for
 // humans as it is for agents"). The strip under the preview groups the same controls and names their state; each strip control
 // and its badge on the card are one action, and pointing at either outlines the piece it changes and lights its twin.
 // Every gesture becomes one of the card renderer's own inputs (nudge, scale, discSide,
-// highlightTarget, plate). Nothing here draws the card: the preview only moves the
+// highlightTarget, plate). The plate is see-through by default, as it always was, and one tap makes it dark (Sam, 31 Oct: "Keep
+// see-through"; 30 Oct: "make it simple to make the plate dark"). Pointing at a control opens a small bubble saying how it is set
+// now and what a tap does; on a touch screen a press and hold (half a second) opens it without acting (Sam, 30 Oct: "you should be
+// able to hover it and it shows the state"). Nothing here draws the card: the preview only moves the
 // existing pixels while a finger is down, and the renderer redraws on release.
 const STYLE = `
 .card-editor{position:absolute;inset:0;pointer-events:none;z-index:2}
@@ -21,14 +24,18 @@ const STYLE = `
 .card-editor .ce-hint.on{display:block}
 .card-editor .ce-badge{position:absolute;pointer-events:auto;transform:translate(-50%,-50%);min-height:30px;min-width:30px;height:30px;padding:0 10px;border-radius:15px;border:2px solid #fff;background:#0b100ddb;color:#fff;font:700 12px/26px system-ui,sans-serif;white-space:nowrap;cursor:pointer;touch-action:manipulation;box-shadow:0 2px 8px #0007}
 .card-editor .ce-badge:hover:not(:disabled),.card-editor .ce-badge.lit{background:#000;border-color:var(--accent,#b5d899)}
-.card-editor .ce-badge.ce-right{transform:translate(6px,-50%)}
+.card-editor .ce-badge{-webkit-touch-callout:none;user-select:none;-webkit-user-select:none}
+.card-editor .ce-tip{position:absolute;z-index:3;max-width:240px;padding:7px 10px;border-radius:8px;background:#0b100d;color:#eef3ea;border:1px solid var(--accent,#b5d899);font:500 12px/1.4 system-ui,sans-serif;box-shadow:0 4px 14px #000a;pointer-events:none;transform:translate(-50%,calc(-100% - 22px));display:none;white-space:normal;width:max-content}
+.card-editor .ce-tip b{color:var(--accent,#b5d899);font-weight:700}
+.card-editor .ce-tip.on{display:block}
+.card-editor .ce-tip.ce-under{transform:translate(-50%,22px)}
 .card-editor .ce-badge.ce-pressed,.ce-strip .ce-act.ce-pressed{background:var(--accent,#b5d899);border-color:#fff;color:#0b100d}
 .ce-strip .ce-act.lit{border-color:var(--accent,#b5d899);background:#2c3a2e}
 @media (pointer:coarse){.card-editor .ce-badge{min-height:40px;height:40px;line-height:36px;border-radius:20px;padding:0 12px}}
 .card-editor .ce-knob{position:absolute;pointer-events:auto;width:32px;height:32px;min-height:32px;min-width:32px;margin:-16px 0 0 -16px;padding:0;border-radius:50%;border:3px solid #fff;background:#e2402f;color:#fff;font:700 14px/1 system-ui,sans-serif;touch-action:none;cursor:nwse-resize;box-shadow:0 2px 8px #0007}
-.card-editor.is-dragging .ce-knob,.card-editor.is-dragging .ce-badge{visibility:hidden}
+.card-editor.is-dragging .ce-knob,.card-editor.is-dragging .ce-badge,.card-editor.is-dragging .ce-tip{visibility:hidden}
 .ce-strip .ce-tap-hint{display:none;flex-basis:100%;font-size:11px;line-height:1.4;color:#b8c6a6}
-/* On a phone the card's own marks (the size knob, the five red handles, the Side / Colour / Plate badges) would sit on the flight numbers, so they stay
+/* On a phone the card's own marks (the size knob, the five red handles, the Side, Colour and Plate badges) would sit on the flight numbers, so they stay
    away until the card is tapped; the strip under the card has the same three actions all along. Tap the card again to put them away. */
 @media (max-width:760px){
   .card-editor:not(.ce-armed) .ce-knob,.card-editor:not(.ce-armed) .ce-badge,.card-editor:not(.ce-armed) .ce-hint,.card-editor:not(.ce-armed) .card-parts{display:none}
@@ -37,7 +44,7 @@ const STYLE = `
 `;
 import { begin, settle } from './gestures.mjs';
 import { attachCardParts } from './card-parts.mjs';
-import { onPhone, chromeAnchor, clearChrome } from './editor-place.mjs';
+import { onPhone, chromeAnchor, clearChrome, placeClear, spotsAround } from './editor-place.mjs';
 let armed = false; // phone: the card's marks are shown after a tap on the card (see STYLE); kept across redraws
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const union = boxes => {
@@ -50,7 +57,7 @@ const union = boxes => {
 /** Attach the editor to a Single preview that shows a native card. Returns a detach function.
  *  layout: the boxes the renderer reported for this exact card (canvas pixels).
  *  bounds: the card's visible pixels, plate included (canvas pixels), when known.
- *  onChange(controls, note): controls are { nudge } | { scale } | { side } | { highlight } | { plate }. */
+ *  onChange(controls, note): controls are { nudge } | { scale } | { side } | { highlight } | { plate } | { revision }. */
 export function attachCardEditor(holder, { graphic, layout, bounds = null, design, fixedRevision, onChange }) {
   holder.querySelector(':scope > .card-editor')?.remove();
   const svg = holder.querySelector(':scope > svg');
@@ -82,7 +89,7 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
   const corner = { x: hugLeft ? card.x + card.w : card.x, y: hugTop ? card.y + card.h : card.y };
   const knob = el('button', 'ce-knob', { type: 'button', textContent: '⤡', title: 'Drag to size the card' });
   knob.setAttribute('aria-label', `Card size ${Math.round(scale0 * 100)}%: drag to change`);
-  const side = design.nativeSide, other = side === 'left' ? 'right' : 'left', tiles = design.nativeHighlight === 'tiles', solid = design.nativePlate === 'solid';
+  const side = design.nativeSide, other = side === 'left' ? 'right' : 'left', tiles = design.nativeHighlight === 'tiles', dark = design.nativePlate === 'solid';
   // The strip names each control's current state; hovering or focusing one outlines the piece it changes.
   clearChrome(holder);
   const strip = document.createElement('div'); strip.className = 'ce-strip'; strip.setAttribute('role', 'group'); strip.setAttribute('aria-label', 'Card controls');
@@ -91,57 +98,102 @@ export function attachCardEditor(holder, { graphic, layout, bounds = null, desig
   const hintText = () => { tapHint.textContent = armed ? 'Handles are on the card. Drag one, or tap the card again to put them away.' : 'Tap the card to show its handles for moving and sizing.'; };
   hintText(); strip.appendChild(tapHint);
   chromeAnchor(holder).after(strip);
+  // One record per control: what it is, how it is set now and what a tap does. The badge, its bubble, the strip button and the
+  // screen reader's name are all written from it, so they cannot disagree. Each badge sits beside what it changes, on the first
+  // spot that covers none of the card's content or the other controls (Sam, 30 Oct: the badges sat on the S of SERVO, on the tiles
+  // and off the plate's edge): Side beside the disc, away from the plate first; Colour just past the end of the numbers row; Plate
+  // under the plate's corner away from the disc.
   const actions = [
-    // With handles on the card's parts (card-parts.mjs), the badges step off the handles' spots: Side under the disc, Colour under the
-    // numbers, Plate at the plate's bottom corner.
-    [`⇄ Disc <b>${side === 'left' ? 'left' : 'right'}</b>`, `Put the disc on the ${other}`, layout.photo, true, () => onChange({ side: other }, `Disc on the ${other}`), '⇄ Side', layout.recipe ? 'below' : 'c'],
-    [`# Accent on <b>${tiles ? 'tiles' : 'digits'}</b>`, `Put the accent on the ${tiles ? 'digits' : 'tiles'}`, layout.numbers, false, () => onChange({ highlight: tiles ? 'digits' : 'tiles' }, tiles ? 'Accent on the digits' : 'Accent on the tiles'), '# Colour', layout.recipe ? 'below' : 'right'],
-    [`Plate <b>${solid ? 'solid' : 'see-through'}</b>`, `Make the plate ${solid ? 'see-through' : 'solid'}`, bounds ?? card, false, () => onChange({ plate: solid ? 'see-through' : 'solid' }, solid ? 'See-through plate' : 'Solid plate'), 'Plate', 'corner', layout.recipe ? { x: card.x, y: card.y + card.h, w: card.w, h: 0 } : layout.name],
+    { what: 'Disc', now: `on the ${side}`, tap: `put it on the ${other}`, label: '⇄ Side', target: layout.photo, round: true,
+      act: () => onChange({ side: other }, `Disc on the ${other}`), where: 'disc' },
+    { what: 'Colour', now: `on the ${tiles ? 'tiles' : 'digits'}`, tap: `put it on the ${tiles ? 'digits' : 'tiles'}`, label: '# Colour', target: layout.numbers,
+      act: () => onChange({ highlight: tiles ? 'digits' : 'tiles' }, tiles ? 'Colour on the digits' : 'Colour on the tiles'), where: 'row' },
+    // The dark plate is the renderer's own solid plate (appearance.plate 'solid'), so a saved package reads as it always did.
+    { what: 'Plate', now: dark ? 'dark' : 'see-through', tap: dark ? 'let the video show through it' : 'make it dark', label: dark ? 'See-through plate' : '◐ Dark plate', target: bounds ?? card,
+      act: () => onChange({ plate: dark ? 'see-through' : 'solid' }, dark ? 'See-through plate' : 'Dark plate'), where: 'plate' },
   ];
-  // A saved B01 or U04 keeps the drawing it was made with; moving it to the fixed card is a person's choice.
+  // A saved card keeps the drawing it was made with; moving it to the fixed card is a person's choice.
   if (fixedRevision !== undefined && design.nativeRevision !== fixedRevision) {
-    const b01 = String(design.study).endsWith(':b01'), what = b01 ? 'upright disc' : 'smaller manufacturer';
-    actions.push([`✦ Use the fixed card <b>(${what})</b>`, `Use the fixed card: ${b01 ? 'the disc photo is drawn upright' : 'the manufacturer is smaller than the flight numbers'}`, b01 ? layout.photo : (layout.other?.[0] ?? card), b01, () => onChange({ revision: fixedRevision }, 'Fixed card applied'), '✦ Fixed', b01 ? 'below' : 'right']);
+    actions.push({ what: 'Drawing', now: 'the one this card was saved with', tap: `use the fixed card: half numbers as a small raised .5${String(design.study).endsWith(':b01') ? ', disc drawn upright' : ''}`,
+      label: '✦ Fixed card', target: layout.numbers ?? card, act: () => onChange({ revision: fixedRevision }, 'Fixed card applied'), where: 'row' });
   }
-  const controls = actions.filter(([, , target]) => target).map(([html, aria, target, round, act, label, where, anchorBox]) => {
-    const b = document.createElement('button'); b.type = 'button'; b.className = 'ce-act'; b.innerHTML = html; b.title = aria; b.setAttribute('aria-label', aria);
+  const touch = matchMedia('(pointer:coarse)').matches, verb = touch ? 'Tap' : 'Click';
+  const controls = actions.filter(a => a.target).map(({ what, now, tap, label, target, round, act, where }) => {
+    const sentence = `${what}: ${now}. ${verb} to ${tap}.`, stateful = () => [`${what}: `, Object.assign(document.createElement('b'), { textContent: now })];
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'ce-act'; b.title = sentence; b.setAttribute('aria-label', sentence);
+    b.append(...stateful());
     const hint = el('div', `ce-hint${round ? ' round' : ''}`);
-    // The same action, on the card where it acts.
-    const badge = el('button', `ce-badge${where === 'right' ? ' ce-right' : ''}`, { type: 'button', textContent: label, title: aria }); badge.setAttribute('aria-label', aria);
-    const show = on => { hint.classList.toggle('on', on); badge.classList.toggle('lit', on); b.classList.toggle('lit', on); };
+    // The same action, on the card where it acts, with a bubble that says how it is set and what a tap does.
+    const badge = el('button', 'ce-badge', { type: 'button', textContent: label }); badge.setAttribute('aria-label', sentence);
+    const tip = el('div', 'ce-tip'); tip.setAttribute('role', 'tooltip'); tip.id = `ce-tip-${what.toLowerCase()}`; badge.setAttribute('aria-describedby', tip.id);
+    tip.append(...stateful(), `. ${verb} to ${tap}.`);
+    const placeTip = () => {
+      const bb = badge.getBoundingClientRect(), hb = holder.getBoundingClientRect(), half = Math.min(tip.offsetWidth, holder.clientWidth - 8) / 2;
+      // Over its badge when there is room, else under it: the bubble never covers the badge it describes.
+      const under = bb.top - hb.top < tip.offsetHeight + 26; tip.classList.toggle('ce-under', under);
+      Object.assign(tip.style, { left: `${clamp(bb.left + bb.width / 2 - hb.left, half + 4, holder.clientWidth - half - 4)}px`, top: `${under ? bb.bottom - hb.top : bb.top - hb.top}px` });
+    };
+    const show = on => { hint.classList.toggle('on', on); badge.classList.toggle('lit', on); b.classList.toggle('lit', on); tip.classList.toggle('on', on); if (on) placeTip(); };
+    // Mouse: the bubble opens on hover. Keyboard: on focus. A phone's tap focuses too, and that is no ask for the bubble.
     for (const t of [b, badge]) {
-      t.addEventListener('pointerenter', () => show(true)); t.addEventListener('pointerleave', () => show(false));
-      t.addEventListener('focus', () => show(true)); t.addEventListener('blur', () => show(false));
+      t.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') show(true); }); t.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') show(false); });
+      t.addEventListener('focus', () => { if (t.matches(':focus-visible')) show(true); }); t.addEventListener('blur', () => show(false));
     }
+    // Touch: press and hold for half a second opens the bubble and keeps that press from acting; a quick tap still acts at once.
     // The gesture starts when the finger lands (pointerdown), not when the click is delivered after it lifts.
-    let landed = null;
-    for (const t of [b, badge]) t.addEventListener('pointerdown', e => { landed = e.timeStamp; if (t === badge) e.stopPropagation(); });
+    let landed = null, held = false, timer = 0, hide = 0;
+    for (const t of [b, badge]) {
+      t.addEventListener('contextmenu', e => e.preventDefault());
+      t.addEventListener('pointerdown', e => {
+        landed = e.timeStamp; held = false; if (t === badge) e.stopPropagation();
+        if (e.pointerType !== 'mouse') { clearTimeout(timer); timer = setTimeout(() => { held = true; clearTimeout(hide); show(true); hide = setTimeout(() => show(false), 2500); }, 500); }
+      });
+      for (const end of ['pointerup', 'pointercancel', 'pointerleave']) t.addEventListener(end, () => clearTimeout(timer));
+    }
     // Pressed at once, in the same frame as the tap; the new card replaces the whole layer when it is drawn.
-    const go = e => { e.stopPropagation(); begin(label, landed ?? e.timeStamp); landed = null; badge.classList.add('ce-pressed'); b.classList.add('ce-pressed'); act(); };
+    const go = e => { e.stopPropagation(); if (held) { held = false; landed = null; return; } begin(label, landed ?? e.timeStamp); landed = null; badge.classList.add('ce-pressed'); b.classList.add('ce-pressed'); act(); };
     badge.addEventListener('click', go); b.addEventListener('click', go); strip.appendChild(b);
-    return { hint, target, badge, where, at: anchorBox ?? target };
+    return { hint, target, badge, where, tip, placeTip };
   });
   let partsUI = null;
   function place() {
     if (!layer.isConnected) return stop();
-    partsUI?.place();
     const m = view(), hw = holder.clientWidth, hh = holder.clientHeight;
     put(box, card, m); at(knob, corner.x, corner.y, m, hw, hh);
-    for (const { hint, target, badge, where, at: t } of controls) {
+    const inHolder = b => b && { x: m.x(b.x), y: m.y(b.y), w: b.w * m.s, h: b.h * m.s };
+    const knobBox = { x: knob.offsetLeft, y: knob.offsetTop, w: knob.offsetWidth, h: knob.offsetHeight }; // its negative margin centres it on left/top
+    // A 6 px collar round the knob keeps every handle off it.
+    partsUI?.place([{ x: knobBox.x - 6, y: knobBox.y - 6, w: knobBox.w + 12, h: knobBox.h + 12 }]);
+    const keep = [inHolder(layout.photo), inHolder(layout.name), inHolder(layout.numbers), ...(layout.other ?? []).map(inHolder), knobBox, ...(partsUI?.occupied?.() ?? [])];
+    // Side goes to the disc's outer side first (away from the plate, where the frame is empty), then above or below it.
+    const discOut = layout.photo.x + layout.photo.w / 2 > card.x + card.w / 2 ? ['after', 'above', 'below', 'before'] : ['before', 'above', 'below', 'after'];
+    // Colour goes just past the end of the numbers row, a step further out when a handle is there (2213cc3: a bar under the
+    // preview never hides it), then under or over it.
+    const rowEnd = layout.photo.x + layout.photo.w / 2 > (layout.numbers?.x ?? card.x) ? 'after' : 'before';
+    // B05 draws its stamp (a small copy of the disc) just past the numbers row, and the layout does not report it, so there Colour
+    // goes under the row first, into the plate's empty band.
+    const stampAfterRow = String(design.study).endsWith(':b05');
+    const rowSpots = (t, w, h) => stampAfterRow ? [...spotsAround(t, w, h, ['below', 'above'])] : [...spotsAround(t, w, h, [rowEnd]), ...spotsAround(t, w, h, ['below', 'above'])];
+    // Plate goes under the plate's corner away from the disc, its edge lined up with the plate's, then over that corner.
+    const discRight = layout.photo.x + layout.photo.w / 2 > card.x + card.w / 2;
+    const plateSpots = (t, w, h) => { const x = discRight ? t.x + w / 2 : t.x + t.w - w / 2; return [{ x, y: t.y + t.h + 8 + h / 2 }, { x, y: t.y - 8 - h / 2 }, ...spotsAround(t, w, h, ['below', 'above'])]; };
+    // What a badge must never sit on, even on a phone where nothing is clear: the knob, the parts' handles and the badges before it.
+    const o = holder.getBoundingClientRect();
+    const hard = [knobBox, ...[...layer.querySelectorAll('.cp-h')].filter(el => el.offsetParent).map(el => { const r = el.getBoundingClientRect(); return { x: r.left - o.left, y: r.top - o.top, w: r.width, h: r.height }; })];
+    for (const { hint, target, badge, where } of controls) {
       put(hint, { x: target.x - 6 / m.s, y: target.y - 6 / m.s, w: target.w + 12 / m.s, h: target.h + 12 / m.s }, m);
-      // Colour sits just past the end of the numbers row, so a bar under the preview never hides it (2213cc3).
-      if (where === 'right') { Object.assign(badge.style, { left: `${Math.min(m.x(t.x + t.w), hw - badge.offsetWidth - 10)}px`, top: `${clamp(m.y(t.y + t.h / 2), 16, hh - 16)}px` }); continue; }
-      const awayFromDisc = layout.photo.x + layout.photo.w / 2 > t.x + t.w / 2;
-      const x = where === 'c' || where === 'below' ? t.x + t.w / 2 : awayFromDisc ? t.x : t.x + t.w, y = where === 'c' ? t.y + t.h / 2 : where === 'below' ? t.y + t.h : t.y;
-      at(badge, x, y, m, hw, hh);
+      const t = inHolder(target), w = badge.offsetWidth, h = badge.offsetHeight;
+      const took = placeClear(badge, where === 'plate' ? plateSpots(t, w, h) : where === 'disc' ? spotsAround(t, w, h, discOut) : rowSpots(t, w, h), keep, hw, hh, 4, hard);
+      keep.push(took); hard.push(took);
     }
+    for (const c of controls) if (c.tip.classList.contains('on')) c.placeTip(); // an open bubble follows its badge
   }
   const resize = new ResizeObserver(place), watch = new MutationObserver(place);
   resize.observe(holder); watch.observe(svg, { attributes: true, attributeFilter: ['viewBox', 'style', 'class'] });
   function stop() { resize.disconnect(); watch.disconnect(); strip.remove(); partsUI?.detach(); }
   place();
   // Handles on the card's parts, where the renderer reports them (B01 revision 2 so far).
-  if (layout.recipe) { partsUI = attachCardParts(holder, layer, { recipe: layout.recipe, design, name: layout.recipe.name, view, onChange }); partsUI.place?.(); }
+  if (layout.recipe) { partsUI = attachCardParts(holder, layer, { recipe: layout.recipe, design, name: layout.recipe.name, view, onChange }); place(); } // badges step clear of the handles
 
   function track(target, e, move, up) {
     if (e.button > 0) return;

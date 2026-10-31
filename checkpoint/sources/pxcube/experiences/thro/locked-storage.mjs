@@ -10,6 +10,8 @@ const isStorageFailure = error => Object.values(codes).includes(error?.code);
 
 /**
  * One new thro archive, with a staged raw value and a confirmed durable value.
+ * storage.getItem and storage.setItem may answer at once (localStorage) or with a promise (idb-storage.mjs); both are
+ * awaited, inside the same lock, so the conflict check, the write and the readback keep their order either way.
  * Codecs encode/decode strings; null means no archive exists. Every writer of
  * this key must use this lock protocol. The lock is local to the browser origin,
  * not an account, authentication mechanism, or cross-device transaction.
@@ -26,7 +28,7 @@ export async function openLockedArchive(storage, key, {
   }
   let heldPacked, committedRaw;
   try {
-    heldPacked = storage.getItem(key);
+    heldPacked = await storage.getItem(key);
     if (heldPacked !== null && typeof heldPacked !== 'string') throw Error('Invalid stored archive bytes.');
     committedRaw = heldPacked === null ? null : await unpack(heldPacked);
     if (committedRaw !== null && typeof committedRaw !== 'string') throw Error('Invalid decoded archive bytes.');
@@ -67,7 +69,7 @@ export async function openLockedArchive(storage, key, {
       }
       let attemptedWrite = false;
       try {
-        await locks.request(lockName, { mode: 'exclusive' }, () => {
+        await locks.request(lockName, { mode: 'exclusive' }, async () => {
           if (latched) throw latched;
           if (pendingRaw !== candidate) {
             throw failure(codes.changed, 'The draft changed while waiting to save. Its latest raw bytes are retained.');
@@ -75,7 +77,7 @@ export async function openLockedArchive(storage, key, {
           // Another flush of this same adapter may already have committed it.
           if (candidate === committedRaw) return;
           let latest;
-          try { latest = storage.getItem(key); }
+          try { latest = await storage.getItem(key); }
           catch (cause) { throw failure(codes.unavailable, 'The saved archive could not be checked. No write was attempted.', cause); }
           if (latest !== heldPacked) {
             throw stop(codes.conflict, 'This archive changed elsewhere. The pending draft is retained; reload before saving.');
@@ -84,10 +86,10 @@ export async function openLockedArchive(storage, key, {
             throw failure(codes.changed, 'The draft changed before the write. Its latest raw bytes are retained.');
           }
           attemptedWrite = true;
-          try { storage.setItem(key, packed); }
+          try { await storage.setItem(key, packed); }
           catch (cause) {
             let observed;
-            try { observed = storage.getItem(key); }
+            try { observed = await storage.getItem(key); }
             catch (readCause) {
               throw stop(codes.uncertain, 'The write outcome could not be checked. No rollback was attempted; reload before saving.', readCause);
             }
@@ -97,7 +99,7 @@ export async function openLockedArchive(storage, key, {
             throw stop(codes.uncertain, 'Stored bytes changed during a failed write. No rollback was attempted; reload before saving.', cause);
           }
           let observed;
-          try { observed = storage.getItem(key); }
+          try { observed = await storage.getItem(key); }
           catch (cause) {
             throw stop(codes.uncertain, 'The written archive could not be read back. No rollback was attempted; reload before saving.', cause);
           }

@@ -5,6 +5,7 @@
 import { CARD_SIZE, browserFrames, sizeBrowserSticker, ensureCardFonts } from './browser-card-renderer.js?v=28ac2b39fab85255';
 import { drawCard } from './card-renderer-core.js?v=28ac2b39fab85255';
 import { drawCard as drawCardRevision2, solveB01, b01NameWidth, B01_PARTS } from './thro-card-core-r2.js?v=28ac2b39fab85255';
+import { drawCard as drawCardRevision3 } from './thro-card-core-r3.js?v=28ac2b39fab85255';
 import { getMoldDetails } from './mold-library.js?v=28ac2b39fab85255';
 import { alphaBounds as rasterAlphaBounds, cardRasterIdentity, stickerOrigin } from './sticker-raster.mjs?v=28ac2b39fab85255';
 import { imageLayer } from './frame-seek.mjs?v=28ac2b39fab85255';
@@ -15,11 +16,13 @@ export const build = '28ac2b39fab85255';
 export const version = '6.6.1';
 export const DEFAULT_CARD_SCALE = 0.66; // what the DiscStudio export panel uses for an untouched card
 /** Thro card revisions: a recipe without a revision draws exactly as DiscStudio 6.6.1 (revision 1).
- *  Revision 2 exists only where the drawing changed (thro-card-core-r2.js): B01 upright disc, U04 smaller manufacturer. */
-export const cardRevisions = Object.freeze({ b01: 2, u04: 2 });
+ *  Revision 2 exists only where the drawing changed (thro-card-core-r2.js): B01 upright disc, U04 smaller manufacturer.
+ *  Revision 3 is every layout (thro-card-core-r3.js): revision 2, plus half flight numbers as a superscript and a dark plate that reaches every layout. */
+export const cardRevisions = Object.freeze(Object.fromEntries(['u01', 'u02', 'u03-front', 'u03-behind', 'u04', 'u05', 'b01', 'b02', 'b03', 'b04', 'b05'].map(preset => [preset, preset === 'b01' || preset === 'u04' ? Object.freeze([2, 3]) : Object.freeze([3])])));
 function coreFor(preset, revision) {
   if (revision === undefined || revision === null || revision === 1) return drawCard;
-  if (revision === 2 && cardRevisions[preset] === 2) return drawCardRevision2;
+  if (revision === 2 && cardRevisions[preset]?.includes(2)) return drawCardRevision2;
+  if (revision === 3 && cardRevisions[preset]?.includes(3)) return drawCardRevision3;
   throw Error(`Card revision ${revision} is not available for layout ${preset}.`);
 }
 export const presets = Object.freeze([
@@ -173,8 +176,8 @@ export function resolveCardPlacement(placement, footprint, scale = DEFAULT_CARD_
  *  exactly these calls; keeping the canvas lets its layout be read and its pixels be reused
  *  for placement instead of drawing the whole card a second time. */
 // Pinned parts (thro, 24 Oct 2026): parts of B01 revision 2 pinned by the person; the renderer derives the rest (solveB01).
-// Only B01 at revision 2 is drawn from parts and rules so far; for any other card pinned parts are refused, never ignored.
-export const recipeLayouts = Object.freeze({ b01: 2 });
+// Only B01 at revision 2 or 3 is drawn from parts and rules so far; for any other card pinned parts are refused, never ignored.
+export const recipeLayouts = Object.freeze({ b01: Object.freeze([2, 3]) });
 const recipeKey = recipe => (recipe ? JSON.stringify(Object.keys(recipe).sort().map(k => [k, recipe[k]])) : null);
 async function drawNativeCard({ disc, photoSrc, flights, preset, appearance, revision, parts = null }) {
   const { id, orientation } = presetById(preset);
@@ -186,7 +189,7 @@ async function drawNativeCard({ disc, photoSrc, flights, preset, appearance, rev
   if (!context) throw new Error('Canvas2D is unavailable in this browser.');
   await ensureCardFonts();
   const recipe = parts && Object.keys(parts).length ? parts : null;
-  if (recipe && recipeLayouts[id] !== revision) throw Error(`Layout ${id} at revision ${revision ?? 1} is not drawn from parts yet.`);
+  if (recipe && !recipeLayouts[id]?.includes(revision)) throw Error(`Layout ${id} at revision ${revision ?? 1} is not drawn from parts yet.`);
   const environment = { loadImage, getMoldDetails, strictPhoto: true, createCanvas: newCanvas, frameRenderer: browserFrames, ...(recipe ? { recipe } : {}) };
   await coreFor(id, revision)(context, card, orientation, id, environment, look);
   const png = await canvasBlob(canvas), items = drawn.get(canvas)?.items ?? [];
@@ -254,11 +257,11 @@ function recipeLayout(solved, m, moldName) {
  *  in a row along the bottom of the frame (1920 × 1080 by default) or, in a portrait frame such as 1080 × 1350 (4:5), in a grid
  *  of two columns (two rows for four cards) or one card per row, whichever draws the cards larger, centred in the frame; a row of
  *  3–4 that cannot stay readable falls back to that grid.
- *  Nothing is redrawn or restyled: every card is exactly the card it would be on its own, except that B01 revision-2 cards share
+ *  Nothing is redrawn or restyled: every card is exactly the card it would be on its own, except that B01 revision-2 and revision-3 cards share
  *  one name size (the smallest any of them fits), so a short name is never set larger than a long one. emphasis: index of a card
  *  shown full size while the others step back to `rest` of it (Battle's "whose turn"). */
 async function sharedB01NameSize(cards, preset) {
-  const b01 = cards.filter(card => (card.preset ?? preset) === 'b01' && card.revision === 2);
+  const b01 = cards.filter(card => (card.preset ?? preset) === 'b01' && (card.revision === 2 || card.revision === 3)); // revision 3 is revision 2's B01 rules plus the raised .5
   if (b01.length < 2) return cards;
   await ensureCardFonts();
   const ctx = newCanvas(1, 1).getContext('2d');

@@ -1,0 +1,44 @@
+{
+ "site": "Thro production layout (experiences/thro: node build.mjs, then node production-layout.mjs THRO_SITE)",
+ "why": {
+  "tee shot": "Kept at its full 2139 x 1426. The ask page's story frame is 1080 x 1920, which already draws it 1.35 times larger; at 1600 wide it would be drawn 1.8 times larger and look softer. The studio demo's scene worlds still fetch the JPEG, so it stays in the site and only the ask and bar pages move to the WebP.",
+  "sample discs": "Re-encoded in place under the same names; prepared-fixture.json and thro-world.mjs pin their SHA-256, so the built copies get the new hashes.",
+  "sample photos": "The photos page's ten raw phone photos, already 1600 px on the long side, ship as WebP at the same size (Sam's go-ahead via the coordinator, 30 Oct). They are what the live rim fit reads, so the proof compares each photo's fit against Argon's own run before and after. No other page names them, so the JPEGs leave the built site."
+ },
+ "pictures": [
+  { "from": "assets/tee-shot-original.jpg", "to": "assets/tee-shot.webp", "sha256": "7a9a0edbec5f8429d9d1bfbfd3170b75237aebec2cdb20bebb957a1c06e25d56", "quality": 80 },
+  { "from": "assets/discs/sample-anchor.webp", "to": "assets/discs/sample-anchor.webp", "sha256": "24a20b2b1c43886e52c3de6aac04e38fa4f72216b9b973d9921929fd1b54df72", "quality": 80 },
+  { "from": "assets/discs/sample-buzzz-ss.webp", "to": "assets/discs/sample-buzzz-ss.webp", "sha256": "d1d03b92c8102ce6f91fda9f5441830770f090d74777793bcc641532cf154120", "quality": 80 },
+  { "from": "assets/discs/sample-servo.webp", "to": "assets/discs/sample-servo.webp", "sha256": "b720aca1a38562e5ccba1e1ea5f82d4429d790fde1a983fad2b773b7b0c5ef2e", "quality": 80 },
+  { "from": "assets/photos/IMG_6081.jpg", "to": "assets/photos/IMG_6081.webp", "sha256": "0965ee9b3399681c598753004126a3411624efb9f9442f2f07f7353342cf4991", "quality": 80, "removeOriginal": true },
+  { "from": "assets/photos/IMG_6161.jpg", "to": "assets/photos/IMG_6161.webp", "sha256": "40b307a26f93939b95a8b7a18d6e47a8a75193cb120a4e6d312c546893dc698a", "quality": 80, "removeOriginal": true },
+  { "from": "assets/photos/IMG_6162.jpg", "to": "assets/photos/IMG_6162.webp", "sha256": "1f61d5a0252de7381da5d5a728a70dd39163798df55d0220e23dfdfe4e7af01b", "quality": 80, "removeOriginal": true },
+  { "from": "assets/photos/IMG_6163.jpg", "to": "assets/photos/IMG_6163.webp", "sha256": "ef4f3914a7f25be5cba917912e5ff29b3c25408d9312172308920f9549e251dc", "quality": 80, "removeOriginal": true },
+  { "from": "assets/photos/IMG_6164.jpg", "to": "assets/photos/IMG_6164.webp", "sha256": "517785a37d19f439493c2a8b98d65ff4ac3fcc239fe29e8a615dfead6ab3e04a", "quality": 80, "removeOriginal": true },
+  { "from": "assets/photos/IMG_6165.jpg", "to": "assets/photos/IMG_6165.webp", "sha256": "a0426b970d1f39a8883df694bb0a7b750fad4bfaa862d6cac25c85048f7d0819", "quality": 80, "removeOriginal": true },
+  { "from": "assets/photos/IMG_6166.jpg", "to": "assets/photos/IMG_6166.webp", "sha256": "99696ab62b31d178cde2d5b247b0869d1f1cede629e156b78d921ea25fa0df77", "quality": 80, "removeOriginal": true },
+  { "from": "assets/photos/IMG_6167.jpg", "to": "assets/photos/IMG_6167.webp", "sha256": "1d001784e2716fa0b0cd8a95105148fb90bff5ae4500b60dcae89482126bcb02", "quality": 80, "removeOriginal": true },
+  { "from": "assets/photos/IMG_6168.jpg", "to": "assets/photos/IMG_6168.webp", "sha256": "35ef4dfa7a55ad4631fb9e729205c51854f2b104477ff188ac271fb60dcd5a52", "quality": 80, "removeOriginal": true },
+  { "from": "assets/photos/IMG_6576.jpg", "to": "assets/photos/IMG_6576.webp", "sha256": "8f349a82f683ea293d96031cc88e7155dd7238b0fe00f6d975a1ba8d3ee73aa4", "quality": 80, "removeOriginal": true }
+ ],
+ "references": [
+  { "file": "ask.mjs", "before": "./assets/tee-shot-original.jpg", "after": "./assets/tee-shot.webp", "count": 1 },
+  { "file": "bar.mjs", "before": "./assets/tee-shot-original.jpg", "after": "./assets/tee-shot.webp", "count": 1 },
+  { "file": "assets/photos/photos.json", "before": "assets/photos/IMG_6081.jpg", "after": "assets/photos/IMG_6081.webp", "count": 1 },
+  { "file": "assets/photos/photos.json", "before": "assets/photos/IMG_6161.jpg", "after": "assets/photos/IMG_6161.webp", "count": 1 },
+  { "file": "assets/photos/photos.json", "before": "assets/photos/IMG_6162.jpg", "after": "assets/photos/IMG_6162.webp", "count": 1 },
+  { "file": "assets/photos/photos.json", "before": "assets/photos/IMG_6163.jpg", "after": "assets/photos/IMG_6163.webp", "count": 1 },
+  { "file": "assets/photos/photos.json", "before": "assets/photos/IMG_6164.jpg", "after": "assets/photos/IMG_6164.webp", "count": 1 },
+  { "file": "assets/photos/photos.json", "before": "assets/photos/IMG_6165.jpg", "after": "assets/photos/IMG_6165.webp", "count": 1 },
+  { "file": "assets/photos/photos.json", "before": "assets/photos/IMG_6166.jpg", "after": "assets/photos/IMG_6166.webp", "count": 1 },
+  { "file": "assets/photos/photos.json", "before": "assets/photos/IMG_6167.jpg", "after": "assets/photos/IMG_6167.webp", "count": 1 },
+  { "file": "assets/photos/photos.json", "before": "assets/photos/IMG_6168.jpg", "after": "assets/photos/IMG_6168.webp", "count": 1 },
+  { "file": "assets/photos/photos.json", "before": "assets/photos/IMG_6576.jpg", "after": "assets/photos/IMG_6576.webp", "count": 1 }
+ ],
+ "pinnedHashes": [
+  { "file": "prepared-fixture.json", "picture": "assets/discs/sample-anchor.webp", "count": 1 },
+  { "file": "prepared-fixture.json", "picture": "assets/discs/sample-buzzz-ss.webp", "count": 1 },
+  { "file": "prepared-fixture.json", "picture": "assets/discs/sample-servo.webp", "count": 1 },
+  { "file": "thro-world.mjs", "picture": "assets/discs/sample-servo.webp", "count": 1 }
+ ]
+}

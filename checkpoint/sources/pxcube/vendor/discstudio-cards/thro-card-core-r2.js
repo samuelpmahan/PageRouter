@@ -306,6 +306,18 @@ function tilesRowWidth(n        , tile        , gap        )         {
   return n * tile + Math.max(0, n - 1) * gap;
 }
 
+/** A flight value centred on cx at baseline y in the current font. A half number such as 6.5 is drawn as 6 with a raised, smaller .5
+ *  (Sam, 30 Oct: half flight numbers as a superscript), so the whole number keeps its full size in the tile. */
+function fillFlightValue(ctx     , value        , cx        , y        ) {
+  const half = /^(-?\d+)(\.\d+)$/.exec(value), align = ctx.textAlign;
+  if (!half) { ctx.textAlign = 'center'; ctx.fillText(value, cx, y); ctx.textAlign = align; return; }
+  const font = ctx.font, px = Number(/(\d+(?:\.\d+)?)px/.exec(font)?.[1] ?? 40), small = font.replace(/\d+(?:\.\d+)?px/, `${Math.round(px * 0.56)}px`);
+  const whole = ctx.measureText(half[1]).width; ctx.font = small; const frac = ctx.measureText(half[2]).width; ctx.font = font;
+  const x0 = cx - (whole + frac) / 2;
+  ctx.textAlign = 'left'; ctx.fillText(half[1], x0, y);
+  ctx.font = small; ctx.fillText(half[2], x0 + whole, y - px * 0.36); ctx.font = font; ctx.textAlign = align;
+}
+
 /** Law 5: numbers are objects. Left/right/center aligned tile row. */
 function drawTilesRow(
   ctx     , nums          , x        , y        ,
@@ -328,8 +340,7 @@ function drawTilesRow(
     // The caller pairs each tile fill with a contrasting value color.
     ctx.fillStyle = ink;
     if (fitDigits) fitFont(ctx, nums[i], tile - 12, 600, fontPx);
-    ctx.textAlign = 'center';
-    ctx.fillText(nums[i], bx + tile / 2, y + tile * 0.72);
+    fillFlightValue(ctx, nums[i], bx + tile / 2, y + tile * 0.72);
   }
   ctx.textAlign = 'left';
 }
@@ -514,7 +525,7 @@ export async function cardFrameSnapshot(disc              , preset            , 
     } else {
       const cx=mirrorX(124);ctx.save();ctx.translate(cx,744);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle=INK;fitFont(ctx,rd.moldName.toUpperCase(),286,800,76,DISPLAY);ctx.fillText(rd.moldName.toUpperCase(),0,0);ctx.restore();
       ctx.textBaseline='alphabetic';ctx.font=`600 42px ${FONT_STACK}`;ctx.textAlign='center';
-      for(const [i,value] of flightTiles(rd).entries()){const y=920+i*72;const tileFill=appearance && highlightTarget==='digits'?('#38413e'):accent;ctx.fillStyle=tileFill;ctx.fillRect(mirrorX(140)-32,y,64,64);ctx.fillStyle=appearance?(highlightTarget==='tiles'?contrastInk(accent):legibleAccent(accent,'#38413e')):contrastInk(accent);fitFont(ctx,value,52,600,42);ctx.fillText(value,mirrorX(140),y+47);}
+      for(const [i,value] of flightTiles(rd).entries()){const y=920+i*72;const tileFill=appearance && highlightTarget==='digits'?('#38413e'):accent;ctx.fillStyle=tileFill;ctx.fillRect(mirrorX(140)-32,y,64,64);ctx.fillStyle=appearance?(highlightTarget==='tiles'?contrastInk(accent):legibleAccent(accent,'#38413e')):contrastInk(accent);fitFont(ctx,value,52,600,42);fillFlightValue(ctx,value,mirrorX(140),y+47);}
     }
   } };
   const layers = preset === 'u04' || !preset.includes('behind') ? [surface,text,photo] : [photo,surface,text];
@@ -704,7 +715,23 @@ export function solveB01(pinned, nameWidth) {
   const rowW = t => 4 * t + 3 * R.gap, oneRow = Math.round(val('row')) === 1;
   const hideMaker = Math.round(val('maker')) === 1, center = Math.round(val('align')) === 1, plasticGap = hideMaker ? 0 : R.plasticGap;
   let plateW = val('plateW'), tile = val('tile'), namePx = val('nameMax');
-  const discD = val('discD'), discOX = val('discOX'), discOY = val('discOY');
+  const discD = val('discD');
+  let discOX = val('discOX'), discOY = val('discOY');
+  // Rule: the disc stays whole inside the frame (Sam, 30 Oct, thro.dev/editor: a 1824 px plate with a 900 px disc put the disc's centre
+  // past the card's own 1920 px canvas, which cut it down the middle). A part that is not pinned gives way, in this order: the disc's
+  // offset slides it in, then the plate narrows. Only when every part involved is pinned does the disc stay where it was put (and say so).
+  const roomRight = 1920 - R.margin - discD / 2, roomLeft = R.margin + discD / 2, roomTop = R.margin + discD / 2;
+  const keepDiscWhole = () => {
+    const edge = R.margin + plateW;
+    if (edge + discOX * discD > roomRight) {
+      if (!has('discOX')) discOX = Math.max(P.discOX.min, (roomRight - edge) / discD);
+      else if (!has('plateW')) plateW = Math.max(P.plateW.min, Math.floor(roomRight - R.margin - discOX * discD));
+    } else if (edge + discOX * discD < roomLeft && !has('discOX')) discOX = Math.min(P.discOX.max, (roomLeft - edge) / discD);
+  };
+  const keepDiscBelowTop = plateY => {
+    if (plateY + discOY * discD < roomTop && !has('discOY')) discOY = Math.min(P.discOY.max, (roomTop - plateY) / discD);
+  };
+  keepDiscWhole();
   let plate, disc, nameY, plasticY, tilesY, tilesX, plateH, nameLane = 0, rowLead = 0;
   // Where type may run on a band of rows: from the plate's padding to the disc's left edge at those rows, kept clear of the rim.
   const laneRight = (top, bottom) => {
@@ -718,7 +745,7 @@ export function solveB01(pinned, nameWidth) {
       // Rule: the plate hugs its contents (name, plastic line, tiles), with the same spacing the fixed card uses.
       const nameBase = R.nameTop + namePx;
       plateH = Math.round(nameBase + plasticGap + R.tileGap + tile + R.bottom);
-      plate = { x: R.margin, y: 1080 - R.margin - plateH, w: plateW, h: plateH };
+      keepDiscWhole(); plate = { x: R.margin, y: 1080 - R.margin - plateH, w: plateW, h: plateH }; keepDiscBelowTop(plate.y);
       // Rule: the disc rides the plate's top-right corner (or wherever its offsets put it).
       disc = { cx: plate.x + plate.w + discOX * discD, cy: plate.y + discOY * discD, d: discD };
       nameY = plate.y + nameBase; plasticY = hideMaker ? null : nameY + plasticGap; tilesY = nameY + plasticGap + R.tileGap; tilesX = nx;
@@ -741,7 +768,7 @@ export function solveB01(pinned, nameWidth) {
       // One row. Rule: the plate is as tall as the taller of the name and the tiles, plus its padding.
       const cap = namePx * 0.75;
       plateH = Math.round(2 * R.rowPad + Math.max(cap, tile));
-      plate = { x: R.margin, y: 1080 - R.margin - plateH, w: plateW, h: plateH };
+      keepDiscWhole(); plate = { x: R.margin, y: 1080 - R.margin - plateH, w: plateW, h: plateH }; keepDiscBelowTop(plate.y);
       disc = { cx: plate.x + plate.w + discOX * discD, cy: plate.y + discOY * discD, d: discD };
       nameY = plate.y + (plateH + cap) / 2; tilesY = plate.y + (plateH - tile) / 2; plasticY = null;
       // Rule: the tiles come right after the name; together they fit the lane left of the disc.
@@ -768,11 +795,15 @@ export function solveB01(pinned, nameWidth) {
   if (namePx < val('nameMax')) msgs.push([has('nameMax') ? 'warn' : 'ok', `Name set at ${namePx}px: it only fits that size beside the disc.`]);
   if (oneRow) msgs.push(['ok', 'One row: the plastic line is left out.']);
   else if (hideMaker) msgs.push(['ok', 'Maker line hidden: the plate closes the gap it held.']);
+  if (discOX !== val('discOX') || discOY !== val('discOY')) msgs.push(['ok', 'Disc moved in so it stays whole inside the frame.']);
+  else if (!has('plateW') && has('discOX') && plateW < val('plateW')) msgs.push(['ok', `Plate narrowed to ${plateW}px so the disc stays whole inside the frame.`]);
   if (disc.cy - disc.d / 2 < 0) msgs.push(['warn', 'Disc runs off the top of the frame.']);
   if (disc.cx + disc.d / 2 > 1920) msgs.push(['warn', 'Disc runs off the side of the frame.']);
   const values = { plateW, discD, discOX, discOY, tile, nameMax: val('nameMax'), row: oneRow ? 1 : 0, maker: hideMaker ? 1 : 0, align: center ? 1 : 0 };
   const state = Object.fromEntries(Object.keys(P).map(k => [k, has(k) ? 'pinned' : 'default']));
   if (plateW !== val('plateW')) state.plateW = 'derived';
+  if (discOX !== val('discOX')) state.discOX = 'derived';
+  if (discOY !== val('discOY')) state.discOY = 'derived';
   if (tile !== val('tile')) state.tile = 'derived';
   // The dark panel runs past the plate toward the disc, and stops at the same margin on the far side of the frame.
   const scrimW = Math.min(plateW + R.scrimRun, 1920 - 2 * R.margin);

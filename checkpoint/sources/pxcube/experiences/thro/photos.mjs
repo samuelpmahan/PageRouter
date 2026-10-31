@@ -5,8 +5,21 @@
 // caption shows how far the live fit lands from it, as a number.
 import { saveBag } from './photo-bag.mjs';
 import { enter, record } from './thro-calculations.mjs';
+import { moldFeed } from './mold-feed.mjs';
 const V = '?v=28ac2b39fab85255';
-const molds = await import(`./vendor/discstudio-cards/mold-library.js${V}`);
+// Mold search reads one ranked list a page at a time, loading the next page as the list scrolls (mold-feed.mjs). The build
+// writes how many harvested videos name each mold; without that file every mold counts the same.
+// The catalog (mold-library.js and the packed mold-runtime.bin) and the counts load when the search box is first focused or
+// typed in, or when the discs are handed to the editor, not with the page (30 Oct: the photos page was over its 75,000 byte
+// code budget with them in its first load). The sample photos' own molds come in the built photos.json, so the page can name
+// them without the catalog. A search typed before the catalog arrives waits for it, so the first list shown is already ranked.
+let molds = null, feed = null, catalogLoading = null;
+const loadCatalog = () => catalogLoading ??= Promise.all([
+  import(`./vendor/discstudio-cards/mold-library.js${V}`),
+  import(`./vendor/discstudio-cards/mold-runtime-index.js${V}`),
+  fetch('./assets/molds/mold-mentions.json').then(r => r.ok ? r.json() : {}, () => ({})),
+]).then(([library, { packedMoldIndex }, heard]) => { molds = library; feed = moldFeed(packedMoldIndex, heard.mentions ?? {}); });
+const PAGE = 12;
 const $ = id => document.getElementById(id);
 const DEG = Math.PI / 180, TAU = Math.PI * 2;
 const css = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -16,7 +29,8 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const manifest = await (await fetch('./assets/photos/photos.json')).json();
 const image = src => new Promise((ok, no) => { const i = new Image(); i.decoding = 'async'; i.onload = () => ok(i); i.onerror = () => no(Error(`Could not load ${src}`)); i.src = src; });
-const photos = manifest.photos.map(meta => ({ meta, label: meta.name, img: null, result: null, ms: 0, mold: meta.mold ? molds.moldRecord(meta.mold) : null, cut: null, show: 'disc' }));
+const sampleMold = meta => { if (meta.mold && !meta.record) throw Error(`photos.json names ${meta.mold} without its record; rebuild with build.mjs`); return meta.record ?? null; };
+const photos = manifest.photos.map(meta => ({ meta, label: meta.name, img: null, result: null, ms: 0, mold: sampleMold(meta), cut: null, show: 'disc' }));
 let current = null, busy = false, frame = null, run = null, uploads = 0;
 const narrow = matchMedia('(max-width:980px)');
 
@@ -203,25 +217,53 @@ function closest(q, limit = 5) {
     for (const w of words) if (w.length >= len) for (const m of molds.searchMolds(w.slice(0, len), limit)) if (seen.size < limit && !seen.has(m.id)) seen.set(m.id, m);
   return [...seen.values()];
 }
+let more = null; // { query, cursor, total, shown } while the typed search has pages left to load
+const more$ = new IntersectionObserver(entries => { if (entries.some(e => e.isIntersecting)) nextPage(); }, { root: $('hits'), rootMargin: '0px 0px 24px 0px' });
+function hitButton(found) {
+  const { match: _match, heard: _heard, ...m } = found, p = current;
+  const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-pressed', String(p.mold?.id === m.id));
+  b.innerHTML = `${m.manufacturer} <b>${m.mold}</b><small>${(m.flight ?? []).join(' | ')}</small>`;
+  b.onclick = () => { p.mold = m; $('mold').value = `${m.manufacturer} ${m.mold}`; $('mold').blur(); panel(); thumbs(); bag(); };
+  return b;
+}
+function moreRow() {
+  const row = document.createElement('p'); row.className = 'more';
+  row.textContent = `${more.total - more.shown} more`;
+  return row;
+}
+function nextPage() {
+  if (!more?.cursor) return;
+  const page = feed.search(more.query, { limit: PAGE, cursor: more.cursor });
+  more = { ...more, cursor: page.nextCursor, shown: more.shown + page.items.length };
+  const list = $('hits'), old = list.querySelector('.more');
+  more$.disconnect();
+  old?.replaceWith(...page.items.map(hitButton), ...(more.cursor ? [moreRow()] : []));
+  const row = list.querySelector('.more'); if (row) more$.observe(row);
+}
 function hits() {
   const p = current, q = $('mold').value.trim();
   const own = p.mold ? `${p.mold.manufacturer} ${p.mold.mold}` : '';
   const typing = q && q !== own;
-  let rows = typing ? molds.searchMolds(q, 6) : p.mold ? [p.mold] : [], note = null;
+  more$.disconnect(); more = null;
+  if (typing && !feed) { loadCatalog().then(hits); return; }
+  let rows = p.mold && !typing ? [p.mold] : [], note = null;
+  if (typing) {
+    const page = feed.search(q, { limit: PAGE });
+    rows = page.items;
+    more = { query: q, cursor: page.nextCursor, total: page.total, shown: rows.length };
+  }
   if (typing && !rows.length) {
     rows = closest(q);
     note = document.createElement('p'); note.className = 'nomatch';
     note.innerHTML = `The catalog has no mold called <b></b>.` + (rows.length ? ' Closest matches:' : ' Try the maker\u2019s name or the first letters.');
     note.querySelector('b').textContent = `\u201c${q}\u201d`;
   }
-  $('hits').replaceChildren(...(note ? [note] : []), ...rows.map(m => {
-    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('aria-pressed', String(p.mold?.id === m.id));
-    b.innerHTML = `${m.manufacturer} <b>${m.mold}</b><small>${(m.flight ?? []).join(' | ')}</small>`;
-    b.onclick = () => { p.mold = m; $('mold').value = `${m.manufacturer} ${m.mold}`; $('mold').blur(); panel(); thumbs(); bag(); };
-    return b;
-  }));
+  $('hits').replaceChildren(...(note ? [note] : []), ...rows.map(hitButton), ...(more?.cursor ? [moreRow()] : []));
+  $('hits').scrollTop = 0;
+  const row = $('hits').querySelector('.more'); if (row) more$.observe(row);
 }
 $('mold').addEventListener('input', hits);
+$('mold').addEventListener('focus', loadCatalog, { once: true });
 const ready = () => photos.filter(p => p.cut && p.mold);
 const left = () => photos.filter(p => p.cut && !p.mold);
 function bag() {
@@ -310,6 +352,7 @@ $('make').onclick = async () => {
   const discs = ready().map(p => ({ id: `photo-${p.meta.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`, mold: p.mold.id, name: p.mold.mold, manufacturer: p.mold.manufacturer,
     plastic: p.mold.id === p.meta.mold ? p.meta.plastic ?? null : null, src: p.cut.src }));
   let handoff;
+  await loadCatalog();
   try { handoff = enter('thro/bag/handoff', [{ name: 'bag', discs, moldRecord: molds.moldRecord, save: saveBag }]); }
   catch (error) { $('status').textContent = `Could not hand the discs over: ${error.message}`; return; }
   if (handoff.selfGuaranteeStatus !== 'PASS') { $('status').textContent = `Hand-off guarantees failed: ${Object.values(handoff.guarantees).filter(g => !g.passed).map(g => g.id).join(', ')}`; return; }

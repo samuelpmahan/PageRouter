@@ -45,7 +45,8 @@ aside h2{margin:0 0 2px;font:650 19px/1.25 system-ui;letter-spacing:-.3px}
 .flight{font:650 17px ui-monospace,Menlo,Consolas,monospace;color:var(--accent);margin:2px 0 0}
 input[type=search]{width:100%;min-height:46px;margin-top:10px;border:0;border-bottom:2px solid #405043;border-radius:0;padding:8px 2px;background:transparent;color:var(--ink);font:16px system-ui}
 input[type=search]:focus{border-bottom-color:var(--accent);outline:0}
-.hits{display:grid;margin-top:4px}
+.hits{display:grid;margin-top:4px;max-height:min(52vh,460px);overflow-y:auto;overscroll-behavior:contain}
+.hits .more{margin:0;padding:10px 2px;color:var(--muted);font:13px system-ui}
 .hits button{text-align:left;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);padding:11px 2px;min-height:44px;font:15px system-ui;cursor:pointer}
 .hits button[aria-pressed=true]{color:var(--accent)}
 .hits button[aria-pressed=true]::after{content:" ✓"}

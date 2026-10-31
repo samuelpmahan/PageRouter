@@ -21,7 +21,7 @@ test('an accent change recomputes only the card recipe; going back to an earlier
   assert.ok(read(first).every(line => line.startsWith('computed')));
   const red = screen(world, single({ study: 'discstudio:b01', accent: '#e4572e', nativeRevision: 2 }));
   assert.deepEqual(read(red), ['reused thro.site', 'computed thro.card.recipe', 'reused thro.rule', 'computed thro.photo.material']);
-  assert.deepEqual(definitionDiff(recipeDefinition(first.outputs.recipe), recipeDefinition(red.outputs.recipe)), ["accent: the layout's own (#c8f23d) → custom #e4572e"]);
+  assert.deepEqual(definitionDiff(recipeDefinition(first.outputs.recipe), recipeDefinition(red.outputs.recipe)), ["accent: Lime → custom #e4572e"]);
   const back = screen(world, single({ study: 'discstudio:b01', accent: '#c8f23d', nativeRevision: 2 }));
   const [whole] = propagation(back.receipt);
   assert.equal(whole.whole, true);
@@ -34,7 +34,7 @@ test('a change is told by features: layouts by name, and what follows from a lay
   const b01 = screen(world, single({ study: 'discstudio:b01', nativeRevision: 2 }));
   const u04 = screen(world, single({ study: 'discstudio:u04', nativeRevision: 2 }));
   const diff = definitionDiff(recipeDefinition(b01.outputs.recipe), recipeDefinition(u04.outputs.recipe));
-  assert.deepEqual(diff, ['layout: Hero rail → Kinetic name (and with it: disc side left, highlight tiles)'], 'layouts by name; what comes with a layout is said with it');
+  assert.deepEqual(diff, ['layout: Hero rail → Kinetic name (and with it: disc side left)'], 'layouts by name; what comes with a layout is said with it');
   const chosen = definitionDiff(recipeDefinition(b01.outputs.recipe), recipeDefinition(screen(world, single({ study: 'discstudio:b01', nativeRevision: 2, nativeSide: 'left' })).outputs.recipe));
   assert.deepEqual(chosen, ['disc side: right → left'], 'a side set by hand is a choice of its own');
   assert.ok(!diff.some(line => /[0-9a-f]{16}/.test(line)), 'no hash in what a change says');
@@ -49,19 +49,19 @@ test('a lineup: the same change on every card is said once, a disc swap names it
   assert.deepEqual(read(swapped).filter(l => l.includes('card.recipe')), ['reused thro.card.recipe#card0', 'computed thro.card.recipe#card1', 'reused thro.card.recipe#card2']);
   assert.deepEqual(definitionDiff(recipeDefinition(a.outputs.recipe), recipeDefinition(swapped.outputs.recipe)), ['disc (card 2): MVP Buzzz, Neutron → MVP Wraith, Neutron']);
   const red = screen(world, lineup([card('a', 'Servo'), card('d', 'Wraith'), card('c', 'Roc3')], '#e4572e'));
-  assert.deepEqual(definitionDiff(recipeDefinition(swapped.outputs.recipe), recipeDefinition(red.outputs.recipe)), ['accent (cards 1, 2, 3): custom #c8f23d → custom #e4572e']);
-  const lime = screen(world, lineup([card('a', 'Servo'), card('d', 'Wraith'), card('c', 'Roc3')], '#c8f49d')), rose = screen(world, lineup([card('a', 'Servo'), card('d', 'Wraith'), card('c', 'Roc3')], '#ff4d6d'));
+  assert.deepEqual(definitionDiff(recipeDefinition(swapped.outputs.recipe), recipeDefinition(red.outputs.recipe)), ['accent (cards 1, 2, 3): Lime → custom #e4572e']);
+  const lime = screen(world, lineup([card('a', 'Servo'), card('d', 'Wraith'), card('c', 'Roc3')], '#c8f23d')), rose = screen(world, lineup([card('a', 'Servo'), card('d', 'Wraith'), card('c', 'Roc3')], '#ff4d6d'));
   assert.deepEqual(definitionDiff(recipeDefinition(lime.outputs.recipe), recipeDefinition(rose.outputs.recipe)), ['accent (cards 1, 2, 3): Lime → Red'], 'palette colours by name');
 });
 
 test('the four guarantees: a card saved before the fix fails the efficient one, and a lineup says it cannot tell yet', () => {
   const world = createThroWorld();
-  const fresh = guarantees(world, screen(world, single({ study: 'discstudio:u04', nativeRevision: 2 })));
+  const fresh = guarantees(world, screen(world, single({ study: 'discstudio:u04', nativeRevision: 3 })));
   assert.deepEqual(fresh.map(g => g.cause), ['material', 'formal', 'efficient', 'final']);
   assert.ok(fresh.every(g => g.ok === true));
   const saved = guarantees(world, screen(world, single({ study: 'discstudio:u04' }))).find(g => g.cause === 'efficient');
   assert.equal(saved.ok, false);
-  assert.match(saved.what, /revision 1; the site now draws revision 2/);
+  assert.match(saved.what, /revision 1; the site now draws revision 3/);
   const card = { disc: servo, facts, design: { rendererBuild: nativeBuild, study: 'discstudio:b01' }, photo };
   const lineup = guarantees(world, screen(world, { preset: 'l01', featured: null, layouts: [upright, upright], cards: [card, { ...card, disc: { ...servo, id: 'b' } }] }));
   assert.equal(lineup.find(g => g.cause === 'efficient').ok, null);

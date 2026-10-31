@@ -21,7 +21,11 @@ test('built HH entry resolves its local module imports', () => {
       if (/\.(?:mjs|js)$/.test(target)) pending.push(target);
     }
   }
-  assert.ok(visited.has(resolve(hhRoot, 'style-playground.mjs')), 'HH entry must reach the style adapter');
+  // The public page is an examinable demo, not a test bench (Sam, 30 Oct: "We don't need fast-check or devtools").
+  for (const left of ['style-playground.mjs', 'pxc-devtools/devtools.mjs', 'vendor/fast-check-4.10.2.bundle.mjs']) {
+    assert.ok(!visited.has(resolve(hhRoot, left)), `HH entry must not reach ${left}`);
+    assert.ok(!existsSync(resolve(hhRoot, left)), `HH must not ship ${left}`);
+  }
 });
 
 test('PageRouter entry URL selects its exact module bytes instead of a cached older app', () => {

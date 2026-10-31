@@ -5,9 +5,9 @@ import { createThroWorld, decide, SITE_FILL, OPEN, hierarchyVerdict } from '../.
 
 test('the site runs under its fill and says what each mode offers', () => {
   const { site, choices, receipt } = decide(createThroWorld());
-  assert.deepEqual(site, { single: 'cards', bag: 'lineups', battle: 'layouts', revision: 2 });
+  assert.deepEqual(site, { single: 'cards', bag: 'lineups', battle: 'layouts', revision: 3 });
   assert.equal(choices['thro.single.layouts'].rung, 'contract fill', 'a decided choice comes from the fill');
-  assert.equal(choices['thro.card.revision'].rung, 'contract fill', 'two card revisions: the fill decides');
+  assert.equal(choices['thro.card.revision'].rung, 'contract fill', 'three card revisions: the fill decides');
   assert.deepEqual(Object.keys(receipt.fillReach).sort(), Object.keys(SITE_FILL).sort());
 });
 
@@ -17,7 +17,7 @@ test('with no fill, a decision with two alternatives is AMBIGUOUS: open, in the 
 
 test('switching an alternative changes only that decision', () => {
   const { site } = decide(createThroWorld(), { ...SITE_FILL, 'thro.battle.engine': 'thro.battle.engine/formats' });
-  assert.deepEqual(site, { single: 'cards', bag: 'lineups', battle: 'formats', revision: 2 });
+  assert.deepEqual(site, { single: 'cards', bag: 'lineups', battle: 'formats', revision: 3 });
 });
 
 test("Sam's rule is a check contract proven by real measurements", () => {

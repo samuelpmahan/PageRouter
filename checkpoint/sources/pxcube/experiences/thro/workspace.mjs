@@ -163,6 +163,16 @@ export async function openWorkspace({ storage = globalThis.localStorage, locks =
       }
       return null;
     },
+    // Delete a kept graphic (Sam: no cap on kept versions, and each kept graphic gets a delete). It leaves Kept graphics; the
+    // other kept versions stay exactly as they were.
+    forget(address) {
+      return serial({ operation: 'forget-graphic', address }, async candidate => {
+        const graphics = candidate.context.graphics ?? [];
+        if (!graphics.includes(address)) return false;
+        await candidate.patch({ graphics: graphics.filter(item => item !== address) });
+        return true;
+      });
+    },
     keep(result) {
       const design = result.design ?? model.value(result.designAddress);
       const requested = { ...result, design: clone(design), graphic: clone(result.graphic) };

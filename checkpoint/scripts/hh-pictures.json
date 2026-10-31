@@ -1,0 +1,81 @@
+{
+ "site": "Homeroom Heroes as PageRouter assemble copies it (build/hh), before the snapshot",
+ "why": {
+  "width": "The homepage draws these as cover backgrounds no wider than 1256 CSS pixels; 1600 wide keeps them sharp on most high-density screens.",
+  "teacher of the day": "Left as captured. The reference profile prints its SHA-256 as the capture receipt, so re-encoding it would make that receipt wrong."
+ },
+ "pictures": [
+  {
+   "from": "assets/reference/static/images/homepage/hero_border.jpg",
+   "to": "assets/reference/static/images/homepage/hero_border.webp",
+   "sha256": "d221d00958211ad77ba5db6bf7bfbdcdbcb9966fe078740dd7289c4e368a4db7",
+   "maxWidth": 1600,
+   "quality": 80,
+   "removeOriginal": true
+  },
+  {
+   "from": "assets/reference/static/images/homepage/tile_border_1.jpg",
+   "to": "assets/reference/static/images/homepage/tile_border_1.webp",
+   "sha256": "54fd022bab5a985f7a0b59dd266b18944ec8af164a80cd9b99d523a0e89616fb",
+   "maxWidth": 1600,
+   "quality": 80,
+   "removeOriginal": true
+  },
+  {
+   "from": "assets/reference/static/images/homepage/tile_border_2.jpg",
+   "to": "assets/reference/static/images/homepage/tile_border_2.webp",
+   "sha256": "6b9bb79653d87b2c31d8d3b2ea88e1c5e1aaf1aa653020030ae8c765fa633fe9",
+   "maxWidth": 1600,
+   "quality": 80,
+   "removeOriginal": true
+  },
+  {
+   "from": "assets/reference/static/images/homepage/tile_border_3.jpg",
+   "to": "assets/reference/static/images/homepage/tile_border_3.webp",
+   "sha256": "81bdff068353022d4e06dfbb491ac2233f04d94e32a17ec44fa3a64ec1966aa9",
+   "maxWidth": 1600,
+   "quality": 80,
+   "removeOriginal": true
+  },
+  {
+   "from": "assets/reference/static/images/homepage/tile_border_4.jpg",
+   "to": "assets/reference/static/images/homepage/tile_border_4.webp",
+   "sha256": "30db5bcf15afc159686ff36bc4ed79b440ec88bda293df335896de5e82b18fb9",
+   "maxWidth": 1600,
+   "quality": 80,
+   "removeOriginal": true
+  }
+ ],
+ "references": [
+  {
+   "file": "public-site.css",
+   "before": "homepage/hero_border.jpg",
+   "after": "homepage/hero_border.webp",
+   "count": 3
+  },
+  {
+   "file": "public-site.css",
+   "before": "homepage/tile_border_1.jpg",
+   "after": "homepage/tile_border_1.webp",
+   "count": 3
+  },
+  {
+   "file": "public-site.css",
+   "before": "homepage/tile_border_2.jpg",
+   "after": "homepage/tile_border_2.webp",
+   "count": 3
+  },
+  {
+   "file": "public-site.css",
+   "before": "homepage/tile_border_3.jpg",
+   "after": "homepage/tile_border_3.webp",
+   "count": 3
+  },
+  {
+   "file": "public-site.css",
+   "before": "homepage/tile_border_4.jpg",
+   "after": "homepage/tile_border_4.webp",
+   "count": 3
+  }
+ ]
+}

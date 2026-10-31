@@ -229,3 +229,16 @@ html.console-map .workspace-heading .mode-nav{display:grid;grid-template-columns
 .kan-error-msg{padding:8px 10px;border-radius:8px;border:1px solid #c4502b;background:#f6dccd;color:#8a2f14;font-size:11px}
 .kan-modal-actions .button-primary{width:100%;min-height:44px;font-size:13px;color:var(--ink)}
 @media(max-width:820px){.kan-modal-grid{grid-template-columns:1fr}.kan-canvas-wrap{max-height:38vh}}
+/* Your own disc: the photos page, from the shelf. */
+.disc-add{text-decoration:none;border-style:dashed}
+.disc-add .disc-thumb{display:grid;place-items:center}
+.disc-add-mark{font-size:34px;line-height:1;font-weight:500;color:var(--accent)}
+/* Kept graphics (Sam's screenshot, 30 Oct): the heading stacks in the narrow column, and each kept graphic has its own Delete on its row. */
+.captures .section-heading{display:block;margin-bottom:0}
+.captures h2{white-space:nowrap}
+.captures .captures-note{margin:4px 0 0;font-size:11px;text-align:left}
+.captures .empty-note{padding:8px 0 0;margin:0}
+.capture-row{display:flex;flex-direction:column;gap:4px;min-width:0}
+.capture-row .capture-choice{width:100%}
+.capture-delete{align-self:flex-end;min-height:30px;padding:4px 12px;border-radius:15px;font-size:11px;font-weight:650;background:transparent;border:1px solid #b9ad98;color:#7a3b2a}
+.capture-delete:hover,.capture-delete[data-armed=true]{background:#c2452d;border-color:#c2452d;color:#fff}

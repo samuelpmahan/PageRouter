@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import {gzipSync} from 'node:zlib';
+import {execFileSync} from 'node:child_process';
 import {buildSnapshot,createPatch,applyPatch,canonical,hash,packSnapshot} from '../src/compiled-patch.mjs';
 import {staticSpec} from '../src/static-compiler.mjs';
 import {atlasImplementationIdentity} from './atlas-identity.mjs';
@@ -39,7 +40,13 @@ function files(dir){const o={};function walk(d,p=''){for(const name of fs.readdi
 
 const pxcEvidence=JSON.parse(fs.readFileSync(path.join(root,'evidence/pxcube-build.json')));
 const pxcRelocation=await preservePxCube(root,pxcEvidence,files);
-const hh=path.join(root,'build/hh');fs.mkdirSync(hh,{recursive:true});fs.cpSync(path.join(root,'vendor/hh/src'),hh,{recursive:true,filter:source=>!source.endsWith('.test.mjs')});fs.cpSync(path.join(root,'vendor/hh/services'),path.join(hh,'services'),{recursive:true});relocateHhServiceImports(hh);
+// The public HH page ships without the PxC devtools and the fast-check style playground (Sam, 30 Oct: "We don't need fast-check or
+// devtools"); their sources stay in vendor/hh/src for anyone who wants to read them.
+const hh=path.join(root,'build/hh');fs.rmSync(hh,{recursive:true,force:true});fs.mkdirSync(hh,{recursive:true});
+const hhLeftOut=['pxc-devtools','style-playground.mjs','vendor'].map(name=>path.join(root,'vendor/hh/src',name));
+fs.cpSync(path.join(root,'vendor/hh/src'),hh,{recursive:true,filter:source=>!source.endsWith('.test.mjs')&&!hhLeftOut.some(left=>source===left||source.startsWith(left+path.sep))});fs.cpSync(path.join(root,'vendor/hh/services'),path.join(hh,'services'),{recursive:true});relocateHhServiceImports(hh);
+// The homepage photographs ship as WebP; vendor/hh/src keeps the captured JPEGs as the source. The receipt records every hash and encoder version.
+execFileSync(process.env.PYTHON??'python3',[path.join(root,'scripts/reencode-pictures.py'),hh,path.join(root,'scripts/hh-pictures.json'),path.join(root,'build/hh-pictures-receipt.json')],{stdio:'inherit'});
 const justin=path.join(root,'build/justin');fs.mkdirSync(justin,{recursive:true});fs.cpSync(path.join(root,'vendor/justin'),justin,{recursive:true});
 const capabilityLab=path.join(root,'vendor/capability-lab');
 // Technical portability fixes only. Original prose/links preserved.

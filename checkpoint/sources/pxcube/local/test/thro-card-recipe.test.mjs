@@ -24,12 +24,12 @@ test('for every disc, layout, revision and design variant, the world\'s recipe i
       checked++;
     }
   }
-  assert.equal(checked, fixture.discs.length * (11 + 2) * variants.length, 'every combination was checked');
+  assert.equal(checked, fixture.discs.length * nativeStudies.length * 2 * variants.length, 'every combination was checked (every layout has revision 3)');
 });
 
 test('the same card is the same Part: one hash, and a second run is served from the cache', () => {
   const world = createThroWorld(), d = fixture.discs[0];
-  const input = { disc: { id: d.id, mold: d.mold, plastic: d.plastic ?? null, weight: null }, facts, design: { study: 'discstudio:b01', rendererBuild: nativeBuild, nativeRevision: 2 }, photo: d.sha256 };
+  const input = { disc: { id: d.id, mold: d.mold, plastic: d.plastic ?? null, weight: null }, facts, design: { study: 'discstudio:b01', rendererBuild: nativeBuild, nativeRevision: 3 }, photo: d.sha256 };
   const a = world.run('thro.card.recipe', input), b = world.run('thro.card.recipe', input);
   assert.equal(a.receipt.outputs.recipe, b.receipt.outputs.recipe, 'same recipe hash');
   assert.ok(b.trace.cachedFrom, 'the second run is a cache hit');

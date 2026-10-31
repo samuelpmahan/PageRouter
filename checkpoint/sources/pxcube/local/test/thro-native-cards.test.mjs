@@ -95,7 +95,7 @@ test('changing native preset discards the previous controls side/highlight but k
   assert.equal(u02.accent, '#11aa88');
   const u03 = read(u02, { study: 'discstudio:u03-front', side: 'left', highlight: 'digits', scale: 0.8, accent: '#11aa88' });
   assert.equal(u03.nativeSide, 'right');
-  assert.equal(u03.nativeHighlight, 'tiles', 'U02 controls must not override the new U03 default');
+  assert.equal(u03.nativeHighlight, 'digits', 'U03 starts on Digits like every layout (30 Oct), from its own default, not carried over');
   assert.equal(u03.orientation, 'portrait');
 });
 

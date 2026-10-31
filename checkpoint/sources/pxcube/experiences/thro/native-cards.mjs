@@ -3,18 +3,27 @@ import { span, here } from './gestures.mjs';
 // Native card pixels are an optional Single treatment. The renderer/catalog
 // module graph is imported only when one of these explicit studies is used.
 export const nativeBuild = '28ac2b39fab85255';
-// Thro card revisions (vendor/discstudio-cards/thro-card-core-r2.js): only layouts whose drawing changed have one.
-// A design without nativeRevision draws exactly as DiscStudio 6.6.1. A saved design keeps its revision until a
-// person chooses the fixed card; a layout picked fresh starts at its latest revision.
-export const cardRevisions = Object.freeze({ b01: 2, u04: 2 });
+// Thro card revisions (vendor/discstudio-cards/thro-card-core-r2.js and -r3.js). cardRevisions is each layout's latest:
+// revision 3 for every layout (half flight numbers as a superscript; a dark plate that reaches every layout). Revision 2 (B01 upright disc, U04
+// smaller manufacturer) stays drawable for designs saved with it. A design without nativeRevision draws exactly as
+// DiscStudio 6.6.1. A saved design keeps its revision until a person chooses the fixed card; a layout picked fresh
+// starts at the revision the site decides.
+export const cardRevisions = Object.freeze(Object.fromEntries(['u01', 'u02', 'u03-front', 'u03-behind', 'u04', 'u05', 'b01', 'b02', 'b03', 'b04', 'b05'].map(preset => [preset, 3])));
+export const savedRevisions = Object.freeze({ b01: Object.freeze([2]), u04: Object.freeze([2]) });
+export const knownRevision = (preset, revision) => revision === cardRevisions[preset] || Boolean(savedRevisions[preset]?.includes(revision));
 // The site decides which revision new cards start at (thro-world.mjs, 'thro.card.revision'): 1 draws every new card
-// exactly as DiscStudio 6.6.1; 2 starts new B01 and U04 cards at revision 2. A saved design keeps its own either way.
-let siteCardRevision = 2;
+// exactly as DiscStudio 6.6.1; 2 starts new B01 and U04 cards at revision 2; 3 starts every new card at revision 3.
+// A saved design keeps its own either way.
+let siteCardRevision = 3;
 export function useSiteCardRevision(revision) {
-  if (revision !== 1 && revision !== 2) throw Error(`Card revision ${revision} is not one the site can choose.`);
+  if (revision !== 1 && revision !== 2 && revision !== 3) throw Error(`Card revision ${revision} is not one the site can choose.`);
   siteCardRevision = revision;
 }
-export const latestCardRevision = study => (isNativeStudy(study) && siteCardRevision >= 2 ? cardRevisions[nativeStudy(study).preset] : undefined);
+export const latestCardRevision = study => {
+  if (!isNativeStudy(study) || siteCardRevision < 2) return undefined;
+  const preset = nativeStudy(study).preset;
+  return siteCardRevision >= 3 ? cardRevisions[preset] : savedRevisions[preset]?.includes(2) ? 2 : undefined;
+};
 const definitions = [
   ['u01', 'Compact scorebug'], ['u02', 'Stacked poster'],
   ['u03-front', 'Disc in front'], ['u03-behind', 'Disc behind'],
@@ -26,7 +35,7 @@ export const nativeStudies = Object.freeze(definitions.map(([preset, name]) => O
   id: `discstudio:${preset}`, preset, name: `${preset.toUpperCase()} · ${name}`,
   orientation: preset.startsWith('u') ? 'portrait' : 'landscape',
   side: ['u02', 'u04', 'u05'].includes(preset) ? 'left' : 'right',
-  highlight: preset === 'u01' || preset === 'u02' || preset.startsWith('b') ? 'digits' : 'tiles',
+  highlight: 'digits', // every layout starts quiet (30 Oct): Tile blocks made the numbers louder than the name; it stays a choice
   accent: /^(u03|u04|b0)/.test(preset) ? '#c8f23d' : '#8fe3ae',
 })));
 // Lineups (Bag): 2–4 of the same DiscStudio cards in one frame. Portrait-family cards stay readable at 3–4 across; U04 is left
@@ -62,7 +71,8 @@ export function nativeDesign(previous, study) {
     nativeScale: wasNative ? previous.nativeScale ?? 0.66 : 0.66,
     nativeSide: same ? previous.nativeSide ?? selected.side : selected.side,
     nativeHighlight: same ? previous.nativeHighlight ?? selected.highlight : selected.highlight,
-    // Plate carries across layouts like the accent; a nudge belongs to one layout's geometry.
+    // Plate carries across layouts like the accent: see-through by default, dark when asked (Sam, 30 Oct: "keep it as it was.
+    // We just make it simple to make the plate dark if you want to"). A nudge belongs to one layout's geometry.
     nativePlate: wasNative ? previous.nativePlate ?? 'see-through' : 'see-through',
     nativeNudge: same && previous.nativeNudge ? { ...previous.nativeNudge } : { x: 0, y: 0 } };
   delete design.nativeRevision; delete design.nativeParts; // pinned parts, like a nudge, belong to one layout's geometry
@@ -76,7 +86,7 @@ export function nativeDesign(previous, study) {
 export const cardParts = Object.freeze({ b01: Object.freeze({
   plateW: [240, 1824], discD: [80, 900], discOX: [-1.6, 0.8], discOY: [-0.9, 1.6], tile: [24, 160], nameMax: [24, 220], row: [0, 1], maker: [0, 1], align: [0, 1] }) });
 const wholeParts = new Set(['row', 'maker', 'align']); // choices, not measures: 0 or 1
-export const partsLayout = design => (isNativeStudy(design?.study) && cardParts[nativeStudy(design.study).preset] && design.nativeRevision === cardRevisions[nativeStudy(design.study).preset] ? nativeStudy(design.study).preset : null);
+export const partsLayout = design => (isNativeStudy(design?.study) && cardParts[nativeStudy(design.study).preset] && design.nativeRevision >= 2 && knownRevision(nativeStudy(design.study).preset, design.nativeRevision) ? nativeStudy(design.study).preset : null);
 export function validParts(parts, preset) {
   const ranges = cardParts[preset];
   if (!ranges || !parts || typeof parts !== 'object' || Array.isArray(parts)) return false;
@@ -135,9 +145,9 @@ export function nativeCardRecipe({ disc, resolved, design }) {
   const nudge = design.nativeNudge ?? { x: 0, y: 0 };
   if (!validNudge(nudge)) throw Error('Card position is out of range.');
   const appearance = { discSide: design.nativeSide ?? selected.side, highlightTarget: design.nativeHighlight ?? selected.highlight, accentColor: design.accent ?? selected.accent };
-  if (design.nativePlate === 'solid') appearance.plate = 'solid';
+  if (design.nativePlate === 'solid') appearance.plate = 'solid'; // 'solid' is the dark plate; see-through is the default
   const revision = design.nativeRevision;
-  if (revision !== undefined && revision !== cardRevisions[selected.preset]) throw Error('This card revision is not available for its layout.');
+  if (revision !== undefined && !knownRevision(selected.preset, revision)) throw Error('This card revision is not available for its layout.');
   const parts = design.nativeParts && Object.keys(design.nativeParts).length ? design.nativeParts : null;
   if (parts && (partsLayout(design) !== selected.preset || !validParts(parts, selected.preset))) throw Error('These card parts are not available for this layout.');
   return {
@@ -195,7 +205,7 @@ export const lineupRequestRecipe = (plan, requests, photos) => ({ preset: plan.p
 export const requestRecipe = (request, photo) => { const { disc: { depiction, ...disc }, photoSrc, ...rest } = request; return { disc, ...rest, photo }; };
 export const recipePartHash = recipe => hashString(canonical(recipe));
 /** The accent palette, by name (the app's swatches and the world's definitions read this one list). */
-export const accentPalette = Object.freeze([['#a6edda', 'Mint'], ['#c8f49d', 'Lime'], ['#ffd166', 'Gold'], ['#ff7a45', 'Orange'], ['#ff4d6d', 'Red'], ['#c77dff', 'Violet'], ['#4cc9f0', 'Sky'], ['#f6f3e9', 'Chalk']].map(pair => Object.freeze(pair)));
+export const accentPalette = Object.freeze([['#a6edda', 'Mint'], ['#c8f23d', 'Lime'], ['#ffd166', 'Gold'], ['#ff7a45', 'Orange'], ['#ff4d6d', 'Red'], ['#c77dff', 'Violet'], ['#4cc9f0', 'Sky'], ['#f6f3e9', 'Chalk']].map(pair => Object.freeze(pair)));
 export const accentName = hex => accentPalette.find(([value]) => value.toLowerCase() === String(hex).toLowerCase())?.[1] ?? null;
 export const pixelStats = { drawn: 0, reused: 0, byRecipe: new Map() }; // byRecipe: recipe Part hash → 'drawn' | 'reused', the latest outcome for it
 const notePixels = (key, cached) => { pixelStats[cached ? 'reused' : 'drawn']++; pixelStats.byRecipe.delete(key); pixelStats.byRecipe.set(key, cached ? 'reused' : 'drawn'); if (pixelStats.byRecipe.size > 80) pixelStats.byRecipe.delete(pixelStats.byRecipe.keys().next().value); };

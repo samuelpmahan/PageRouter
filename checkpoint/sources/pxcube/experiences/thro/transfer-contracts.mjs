@@ -21,16 +21,17 @@ export const NUDGE_LIMIT = 1920;
 /** Plate and nudge as retained: omitted means the old defaults; a supplied value must be exact, never normalised. */
 export const validPlate = value => value === 'see-through' || value === 'solid';
 export const validNudge = value => exactKeys(value, ['x', 'y']) && [value.x, value.y].every(n => typeof n === 'number' && Number.isFinite(n) && Math.abs(n) <= NUDGE_LIMIT);
-// thro-card-revision@2/<preset>: a B01 or U04 recipe or card drawn with Thro card revision 2. Consumers need it to
-// know the upright B01 disc and the smaller U04 manufacturer; revision-1 recipes need nothing new.
-export const revisedPresets = Object.freeze({ b01: 2, u04: 2 });
-export const validRevision = (preset, value) => value === revisedPresets[preset];
+// thro-card-revision@<n>/<preset>: a recipe or card drawn with Thro card revision n. Consumers need @2 to know the
+// upright B01 disc and the smaller U04 manufacturer, and @3 to know the superscript half and the dark plate on every
+// layout; revision-1 recipes need nothing new.
+export const revisedPresets = Object.freeze(Object.fromEntries(['u01', 'u02', 'u03-front', 'u03-behind', 'u04', 'u05', 'b01', 'b02', 'b03', 'b04', 'b05'].map(preset => [preset, Object.freeze(preset === 'b01' || preset === 'u04' ? [2, 3] : [3])])));
+export const validRevision = (preset, value) => Boolean(revisedPresets[preset]?.includes(value));
 export const revisionCapability = (preset, revision) => `thro-card-revision@${revision}/${preset}`;
 export const usesCardAppearance = design => design?.nativePlate === 'solid' || Boolean(design?.nativeNudge && (design.nativeNudge.x || design.nativeNudge.y));
 export const calculationNames = new Set(`fn.addReference fn.addToShelf fn.createBag fn.find fn.paintRecipe fn.read fn.renderDepiction fn.renderPainting fn.selectPainting fn.shelfQuery fn.shelfRows fn.tick oc.create oc.destroy oc.update fn.studio.canvasDesign fn.studio.canvasFields fn.studio.canvasFrame fn.studio.canvasScene fn.studio.capture fn.studio.card fn.studio.cardPreset fn.studio.cardPreview fn.studio.cardTokens fn.studio.compositionDefinition fn.studio.compositionFields fn.studio.compositionLayers fn.studio.cornerMetadata fn.studio.cornerStudy fn.studio.cornerTypography fn.studio.exportRecord fn.studio.frame fn.studio.graphic fn.studio.graphicArt fn.studio.graphicDesign fn.studio.graphicFields fn.studio.layeredCompositionDefinition fn.studio.layeredCompositionPreview fn.studio.layeredCompositionScene fn.studio.moldHeading fn.studio.reorderSelection fn.studio.scene fn.studio.svgDigest fn.studio.unlabelledArt fn.studio.unlabelledCard fn.studio.competitionAppearance fn.studio.competitionCapture fn.studio.competitionDesign fn.studio.competitionDraft fn.studio.competitionEdit fn.studio.competitionFields fn.studio.competitionPreset fn.studio.competitionPresetPanel fn.studio.competitionScene fn.studio.competitionTreatment fn.studio.competitionTreatmentPanel fn.battle.entry fn.battle.standings`.split(' '));
 const presets = ['u01', 'u02', 'u03-front', 'u03-behind', 'u04', 'u05', 'b01', 'b02', 'b03', 'b04', 'b05'];
 export const supportsCapability = item => capabilities.includes(item) || presets.some(preset => item === `discstudio-recipe@28ac2b39fab85255/${preset}`)
-  || Object.entries(revisedPresets).some(([preset, revision]) => item === revisionCapability(preset, revision))
+  || Object.entries(revisedPresets).some(([preset, revisions]) => revisions.some(revision => item === revisionCapability(preset, revision)))
   || partsPresets.some(preset => item === partsCapability(preset));
 // v1 did not declare its data ABI. Only this verified delivered producer has
 // an explicit historical profile mapping; this is not proof of authorship.

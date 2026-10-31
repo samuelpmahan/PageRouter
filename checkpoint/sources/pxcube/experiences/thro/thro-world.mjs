@@ -16,12 +16,12 @@ export const SITE_FILL = Object.freeze({
   'thro.single.layouts': 'thro.single.layouts/one-renderer',
   'thro.bag.layouts': 'thro.bag.layouts/thro-lineups',
   'thro.battle.engine': 'thro.battle.engine/layouts-with-points',
-  'thro.card.revision': 'thro.card.revision/thro-r2',
+  'thro.card.revision': 'thro.card.revision/thro-r3',
 });
 /** Decisions still open: a choice is in the fill so the site can run, but it is waiting on someone. */
 export const OPEN = Object.freeze({
   'thro.battle.engine': 'dab: the saved-data shape for the formats model (mailbox, 17:27); then Sam picks',
-  'thro.card.revision': 'Sam: visual review of revision 2 (B01 upright, U04 manufacturer below the numbers); dab: integration receipt once 8dcb656 is pushed',
+  'thro.card.revision': 'Sam: yes to deploy revision 3 (half flight numbers as a raised .5, see-through kept with a dark plate switch on every layout), after the before and after renders',
 });
 
 const enumOf = (...values) => ({ type: values.every(v => typeof v === 'number') ? 'integer' : 'string', enum: values });
@@ -82,11 +82,12 @@ export function createThroWorld() {
       { id: 'layouts-with-points', value: { engine: 'layouts' }, choice: 'Studio battle layouts with a points field per disc.', origin: { by: 'claude-ed', iters: [10, 14] } },
       { id: 'formats', value: { engine: 'formats' }, choice: 'One model: entries × holes; each format (Round, Closest to the pin, Skins) is a class with compare(a, b) → int.', origin: { by: 'Sam · claude-ed', iters: [21, 22], commits: ['ce81a93', '76e98a8', '6f768e4'] } },
     ] });
-  decision({ id: 'thro.card.revision', question: 'Which revision of the card drawing?', out: { revision: enumOf(1, 2) },
-    why: 'B01 tilts the disc 12° and U04 draws the manufacturer bigger than the flight numbers; revision 2 fixes both (dab assigned, claude-a9). The revision decided here is what new B01 and U04 cards draw; a saved card keeps its own until "Use the fixed card" is chosen in the card editor.',
+  decision({ id: 'thro.card.revision', question: 'Which revision of the card drawing?', out: { revision: enumOf(1, 2, 3) },
+    why: 'B01 tilts the disc 12° and U04 draws the manufacturer bigger than the flight numbers; revision 2 fixes both (dab assigned, claude-a9). Revision 3 (Sam, 30 Oct) keeps the see-through plate of each layout as the default, lets the dark plate reach every layout ("make it simple to make the plate dark"), and draws a half flight number as a small raised .5 ("6.5 is likely much easier using a superscript"). The revision decided here is what new cards draw; a saved card keeps its own until "Use the fixed card" is chosen in the card editor.',
     alternatives: [
       { id: 'discstudio-6.6.1', value: { revision: 1 }, choice: 'The pinned DiscStudio 6.6.1 cards, byte-identical.', origin: { by: 'dab · claude-ed', iters: [15, 16], commits: ['a3319df', '131edd6'] } },
       { id: 'thro-r2', value: { revision: 2 }, choice: 'Card revision 2 for B01 and U04: the disc upright, the manufacturer below the flight numbers. The other nine layouts draw exactly as 6.6.1.', origin: { by: 'dab (assigned) · claude-a9', commits: ['8dcb656'] } },
+      { id: 'thro-r3', value: { revision: 3 }, choice: 'Card revision 3 on every layout: revision 2\'s B01 and U04 fixes, a dark plate that reaches every layout (see-through stays the default), and a half flight number drawn as a small raised .5.', origin: { by: 'Sam (asked, 30 Oct) · claude (thread)' } },
     ] });
 
   // ---- A card: what exactly it draws. The implementation is the same function the renderer's request is built from
@@ -98,10 +99,10 @@ export function createThroWorld() {
     notes: 'Disc facts + design + the prepared photo\'s SHA-256 → the recipe the DiscStudio renderer draws. Same recipe, same pixels.',
     in: { disc: { type: 'object' }, facts: { type: 'object' }, design: { type: 'object' }, photo: { type: 'string' } }, out: { recipe: { type: 'object' } },
     examples: [
-      { name: 'B01 Servo, fixed drawing (revision 2), defaults', in: { ...servo, design: { study: 'discstudio:b01', rendererBuild: nativeBuild, nativeRevision: 2, accent: '#c8f23d' } },
-        out: { recipe: { disc: servoFacts, flights: [6.5, 5, -1, 2], preset: 'b01', placement: 'panel-default', scale: 0.66, appearance: { discSide: 'right', highlightTarget: 'digits', accentColor: '#c8f23d' }, revision: 2, photo: servo.photo } } },
+      { name: 'B01 Servo, revision 3, defaults: the see-through plate', in: { ...servo, design: { study: 'discstudio:b01', rendererBuild: nativeBuild, nativeRevision: 3, accent: '#c8f23d' } },
+        out: { recipe: { disc: servoFacts, flights: [6.5, 5, -1, 2], preset: 'b01', placement: 'panel-default', scale: 0.66, appearance: { discSide: 'right', highlightTarget: 'digits', accentColor: '#c8f23d' }, revision: 3, photo: servo.photo } } },
       { name: 'U04 Servo saved before the fix: no revision, solid plate, nudged', in: { ...servo, design: { study: 'discstudio:u04', rendererBuild: nativeBuild, accent: '#a6edda', nativePlate: 'solid', nativeNudge: { x: 40, y: -20 }, nativeScale: 0.8 } },
-        out: { recipe: { disc: servoFacts, flights: [6.5, 5, -1, 2], preset: 'u04', placement: 'panel-default', scale: 0.8, appearance: { discSide: 'left', highlightTarget: 'tiles', accentColor: '#a6edda', plate: 'solid' }, nudge: { x: 40, y: -20 }, photo: servo.photo } } },
+        out: { recipe: { disc: servoFacts, flights: [6.5, 5, -1, 2], preset: 'u04', placement: 'panel-default', scale: 0.8, appearance: { discSide: 'left', highlightTarget: 'digits', accentColor: '#a6edda', plate: 'solid' }, nudge: { x: 40, y: -20 }, photo: servo.photo } } },
     ] });
   world.implement({ id: 'thro.card.recipe/discstudio', implements: 'thro.card.recipe', description: 'native-cards.mjs nativeCardRecipe: the function the renderer\'s request is built from.',
     origin: { by: 'claude-ed (rung 3)', iters: [28] },

@@ -3,10 +3,19 @@
 // (so the saved prepared-sample workspace is never touched). Each hand-off starts that workspace fresh.
 export const handoffKey = 'thro.photos:handoff';
 export const workspaceKey = 'thro.photos:bag';
+const freshKey = 'thro.photos:fresh';
 
 export function saveBag(discs, { session = sessionStorage, local = localStorage } = {}) {
   session.setItem(handoffKey, JSON.stringify({ schema: 'thro-photo-handoff@1', discs }));
+  session.setItem(freshKey, '1'); // the editor clears the bag's workspace where it keeps it (IndexedDB, idb-storage.mjs)
   local.removeItem(workspaceKey);
+}
+
+/** In the editor, before the photo bag's workspace opens: a new hand-off starts it fresh in whichever storage it uses. */
+export async function takeFreshBag(storage, { session = sessionStorage } = {}) {
+  if (session.getItem(freshKey) !== '1') return;
+  await storage.removeItem?.(workspaceKey);
+  session.removeItem(freshKey);
 }
 
 export function loadBag({ session = sessionStorage } = {}) {
