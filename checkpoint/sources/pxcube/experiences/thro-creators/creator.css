@@ -1,0 +1,21 @@
+/* A ThroCard without a photo: the card's dark plate (name, flight numbers, maker) in the page's signal colour. */
+.tc{min-width:0;container-type:inline-size;display:grid;gap:10px;align-content:start;padding:16px 16px 14px;background:#1d1b19;border-left:4px solid var(--signal);border-radius:3px;color:#f3e8d2;transition:transform .15s}
+.card:hover .tc{transform:translateY(-3px)}
+.tc-name{font:800 min(40px,calc(128cqw / var(--n,6)))/.95 "Jost",sans-serif;letter-spacing:-.01em;text-transform:uppercase;overflow-wrap:normal;hyphens:none}
+.tc-flight{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+.tc-flight i{font:700 clamp(16px,1.5vw,21px)/1 "Jost";font-style:normal;color:var(--signal);background:#2c2a27;border-radius:4px;padding:6px 0;min-width:0;text-align:center}
+.tc-brand{font:700 12px/1.25 "Jost";letter-spacing:.12em;text-transform:uppercase;color:var(--signal);overflow-wrap:anywhere}
+.how a{color:var(--signal2);font-weight:600;text-decoration:none}
+.how a:hover{text-decoration:underline}
+section .sel{display:none;color:var(--signal2);font-weight:700}
+section.is-selected{background:color-mix(in srgb,var(--signal) 18%,var(--paper));border:2px solid var(--ink);border-radius:4px;padding:28px clamp(14px,2vw,28px);margin:24px 0}
+section.is-selected .sel{display:inline}
+.molds{grid-template-columns:1fr}
+.mold-index{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.mold-index a{display:inline-block;padding:6px 11px;border:2px solid var(--ink);border-radius:3px;text-decoration:none;font-weight:600;text-transform:capitalize}
+.mold-index a:hover{background:var(--signal)}
+.grid li,.card{min-width:0}
+/* Long names wrap beside the starburst instead of running under it. */
+.top .inner{max-width:calc(100% - clamp(150px,24vw,380px))}
+.top h1{font-size:clamp(40px,6.4vw,96px);overflow-wrap:normal}
+@media (max-width:760px){.top .inner{max-width:none}}
