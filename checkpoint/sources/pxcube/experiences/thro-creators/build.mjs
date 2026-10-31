@@ -11,6 +11,12 @@ import { fileURLToPath } from 'node:url';
 const root = path.dirname(fileURLToPath(import.meta.url));
 const site = path.resolve(process.argv[2] ?? '');
 if (!process.argv[2] || !fs.existsSync(site)) { console.error('usage: node build.mjs SITE_DIR'); process.exit(2); }
+// Disc photos (photos/fetch.py, a build step before this one): SITE/disc-photos/manifest.json lists each provider's photos.
+// Like map imagery, a page asks its providers in order (creators[slug] or the default, ['manufacturer']) and shows the first
+// photo found, credited on the card ("Photo: Discraft"); with no photo the card is the plate alone.
+const manifestFile = path.join(site, 'disc-photos', 'manifest.json');
+const photos = fs.existsSync(manifestFile) ? JSON.parse(fs.readFileSync(manifestFile, 'utf8')) : { default: [], creators: {}, photos: {} };
+const photoFor = (slug, discId) => { for (const p of photos.creators?.[slug] ?? photos.default ?? []) { const x = photos.photos?.[p]?.[discId]; if (x) return x; } return null; };
 const shopCss = fs.readFileSync(path.join(root, '../thro-shops/page.css'), 'utf8');
 const ownCss = fs.readFileSync(path.join(root, 'creator.css'), 'utf8');
 const LOGO = fs.readFileSync(path.join(root, '../thro/brand/thro-logo.svg'), 'utf8').replace(/ width="\d+" height="\d+"/, '').replace('<svg ', '<svg class="logo" ');
@@ -28,7 +34,7 @@ const signal = slug => SIGNALS[[...slug].reduce((h, c) => (h * 31 + c.charCodeAt
 const burst = `<svg class="burst" viewBox="-100 -100 200 200" aria-hidden="true">${Array.from({ length: 16 }, (_, i) => `<line x1="0" y1="0" x2="${(Math.cos(i * Math.PI / 8) * (i % 2 ? 62 : 96)).toFixed(1)}" y2="${(Math.sin(i * Math.PI / 8) * (i % 2 ? 62 : 96)).toFixed(1)}" stroke="#2b2420" stroke-width="${i % 2 ? 3 : 5}" stroke-linecap="round"/>`).join('')}<circle r="22" fill="#f3e8d2" stroke="#2b2420" stroke-width="5"/><circle r="7" fill="#2b2420"/></svg>`;
 
 function read(slug, html) {
-  const name = brand(unesc((html.match(/<h1 class="page-title">([^<]*)<\/h1>/) ?? [])[1] ?? slug));  // a brand channel goes by its short name (Innova)
+  const rawName = unesc((html.match(/<h1 class="page-title">([^<]*)<\/h1>/) ?? [])[1] ?? slug);
   const sub = (html.match(/<p class="page-sub">([\s\S]*?)<\/p>/) ?? [])[1] ?? '';
   const handle = unesc((sub.match(/<strong>(@[^<]+)<\/strong>/) ?? [])[1] ?? '');
   const about = unesc(sub.replace(/<strong>@[^<]+<\/strong>\s*·\s*/, '').replace(/<[^>]+>/g, '')).trim();
@@ -50,13 +56,18 @@ function read(slug, html) {
   }
   // A brand that is also a channel keeps its mold list (links to /<brand>/<mold>) at the bottom.
   const molds = [...new Set([...html.matchAll(new RegExp(`href="/${slug}/([a-z0-9-]+)"`, 'g'))].map(x => x[1]))];
+  const name = molds.length ? brand(rawName) : rawName;  // only a brand channel goes by its short name (Innova); 'Dang Disc Golf' stays whole
   return { name, handle, about, videos, molds };
 }
 
 function tile(d, v) {
+  const photo = photoFor(v.slug, d.id);
   const label = `${d.maker} ${d.mold}${d.plastic ? `, ${d.plastic}` : ''}`;
   const how = d.sec > 0 ? `<a href="https://www.youtube.com/watch?v=${esc(v.id)}&amp;t=${Math.floor(d.sec)}s" rel="noopener">▶ said at ${clock(d.sec)}</a>` : esc(HOW[d.source] ?? '');
-  const card = `<span class="tc" aria-hidden="true"><span class="tc-name" style="--n:${Math.max(5, d.mold.length)}">${esc(d.mold)}</span>${d.flight.length === 4 ? `<span class="tc-flight">${d.flight.map(n => `<i>${esc(n)}</i>`).join('')}</span>` : ''}<span class="tc-brand">${esc(d.maker)}</span></span>`;
+  // No photo from any provider: an empty ring keeps the row's plates level and says so plainly.
+  const pic = photo ? `<span class="tc-photo"><img src="${esc(photo.src)}" alt="" loading="lazy" width="${photo.w}" height="${photo.h}"></span>` : '<span class="tc-photo none"><span>No maker photo yet</span></span>';
+  const credit = photo ? `<span class="tc-credit">${esc(photo.credit)}${photo.match === 'special-edition' ? ' · special run' : ''}</span>` : '';
+  const card = `${pic}<span class="tc with-photo" aria-hidden="true">${credit}<span class="tc-name" style="--n:${Math.max(5, d.mold.length)}">${esc(d.mold)}</span>${d.flight.length === 4 ? `<span class="tc-flight">${d.flight.map(n => `<i>${esc(n)}</i>`).join('')}</span>` : ''}<span class="tc-brand">${esc(d.maker)}</span></span>`;
   return `<li><a class="card" href="${esc(d.buy || d.page)}" rel="${d.buy ? 'nofollow noopener' : ''}">${card}<span class="what">${d.buy ? 'Get' : 'See'} the ${esc(label)}${d.buy ? ' ↗' : ''}</span></a><span class="how">${how}${how ? ' · ' : ''}<a href="${esc(d.page)}">every video with it</a></span></li>`;
 }
 function section(v, i) {

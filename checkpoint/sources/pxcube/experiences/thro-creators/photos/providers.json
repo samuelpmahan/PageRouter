@@ -1,0 +1,8 @@
+{
+ "about": "Disc photo providers, layered like map imagery: a page asks its providers in order and the first one that has a photo of the disc wins; every photo carries its provider's credit on the card. 'manufacturer' is the default layer for every creator page; a creator who wants a shop's photos adds 'shop:<domain>' ahead of it in creators.",
+ "providers": {
+  "manufacturer": { "label": "{maker}", "credit": "Photo: {maker}", "data": "manufacturer.jsonl", "kinds": ["exact", "stock", "special-edition"] }
+ },
+ "default": ["manufacturer"],
+ "creators": {}
+}
