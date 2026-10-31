@@ -5,26 +5,35 @@
 //   Stage 3: Shadow-Aware ForkJoin (720px Lab, 3 branches + 8-octant arc join + ScopeLive Witness)
 
 import { initialDraft } from './studio/upload-disc-to-shelf/model.js';
-import { enter } from './thro-calculations.mjs';
+import { enter, record } from './thro-calculations.mjs';
 
 // The crop is thro's own (photos.html): Argon's CoarseRimBand + FineRimForkJoin as the registered Calculation thro/crop/live, run
-// off the main thread, then thro/crop/unwarp (one affine map, ellipse -> face-on circle) and thro/crop/cutout. KAN's own detector
-// still runs and its branches stay as alternatives under the stage.
+// off the main thread, then thro/crop/unwarp (one affine map, ellipse -> face-on circle) and thro/crop/cutout.
 const DEG = Math.PI / 180;
 let rimWorker = null; const rimWaiting = new Map(); let rimSeq = 0;
 function rimFit(img, name) {
   rimWorker ??= Object.assign(new Worker(new URL('./rimfit-worker.mjs', import.meta.url), { type: 'module' }), {
-    onmessage: ({ data }) => { const w = rimWaiting.get(data.name); rimWaiting.delete(data.name); if (w) data.error ? w.no(Error(data.error)) : w.ok(data.report); },
+    onmessage: ({ data }) => {
+      const w = rimWaiting.get(data.name);
+      rimWaiting.delete(data.name);
+      if (!w) return;
+      if (data.error) w.no(Error(data.error));
+      else { record(data.report); w.ok(data.report); }
+    },
   });
-  const W = img.naturalWidth || img.width, H = img.naturalHeight || img.height, k = 1024 / Math.max(W, H);
-  const c = Object.assign(document.createElement('canvas'), { width: Math.round(W * k), height: Math.round(H * k) });
+  const W = img.naturalWidth || img.width, H = img.naturalHeight || img.height, k = Math.min(1, 1080 / Math.max(W, H));
+  const c = Object.assign(document.createElement('canvas'), { width: Math.max(16, Math.round(W * k)), height: Math.max(16, Math.round(H * k)) });
   const x = c.getContext('2d', { willReadFrequently: true }); x.drawImage(img, 0, 0, c.width, c.height);
   const data = x.getImageData(0, 0, c.width, c.height).data, key = `${name}#${++rimSeq}`;
   return new Promise((ok, no) => { rimWaiting.set(key, { ok, no }); rimWorker.postMessage({ name: key, width: W, height: H, reference: null, working: { width: c.width, height: c.height, data } }, [data.buffer]); });
 }
-// A crop here is normalised (centre and radii as fractions of the photo's width/height) plus the ellipse's angle in degrees.
-const toPx = (crop, W, H) => ({ cx: crop.centerX * W, cy: crop.centerY * H, rx: Math.max(4, crop.radiusX * W), ry: Math.max(4, crop.radiusY * H), angle: crop.angle || 0 });
-const fromPx = (e, W, H) => ({ centerX: e.cx / W, centerY: e.cy / H, radiusX: e.rx / W, radiusY: e.ry / H, angle: e.angle || 0 });
+
+function resolveEllipsePx(crop, W, H) {
+  if (typeof crop?.cx === 'number' && typeof crop?.rx === 'number') {
+    return { cx: crop.cx, cy: crop.cy, rx: Math.max(4, crop.rx), ry: Math.max(4, crop.ry), angle: crop.angle || 0 };
+  }
+  return { cx: crop.centerX * W, cy: crop.centerY * H, rx: Math.max(4, crop.radiusX * W), ry: Math.max(4, crop.radiusY * H), angle: crop.angle || 0 };
+}
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
@@ -804,16 +813,18 @@ export function detectKanDisc(rgba, width, height) {
     const cy = ell.cy * invS;
     const rx = ell.rx * invS;
     const ry = ell.ry * invS;
-    const rad = (ell.angle || 0) * DEG;
-    const boxRx = Math.hypot(rx * Math.cos(rad), ry * Math.sin(rad));
-    const boxRy = Math.hypot(rx * Math.sin(rad), ry * Math.cos(rad));
+    const angle = +(ell.angle || 0).toFixed(2);
     return {
+      cx: +cx.toFixed(2),
+      cy: +cy.toFixed(2),
+      rx: +rx.toFixed(2),
+      ry: +ry.toFixed(2),
       centerX: clamp(cx / width, 0.05, 0.95),
       centerY: clamp(cy / height, 0.05, 0.95),
-      radiusX: clamp(boxRx / width, 0.05, 0.50),
-      radiusY: clamp(boxRy / height, 0.05, 0.50),
-      angle: +(ell.angle || 0).toFixed(2),
-      foci: computeFoci({ cx, cy, rx, ry, angle: ell.angle || 0 }),
+      radiusX: rx / width,
+      radiusY: ry / height,
+      angle,
+      foci: computeFoci({ cx, cy, rx, ry, angle }),
     };
   };
 
@@ -868,7 +879,7 @@ export async function cropDiscToDataUrl(imageSource, crop, size = 1024) {
   canvas.height = size;
   const ctx = canvas.getContext('2d');
 
-  const ellipse = toPx(crop, srcW, srcH), name = 'added-photo';
+  const ellipse = resolveEllipsePx(crop, srcW, srcH), name = 'added-photo';
   const { matrix } = enter('thro/crop/unwarp', [{ name, ellipse, size }]).items[0];
   ctx.drawImage(enter('thro/crop/cutout', [{ name, img: imageSource, ellipse, size, matrix }]).items[0].canvas, 0, 0);
 
@@ -888,9 +899,9 @@ export async function cropDiscToDataUrl(imageSource, crop, size = 1024) {
 
 // The 10 real Thro-discs test photos for 1-click live pipeline demo testing
 export const KAN_SAMPLE_PHOTOS = Object.freeze([
-  { id: 'IMG_6081', file: './assets/discs/kan-img-6081.jpg', label: 'Stag · iOS Screenshot', moldQuery: 'stag', manufacturer: 'Westside Discs', name: 'Stag', plastic: 'VIP', weight: 173, speed: 8, glide: 6, turn: -1, fade: 2 },
+  { id: 'IMG_6081', file: './assets/discs/kan-img-6081.jpg', label: 'Stag · iOS Screenshot', moldQuery: 'stag', manufacturer: 'Westside', name: 'Stag', plastic: 'VIP', weight: 173, speed: 8, glide: 6, turn: -1, fade: 2 },
   { id: 'IMG_6161', file: './assets/discs/kan-img-6161.jpg', label: 'Putter · Shadow Dipole', moldQuery: 'luna', manufacturer: 'Discraft', name: 'Luna', plastic: 'Jawbreaker', weight: 174, speed: 3, glide: 3, turn: 0, fade: 3 },
-  { id: 'IMG_6162', file: './assets/discs/kan-img-6162.jpg', label: 'Salamander · Tie-Dye', moldQuery: 'leopard', manufacturer: 'Mint Discs', name: 'Salamander', plastic: 'Sublime', weight: 171, speed: 6, glide: 5, turn: -2, fade: 1 },
+  { id: 'IMG_6162', file: './assets/discs/kan-img-6162.jpg', label: 'Salamander · Tie-Dye', moldQuery: 'leopard', manufacturer: 'Mint', name: 'Salamander', plastic: 'Sublime', weight: 171, speed: 6, glide: 5, turn: -2, fade: 1 },
   { id: 'IMG_6163', file: './assets/discs/kan-img-6163.jpg', label: 'Dojo · Spin-Dye Rings', moldQuery: 'buzzz', manufacturer: 'Discraft', name: 'Buzzz', plastic: 'ESP Spin-Dye', weight: 177, speed: 5, glide: 4, turn: -1, fade: 1 },
   { id: 'IMG_6164', file: './assets/discs/kan-img-6164.jpg', label: 'Defy · Dark Gyro Overmold', moldQuery: 'defy', manufacturer: 'Axiom', name: 'Defy', plastic: 'Fission', weight: 164, speed: 11, glide: 5, turn: -1, fade: 3 },
   { id: 'IMG_6165', file: './assets/discs/kan-img-6165.jpg', label: 'Servo · White Gyro on Fleece', moldQuery: 'servo', manufacturer: 'MVP', name: 'Servo', plastic: 'Neutron', weight: 172, speed: 6.5, glide: 5, turn: -1, fade: 2 },
@@ -931,7 +942,7 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
       <div class="kan-modal-grid">
         <section class="kan-stage-col">
           <div class="kan-canvas-wrap">
-            <canvas id="kan-stage-canvas" width="520" height="520"></canvas>
+            <canvas id="kan-stage-canvas" width="640" height="640"></canvas>
           </div>
           <div id="kan-witness-badge" class="kan-witness-badge">Pick a sample or upload a photo</div>
           <div class="kan-stage-controls">
@@ -1023,12 +1034,14 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
 
   let loadedImg = null;
   let sourceName = 'disc-photo.jpg';
-  let kanResult = null;
-  let activeCrop = null;
-  let activeCandidateId = 'joined-outer';
+  let candidates = [];
+  let innerRingEllipse = null;
+  let activeEllipse = null;
+  let activeCandidateId = 'rim-fit';
   let selectedSeedAddress = 'ds.px.seed.mvp--servo';
   let dragMode = null; // 'move' | 'resize'
   let dragStart = null;
+  let loadGeneration = 0;
 
   function renderSeedMatches(query = '') {
     const matches = workspace.model.experience.seedOptions(query).slice(0, 8);
@@ -1060,7 +1073,7 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
   }
 
   function paintStage() {
-    if (!loadedImg || !activeCrop) return;
+    if (!loadedImg || !activeEllipse) return;
     const sw = loadedImg.naturalWidth || loadedImg.width;
     const sh = loadedImg.naturalHeight || loadedImg.height;
     const cw = stageCanvas.width, ch = stageCanvas.height;
@@ -1070,13 +1083,14 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
     const dw = sw * scale, dh = sh * scale;
     const ox = (cw - dw) * 0.5, oy = (ch - dh) * 0.5;
 
+    stageCtx.imageSmoothingQuality = 'high';
     stageCtx.drawImage(loadedImg, ox, oy, dw, dh);
 
-    const cx = ox + activeCrop.centerX * dw;
-    const cy = oy + activeCrop.centerY * dh;
-    const rx = activeCrop.radiusX * dw;
-    const ry = activeCrop.radiusY * dh;
-    const tilt = (activeCrop.angle || 0) * DEG, ct = Math.cos(tilt), st = Math.sin(tilt);
+    const cx = ox + activeEllipse.cx * scale;
+    const cy = oy + activeEllipse.cy * scale;
+    const rx = activeEllipse.rx * scale;
+    const ry = activeEllipse.ry * scale;
+    const tilt = (activeEllipse.angle || 0) * DEG, ct = Math.cos(tilt), st = Math.sin(tilt);
 
     // Darken exterior outside active crop ellipse
     stageCtx.save();
@@ -1088,11 +1102,11 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
     stageCtx.restore();
 
     // Draw dashed yellow inner ring if concentric dual-ring was detected
-    if (kanResult?.innerCrop && activeCandidateId !== 'flight-plate') {
-      const ic = kanResult.innerCrop;
+    if (innerRingEllipse && activeCandidateId !== 'flight-plate') {
+      const ic = innerRingEllipse;
       stageCtx.save();
       stageCtx.beginPath();
-      stageCtx.ellipse(ox + ic.centerX * dw, oy + ic.centerY * dh, ic.radiusX * dw, ic.radiusY * dh, (ic.angle || 0) * DEG, 0, Math.PI * 2);
+      stageCtx.ellipse(ox + ic.cx * scale, oy + ic.cy * scale, ic.rx * scale, ic.ry * scale, (ic.angle || 0) * DEG, 0, Math.PI * 2);
       stageCtx.setLineDash([5, 5]);
       stageCtx.lineWidth = 1.75;
       stageCtx.strokeStyle = '#ffd166cc';
@@ -1100,17 +1114,17 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
       stageCtx.restore();
     }
 
-    // Draw the active outer crop ellipse (thro orange) + 4 cardinal handles
+    // Draw the active outer crop ellipse (thro orange) + 4 semi-axis handles along rotated axes
     stageCtx.save();
     stageCtx.beginPath();
     stageCtx.ellipse(cx, cy, rx, ry, tilt, 0, Math.PI * 2);
-    stageCtx.lineWidth = 2.5;
+    stageCtx.lineWidth = 2.75;
     stageCtx.strokeStyle = '#e0632e';
     stageCtx.stroke();
 
     for (const [hx, hy] of [[cx + rx * ct, cy + rx * st], [cx - rx * ct, cy - rx * st], [cx - ry * st, cy + ry * ct], [cx + ry * st, cy - ry * ct]]) {
       stageCtx.beginPath();
-      stageCtx.arc(hx, hy, 5, 0, Math.PI * 2);
+      stageCtx.arc(hx, hy, 5.5, 0, Math.PI * 2);
       stageCtx.fillStyle = '#e1d6c2';
       stageCtx.fill();
       stageCtx.lineWidth = 2;
@@ -1119,85 +1133,119 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
     }
     stageCtx.restore();
 
-    // Paint live circular cutout preview
+    // Paint live circular cutout preview using the exact same pixel-space ellipse + unwarp matrix as save
     const cSize = cutoutCanvas.width;
     cutoutCtx.clearRect(0, 0, cSize, cSize);
     cutoutCtx.save();
-    const e = toPx(activeCrop, sw, sh), { matrix } = enter('thro/crop/unwarp', [{ name: 'preview', ellipse: e, size: cSize }]).items[0];
+    const { matrix } = enter('thro/crop/unwarp', [{ name: 'preview', ellipse: activeEllipse, size: cSize }]).items[0];
     cutoutCtx.imageSmoothingQuality = 'high';
     cutoutCtx.setTransform(...matrix);
     cutoutCtx.beginPath();
-    cutoutCtx.ellipse(e.cx, e.cy, e.rx, e.ry, e.angle * DEG, 0, Math.PI * 2);
+    cutoutCtx.ellipse(activeEllipse.cx, activeEllipse.cy, activeEllipse.rx, activeEllipse.ry, (activeEllipse.angle || 0) * DEG, 0, Math.PI * 2);
     cutoutCtx.clip();
     cutoutCtx.drawImage(loadedImg, 0, 0);
     cutoutCtx.restore();
   }
 
   function renderCandidatePills() {
-    if (!kanResult) return;
-    candidatePills.innerHTML = kanResult.candidates.map((cand) => `
+    candidatePills.innerHTML = candidates.map((cand) => `
       <button type="button" class="kan-cand-pill ${cand.id === activeCandidateId ? 'is-active' : ''}" data-cand-id="${cand.id}">
         ${cand.label}
       </button>
     `).join('');
     candidatePills.querySelectorAll('[data-cand-id]').forEach((btn) => {
       btn.onclick = () => {
-        const found = kanResult.candidates.find((c) => c.id === btn.dataset.candId);
+        const found = candidates.find((c) => c.id === btn.dataset.candId);
         if (!found) return;
         activeCandidateId = found.id;
-        activeCrop = structuredClone(found.crop);
+        activeEllipse = structuredClone(found.ellipse);
         renderCandidatePills();
         paintStage();
       };
     });
   }
 
-  async function processImageElement(img, fname, preset = null) {
+  async function processImageElement(img, fname, preset = null, gen = loadGeneration) {
     loadedImg = img;
     sourceName = fname;
+    saveBtn.disabled = true;
     witnessBadge.textContent = 'Finding the rim…';
     witnessBadge.className = 'kan-witness-badge';
 
     const sw = img.naturalWidth || img.width;
     const sh = img.naturalHeight || img.height;
-    const decodeMax = 960;
-    const dScale = Math.min(1, decodeMax / Math.max(sw, sh));
-    const dw = Math.max(16, Math.round(sw * dScale));
-    const dh = Math.max(16, Math.round(sh * dScale));
-    const off = document.createElement('canvas');
-    off.width = dw; off.height = dh;
-    const octx = off.getContext('2d', { willReadFrequently: true });
-    octx.drawImage(img, 0, 0, dw, dh);
-    const rgba = octx.getImageData(0, 0, dw, dh).data;
 
-    const detected = detectKanDisc(rgba, dw, dh);
-    let fit = null;
+    let liveItem = null;
+    let livePassed = false;
     try {
       const report = await rimFit(img, fname || 'photo');
-      const item = report.items?.[0];
-      if (item?.output) fit = { crop: fromPx(item.output, sw, sh), passed: ['G1_LivePriorBounds', 'G2_LiveZeroBandClip', 'G3_LiveOctantSupport'].every(g => report.guarantees?.[g]?.passed !== false), ms: item.ms };
-    } catch (error) { console.warn('rim fit failed; using the KAN detector', error); }
-    if (loadedImg !== img) return; // another photo was picked while this one was fitting
-    kanResult = detected;
-    if (fit) kanResult.candidates = [{ id: 'rim-fit', label: 'Rim fit', crop: fit.crop }, ...kanResult.candidates];
-    activeCandidateId = kanResult.candidates[0].id;
-    activeCrop = structuredClone(fit ? fit.crop : kanResult.crop);
+      liveItem = report.items?.[0] ?? null;
+      if (liveItem?.output) {
+        livePassed = ['G1_LivePriorBounds', 'G2_LiveZeroBandClip', 'G3_LiveOctantSupport'].every(
+          (g) => report.guarantees?.[g]?.passed !== false
+        );
+      }
+    } catch (error) {
+      console.warn('rim fit worker unavailable; falling back to synchronous detector', error);
+    }
+    if (gen !== loadGeneration || loadedImg !== img) return;
 
-    const w = kanResult.witness;
-    // Plain words for everyone; the solver's numbers only with ?dev.
-    const dev = new URLSearchParams(location.search).has('dev');
-    const found = fit ? fit.passed : w.passed;
-    const parts = !dev ? [found ? '✓ Rim found' : 'Check the rim, then drag it to fit'] : [
-      fit ? `thro/crop/live ${fit.passed ? 'PASS' : 'CHECK'} · ${Math.round(fit.ms)} ms` : 'thro/crop/live unavailable',
-      w.passed ? '✓ ScopeLive PASS' : '⚠ Manual review',
-      `octants ${Math.round(w.octantSupport * 8)}/8`,
-      `band ${(w.bandUsage * 100).toFixed(1)}%`,
-      w.hasConcentricOvermold ? 'Gyro dual-ring' : null,
-      w.isLetterboxed ? `Letterbox stripped (${w.letterboxBars})` : null,
-      `${w.ms} ms`,
-    ].filter(Boolean);
-    witnessBadge.textContent = parts.join(' · ');
-    witnessBadge.classList.toggle('is-pass', found);
+    if (liveItem?.output) {
+      const nextCandidates = [{ id: 'rim-fit', label: 'Rim fit', ellipse: structuredClone(liveItem.output) }];
+      if (liveItem.innerRimRing) {
+        nextCandidates.push({ id: 'flight-plate', label: 'Flight plate', ellipse: structuredClone(liveItem.innerRimRing) });
+      }
+      const branchLabels = [
+        ['fine/v1-band-snap', 'v1-band-snap', 'Ignore shadow'],
+        ['fine/v2-overmold-outer', 'v2-overmold-outer', 'Overmold edge'],
+        ['fine/v3-polar-dp-band', 'v3-polar-dp-band', 'Traced edge'],
+      ];
+      for (const [key, id, label] of branchLabels) {
+        const bEll = liveItem.branches?.[key];
+        if (bEll) nextCandidates.push({ id, label, ellipse: structuredClone(bEll) });
+      }
+      candidates = nextCandidates;
+      innerRingEllipse = liveItem.innerRimRing ? structuredClone(liveItem.innerRimRing) : null;
+
+      const dev = new URLSearchParams(location.search).has('dev');
+      const lw = liveItem.liveWitness || {};
+      const parts = !dev
+        ? [livePassed ? '✓ Rim found' : 'Check the rim, then drag it to fit']
+        : [
+            `thro/crop/live ${livePassed ? 'PASS' : 'CHECK'} · ${Math.round(liveItem.ms || 0)} ms`,
+            `octants ${Math.round((lw.octantSupport || 0) * 8)}/8`,
+            `band ${(lw.maxBandUsagePct ?? 0).toFixed(1)}%`,
+            liveItem.innerRimRing ? 'Gyro dual-ring' : null,
+            lw.letterboxDetected ? 'Letterbox stripped' : null,
+          ].filter(Boolean);
+      witnessBadge.textContent = parts.join(' · ');
+      witnessBadge.classList.toggle('is-pass', livePassed);
+    } else {
+      const decodeMax = 960;
+      const dScale = Math.min(1, decodeMax / Math.max(sw, sh));
+      const dw = Math.max(16, Math.round(sw * dScale));
+      const dh = Math.max(16, Math.round(sh * dScale));
+      const off = document.createElement('canvas');
+      off.width = dw; off.height = dh;
+      const octx = off.getContext('2d', { willReadFrequently: true });
+      octx.drawImage(img, 0, 0, dw, dh);
+      const rgba = octx.getImageData(0, 0, dw, dh).data;
+      const detected = detectKanDisc(rgba, dw, dh);
+      candidates = detected.candidates.map((c) => ({
+        id: c.id,
+        label: c.label,
+        ellipse: resolveEllipsePx(c.crop, sw, sh),
+      }));
+      innerRingEllipse = detected.innerCrop ? resolveEllipsePx(detected.innerCrop, sw, sh) : null;
+      const dev = new URLSearchParams(location.search).has('dev');
+      witnessBadge.textContent = !dev
+        ? (detected.witness.passed ? '✓ Rim found' : 'Check the rim, then drag it to fit')
+        : `ScopeLive ${detected.witness.passed ? 'PASS' : 'CHECK'} · ${detected.witness.ms} ms`;
+      witnessBadge.classList.toggle('is-pass', detected.witness.passed);
+    }
+
+    activeCandidateId = candidates[0].id;
+    activeEllipse = structuredClone(candidates[0].ellipse);
 
     if (preset) {
       moldSearch.value = preset.moldQuery;
@@ -1212,6 +1260,30 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
       turnInput.value = String(preset.turn);
       fadeInput.value = String(preset.fade);
       renderSeedMatches(preset.moldQuery);
+    } else {
+      const stem = String(fname || '').replace(/\.[^.]+$/, '').replace(/[_-]+/g, ' ').trim();
+      const tokenMatches = stem && !/^img\s*\d+$/i.test(stem) ? workspace.model.experience.seedOptions(stem) : [];
+      if (tokenMatches.length) {
+        selectedSeedAddress = tokenMatches[0].address;
+        const seed = tokenMatches[0].seed;
+        moldSearch.value = stem;
+        mfgInput.value = seed.manufacturer || '';
+        nameInput.value = seed.name || '';
+        plasticInput.value = '';
+        weightInput.value = '';
+        if (seed.speed != null) speedInput.value = String(seed.speed);
+        if (seed.glide != null) glideInput.value = String(seed.glide);
+        if (seed.turn != null) turnInput.value = String(seed.turn);
+        if (seed.fade != null) fadeInput.value = String(seed.fade);
+        renderSeedMatches(stem);
+      } else {
+        moldSearch.value = '';
+        mfgInput.value = '';
+        nameInput.value = '';
+        plasticInput.value = '';
+        weightInput.value = '';
+        renderSeedMatches('');
+      }
     }
 
     renderCandidatePills();
@@ -1222,50 +1294,74 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
   async function loadSamplePhoto(idx) {
     const preset = KAN_SAMPLE_PHOTOS[idx];
     if (!preset) return;
+    const gen = ++loadGeneration;
     dialog.querySelectorAll('[data-sample-idx]').forEach((b, i) => b.classList.toggle('is-active', i === idx));
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.src = preset.file;
     await img.decode();
-    await processImageElement(img, `${preset.id}.jpg`, preset);
+    if (gen !== loadGeneration) return;
+    await processImageElement(img, `${preset.id}.jpg`, preset, gen);
   }
 
-  // Pointer drag on stage canvas: inside ring = pan, near rim = resize
-  function stageCoords(e) {
+  // Isotropic natural-pixel pointer coordinates + tilt-aware local ellipse norm
+  function stageImageCoords(e) {
     const rect = stageCanvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left) * (stageCanvas.width / rect.width);
-    const y = (e.clientY - rect.top) * (stageCanvas.height / rect.height);
+    const sx = (e.clientX - rect.left) * (stageCanvas.width / rect.width);
+    const sy = (e.clientY - rect.top) * (stageCanvas.height / rect.height);
     const sw = loadedImg.naturalWidth || loadedImg.width;
     const sh = loadedImg.naturalHeight || loadedImg.height;
     const scale = Math.min(stageCanvas.width / sw, stageCanvas.height / sh);
-    const dw = sw * scale, dh = sh * scale;
-    const ox = (stageCanvas.width - dw) * 0.5, oy = (stageCanvas.height - dh) * 0.5;
-    return { nx: (x - ox) / dw, ny: (y - oy) / dh };
+    const ox = (stageCanvas.width - sw * scale) * 0.5;
+    const oy = (stageCanvas.height - sh * scale) * 0.5;
+    return { ix: (sx - ox) / scale, iy: (sy - oy) / scale, sw, sh };
+  }
+
+  function ellipseLocalNorm(ix, iy, ell) {
+    const rad = (ell.angle || 0) * DEG;
+    const ct = Math.cos(rad), st = Math.sin(rad);
+    const dx = ix - ell.cx, dy = iy - ell.cy;
+    const u = dx * ct + dy * st;
+    const v = -dx * st + dy * ct;
+    return Math.hypot(u / Math.max(4, ell.rx), v / Math.max(4, ell.ry));
+  }
+
+  function scaleEllipseOnRim(ell, factor, sw, sh) {
+    const minRatio = (Math.min(sw, sh) * 0.06) / Math.max(4, Math.min(ell.rx, ell.ry));
+    const maxRatio = (Math.max(sw, sh) * 0.65) / Math.max(4, Math.max(ell.rx, ell.ry));
+    const r = clamp(factor, minRatio, maxRatio);
+    return {
+      ...ell,
+      rx: +(ell.rx * r).toFixed(2),
+      ry: +(ell.ry * r).toFixed(2),
+    };
   }
 
   stageCanvas.onpointerdown = (e) => {
-    if (!loadedImg || !activeCrop) return;
+    if (!loadedImg || !activeEllipse) return;
     stageCanvas.setPointerCapture(e.pointerId);
-    const { nx, ny } = stageCoords(e);
-    const dx = (nx - activeCrop.centerX) / activeCrop.radiusX;
-    const dy = (ny - activeCrop.centerY) / activeCrop.radiusY;
-    const normR = Math.hypot(dx, dy);
-    dragMode = normR >= 0.82 ? 'resize' : 'move';
-    dragStart = { nx, ny, crop: structuredClone(activeCrop) };
+    const { ix, iy } = stageImageCoords(e);
+    const normR = ellipseLocalNorm(ix, iy, activeEllipse);
+    dragMode = normR >= 0.85 ? 'resize' : 'move';
+    dragStart = { ix, iy, normR: Math.max(0.08, normR), ell: structuredClone(activeEllipse) };
   };
 
   stageCanvas.onpointermove = (e) => {
-    if (!dragMode || !dragStart || !activeCrop) return;
-    const { nx, ny } = stageCoords(e);
+    if (!loadedImg || !activeEllipse) return;
+    const { ix, iy, sw, sh } = stageImageCoords(e);
+    if (!dragMode || !dragStart) {
+      const hoverNorm = ellipseLocalNorm(ix, iy, activeEllipse);
+      stageCanvas.style.cursor = hoverNorm >= 0.85 && hoverNorm <= 1.18 ? 'nwse-resize' : 'grab';
+      return;
+    }
     if (dragMode === 'move') {
-      activeCrop.centerX = clamp(dragStart.crop.centerX + (nx - dragStart.nx), 0.08, 0.92);
-      activeCrop.centerY = clamp(dragStart.crop.centerY + (ny - dragStart.ny), 0.08, 0.92);
+      activeEllipse.cx = +clamp(dragStart.ell.cx + (ix - dragStart.ix), sw * 0.06, sw * 0.94).toFixed(2);
+      activeEllipse.cy = +clamp(dragStart.ell.cy + (iy - dragStart.iy), sh * 0.06, sh * 0.94).toFixed(2);
     } else {
-      const dist0 = Math.max(0.03, Math.hypot(dragStart.nx - dragStart.crop.centerX, dragStart.ny - dragStart.crop.centerY));
-      const dist1 = Math.max(0.03, Math.hypot(nx - dragStart.crop.centerX, ny - dragStart.crop.centerY));
-      const ratio = dist1 / dist0;
-      activeCrop.radiusX = clamp(dragStart.crop.radiusX * ratio, 0.06, 0.50);
-      activeCrop.radiusY = clamp(dragStart.crop.radiusY * ratio, 0.06, 0.50);
+      const curNorm = Math.max(0.08, ellipseLocalNorm(ix, iy, dragStart.ell));
+      const scaled = scaleEllipseOnRim(dragStart.ell, curNorm / dragStart.normR, sw, sh);
+      activeEllipse.rx = scaled.rx;
+      activeEllipse.ry = scaled.ry;
     }
     paintStage();
   };
@@ -1277,18 +1373,18 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
 
   dialog.querySelectorAll('[data-nudge]').forEach((btn) => {
     btn.onclick = () => {
-      if (!activeCrop) return;
-      const factor = 1 + Number(btn.dataset.nudge);
-      activeCrop.radiusX = clamp(activeCrop.radiusX * factor, 0.06, 0.50);
-      activeCrop.radiusY = clamp(activeCrop.radiusY * factor, 0.06, 0.50);
+      if (!loadedImg || !activeEllipse) return;
+      const sw = loadedImg.naturalWidth || loadedImg.width;
+      const sh = loadedImg.naturalHeight || loadedImg.height;
+      activeEllipse = scaleEllipseOnRim(activeEllipse, 1 + Number(btn.dataset.nudge), sw, sh);
       paintStage();
     };
   });
 
   dialog.querySelector('#kan-reset-crop').onclick = () => {
-    if (!kanResult) return;
-    activeCandidateId = kanResult.candidates[0].id;
-    activeCrop = structuredClone(kanResult.crop);
+    if (!candidates.length) return;
+    activeCandidateId = candidates[0].id;
+    activeEllipse = structuredClone(candidates[0].ellipse);
     renderCandidatePills();
     paintStage();
   };
@@ -1300,13 +1396,15 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
   dialog.querySelector('#kan-file-input').onchange = async (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    const gen = ++loadGeneration;
     dialog.querySelectorAll('[data-sample-idx]').forEach((b) => b.classList.remove('is-active'));
     const url = URL.createObjectURL(file);
     try {
       const img = new Image();
       img.src = url;
       await img.decode();
-      await processImageElement(img, file.name, null);
+      if (gen !== loadGeneration) return;
+      await processImageElement(img, file.name, null, gen);
     } finally {
       URL.revokeObjectURL(url);
     }
@@ -1320,12 +1418,12 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
   };
 
   saveBtn.onclick = async () => {
-    if (!loadedImg || !activeCrop) return;
+    if (!loadedImg || !activeEllipse) return;
     errorBox.hidden = true;
     saveBtn.disabled = true;
     saveBtn.textContent = 'Cropping & saving to shelf…';
     try {
-      const { dataUrl, sha256, width, height } = await cropDiscToDataUrl(loadedImg, activeCrop, 1024);
+      const { dataUrl, sha256, width, height } = await cropDiscToDataUrl(loadedImg, activeEllipse, 1024);
       const mfg = mfgInput.value.trim() || 'Custom';
       const moldName = nameInput.value.trim() || 'Disc';
       const plastic = plasticInput.value.trim();
@@ -1370,9 +1468,9 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
       };
 
       const newAddress = await workspace.saveDisc(draft, depiction, { photo: depiction });
+      await onDiscSaved?.(newAddress, `${mfg} ${moldName}`);
       dialog.close();
       dialog.remove();
-      await onDiscSaved?.(newAddress, `${mfg} ${moldName}`);
     } catch (err) {
       errorBox.textContent = err?.message || String(err);
       errorBox.hidden = false;

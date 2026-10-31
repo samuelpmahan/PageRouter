@@ -192,7 +192,7 @@ html.console-map .workspace-heading .mode-nav{display:grid;grid-template-columns
 /* + Add a disc photo (Argon's KAN 2.0 auto-crop), in the editor's paper/ink/orange */
 .add-disc-button{width:100%;margin-top:12px;border:1.5px dashed #b49c74;background:#f3e8d2;color:var(--ink);font-size:12px;font-weight:700;padding:10px 12px;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:6px}
 .add-disc-button:hover:not(:disabled){background:#ead9b8;border-color:var(--accent)}
-.kan-upload-dialog{border:1.5px solid #2b2420;border-radius:18px;background:#f8f0df;color:var(--ink);padding:0;width:min(1120px,95vw);max-height:94vh;box-shadow:0 28px 80px #2b242066}
+.kan-upload-dialog{border:1.5px solid #2b2420;border-radius:18px;background:#f8f0df;color:var(--ink);padding:0;width:min(1120px,95vw);max-height:94vh;overflow-y:auto;box-shadow:0 28px 80px #2b242066}
 .kan-upload-dialog::backdrop{background:rgba(43,36,32,.52);backdrop-filter:blur(3px)}
 .kan-modal-shell{padding:18px 22px;display:flex;flex-direction:column;gap:12px}
 .kan-modal-header{display:flex;justify-content:space-between;align-items:center;gap:12px}
@@ -204,8 +204,8 @@ html.console-map .workspace-heading .mode-nav{display:grid;grid-template-columns
 .kan-upload-chip{margin-left:auto;border-color:#2b2420;background:var(--accent);color:var(--ink);font-weight:700}
 .kan-modal-grid{display:grid;grid-template-columns:minmax(340px,1.08fr) minmax(300px,.92fr);gap:18px;align-items:start}
 .kan-stage-col{display:flex;flex-direction:column;gap:10px}
-.kan-canvas-wrap{position:relative;border:1px solid #cdb995;border-radius:13px;overflow:hidden;background:#e1d6c2;display:grid;place-items:center;aspect-ratio:1 / 1;max-height:54vh;margin:0 auto;width:100%}
-#kan-stage-canvas{width:100%;height:100%;object-fit:contain;touch-action:none;cursor:grab}
+.kan-canvas-wrap{position:relative;border:1px solid #cdb995;border-radius:13px;overflow:hidden;background:#e1d6c2;aspect-ratio:1 / 1;width:min(100%,48vh,480px);margin:0 auto;display:block}
+#kan-stage-canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}
 #kan-stage-canvas:active{cursor:grabbing}
 .kan-witness-badge{padding:7px 11px;border-radius:9px;background:#f3e8d2;border:1px solid #cdb995;font-size:12px;font-weight:600;color:var(--muted)}
 .kan-witness-badge.is-pass{border-color:#1f6f68;color:#1f6f68}
@@ -228,7 +228,7 @@ html.console-map .workspace-heading .mode-nav{display:grid;grid-template-columns
 .kan-form-col input{min-height:38px;padding:7px 9px;font-size:12.5px}
 .kan-error-msg{padding:8px 10px;border-radius:8px;border:1px solid #c4502b;background:#f6dccd;color:#8a2f14;font-size:11px}
 .kan-modal-actions .button-primary{width:100%;min-height:44px;font-size:13px;color:var(--ink)}
-@media(max-width:820px){.kan-modal-grid{grid-template-columns:1fr}.kan-canvas-wrap{max-height:38vh}}
+@media(max-width:820px){.kan-modal-grid{grid-template-columns:1fr}.kan-canvas-wrap{width:min(100%,38vh,360px)}}
 /* Your own disc: the photos page, from the shelf. */
 .disc-add{text-decoration:none;border-style:dashed}
 .disc-add .disc-thumb{display:grid;place-items:center}

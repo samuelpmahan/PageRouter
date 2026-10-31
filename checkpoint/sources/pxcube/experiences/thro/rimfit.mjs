@@ -69,7 +69,8 @@ function getLab(photo, maxDim = 720) {
   const sWork = Math.min(1, maxDim / Math.max(work.width, work.height));
   const w = Math.max(16, Math.round(work.width * sWork));
   const h = Math.max(16, Math.round(work.height * sWork));
-  const s = w / photo.width;
+  const sx = w / photo.width, sy = h / photo.height;
+  const s = 0.5 * (sx + sy);
   const L = new Float64Array(w * h);
   const A = new Float64Array(w * h);
   const B = new Float64Array(w * h);
@@ -107,7 +108,7 @@ function getLab(photo, maxDim = 720) {
   }
   const letterboxDetected = yTopValid > Math.floor(h * 0.04) || (h - 1 - yBotValid) > Math.floor(h * 0.08);
   const out = {
-    w, h, s,
+    w, h, s, sx, sy,
     yTopValid: letterboxDetected ? yTopValid : 0,
     yBotValid: letterboxDetected ? yBotValid : h - 1,
     letterboxDetected,
@@ -120,8 +121,8 @@ function getLab(photo, maxDim = 720) {
 }
 
 function labAt(L, x, y) {
-  const xc = Math.max(0, Math.min(L.w - 1.001, x));
-  const yc = Math.max(0, Math.min(L.h - 1.001, y));
+  const xc = Math.max(0, Math.min(L.w - 1.001, x - 0.5));
+  const yc = Math.max(0, Math.min(L.h - 1.001, y - 0.5));
   const x0 = Math.floor(xc), y0 = Math.floor(yc), fx = xc - x0, fy = yc - y0;
   const i = y0 * L.w + x0;
   return [
@@ -616,12 +617,12 @@ function runCoarseRimBand(photo) {
   }
 
   const fitted2 = chosenPts.length >= 18 ? fitEllipseRobust(chosenPts, seed2, 4, 0.86) : seed2;
-  const invS = 1 / L2.s;
+  const invSx2 = 1 / L2.sx, invSy2 = 1 / L2.sy, invS2 = 1 / L2.s;
   const toSource = (e) => ({
-    cx: +(e.cx * invS).toFixed(2),
-    cy: +(e.cy * invS).toFixed(2),
-    rx: +(e.rx * invS).toFixed(2),
-    ry: +(e.ry * invS).toFixed(2),
+    cx: +(e.cx * invSx2).toFixed(2),
+    cy: +(e.cy * invSy2).toFixed(2),
+    rx: +(e.rx * invS2).toFixed(2),
+    ry: +(e.ry * invS2).toFixed(2),
     angle: +e.angle.toFixed(2),
   });
   const ell = toSource(fitted2);
@@ -710,7 +711,7 @@ function scoreCandidateArcs(L, eSeed, candEll, extProto) {
   return { arcScores, arcRawSteps, arcBgGain, octantSupport, arcPoints, totalScore, meanR };
 }
 
-function branchBandSnap(L, eSeed, discProto, extProto, bandLoFrac = 0.92) {
+function branchBandSnap(L, eSeed, discProto, extProto, bandLoFrac = 0.92, hasConcentricOvermold = false) {
   const sep = Math.max(4, labChromaDist(discProto, extProto));
   const pts = [];
   const RAYS = 180;
@@ -723,7 +724,11 @@ function branchBandSnap(L, eSeed, discProto, extProto, bandLoFrac = 0.92) {
       rayBgList.push(labAt(L, xb, yb));
     }
     const localBg = medianLab(rayBgList);
-    const localRimIn = labAt(L, eSeed.cx + 0.955 * r0 * ux, eSeed.cy + 0.955 * r0 * uy);
+    const rimSamples = [0.925, 0.942, 0.958].map((f) => labAt(L, eSeed.cx + f * r0 * ux, eSeed.cy + f * r0 * uy));
+    const minRimSample = rimSamples.reduce((best, c) => (c[0] < best[0] ? c : best), rimSamples[0]);
+    const medRimSample = medianLab(rimSamples);
+    const isDarkRim = minRimSample[0] < 36 && localBg[0] > minRimSample[0] + 10;
+    const localRimIn = isDarkRim ? minRimSample : medRimSample;
 
     const prof = [];
     let maxRReached = 0;
@@ -737,8 +742,12 @@ function branchBandSnap(L, eSeed, discProto, extProto, bandLoFrac = 0.92) {
     let last = -1;
     let bgRun = 0;
     for (let i = 0; i < prof.length; i++) {
-      const dDisc = Math.min(labChromaDist(prof[i][1], discProto), labChromaDist(prof[i][1], localRimIn));
-      if (dDisc < shadowAwareBgDist(prof[i][1], localBg)) {
+      const pxLab = prof[i][1];
+      const darkRimEscaped = isDarkRim && pxLab[0] > localRimIn[0] + 9.5;
+      const dDisc = isDarkRim
+        ? labChromaDist(pxLab, localRimIn)
+        : Math.min(labChromaDist(pxLab, discProto), labChromaDist(pxLab, localRimIn));
+      if (!darkRimEscaped && dDisc < shadowAwareBgDist(pxLab, localBg)) {
         last = i;
         bgRun = 0;
       } else {
@@ -749,13 +758,13 @@ function branchBandSnap(L, eSeed, discProto, extProto, bandLoFrac = 0.92) {
     if (last < 1 || last >= prof.length - 2) continue;
     const grad = labChromaDist(prof[Math.max(0, last - 2)][1], prof[Math.min(prof.length - 1, last + 2)][1]);
     if (grad < Math.max(3.5, 0.14 * sep)) continue;
-    const r = prof[last][0] + 0.2;
+    const r = prof[last][0];
     pts.push([eSeed.cx + r * ux, eSeed.cy + r * uy]);
   }
   return fitEllipseRobust(pts, eSeed, 4, 0.86);
 }
 
-function branchOvermoldOuter(L, eSeed, discProto, extProto, bandLoFrac = 0.92) {
+function branchOvermoldOuter(L, eSeed, discProto, extProto, bandLoFrac = 0.92, hasConcentricOvermold = false) {
   const pts = [];
   const RAYS = 180;
   for (let k = 0; k < RAYS; k++) {
@@ -767,6 +776,10 @@ function branchOvermoldOuter(L, eSeed, discProto, extProto, bandLoFrac = 0.92) {
       rayBgList.push(labAt(L, xb, yb));
     }
     const localBg = medianLab(rayBgList);
+    const rimSamples = [0.925, 0.942, 0.958].map((f) => labAt(L, eSeed.cx + f * r0 * ux, eSeed.cy + f * r0 * uy));
+    const minRimSample = rimSamples.reduce((best, c) => (c[0] < best[0] ? c : best), rimSamples[0]);
+    const isDarkRim = minRimSample[0] < 36 && localBg[0] > minRimSample[0] + 10;
+    const localRimIn = isDarkRim ? minRimSample : medianLab(rimSamples);
 
     const prof = [];
     let maxRReached = 0;
@@ -786,7 +799,8 @@ function branchOvermoldOuter(L, eSeed, discProto, extProto, bandLoFrac = 0.92) {
       if (grads[i] >= 0.42 * top && grads[i] >= grads[i - 1] && grads[i] >= grads[i + 1]) {
         const dIn = shadowAwareBgDist(prof[i - 2][1], localBg);
         const dOut = shadowAwareBgDist(prof[i + 2][1], localBg);
-        if (dIn > dOut + 2.5 && dIn >= 5.5) {
+        const rimOk = !isDarkRim || prof[i - 2][1][0] <= localRimIn[0] + 9.5;
+        if (dIn > dOut + 2.5 && dIn >= 5.5 && rimOk) {
           pick = i;
           break;
         }
@@ -800,7 +814,7 @@ function branchOvermoldOuter(L, eSeed, discProto, extProto, bandLoFrac = 0.92) {
   return fitEllipseRobust(pts, eSeed, 4, 0.86);
 }
 
-function branchPolarDpBand(L, eSeed, discProto, extProto, bandLoFrac = 0.92) {
+function branchPolarDpBand(L, eSeed, discProto, extProto, bandLoFrac = 0.92, hasConcentricOvermold = false) {
   const NA = 180, NR = 64, lo = bandLoFrac, hi = 1.075;
   const rel = Array.from({ length: NR }, (_, k) => lo + ((hi - lo) * k) / (NR - 1));
   const cost = new Float64Array(NA * NR);
@@ -810,6 +824,10 @@ function branchPolarDpBand(L, eSeed, discProto, extProto, bandLoFrac = 0.92) {
     const xb = Math.max(2, Math.min(L.w - 2.01, eSeed.cx + 1.12 * r0 * ux));
     const yb = Math.max(L.yTopValid + 2, Math.min(L.yBotValid - 2.01, eSeed.cy + 1.12 * r0 * uy));
     const localBg = labAt(L, xb, yb);
+    const rimSamples = [0.925, 0.942, 0.958].map((f) => labAt(L, eSeed.cx + f * r0 * ux, eSeed.cy + f * r0 * uy));
+    const minRimSample = rimSamples.reduce((best, c) => (c[0] < best[0] ? c : best), rimSamples[0]);
+    const isDarkRim = minRimSample[0] < 36 && localBg[0] > minRimSample[0] + 10;
+    const localRimIn = isDarkRim ? minRimSample : medianLab(rimSamples);
     for (let k = 2; k < NR - 2; k++) {
       const r = rel[k] * r0;
       const xIn = eSeed.cx + (r - 2.0) * ux, yIn = eSeed.cy + (r - 2.0) * uy;
@@ -822,7 +840,8 @@ function branchPolarDpBand(L, eSeed, discProto, extProto, bandLoFrac = 0.92) {
       const step = labChromaDist(cIn, cOut);
       const bgDrop = Math.max(0, shadowAwareBgDist(cIn, localBg) - shadowAwareBgDist(cOut, localBg));
       const priorPen = 16 * Math.abs(rel[k] - 1.0);
-      cost[a * NR + k] = -(step * 0.65 + bgDrop * 0.55) + priorPen;
+      const rimPen = isDarkRim ? Math.max(0, cIn[0] - (localRimIn[0] + 9.0)) * 2.0 : 0;
+      cost[a * NR + k] = -(step * 0.65 + bgDrop * 0.55) + priorPen + rimPen;
     }
   }
 
@@ -870,18 +889,18 @@ function branchPolarDpBand(L, eSeed, discProto, extProto, bandLoFrac = 0.92) {
 function runThroDiscItem(photo) {
   const coarseRes = runCoarseRimBand(photo);
   const L = getLab(photo, 720);
-  const s = L.s, invS = 1 / s;
+  const s = L.s, invS = 1 / s, invSx = 1 / L.sx, invSy = 1 / L.sy;
   const eSeed = {
-    cx: coarseRes.coarse.cx * s,
-    cy: coarseRes.coarse.cy * s,
+    cx: coarseRes.coarse.cx * L.sx,
+    cy: coarseRes.coarse.cy * L.sy,
     rx: coarseRes.coarse.rx * s,
     ry: coarseRes.coarse.ry * s,
     angle: coarseRes.coarse.angle,
   };
   const innerWork = coarseRes.innerRimRing
     ? {
-        cx: coarseRes.innerRimRing.cx * s,
-        cy: coarseRes.innerRimRing.cy * s,
+        cx: coarseRes.innerRimRing.cx * L.sx,
+        cy: coarseRes.innerRimRing.cy * L.sy,
         rx: coarseRes.innerRimRing.rx * s,
         ry: coarseRes.innerRimRing.ry * s,
         angle: coarseRes.innerRimRing.angle,
@@ -893,9 +912,9 @@ function runThroDiscItem(photo) {
   // keep the fine search band above the inner overmold boundary (bandLoFrac = 0.955)!
   const bandLoFrac = coarseRes.hasConcentricOvermold ? 0.955 : 0.92;
 
-  const b1Ell = branchBandSnap(L, eSeed, discProto, extProto, bandLoFrac);
-  const b2Ell = branchOvermoldOuter(L, eSeed, discProto, extProto, bandLoFrac);
-  const b3Ell = branchPolarDpBand(L, eSeed, discProto, extProto, bandLoFrac);
+  const b1Ell = branchBandSnap(L, eSeed, discProto, extProto, bandLoFrac, coarseRes.hasConcentricOvermold);
+  const b2Ell = branchOvermoldOuter(L, eSeed, discProto, extProto, bandLoFrac, coarseRes.hasConcentricOvermold);
+  const b3Ell = branchPolarDpBand(L, eSeed, discProto, extProto, bandLoFrac, coarseRes.hasConcentricOvermold);
 
   const branches = [
     { id: 'fine/v1-band-snap', ell: b1Ell, ev: scoreCandidateArcs(L, eSeed, b1Ell, extProto) },
@@ -904,12 +923,26 @@ function runThroDiscItem(photo) {
   ];
 
   const minR = Math.min(...branches.map((b) => b.ev.meanR));
-  const outerOvermoldBranch = branches.find(
-    (b) => b.ev.meanR / minR >= 1.032 && b.ev.meanR / minR <= 1.095 && b.ev.octantSupport >= 0.55
-  );
-  const eligible = outerOvermoldBranch
+  const outerOvermoldBranch = !coarseRes.hasConcentricOvermold
+    ? branches.find((b) => b.ev.meanR / minR >= 1.032 && b.ev.meanR / minR <= 1.095 && b.ev.octantSupport >= 0.55)
+    : null;
+  let eligible = outerOvermoldBranch
     ? branches.filter((b) => Math.abs(b.ev.meanR - outerOvermoldBranch.ev.meanR) / outerOvermoldBranch.ev.meanR <= 0.025)
     : branches;
+  if (!outerOvermoldBranch && branches.length === 3) {
+    for (let i = 0; i < 3; i++) {
+      const a = branches[(i + 1) % 3], b = branches[(i + 2) % 3], outlier = branches[i];
+      const rAvg = 0.5 * (a.ev.meanR + b.ev.meanR);
+      const abCenter = Math.hypot(a.ell.cx - b.ell.cx, a.ell.cy - b.ell.cy) / rAvg;
+      const abRadius = Math.abs(a.ev.meanR - b.ev.meanR) / rAvg;
+      const outA = Math.hypot(outlier.ell.cx - a.ell.cx, outlier.ell.cy - a.ell.cy) / rAvg;
+      const outB = Math.hypot(outlier.ell.cx - b.ell.cx, outlier.ell.cy - b.ell.cy) / rAvg;
+      if (abCenter <= 0.008 && abRadius <= 0.022 && outA >= 0.015 && outB >= 0.015) {
+        eligible = [a, b];
+        break;
+      }
+    }
+  }
 
   const joinedPts = [];
   const pickedPerArc = [];
@@ -924,7 +957,22 @@ function runThroDiscItem(photo) {
     joinedPts.push(...bestB.ev.arcPoints[o]);
   }
 
-  const joinedWork = pickedBranches.size === 1 ? [...pickedBranches][0].ell : fitEllipseRobust(joinedPts, eligible[0].ell, 2, 0.86);
+  let joinedWork;
+  if (pickedBranches.size === 1) {
+    joinedWork = [...pickedBranches][0].ell;
+  } else if (eligible.length === 2 && Math.abs(eligible[0].ev.meanR - eligible[1].ev.meanR) / (0.5 * (eligible[0].ev.meanR + eligible[1].ev.meanR)) <= 0.006) {
+    const a = eligible[0].ell, b = eligible[1].ell;
+    const avgPts = [];
+    for (let k = 0; k < 144; k++) {
+      const th = (2 * Math.PI * k) / 144, ux = Math.cos(th), uy = Math.sin(th);
+      const rA = radiusAlong(a, th), rB = radiusAlong(b, th);
+      avgPts.push([0.5 * (a.cx + rA * ux + b.cx + rB * ux), 0.5 * (a.cy + rA * uy + b.cy + rB * uy)]);
+    }
+    joinedWork = fitEllipseRobust(avgPts, a, 1, 0.86);
+  } else {
+    joinedWork = fitEllipseRobust(joinedPts, eligible[0].ell, 2, 0.86);
+  }
+  // Evaluate ScopeLive edge step & band-clip witness on the physical gradient-midpoint ellipse before stepping onto the inner rim shoulder
   const joinedEv = scoreCandidateArcs(L, eSeed, joinedWork, extProto);
 
   let maxBandUsage = 0;
@@ -935,6 +983,41 @@ function runThroDiscItem(photo) {
     const dy = joinedWork.cy + radiusAlong(joinedWork, th) * Math.sin(th) - eSeed.cy;
     const rJ = Math.hypot(dx, dy);
     maxBandUsage = Math.max(maxBandUsage, Math.abs(rJ - r0) / r0);
+  }
+
+  // Step onto the pure rim inner shoulder (~0.70 work-px inside the 3x3 boxBlur 50% ramp) so 2x+ upscaled cutouts have zero anti-aliased bg fringe
+  const rimLs = [];
+  for (let k = 0; k < 36; k++) {
+    const th = (2 * Math.PI * k) / 36, rJ = radiusAlong(joinedWork, th) * 0.955;
+    const x = joinedWork.cx + rJ * Math.cos(th), y = joinedWork.cy + rJ * Math.sin(th);
+    if (x >= 2 && y >= L.yTopValid + 2 && x < L.w - 2 && y < L.yBotValid - 2) rimLs.push(labAt(L, x, y)[0]);
+  }
+  const medRimL = median(rimLs);
+  const darkOnBrightExtra = medRimL < 42 && extProto[0] - medRimL > 24 ? joinedWork.rx * 0.0040 : 0;
+  joinedWork = {
+    ...joinedWork,
+    rx: Math.max(8, joinedWork.rx - 1.05 - darkOnBrightExtra),
+    ry: Math.max(8, joinedWork.ry - 1.05 - darkOnBrightExtra),
+  };
+  // If one edge grazes within 0.5px of the camera frame boundary (e.g. IMG_6166 right edge), inset smoothly so 100% of the cutout stays in-frame
+  {
+    const caJ = Math.cos(joinedWork.angle * DEG), saJ = Math.sin(joinedWork.angle * DEG);
+    const dxJ = Math.hypot(joinedWork.rx * caJ, joinedWork.ry * saJ);
+    const dyJ = Math.hypot(joinedWork.rx * saJ, joinedWork.ry * caJ);
+    const overR = (joinedWork.cx + dxJ) - (L.w - 0.6);
+    const overL = 0.6 - (joinedWork.cx - dxJ);
+    const overB = (joinedWork.cy + dyJ) - (L.h - 0.6);
+    const overT = 0.6 - (joinedWork.cy - dyJ);
+    const maxOver = Math.max(0, overR, overL, overB, overT);
+    if (maxOver > 0 && maxOver <= 4.0) {
+      joinedWork = {
+        ...joinedWork,
+        cx: joinedWork.cx - (overR > 0 ? overR * 0.5 : 0) + (overL > 0 ? overL * 0.5 : 0),
+        cy: joinedWork.cy - (overB > 0 ? overB * 0.5 : 0) + (overT > 0 ? overT * 0.5 : 0),
+        rx: Math.max(8, joinedWork.rx - maxOver * 0.55),
+        ry: Math.max(8, joinedWork.ry - maxOver * 0.55),
+      };
+    }
   }
 
   const octantSpreadPct = [];
@@ -948,8 +1031,8 @@ function runThroDiscItem(photo) {
   const serialFeatures = extractSerialFeatures(L, joinedWork, innerWork);
 
   const toSource = (e) => ({
-    cx: +(e.cx * invS).toFixed(2),
-    cy: +(e.cy * invS).toFixed(2),
+    cx: +(e.cx * invSx).toFixed(2),
+    cy: +(e.cy * invSy).toFixed(2),
     rx: +(e.rx * invS).toFixed(2),
     ry: +(e.ry * invS).toFixed(2),
     angle: +e.angle.toFixed(2),
