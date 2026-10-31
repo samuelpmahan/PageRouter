@@ -75,7 +75,17 @@ function section(v, i) {
   return `<section id="v-${esc(v.id)}" data-video="${esc(v.id)}"><header><span class="no">No. ${String(i + 1).padStart(2, '0')}</span><span class="kind"><span class="sel">Selected video · </span>Video · ${date(v.day)}</span><a class="vt" href="https://www.youtube.com/watch?v=${esc(v.id)}" rel="noopener">${esc(v.title)}</a><p class="bag">Featured: ${names}</p><a class="dl" href="/editor?creator=${encodeURIComponent(v.slug)}">Make these cards <small>in the thro editor</small></a></header><ol class="grid">${v.discs.map(d => tile(d, v)).join('')}</ol></section>`;
 }
 // ?v=<id> (a card on the front page): that video's section moves to the top, marked "Selected video", and the page starts there.
-const PICK = `<script>(()=>{const id=new URLSearchParams(location.search).get('v');if(!id)return;const s=document.getElementById('v-'+id);if(!s)return;const m=s.parentNode;m.prepend(s);s.classList.add('is-selected');})()</script>`;
+const PICK = `<script>(async()=>{const id=new URLSearchParams(location.search).get('v');if(!id)return;let s=document.getElementById('v-'+id);
+const first=document.querySelector('section[data-video]');if(!first)return;const m=first.parentNode;
+if(!s){/* The search sent someone here for a video this page doesn't list yet: build its section from the search data. */
+const f=await fetch('/feed.json').then(r=>r.ok?r.json():null,()=>null);const v=f&&f.videos.find(x=>x[0]===id);if(!v)return;
+const ph=await fetch('/disc-photos/manifest.json').then(r=>r.ok?r.json():{},()=>({}));const P=(ph.photos||{}).manufacturer||{};
+const e=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]);
+const ds=v[4].map(x=>{const d=f.discs[x[0]],mk=f.makers[d[1]];return{id:d[0],name:d[2],mk:mk[1],at:x[1]}});
+const day=v[2]?new Date(v[2]+'T12:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'';
+s=document.createElement('section');s.id='v-'+id;s.dataset.video=id;
+s.innerHTML=\`<header><span class="no">No. 00</span><span class="kind"><span class="sel">Selected video · </span>Video\${day?' · '+day:''}</span><a class="vt" href="https://www.youtube.com/watch?v=\${e(id)}" rel="noopener">\${e(v[3])}</a><p class="bag">Featured: \${ds.map(d=>e(d.name)).join(', ')}</p></header><ol class="grid">\${ds.map(d=>{const p=P[d.id];return\`<li><a class="card" href="/\${e(d.id)}">\${p?\`<span class="tc-photo"><img src="\${e(p.src)}" alt="" loading="lazy" width="480" height="480"></span>\`:''}<span class="tc\${p?' with-photo':''}" aria-hidden="true">\${p?\`<span class="tc-credit">\${e(p.credit||'')}</span>\`:''}<span class="tc-name" style="--n:\${Math.max(5,d.name.length)}">\${e(d.name)}</span><span class="tc-brand">\${e(d.mk)}</span></span><span class="what">See the \${e(d.mk)} \${e(d.name)}</span></a><span class="how">\${d.at!=null?\`<a href="https://www.youtube.com/watch?v=\${e(id)}&amp;t=\${d.at}s" rel="noopener">at \${Math.floor(d.at/60)}:\${String(d.at%60).padStart(2,'0')} in the video</a> · \`:''}<a href="/\${e(d.id)}">every video with it</a></span></li>\`}).join('')}</ol>\`;}
+m.prepend(s);s.classList.add('is-selected');s.scrollIntoView({block:'start'});})()</script>`;
 
 let n = 0;
 for (const slug of fs.readdirSync(site).sort()) {
