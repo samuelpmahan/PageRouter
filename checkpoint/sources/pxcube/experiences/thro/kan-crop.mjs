@@ -1170,13 +1170,15 @@ export function openKanUploadModal({ workspace, onDiscSaved }) {
     octx.drawImage(img, 0, 0, dw, dh);
     const rgba = octx.getImageData(0, 0, dw, dh).data;
 
-    kanResult = detectKanDisc(rgba, dw, dh);
+    const detected = detectKanDisc(rgba, dw, dh);
     let fit = null;
     try {
       const report = await rimFit(img, fname || 'photo');
       const item = report.items?.[0];
       if (item?.output) fit = { crop: fromPx(item.output, sw, sh), passed: ['G1_LivePriorBounds', 'G2_LiveZeroBandClip', 'G3_LiveOctantSupport'].every(g => report.guarantees?.[g]?.passed !== false), ms: item.ms };
     } catch (error) { console.warn('rim fit failed; using the KAN detector', error); }
+    if (loadedImg !== img) return; // another photo was picked while this one was fitting
+    kanResult = detected;
     if (fit) kanResult.candidates = [{ id: 'rim-fit', label: 'Rim fit', crop: fit.crop }, ...kanResult.candidates];
     activeCandidateId = kanResult.candidates[0].id;
     activeCrop = structuredClone(fit ? fit.crop : kanResult.crop);
